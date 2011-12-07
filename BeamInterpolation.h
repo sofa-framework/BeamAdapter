@@ -96,6 +96,7 @@ public:
 	typedef typename  sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 	typedef typename  sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
+        typedef Vec<2, Real> Vec2;
 	typedef Vec<3, Real> Vec3;
 	typedef Vec<6, Real> Vec6;
 
@@ -158,6 +159,10 @@ public:
 
         void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
                                                    Transform &global_H_localInterpol, Deriv &v_interpol);
+
+
+        void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
+                                       SpatialVector& FNode0output, SpatialVector& FNode1output );
 
 
 

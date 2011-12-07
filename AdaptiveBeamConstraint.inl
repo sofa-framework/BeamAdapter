@@ -148,7 +148,9 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		// Get new projection on the curve
 		previousPositions[i] += displacements[i];
-                //interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i]);
+                Real tol = 1.0e-5;
+                Vec3 P = x2[i].getCenter();
+                interpolation->getCurvAbsOfProjection(P, x1, previousPositions[i], tol);
 
 		// Position and frame on the curve
         interpolation->getBeamAtCurvAbs(previousPositions[i], beam, baryCoord);

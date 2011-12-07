@@ -590,6 +590,12 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const InVecCoord& x)
 {
 
+    PosPointDefinition  ppd = pointBeamDistribution[i];
+    const Vec3 localPos(0.,ppd.baryPoint[1],ppd.baryPoint[2]);
+    const Vec3 Fin(finput[0], finput[1], finput[2]);
+
+    m_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(ppd.beamId, ppd.baryPoint[0], localPos, x, Fin, FNode0output, FNode1output );
+/*
 	//1. get the curvilinear abs;
 	PosPointDefinition  ppd = pointBeamDistribution[i];
 	Real bx = ppd.baryPoint[0];
@@ -640,6 +646,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv
 	// back to the DOF0 and DOF1 frame:
 	FNode0output = DOF0Global_H_local0 * (f0+f1);
 	FNode1output = DOF1Global_H_local1 * (f2+f3);
+      */
 
 }
 

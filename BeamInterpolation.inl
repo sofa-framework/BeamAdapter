@@ -879,9 +879,65 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
             global_H_local1.projectVector(VelNode1inNode1.getAngularVelocity() ) * baryCoord;
 
 
+}
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
+                                                             SpatialVector& FNode0output, SpatialVector& FNode1output )
+{
+
+    //1. get the curvilinear abs and spline parameters
+    Real bx = baryCoord;
+    Real a0=(1-bx)*(1-bx)*(1-bx);
+    Real a1=3*bx*(1-bx)*(1-bx);
+    Real a2=3*bx*bx*(1-bx);
+    Real a3=bx*bx*bx;
+
+    //2. computes a force on the 4 points of the spline:
+    Vec3 F0, F1, F2, F3;
+    F0 = finput*a0;
+    F1 = finput*a1;
+    F2 = finput*a2;
+    F3 = finput*a3;
+
+    //3. influence of these forces on the nodes of the beam    => TODO : simplify the computations !!!
+    Transform DOF0Global_H_local0, DOF1Global_H_local1;
+    this->getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
+
+    //rotate back to local frame
+    SpatialVector f0, f1,f2,f3;
+    f0.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F0) );
+    f1.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F1) );
+    f2.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F2) );
+    f3.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F3) );
+
+    // computes the torque created on DOF0 and DOF1 by f1 and f2
+    Real L = this->getLength(edgeInList);
+
+    if(localPos.norm() > L*1e-10)
+    {
+            f0.setTorque(localPos.cross(f0.getForce()+f1.getForce()));
+            f3.setTorque(localPos.cross(f2.getForce()+f3.getForce()));
+    }
+    else
+    {
+            f0.setTorque(Vec3(0,0,0));
+            f3.setTorque(Vec3(0,0,0));
+
+    }
+
+    Vec3 lever(L/3,0,0);
+    f1.setTorque(lever.cross(f1.getForce()));
+    f2.setTorque(-lever.cross(f2.getForce()));
+
+
+    // back to the DOF0 and DOF1 frame:
+    FNode0output = DOF0Global_H_local0 * (f0+f1);
+    FNode1output = DOF1Global_H_local1 * (f2+f3);
 
 
 }
+
 
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::breaksInTwo(const Real& /*x_min_out*/,  Real& /*x_break*/, int& /*numBeamsNotUnderControlled*/ )

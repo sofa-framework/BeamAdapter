@@ -73,7 +73,7 @@ protected:
 		
 	int nbConstraints; // number of constraints created
 	std::vector<Real> violations;
-	std::vector<double> previousPositions, displacements; // the position on which each point was projected		
+        std::vector<Real> previousPositions, displacements; // the position on which each point was projected
 	std::vector<bool> projected;
 
 	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
