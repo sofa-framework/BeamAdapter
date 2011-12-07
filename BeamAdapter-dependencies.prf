@@ -1,0 +1,14 @@
+includeOnce($$_FILE_) {
+	declare(BeamAdapter, applications/plugins/BeamAdapter, sofacore           \
+										   		    sofatree              \
+												    sofa_base_topology    \
+												    sofa_mesh_collision   \
+                                                                                                    sofa_base_collision   \
+                                                                                                    sofa_constraint       \
+                                                                                                    sofa_user_interaction \
+                                                                                                    sofa_advanced_constraint \
+                                                                                                    sofa_topology_mapping )
+	
+		enable(BeamAdapter)
+
+	}

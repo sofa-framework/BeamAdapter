@@ -1,0 +1,93 @@
+
+**************************
+*    BeamAdapter.txt     *
+**************************
+
+**************************
+*  INFORMATION SOURCES   *
+**************************
+This plugins works at 13.December.2010:17h30_fr with all scenes in examples folder 
+Compatible between revesion 11 of sofa-dt and revision 9282 of sofa-dev 
+
+
+**************************
+*         INSTALL        *
+**************************
+checkout your code BeamAdapter in the folder $SOFA_DIR/applications/plugins/
+uncomment the flag SOFA_HAVE_BEAMADAPTER in file $SOFA_DIR/sofa-default.cfg or in  $SOFA_DIR/sofa-local.cfg
+execute qmake.
+compile.
+run test scenes in folders BeamAdapter/examples
+
+
+**************************
+*         CONTENT        *
+**************************
+============  CODE SOURCES FILES ======================
+AdaptiveBeamController.cpp         
+AdaptiveBeamController.h           
+AdaptiveBeamController.inl         
+AdaptiveBeamForceFieldAndMass.cpp  
+AdaptiveBeamForceFieldAndMass.h    
+AdaptiveBeamForceFieldAndMass.inl  
+AdaptiveBeamMapping.cpp  
+AdaptiveBeamMapping.h    
+AdaptiveBeamMapping.inl  
+BaseRestShape.cpp        
+BaseRestShape.inl        
+BaseRestShape.h          
+BeamInterpolation.cpp  
+BeamInterpolation.h    
+BeamInterpolation.inl  
+initBeamAdapter.cpp                    
+initBeamAdapter.h                      
+InterventionalRadiologyController.cpp  
+InterventionalRadiologyController.h    
+InterventionalRadiologyController.inl  
+MultiAdaptiveBeamMapping.cpp  
+MultiAdaptiveBeamMapping.h    
+MultiAdaptiveBeamMapping.inl  
+WireBeamInterpolation.cpp
+WireBeamInterpolation.h
+WireBeamInterpolation.inl
+WireRestShape.cpp
+WireRestShape.h
+WireRestShape.inl
+BeamAdapter.pro        
+============  EXAMPLES AND TEST ======================
+examples/3instruments.scn  
+examples/AdaptiveBeamController.scn  
+examples/AdaptiveBeamMappingRigidRigid.scn  
+examples/AdaptiveBeamMapping.scn  
+examples/AdaptiveCathAndGuide.scn    
+examples/coil_3D.obj  
+examples/verificationBeamAdapter.ini  
+============  DIVERS =================================
+TodoList.rtf                 
+BeamAdapter.txt
+=================================  39 Files =====
+
+Explications du code:
+Chaque class est code par trois fichiers portant sont nom .h, .inl et .cpp.
+
+1.BaseRestShape : decrit les fonctions de formes dans le cas d'une seule ligne droite. (en cours de developpement).
+
+2.WireRestShape : decrit le fonctions de formes dans le cas de plusieurs segment en utilisant les abcisses curvilignes.
+
+3.BeamInterpolation : Interpolation dans le cas non utilise les abcisses curvilignes.
+
+3.WireBeamInterpolation : Interpolation utilisant les abcisses curvilignes (les splines), cette class herite de BeamInterpolation et pointe vers WireRestShape class pour avoir des informations des fonctions de formes.
+
+4.AdaptiveBeamForceFieldAndMass : Pointe vers l'interface BeamInterpolation pour effectuer des interpolations que ce soit ou non dans le cas des abcisses curvilignes.
+
+5.AdaptiveBeamController : Pointe vers l'interface BeamInterpolation pour effectuer des interpolations que ce soit ou non dans le cas des abcisses curvilignes.
+
+6.AdaptiveBeamMapping : Pointe vers l'interface BeamInterpolation pour effectuer des interpolations que ce soit ou non dans le cas des abcisses curvilignes.
+
+7.InterventionalRadiologyController : Pointe vers plusieurs WireBeamInterpolation pour effectuer les interpolations de splines. Chacun des WireBeamInterpolation est un instrument qui est gerer pas le controller. Ce controller permet d'interagir avec l'utilisateur.
+
+8.MultiAdaptiveBeamMapping : Pointe vers plusieurs WireBeamInterpolation pour effectuer les interpolations de splines et vers un InterventionalRadiologyController pour adapter des changements a chaque fois le controller effectue des operations. Ce mapping prend la list des instruments du controller comme parametre et creer une liste sous-mapping de AdaptiveBeamMapping pour chacun des instruments.
+
+
+              
+

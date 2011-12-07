@@ -1,0 +1,100 @@
+/******************************************************************************
+*       SOFA, Simulation Open-Framework Architecture, version 1.0 beta 4      *
+*                (c) 2006-2009 MGH, INRIA, USTL, UJF, CNRS                    *
+*                                                                             *
+* This program is free software; you can redistribute it and/or modify it     *
+* under the terms of the GNU General Public License as published by the Free  *
+* Software Foundation; either version 2 of the License, or (at your option)   *
+* any later version.                                                          *
+*                                                                             *
+* This program is distributed in the hope that it will be useful, but WITHOUT *
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or       *
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for    *
+* more details.                                                               *
+*                                                                             *
+* You should have received a copy of the GNU General Public License along     *
+* with this program; if not, write to the Free Software Foundation, Inc., 51  *
+* Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.                   *
+*******************************************************************************
+*                            SOFA :: Applications                             *
+*                                                                             *
+* Authors: M. Adam, J. Allard, B. Andre, P-J. Bensoussan, S. Cotin, C. Duriez,*
+* H. Delingette, F. Falipou, F. Faure, S. Fonteneau, L. Heigeas, C. Mendoza,  *
+* M. Nesme, P. Neumann, J-P. de la Plata Alcade, F. Poyer and F. Roy          *
+*                                                                             *
+* Contact information: contact@sofa-framework.org                             *
+******************************************************************************/
+#include "initBeamAdapter.h"
+#include <cstring>
+#include <string>
+
+
+namespace sofa
+{
+
+namespace component
+{
+
+	//Here are just several convenient functions to help user to know what contains the plugin
+	
+	void initExternalModule()
+	{
+		static bool first = true;
+		if (first)
+		{
+			first = false;
+		}
+	}
+	const char* getModuleLicense()
+	{
+		return "INRIA and Digital-Trainers";
+	}
+
+	const char* getModuleName()
+	{
+		return "BeamAdapter";
+	}
+
+	const char* getModuleVersion()
+	{
+		return "0.1";
+	}
+
+	const char* getModuleDescription()
+	{
+		return "A dynamic adapter that modulates the DOF repartition of a beam model according to its radius of curvature.";
+	}
+
+	const char* getModuleComponentList()
+	{
+		std::string commonentlist;
+
+		commonentlist += " WireRestShape"                    ;
+		commonentlist += " BeamInterpolation"                ;
+		commonentlist += " WireBeamInterpolation"            ;
+		commonentlist += " AdaptiveBeamForceFieldAndMass"    ;
+		commonentlist += " AdaptiveBeamController"           ;
+		commonentlist += " InterventionalRadiologyController";
+		commonentlist += " AdaptiveBeamMapping"              ;
+		commonentlist += " MultiAdaptiveBeamMapping"  ;
+		//commonentlist += "";
+		return commonentlist.c_str();
+	}
+
+
+
+} 
+
+} 
+
+
+SOFA_LINK_CLASS(BaseRestShape)
+SOFA_LINK_CLASS(WireRestShape)
+SOFA_LINK_CLASS(BeamInterpolation)
+SOFA_LINK_CLASS(WireBeamInterpolation)
+SOFA_LINK_CLASS(AdaptiveBeamForceFieldAndMass)
+SOFA_LINK_CLASS(AdaptiveBeamController)
+SOFA_LINK_CLASS(InterventionalRadiologyController)
+SOFA_LINK_CLASS(AdaptiveBeamMapping)
+SOFA_LINK_CLASS(MultiAdaptiveBeamMapping)
+
