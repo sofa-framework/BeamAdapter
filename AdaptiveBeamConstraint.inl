@@ -108,16 +108,17 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
 	for(unsigned int i=0; i<m2; i++)
 	{
 		Real r = -1;
-		Pos pt = x2[i].getCenter();
+                Vec3 pt = x2[i].getCenter();
 		bool p = interpolation->getApproximateCurvAbs(pt, x1, r);
 
 		previousPositions[i] = r;
 		projected[i] = p;
 
 		Real r2 = r;
+               Real tol = 0.000001;
 		if(p)
 		{
-			interpolation->getCurvAbsOfProjection(pt, x1, r2);
+                        interpolation->getCurvAbsOfProjection(pt, x1, r2, tol);
 			std::cout << "Point " << i << " projected at " << r << " -> " << r2 << std::endl; 
 		}
 		else
@@ -147,7 +148,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		// Get new projection on the curve
 		previousPositions[i] += displacements[i];
-		interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i]);
+                //interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i]);
 
 		// Position and frame on the curve
         interpolation->getBeamAtCurvAbs(previousPositions[i], beam, baryCoord);

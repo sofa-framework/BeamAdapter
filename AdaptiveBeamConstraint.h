@@ -30,6 +30,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <iostream>
+#include <sofa/defaulttype/Vec.h>
 
 namespace sofa
 {
@@ -39,6 +40,7 @@ namespace component
 
 namespace constraintset
 {
+using sofa::helper::vector;
 
 template<class DataTypes>
 class AdaptiveBeamConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
@@ -61,6 +63,8 @@ public:
 	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 	typedef typename DataTypes::Coord::Pos Pos;
 	typedef typename DataTypes::Coord::Rot Rot;
+        typedef sofa::defaulttype::Vec<3, Real> Vec3;
+
 
 protected:
 	
