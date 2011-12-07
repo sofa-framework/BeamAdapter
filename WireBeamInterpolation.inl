@@ -64,7 +64,8 @@
 //#include <sofa/simulation/common/Node.h>
 
 
-
+#define _max_(a,b) (((a)>(b))?(a):(b))
+#define _min_(a,b) (((a)<(b))?(a):(b))
 
 namespace sofa
 {
@@ -397,15 +398,18 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& xcurv_output)
+void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& xcurv_output, Real& tolerance)
 {
     unsigned int edge;
-    Real baryCoord;
+    Real bx;
 
     if (xcurv_output>0 && xcurv_output<  this->getRestTotalLength())
-        getBeamAtCurvAbs(xcurv_output, edge, baryCoord);
+        getBeamAtCurvAbs(xcurv_output, edge, bx);
     else
+    {
         edge=0;
+        bx=0;
+    }
 
 
     Vec3 P0,P1,P2,P3;
@@ -416,24 +420,72 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
     {
         this->getSplinePoints(edge, x, P0,P1,P2,P3);
 
+        Vec3 P = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+        Vec3 dP= P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
+        Real f_x = dot( (x_input - P) , dP ) ;
+
+        if (fabs(f_x)/dP.norm() < tolerance) // reach convergence
+        {
+            getCurvAbsAtBeam(edge,bx,xcurv_output);
+            return;
+        }
+        Vec3 d2P = P0*6*(1-bx) + P1*(-12 + 18*bx) + P2*(6-18*bx) + P3*6*bx;
+
+        Real df_x = dot(-dP,dP) + dot((x_input-P), d2P);
+
+        if (abs(df_x) < 1e-5*tolerance)
+        {
+            serr<<"Problem in getCurvAbsOfProjection : local minimum without solution"<<sendl;
+        }
+
+        Real d_bx = -f_x/df_x;
+
+        if(bx+d_bx > 1)
+        {
+            if (edge == this->getNumBeams()-1)
+            {
+                serr<<" Problem: no solution found on the thread..."<<sendl;
+                // try a last iteration at the end of the thread...
+                it = this->getNumBeams()-1;
+                edge=this->getNumBeams()-1;
+                bx=1;
+                xcurv_output=this->getRestTotalLength();
+            }
+            else
+            {
+                edge++;
+                bx = _min_(bx+d_bx-1.0,1.0);
+            }
+        }
+
+
+        if(bx+d_bx< 0)
+        {
+
+            if (edge == 0)
+            {
+                serr<<" Problem: no solution found on the thread..."<<sendl;
+                // try a last iteration at the begining of the thread...
+                it = this->getNumBeams()-1;
+                edge=0;
+                bx=0.0;
+                xcurv_output=0.0;
+            }
+            else
+            {
+                edge--;
+                bx = _max_(bx+d_bx+1.0,0.0);
+            }
+
+        }
 
 
 
 
 
-
+        it++;
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

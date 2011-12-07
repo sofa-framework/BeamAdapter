@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 -9.81 0" dt="0.01" showVisualModels="0" showBehaviorModels="0" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
+	<MasterContactSolver />
+	<LCPConstraintSolver tolerance="0.00000001"  mu="0.8" />
+	<CollisionPipeline depth="6" verbose="0" draw="0"/>
+	<BruteForceDetection name="N2" />
+	<LocalMinDistance name="Proximity"  alarmDistance="0.3" contactDistance="0.0" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
+	<CollisionResponse name="Response" response="ContinuousFrictionContact"/>
+	
+	
+	
+	<Node name="topoLines">
+		<Object type="RegularGrid" name="meshLines"
+		nx="30" ny="1" nz="1"
+		xmin="0.0" xmax="4.05"
+		ymin="0" ymax="0"
+		zmin="0" zmax="0"
+		/>
+		<MechanicalObject template="Rigid" name="DOFs" />
+	</Node>	
+	
+	<Node name="AdaptiveBeam">
+      <EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+	  <BTDLinearSolver verbose="0"/>
+      <MechanicalObject template="Rigid" name="DOFs" position="0 0 0 0 0 0 1  2 0.5 0 0 0 0 1    4 0.5 0 0 0 0.7071068  0.7071068 "/> 
+      <Mesh name="lines" lines="0 1 1 2" /> 
+	  <!--<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />	-->		
+	  <!--<AdaptiveBeamController template="Rigid"/>-->
+	  <AdaptiveBeamInterpolation name="BeamInterpolation" radius="0.1" straightRestShape="1" /> 
+	  <AdaptiveBeamForceFieldAndMass name="BeamForceField"  youngModulus="1000000" massDensity="1"/> 
+	  <LinearSolverConstraintCorrection />
+	  
+	  <Node name="Collision">
+	  		<Object type="RegularGrid"
+				nx="5" ny="1" nz="1"
+				xmin="0.0" xmax="4.05"
+				ymin="0" ymax="0"
+				zmin="0" zmax="0"
+			/>
+			<MechanicalObject name="CollisionDOFs" template="Vec3d" debugViewIndices="0" debugViewIndicesScale="0.001"/>
+			<!--<Mesh name="lines" lines="0 1" />-->
+			<Line proximity="0.2" group="1"/>
+			<Point proximity="0.2" group="1"/>
+			<AdaptiveBeamMapping name="collisionMap" useCurvAbs="1"  /> <!--points="0 0 0  0.2 0 0  0.4 0 0  0.6 0 0  0.8 0 0"-->
+	  </Node>
+	  
+	  <Node name="ContinuousFrictionResponse">
+			<MechanicalObject name="ConstraintDOFs" template="Vec3d" debugViewIndices="0" debugViewIndicesScale="0.001"/>
+			<AdaptiveBeamMapping  useCurvAbs="1" name="constraintMapping" contactDuplicate="1" nameOfInputMap="collisionMap"/>
+	  </Node>
+	  
+	  
+	  
+	   <Node name="Visu">
+			<Object type="MechanicalObject" name="Quads" />
+			<include href="Objects/QuadSetTopology.xml"/>
+			<Object type="Edge2QuadTopologicalMapping" nbPointsOnEachCircle="10" radius="0.2" object1="topoLines/meshLines" object2="Container"   flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="visuMap" useCurvAbs="1" printLog="1"  />
+			<Node name="VisuOgl">
+				<Object type="OglModel" name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<Object type="IdentityMapping" object1="Quads" object2="Visual"/>
+			</Node>		
+			
+	   </Node>	
+	   
+	  
+   </Node>
+   
+    
+		<Node name="BOX">
+			<Object type="MeshLoader" name="meshLoader" filename="mesh/box_inside.obj" triangulate="true"/>
+			<Object type="Mesh"/>
+			<Object type="MechanicalObject" dx="2" rx="10" scale="0.55"/>
+			<Object type="Triangle" simulated="0" moving="0"/>	
+			<Object type="Line" simulated="0" moving="0"/>
+			<Object type="Point" simulated="0" moving="0"/>
+			<Object type="OglModel" name="Visual" fileMesh="mesh/box_outside.obj" color="1 0 0 0.3" dx="2" rx="10" scale="0.55"/>
+		</Node>
+
+   
+
+</Node>

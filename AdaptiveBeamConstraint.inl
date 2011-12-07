@@ -103,7 +103,7 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
 	
 	fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 	const VecCoord& x1 = *this->mstate1->getX();
-	const VecCoord& x2 = *this->mstate2->getX();
+        const VecCoord& x2 = *this->mstate2->getX();
 
 	for(unsigned int i=0; i<m2; i++)
 	{
