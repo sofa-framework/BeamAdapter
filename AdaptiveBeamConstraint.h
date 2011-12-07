@@ -28,6 +28,7 @@
 #include "WireBeamInterpolation.h"
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include <sofa/core/behavior/MechanicalState.h>
+#include <sofa/defaulttype/SolidTypes.h>
 #include <iostream>
 
 namespace sofa
@@ -54,18 +55,21 @@ public:
 	typedef typename Coord::value_type Real;
 	typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
 	typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
-        typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
-        typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
-        typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
+	typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
+	typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
+	typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
+	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
+	typedef typename DataTypes::Coord::Pos Pos;
+	typedef typename DataTypes::Coord::Rot Rot;
 
 protected:
 	
 	bool yetIntegrated;
 	unsigned int cid;
 		
-	std::vector<Real> dists;	// constraints violations
 	int nbConstraints; // number of constraints created
-	std::vector<double> previousPositions; // the position on which each point was projected		
+	std::vector<Real> violations;
+	std::vector<double> previousPositions, displacements; // the position on which each point was projected		
 	std::vector<bool> projected;
 
 	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
@@ -109,6 +113,21 @@ public:
 
 	void draw(const core::visual::VisualParams* vparams);
 };
+
+class AdaptiveBeamConstraintResolution : public core::behavior::ConstraintResolution
+{
+public:
+	AdaptiveBeamConstraintResolution(double* sliding = NULL)
+	: _slidingDisp(sliding) { nbLines = 3; }
+	virtual void init(int line, double** w, double* force);
+	virtual void resolution(int line, double** w, double* d, double* force);
+	virtual void store(int line, double* force, bool /*convergence*/);
+	
+protected:
+	double slidingW;
+	double* _slidingDisp;
+};
+
 } // namespace constraintset
 
 } // namespace component
