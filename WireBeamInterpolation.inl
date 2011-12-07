@@ -433,9 +433,15 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
 
         Real df_x = dot(-dP,dP) + dot((x_input-P), d2P);
 
-        if (abs(df_x) < 1e-5*tolerance)
+
+        // debug
+        getCurvAbsAtBeam(edge,bx,xcurv_output);
+        std::cout<<" test at xcurv ="<<xcurv_output<<"  f_x = "<< f_x<<" df_x ="<<df_x<<"  x_input-P ="<<x_input-P<<std::endl;
+
+        if (fabs(df_x) < 1e-5*tolerance)
         {
-            serr<<"Problem in getCurvAbsOfProjection : local minimum without solution"<<sendl;
+            serr<<"Problem in getCurvAbsOfProjection : local minimum without solution and f_x= "<<f_x<<" not null"<<sendl;
+            continue;
         }
 
         Real d_bx = -f_x/df_x;
@@ -478,6 +484,7 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
             }
 
         }
+        bx+=d_bx;
 
 
 
