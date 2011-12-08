@@ -151,11 +151,9 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 		previousPositions[i] += displacements[i];
 		if(!interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i], 1e-5))
 		{
-			std::cout << "point " << i << " not on the curve" << std::endl;
 			projected[i] = false;
 			continue;
 		}
-		std::cout << "point " << i << " at " << previousPositions[i] << std::endl;
 
 		// Position and frame on the curve
         interpolation->getBeamAtCurvAbs(previousPositions[i], beam, baryCoord);
@@ -182,7 +180,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		MatrixDerivRowIterator c1_it = c1.writeLine(cid + nbConstraints);
 		MatrixDerivRowIterator c2_it = c2.writeLine(cid + nbConstraints);
-		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(0,1,0), sv0, sv1);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir1, sv0, sv1);
 		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
 		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
 		c2_it.addCol(i, Deriv(-dir1, nullRot));
@@ -190,7 +188,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		c1_it = c1.writeLine(cid + nbConstraints);
 		c2_it = c2.writeLine(cid + nbConstraints);
-		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(0,0,1), sv0, sv1);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir2, sv0, sv1);
 		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
 		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
 		c2_it.addCol(i, Deriv(-dir2, nullRot));
@@ -198,7 +196,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		c1_it = c1.writeLine(cid + nbConstraints);
 		c2_it = c2.writeLine(cid + nbConstraints);
-		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(1,0,0), sv0, sv1);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir, sv0, sv1);
 		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
 		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
 		c2_it.addCol(i, Deriv(-dir, nullRot));

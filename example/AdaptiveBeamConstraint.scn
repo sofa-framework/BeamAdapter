@@ -7,13 +7,13 @@
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />
-	<VisualStyle name="VisualStyle" displayFlags="hideVisualModels showBehaviorModels showForceFields showInteractionForceFields" />
+	<VisualStyle name="VisualStyle" displayFlags="hideVisualModels showForceFields showInteractionForceFields" />
 
 <!--------------------------- SUTURE REST SHAPE  -------------------------------->
 
 	<Node name="topoLines_suture">
 		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="4"  straightLength="0" spireDiameter="5.0" spireHeight="0.0"
-					    densityOfBeams="10 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="10000" youngModulusExtremity="100"/> <!-- silicone -->		
+					    densityOfBeams="20 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="100000" youngModulusExtremity="100000"/> <!-- silicone -->		
 
 		<EdgeSetTopologyContainer name="meshLinesSuture" />
 		<EdgeSetTopologyModifier   name="Modifier" />
@@ -43,7 +43,7 @@
 	</Node>
 
 	<Node name="Fixed">
-        <MechanicalObject template="Rigid" name="DOFs" position="0 0 0 0 0 0 1  1 0 -1 0 0 0 1" />
+        <MechanicalObject template="Rigid" name="DOFs" position="0 0 -0.2 0 0 0 1    1.35 0 -1.5 0 0 0 1" />
     </Node>
 
    <AdaptiveBeamConstraint interpolation="@AdaptiveBeam/InterpolSuture" object1="AdaptiveBeam/DOFs" object2="Fixed/DOFs" />
