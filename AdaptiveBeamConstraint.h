@@ -61,19 +61,19 @@ public:
 	typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
 	typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
 	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
+	typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 	typedef typename DataTypes::Coord::Pos Pos;
 	typedef typename DataTypes::Coord::Rot Rot;
-        typedef sofa::defaulttype::Vec<3, Real> Vec3;
-
+	typedef sofa::defaulttype::Vec<3, Real> Vec3;
+	typedef sofa::defaulttype::Vec<6, Real> Vec6;
 
 protected:
 	
-	bool yetIntegrated;
 	unsigned int cid;
 		
 	int nbConstraints; // number of constraints created
 	std::vector<Real> violations;
-        std::vector<Real> previousPositions, displacements; // the position on which each point was projected
+	std::vector<Real> previousPositions, displacements; // the position on which each point was projected		
 	std::vector<bool> projected;
 
 	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
@@ -106,8 +106,6 @@ public:
 	
 	virtual void init();
 	
-	virtual void bwdInit();
-
 	void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex, const DataVecCoord &x1, const DataVecCoord &x2);
 
 	void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2

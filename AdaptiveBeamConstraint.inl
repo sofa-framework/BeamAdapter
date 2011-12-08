@@ -50,6 +50,8 @@ void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* 
 	d[line+1] += w[line+1][line] * (force[line]-f[0]);
 	force[line+1] -= d[line+1] / w[line+1][line+1];
 	d[line+2] += w[line+2][line] * (force[line]-f[0]) + w[line+2][line+1] * (force[line+1]-f[1]);
+//	force[line+2] = 0;
+//	force[line+2] -= d[line+2] / w[line+2][line+2];
 }
 
 void AdaptiveBeamConstraintResolution::init(int line, double** w, double* /*force*/)
@@ -77,12 +79,6 @@ void AdaptiveBeamConstraint<DataTypes>::reset()
 }
 
 template<class DataTypes>
-void AdaptiveBeamConstraint<DataTypes>::bwdInit()
-{
-	internalInit();
-}
-
-template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::internalInit()
 {	// We search for the closest segment, on which to project each point
 	// Convention : object1 is the beam model, object2 is the list of point constraints
@@ -103,26 +99,26 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
 	
 	fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 	const VecCoord& x1 = *this->mstate1->getX();
-        const VecCoord& x2 = *this->mstate2->getX();
+	const VecCoord& x2 = *this->mstate2->getX();
 
 	for(unsigned int i=0; i<m2; i++)
 	{
 		Real r = -1;
-                Vec3 pt = x2[i].getCenter();
+		Vec3 pt = x2[i].getCenter();
 		bool p = interpolation->getApproximateCurvAbs(pt, x1, r);
 
 		previousPositions[i] = r;
 		projected[i] = p;
-
+/*
 		Real r2 = r;
-               Real tol = 0.000001;
+		Real tol = 0.000001;
 		if(p)
 		{
-                        interpolation->getCurvAbsOfProjection(pt, x1, r2, tol);
+			interpolation->getCurvAbsOfProjection(pt, x1, r2, tol);
 			std::cout << "Point " << i << " projected at " << r << " -> " << r2 << std::endl; 
 		}
 		else
-			std::cout << "Point " << i << " not projected near " << r << std::endl; 
+			std::cout << "Point " << i << " not projected near " << r << std::endl;		*/
 	}
 }
 
@@ -132,6 +128,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 {
 	violations.clear();
 	nbConstraints = 0;
+	cid = constraintId;
 
     Transform Tnode0, Tnode1, Tresult;
     Real baryCoord;
@@ -139,8 +136,12 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 	unsigned int m2 = this->mstate2->getSize();
 	fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
-	const VecCoord& x1 = *this->mstate1->getXfree();
-	const VecCoord& x2 = *this->mstate2->getXfree();
+	MatrixDeriv& c1 = *c1_d.beginEdit();
+	MatrixDeriv& c2 = *c2_d.beginEdit();
+	const VecCoord& x1= x1_d.getValue();
+	const VecCoord& x2= x2_d.getValue();
+	const VecCoord& x1free = *this->mstate1->getXfree();
+	const VecCoord& x2free = *this->mstate2->getXfree();
     for(unsigned int i=0; i<m2 ; i++)
     {
 		if(!projected[i])
@@ -148,14 +149,18 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
 		// Get new projection on the curve
 		previousPositions[i] += displacements[i];
-                Real tol = 1.0e-5;
-                Vec3 P = x2[i].getCenter();
-                interpolation->getCurvAbsOfProjection(P, x1, previousPositions[i], tol);
+		if(!interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i], 1e-5))
+		{
+			std::cout << "point " << i << " not on the curve" << std::endl;
+			projected[i] = false;
+			continue;
+		}
+		std::cout << "point " << i << " at " << previousPositions[i] << std::endl;
 
 		// Position and frame on the curve
         interpolation->getBeamAtCurvAbs(previousPositions[i], beam, baryCoord);
-        interpolation->computeTransform2(beam, Tnode0, Tnode1, x1);
-        interpolation->InterpolateTransformUsingSpline(Tresult, baryCoord, Tnode0,Tnode1,interpolation->getLength(beam));
+        interpolation->computeTransform2(beam, Tnode0, Tnode1, x1free);
+        interpolation->InterpolateTransformUsingSpline(Tresult, baryCoord, Tnode0, Tnode1, interpolation->getLength(beam));
 		Pos p = Tresult.getOrigin();
 		Pos dir, dir1, dir2;
 		Rot rot = Tresult.getOrientation();
@@ -164,13 +169,45 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 		dir2 = rot.rotate(Pos(0,0,1));
 
 		// Compute violations
-		Pos violation = x2[i].getCenter() - p;
-		violations.push_back(violation * dir);
+		Pos violation = p - x2free[i].getCenter();
 		violations.push_back(violation * dir1);
 		violations.push_back(violation * dir2);
+		violations.push_back(violation * dir);
 
 		// Define the constraint
+		unsigned int node0, node1;
+		SpatialVector sv0, sv1;
+		Vec3 nullRot(0,0,0);
+		interpolation->getNodeIndices(beam, node0, node1);
+
+		MatrixDerivRowIterator c1_it = c1.writeLine(cid + nbConstraints);
+		MatrixDerivRowIterator c2_it = c2.writeLine(cid + nbConstraints);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(0,1,0), sv0, sv1);
+		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
+		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
+		c2_it.addCol(i, Deriv(-dir1, nullRot));
+		nbConstraints++;
+
+		c1_it = c1.writeLine(cid + nbConstraints);
+		c2_it = c2.writeLine(cid + nbConstraints);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(0,0,1), sv0, sv1);
+		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
+		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
+		c2_it.addCol(i, Deriv(-dir2, nullRot));
+		nbConstraints++;
+
+		c1_it = c1.writeLine(cid + nbConstraints);
+		c2_it = c2.writeLine(cid + nbConstraints);
+		interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, Pos(1,0,0), sv0, sv1);
+		c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
+		c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
+		c2_it.addCol(i, Deriv(-dir, nullRot));
+		nbConstraints++;
 	}
+
+	constraintId += nbConstraints;
+	c1_d.endEdit();
+	c2_d.endEdit();
 }
 
 
@@ -178,27 +215,29 @@ template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::getConstraintViolation(const core::ConstraintParams* /* PARAMS FIRST */, defaulttype::BaseVector *v, const DataVecCoord &, const DataVecCoord &
 		, const DataVecDeriv &, const DataVecDeriv &)
 {
-/*	unsigned int nb = violations.size();
+	unsigned int nb = violations.size();
 	for(unsigned int i=0; i<nb; i++)
-		v->set(cid+i, violations[i]);	*/
+		v->set(cid+i, violations[i]);
 }
 
 
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset)
 {
-/*	unsigned int nb = this->mstate2->getSize();
+	unsigned int nb = this->mstate2->getSize();
 	for(unsigned int i=0; i<nb; i++)
 	{
 		if(!projected[i]) continue;
 		resTab[offset] = new AdaptiveBeamConstraintResolution(&displacements[i]);
 		offset += 3;
-	}	*/
+	}
 }
 
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
 { 
+	if(!vparams->displayFlags().getShowInteractionForceFields()) return;
+
 	glDisable(GL_LIGHTING);
 	glPointSize(10);
 	glBegin(GL_POINTS);
