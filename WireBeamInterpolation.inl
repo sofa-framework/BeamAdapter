@@ -398,7 +398,7 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& xcurv_output, Real& tolerance)
+bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& xcurv_output, const Real& tolerance)
 {
     unsigned int edge;
     Real bx;
@@ -415,6 +415,7 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
     Vec3 P0,P1,P2,P3;
     unsigned int it=0;
     Transform global_H_local0, global_H_local1;
+	bool lastTry = false;
 
     while(it < this->getNumBeams()+1 ) // no more iteration than the number of beam....
     {
@@ -427,7 +428,7 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
         if (fabs(f_x)/dP.norm() < tolerance) // reach convergence
         {
             getCurvAbsAtBeam(edge,bx,xcurv_output);
-            return;
+            return true;
         }
         Vec3 d2P = P0*6*(1-bx) + P1*(-12 + 18*bx) + P2*(6-18*bx) + P3*6*bx;
 
@@ -436,7 +437,7 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
 
         // debug
         getCurvAbsAtBeam(edge,bx,xcurv_output);
-        std::cout<<" test at xcurv ="<<xcurv_output<<"  f_x = "<< f_x<<" df_x ="<<df_x<<"  x_input-P ="<<x_input-P<<std::endl;
+//        std::cout<<" test at xcurv ="<<xcurv_output<<"  f_x = "<< f_x<<" df_x ="<<df_x<<"  x_input-P ="<<x_input-P<<std::endl;
 
         if (fabs(df_x) < 1e-5*tolerance)
         {
@@ -450,8 +451,11 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
         {
             if (edge == this->getNumBeams()-1)
             {
+				if(lastTry) // Did not find a solution
+					return false;
                 serr<<" Problem: no solution found on the thread..."<<sendl;
                 // try a last iteration at the end of the thread...
+				lastTry = true;
                 it = this->getNumBeams()-1;
                 edge=this->getNumBeams()-1;
                 bx=1;
@@ -470,8 +474,11 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
 
             if (edge == 0)
             {
+				if(lastTry) // Did not find a solution
+					return false;
                 serr<<" Problem: no solution found on the thread..."<<sendl;
                 // try a last iteration at the begining of the thread...
+				lastTry = true;
                 it = this->getNumBeams()-1;
                 edge=0;
                 bx=0.0;
@@ -485,16 +492,10 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
 
         }
         bx+=d_bx;
-
-
-
-
-
         it++;
-
     }
 
-
+	return true;
 }
 
 

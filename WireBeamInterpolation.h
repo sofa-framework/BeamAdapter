@@ -156,9 +156,9 @@ public:
 	virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output);
-	virtual void getCurvAbsAtBeam(unsigned int &edgeInList_input, Real& baryCoord_input, Real& x_output);
-	virtual bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
-        void getCurvAbsOfProjection(const Vec3& x_input, const VecCoord&, Real& x_output, Real& tolerance);
+	void getCurvAbsAtBeam(unsigned int &edgeInList_input, Real& baryCoord_input, Real& x_output);
+	bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
+	bool getCurvAbsOfProjection(const Vec3& x_input, const VecCoord&, Real& x_output, const Real& tolerance);
 
 
 	bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
