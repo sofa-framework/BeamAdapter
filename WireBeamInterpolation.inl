@@ -467,9 +467,7 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
                 bx = _min_(bx+d_bx-1.0,1.0);
             }
         }
-
-
-        if(bx+d_bx< 0)
+		else if(bx+d_bx< 0)
         {
 
             if (edge == 0)
@@ -491,7 +489,9 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
             }
 
         }
-        bx+=d_bx;
+		else
+			bx+=d_bx;
+
         it++;
     }
 
