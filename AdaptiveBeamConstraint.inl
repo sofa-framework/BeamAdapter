@@ -148,7 +148,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 			continue;
 
 		// Get new projection on the curve
-		previousPositions[i] += displacements[i];
+                previousPositions[i] += (Real) displacements[i];
 		if(!interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, previousPositions[i], 1e-5))
 		{
 			projected[i] = false;
@@ -226,6 +226,7 @@ void AdaptiveBeamConstraint<DataTypes>::getConstraintResolution(std::vector<core
 	for(unsigned int i=0; i<nb; i++)
 	{
 		if(!projected[i]) continue;
+
 		resTab[offset] = new AdaptiveBeamConstraintResolution(&displacements[i]);
 		offset += 3;
 	}

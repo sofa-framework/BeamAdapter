@@ -1,0 +1,26 @@
+This README file accompanies the 2011/03/02 version of the "acmsiggraph"
+LaTeX and BibTeX files, to be used to prepare documents for publication in
+the print and electronic proceedings of events sponsored by ACM SIGGRAPH.
+
+File Listing
+------------
+
+acmsiggraph.bst		BibTeX template file.
+acmsiggraph.cls		LaTeX template file.
+icons/			Folder containing hyperlink icons.
+images/			Folder containing sample images.
+Makefile_latex		Makefile for 'latex / dvips / ps2pdf' workflow.
+Makefile_pdflatex	Makefile for 'pdflatex' workflow.
+README			This file.
+template.bib		Sample BibTeX file.
+template.pdf		Sample PDF file (output).
+template.tex		Sample LaTeX file.
+
+Please examine the "template.tex" file carefully, especially if you have
+used the "acmsiggraph" class files before. There are several new commands,
+and several commands have been (appropriately) moved out of the LaTeX file
+and into the "acmsiggraph.cls" template file.
+
+Questions, comments and suggestions should be sent to Stephen Spencer
+at 'spencer@cs.washington.edu' to be considered for inclusion in a future
+version of this package.

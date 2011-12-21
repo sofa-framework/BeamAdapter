@@ -1,0 +1,240 @@
+\begin{thebibliography}{\protect\citename{Abolhassani et~al\mbox{.} }2007b}
+
+\bibitem[\protect\citename{Abolhassani et~al\mbox{.} }2007a]{Abolhassani07b}
+{\sc Abolhassani, N., Patel, R., and Ayazi, F.}
+\newblock 2007.
+\newblock Effects of different insertion methods on reducing needle deflection.
+\newblock In {\em Proceedings of IEEE EMBS 2007}, 491--494.
+
+\bibitem[\protect\citename{Abolhassani et~al\mbox{.} }2007b]{Abolhassani07}
+{\sc Abolhassani, N., Patel, R., and Moallem, M.}
+\newblock 2007.
+\newblock Needle insertion into soft tissue: A survey.
+\newblock {\em Medical Engineering and Physics 29\/}, 413--431.
+
+\bibitem[\protect\citename{Bergou et~al\mbox{.} }2008]{Bergou08}
+{\sc Bergou, M., Wardetzky, M., Robinson, S., Audoly, B., and Grinspun, E.}
+\newblock 2008.
+\newblock Discrete elastic rods.
+\newblock In {\em SIGGRAPH '08}, ACM, New York, NY, USA, 1--12.
+
+\bibitem[\protect\citename{Berkley et~al\mbox{.} }2004]{Berkley04}
+{\sc Berkley, J., Turkiyyah, G., Berg, D., Ganter, M., and Weghorst, S.}
+\newblock 2004.
+\newblock Real-time finite element modeling for surgery simulation: an
+  application to virtual suturing.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics 10}, 3,
+  314--325.
+
+\bibitem[\protect\citename{Bertails }2009]{Bertails09}
+{\sc Bertails, F.}
+\newblock 2009.
+\newblock Linear time super-helices.
+\newblock {\em Comput. Graph. Forum 28}, 2, 417--426.
+
+\bibitem[\protect\citename{Brown et~al\mbox{.} }2004]{Brown04}
+{\sc Brown, J., Latombe, J.-C., and Montgomery, K.}
+\newblock 2004.
+\newblock Real-time knot-tying simulation.
+\newblock {\em Vis. Comput. 20}, 2, 165--179.
+
+\bibitem[\protect\citename{Chentanez et~al\mbox{.} }2009]{Chentanez09}
+{\sc Chentanez, N., Alterovitz, R., Ritchie, D., Cho, L., Hauser, K., Goldberg,
+  K., Shewchuk, R.~J., and O'Brien, F.~J.}
+\newblock 2009.
+\newblock Interactive simulation of surgical needle insertion and steering.
+\newblock In {\em to appear in The Proceedings of ACM SIGGRAPH 2009}.
+
+\bibitem[\protect\citename{Cottle et~al\mbox{.} }1992]{Cottle}
+{\sc Cottle, R., Pang, J.~S., and Stone, R.~E.}
+\newblock 1992.
+\newblock {\em The Linear Complementarity problem}.
+\newblock Academic Press.
+
+\bibitem[\protect\citename{Crouch et~al\mbox{.} }2005]{Crouch05}
+{\sc Crouch, J., Schneider, C., Wainer, J., and Okamura, A.}
+\newblock 2005.
+\newblock A velocity-dependent model for needle insertion in soft tissue.
+\newblock In {\em Proceedings of MICCAI'05}, 624--632.
+
+\bibitem[\protect\citename{Dehghan et~al\mbox{.} }2008]{Dehghan08}
+{\sc Dehghan, E., Wen, X., Zahiri-Azar, R., Marchal, M., and Salcudean, S.}
+\newblock 2008.
+\newblock Needle-tissue interaction modeling using ultrasound-based motion
+  estimation: Phantom study.
+\newblock {\em Computer Aided Surgery 13}, 5, 265--280.
+
+\bibitem[\protect\citename{DiMaio and Salcudean }2003]{DiMaioSalcudean03}
+{\sc DiMaio, S., and Salcudean, S.}
+\newblock 2003.
+\newblock Needle steering and model-based trajectory planning.
+\newblock In {\em Medical Image Computing and Computer-Assisted Intervention
+  (MICCAI)}, vol.~2878, 33--40.
+
+\bibitem[\protect\citename{DiMaio and Salcudean }2005]{DiMaio05}
+{\sc DiMaio, S., and Salcudean, S.}
+\newblock 2005.
+\newblock Needle steering and motion planning in soft tissues.
+\newblock {\em IEEE Transactions on Biomedical Engineering 19}, 6, 965--974.
+
+\bibitem[\protect\citename{Duriez et~al\mbox{.} }2006]{Duriez06}
+{\sc Duriez, C., Dubois, F., Kheddar, A., and Andriot, C.}
+\newblock 2006.
+\newblock Realistic haptic rendering of interacting deformable objects in
+  virtual environments.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics 12}, 1,
+  36--47.
+
+\bibitem[\protect\citename{Erleben }2007]{Erleben07}
+{\sc Erleben, K.}
+\newblock 2007.
+\newblock Velocity-based shock propagation for multibody dynamics animation.
+\newblock {\em ACM Trans. Graph. 26}, 2, 12.
+
+\bibitem[\protect\citename{Guébert et~al\mbox{.} }2008]{Guebert08}
+{\sc Guébert, C., Duriez, C., and Grisoni, L.}
+\newblock 2008.
+\newblock Unified processing of constraints for interactive simulation.
+\newblock In {\em Proceedings of the 5th Workshop On Virtual Reality
+  Interaction and Physical Simulation (VRIPHYS'08)}, Eurographics, Grenoble,
+  France.
+
+\bibitem[\protect\citename{Holbrey et~al\mbox{.} }2004]{Holbrey04}
+{\sc Holbrey, R., Bulpitt, A., Brodlie, K., Walkley, M., and Scott, J.}
+\newblock 2004.
+\newblock A model for virtual suturing in vascular surgery.
+\newblock In {\em Theory and Practice of Computer Graphics, 2004. Proceedings},
+  50--58.
+
+\bibitem[\protect\citename{Jourdan et~al\mbox{.} }1998]{Jourdan98}
+{\sc Jourdan, F., Alart, P., and Jean, M.}
+\newblock 1998.
+\newblock A gauss-seidel like algorithm to solve frictional contact problems.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering 155}, 1,
+  31--47.
+
+\bibitem[\protect\citename{LeDuc et~al\mbox{.} }2003]{LeDuc03}
+{\sc LeDuc, M., Payandeh, S., and Dill, J.}
+\newblock 2003.
+\newblock Toward modeling of a suturing task.
+\newblock In {\em In Graphics Interface conference}.
+
+\bibitem[\protect\citename{Lenoir et~al\mbox{.} }2002]{Lenoir02}
+{\sc Lenoir, J., Meseure, P., Grisoni, L., and Chaillou, C.}, 2002.
+\newblock Surgical thread simulation.
+
+\bibitem[\protect\citename{Lenoir et~al\mbox{.} }2004]{Lenoir04}
+{\sc Lenoir, J., Meseure, P., Grisoni, L., and Chaillou, C.}
+\newblock 2004.
+\newblock A suture model for surgical simulation.
+\newblock In {\em in International Symposium on Medical Simulation}, 17--18.
+
+\bibitem[\protect\citename{Marshall et~al\mbox{.} }2005]{Marshall05}
+{\sc Marshall, P., Payandeh, S., and Dill, J.}
+\newblock 2005.
+\newblock Suturing for surface meshes.
+\newblock In {\em Control Applications, 2005. CCA 2005. Proceedings of 2005
+  IEEE Conference on}, 31--36.
+
+\bibitem[\protect\citename{Nageotte et~al\mbox{.} }2005]{Nageotte05}
+{\sc Nageotte, F., Zanne, P., de~Mathelin, M., and Doignon, C.}
+\newblock 2005.
+\newblock A circular needle path planning method for suturing in laparoscopic
+  surgery.
+\newblock In {\em Proceedings of the 2005 IEEE ICRA}, 514--519.
+
+\bibitem[\protect\citename{Okamura et~al\mbox{.} }2004]{Okamura04}
+{\sc Okamura, A., Simone, C., and O'Leary, M.}
+\newblock 2004.
+\newblock Force modeling for needle insertion into soft tissue.
+\newblock {\em IEEE Transactions on Biomedical Engineering 51}, 10, 1707--1716.
+
+\bibitem[\protect\citename{Otaduy et~al\mbox{.} }2009]{Otaduy09}
+{\sc Otaduy, M.~A., Tamstorf, R., Steinemann, D., and Gross, M.}
+\newblock 2009.
+\newblock Implicit contact handling for deformable objects.
+\newblock {\em Computer Graphics Forum 28\/}, 559--568.
+
+\bibitem[\protect\citename{Pai }2002]{Pai02}
+{\sc Pai, D.~K.}
+\newblock 2002.
+\newblock Strands: Interactive simulation of thin solids using cosserat models.
+\newblock {\em Computer Graphics Forum 21}, 3, 347--352.
+
+\bibitem[\protect\citename{Peterlik et~al\mbox{.} }2011]{PNDCK11}
+{\sc Peterlik, I., Nouicer, M., Duriez, C., Cotin, S., and Kheddar, A.}
+\newblock 2011.
+\newblock Constraint-based haptic rendering of multirate compliant mechanisms.
+\newblock {\em IEEE Transactions on Haptics 4\/}, 175--187.
+
+\bibitem[\protect\citename{Phillips et~al\mbox{.} }2002]{Phillips02}
+{\sc Phillips, J., Ladd, A., and Kavraki, L.~E.}
+\newblock 2002.
+\newblock Simulated knot tying.
+\newblock In {\em In Proceedings of the IEEE International Conference on
+  Robotics and Automation}, 841--846.
+
+\bibitem[\protect\citename{Shi and Payandeh }2008]{Shi08}
+{\sc Shi, F., and Payandeh, S.}
+\newblock 2008.
+\newblock On suturing simulation with haptic feedback.
+\newblock In {\em EuroHaptics '08: Proceedings of the 6th international
+  conference on Haptics}, Springer-Verlag, Berlin, Heidelberg, 599--608.
+
+\bibitem[\protect\citename{Sifakis et~al\mbox{.} }2007]{Sifakis07}
+{\sc Sifakis, E., Shinar, T., Irving, G., and Fedkiw, R.}
+\newblock 2007.
+\newblock Hybrid simulation of deformable solids.
+\newblock In {\em SCA '07: Proceedings of the 2007 ACM SIGGRAPH/Eurographics
+  symposium on Computer animation}, Eurographics Association, Aire-la-Ville,
+  Switzerland, Switzerland, 81--90.
+
+\bibitem[\protect\citename{Simone and Okamura }2002]{Simone02}
+{\sc Simone, C., and Okamura, A.}
+\newblock 2002.
+\newblock Modeling of needle insertion forces for robot-assisted percutaneous
+  therapy.
+\newblock In {\em Proceedings of ICRA 2002}, 2085--2091.
+
+\bibitem[\protect\citename{Spillmann and Teschner }2007]{Spillmann07}
+{\sc Spillmann, J., and Teschner, M.}
+\newblock 2007.
+\newblock Corde: Cosserat rod elements for the dynamic simulation of
+  one-dimensional elastic objects.
+\newblock In {\em SCA '07: Proceedings of the 2007 ACM Symposium on Computer
+  animation}, 63--72.
+
+\bibitem[\protect\citename{Spillmann and Teschner }2008]{Spillmann08}
+{\sc Spillmann, J., and Teschner, M.}
+\newblock 2008.
+\newblock An adaptive contact model for the robust simulation of knots.
+\newblock {\em Computer Graphics Forum 24}, 2, 497--506.
+
+\bibitem[\protect\citename{Theetten et~al\mbox{.} }2008]{Theetten08}
+{\sc Theetten, A., Grisoni, L., Andriot, C., and Barsky, B.}
+\newblock 2008.
+\newblock Geometrically exact dynamic splines.
+\newblock {\em Comput. Aided Des. 40}, 1, 35--48.
+
+\bibitem[\protect\citename{Wang et~al\mbox{.} }2005]{Wang05}
+{\sc Wang, F., Burdet, E., Dhanik, A., Poston, T., and Teo, C.}
+\newblock 2005.
+\newblock Dynamic thread for real-time knot-tying.
+\newblock {\em Symposium on Haptic Interfaces for Virtual Environment and
+  Teleoperator Systems\/} (March), 507--508.
+
+\bibitem[\protect\citename{Wang et~al\mbox{.} }2008]{Wang08}
+{\sc Wang, F., Su, E., Burdet, E., and Bleuler, H.}
+\newblock 2008.
+\newblock Development of a microsurgery training system.
+\newblock In {\em Engineering in Medicine and Biology Society (EMBS 2008)},
+  1935--1938.
+
+\bibitem[\protect\citename{Zhang et~al\mbox{.} }2007]{Zhang07}
+{\sc Zhang, J., Gu, L., Huang, P., Dworzak, J., Chen, F., and Kong, X.}
+\newblock 2007.
+\newblock Real-time cutting and suture simulation using hybrid elastic model.
+\newblock In {\em Engineering in Medicine and Biology Society (EMBS 2007)},
+  3646--3649.
+
+\end{thebibliography}
