@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.03"  gravity="0 0 0.1">
+<Node name="root" dt="0.03"  gravity="0 0 -9810">
 	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields showWireFrame" />
  	<FreeMotionAnimationLoop />
  	<GenericConstraintSolver tolerance="1e-10" unbuilt="true"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
-	<LocalMinDistance name="localmindistance" alarmDistance="0.5" contactDistance="0.2" angleCone="0.05"/>
+	<LocalMinDistance name="localmindistance" alarmDistance="0.5" contactDistance="0.25" angleCone="0.05"/>
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />
 
@@ -14,8 +14,8 @@
 <!--------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  ------------------------------>
 
 	<Node name="topoLines_cath">
-		<WireRestShape template="Rigid" printLog="1" name="catheterRestShape" length="40.0"  straightLength="38" spireDiameter="7.0" spireHeight="0.0"
-					    densityOfBeams="10 10" numEdges="200" numEdgesCollis="100 8"  youngModulus="1000" youngModulusExtremity="1000"/> 
+		<WireRestShape template="Rigid" printLog="1" name="catheterRestShape" length="40.0"  straightLength="36" spireDiameter="7.0" spireHeight="0.0"
+					    densityOfBeams="10 2" numEdges="200" numEdgesCollis="36 4"  youngModulus="1000" youngModulusExtremity="1000"/> <!-- silicone -->
 
 		<EdgeSetTopologyContainer name="meshLinesCath" />
 		<EdgeSetTopologyModifier   name="Modifier" />
@@ -26,7 +26,7 @@
 
 	<Node name="topoLines_coils">
 		<WireRestShape template="Rigid" printLog="1" name="CoilRestShape" length="60.0"  straightLength="20.0" spireDiameter="6" spireHeight="3"
-						densityOfBeams="10 20" numEdges="200" numEdgesCollis="100 200"  youngModulus="1680" youngModulusExtremity="1680"/>
+						densityOfBeams="10 20" numEdges="200" numEdgesCollis="50 100"  youngModulus="16800" youngModulusExtremity="16800"/>
 		<EdgeSetTopologyContainer name="meshLinesCoils" />
 		<EdgeSetTopologyModifier   name="Modifier" />
 		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
@@ -46,11 +46,11 @@
 		/>		
 		<MechanicalObject template="Rigid" name="DOFs"/> 
 
-		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.2" printLog="1"/> 
+		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.8" printLog="1"/> 
 		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="InterpolCatheter" massDensity="0.0000155"/>  <!-- silicone E = 1000 MPa // 1550 Kg/m3-->	
 
 
-		<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.05" printLog="1"/> 
+		<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.2" printLog="1"/> 
 		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="InterpolCoils" massDensity="0.00021"/>  <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
 				
 		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.51 0.3"  step="0.2" rotationInstrument="0 0 " 
