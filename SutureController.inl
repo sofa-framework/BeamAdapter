@@ -44,6 +44,7 @@
 #include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 
+//#define DEBUG
 
 
 namespace sofa
@@ -168,8 +169,9 @@ void SutureController<DataTypes>::init()
         _topology->addPoint( x[0][0], x[0][1], x[0][2] );
         nodeCurvAbs.push_back(0.0);
 
+#ifdef DEBUG
         std::cout<< "Init the positions of the beam "<<std::endl;
-
+#endif
         m_adaptiveinterpolation->clear();
 
         for (unsigned int i=0; i<nbP_density.size(); i++)
@@ -192,8 +194,9 @@ void SutureController<DataTypes>::init()
 
                 Transform global_H_localP;
                 m_adaptiveinterpolation->getRestTransformOnX(global_H_localP, x_curv);
+#ifdef DEBUG
                 std::cout<<" getRestTransformOnX ="<<global_H_localP<<" at "<< x_curv <<std::endl;
-
+#endif
 
 
                 Transform global_H_P = global_T_init * global_H_localP;
@@ -214,8 +217,9 @@ void SutureController<DataTypes>::init()
                 // add the beam to the m_adaptiveinterpolation
                 m_adaptiveinterpolation->addBeam(id_node-1,dx,x_curv-dx,x_curv,0.0  );
 
-
+#ifdef DEBUG
                 std::cout<<" Pos at x_curv ="<<x_curv<<" : "<<x[id_node]<<std::endl;
+#endif
             }
 
         }
@@ -238,7 +242,6 @@ void SutureController<DataTypes>::reinit()
 {
 
     this->getMechanicalState()->cleanup();
-    std::cout<<" REINIT CALLED"<<std::endl;
     init();
     applyController();
 
@@ -271,9 +274,9 @@ void SutureController<DataTypes>::addNodesAndEdge(unsigned int num, Real &xend)
     unsigned int numNodes = this->getMechanicalState()->getSize();
     this->getMechanicalState()->resize( numNodes + num);
     unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
-
+#ifdef DEBUG
     std::cout<<" ####  addNodesAndEdge -- Size Mstate ="<<this->getMechanicalState()->getSize()<<std::endl;
-
+#endif
     for (unsigned int i=0; i<num; i++)
     {
         _topology->addPoint( 0.0, 0.0, 0.0 );
@@ -389,9 +392,9 @@ void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &ne
     addRigidCurvAbs(newCurvAbs, 0.0001);
 
    // newCurvAbs.push_back(length);
-
+#ifdef DEBUG
     std::cout<<"newCurvAbs  = "<<newCurvAbs<<std::endl;
-
+#endif
 }
 
 
@@ -448,10 +451,10 @@ void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &ne
         newCurvAbs.push_back(newCurvAbsBuf[iterator]) ;
         iterator++;
     }
-
+#ifdef DEBUG
     std::cout<<"newCurvAbsBuf = "<<newCurvAbsBuf<<std::endl;
     std::cout<<"newCurvAbs    = "<<newCurvAbs<<std::endl;
-
+#endif
 
 
 }
@@ -483,41 +486,31 @@ void SutureController<DataTypes>::applyController()
         this->computeSampling(newCurvAbs, x);
 
 
-
+#ifdef DEBUG
     std::cout<<" newCurvAbs = "<<newCurvAbs<<"  - nodeCurvAbs = "<<nodeCurvAbs<<std::endl;
 
     for (unsigned int i=0; i<rigidCurveSegments.size(); i++)
     {
         std::cout<<" rigidCurveSegments["<<i<<"] "<<rigidCurveSegments[0].first<<" - "<<rigidCurveSegments[0].second<<std::endl;
     }
-/*
-    std::cout<<" x before ="<<x<<std::endl;
 
-    std::cout<< " v before ="<<v<<std::endl;
-
-    std::cout<< " num Beams ="<<m_adaptiveinterpolation->getNumBeams()<<std::endl;
-
-*/
     std::cout<<" Before... Beam  lengths = ";
     for (unsigned int b=0; b<m_adaptiveinterpolation->getNumBeams(); b++)
         std::cout<<" "<<m_adaptiveinterpolation->getLength(b);
     std::cout<<" "<<std::endl;
 
-
+#endif
 
 
     this->applyNewSampling(newCurvAbs, nodeCurvAbs, x, v);
-/*
-    std::cout<<" x after ="<<x<<std::endl;
 
-    std::cout<< " v after ="<<v<<std::endl;
-*/
+ #ifdef DEBUG
     std::cout<<"After.... Beam  lengths = ";
 
     for (unsigned int b=0; b<m_adaptiveinterpolation->getNumBeams(); b++)
         std::cout<<" "<<m_adaptiveinterpolation->getLength(b);
     std::cout<<" "<<std::endl;
-
+#endif
 
     nodeCurvAbs.clear();
     for( unsigned int i=0; i< newCurvAbs.size(); i++)
@@ -569,7 +562,7 @@ void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& x
     if (idBeamMin==idBeamMax)
     {
         m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(angle, dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
-         std::cout<<" idBeamMin==idBeamMax, angle ="<<angle<<std::endl;
+         //std::cout<<" idBeamMin==idBeamMax, angle ="<<angle<<std::endl;
         return;
     }
 
@@ -671,9 +664,9 @@ void SutureController<DataTypes>::detectRigidBeams(sofa::helper::vector<Real> &n
             rigidBeamList.push_back(false);
 
     }
-
+#ifdef DEBUG
     std::cout<<" detectRigidBeams result : "<<rigidBeamList<<std::endl;
-
+#endif
 }
 
 
@@ -692,7 +685,9 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
     x.clear();
     v.clear();
 
+#ifdef DEBUG
     std::cout<<" Begin applyNewSampling : newCurvAbs="<<newCurvAbs<<std::endl;
+#endif
     detectRigidBeams(newCurvAbs);
 
 
@@ -737,11 +732,11 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
     vec_global_H_node.push_back(global_H_interpol);
     vec_global_Vel_node.push_back(v_interpol);
 
+
+#ifdef DEBUG
     std::cout<<"vec_global_H_node = "<<vec_global_H_node<<std::endl;
-
-
     std::cout<<"vec_global_Vel_node = "<<vec_global_Vel_node<<std::endl;
-
+#endif
 
 
     ////////////////////// compute a gravity center for the rigid segments //////////
@@ -792,13 +787,14 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
                 global_H_gravityC.setOrientation(vec_global_H_node[s].getOrientation() );
                 global_H_gravityC.setOrigin(pos_G);
 
+ #ifdef DEBUG
                 std::cout<<" global_H_gravityC.origin = "<<global_H_gravityC.getOrigin()<<"  global_H_gravityC ="<<global_H_gravityC <<std::endl;
 
 
                 /////////////////// Computation of the velocities (can be put in an other function) /////////////////
 
                 std::cout<<"rigidification using vec_global_Vel_node["<<s+1<<"] = "<<vec_global_Vel_node[s+1]<<std::endl;
-
+#endif
                 SpatialVector VelNode_in_global, VelNode_in_Node, VelGravityC_inGravityC, VelGravity_inGlobal;
                 VelNode_in_global.setAngularVelocity( vec_global_Vel_node[s].getVOrientation());
                 VelNode_in_global.setLinearVelocity(  vec_global_Vel_node[s].getVCenter());
@@ -841,8 +837,9 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
     {
 
         unsigned s=rigidBeamList.size()-1;
-
+#ifdef DEBUG
         std::cout<<"!!!! Rigidification at the end tip !!!! "<<std::endl;
+#endif
         Vec3 pos_G = global_H_gravityC.getOrigin();
         global_H_gravityC.setOrientation(vec_global_H_node[s+1].getOrientation() );
         global_H_gravityC.setOrigin(pos_G);
@@ -932,10 +929,12 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
 
             L =  newCurvAbs[s+1] - newCurvAbs[s];
             m_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,GravityCenter_H_interpol0, GravityCenter_H_interpol1 );
+
+#ifdef DEBUG
             std::cout<<" add rigid segment on segment "<<s<<" that links the same dof: [ "<<_topology->getEdge(s)[0]<<" "<<_topology->getEdge(s)[1]
                     <<"]   x curv = ["<< newCurvAbs[s]<<" " <<newCurvAbs[s+1]<<"]"<<std::endl;
             std::cout<<"GravityCenter_H_interpol0 ="<<GravityCenter_H_interpol0<<"   - GravityCenter_H_interpol1"<<GravityCenter_H_interpol1<<std::endl;
-
+#endif
         }
 
         else // the beam is deformable
@@ -948,9 +947,10 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
 
             _topology->addEdge( (int)(numNodes-1), (int)(numNodes) );
             m_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,0.0 );
+#ifdef DEBUG
             std::cout<<" add deformable segment on segment "<<s<<" that links the same dof: [ "<<_topology->getEdge(s)[0]<<" "<<_topology->getEdge(s)[1]
                     <<"]   x curv = ["<< newCurvAbs[s]<<" " <<newCurvAbs[s+1]<<"]"<<std::endl;
-
+#endif
             // ADD a DOF for the second node of the beam
             numNodes++;
             xDof.getCenter()     = vec_global_H_node[s+1].getOrigin();
@@ -969,20 +969,21 @@ void SutureController<DataTypes>::applyNewSampling(sofa::helper::vector<Real> &n
                 // add a transformation between the node 0 and the gravity center on current beam
                 Transform GravityCenter_H_node0 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
                 m_adaptiveinterpolation->setTransformBetweenDofAndNode(s,GravityCenter_H_node0,0);
-
+#ifdef DEBUG
                 std::cout<<" Add transformation"<< GravityCenter_H_node0<<"  between the node 0 and the gravity center on beam "<<s<<std::endl;
-
+#endif
             }
 
         }
     }
 
+#ifdef DEBUG
     std::cout<<"xbuf = "<<x_buf<<std::endl;
     std::cout<<" x   = "<<x<<std::endl;
 
     std::cout<<"vbuf = "<<v_buf<<std::endl;
     std::cout<<" v   = "<<v<<std::endl;
-
+#endif
 
     this->getMechanicalState()->resize(x.size());
 
@@ -1027,106 +1028,21 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     }
 
 
-
-    /*
-    helper::vector<Real> xP_noticeable_buf;
-    helper::vector< int> nbP_density_buf;
-
-    m_adaptiveinterpolation->getSamplingParameters(xP_noticeable_buf, nbP_density_buf);
-
-    // Rigidification => each rigid curve segment adds 2 noticeable points: TODO => recompute coherent density
-    unsigned int iter=1;
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //
-    // The following loop
-       // (1) copy xP_noticeable_buf in xP_noticeable
-       // (2) add the xcurv info of rigidCurveSegments info in  xP_noticeable
-    xP_noticeable.push_back(xP_noticeable_buf[0]);
-    for (unsigned int seg=0; seg<this->rigidCurveSegments.size(); seg++)
-    {
-
-        // ADD rigidCurveSegments[seg].first in xP_noticeable_buf
-        while(xP_noticeable_buf[iter]<rigidCurveSegments[seg].first)
-        {
-            xP_noticeable.push_back(xP_noticeable_buf[iter]);
-            iter++;
-            if (iter== xP_noticeable_buf.size())
-            {
-                serr<<" PROBLEM : rigidCurveSegments[seg].first ="<<rigidCurveSegments[seg].first<<" is out of the defined abs_curv ("<<xP_noticeable_buf[0]<<","<<xP_noticeable_buf[xP_noticeable_buf.size()-1]<<")"<<sendl;
-                break;
-            }
-        }
-        // rigidCurveSegments[seg].first is inserted between xP_noticeable[iter-1] and xP_noticeable[iter]
-        xP_noticeable.push_back(rigidCurveSegments[seg].first);
-
-        // ADD rigidCurveSegments[seg].second in xP_noticeable_buf
-        while(xP_noticeable_buf[iter]<rigidCurveSegments[seg].second)
-        {
-            xP_noticeable.push_back(xP_noticeable_buf[iter]);
-            iter++;
-            if (iter== xP_noticeable_buf.size())
-            {
-                serr<<" PROBLEM : rigidCurveSegments[seg].first ="<<rigidCurveSegments[seg].second<<" is out of the defined abs_curv ("<<xP_noticeable_buf[0]<<","<<xP_noticeable_buf[xP_noticeable_buf.size()-1]<<")"<<sendl;
-                break;
-            }
-        }
-
-        // rigidCurveSegments[seg].first is inserted between xP_noticeable[iter-1] and xP_noticeable[iter]
-        xP_noticeable.push_back(rigidCurveSegments[seg].second);
-    }
-
-    // finishing to fill the xP_noticeable vector
-    while(iter<xP_noticeable_buf.size())
-    {
-        xP_noticeable.push_back(xP_noticeable_buf[iter]);
-        iter++;
-    }
-    //
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Post treatment to set the adequate densities...
-
-    // ex: xP_noticeable_buf=[0 10 20] nbP_density_buf=[5 10] and xP_noticeable= [0 4 10 17 20]
-    // we should obtain nbP_density=[2 3 7 3]
-
-    Real density_rate= nbP_density_buf[0]/(xP_noticeable_buf[1]-xP_noticeable_buf[0] );
-    unsigned int index_buf=1;
-    for (unsigned int i=1; i<xP_noticeable.size(); i++)
-    {
-        while(xP_noticeable_buf[index_buf] < 0.99999999999*xP_noticeable[i] )
-        {
-            index_buf++;
-            density_rate= nbP_density_buf[index_buf-1]/(xP_noticeable_buf[index_buf]-xP_noticeable_buf[index_buf-1] );
-        }
-
-        int density = (int) floor( density_rate*( xP_noticeable[i] - xP_noticeable[i-1] ) + 0.00001);
-        nbP_density.push_back(density);
-    }
-
-    //debug:
-    std::cout<<" +++++++++ debug rigidification +++++++"<<std::endl;
-    std::cout<<" xP_noticeable_buf = "<<xP_noticeable_buf<<" -   xP_noticeable ="<<xP_noticeable<<std::endl;
-    std::cout<<" nbP_density_buf = "<<nbP_density_buf<<" -    nbP_density ="<<nbP_density<<std::endl;
-    //
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    */
-
-
     Real sutureLength= m_adaptiveinterpolation->getRestTotalLength();
     Real dx=sutureLength/100.0;
     Real BendingAngle=0.0;
     this->computeBendingAngle(BendingAngle, 0.0, sutureLength, dx, x);
-    std::cout<<" BendingAngle ="<<BendingAngle<<std::endl;
 
+#ifdef DEBUG
+    std::cout<<" BendingAngle ="<<BendingAngle<<std::endl;
+#endif
 
 
     Real L_add=0.0;
 
     // in density it is defined the number of beams that are basically asked between
+    sofa::helper::vector<Real> newCurvAbs_notSecure;
+    newCurvAbs_notSecure.clear();
     for (unsigned int part=0; part<nbP_density.size(); part++)
     {
         unsigned int numBeams=nbP_density[part];
@@ -1135,7 +1051,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 
         while(L_add< xP_noticeable[part+1]-threshold.getValue())
         {
-            newCurvAbs.push_back(L_add);
+            newCurvAbs_notSecure.push_back(L_add);
 
             if (L_add+L_beam_straight < xP_noticeable[part+1])
                 this->computeBendingAngle(BendingAngle, L_add, L_add+L_beam_straight, dx, x);
@@ -1153,14 +1069,18 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
             L_add+=L_beam;
 
         }
-        newCurvAbs.push_back(xP_noticeable[part+1]);
+        newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
 
     }
 
 
 
 
+
+
+
     this->rigidCurveSegments.clear();
+    /*
 
     std::pair<Real, Real> rigidSegment;
 
@@ -1168,13 +1088,25 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     rigidSegment.second = 9.5*sutureLength/10.0;
     this->rigidCurveSegments.push_back(rigidSegment);
 
-    addRigidCurvAbs(newCurvAbs, threshold.getValue());
+    addRigidCurvAbs(newCurvAbs_notSecure, threshold.getValue());
+
+    */
 
 
+    ///// Verify that there is no beams with null length ///
+    newCurvAbs.clear();
+    newCurvAbs.push_back(newCurvAbs_notSecure[0]);
+    for (unsigned int i=1; i<newCurvAbs_notSecure.size(); i++)
+    {
+        if (newCurvAbs_notSecure[i] > newCurvAbs_notSecure[i-1]+threshold.getValue())
+            newCurvAbs.push_back(newCurvAbs_notSecure[i]);
+    }
+
+#ifdef DEBUG
     std::cout<<" compute Sampling: newCurvAbs="<<newCurvAbs<<"   xP_noticeable="<<xP_noticeable<<"   nbP_density="<<nbP_density<<std::endl;
 
+#endif
 
-    ///////// TODO : computation of the bending angle
 
 }
 

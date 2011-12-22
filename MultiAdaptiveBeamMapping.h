@@ -109,7 +109,7 @@ public:
 public:
 
     Data<bool> useCurvAbs;
-    Data< helper::vector< std::string > > m_interpolationPath;
+    Data< helper::vector< std::string > > m_controlerPath;
 	
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller);
     MultiAdaptiveBeamMapping();

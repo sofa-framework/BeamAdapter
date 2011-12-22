@@ -127,8 +127,9 @@ public:
 	virtual void store(int line, double* force, bool /*convergence*/);
 	
 protected:
+        double* _slidingDisp;
 	double slidingW;
-	double* _slidingDisp;
+
 };
 
 } // namespace constraintset

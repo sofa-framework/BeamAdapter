@@ -251,7 +251,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		Real baryX = 0.5;
 		Real L = m_interpolation->getLength(b);
 
-                std::cout<<"beam "<<b<<" global_H_local0 ="<<global_H_local0<<"  global_H_local1 ="<<global_H_local1<<"   length ="<<L<<std::endl;
+                //std::cout<<"beam "<<b<<" global_H_local0 ="<<global_H_local0<<"  global_H_local1 ="<<global_H_local1<<"   length ="<<L<<std::endl;
 		m_interpolation->InterpolateTransformUsingSpline(global_H_local, baryX, global_H_local0, global_H_local1, L);
 
 

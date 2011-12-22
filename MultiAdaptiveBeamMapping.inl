@@ -61,7 +61,7 @@ template <class TIn, class TOut>
 MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller)
 : Inherit(from, to)
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-, m_interpolationPath(initData(&m_interpolationPath,"ircontroller", "Path to the ircontroller component on scene"))
+, m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
 , m_ircontroller(_ircontroller)
 , isBarycentricMapping(false)
 {
@@ -72,7 +72,7 @@ template <class TIn, class TOut>
 MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-, m_interpolationPath(initData(&m_interpolationPath,"ircontroller", "Path to the ircontroller component on scene"))
+, m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
 , m_ircontroller(NULL)
 , isBarycentricMapping(false)
 {
@@ -262,11 +262,11 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
                 //std::vector<sofa::core::behavior::LinearSolver*> solvers;
                 core::objectmodel::BaseContext * c = this->getContext();
 
-                const helper::vector<std::string>& interpolName = m_interpolationPath.getValue();
+                const helper::vector<std::string>& interpolName = m_controlerPath.getValue();
                 if (interpolName.empty()) {
                     m_ircontroller = c->get<TInterventionalRadiologyController>(core::objectmodel::BaseContext::Local);
                 } else {
-                    m_ircontroller = c->get<TInterventionalRadiologyController>(m_interpolationPath.getValue()[0]);
+                    m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
                 }
 
                 if(m_ircontroller==NULL)
