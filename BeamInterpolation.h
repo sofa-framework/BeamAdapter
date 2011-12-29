@@ -161,8 +161,13 @@ public:
                                                    Transform &global_H_localInterpol, Deriv &v_interpol);
 
 
+        // 3DOF mapping
         void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
                                        SpatialVector& FNode0output, SpatialVector& FNode1output );
+
+        // 6DoF mapping
+        void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const SpatialVector& f6DofInput,
+                                           SpatialVector& FNode0output, SpatialVector& FNode1output );
 
 
 

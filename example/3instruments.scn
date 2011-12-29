@@ -42,7 +42,7 @@
 	</Node>	
 	
 
-	<Node name="InstrumentCombined">
+	"
 		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
 		<BTDLinearSolver verbose="0"/>
 		<RegularGrid name="meshLinesCombined"

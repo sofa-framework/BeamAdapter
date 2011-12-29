@@ -881,6 +881,18 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
 
 }
 
+
+
+
+////////////////////
+// BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline
+// 3DoF (reverse) mapping of a force (finput) that is positionned / to the centerline of a beam
+// + point on the centerline given by edgeInList (num of the beam) and baryCoord
+// + localPos provides the position shift / to the point on the centerline
+// + x provides the positions of the nodes
+// Result: Forces (and Torques) on the nodes of this beam
+///////////////////
+
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
                                                              SpatialVector& FNode0output, SpatialVector& FNode1output )
@@ -934,10 +946,76 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
     // back to the DOF0 and DOF1 frame:
     FNode0output = DOF0Global_H_local0 * (f0+f1);
     FNode1output = DOF1Global_H_local1 * (f2+f3);
-
-
 }
 
+
+
+
+////////////////////
+// BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline
+// 6DoF (reverse) mapping of a force (f6DofInput) that is positionned / to the centerline of a beam
+// + point on the centerline given by edgeInList (num of the beam) and baryCoord
+// + localPos provides the position shift / to the point on the centerline
+// + x provides the positions of the nodes
+// Result: Forces (and Torques) on the nodes of this beam
+///////////////////
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const SpatialVector& f6DofInput,
+                                   SpatialVector& FNode0output, SpatialVector& FNode1output )
+{
+    //1. get the curvilinear abs and spline parameters
+    Real bx = baryCoord;
+    Real a0=(1-bx)*(1-bx)*(1-bx);
+    Real a1=3*bx*(1-bx)*(1-bx);
+    Real a2=3*bx*bx*(1-bx);
+    Real a3=bx*bx*bx;
+
+    //2. computes a force on the 4 points of the spline:
+    Vec3 F0, F1, F2, F3, C0, C3;
+    F0 = f6DofInput.getForce()*a0;
+    F1 = f6DofInput.getForce()*a1;
+    F2 = f6DofInput.getForce()*a2;
+    F3 = f6DofInput.getForce()*a3;
+    C0 = f6DofInput.getTorque()*(a0+a1);
+    C3 = f6DofInput.getTorque()*(a2+a3);
+
+    //3. influence of these forces on the nodes of the beam    => TODO : simplify the computations !!!
+    Transform DOF0Global_H_local0, DOF1Global_H_local1;
+    this->getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
+
+    //rotate back to local frame
+    SpatialVector f0, f1,f2,f3;
+    f0.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F0) );
+    f1.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F1) );
+    f2.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F2) );
+    f3.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F3) );
+
+    // computes the torque created on DOF0 and DOF1 by f1 and f2
+    Real L = this->getLength(edgeInList);
+
+    if(localPos.norm() > L*1e-10)
+    {
+            f0.setTorque(localPos.cross(f0.getForce()+f1.getForce()) + DOF0Global_H_local0.getOrientation().inverseRotate(C0) );
+            f3.setTorque(localPos.cross(f2.getForce()+f3.getForce()) + DOF1Global_H_local1.getOrientation().inverseRotate(C3) );
+    }
+    else
+    {
+            f0.setTorque( DOF0Global_H_local0.getOrientation().inverseRotate(C0) );
+            f3.setTorque( DOF1Global_H_local1.getOrientation().inverseRotate(C3) );
+
+    }
+
+    Vec3 lever(L/3,0,0);
+    f1.setTorque(lever.cross(f1.getForce()));
+    f2.setTorque(-lever.cross(f2.getForce()));
+
+
+    // back to the DOF0 and DOF1 frame:
+    FNode0output = DOF0Global_H_local0 * (f0+f1);
+    FNode1output = DOF1Global_H_local1 * (f2+f3);
+
+}
 
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::breaksInTwo(const Real& /*x_min_out*/,  Real& /*x_break*/, int& /*numBeamsNotUnderControlled*/ )

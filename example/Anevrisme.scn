@@ -2,7 +2,7 @@
 <Node name="root" dt="0.03"  gravity="0 0 -9810">
 	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields showWireFrame" />
  	<FreeMotionAnimationLoop />
- 	<GenericConstraintSolver tolerance="1e-10" unbuilt="true"/>
+ 	<GenericConstraintSolver tolerance="1e-6" maxIterations="100" unbuilt="true"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
 	<LocalMinDistance name="localmindistance" alarmDistance="0.5" contactDistance="0.25" angleCone="0.05"/>
@@ -46,7 +46,7 @@
 		/>		
 		<MechanicalObject template="Rigid" name="DOFs"/> 
 
-		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.8" printLog="1"/> 
+		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.4" printLog="1"/> 
 		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="InterpolCatheter" massDensity="0.0000155"/>  <!-- silicone E = 1000 MPa // 1550 Kg/m3-->	
 
 
@@ -78,7 +78,7 @@
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
-			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.1" input="@../../topoLines_cath/meshLinesCath" output="@ContainerCath" flipNormals="true"/>
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.4" input="@../../topoLines_cath/meshLinesCath" output="@ContainerCath" flipNormals="true"/>
 
 			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
@@ -96,7 +96,7 @@
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
-			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.05"  input="@../../topoLines_coils/meshLinesCoils" output="@ContainerCoils"  flipNormals="true" listening="true" /> 
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.2"  input="@../../topoLines_coils/meshLinesCoils" output="@ContainerCoils"  flipNormals="true" listening="true" /> 
 			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="../InterpolCoils" input="@../DOFs" output="@Quads" isMechanical="false" />
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.2 0.8 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>

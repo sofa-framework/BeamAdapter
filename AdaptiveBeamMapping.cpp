@@ -167,66 +167,21 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJonPoint(unsigned in
 template<>
 void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x)
 {
+
+
+
 	//1. get the curvilinear abs;
 	PosPointDefinition  ppd = pointBeamDistribution[i];
 	Real bx = ppd.baryPoint[0];
-	Real a0=(1-bx)*(1-bx)*(1-bx);
-	Real a1=3*bx*(1-bx)*(1-bx);
-	Real a2=3*bx*bx*(1-bx);
-	Real a3=bx*bx*bx;
 
-	//2. computes a force on the 4 points of the spline:
-	Vec3 F0, F1, F2, F3, C0, C3;
-
-//	F0 = finput.getVCenter()*a0;
-//	F1 = finput.getVCenter()*a1;
-//	F2 = finput.getVCenter()*a2;
-//	F3 = finput.getVCenter()*a3;
-//	C0 = finput.getVOrientation()*(a0+a1);
-//	C3 = finput.getVOrientation()*(a2+a3);
-
-	F0 = Rigid3dTypes::getDPos(finput)*a0;
-	F1 = Rigid3dTypes::getDPos(finput)*a1;
-	F2 = Rigid3dTypes::getDPos(finput)*a2;
-	F3 = Rigid3dTypes::getDPos(finput)*a3;
-	C0 = Rigid3dTypes::getDRot(finput)*(a0+a1);
-	C3 = Rigid3dTypes::getDRot(finput)*(a2+a3);
+        SpatialVector f6DofInput;
+        f6DofInput.setForce(Rigid3dTypes::getDPos(finput));
+        f6DofInput.setTorque(Rigid3dTypes::getDRot(finput));
 
 
-	//  std::cout<<" ************ applyJTonPoint *************"<<std::endl;
-	//  std::cout<<" finput="<<finput<<"  -  F0 = "<<F0<<"  -  F1 = "<<F1<<"  - F2 = "<<F2<<"  - F3 = "<<F3<<std::endl;
+        m_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(ppd.beamId, bx, Vec3(0,ppd.baryPoint[1],ppd.baryPoint[2]), x,
+                                                                f6DofInput, FNode0output, FNode1output);
 
-
-	//3. influence of these forces on the nodes of the beam    => TODO : simplify the computations !!!
-	Transform DOF0Global_H_local0, DOF1Global_H_local1;
-	m_adaptativebeamInterpolation->getDOFtoLocalTransformInGlobalFrame(ppd.beamId, DOF0Global_H_local0, DOF1Global_H_local1, x);
-
-	//std::cout<<" applyJTonPoint : DOF0Global_H_local0="<<DOF0Global_H_local0<<"  -  DOF1Global_H_local1="<<DOF1Global_H_local1<<std::endl;
-
-
-	// rotate back to local frame
-	SpatialVector f0, f1,f2,f3;
-	f0.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F0) );
-	f1.setForce( DOF0Global_H_local0.getOrientation().inverseRotate(F1) );
-	f2.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F2) );
-	f3.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F3) );
-
-
-	// computes the torque created on DOF0 and DOF1 by f1 and f2
-	Real L = m_adaptativebeamInterpolation->getLength(ppd.beamId);
-	Vec3 lever(L/3,0,0);
-	f0.setTorque( DOF0Global_H_local0.getOrientation().inverseRotate(C0) );
-	f1.setTorque(lever.cross(f1.getForce()));
-	f2.setTorque(-lever.cross(f2.getForce()));
-	f3.setTorque( DOF1Global_H_local1.getOrientation().inverseRotate(C3) );
-
-	//   std::cout<<" f0="<<f0<<"  -  f1 ="<<f1<<" - f2="<<f2<<"  -  f3 ="<<f3<<std::endl;
-
-	//    // back to the DOF0 and DOF1 frame:
-	FNode0output = DOF0Global_H_local0 * (f0+f1);
-	FNode1output = DOF1Global_H_local1 * (f2+f3);
-
-	//   std::cout<<" FNode0output="<<FNode0output<<"  -  FNode1output ="<<FNode1output<<std::endl;
 
 }
 
