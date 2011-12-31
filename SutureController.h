@@ -93,6 +93,8 @@ public:
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
     typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
 
+    typedef typename std::list< Real >::iterator ListRealIterator;
+
     typedef MechanicalStateController<DataTypes> Inherit;
 
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
@@ -218,6 +220,18 @@ public :
 	 */
         virtual void draw(const core::visual::VisualParams*);
 
+
+
+
+    /**
+      * @brief addNodeOnXcurv (const Real& x_curv) will add a node at abs curv "x_curv" in the list of the imposed node
+      *        this list is the used in the controller for the sampling of nodes of the suture model
+      */
+    void addNodeOnXcurv(const Real& x_curv){   listOfImposedNodesOnXcurv.push_back(x_curv);}
+    void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
+
+
+
 private:
     void recreateTopology();
     void addNodesAndEdge(unsigned int num, Real &xend);
@@ -238,9 +252,14 @@ private:
     void applyNewSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
 
 
-    // add the cruv abs of the nodes at the extremity of the rigid segment
+    // add the curv abs of the nodes at the extremity of the rigid segment
     // if a node already exists or is very close (< tol), do not add any point
     void addRigidCurvAbs(sofa::helper::vector<Real> &newCurvAbs, const Real &tol);
+
+
+    // add the nodes that are imposed at a given curv abs
+    // if a node already exists or is very close (< tol), do not add any point
+    void addImposedCurvAbs(sofa::helper::vector<Real> &newCurvAbs, const Real &tol);
 
 
     // compute sampling
@@ -276,6 +295,9 @@ protected:
     /////// for re-interpolation
     sofa::helper::vector<Transform> vec_global_H_node;
     sofa::helper::vector<Deriv> vec_global_Vel_node;
+
+    /////// for imposing nodes along the spline
+    std::list< Real > listOfImposedNodesOnXcurv;
 
 
 

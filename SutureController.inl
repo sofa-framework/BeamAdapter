@@ -391,6 +391,16 @@ void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &ne
 
     addRigidCurvAbs(newCurvAbs, 0.0001);
 
+
+
+    Real totalLength = newCurvAbs[newCurvAbs.size()-1];
+
+    listOfImposedNodesOnXcurv.push_back(0.23*totalLength);
+
+    listOfImposedNodesOnXcurv.push_back(0.57*totalLength);
+
+
+
    // newCurvAbs.push_back(length);
 #ifdef DEBUG
     std::cout<<"newCurvAbs  = "<<newCurvAbs<<std::endl;
@@ -461,7 +471,74 @@ void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &ne
 
 
 
+template <class DataTypes>
+void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &newCurvAbs, const Real &tol)
+{
 
+#ifdef DEBUG
+    std::cout<<" --------- addImposedCurvAbs  called with tolerance= "<< tol<<"   ----------"<<std::endl;
+    std::cout<<" newCurvAbs = "<<newCurvAbs<<std::endl;
+#endif
+
+    listOfImposedNodesOnXcurv.sort();
+    listOfImposedNodesOnXcurv.unique();
+
+    ListRealIterator it_xcurv_imposed;
+
+    sofa::helper::vector<Real> newCurvAbsBuf=newCurvAbs;
+    newCurvAbs.clear();
+    unsigned int iterator=1;
+    newCurvAbs.push_back(newCurvAbsBuf[0]);
+
+#ifdef DEBUG
+    std::cout<<" listOfImposedNodesOnXcurv = ";
+#endif
+    for (it_xcurv_imposed=listOfImposedNodesOnXcurv.begin(); it_xcurv_imposed!=listOfImposedNodesOnXcurv.end(); it_xcurv_imposed++)
+    {
+
+#ifdef DEBUG
+        std::cout<<" "<<(*it_xcurv_imposed);
+#endif
+        while( (*it_xcurv_imposed) > newCurvAbsBuf[iterator])   // newCurvAbsBuf=  [ 0 2 5 7]    // xcurvImposed= [ 2.1  3  4.9 ]
+        {
+            newCurvAbs.push_back(newCurvAbsBuf[iterator]) ;
+            iterator++;
+        }
+
+        if ( newCurvAbsBuf[iterator] - (*it_xcurv_imposed)  > tol  &&  (*it_xcurv_imposed) - newCurvAbsBuf[iterator-1] > tol)
+            // cas 2 par exemple =>  xcurvImposed=3  newCurvAbs[iterator]= 5
+        {
+            newCurvAbs.push_back( (*it_xcurv_imposed) );            // newCurvAbsBuf=  [ 0 2 3 ... ]
+        }
+        else if( (*it_xcurv_imposed) - newCurvAbsBuf[iterator-1] < tol ) //  cas 1 par exemple => xcurvImposed=2.1  newCurvAbs
+        {
+            newCurvAbs[iterator-1] = (*it_xcurv_imposed);   // newCurvAbsBuf= [0 2.1 ...]
+        }
+        else
+        {
+            newCurvAbs.push_back( (*it_xcurv_imposed) );
+            iterator++;
+        }
+
+
+    }
+
+    while(iterator < newCurvAbsBuf.size())
+    {
+        newCurvAbs.push_back(newCurvAbsBuf[iterator]) ;
+        iterator++;
+    }
+
+#ifdef DEBUG
+    std::cout<<" "<<std::endl;
+
+    std::cout<<" result : newCurvAbs  ="<<newCurvAbs<<std::endl;
+#endif
+
+
+
+
+}
 
 
 
@@ -484,6 +561,13 @@ void SutureController<DataTypes>::applyController()
         this->dummyController(newCurvAbs);
     else
         this->computeSampling(newCurvAbs, x);
+
+
+
+
+
+    this->addImposedCurvAbs(newCurvAbs, 0.0001);
+
 
 
 #ifdef DEBUG
