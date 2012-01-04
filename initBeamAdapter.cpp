@@ -77,6 +77,7 @@ namespace component
 		commonentlist += " InterventionalRadiologyController";
 		commonentlist += " AdaptiveBeamMapping"              ;
 		commonentlist += " MultiAdaptiveBeamMapping"  ;
+                commonentlist += " AdaptiveBeamLengthConstraint " ;
 		//commonentlist += "";
 		return commonentlist.c_str();
 	}

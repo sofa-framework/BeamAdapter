@@ -146,12 +146,19 @@ public:
 	void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
 			Real &_Asy, Real &_Asz, Real &J);
 
-	Real getLength(unsigned int edgeInList){ Real _L = this->Length_List[edgeInList]; return _L; }
-	void setLength(unsigned int edgeInList, Real &length){this->Length_List[edgeInList] =length; }
 
 	// spline base interpolation of points and transformation
 	void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult);
 	void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
+
+        // getLength / setLength => provides the rest length of each spline
+        Real getLength(unsigned int edgeInList){ Real _L = this->Length_List[edgeInList]; return _L; }
+        void setLength(unsigned int edgeInList, Real &length){this->Length_List[edgeInList] =length; }
+
+        // computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
+        void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
+
+
 	void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
 	void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol);
         // generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
@@ -159,6 +166,8 @@ public:
 
         void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
                                                    Transform &global_H_localInterpol, Deriv &v_interpol);
+
+
 
 
         // 3DOF mapping
