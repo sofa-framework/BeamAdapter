@@ -326,49 +326,34 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(unsigned int &edgeInList
 template<class DataTypes>
 bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x, Real& x_output)
 {
-	unsigned int beamIndex = 0;
-	int dir = 0;
-        Real beamBary = 0.0, closestDist = -1;
-	bool projected = false;
-	
 	if(x.size() <= 1) 
 	{ 
 		x_output = 0.0; 
 		return false; 
 	}
 
+	// Initialize with the first vertex
+	Transform globalHlocal0, globalHlocal1;
+	computeTransform2(0, globalHlocal0, globalHlocal1, x);
+	Real closestDist = (x_input-globalHlocal0.getOrigin()).norm2();
+	Real beamBary = 0.0;
+	bool projected = false;
+	unsigned int beamIndex = 0;
+
+	// Just look for the closest point on the curve
+	// Returns false if this point is not a projection on the curve
 	unsigned int nb = x.size() - 1;
-	for(unsigned int i=0; i<nb; i++) // Let say we go from "left" to "right"
+	for(unsigned int i=0; i<nb; i++)	// Check each segment and each vertex
 	{
-		Transform globalHlocal0, globalHlocal1;
 		computeTransform2(i, globalHlocal0, globalHlocal1, x);
 		Vec3 A = globalHlocal0.getOrigin(), B = globalHlocal1.getOrigin();
 		Real r = ((x_input-A) * (B-A)) / (B-A).norm2();
-		
-		if(r < 0)	// "left" of the segment
-		{
-			if(dir == 1) // We were on the right of the previous segment, test with the vertex itself
-			{
-				double dist = (x_input-x[i].getCenter()).norm2();
-				if(closestDist<0 || dist<closestDist)
-				{
-					beamIndex = i;
-					beamBary = 0.0;
-					projected = true;	// This is a correct answer, even if it lie between 2 segments
-					closestDist = dist;
-				}
-			}
-			dir = -1;
-		}
-		else if(r > 1)	// "right" of the segment
-		{
-			dir = 1;
-		}
-		else if(r<=1) // on the segment
+
+		if(r >= 0 && r <= 1)
 		{
 			Vec3 proj = A + (B-A) * r;
 			double dist = (x_input-proj).norm2();
-			if(closestDist<0 || dist<closestDist)
+			if(dist < closestDist)
 			{
 				beamIndex = i;
 				beamBary = r;
@@ -376,45 +361,56 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 				closestDist = dist;
 			}
 		}
+		else if(i != nb-1) // Also check vertices between segments (not the last one)
+		{
+			double dist = (x_input-B).norm2();
+			if(dist < closestDist)
+			{
+				beamIndex = i;
+				beamBary = 1.0;
+				projected = true;
+				closestDist = dist;
+			}
+		}
 	}
 
-	if(!projected)	// Not on the curve, test start and end vertices
+	// Also test the last vertex
+	double dist = (x_input-globalHlocal1.getOrigin()).norm2();
+	if(dist < closestDist)
 	{
-                Real d1 = (x_input-x[0].getCenter()).norm2();
-                Real d2 = (x_input-x[nb].getCenter()).norm2();
-		if(d1 < d2)
-			x_output = 0.0;
-		else
-			x_output = this->getRestTotalLength();
-		return false;
+		beamIndex = nb - 1;
+		beamBary = 1.0;
+		projected = false;
 	}
 
 	// We know the beam the point can be projected to, translate that to an abscissa
 	getCurvAbsAtBeam(beamIndex, beamBary, x_output);
-	return true;
+	return projected;
 }
-
-
 
 
 template<class DataTypes>
 bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& xcurv_output, const Real& tolerance)
 {
-    unsigned int edge;
-    Real bx;
+	unsigned int edge;
+	Real bx;
 
-    if (xcurv_output>0 && xcurv_output<  this->getRestTotalLength())
-        getBeamAtCurvAbs(xcurv_output, edge, bx);
-    else
-    {
-        edge=0;
-        bx=0;
-    }
+	if(xcurv_output<0)
+	{
+		edge=0;
+		bx=0;
+	}
+	else if(xcurv_output > this->getRestTotalLength())
+	{
+		edge=this->getNumBeams()-1;
+		bx=1;
+	}
+	else
+		getBeamAtCurvAbs(xcurv_output, edge, bx);
 
-
-    Vec3 P0,P1,P2,P3;
-    unsigned int it=0;
-    Transform global_H_local0, global_H_local1;
+	Vec3 P0,P1,P2,P3;
+	unsigned int it=0;
+	Transform global_H_local0, global_H_local1;
 	bool lastTry = false;
 
     while(it < this->getNumBeams()+1 ) // no more iteration than the number of beam....
@@ -434,14 +430,13 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
 
         Real df_x = dot(-dP,dP) + dot((x_input-P), d2P);
 
-
         // debug
         getCurvAbsAtBeam(edge,bx,xcurv_output);
 //        std::cout<<" test at xcurv ="<<xcurv_output<<"  f_x = "<< f_x<<" df_x ="<<df_x<<"  x_input-P ="<<x_input-P<<std::endl;
 
         if (fabs(df_x) < 1e-5*tolerance)
         {
-            serr<<"Problem in getCurvAbsOfProjection : local minimum without solution and f_x= "<<f_x<<" not null"<<sendl;
+//            serr<<"Problem in getCurvAbsOfProjection : local minimum without solution and f_x= "<<f_x<<" not null"<<sendl;
             continue;
         }
 
@@ -453,7 +448,7 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
             {
 				if(lastTry) // Did not find a solution
 					return false;
-                serr<<" Problem: no solution found on the thread..."<<sendl;
+//                serr<<" Problem: no solution found on the thread..."<<sendl;
                 // try a last iteration at the end of the thread...
 				lastTry = true;
                 it = this->getNumBeams()-1;
@@ -469,12 +464,11 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
         }
 		else if(bx+d_bx< 0)
         {
-
             if (edge == 0)
             {
 				if(lastTry) // Did not find a solution
 					return false;
-                serr<<" Problem: no solution found on the thread..."<<sendl;
+//                serr<<" Problem: no solution found on the thread..."<<sendl;
                 // try a last iteration at the begining of the thread...
 				lastTry = true;
                 it = this->getNumBeams()-1;
@@ -487,7 +481,6 @@ bool WireBeamInterpolation<DataTypes>::getCurvAbsOfProjection(const Vec3& x_inpu
                 edge--;
                 bx = _max_(bx+d_bx+1.0,0.0);
             }
-
         }
 		else
 			bx+=d_bx;
