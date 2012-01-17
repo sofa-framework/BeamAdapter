@@ -35,9 +35,8 @@ HEADERS += \
                 SutureController.h			\
                 SutureController.inl		\
 		AdaptiveBeamConstraint.h 		\
-                AdaptiveBeamConstraint.inl             \
-                AdaptiveBeamLengthConstraint.h         \
-                AdaptiveBeamLengthConstraint.inl
+                AdaptiveBeamConstraint.inl             
+
 
 SOURCES += \
 		initBeamAdapter.cpp                   \
@@ -54,8 +53,7 @@ AdaptiveBeamFrictionContact.cpp\
 MultiAdaptiveBeamContactMapper.cpp\
 		MultiAdaptiveBeamMapping.cpp 		\
                 SutureController.cpp	\
-                AdaptiveBeamConstraint.cpp          \
-                AdaptiveBeamLengthConstraint.cpp
+                AdaptiveBeamConstraint.cpp          
 
 	  
 		  

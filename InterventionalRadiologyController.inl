@@ -143,7 +143,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     /////////////////
 
 
-     xAbs_collisionPoints_buf.clear();
+     activated_Points_buf.clear();
 
      if(speed.getValue()>0)
      {
@@ -669,17 +669,17 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
                                         sofa::helper::vector<int> &id_instrument_list, sofa::helper::vector<int> &removeEdge)
 {
 
-    xAbs_collisionPoints_buf.clear();
-    for (unsigned int i=0; i<x_point_list.size(); i++)
-        xAbs_collisionPoints_buf.push_back(x_point_list[i]);
-
-
     if(id_instrument_list.size() != x_point_list.size())
     {
-		if ( this->f_printLog.getValue() ) 
-			serr<<" pb: interventionalRadiologyCollisionControls : the list do not have the same size !!"<<sendl;
+                if ( this->f_printLog.getValue() )
+                        serr<<" pb: interventionalRadiologyCollisionControls : the list do not have the same size !!"<<sendl;
         return;
     }
+
+
+
+
+
       // we enter the point from the tip to the end of the combined instrument
 
     // x_abs_curv provides the value of the curv abs along the combined instrument
@@ -753,6 +753,47 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     }
 
 
+
+          // A  way to detect if a collision point is "activated" or not=> look at its curv_abs  and if > 0, it is active
+          // first, we need to compute abs_curv_point
+    sofa::helper::vector<Real> abs_curv_point;
+    abs_curv_point.clear();
+
+    for (unsigned int i=0; i<x_point_list.size(); i++)
+    {
+
+        int instrument_id = id_instrument_list[i];
+
+        // x_max for the instrument that is controlled (not dropped part)
+        Real x_max_instrument = this->m_instrumentsList[instrument_id]->getRestTotalLength();
+
+        Real x_tip_instrument = xtip.getValue()[instrument_id];
+
+
+        Real x_point= x_point_list[i] - x_max_instrument + x_tip_instrument;
+
+        abs_curv_point.push_back( x_point );
+
+    }
+
+
+    // x point < epsilon... it is not activated`
+
+    activated_Points_buf.clear();
+    activated_Points_buf.push_back(false);
+    for (unsigned int i=1; i<abs_curv_point.size(); i++)
+    {
+
+        Real x_max_instrument = this->m_instrumentsList[id_instrument_list[i]]->getRestTotalLength();
+
+        if (abs_curv_point[i] < 0.00000001*x_max_instrument || fabs(abs_curv_point[i] - abs_curv_point[i-1])<0.00000001*x_max_instrument)
+            activated_Points_buf.push_back(false);
+        else
+            activated_Points_buf.push_back(true);
+
+        //std::cout<<" point "<<i<<" x_point = "<< x_point<< " instrument_id = "<<instrument_id<<" x_max_instrument ="<<x_max_instrument<<"  x_tip_instrument = "<<x_tip_instrument<<std::endl;
+
+    }
 
 
 }

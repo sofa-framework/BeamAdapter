@@ -697,6 +697,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
     Vec3 P0,P1,P2,P3,dP01, dP12;
 
+    // find the spline points
     P0=global_H_local0.getOrigin();
     P3=global_H_local1.getOrigin();
     P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
@@ -711,25 +712,44 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     dP01 = P1-P0;
     dP12 = P2-P1;
 
-    if(dP01*dP12<0.0)
+
+
+
+    if(0)//dP01*dP12<0.0
     {
+
+        // The beam is very compressed => it leads to a non correct interpolation using spline
+        // (the spline formulation is based on the rest length of the beam)
+        // For a correct result, we use linear interpolation instead...
+        // (for the quaternion, we use a "simple" slerp
+
+
         quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
         posResult = P0 *(1-bx) + P3*bx;
     }
     else
     {
 
+        // The position of the frame is computed using the interpolation of the spline
+
          posResult = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+
+        // the tangent is computed by derivating the spline
 
         Vec3 n_x =  P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
 
+        // try to interpolate the "orientation" (especially the torsion) the best possible way... (but other ways should exit...)
         Quat R0, R1, Rslerp;
 
+        //      1. The frame at each node of the beam are rotated to align x along n_x
         this->RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
         this->RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
 
+        //     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
         Rslerp.slerp(R0,R1,bx,true);
         Rslerp.normalize();
+
+        //     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
         this->RotateFrameForAlignX(Rslerp, n_x,quatResult);
 
     }

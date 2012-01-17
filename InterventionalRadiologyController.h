@@ -110,26 +110,18 @@ public:
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
 
-        if (index >= (int)xAbs_collisionPoints_buf.size() || index<0)
-        return false;
 
-        if(xAbs_collisionPoints_buf[index]>10.0)
-            return true;
+         return activated_Points_buf[index];
 
-        return false;
+
+
 
     }
 
     bool activeLine(int index, core::CollisionModel * /*cm*/ = 0)
     {
+        return activated_Points_buf[index+1];
 
-        if ((index+1) >= (int)xAbs_collisionPoints_buf.size() || (index+1)<0)
-        return false;
-
-        if(xAbs_collisionPoints_buf[index+1]>10.0)
-            return true;
-
-        return false;
     }
 
 
@@ -224,7 +216,7 @@ public:
 protected:
 
     ////// for point and line activer
-    sofa::helper::vector<Real> xAbs_collisionPoints_buf;
+    sofa::helper::vector<bool> activated_Points_buf;
 
     ////////// Interface for interventionalRadiology instruments:
     void applyInterventionalRadiologyController(void);

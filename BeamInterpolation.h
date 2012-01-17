@@ -260,7 +260,7 @@ public:
 
         void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
         {
-            if(beam > (DOF0_Transform_node0.size()-1) || beam > (DOF1_Transform_node1.size()-1) )
+            if(beam > (int) (DOF0_Transform_node0.size()-1) || beam > (int) (DOF1_Transform_node1.size()-1) )
             {
                 serr<<"WARNING setTransformBetweenDofAndNode on non existing beam"<<sendl;
                 return;
