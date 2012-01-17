@@ -685,7 +685,9 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 }
 
 
-
+/// InterpolateTransformUsingSpline
+/// This function provide an interpolation of a frame that is placed between node0 and node1
+/// the location of the frame is given by baryCoord
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& global_H_localResult,
                                                                            const Real &baryCoord,
@@ -715,16 +717,16 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
 
 
-    if(0)//dP01*dP12<0.0
+    if(dP01*dP12<0.0)
     {
 
         // The beam is very compressed => it leads to a non correct interpolation using spline
         // (the spline formulation is based on the rest length of the beam)
         // For a correct result, we use linear interpolation instead...
         // (for the quaternion, we use a "simple" slerp
+        quatResult = global_H_local0.getOrientation();
 
-
-        quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
+        //quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
         posResult = P0 *(1-bx) + P3*bx;
     }
     else
@@ -760,7 +762,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
 }
 
-
+///  getTangent : Computation of a Tangent for the beam (it is given by the derivative of the spline formulation)
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L)
 {
@@ -778,6 +780,11 @@ void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord, co
 
 }
 
+
+/// ComputeTotalBendingRotationAngle
+/// This function compute a global bending angle value for the current position of the beam
+/// Principle: computation of several tangent between node0 to the node1 (given by numComputationPoints)
+/// and computation of an angle (acos) between these successive tangents
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::ComputeTotalBendingRotationAngle(Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
@@ -812,67 +819,6 @@ void BeamInterpolation<DataTypes>::ComputeTotalBendingRotationAngle(Real& Bendin
         }
 
 }
-
-/*
-
-template<class DataTypes>
-void BeamInterpolation<DataTypes>::BaryCoordForRotationAngle(Real& baryCoordMax, const Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
-                                                                    const Real& baryCoordMin)
-{
-
-        Vec3 P0,P1,P2,P3, t0, t1;
-
-        P0=global_H_local0.getOrigin();
-        P3=global_H_local1.getOrigin();
-        P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-        P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
-
-
-
-        t0= P0*(-3*(1-baryCoordMin)*(1-baryCoordMin)) + P1*(3-12*baryCoordMin+9*baryCoordMin*baryCoordMin) + P2*(6*baryCoordMin-9*baryCoordMin*baryCoordMin) + P3*(3*baryCoordMin*baryCoordMin);
-
-        Real CummulativeBendingAngle=0.0;
-
-        unsigned int numComputationPoints = (unsigned int) ceil((1.0-baryCoordMin)*(L/dx_computation));
-
-
-        for (unsigned int i=0; i<numComputationPoints; i++)
-        {
-            Real bx= ((Real)((i+1)/numComputationPoints))*(1.0-baryCoordMin) + baryCoordMin;
-            t1 =  P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
-            t1.normalize();
-
-            if(dot(t0,t1)<1.0)
-                CummulativeBendingAngle += acos(dot(t0,t1));
-
-            if(CummulativeBendingAngle>BendingAngle)
-            {
-
-                // for more precision, we can perform a linear interpolation...
-                // ya= angle_at_i-1 = CummulativeBendingAngle-acos(dot(t0,t1)); xa= = bx-(1/ numComputationPoints)*(1.0-baryCoordMin);
-                // yb= angle_at_i = CummulativeBendingAngle; xb=bx;
-
-                // linear interpolation: y=ax+b
-                // a=(yb-ya)/(xb-xa);  = acos(dot(t0,t1))/  ((1/ numComputationPoints)*(1.0-baryCoordMin))
-                // b = yb - axb = CummulativeBendingAngle - a*bx;
-
-                Real a = acos(dot(t0,t1))/  ((1.0/ numComputationPoints)*(1.0-baryCoordMin));
-                Real b=CummulativeBendingAngle - a*bx;
-
-                baryCoordMax= (BendingAngle - b)/a;
-
-                return;
-
-            }
-
-            t0=t1;
-        }
-
-        baryCoordMax=1.0;
-
-
-}
-*/
 
 
 template<class DataTypes>
