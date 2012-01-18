@@ -100,11 +100,7 @@
       <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
       <Node name="VisuOgl">
-        <!--<OglModel name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" />-->
-        <OglModel name="Visual" color="red" depthTest="false" cullFace="0" alphaBlend="true" sfactor="GL_ONE" dfactor="GL_ONE" />
-        <OglShader name="Shading" vertFilename="shaders/xray1pass.vert" fragFilename="shaders/xray1pass.frag" backfaceWriting="true"
-                   clampVertexColor="false" />
-        <OglFloatVariable id="AbsorptionParam" value="0.05" />
+        <OglModel name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" />
         <IdentityMapping input="@../Quads" output="@Visual"/>
       </Node>
     </Node>
@@ -118,11 +114,7 @@
       <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="1" input="@../../topoLines_guide/meshLinesGuide" output="@ContainerGuide"  flipNormals="true" listening="true"/>
       <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
       <Node name="VisuOgl">
-        <!--<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>-->
-        <OglModel name="Visual" color="red" depthTest="false" cullFace="0" alphaBlend="true" sfactor="GL_ONE" dfactor="GL_ONE" />
-        <OglShader name="Shading" vertFilename="shaders/xray1pass.vert" fragFilename="shaders/xray1pass.frag" backfaceWriting="true"
-                   clampVertexColor="false" />
-        <OglFloatVariable id="AbsorptionParam" value="0.1" />
+        <OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>
         <IdentityMapping input="@../Quads" output="@Visual"/>
       </Node>
     </Node>
