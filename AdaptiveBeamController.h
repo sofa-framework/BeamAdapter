@@ -246,60 +246,7 @@ protected:
 	Real edgeTLength;
 
 
-public :
 
-	/** Creation of AdaptiveBeamController
-	  * The creation of AdaptiveBeamController require a Interpolation and only one
-	  * Generally, Interpolation are placed in the same context
-
-
-	template<class T>
-	static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
-	{
-		BeamInterpolation<DataTypes>* _interpolation=NULL;
-
-		if(arg->getAttribute("interpolation",NULL) != NULL){
-			_interpolation = sofa::core::objectmodel::ObjectRef::parse< BeamInterpolation<DataTypes> >("interpolation", arg);
-		}
-
-		if(arg->getAttribute("interpolation",NULL) == NULL){
-			context->get(_interpolation);
-		}
-
-        if (_interpolation == NULL)
-            return false;
-
-        return core::objectmodel::BaseObject::canCreate(obj, context, arg);
-	}
-
-        template<class T>
-        static typename T::SPtr  create(T*  , core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-	{
-		BeamInterpolation<DataTypes>* _interpolation=NULL;
-		std::string _interpolationPath;
-
-		if(arg){
-
-			if(arg->getAttribute("interpolation",NULL) != NULL){
-				_interpolation = sofa::core::objectmodel::ObjectRef::parse< BeamInterpolation<DataTypes> >("interpolation", arg);
-				_interpolationPath = arg->getAttribute("interpolation");
-			}
-
-			if(_interpolation == NULL){
-				context->get(_interpolation);
-				_interpolationPath = "@" + _interpolation->getName();
-			}
-		}
-
-
-                typename T::SPtr obj = sofa::core::objectmodel::New<T>(_interpolation);
-                obj->setPathToInterpolation(_interpolationPath);
-                if (context) context->addObject(obj);
-                if (arg) obj->parse(arg);
-                return obj;
-
-	}
-        */
 
 };
 

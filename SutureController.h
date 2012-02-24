@@ -104,7 +104,7 @@ public:
 
 protected :
     WInterpolation* m_adaptiveinterpolation;
-    //sofa::core::objectmodel::DataObjectRef m_interpolationPath;
+
 
 public :
 //    void setPathToInterpolation(const std::string &o){

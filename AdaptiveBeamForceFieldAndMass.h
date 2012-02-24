@@ -220,62 +220,7 @@ protected:
     Vec3 gravity;
 
 
-public :
-	/** Creation of AdaptativeBeamForceFieldAndMass
-	  * The creation of AdaptativeBeamForceFieldAndMass require a Interpolation
-	  * Generally, Interpolation are placed in the same context
-	  * On a context, there are might several AdaptativeBeamForceFieldAndMass and several Interpolation
-	  * In this case, a ForceField must have and attribute interpolation precising what interpolation used
 
-	template<class T>
-	static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
-	{
-		BeamInterpolation<DataTypes>* _interpolation=NULL;
-
-		if(arg->getAttribute("interpolation",NULL) != NULL){
-			_interpolation = sofa::core::objectmodel::ObjectRef::parse< BeamInterpolation<DataTypes> >("interpolation", arg);
-		}
-
-		if(arg->getAttribute("interpolation",NULL) == NULL){
-			context->get(_interpolation);
-		}
-
-        if (_interpolation == NULL)
-            return false;
-
-        return core::objectmodel::BaseObject::canCreate(obj, context, arg);
-	}
-
-
-        template<class T>
-        static typename T::SPtr  create(T* , core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-	{
-		BeamInterpolation<DataTypes>* _interpolation=NULL;
-		std::string _interpolationPath;
-
-		if(arg){
-
-			if(arg->getAttribute("interpolation",NULL) != NULL){
-				_interpolation = sofa::core::objectmodel::ObjectRef::parse< BeamInterpolation<DataTypes> >("interpolation", arg);
-				_interpolationPath = arg->getAttribute("interpolation");
-			}
-
-			if(_interpolation == NULL){
-				context->get(_interpolation);
-				_interpolationPath = "@" + _interpolation->getName();
-			}
-		}
-
-
-
-                typename T::SPtr obj = sofa::core::objectmodel::New<T>(_interpolation);
-                obj->setPathToInterpolation(_interpolationPath);
-                if (context) context->addObject(obj);
-                if (arg) obj->parse(arg);
-                return obj;
-	}
-
-    */
 
 
 };

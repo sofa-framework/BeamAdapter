@@ -22,11 +22,11 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
-#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
+#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H
+#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H
 
 #include "WireBeamInterpolation.h"
-#include <sofa/core/behavior/PairInteractionConstraint.h>
+#include <sofa/core/behavior/Constraint.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <iostream>
@@ -43,10 +43,10 @@ namespace constraintset
 using sofa::helper::vector;
 
 template<class DataTypes>
-class AdaptiveBeamConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
+class AdaptiveBeamLengthConstraint : public core::behavior::Constraint<DataTypes>
 {
 public:
-	SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamConstraint,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
+        SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamLengthConstraint,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::Constraint,DataTypes));
 
 	typedef typename DataTypes::VecCoord VecCoord;
 	typedef typename DataTypes::VecDeriv VecDeriv;
@@ -56,7 +56,7 @@ public:
 	typedef typename DataTypes::Deriv Deriv;
 	typedef typename Coord::value_type Real;
 	typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-	typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
+        typedef typename core::behavior::Constraint<DataTypes> Inherit;
 	typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
 	typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
 	typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
@@ -73,33 +73,24 @@ protected:
 		
 	int nbConstraints; // number of constraints created
 	std::vector<Real> violations;
-        std::vector<Real> previousPositions;// the position on which each point was projected
-        std::vector<double> displacements; 	// displacement=double for compatibility with constraint resolution
-	std::vector<bool> projected;
+        std::vector<unsigned int> activated_beams;
 
-	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+        SingleLink<AdaptiveBeamLengthConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 	
 	void internalInit();
-
 	
-	AdaptiveBeamConstraint(MechanicalState* object1, MechanicalState* object2)
-	: Inherit(object1, object2)
-	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-	{
-	}
-	
-	AdaptiveBeamConstraint(MechanicalState* object)
-	: Inherit(object, object)
+        AdaptiveBeamLengthConstraint(MechanicalState* object)
+        : Inherit(object)
 	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
 	{
 	}
 
-	AdaptiveBeamConstraint()
+        AdaptiveBeamLengthConstraint()
 	: m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
 	{
 	}
 	
-	virtual ~AdaptiveBeamConstraint()
+        virtual ~AdaptiveBeamLengthConstraint()
 	{
 	}
 public:
@@ -107,32 +98,25 @@ public:
 	
 	virtual void init();
 	
-	void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex, const DataVecCoord &x1, const DataVecCoord &x2);
+      virtual  void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, DataMatrixDeriv &c, unsigned int &cIndex, const DataVecCoord &x);
 
-	void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2
-		, const DataVecDeriv &v1, const DataVecDeriv &v2);
+        void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, defaulttype::BaseVector *viol, const DataVecCoord &x,const DataVecDeriv &v);
 
 	virtual void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
 
 	void draw(const core::visual::VisualParams* vparams);
 };
 
-class AdaptiveBeamConstraintResolution : public core::behavior::ConstraintResolution
+class AdaptiveBeamLengthConstraintResolution : public core::behavior::ConstraintResolution
 {
 public:
-	AdaptiveBeamConstraintResolution(double* sliding = NULL)
-	: _slidingDisp(sliding) { nbLines = 3; }
-	virtual void init(int line, double** w, double* force);
-    void resolution(int line, double** w, double* d, double* force, double* /*dfree*/)
-    {
-        resolution(line,w,d,force);
-    }
+        AdaptiveBeamLengthConstraintResolution( )
+    { nbLines = 1; }
+    virtual void init(int line, double** /*w*/, double* force){ force[line]=0.0;}
 	virtual void resolution(int line, double** w, double* d, double* force);
 	virtual void store(int line, double* force, bool /*convergence*/);
 	
-protected:
-        double* _slidingDisp;
-	double slidingW;
+//protected:
 
 };
 
@@ -142,4 +126,4 @@ protected:
 
 } // namespace sofa
 
-#endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
+#endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H

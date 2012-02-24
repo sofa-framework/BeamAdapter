@@ -180,7 +180,7 @@ public:
         }
 
 protected :
-	// pointer on an external rest-shape
+        // pointer on an external rest-shape
 //	sofa::core::objectmodel::DataObjectRef m_restShapePath;
 
         //link on an external rest-shape...

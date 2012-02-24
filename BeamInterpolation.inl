@@ -528,6 +528,7 @@ void BeamInterpolation<DataTypes>::computeActualLength(Real &length, const Vec3&
 
 
     // verification
+    /*
 
     Real length_verif=0.0;
     Vec3 seg, pos;
@@ -541,7 +542,9 @@ void BeamInterpolation<DataTypes>::computeActualLength(Real &length, const Vec3&
         length_verif += seg.norm();
     }
 
+
     std::cout<<"computeActualLength verif=  length="<<length<<"  length_verif"<<length_verif<<std::endl;
+    */
 
 
 
@@ -724,6 +727,8 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         // (the spline formulation is based on the rest length of the beam)
         // For a correct result, we use linear interpolation instead...
         // (for the quaternion, we use a "simple" slerp
+
+
         quatResult = global_H_local0.getOrientation();
 
         //quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
