@@ -510,7 +510,6 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(Real& x_curv, Real& youngModul
 {
     //Initialization
     Real _E1, _E2;
-    bool wrongE2 = false;
     youngModulus = 0.0;
     cPoisson = 0.0;
 
@@ -518,15 +517,8 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(Real& x_curv, Real& youngModul
     _E1 = this->_youngModulus1.getValue();
     _E2 = this->_youngModulus2.getValue();
 
-    if(_E2 == 0.0)
-    {
-        wrongE2 = true;
-        std::cout<<"WARNING : second Young Modulus defined as zero -- only E1 is used"<<std::endl;
-    }
-
     //Get User data
     cPoisson = this->_poissonRatio.getValue();
-
 
     //Depending on the position of the beam, determine the Young modulus
     if(x_curv <= this->straightLength.getValue())
@@ -535,18 +527,17 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(Real& x_curv, Real& youngModul
     }
     else
     {
-        youngModulus = _E2;
-
-        if(wrongE2==true)
-        {
-            _E2 = _E1;
-            wrongE2 = false;
-        }
+		if(_E2 == 0.0)
+		{
+			youngModulus = _E1;
+		//	std::cout<<"WARNING : second Young Modulus defined as zero -- only E1 is used"<<std::endl;	// Uncomment if you want a message flood
+		}
+		else
+			youngModulus = _E2;
     }
 
     return;
 }
-
 
 
 template <class DataTypes>
