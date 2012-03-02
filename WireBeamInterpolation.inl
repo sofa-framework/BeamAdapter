@@ -115,20 +115,7 @@ template <class DataTypes>
     else
         sout<<"external controller for this ForceField is detected"<<sendl;
 }
-
-
-
-
-template <class DataTypes>
-void WireBeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int& beam, Real& x_curv)
-{
-    //std::cout<<" getAbsCurvXFromBeam ("<<beam<<") - num Beam in Curv_abs_List: "<<Curv_abs_List.size()<<std::endl;
-    x_curv = this->Curv_abs_List[beam].second;
-    return;
-}
-
-
-
+ 
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::clear()
 {
@@ -150,24 +137,6 @@ void WireBeamInterpolation<DataTypes>::clear()
     }
 }
 
-template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
-{
-
-    this->Edge_List.push_back(eID);
-    this->Length_List.push_back(length);
-    std::pair<Real,Real> x_pair(x0,x1);
-    this->Curv_abs_List.push_back(x_pair);
-
-    Quat QuatX ;
-    QuatX.axisToQuat(Vec3(1,0,0), angle);
-    QuatX.normalize();
-
-    // as a angle is set between DOFs and Beam, they are no more aligned
-    this->dofsAndBeamsAligned.setValue(false);
-    this->DOF0_Transform_node0.push_back(Transform(Vec3(0,0,0), QuatX ));
-    this->DOF1_Transform_node1.push_back(Transform(Vec3(0,0,0), QuatX ));
-}
 
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,

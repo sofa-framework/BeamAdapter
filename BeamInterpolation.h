@@ -194,7 +194,7 @@ public:
 			return 0 ;}
 		else
                 {
-                    std::cout<<" get mstate named "<<this->_mstate->name<<"  size ="<<this->_mstate->getSize()<<std::endl;
+//                    std::cout<<" get mstate named "<<this->_mstate->name<<"  size ="<<this->_mstate->getSize()<<std::endl;
 			return this->_mstate->getSize();
                 }
 	}
@@ -282,7 +282,7 @@ public:
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output);
 	virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
-
+	virtual void getAbsCurvXFromBeam(int& beam, Real& x_curv);
 
 
 	/// Pre-construction check method called by ObjectFactory.
@@ -324,6 +324,8 @@ protected :
 
 	//4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
 	vector<Transform> DOF1_Transform_node1;
+
+	vector< std::pair<Real, Real> > Curv_abs_List;
 
 	// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
 	BeamSection _constantRadius;

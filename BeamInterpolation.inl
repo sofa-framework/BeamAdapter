@@ -262,6 +262,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     this->Edge_List.push_back(eID);
     this->Length_List.push_back(length);
     std::pair<Real,Real> x_pair(x0,x1);
+	this->Curv_abs_List.push_back(x_pair);
 
     Quat QuatX ;
     QuatX.axisToQuat(Vec3(1,0,0), angle);
@@ -319,6 +320,15 @@ template<class DataTypes>
      edgeInList_output = this->Edge_List.size()-1;
      baryCoord_output = 1.0;
 
+}
+
+ 
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int& beam, Real& x_curv)
+{
+    //std::cout<<" getAbsCurvXFromBeam ("<<beam<<") - num Beam in Curv_abs_List: "<<Curv_abs_List.size()<<std::endl;
+    x_curv = this->Curv_abs_List[beam].second;
+    return;
 }
 
 

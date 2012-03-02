@@ -90,6 +90,12 @@ public:
 	, _poissonRatio(initData(&_poissonRatio,(Real)0.49,"poissonRatio","Poisson Ratio"))
 	, _youngModulus1(initData(&_youngModulus1,(Real)5000,"youngModulus","Young Modulus"))
 	, _youngModulus2(initData(&_youngModulus2,(Real)3000,"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
+	, _radius1(initData(&_radius1,(Real)1.0f,"radius","radius"))
+	, _radius2(initData(&_radius2,(Real)1.0f,"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
+	, _innerRadius1(initData(&_innerRadius1,(Real)0.0f,"innerRadius","inner radius if it applies"))
+	, _innerRadius2(initData(&_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
+	, _massDensity1(initData(&_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
+	, _massDensity2(initData(&_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
 	,edge2QuadMap(NULL)
 	{
 		 brokenIn2=false;
@@ -126,8 +132,10 @@ public:
 	 virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density);
 
 	 //this function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-	 virtual void getYoungModulusAtX(Real& x_curv, Real& youngModulus, Real& cPoisson);
+	 virtual void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
 
+	 //this function gives the mass density and the BeamSection data depending on the beam position
+	 void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
 
 	 //Functions enabling to load and use a geometry given from OBJ external file
 	 void LoadFile();
@@ -206,7 +214,20 @@ protected:
 	 sofa::helper::vector<Real> curvAbs;
 	 double absOfGeometry;
 
-
+	 // Radius
+	 Data<Real> _radius1, _radius2, _innerRadius1, _innerRadius2;
+	 struct BeamSection{
+		double _r; //radius of the section
+		double _rInner; //inner radius of the section if beam is hollow
+		double _Iy;
+		double _Iz; //Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
+		double _J;  //Polar moment of inertia (J = Iy + Iz)
+		double _A; // A is the cross-sectional area;
+		double _Asy; //_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
+		double _Asz; //_Asz is the z-direction effective shear area;
+	 };
+	 BeamSection beamSection1, beamSection2;
+	 Data<Real> _massDensity1, _massDensity2;
 
 	 // broken in 2 case
 	 bool brokenIn2;

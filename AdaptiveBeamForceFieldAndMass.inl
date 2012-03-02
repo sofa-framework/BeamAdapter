@@ -211,7 +211,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 	unsigned int numBeams = m_interpolation->getNumBeams();
 	_localBeamMatrices.resize(numBeams);
 
-        std::cout<<" +++++ ADD FORCE +++++"<<std::endl;
+        //std::cout<<" +++++ ADD FORCE +++++"<<std::endl;
 
 
 	if(_computeMass.getValue())
@@ -481,6 +481,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
 	m_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
 
+	if(m_instrumentParameters)	// Temp : we only overide values for which a Data has been set in the WireRestShape
+	{
+		Real x_curv = 0, _rho;
+		m_interpolation->getAbsCurvXFromBeam(beam, x_curv);
+		m_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);	// The length of the beams is only known to the interpolation !
+	}
+
 
 	Real   phiy, phiz;
 	Real L2 = (Real) (_L * _L);
@@ -555,6 +562,14 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam,BeamLocalMat
 	// interpolation & geometrical parameters
 	Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
 	m_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
+
+	if(m_instrumentParameters)	// Temp : we only overide values for which a Data has been set in the WireRestShape
+	{
+		Real x_curv = 0;
+		m_interpolation->getAbsCurvXFromBeam(beam, x_curv);
+		m_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);	// The length of the beams is only known to the interpolation !
+	}
+
 
 	Real L2 = (Real) (_L * _L);
 

@@ -39,6 +39,7 @@
 
 #include "initBeamAdapter.h"
 #include "BeamInterpolation.h"
+#include "WireRestShape.h"
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/core/objectmodel/Data.h>
@@ -63,7 +64,7 @@ namespace forcefield
     using sofa::helper::vector;
     using namespace sofa::core::topology;
     using namespace sofa::component::fem;
-
+	using engine::WireRestShape;
 
 template<class DataTypes>
 class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
@@ -109,17 +110,17 @@ protected :
     // pointer to the interpolation
     BInterpolation* m_interpolation;
     Data< helper::vector< std::string > > m_interpolationPath;
+	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
 
 public:
     AdaptiveBeamForceFieldAndMass( )
     : m_interpolation(NULL)
     , m_interpolationPath(initData(&m_interpolationPath,"interpolation","Path to the Interpolation component on scene"))
     , _timoshenko(initData(&_timoshenko,true,"timoshenko","use Timoshenko beam (non-null section shear area)"))
-    , _radius(initData(&_radius,(Real)0.1,"radius","radius of the section"))
-    , _radiusInner(initData(&_radiusInner,(Real)0.0,"radiusInner","inner radius of the section for hollow beams"))
     , _computeMass(initData(&_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
     , _massDensity(initData(&_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , _shearStressComputation(initData(&_shearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
+	, m_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
     {
         _localBeamMatrices.resize(2);
     }
@@ -160,8 +161,6 @@ public:
 
 
     Data<bool> _timoshenko;
-    Data<Real> _radius;
-    Data<Real> _radiusInner;
     Data<bool> _computeMass;
     Data<Real> _massDensity;
     Data<bool> _shearStressComputation;

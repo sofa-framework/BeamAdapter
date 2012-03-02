@@ -209,7 +209,28 @@ void WireRestShape<DataTypes>::init()
      std::cout<<"WireRestShape end init"<<std::endl;
 
 
+	// Prepare beam sections
+	double r = this->_radius1.getValue();
+	double rInner = this->_innerRadius1.getValue();
+	this->beamSection1._r = r;
+	this->beamSection1._rInner = rInner;
+	this->beamSection1._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+	this->beamSection1._Iy = this->beamSection1._Iz ;
+	this->beamSection1._J = this->beamSection1._Iz + this->beamSection1._Iy;
+	this->beamSection1._A = M_PI*(r*r - rInner*rInner);
+	this->beamSection1._Asy = 0.0;
+	this->beamSection1._Asz = 0.0;
 
+	r = this->_radius2.getValue();
+	rInner = this->_innerRadius2.getValue();
+	this->beamSection2._r = r;
+	this->beamSection2._rInner = rInner;
+	this->beamSection2._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+	this->beamSection2._Iy = this->beamSection2._Iz ;
+	this->beamSection2._J = this->beamSection2._Iz + this->beamSection2._Iy;
+	this->beamSection2._A = M_PI*(r*r - rInner*rInner);
+	this->beamSection2._Asy = 0.0;
+	this->beamSection2._Asz = 0.0;
 }
 
 
@@ -506,7 +527,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getYoungModulusAtX(Real& x_curv, Real& youngModulus, Real& cPoisson)
+void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson)
 {
     //Initialization
     Real _E1, _E2;
@@ -537,6 +558,53 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(Real& x_curv, Real& youngModul
     }
 
     return;
+}
+
+
+template <class DataTypes>
+void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
+{
+	if(x_curv <= this->straightLength.getValue())
+	{
+		if(_massDensity1.isSet())
+			_rho = _massDensity1.getValue();
+
+		if(_radius1.isSet())
+		{
+			_A=beamSection1._A;
+			_Iy=beamSection1._Iy;
+			_Iz=beamSection1._Iz;
+			_Asy=beamSection1._Asy;
+			_Asz=beamSection1._Asz;
+			_J=beamSection1._J;
+		}
+	}
+	else
+	{
+		if(_massDensity2.isSet())
+			_rho = _massDensity2.getValue();
+		else if(_massDensity1.isSet())
+			_rho = _massDensity1.getValue();
+
+		if(_radius2.isSet())
+		{
+			_A=beamSection2._A;
+			_Iy=beamSection2._Iy;
+			_Iz=beamSection2._Iz;
+			_Asy=beamSection2._Asy;
+			_Asz=beamSection2._Asz;
+			_J=beamSection2._J;
+		}
+		else if(_radius1.isSet())
+		{
+			_A=beamSection1._A;
+			_Iy=beamSection1._Iy;
+			_Iz=beamSection1._Iz;
+			_Asy=beamSection1._Asy;
+			_Asz=beamSection1._Asz;
+			_J=beamSection1._J;
+		}
+	}
 }
 
 

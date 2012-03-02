@@ -115,14 +115,11 @@ public:
 	void bwdInit();
 	void reinit(){init(); bwdInit(); }
 
-	void getAbsCurvXFromBeam(int& beam, Real& x_curv);
-
 	virtual void clear();
 
-        virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
-
-        void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
-                     const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
+	using BeamInterpolation::addBeam;
+    void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
+                 const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
 
 
 	virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector< int>& nbP_density)
@@ -187,7 +184,6 @@ protected :
         SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape;
 
         //sofa::component::engine::WireRestShape<DataTypes> *m_restShape;
-	vector< std::pair<Real, Real> > Curv_abs_List;
 
 
 public:

@@ -109,16 +109,6 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
 
 		previousPositions[i] = r;
 		projected[i] = p;
-/*
-		Real r2 = r;
-		Real tol = 0.000001;
-		if(p)
-		{
-			interpolation->getCurvAbsOfProjection(pt, x1, r2, tol);
-			std::cout << "Point " << i << " projected at " << r << " -> " << r2 << std::endl; 
-		}
-		else
-			std::cout << "Point " << i << " not projected near " << r << std::endl;		*/
 	}
 }
 
