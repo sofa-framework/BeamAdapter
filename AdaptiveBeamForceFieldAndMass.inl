@@ -481,7 +481,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
 	m_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
 
-	if(m_instrumentParameters)	// Temp : we only overide values for which a Data has been set in the WireRestShape
+	if(m_instrumentParameters.get())	// Temp : we only overide values for which a Data has been set in the WireRestShape
 	{
 		Real x_curv = 0, _rho;
 		m_interpolation->getAbsCurvXFromBeam(beam, x_curv);
@@ -563,7 +563,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam,BeamLocalMat
 	Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
 	m_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
 
-	if(m_instrumentParameters)	// Temp : we only overide values for which a Data has been set in the WireRestShape
+	if(m_instrumentParameters.get())	// Temp : we only overide values for which a Data has been set in the WireRestShape
 	{
 		Real x_curv = 0;
 		m_interpolation->getAbsCurvXFromBeam(beam, x_curv);

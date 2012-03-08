@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.002" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 -98.81 0">
  	<FreeMotionAnimationLoop />
-	<GenericConstraintSolver tolerance="1e-4"  maxIterations="100" unbuilt="false" printLog="1"/>
+	<GenericConstraintSolver tolerance="1e-4"  maxIterations="100" unbuilt="false" printLog="0"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
@@ -21,7 +21,7 @@
 	  <ArticulatedSystemMapping input1="@../Articulations" input2="" output="@6D_Dof"/>
 	  
     </Node>
-    <ArticulatedHierarchyContainer filename="inextension.bvh"/>
+    <ArticulatedHierarchyContainer filename="inextension_test.bvh"/>
     <ArticulatedHierarchyBVHController />
   </Node>
 
@@ -29,8 +29,8 @@
 <!--------------------------- SUTURE REST SHAPE  -------------------------------->
 
 	<Node name="topoLines_suture">
-		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="3.89"  straightLength="3.89" spireDiameter="4000.0" spireHeight="0.0"
-					    densityOfBeams="5 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="1000000" youngModulusExtremity="10000"/> <!-- silicone -->		
+		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="4"  straightLength="4" spireDiameter="4000.0" spireHeight="0.0"
+					    densityOfBeams="15 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="1000000" youngModulusExtremity="10000"/> <!-- silicone -->		
 
 		<EdgeSetTopologyContainer name="meshLinesSuture" />
 		<EdgeSetTopologyModifier   name="Modifier" />
@@ -63,9 +63,9 @@
 
 		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.05" printLog="0" dofsAndBeamsAligned="false"/> 
 		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.0"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-0.9 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="1e6"/>
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-4 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="1e6"/>
 		<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>
-		<RestShapeSpringsForceField stiffness="1e5"  angularStiffness="1e1"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="5" external_points="1" />
+		<RestShapeSpringsForceField stiffness="1e5"  angularStiffness="1e1"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="15" external_points="1" />
 
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 
@@ -74,7 +74,7 @@
 		<Node name="ConstrainedFames">
 			<MechanicalObject name="AttachedFrame" template="Rigid" position=" 0 0 0 0 0 0 1" />
 			<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
-			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points=" 3.89 0 0" /> 
+			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" /> 
 		</Node>
 		
 		
@@ -82,7 +82,7 @@
 		<Node name="Collis">
 				<RegularGrid name="test"
 				nx="120" ny="1" nz="1"
-				xmin="0.0" xmax="3.89"
+				xmin="0.0" xmax="4"
 				ymin="0" ymax="0"
 				zmin="0" zmax="0"
 				/>

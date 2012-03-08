@@ -324,7 +324,7 @@ template<class DataTypes>
 
  
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int& beam, Real& x_curv)
+void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv)
 {
     //std::cout<<" getAbsCurvXFromBeam ("<<beam<<") - num Beam in Curv_abs_List: "<<Curv_abs_List.size()<<std::endl;
     x_curv = this->Curv_abs_List[beam].second;

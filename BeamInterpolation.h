@@ -282,7 +282,7 @@ public:
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output);
 	virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
-	virtual void getAbsCurvXFromBeam(int& beam, Real& x_curv);
+	virtual void getAbsCurvXFromBeam(int beam, Real& x_curv);
 
 
 	/// Pre-construction check method called by ObjectFactory.
