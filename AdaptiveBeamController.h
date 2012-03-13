@@ -75,12 +75,10 @@ namespace controller
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-    class SOFA_BEAMADAPTER_API AdaptiveBeamController : public MechanicalStateController<DataTypes> ,
-                                                        public sofa::component::collision::PointActiver,
-                                                        public sofa::component::collision::LineActiver
+class AdaptiveBeamController : public MechanicalStateController<DataTypes> , public collision::PointActiver, public collision::LineActiver
 {
 public:
-  SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+	SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
 	typedef typename DataTypes::VecCoord VecCoord;
 	typedef typename DataTypes::VecDeriv VecDeriv;
 	typedef typename DataTypes::Coord    Coord   ;
@@ -109,7 +107,7 @@ public :
         if (index >= (int)xAbs_collisionPoints_buf.size() || index<0)
         return false;
 
-        if(xAbs_collisionPoints_buf[index]>10.0)
+        if (xAbs_collisionPoints_buf[index]>10.0)
             return true;
 
         return false;
@@ -122,7 +120,7 @@ public :
         if ((index+1) >= (int)xAbs_collisionPoints_buf.size() || (index+1)<0)
         return false;
 
-        if(xAbs_collisionPoints_buf[index+1]>10.0)
+        if (xAbs_collisionPoints_buf[index+1]>10.0)
             return true;
 
         return false;

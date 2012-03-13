@@ -79,7 +79,7 @@ using namespace sofa::component::engine;
 /// AdaptiveBeam Interpolation provides the basis of the Beam computation
 /// As the computation is adaptive, the interpolation can be modified at each time step.
 template<class DataTypes>
-class SOFA_BEAMADAPTER_API WireBeamInterpolation : public virtual sofa::component::fem::BeamInterpolation<DataTypes>
+class WireBeamInterpolation : public virtual sofa::component::fem::BeamInterpolation<DataTypes>
 {
 public:
 
@@ -109,18 +109,16 @@ public:
 
 	WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = NULL);
 
-	~WireBeamInterpolation();
+	virtual ~WireBeamInterpolation();
 
 	void init();
 	void bwdInit();
 	void reinit(){init(); bwdInit(); }
 
-	virtual void clear();
-
 	using BeamInterpolation::addBeam;
+
     void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
-
 
 	virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector< int>& nbP_density)
 	{
@@ -152,7 +150,7 @@ public:
 
 	virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
-	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output);
+	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
 	void getCurvAbsAtBeam(unsigned int &edgeInList_input, Real& baryCoord_input, Real& x_output);
 	bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 	bool getCurvAbsOfProjection(const Vec3& x_input, const VecCoord&, Real& x_output, const Real& tolerance);
@@ -160,73 +158,68 @@ public:
 
 	bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
 
-        void setPathToRestShape(const std::string &o){m_restShape.setPath(o);};
+    void setPathToRestShape(const std::string &o){m_restShape.setPath(o);};
 
-        void getRestTransformOnX(Transform &global_H_local, const Real &x)
+    void getRestTransformOnX(Transform &global_H_local, const Real &x)
+    {
+        if(this->m_restShape)
+		{
+            this->m_restShape->getRestTransformOnX(global_H_local, x);
+            return;
+        }
+        else
         {
-            if(this->m_restShape){
-                this->m_restShape->getRestTransformOnX(global_H_local, x);
-                return;
-            }
-            else
-            {
-                global_H_local.set(Vec3(x,0,0), Quat());
-
-            }
+            global_H_local.set(Vec3(x,0,0), Quat());
 
         }
+    }
 
 protected :
-        // pointer on an external rest-shape
-//	sofa::core::objectmodel::DataObjectRef m_restShapePath;
-
-        //link on an external rest-shape...
-        SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape;
-
-        //sofa::component::engine::WireRestShape<DataTypes> *m_restShape;
+        
+    // link on an external rest-shape...
+    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape;
 
 
 public:
 
 	template<class T>
-        static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
+	static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
 	{
 		return Inherited::canCreate(obj,context,arg);
 	}
 
 
-        template<class T>
-        static typename T::SPtr  create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
+	template<class T>
+	static typename T::SPtr  create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 	{
 		WireRestShape<DataTypes>* _restShape = NULL;
 		bool                  _pathCheckedOk = false;
 		std::string _restShapePath;
 
-		if(arg){
-
-			if(arg->getAttribute("WireRestShape",NULL) != NULL){
+		if(arg)
+		{
+			if (arg->getAttribute("WireRestShape",NULL) != NULL)
+			{
 				_restShapePath = arg->getAttribute("WireRestShape");
-                                 context->findLinkDest(_restShape, _restShapePath, NULL);
+				context->findLinkDest(_restShape, _restShapePath, NULL);
 				_pathCheckedOk = true;
 			}
 
 			if(_restShape == NULL)
 			{
 				_restShapePath=" ";
-                                context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+				context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
 				_restShape = new WireRestShape<DataTypes>();
 				_pathCheckedOk = false;
 			}
 		}
 
-                typename T::SPtr obj = sofa::core::objectmodel::New<T>(_restShape);
-                obj->setPathToRestShape(_restShapePath);
-                if (context) context->addObject(obj);
-                if (arg) obj->parse(arg);
-                return obj;
-
+		typename T::SPtr obj = sofa::core::objectmodel::New<T>(_restShape);
+		obj->setPathToRestShape(_restShapePath);
+		if (context) context->addObject(obj);
+		if (arg) obj->parse(arg);
+		return obj;
 	}
-
 };
 
 } // namespace fem

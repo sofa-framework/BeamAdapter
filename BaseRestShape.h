@@ -56,7 +56,7 @@ namespace engine
 
 
 template <class DataTypes>
-class SOFA_BEAMADAPTER_API BaseRestShape : public sofa::core::DataEngine
+class BaseRestShape : public sofa::core::DataEngine
 {
 public:
 	SOFA_CLASS(BaseRestShape,sofa::core::DataEngine);

@@ -33,11 +33,9 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "initBeamAdapter.h"
 #include "SutureController.inl"
 
 #include <sofa/core/ObjectFactory.h>
-#include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 
@@ -59,36 +57,37 @@ SOFA_DECL_CLASS(SutureController)
 
 // Register in the Factory	
 int SutureControllerClass = core::RegisterObject("")
-//.add< SutureController<Vec3dTypes> >()
-//.add< SutureController<Vec3fTypes> >()
-//.add< SutureController<Vec2dTypes> >()
-//.add< SutureController<Vec2fTypes> >()
-//.add< SutureController<Vec1dTypes> >()
-//.add< SutureController<Vec1fTypes> >()
 #ifndef SOFA_FLOAT
 .add< SutureController<Rigid3dTypes> >()
+//.add< SutureController<Rigid2dTypes> >()
+//.add< SutureController<Vec3dTypes> >()
+//.add< SutureController<Vec2dTypes> >()
+//.add< SutureController<Vec1dTypes> >()
 #endif
 #ifndef SOFA_DOUBLE
 .add< SutureController<Rigid3fTypes> >()
-#endif
-//.add< SutureController<Rigid2dTypes> >()
 //.add< SutureController<Rigid2fTypes> >()
+//.add< SutureController<Vec3fTypes> >()
+//.add< SutureController<Vec2fTypes> >()
+//.add< SutureController<Vec1fTypes> >()
+#endif
 ;
 
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec3dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec3fTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec2dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec2fTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec1dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API SutureController<Vec1fTypes>;
+
 #ifndef SOFA_FLOAT
 template class SOFA_BEAMADAPTER_API SutureController<Rigid3dTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Rigid2dTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec3dTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec2dTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec1dTypes>;
 #endif
 #ifndef SOFA_DOUBLE
 template class SOFA_BEAMADAPTER_API SutureController<Rigid3fTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Rigid2fTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec3fTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec2fTypes>;
+//template class SOFA_BEAMADAPTER_API SutureController<Vec1fTypes>;
 #endif
-//template class SutureController<Rigid2dTypes>;
-//template class SutureController<Rigid2fTypes>;
 
 
 } // namespace controller

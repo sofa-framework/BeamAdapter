@@ -274,7 +274,7 @@ void WireRestShape<DataTypes>::bwdInit()
 template <class DataTypes>
 void WireRestShape<DataTypes>::releaseWirePart(){
 
-    brokenIn2=true;
+    brokenIn2.setValue(true);
 
     if ( edgeMod == NULL )
     {
@@ -344,7 +344,7 @@ void WireRestShape<DataTypes>::getSamplingParameters(helper::vector<Real>& xP_no
     xP_noticeable.clear();
     nbP_density.clear();
 
-    if(brokenIn2)
+    if (brokenIn2.getValue())
     {
         for (unsigned int i=0; i<keyPoints.getValue().size(); i++)
         {
@@ -371,7 +371,7 @@ void WireRestShape<DataTypes>::getSamplingParameters(helper::vector<Real>& xP_no
 /*
     xP_noticeable.push_back(0.0);
 
-    if(brokenIn2)
+    if(brokenIn2.getValue())
     {
         xP_noticeable.push_back(straightLength.getValue());
         int numNodes = (int) floor(5.0*straightLength.getValue() / length.getValue() );

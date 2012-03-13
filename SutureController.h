@@ -26,8 +26,8 @@
 // C++ Implementation : SutureController
 //
 // Description:
-// This controller allows to drive the disretization of a suture model computed with adaptive beam elements
-// + The disretization is driven by: the curvature, some particular points on the wire (the node on the boundary between needle and thread), the suture constraints
+// This controller allows to drive the discretization of a suture model computed with adaptive beam elements
+// + The discretization is driven by: the curvature, some particular points on the wire (the node on the boundary between needle and thread), the suture constraints
 // + It allows to detect and "rigidify" the nodes realized during suture
 //
 // Author: Christian Duriez, INRIA
@@ -40,31 +40,31 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 
-#include "WireRestShape.h" // needed ??
-#include "WireBeamInterpolation.h"
-#include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/topology/EdgeSetTopologyModifier.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/DataEngine.h>
 #include <sofa/component/collision/PointModel.h>
 #include <sofa/component/collision/LineModel.h>
 
-
-using namespace sofa::component::fem;
+#include "initBeamAdapter.h"
 
 namespace sofa
 {
 
 namespace component
 {
-	namespace topology
-	{
-		template <class T>
-		class EdgeSetGeometryAlgorithms;
 
-		class EdgeSetTopologyModifier;
-	}
+namespace topology
+{
+	template <class T>
+	class EdgeSetGeometryAlgorithms;
+
+	class EdgeSetTopologyModifier;
+}
+
+namespace fem
+{
+	template <class T>
+	class WireBeamInterpolation;
+}
 
 
 namespace controller
@@ -77,21 +77,20 @@ namespace controller
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-    class SOFA_BEAMADAPTER_API SutureController : public MechanicalStateController<DataTypes> ,
-                                                        public sofa::component::collision::PointActiver,
-                                                        public sofa::component::collision::LineActiver
+class SutureController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
 {
 public:
-  SOFA_CLASS(SOFA_TEMPLATE(SutureController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+	SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
+
 	typedef typename DataTypes::VecCoord VecCoord;
 	typedef typename DataTypes::VecDeriv VecDeriv;
 	typedef typename DataTypes::Coord    Coord   ;
 	typedef typename DataTypes::Deriv    Deriv   ;
 	typedef typename Coord::value_type   Real    ;
-     typedef Vec<3, Real> Vec3;
+    typedef Vec<3, Real> Vec3;
 
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
-    typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
+    typedef sofa::helper::vector< ElementID > VecElementID;
 
     typedef typename std::list< Real >::iterator ListRealIterator;
 
@@ -103,49 +102,49 @@ public:
 
 
 protected :
+
     WInterpolation* m_adaptiveinterpolation;
+    //sofa::core::objectmodel::DataObjectRef m_interpolationPath;
 
 
 public :
-//    void setPathToInterpolation(const std::string &o){
-//        m_interpolationPath.getValue()[0] = o;
-//    }
 
-    /////////////// Point & Line Activer interface
+	/**
+	 * @name Point & Line Activer interface
+	 */
+	//@{
+
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
+        if (index >= (int)xAbs_collisionPoints_buf.size() || index < 0)
+			return false;
 
-        if (index >= (int)xAbs_collisionPoints_buf.size() || index<0)
-        return false;
-
-        if(xAbs_collisionPoints_buf[index]>10.0)
+        if (xAbs_collisionPoints_buf[index] > 10.0)
             return true;
 
         return false;
-
     }
 
     bool activeLine(int index, core::CollisionModel * /*cm*/ = 0)
     {
+		const int next_index = index + 1;
 
-        if ((index+1) >= (int)xAbs_collisionPoints_buf.size() || (index+1)<0)
-        return false;
+        if (next_index >= (int)xAbs_collisionPoints_buf.size() || next_index < 0)
+			return false;
 
-        if(xAbs_collisionPoints_buf[index+1]>10.0)
+        if (xAbs_collisionPoints_buf[next_index] > 10.0)
             return true;
 
         return false;
     }
 
-
-    /////////////////////
-
-
+	//@}
 
 	/**
 	 * @brief Default Constructor.
 	 */
-    SutureController(WireBeamInterpolation<DataTypes>* _adaptiveinterpolation);
+    SutureController(WInterpolation* _adaptiveinterpolation);
+
     SutureController();
 
 	/**
@@ -179,11 +178,10 @@ public :
 	 */
     virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *){}
 
-
 	/**
 	 * @brief Begin Animation event callback.
 	 */
-        virtual void onEndAnimationStep(const double dt);
+	virtual void onEndAnimationStep(const double dt);
 
 	//@}
 
@@ -194,12 +192,12 @@ public :
 
 	virtual std::string getTemplateName() const
     {
-      return templateName(this);
+		return templateName(this);
     }
 
     static std::string templateName(const SutureController<DataTypes>* = NULL)
     {
-      return DataTypes::Name();
+		return DataTypes::Name();
     }
 
 	//@}
@@ -213,12 +211,12 @@ public :
 	/**
 	 * @brief
 	 */
-        virtual bool modifyTopology(void){ return false;}
+	virtual bool modifyTopology(void){ return false;}
  
 	/**
 	 * @brief
 	 */
-        virtual void draw(const core::visual::VisualParams*);
+	virtual void draw(const core::visual::VisualParams*);
 
 
 
@@ -227,12 +225,28 @@ public :
       * @brief addNodeOnXcurv (const Real& x_curv) will add a node at abs curv "x_curv" in the list of the imposed node
       *        this list is the used in the controller for the sampling of nodes of the suture model
       */
-    void addNodeOnXcurv(const Real& x_curv){   listOfImposedNodesOnXcurv.push_back(x_curv);}
-    void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
+	void addNodeOnXcurv(const Real& x_curv){listOfImposedNodesOnXcurv.push_back(x_curv);}
+	void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
 
 
 
 private:
+	
+	/**
+	 * @brief Get the adaptive interpolation component.
+	 */
+	void getWireBeamInterpolation();
+
+	/**
+	 * @brief Checks if the controlled MechanicalState and Topology have already been initialized.
+	 */
+	bool wireIsAlreadyInitialized();
+
+	/**
+	 * @brief "Wire" initialization from the starting position, rest shape, propozed discretization...
+	 */
+	void initWireModel();
+
     void recreateTopology();
     void addNodesAndEdge(unsigned int num, Real &xend);
     void removeNodesAndEdge(unsigned int num);
@@ -245,11 +259,11 @@ private:
     void computeTangentOnDiscretePoints(sofa::helper::vector<Vec3> TangTable, sofa::helper::vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos);
 
     // fill the list rigidBeamList
-    void detectRigidBeams(sofa::helper::vector<Real> &newCurvAbs);
+    void detectRigidBeams(const sofa::helper::vector<Real> &newCurvAbs);
 
     // when the sampling is computed, this function allows for reinterpolate the position and the velocity
     // TODO !! ADD 1/ RIGIDIFICATIONS + 2/ TOPOLOGY CHANGES + 3/ADD_BEAM (on the adaptive interpolation)
-    void applyNewSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
+    void applyNewSampling(const sofa::helper::vector<Real> &newCurvAbs, const sofa::helper::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
 
 
     // add the curv abs of the nodes at the extremity of the rigid segment
@@ -281,11 +295,11 @@ protected:
     sofa::helper::vector<Real> xAbs_collisionPoints_buf;
 
     ///// Data:
-    Data<Coord> startingPos;
-    Data<Real> threshold;
+    Data< Coord > startingPos;
+    Data< Real > threshold;
     Data< Real > maxBendingAngle;
     Data< helper::vector< std::string > > m_interpolationPath;
-    Data<bool> useDummyController;
+    Data< bool > useDummyController;
 
     /////// for rigidity control
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments;
@@ -303,8 +317,8 @@ protected:
 
 
 
-    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
-    sofa::helper::vector<Real> nodeCurvAbs;
+//    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
+    Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
 
 
 
@@ -312,14 +326,28 @@ protected:
 
     /////////// Interface for topology changes
 
-    sofa::core::topology::TopologyContainer* _topology;
-    sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
-    sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
+    sofa::core::topology::TopologyContainer* m_topology;
 
     void dummyController(sofa::helper::vector<Real> &newCurvAbs);
-
-
 };
+
+#if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)
+#pragma warning(disable : 4231)
+#ifndef SOFA_FLOAT
+extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Rigid3dTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Rigid2dTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec3dTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec2dTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec1dTypes>;
+#endif
+#ifndef SOFA_DOUBLE
+extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Rigid3fTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Rigid2fTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec3fTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec2fTypes>;
+//extern template class SOFA_BEAMADAPTER_API SutureController<defaulttype::Vec1fTypes>;
+#endif
+#endif
 
 } // namespace controller
 

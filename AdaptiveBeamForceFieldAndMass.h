@@ -67,7 +67,7 @@ namespace forcefield
 	using engine::WireRestShape;
 
 template<class DataTypes>
-class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
+class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
 {
 public:
 

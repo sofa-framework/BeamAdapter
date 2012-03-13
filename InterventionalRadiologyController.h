@@ -77,9 +77,7 @@ namespace controller
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-    class SOFA_BEAMADAPTER_API InterventionalRadiologyController : public MechanicalStateController<DataTypes> ,
-                                                        public sofa::component::collision::PointActiver,
-                                                        public sofa::component::collision::LineActiver
+class InterventionalRadiologyController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
 {
 public:
   SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));

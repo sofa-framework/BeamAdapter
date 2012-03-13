@@ -50,6 +50,7 @@
 
 #include <sofa/core/objectmodel/BaseObject.h>
 
+
 namespace sofa
 {
 
@@ -74,7 +75,7 @@ using namespace sofa::core::topology;
 /// AdaptiveBeam Interpolation provides the basis of the Beam computation
 /// As the computation is adaptive, the interpolation can be modified at each time step.
 template<class DataTypes>
-class SOFA_BEAMADAPTER_API BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
+class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
 {
 public:
 
@@ -96,35 +97,46 @@ public:
 	typedef typename  sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 	typedef typename  sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
-        typedef Vec<2, Real> Vec2;
+    typedef Vec<2, Real> Vec2;
 	typedef Vec<3, Real> Vec3;
 	typedef Vec<6, Real> Vec6;
 
 
 	BeamInterpolation()
-	: radius(initData(&radius,(Real)1.0f,"radius","radius of the beam (for now only constant radius are used)")),
-	  innerRadius(initData(&innerRadius,(Real)0.0f,"innerRadius","inner radius of the beam if it applies")),
-	  dofsAndBeamsAligned(initData(&dofsAndBeamsAligned,true,"dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes")),
-	  _topology(NULL),
-	  _mstate(NULL)
+	: radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (for now only constant radius are used)"))
+	, innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
+	, dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
+	, m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
+	, m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
+	, m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
+	, m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
+	, m_curvAbsList(initData(&m_curvAbsList, "curvAbsList", ""))
+	, _topology(NULL)
+	, _mstate(NULL)
 	{
 		this->brokenInTwo=false;
 		_isControlled=false;
 		this->_numBeamsNotUnderControl = 0;
 	}
 
-	~BeamInterpolation(){}
+	virtual ~BeamInterpolation(){}
 
 	void init();
 	void bwdInit();
 	void reinit(){init(); bwdInit(); }
 	void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
 
+	/**
+	 * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...) 
+	 */
+	bool interpolationIsAlreadyInitialized();
+
 	unsigned int getNumBeamsNotUnderControl(){return this->_numBeamsNotUnderControl;}
-	unsigned int getNumBeams(){return this->Edge_List.size();}
+	unsigned int getNumBeams(){return this->m_edgeList.getValue().size();}
 
-	VecElementID &getEdgeList(){return this->Edge_List;}
+//	VecElementID &getEdgeList(){return this->Edge_List;}
 
+	void getAbsCurvXFromBeam(int beam, Real& x_curv);
 
 	void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
 
@@ -151,9 +163,19 @@ public:
 	void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult);
 	void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
 
-        // getLength / setLength => provides the rest length of each spline
-        Real getLength(unsigned int edgeInList){ Real _L = this->Length_List[edgeInList]; return _L; }
-        void setLength(unsigned int edgeInList, Real &length){this->Length_List[edgeInList] =length; }
+	// getLength / setLength => provides the rest length of each spline
+	Real getLength(unsigned int edgeInList)
+	{
+		Real _L = this->m_lengthList.getValue()[edgeInList];
+		return _L;
+	}
+
+	void setLength(unsigned int edgeInList, Real &length)
+	{
+		vector<double> &lengthList = *m_lengthList.beginEdit();
+		lengthList[edgeInList] = length;
+		m_lengthList.endEdit();
+	}
 
         // computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
         void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
@@ -188,15 +210,18 @@ public:
 	void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
 
 
-	unsigned int getStateSize(){
-		if(this->_mstate==NULL) {
-			serr<<"WARNING no _mstate found"<<sendl;
-			return 0 ;}
+	unsigned int getStateSize() const
+	{
+		if (this->_mstate==NULL)
+		{
+			serr << "WARNING no _mstate found" << sendl;
+			return 0 ;
+		}
 		else
                 {
 //                    std::cout<<" get mstate named "<<this->_mstate->name<<"  size ="<<this->_mstate->getSize()<<std::endl;
 			return this->_mstate->getSize();
-                }
+		}
 	}
 
 	struct BeamSection{
@@ -211,6 +236,38 @@ public:
 		double _Asz; //_Asz is the z-direction effective shear area;
 	};
 	BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantRadius;}
+
+	template< class TReal >
+	struct CurvAbscissa
+	{
+		CurvAbscissa()
+		{
+		}
+
+		CurvAbscissa(Real r1, Real r2)
+			: m_abscissa(std::make_pair(r1, r2))
+		{
+		}
+
+		/// write to an output stream
+        inline friend std::ostream& operator << (std::ostream& out, const CurvAbscissa& a)
+        {
+            out << a.m_abscissa.first << " " << a.m_abscissa.second;
+            return out;
+        }
+
+		/// read from an input stream
+		inline friend std::istream& operator >> (std::istream& in, CurvAbscissa& a)
+		{
+			in >> a.m_abscissa.first >> a.m_abscissa.second;
+			return in;
+		}
+
+		const Real &first() const {return m_abscissa.first;}
+		const Real &second() const {return m_abscissa.second;}
+
+		std::pair< TReal, TReal > m_abscissa;
+	};
 
 	Data<Real> radius;
 	Data<Real> innerRadius;
@@ -234,8 +291,11 @@ public:
 	virtual Real getRestTotalLength()
 	{
 		Real le(0.0);
-		for (unsigned int i=0; i<this->Length_List.size(); i++)
-			le += this->Length_List[i];
+		const vector< double > &lengthList = m_lengthList.getValue();
+
+		for (unsigned int i = 0; i < lengthList.size(); i++)
+			le += lengthList[i];
+
 		return le;
 	}
 
@@ -258,31 +318,38 @@ public:
 		cPoisson     = (Real) 0.4;
 	}
 
-        void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
-        {
-            if(beam > (int) (DOF0_Transform_node0.size()-1) || beam > (int) (DOF1_Transform_node1.size()-1) )
-            {
-                serr<<"WARNING setTransformBetweenDofAndNode on non existing beam"<<sendl;
-                return;
-            }
 
-            if(!zeroORone)
-            {
-                DOF0_Transform_node0[beam]=DOF_H_Node;
-            }
-            else
-            {
-                DOF1_Transform_node1[beam]=DOF_H_Node;
-            }
+    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
+    {
+        if (beam > (int) (m_DOF0TransformNode0.getValue().size()-1) || beam > (int) (m_DOF1TransformNode1.getValue().size()-1))
+        {
+            serr<<"WARNING setTransformBetweenDofAndNode on non existing beam"<<sendl;
+            return;
         }
 
+        if (!zeroORone)
+        {
+			vector<Transform> &DOF0_TransformNode0 = *m_DOF0TransformNode0.beginEdit();
+            
+			DOF0_TransformNode0[beam] = DOF_H_Node;
+
+			m_DOF0TransformNode0.endEdit();
+        }
+        else
+        {
+			vector<Transform> &DOF1_TransformNode1 = *m_DOF1TransformNode1.beginEdit();
+
+            DOF1_TransformNode1[beam] = DOF_H_Node;
+
+			m_DOF1TransformNode1.endEdit();
+        }
+    }
 
 
 	virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
-	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output);
+	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
 	virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
-	virtual void getAbsCurvXFromBeam(int beam, Real& x_curv);
 
 
 	/// Pre-construction check method called by ObjectFactory.
@@ -311,21 +378,21 @@ public:
 
 protected :
 	// DATA INPUT (that could change in real-time)
-	//1.Edge_List : list of the edge in the topology that are concerned by the Interpolation
-	VecElementID Edge_List;
+	//1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
+	Data< VecElementID > m_edgeList;
 	const VecEdges *_topologyEdges;
 
-	//2.Length_List: list of the length of each beam
-	vector<double> Length_List;
+	//2.m_lengthList: list of the length of each beam
+	Data< vector< double > > m_lengthList;
 
 	//3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
 	// Indexation based on the num of Edge
-	vector<Transform> DOF0_Transform_node0;
+	Data< vector< Transform > > m_DOF0TransformNode0;
 
 	//4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
-	vector<Transform> DOF1_Transform_node1;
+	Data< vector< Transform > > m_DOF1TransformNode1;
 
-	vector< std::pair<Real, Real> > Curv_abs_List;
+	Data< vector< CurvAbscissa< Real > > > m_curvAbsList;
 
 	// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
 	BeamSection _constantRadius;
@@ -335,7 +402,7 @@ protected :
 	// pointer to the topology
 	sofa::core::topology::BaseMeshTopology* _topology;
 
-	// verify that the Edge_List always contains existing edges
+	// verify that the m_edgeList always contains existing edges
 	bool verifyTopology();
 
 	// pointer on mechanical state
@@ -352,10 +419,17 @@ protected :
 	bool _isControlled;
 	bool brokenInTwo;
 	unsigned int  _numBeamsNotUnderControl;
-
-
-
 };
+
+#if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)
+#pragma warning(disable : 4231)
+#ifndef SOFA_FLOAT
+extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
+#endif
+#ifndef SOFA_DOUBLE
+extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
+#endif
+#endif
 
 } // namespace fem
 

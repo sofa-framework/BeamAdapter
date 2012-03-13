@@ -103,8 +103,6 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 
 
         output=input*inputRoutput;
     }
-
-
 }
 
 
@@ -124,7 +122,6 @@ template <class DataTypes>
     double r = this->radius.getValue();
     double rInner = this->innerRadius.getValue();
 
-
     this->_constantRadius._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
 
     //_Iz = M_PI*(r*r*r*r)/4.0;
@@ -135,134 +132,182 @@ template <class DataTypes>
     this->_constantRadius._Asy = 0.0;
     this->_constantRadius._Asz = 0.0;
 
-
-
     // Init Adaptive Topology:
     this->_topology = context->getMeshTopology();
-
-
 }
 
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::bwdInit()
 {
-
-
     if(!this->verifyTopology())
         serr<<"no topology found"<<sendl;
 
+	sofa::core::objectmodel::BaseContext* context = this->getContext();
 
-    sofa::core::objectmodel::BaseContext* context = this->getContext();
+	_mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
 
+	if (_mstate == NULL)
+	{
+		serr << "WARNING no MechanicalState found bwdInit failed" << sendl;
+		return;
+	}
 
-    this->Edge_List.clear();
+	if (!interpolationIsAlreadyInitialized())
+	{
+		VecElementID &edgeList = *m_edgeList.beginEdit();
+	
+		edgeList.clear();
 
-    for (int i=0; i<this->_topology->getNbEdges(); i++)
-    {
-            this->Edge_List.push_back(i);
-    }
+		for (int i=0; i<this->_topology->getNbEdges(); i++)
+		{
+			edgeList.push_back(i);
+		}
 
+		vector<Transform> &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
+		vector<Transform> &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
 
-    if(!dofsAndBeamsAligned.getValue())
-    {
-            this->DOF0_Transform_node0.resize( this->Edge_List.size());
-            this->DOF1_Transform_node1.resize( this->Edge_List.size());
-    }
+		if (!dofsAndBeamsAligned.getValue())
+		{
+			DOF0TransformNode0.resize(edgeList.size());
+			DOF1TransformNode1.resize(edgeList.size());
+		}
 
+		m_edgeList.endEdit();
+		m_DOF0TransformNode0.endEdit();
+		m_DOF1TransformNode1.endEdit();
 
-    this->Length_List.clear();
-    for (unsigned int i=0; i<this->Edge_List.size(); i++)
-    {
+		const VecCoord& statePos = *_mstate->getX();
 
-            unsigned int nd0Id, nd1Id;
-            this->getNodeIndices(i,nd0Id, nd1Id);
-            sofa::core::behavior::MechanicalState<DataTypes>* mstate = dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes>*>(context->getMechanicalState());
-            if(mstate==NULL)
-            {
-                    serr<<" mstate :can not do the cast"<<sendl;
-                    return;
-            }
-            Vec3 beam_segment =(*mstate->getX())[nd1Id].getCenter() - (*mstate->getX())[nd0Id].getCenter();
-            this->Length_List.push_back(beam_segment.norm());
-    }
+		vector< double > &lengthList = *m_lengthList.beginEdit();
+		lengthList.clear();
 
+		const unsigned int edgeListSize = m_edgeList.getValue().size();
+		unsigned int nd0Id, nd1Id;
+	
+		for (unsigned int i = 0; i < edgeListSize; i++)
+		{
+			this->getNodeIndices(i, nd0Id, nd1Id);
+	
+			Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
 
+			lengthList.push_back(beam_segment.norm());
+		}
 
-    if(!this->verifyTopology())
-            serr<<"WARNING bwdInit failed"<<sendl;
+		m_lengthList.endEdit();
 
-    this->_mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (this->getContext()->getMechanicalState());
-    if(this->_mstate==NULL)
-            serr<<"WARNING no MechanicalState found bwdInit failed"<<sendl;
-
-
+		if (!this->verifyTopology())
+			serr << "WARNING bwdInit failed" << sendl;
+	}
 }
 
 
+template<class DataTypes>
+bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
+{
+	if (m_edgeList.getValue().size() == 0)
+		return false;
+	
+	const unsigned int nbEdges = m_edgeList.getValue().size();
+
+	if (m_DOF0TransformNode0.getValue().size() != nbEdges)
+		return false;
+
+	if (m_DOF1TransformNode1.getValue().size() != nbEdges)
+		return false;
+
+	if (m_lengthList.getValue().size() != nbEdges)
+		return false;
+
+	return true;
+}
+
 
 // verify that we got a non-null pointer on the topology
-// verify that the this->Edge_List do not contain non existing edges
+// verify that the this->m_edgeList do not contain non existing edges
 
 template<class DataTypes>
-bool BeamInterpolation<DataTypes>::verifyTopology(){
+bool BeamInterpolation<DataTypes>::verifyTopology()
+{
+	if (this->_topology==NULL)
+	{
+		serr << "ERROR(BeamInterpolation): object must have a BaseMeshTopology (i.e. EdgeSetTopology or MeshTopology)."<<sendl;
+		return false;
+	}
+	else
+	{
+		if(this->_topology->getNbEdges()==0)
+		{
+			serr << "ERROR(BeamInterpolation): topology is empty."<<sendl;
+			return false;
+		}
 
+		this->_topologyEdges = &this->_topology->getEdges();
 
-    if (this->_topology==NULL)
-        {
-            serr << "ERROR(BeamInterpolation): object must have a BaseMeshTopology (i.e. EdgeSetTopology or MeshTopology)."<<sendl;
-        return false;
-    }
-    else
-    {
-        if(this->_topology->getNbEdges()==0)
-        {
-            serr << "ERROR(BeamInterpolation): topology is empty."<<sendl;
-            return false;
-        }
+		const VecElementID &edgeList = m_edgeList.getValue();
 
-        this->_topologyEdges = &this->_topology->getEdges();
+		for (unsigned int j = 0; j < edgeList.size(); j++)
+		{
+			if(edgeList[j] > this->_topologyEdges->size())
+			{
+				serr << "WARNING defined this->m_edgeList is not compatible with topology" << sendl;
+				return false;
+			}
+		}
 
-        for (unsigned int j=0; j<this->Edge_List.size(); j++)
-        {
-            if(this->Edge_List[j] > this->_topologyEdges->size()){
-                 serr<<"WARNING defined this->Edge_List is not compatible with topology"<<sendl;
-                 return false;
-             }
-        }
+	}
 
-    }
-    return true;
-
+	return true;
 }
 
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::clear()
 {
+	VecElementID &edgeList = *m_edgeList.beginEdit();
+	vector< double > &lengthList = *m_lengthList.beginEdit();
+	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
+	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
+	vector< CurvAbscissa<Real> > &curvAbsList = *m_curvAbsList.beginEdit();
+
     if(this->brokenInTwo)
     {
-        this->Edge_List.resize(this->_numBeamsNotUnderControl);
-        this->Length_List.resize(this->_numBeamsNotUnderControl);
-        this->DOF0_Transform_node0.resize(this->_numBeamsNotUnderControl);
-        this->DOF1_Transform_node1.resize(this->_numBeamsNotUnderControl);
+        edgeList.resize(_numBeamsNotUnderControl);
+        lengthList.resize(_numBeamsNotUnderControl);
+        DOF0TransformNode0.resize(_numBeamsNotUnderControl);
+        DOF1TransformNode1.resize(_numBeamsNotUnderControl);
+		curvAbsList.resize(_numBeamsNotUnderControl);
     }
     else
     {
-        this->Edge_List.clear();
-        this->Length_List.clear();
-        this->DOF0_Transform_node0.clear();
-        this->DOF1_Transform_node1.clear();
+        edgeList.clear();
+        lengthList.clear();
+        DOF0TransformNode0.clear();
+        DOF1TransformNode1.clear();
+		curvAbsList.clear();
     }
+
+	m_edgeList.endEdit();
+	m_lengthList.endEdit();
+	m_DOF0TransformNode0.endEdit();
+	m_DOF1TransformNode1.endEdit();
+	m_curvAbsList.endEdit();
 }
+
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
 {
-    this->Edge_List.push_back(eID);
-    this->Length_List.push_back(length);
-    std::pair<Real,Real> x_pair(x0,x1);
-	this->Curv_abs_List.push_back(x_pair);
+	VecElementID &edgeList = *m_edgeList.beginEdit();
+	vector< double > &lengthList = *m_lengthList.beginEdit();
+	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
+	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
+	vector< CurvAbscissa<Real> > &curvAbsList = *m_curvAbsList.beginEdit();
+	
+	curvAbsList.push_back(CurvAbscissa<Real>(x0, x1));
+
+    edgeList.push_back(eID);
+    lengthList.push_back(length);
 
     Quat QuatX ;
     QuatX.axisToQuat(Vec3(1,0,0), angle);
@@ -270,23 +315,30 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
 
     // as a angle is set between DOFs and Beam, they are no more aligned
     this->dofsAndBeamsAligned.setValue(false);
-    this->DOF0_Transform_node0.push_back(Transform(Vec3(0,0,0), QuatX ));
-    this->DOF1_Transform_node1.push_back(Transform(Vec3(0,0,0), QuatX ));
+    DOF0TransformNode0.push_back(Transform(Vec3(0, 0, 0), QuatX ));
+    DOF1TransformNode1.push_back(Transform(Vec3(0, 0, 0), QuatX ));
+
+	m_edgeList.endEdit();
+	m_lengthList.endEdit();
+	m_DOF0TransformNode0.endEdit();
+	m_DOF1TransformNode1.endEdit();
+	m_curvAbsList.endEdit();
 }
 
 
 template<class DataTypes>
- void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output)
+ void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start)
  {
      //lTotalRest = total length of the
      Real lTotalRest = this->getRestTotalLength();
      //LTotal =  length sum of the beams that are "out"
      Real LTotal=0.0;
-     unsigned int start=0;
+
+	 const unsigned int edgeListSize = m_edgeList.getValue().size();
 
 
      // we find the length of the beam that is "out"
-     for (unsigned int e=start; e<this->Edge_List.size(); e++)
+     for (unsigned int e = start; e < edgeListSize; e++)
      {
          LTotal += this->getLength(e);
      }
@@ -305,7 +357,7 @@ template<class DataTypes>
      // we compute the x value of each node :the topology (stored in Edge_list) is supposed to be a regular seq of segment
      Real x = 0;
 
-     for (unsigned int e=start; e<this->Edge_List.size(); e++)
+     for (unsigned int e = start; e < edgeListSize; e++)
      {
          x += this->getLength(e);
          if(x > x_i)
@@ -317,34 +369,30 @@ template<class DataTypes>
          }
      }
 
-     edgeInList_output = this->Edge_List.size()-1;
+     edgeInList_output = edgeListSize - 1;
      baryCoord_output = 1.0;
-
 }
 
  
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv)
 {
-    //std::cout<<" getAbsCurvXFromBeam ("<<beam<<") - num Beam in Curv_abs_List: "<<Curv_abs_List.size()<<std::endl;
-    x_curv = this->Curv_abs_List[beam].second;
-    return;
+	x_curv = m_curvAbsList.getValue()[beam].second();
 }
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1)
+void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
 {
-
-    if(dofsAndBeamsAligned.getValue())
+    if (dofsAndBeamsAligned.getValue())
     {
         DOF0_H_local0.clear();
         DOF1_H_local1.clear();
         return;
     }
-    DOF0_H_local0 = this->DOF0_Transform_node0[edgeInList];
-    DOF1_H_local1 = this->DOF1_Transform_node1[edgeInList];
 
+    DOF0_H_local0 = m_DOF0TransformNode0.getValue()[edgeInList];
+    DOF1_H_local1 = m_DOF1TransformNode1.getValue()[edgeInList];
 }
 
 
@@ -367,6 +415,8 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
     DOF1Global_H_local1 = global_R_DOF1*DOF1_H_local1;
 
 }
+
+
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
                                                             Transform& local0_H_local1, Quat& local_R_local0, const VecCoord &x)
@@ -444,7 +494,7 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest)
 {
     // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
-    local0_H_local1_rest.set(Vec3(this->Length_List[edgeInList],0,0), Quat());
+    local0_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList],0,0), Quat());
 }
 
 template<class DataTypes>
@@ -452,33 +502,33 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 {
 	// the beam is straight: local is in the middle of local0 and local1
 	// the transformation between local0 and local1 is provided by the length of the beam
-	local_H_local0_rest.set(-Vec3(this->Length_List[edgeInList]/2,0,0), Quat());
-	local_H_local1_rest.set(Vec3(this->Length_List[edgeInList]/2,0,0), Quat());
+	local_H_local0_rest.set(-Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+	local_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
 }
 
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx )
 {
-
     if ( this->_topologyEdges==NULL)
     {
         serr<<" in  getNodeIndices no _topologyEdges defined"<<sendl;
     }
 
     // 1. Get the indices of element and nodes
-    ElementID e = this->Edge_List[edgeInList] ;
+    ElementID e = this->m_edgeList.getValue()[edgeInList] ;
     core::topology::BaseMeshTopology::Edge edge=  (*this->_topologyEdges)[e];
     node0Idx = edge[0];
     node1Idx = edge[1];
 }
+
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy ,
                                                                  Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
 {
     // get the length of the beam:
-    _L = this->Length_List[edgeInList];
+    _L = this->m_lengthList.getValue()[edgeInList];
 
     BeamSection bS = this->getBeamSection(edgeInList);
     _A=bS._A;
@@ -497,14 +547,13 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
     computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
 
    // << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
-    Real _L = this->Length_List[edgeInList];
+    const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
     P0=global_H_local0.getOrigin();
     P3=global_H_local1.getOrigin();
 
     P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0);
     P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0);
-
 }
 
 
@@ -656,7 +705,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 {
 
    // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
-    Real _L = this->Length_List[edgeInList];
+    const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
     if(localPos.norm() >_L*1e-10)
     {
@@ -763,7 +812,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         this->RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
 
         //     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
-        Rslerp.slerp(R0,R1,bx,true);
+        Rslerp.slerp(R0,R1, (float)bx,true);
         Rslerp.normalize();
 
         //     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
@@ -842,7 +891,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int 
     Transform global_H_local0, global_H_local1;
     computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
 
-    Real _L = this->Length_List[edgeInList];
+    const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
     if(localPos.norm() >1e-10*_L)
         serr<<"WARNING in InterpolateTransformUsingSpline interpolate frame only on the central curve of the beam"<<sendl;
@@ -878,7 +927,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
 
 
     // 4. Computes the transformation
-    Real _L = this->Length_List[edgeInList];
+    const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
     if(localPos.norm() >1e-10*_L)
         serr<<"WARNING in InterpolateTransformUsingSpline interpolate frame only on the central curve of the beam"<<sendl;

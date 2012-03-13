@@ -211,9 +211,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 	unsigned int numBeams = m_interpolation->getNumBeams();
 	_localBeamMatrices.resize(numBeams);
 
-        //std::cout<<" +++++ ADD FORCE +++++"<<std::endl;
-
-
 	if(_computeMass.getValue())
 	{
 		computeGravityVector();

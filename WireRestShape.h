@@ -56,7 +56,7 @@ namespace engine
 
 
 template <class DataTypes>
-class SOFA_BEAMADAPTER_API WireRestShape : public sofa::core::DataEngine
+class WireRestShape : public sofa::core::DataEngine
 {
 public:
 	SOFA_CLASS(WireRestShape,sofa::core::DataEngine);
@@ -96,9 +96,9 @@ public:
 	, _innerRadius2(initData(&_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
 	, _massDensity1(initData(&_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
 	, _massDensity2(initData(&_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
-	,edge2QuadMap(NULL)
+	, brokenIn2(initData(&brokenIn2, (bool)false, "brokenIn2", ""))
+	, edge2QuadMap(NULL)
 	{
-		 brokenIn2=false;
 	}
 
 	 /**
@@ -148,8 +148,9 @@ public:
 
 
 
-	 virtual Real getLength(){
-		 if(brokenIn2)
+	 virtual Real getLength()
+	 {
+		 if(brokenIn2.getValue())
 			 return straightLength.getValue();
 		 else
 			 return length.getValue();
@@ -199,7 +200,7 @@ protected:
 	 Data<Real> spireHeight;
 	 Data< sofa::helper::vector<int> > density;
 	 Data< sofa::helper::vector<Real> > keyPoints;
-	 Data<int> numEdges;
+	 Data< int > numEdges;
 	 Data< sofa::helper::vector<int> > numEdgesCollis;
 
 
@@ -230,7 +231,7 @@ protected:
 	 Data<Real> _massDensity1, _massDensity2;
 
 	 // broken in 2 case
-	 bool brokenIn2;
+	 Data< bool > brokenIn2;
 	 sofa::core::topology::TopologyContainer* _topology;
 	 sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
 	 sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
