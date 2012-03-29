@@ -229,7 +229,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 		}
 	}
 
-	core::MechanicalParams* _mparams = core::MechanicalParams::defaultInstance();
+	const core::MechanicalParams* _mparams = core::MechanicalParams::defaultInstance();
 
 	this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::VecCoordId::position()),*this->getFromModel()->read(sofa::core::ConstVecCoordId::position()));
 

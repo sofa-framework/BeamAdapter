@@ -59,8 +59,10 @@ namespace component
 
 namespace fem
 {
+
 using sofa::helper::vector;
 using namespace sofa::core::topology;
+using namespace sofa::defaulttype;
 
 
 /** Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
@@ -94,8 +96,8 @@ public:
 	typedef helper::vector<unsigned int> VecIndex;
 
 
-	typedef typename  sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-	typedef typename  sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
+	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
+	typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
     typedef Vec<2, Real> Vec2;
 	typedef Vec<3, Real> Vec3;
