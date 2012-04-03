@@ -67,6 +67,7 @@ public:
 	typedef typename DataTypes::Coord::Rot Rot;
 	typedef sofa::defaulttype::Vec<3, Real> Vec3;
 	typedef sofa::defaulttype::Vec<6, Real> Vec6;
+    typedef typename  std::map<Real, double>::iterator MapIterator;
 
 protected:
 	
@@ -86,9 +87,9 @@ protected:
 	
     AdaptiveBeamLengthConstraint(MechanicalState* object = NULL)
     : Inherit(object)
-	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
 	, m_alarmLength(initData(&m_alarmLength, (Real)1.02, "alarmLength", "Elongation before creating a constraint"))
 	, m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam"))
+    , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
 	{
 	}
 	

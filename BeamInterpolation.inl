@@ -268,7 +268,7 @@ void BeamInterpolation<DataTypes>::clear()
 	vector< double > &lengthList = *m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
-	vector< CurvAbscissa<Real> > &curvAbsList = *m_curvAbsList.beginEdit();
+    vector< CurvAbscissa > &curvAbsList = *m_curvAbsList.beginEdit();
 
     if(this->brokenInTwo)
     {
@@ -302,9 +302,9 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
 	vector< double > &lengthList = *m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
-	vector< CurvAbscissa<Real> > &curvAbsList = *m_curvAbsList.beginEdit();
+    vector< CurvAbscissa > &curvAbsList = *m_curvAbsList.beginEdit();
 	
-	curvAbsList.push_back(CurvAbscissa<Real>(x0, x1));
+    curvAbsList.push_back(CurvAbscissa(x0, x1));
 
     edgeList.push_back(eID);
     lengthList.push_back(length);

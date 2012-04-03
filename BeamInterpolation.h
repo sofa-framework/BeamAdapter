@@ -239,7 +239,7 @@ public:
 	};
 	BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantRadius;}
 
-	template< class TReal >
+    //template< class TReal >
 	struct CurvAbscissa
 	{
 		CurvAbscissa()
@@ -268,7 +268,7 @@ public:
 		const Real &first() const {return m_abscissa.first;}
 		const Real &second() const {return m_abscissa.second;}
 
-		std::pair< TReal, TReal > m_abscissa;
+        std::pair< Real, Real > m_abscissa;
 	};
 
 	Data<Real> radius;
@@ -394,7 +394,7 @@ protected :
 	//4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
 	Data< vector< Transform > > m_DOF1TransformNode1;
 
-	Data< vector< CurvAbscissa< Real > > > m_curvAbsList;
+    Data< vector< CurvAbscissa > > m_curvAbsList;
 
 	// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
 	BeamSection _constantRadius;

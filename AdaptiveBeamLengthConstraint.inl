@@ -159,7 +159,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vecto
 	unsigned int i=0, nb = activatedBeamsAbscissa.size();
 
 	// Removing from the map old forces for beams that are not constrained anymore
-	for(std::map<Real, double>::iterator iter=prevForces.begin(); iter!=prevForces.end(); )
+    for(MapIterator iter=prevForces.begin(); iter!=prevForces.end(); )
 	{
 		Real key = iter->first;
 		// Does this key exist in the beams list ?

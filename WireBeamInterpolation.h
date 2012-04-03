@@ -107,6 +107,8 @@ public:
 	typedef typename Inherited::Vec3 Vec3;
 	typedef typename Inherited::Vec6 Vec6;
 
+    typedef typename Inherited::CurvAbscissa CurvAbscissa;
+
 	WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = NULL);
 
 	virtual ~WireBeamInterpolation();
@@ -115,7 +117,7 @@ public:
 	void bwdInit();
 	void reinit(){init(); bwdInit(); }
 
-	using BeamInterpolation::addBeam;
+    using BeamInterpolation<DataTypes>::addBeam;
 
     void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);

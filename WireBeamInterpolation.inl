@@ -127,12 +127,12 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
 	vector< double > &lengthList = *this->m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-	vector< CurvAbscissa<Real> > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    vector< CurvAbscissa > &curvAbsList = *this->m_curvAbsList.beginEdit();
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
 
-	curvAbsList.push_back(CurvAbscissa<Real>(x0, x1));
+    curvAbsList.push_back(CurvAbscissa(x0, x1));
 
     // as an angle is set between DOFs and Beam, they are no more aligned
     this->dofsAndBeamsAligned.setValue(false);
@@ -164,7 +164,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 {
 	if (this->isControlled() && this->m_restShape!=NULL)
 	{
-		const CurvAbscissa<Real> &curvAbs = this->m_curvAbsList.getValue()[edgeInList];
+        const CurvAbscissa &curvAbs = this->m_curvAbsList.getValue()[edgeInList];
 
 		Real x_middle = (curvAbs.first() + curvAbs.second()) / 2;
 		Transform global_H_local_middle, global_H_local_0, global_H_local_1;
@@ -491,7 +491,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
 	vector< double > &lengthList = *this->m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-	vector< CurvAbscissa<Real> > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    vector< CurvAbscissa > &curvAbsList = *this->m_curvAbsList.beginEdit();
 
 	const unsigned int curvAbsListSize = curvAbsList.size();
 
