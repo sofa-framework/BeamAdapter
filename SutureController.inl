@@ -59,25 +59,11 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
 , m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
 , useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
+, m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
 , m_topology(0)
 {
 }
-
-
-template <class DataTypes>
-SutureController<DataTypes>::SutureController()
-: m_adaptiveinterpolation(NULL)
-, startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-, threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
-, maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
-, m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
-, useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
-, m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
-, m_topology(0)
-{
-}
-
 
 template <class DataTypes>
 void SutureController<DataTypes>::init()
@@ -570,14 +556,11 @@ void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &
 template <class DataTypes>
 void SutureController<DataTypes>::applyController()
 {
-
-
 //    std::cout<<"applyController: numBeams =" <<m_adaptiveinterpolation->getNumBeams()<<std::endl;
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     Data<VecDeriv>* datav = this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
     VecCoord& x = *datax->beginEdit();
     VecDeriv& v = *datav->beginEdit();
-
 
     sofa::helper::vector<Real> newCurvAbs;
 
@@ -586,13 +569,7 @@ void SutureController<DataTypes>::applyController()
     else
         this->computeSampling(newCurvAbs, x);
 
-
-
-
-
     this->addImposedCurvAbs(newCurvAbs, 0.0001);
-
-
 
 #ifdef DEBUG
     std::cout<<" newCurvAbs = "<<newCurvAbs<<"  - nodeCurvAbs = "<<m_nodeCurvAbs.getValue()<<std::endl;
@@ -609,7 +586,6 @@ void SutureController<DataTypes>::applyController()
 
 #endif
 
-
     this->applyNewSampling(newCurvAbs, m_nodeCurvAbs.getValue(), x, v);
 
  #ifdef DEBUG
@@ -620,15 +596,8 @@ void SutureController<DataTypes>::applyController()
     std::cout<<" "<<std::endl;
 #endif
 
-
 	sofa::helper::vector<Real> &nodeCurvAbs = *m_nodeCurvAbs.beginEdit();
-
-    nodeCurvAbs.clear();
-    for( unsigned int i=0; i< newCurvAbs.size(); i++)
-    {
-        nodeCurvAbs.push_back(newCurvAbs[i]);
-
-    }
+	nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
 
     datax->endEdit();
     datav->endEdit();
@@ -1138,7 +1107,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 
 
     Real sutureLength= m_adaptiveinterpolation->getRestTotalLength();
-    Real dx=sutureLength/100.0;
+    Real dx=sutureLength/100.0;	// TODO : pourquoi 100 et pas un Data ou un nombre dépendant de la densité ?
     Real BendingAngle=0.0;
     this->computeBendingAngle(BendingAngle, 0.0, sutureLength, dx, x);
 
@@ -1157,7 +1126,6 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         unsigned int numBeams=nbP_density[part];
         Real L_beam_straight = (xP_noticeable[part+1] - xP_noticeable[part])/numBeams;
 
-
         while(L_add< xP_noticeable[part+1]-threshold.getValue())
         {
             newCurvAbs_notSecure.push_back(L_add);
@@ -1167,40 +1135,53 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
             else
                 this->computeBendingAngle(BendingAngle, L_add, xP_noticeable[part+1], dx, x);
 
-
-
-
             Real L_beam = L_beam_straight;
             if (BendingAngle>maxBendingAngle.getValue())
-            {
                 L_beam*=maxBendingAngle.getValue()/BendingAngle;
-            }
             L_add+=L_beam;
-
         }
         newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
-
     }
 
-
-
-
-
-
-
+	// TEMP TEST : remove aligned dofs
+/*	if(newCurvAbs_notSecure.size() > 3)
+	{
+		dx = sutureLength / 20;
+		Real prevAbs = newCurvAbs_notSecure[0];
+		int size = newCurvAbs_notSecure.size();
+		for(int i=1; i<size-1; )
+		{
+			Real curvAbs = newCurvAbs_notSecure[i];
+			Real angle = 0;
+			this->computeBendingAngle(angle, prevAbs, curvAbs, dx, x);
+			if(angle < 0.035)	// less than 2 degrees is considered plan
+			{
+				newCurvAbs_notSecure.erase(newCurvAbs_notSecure.begin() + i);
+				size--;
+			}
+			else
+			{
+				i++;
+				prevAbs = curvAbs;
+			}
+		}
+	}
+	*/
     this->rigidCurveSegments.clear();
-    /*
-
-    std::pair<Real, Real> rigidSegment;
-
-    rigidSegment.first=8.5*sutureLength/10.0;
-    rigidSegment.second = 9.5*sutureLength/10.0;
-    this->rigidCurveSegments.push_back(rigidSegment);
-
-    addRigidCurvAbs(newCurvAbs_notSecure, threshold.getValue());
-
-    */
-
+	helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+	int nb = rigidCurvAbs->size();
+	if(nb % 2 == 0)	// Make sure we have pairs of curv abs
+	{
+		helper::set<Real>::const_iterator it;
+		for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
+		{
+			Real start, end;
+			start = *it++;
+			end = *it++;
+			this->rigidCurveSegments.push_back(std::make_pair(start, end));
+		}
+		addRigidCurvAbs(newCurvAbs_notSecure, 0.0001);
+	}
 
     ///// Verify that there is no beams with null length ///
     newCurvAbs.clear();

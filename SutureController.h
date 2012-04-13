@@ -143,9 +143,7 @@ public :
 	/**
 	 * @brief Default Constructor.
 	 */
-    SutureController(WInterpolation* _adaptiveinterpolation);
-
-    SutureController();
+    SutureController(WInterpolation* _adaptiveinterpolation = NULL);
 
 	/**
 	 * @brief Default Destructor.
@@ -300,6 +298,7 @@ protected:
     Data< Real > maxBendingAngle;
     Data< helper::vector< std::string > > m_interpolationPath;
     Data< bool > useDummyController;
+	Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end) 
 
     /////// for rigidity control
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments;
