@@ -139,6 +139,7 @@ public:
 //	VecElementID &getEdgeList(){return this->Edge_List;}
 
 	void getAbsCurvXFromBeam(int beam, Real& x_curv);
+	void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
 
 	void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
 
@@ -150,10 +151,7 @@ public:
 
 	void computeTransform2(unsigned int edgeInList,  Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
 
-        void getTangent(Vec3& t, const Real& baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
-
-
-
+	void getTangent(Vec3& t, const Real& baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
 
 	void getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx );
 
@@ -179,34 +177,32 @@ public:
 		m_lengthList.endEdit();
 	}
 
-        // computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
-        void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
+	// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
+	void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
 
 
 	void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
 	void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol);
-        // generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
+    // generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
 	void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
 
-        void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
-                                                   Transform &global_H_localInterpol, Deriv &v_interpol);
+	void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
+												Transform &global_H_localInterpol, Deriv &v_interpol);
+
+
+	// 3DOF mapping
+	void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
+									SpatialVector& FNode0output, SpatialVector& FNode1output );
+
+	// 6DoF mapping
+	void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const SpatialVector& f6DofInput,
+										SpatialVector& FNode0output, SpatialVector& FNode1output );
 
 
 
-
-        // 3DOF mapping
-        void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
-                                       SpatialVector& FNode0output, SpatialVector& FNode1output );
-
-        // 6DoF mapping
-        void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const SpatialVector& f6DofInput,
-                                           SpatialVector& FNode0output, SpatialVector& FNode1output );
-
-
-
-        // compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
-        void ComputeTotalBendingRotationAngle(Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
-                                              const Real& baryCoordMin, const Real& baryCoordMax);
+	// compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
+	void ComputeTotalBendingRotationAngle(Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
+											const Real& baryCoordMin, const Real& baryCoordMax);
 
 
 	void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);

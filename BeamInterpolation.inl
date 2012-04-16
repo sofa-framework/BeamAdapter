@@ -380,6 +380,14 @@ void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv)
 	x_curv = m_curvAbsList.getValue()[beam].second();
 }
 
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end)
+{
+	CurvAbscissa ca = m_curvAbsList.getValue()[beam];
+	x_curv_start = ca.first();
+	x_curv_end = ca.second();
+}
+
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)

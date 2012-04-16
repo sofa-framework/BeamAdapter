@@ -1170,7 +1170,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     this->rigidCurveSegments.clear();
 	helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 	int nb = rigidCurvAbs->size();
-	if(nb % 2 == 0)	// Make sure we have pairs of curv abs
+	if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
 	{
 		helper::set<Real>::const_iterator it;
 		for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
