@@ -229,6 +229,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		unsigned int node0Idx, node1Idx;
 		m_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
+
+
 		//find the beamMatrices:
 		BeamLocalMatrices  *beamMatrices = &_localBeamMatrices[b]  ;//new BeamLocalMatrices();
 
@@ -279,8 +281,24 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		beamMatrices->loc1_Ad_ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
 
 
+
+        /////////////////////////////////////// COMPUTATION OF THE MASS AND STIFFNESS  MATRIX (LOCAL)
+        // compute the local mass matrices
+        if(_computeMass.getValue())
+        {
+            computeMass(b, (*beamMatrices));
+
+        }
+
+        // IF RIGIDIFICATION: no stiffness forces:
+        if(node0Idx==node1Idx)
+            continue;
+
+
 		// compute the local stiffness matrices
 		computeStiffness(b, (*beamMatrices));
+
+        /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
 
 		// compute the current local displacement of the beam (6dofs)
 		// 1. get the rest transformation from local to 0 and local to 1
@@ -310,12 +328,21 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		}
 
 
+        Vec3 P0,P1,P2,P3;
+        Real length;
+        Real rest_length = m_interpolation->getLength(b);
+        m_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
+        m_interpolation->computeActualLength(length, P0,P1,P2,P3);
+
+        U0local[0]=(-length+rest_length)/2;
+        U1local[0]=( length-rest_length)/2;
+
+
 
 
 
 		if (!_shearStressComputation.getValue())
 		{
-
 			/////////////////// TEST //////////////////////
 			//        // test: correction due to spline computation;
 			Vec3 ResultNode0, ResultNode1;
@@ -336,6 +363,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		// compute the force in the local frame:
 		Vec6 f0 = beamMatrices->k_loc00 * U0local + beamMatrices->k_loc01 * U1local;
 		Vec6 f1 = beamMatrices->k_loc10 * U0local + beamMatrices->k_loc11 * U1local;
+
+
+
 
 
 
@@ -403,12 +433,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		// _localBeamMatrices.push_back((*beamMatrices));
 		// std::cerr<<"after push back"<<std::endl;
 
-		// compute the local mass matrices
-		if(_computeMass.getValue())
-		{
-			computeMass(b, (*beamMatrices));
 
-		}
 	}
 
 	if(_computeMass.getValue())
@@ -443,6 +468,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const sofa::core::Mecha
 
 		applyStiffnessLarge( df, dx, b, node0Idx, node1Idx, kFactor );
 
+
+
 	}
 
 	datadF.endEdit();
@@ -467,8 +494,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	Real x_curv = 0.0;
 	//Get the curvilinear abscissa of the extremity of the beam
 
-	m_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
 
+	m_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
 
 	// material parameters
 	Real _G;
@@ -492,7 +519,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	Real EIy = (Real)(_E * _Iy);
 	Real EIz = (Real)(_E * _Iz);
 
-	//<<" Young Modulus :"<<_E<<std::endl;
+
 
 	// Find shear-deformation parameters
 	if (_Asy == 0)
@@ -508,7 +535,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	b.k_loc00.clear(); b.k_loc01.clear(); b.k_loc10.clear(); b.k_loc11.clear();
 
 	// diagonal values
-	b.k_loc00[0][0] = b.k_loc11[0][0] = _E*_A/_L;
+    b.k_loc00[0][0] = b.k_loc11[0][0] = 1*_E*_A/_L;
 	b.k_loc00[1][1] = b.k_loc11[1][1] = (Real)(12.0*EIz/(L3*(1.0+phiy)));
 	b.k_loc00[2][2] = b.k_loc11[2][2]   = (Real)(12.0*EIy/(L3*(1.0+phiz)));
 	b.k_loc00[3][3] = b.k_loc11[3][3]   = _G*_J/_L;
@@ -546,6 +573,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 
 	// upper non-diagonal block : set k_loc10 as the transposed matrix of k_loc01
 	b.k_loc01 = b.k_loc10.transposed();
+
 }
 
 template<class DataTypes>
@@ -618,12 +646,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam,BeamLocalMat
 
 	// upper non-diagonal block : set k_loc10 as the transposed matrix of k_loc01
 	b.m_loc01 = b.m_loc10.transposed();
-
-	/*    <<"m_loc00 = "<<b.m_loc00<<std::endl;
+/*
+    std::cout<<"m_loc00 = "<<b.m_loc00<<std::endl;
     <<"m_loc11 = "<<b.m_loc11<<std::endl;
     <<"m_loc10 = "<<b.m_loc10<<std::endl;
     <<"m_loc01 = "<<b.m_loc01<<std::endl;
-	 */
+     */
 
 }
 
@@ -650,6 +678,11 @@ inline Quat qDiff(Quat a, const Quat& b)
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor )
 {
+
+    // in case of rigidification:
+    if(nd0Id==nd1Id)
+        return;
+
 
 	Vec6 U0, U1, u0, u1, f0, f1, F0, F1;
 	BeamLocalMatrices &bLM = _localBeamMatrices[bIndex];
@@ -735,6 +768,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const core::Mechanic
 		unsigned int node0Idx, node1Idx;
 		BeamLocalMatrices &bLM = _localBeamMatrices[b];
 		m_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+
+        if(node0Idx==node1Idx)
+            continue;
 
 		// matrices in global frame
 		Matrix6x6 K00, K01, K10, K11;
@@ -830,30 +867,37 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const core::Mechan
 		BeamLocalMatrices &bLM = _localBeamMatrices[b];
 		m_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-		// matrices in global frame
-		Matrix6x6 K00, K01, K10, K11;
 
-		K00=bLM.loc0_Ad_ref.multTranspose( ( bLM.k_loc00 * bLM.loc0_Ad_ref  )  );
-		K01=bLM.loc0_Ad_ref.multTranspose( ( bLM.k_loc01 * bLM.loc1_Ad_ref  )  );
-		K10=bLM.loc1_Ad_ref.multTranspose( ( bLM.k_loc10 * bLM.loc0_Ad_ref  )  );
-		K11=bLM.loc1_Ad_ref.multTranspose( ( bLM.k_loc11 * bLM.loc1_Ad_ref  )  );
+        int index0[6], index1[6];
+        for (int i=0;i<6;i++)
+            index0[i] = r.offset+node0Idx*6+i;
+        for (int i=0;i<6;i++)
+            index1[i] = r.offset+node1Idx*6+i;
 
-		int index0[6], index1[6];
-		for (int i=0;i<6;i++)
-			index0[i] = r.offset+node0Idx*6+i;
-		for (int i=0;i<6;i++)
-			index1[i] = r.offset+node1Idx*6+i;
 
-		for (int i=0;i<6;i++)
-		{
-			for (int j=0;j<6;j++)
-			{
-				r.matrix->add(index0[i], index0[j], - K00(i,j)*kFact);
-				r.matrix->add(index0[i], index1[j], - K01(i,j)*kFact);
-				r.matrix->add(index1[i], index0[j], - K10(i,j)*kFact);
-				r.matrix->add(index1[i], index1[j], - K11(i,j)*kFact);
-			}
-		}
+        if(node0Idx!=node1Idx) // no rigidification
+        {
+            // matrices in global frame
+            Matrix6x6 K00, K01, K10, K11;
+
+            K00=bLM.loc0_Ad_ref.multTranspose( ( bLM.k_loc00 * bLM.loc0_Ad_ref  )  );
+            K01=bLM.loc0_Ad_ref.multTranspose( ( bLM.k_loc01 * bLM.loc1_Ad_ref  )  );
+            K10=bLM.loc1_Ad_ref.multTranspose( ( bLM.k_loc10 * bLM.loc0_Ad_ref  )  );
+            K11=bLM.loc1_Ad_ref.multTranspose( ( bLM.k_loc11 * bLM.loc1_Ad_ref  )  );
+
+            for (int i=0;i<6;i++)
+            {
+                for (int j=0;j<6;j++)
+                {
+                    r.matrix->add(index0[i], index0[j], - K00(i,j)*kFact);
+                    r.matrix->add(index0[i], index1[j], - K01(i,j)*kFact);
+                    r.matrix->add(index1[i], index0[j], - K10(i,j)*kFact);
+                    r.matrix->add(index1[i], index1[j], - K11(i,j)*kFact);
+                }
+            }
+        }
+
+
 
 		// matrices in global frame
 		Matrix6x6 M00, M01, M10, M11;
