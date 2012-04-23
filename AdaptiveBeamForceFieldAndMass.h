@@ -120,6 +120,7 @@ public:
     , _computeMass(initData(&_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
     , _massDensity(initData(&_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , _shearStressComputation(initData(&_shearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
+	, _elongationFactor(initData(&_elongationFactor, (Real)1.0, "elongationFactor", "modifies the Young modulus in the elongation direction"))
 	, m_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
     {
         _localBeamMatrices.resize(2);
@@ -164,6 +165,7 @@ public:
     Data<bool> _computeMass;
     Data<Real> _massDensity;
     Data<bool> _shearStressComputation;
+	Data<Real> _elongationFactor;
 
 
   //  void setPathToInterpolation(const std::string &o){m_interpolationPath.setValue(o);};

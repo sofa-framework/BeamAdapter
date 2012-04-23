@@ -535,7 +535,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	b.k_loc00.clear(); b.k_loc01.clear(); b.k_loc10.clear(); b.k_loc11.clear();
 
 	// diagonal values
-    b.k_loc00[0][0] = b.k_loc11[0][0] = 1*_E*_A/_L;
+    b.k_loc00[0][0] = b.k_loc11[0][0] = _elongationFactor.getValue()*_E*_A/_L;
 	b.k_loc00[1][1] = b.k_loc11[1][1] = (Real)(12.0*EIz/(L3*(1.0+phiy)));
 	b.k_loc00[2][2] = b.k_loc11[2][2]   = (Real)(12.0*EIy/(L3*(1.0+phiz)));
 	b.k_loc00[3][3] = b.k_loc11[3][3]   = _G*_J/_L;
