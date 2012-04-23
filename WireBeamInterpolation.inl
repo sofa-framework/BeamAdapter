@@ -307,7 +307,7 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 
 	// Just look for the closest point on the curve
 	// Returns false if this point is not a projection on the curve
-	unsigned int nb = x.size() - 1;
+	unsigned int nb = this->getNumBeams();
 	for(unsigned int i=0; i<nb; i++)	// Check each segment and each vertex
 	{
 		computeTransform2(i, globalHlocal0, globalHlocal1, x);
