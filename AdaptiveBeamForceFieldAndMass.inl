@@ -122,16 +122,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::reinit()
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 {
-	static bool firstTime=false;
+
 
     Vec3 g = this->getContext()->getGravity();
 
    // const SReal* g = this->getContext()->getGravityInWorld().ptr();
 
-	if (firstTime)
-	{
-		gravity[0]=g[0]; gravity[1]=g[1]; gravity[2]=g[2];
-	}
+
         /*
         else
 	{
@@ -164,8 +161,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 		_G[i][3]=(Real)0.0; _G[i][4]=(Real)0.0; _G[i][5]=(Real)0.0;
 	}
 
-	if(firstTime)
-		firstTime=false;
 
 	data_G.endEdit();
 }

@@ -1142,19 +1142,44 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         }
         newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
     }
+    /*
 
 	// TEMP TEST : remove aligned dofs
-/*	if(newCurvAbs_notSecure.size() > 3)
+    if(newCurvAbs_notSecure.size() >= 3)
 	{
 		dx = sutureLength / 20;
-		Real prevAbs = newCurvAbs_notSecure[0];
+        Real prevAbs = newCurvAbs_notSecure[0], unused=0.0;
+        unsigned int prevBeam = 0;
+        m_adaptiveinterpolation->getBeamAtCurvAbs(prevAbs, prevBeam, unused);
 		int size = newCurvAbs_notSecure.size();
 		for(int i=1; i<size-1; )
 		{
 			Real curvAbs = newCurvAbs_notSecure[i];
 			Real angle = 0;
 			this->computeBendingAngle(angle, prevAbs, curvAbs, dx, x);
-			if(angle < 0.035)	// less than 2 degrees is considered plan
+
+            unsigned int beamIndex = 0;
+            m_adaptiveinterpolation->getBeamAtCurvAbs(curvAbs, beamIndex, unused);
+
+            bool stretched = false;
+            for(unsigned int j=beamIndex; j<=beamIndex; j++)
+            {
+                Vec3 P0,P1,P2,P3;
+                Real rest_length = m_adaptiveinterpolation->getLength(j);
+                m_adaptiveinterpolation->getSplinePoints(j,x,P0,P1,P2,P3);
+                Real length = 0.0;
+                m_adaptiveinterpolation->computeActualLength(length, P0,P1,P2,P3);
+
+           //     std::cout<<" test on curvAbs"<<curvAbs<<" - prevBeam="<<prevBeam<<" - beamIndex ="<<beamIndex<<"- length="<<length<<"- rest_length"<<rest_length<<std::endl;
+
+                if( length > 1.01 * rest_length)
+                {
+                    stretched = true;
+                    break;
+                }
+            }
+
+            if(angle<0.1 && stretched)	// less than 2 degrees is considered plan
 			{
 				newCurvAbs_notSecure.erase(newCurvAbs_notSecure.begin() + i);
 				size--;
@@ -1162,17 +1187,20 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 			else
 			{
 				i++;
-				prevAbs = curvAbs;
+                prevAbs = curvAbs;
+
 			}
+            //prevBeam = beamIndex;
 		}
 	}
-	*/
+    */
+
     this->rigidCurveSegments.clear();
 	helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 	int nb = rigidCurvAbs->size();
 	if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
 	{
-		helper::set<Real>::const_iterator it;
+        RealConstIterator it;
 		for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
 		{
 			Real start, end;

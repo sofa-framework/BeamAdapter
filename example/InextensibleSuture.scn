@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.002" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 -98.81 0">
+<Node name="root" dt="0.01" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="0" showInteractionForceFields="1" showWireFrame="0" gravity="0 -980 0">
  	<FreeMotionAnimationLoop />
-	<GenericConstraintSolver tolerance="1e-4"  maxIterations="100" unbuilt="false" printLog="0"/>
+	<GenericConstraintSolver tolerance="1e-10"  maxIterations="1000" unbuilt="false" printLog="1"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
@@ -17,20 +17,30 @@
 	<!--<UncoupledConstraintCorrection compliance="0.0001"/>-->
     <Node name="6D_DOFs1">
       <MechanicalObject name="6D_Dof" template="Rigid"/>
-      <UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+	  <UniformMass mass="0.01 1 1 0 0 0 1 0 0 0 1" printLog="false" showAxisSizeFactor="10" />
+      
 	  <ArticulatedSystemMapping input1="@../Articulations" input2="" output="@6D_Dof"/>
 	  
     </Node>
-    <ArticulatedHierarchyContainer filename="inextension_test.bvh"/>
+    <ArticulatedHierarchyContainer filename="inextension.bvh"/>
     <ArticulatedHierarchyBVHController />
   </Node>
+  
+  <Node name="inputPosition">
+		<EulerImplicit rayleighStiffness="0.1" rayleighMass="0.3"/>
+		<LULinearSolver/>
+		<MechanicalObject name="6D_Dof" template="Rigid" position="-3.17058 0 -9.19395  0 0.479426 0 0.877583"/> 
+		<UniformMass mass="0.01 1 1 0 0 0 1 0 0 0 1" printLog="false" showAxisSizeFactor="10" />
+		<RestShapeSpringsForceField stiffness="1e3"  angularStiffness="1e-2"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="0" external_points="1" />
+		<LinearSolverConstraintCorrection />
+  </Node> 
 
 
 <!--------------------------- SUTURE REST SHAPE  -------------------------------->
 
 	<Node name="topoLines_suture">
-		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="4"  straightLength="4" spireDiameter="4000.0" spireHeight="0.0"
-					    densityOfBeams="15 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="1000000" youngModulusExtremity="10000"/> <!-- silicone -->		
+		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="400"  straightLength="380" spireDiameter="40.0" spireHeight="0.0"
+					    densityOfBeams="19 1" numEdges="150" numEdgesCollis="150 10"  youngModulus="1e9" youngModulusExtremity="1e9"/> 		
 
 		<EdgeSetTopologyContainer name="meshLinesSuture" />
 		<EdgeSetTopologyModifier   name="Modifier" />
@@ -42,7 +52,8 @@
 	
 
 	<Node name="AdaptiveBeam">
-		<EulerImplicit rayleighStiffness="0.08" rayleighMass="0.08" printLog="false" />
+		<EulerImplicit rayleighStiffness="0.1" rayleighMass="0.3" printLog="false" />
+		<!--<StaticSolver applyIncrementFactor="1" />-->
 		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
 		
 		<!--
@@ -61,20 +72,24 @@
 		
 		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
 
-		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.05" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.0"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-4 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="1e6"/>
-		<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>
-		<RestShapeSpringsForceField stiffness="1e5"  angularStiffness="1e1"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="15" external_points="1" />
-
+		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.25" printLog="0" dofsAndBeamsAligned="false"/> 
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.2e-2"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<SutureController template="Rigid" name="m_ircontroller" rigidCurvAbs="350 400" printLog="0"  startingPos="-400 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="0.3"/>
+		
+		
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 
-		<FixedConstraint name="FixedConstraint" indices="0" />
+			<FixedConstraint name="FixedConstraint" indices="0"  />
+		
+		<Node name="constraint" activated="false">
+		
+		 <AdaptiveBeamLengthConstraint printLog="true" interpolation="@InterpolSuture" alarmLength="0.9" constrainedLength="1.00" maxBendingAngle="1e8"/>
+		</Node>
 		
 		<Node name="ConstrainedFames">
 			<MechanicalObject name="AttachedFrame" template="Rigid" position=" 0 0 0 0 0 0 1" />
-			<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
-			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" /> 
+			<!--<UniformMass mass="0.00005 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />-->
+			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points="400 0 0" /> 
 		</Node>
 		
 		
@@ -82,14 +97,14 @@
 		<Node name="Collis">
 				<RegularGrid name="test"
 				nx="120" ny="1" nz="1"
-				xmin="0.0" xmax="4"
+				xmin="0.0" xmax="400"
 				ymin="0" ymax="0"
 				zmin="0" zmax="0"
 				/>
 				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
 				<AdaptiveBeamMapping  name="collisMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0"/> 
-				<Line proximity="0.0" group="1"  selfCollision="1" />
-				<Point proximity="0.0" group="1" selfCollision="1"/>
+				<Line proximity="0.0" group="1"  selfCollision="0" />
+				<Point proximity="0.0" group="1" selfCollision="0"/>
 		</Node>	
 
 		<Node name="VisuSuture">
@@ -112,30 +127,10 @@
 	</Node>
 
 
-  <!-- <BilateralInteractionConstraint template="Rigid" object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/ConstrainedFames/AttachedFrame" first_point="1" second_point="0" /> -->
+   <BilateralInteractionConstraint template="Rigid" object1="@inputPosition/6D_Dof" object2="@AdaptiveBeam/ConstrainedFames/AttachedFrame" first_point="0" second_point="0" /> 
 
 
 
- <!--
-	<Node name="CollidedPoints">
-		<MechanicalObject name="DOFs1" position="0 0 40" />		
-		<FixedConstraint name="m_fixedConstraint" indices="0" />
-		<Point radius="10"/>
-	</Node> 
-	
-	
 
-	<Node name="CollisionModel"> 
-		<MeshObjLoader name="meshLoader" filename="mesh/phantom.obj" triangulate="true" flipNormals="1"/>
-		<Mesh position="@meshLoader.position"  triangles="@meshLoader.triangles"/>
-		<MechanicalObject name="DOFs1" position="0 0 400" scale="3" ry="90"/>	
-			<Triangle simulated="0" moving="0"/>	
-		<Line simulated="0" moving="0"/>
-		<Point simulated="0" moving="0"/>
-		<OglModel name="Visual" fileMesh="mesh/phantom.obj" color="1 0 0 0.3" scale="3" ry="90"/>
-	</Node>
-	
-	
-	-->
 </Node>
 

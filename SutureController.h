@@ -100,6 +100,8 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
     typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WInterpolation;
 
+    typedef typename helper::set<Real>::const_iterator RealConstIterator;
+
 
 protected :
 

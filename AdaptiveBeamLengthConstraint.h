@@ -76,10 +76,9 @@ protected:
 	int nbConstraints; // number of constraints created
 	std::vector<Real> violations;
  //   std::vector<unsigned int> activated_beams;	// Not used ?
-	std::vector<Real> activatedBeamsAbscissa;
 	std::map<Real, double> prevForces;	// Map abscissa <-> previous constraint force
 
-	Data<Real> m_alarmLength, m_constrainedLength;
+    Data<Real> m_alarmLength, m_constrainedLength, m_maxBendingAngle;
 
     SingleLink<AdaptiveBeamLengthConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 	
@@ -89,6 +88,7 @@ protected:
     : Inherit(object)
 	, m_alarmLength(initData(&m_alarmLength, (Real)1.02, "alarmLength", "Elongation before creating a constraint"))
 	, m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam"))
+    , m_maxBendingAngle(initData(&m_maxBendingAngle,  (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one constraint interval"))
     , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
 	{
 	}
@@ -109,6 +109,33 @@ public:
 	virtual void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
 
 	void draw(const core::visual::VisualParams* vparams);
+
+private:
+    void detectElongation(const VecCoord &x, const VecCoord& xfree);
+
+    typedef struct
+    {
+       // definition of an interval which length is "constrained"
+        // positions begin /  end of the interval
+       Vec3 posBegin, posEnd;
+
+       // positions free : begin / end of the interval
+       Vec3 posFreeBegin, posFreeEnd;
+
+       // index of the dofs: begin / end of the interval
+       unsigned int IdxBegin, IdxEnd;
+
+       // transform from dof to begin/end of the interval
+       Transform dof_H_begin, dof_H_end;
+
+       // rest length of the interval (if no stretching)
+       Real rest_length;
+
+
+    } IntervalDefinition;
+
+    std::vector<IntervalDefinition> _constraintIntervals;
+
 };
 
 class AdaptiveBeamLengthConstraintResolution : public core::behavior::ConstraintResolution
