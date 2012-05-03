@@ -88,223 +88,203 @@ void AdaptiveBeamLengthConstraint<DataTypes>::internalInit()
 template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x, const VecCoord& xfree)
 {
-    Vec3 P0,P1,P2,P3;
-    Real length, rest_length, length_interval, rest_length_interval;
-    Real alarmLength = m_alarmLength.getValue();
-    bool prev_stretch = false;
+	Vec3 P0,P1,P2,P3;
+	Real length, rest_length, length_interval, rest_length_interval;
+	Real alarmLength = m_alarmLength.getValue();
+	bool prev_stretch = false;
 
-    fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+	fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 
-   // storage of the length (and the rest_length)  of the interval being stretched
-    length_interval=0.0;
-    rest_length_interval=0.0;
+	// storage of the length (and the rest_length)  of the interval being stretched
+	length_interval=0.0;
+	rest_length_interval=0.0;
 
-    // storage of the interval information
-    IntervalDefinition intervalDef;
-    Real angleInterval=0.0;
+	// storage of the interval information
+	IntervalDefinition intervalDef;
+	Real angleInterval=0.0;
 
-    for (unsigned int b=0; b<interpolation->getNumBeams(); b++)
-    {
-        // 1. compute the actual length and the rest length of the beams
-        interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
-        //interpolation->computeActualLength(length, P0,P1,P2,P3);
-        // TODO : optimization: finally it is not necessary to compute all the spline points
-        length=(P0-P3).norm();
-        rest_length = interpolation->getLength(b);
+	for (unsigned int b=0; b<interpolation->getNumBeams(); b++)
+	{
+		// 1. compute the actual length and the rest length of the beams
+		interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
+		//interpolation->computeActualLength(length, P0,P1,P2,P3);
+		// TODO : optimization: finally it is not necessary to compute all the spline points
+		length=(P0-P3).norm();
+		rest_length = interpolation->getLength(b);
 
-        // 2. compute the bending angle
-        Transform Tnode0, Tnode1;
-        Real angleBeam=0.0;
-        interpolation->computeTransform2(b,Tnode0,Tnode1,x);
-        interpolation->ComputeTotalBendingRotationAngle(angleBeam, rest_length/10.0, Tnode0, Tnode1,rest_length , 0.0, 1.0);
-
-
-        // 3. treatment of the different case..
-        unsigned n0, n1;
-        interpolation->getNodeIndices(b, n0, n1);
-        bool case1a = (n0==n1);
-
-        if(prev_stretch)
-        {
-            ////CASE 1: previous beam was stretched:
-            // find the case that necessitates to stop the interval:
-            // (a) rigidification
-            // (b) current beam not stretched
-            // (c) too large bending angle...
-            // (d) last beam ! [ see after the loop "for" ]
-            //// => store the information : index [begin end], Pos [begin end]
+		// 2. compute the bending angle
+		Transform Tnode0, Tnode1;
+		Real angleBeam=0.0;
+		interpolation->computeTransform2(b,Tnode0,Tnode1,x);
+		interpolation->ComputeTotalBendingRotationAngle(angleBeam, rest_length/10.0, Tnode0, Tnode1,rest_length , 0.0, 1.0);
 
 
-            bool case1b = (rest_length*alarmLength > length);
-            bool case1c = (angleBeam >= 0.99*m_maxBendingAngle.getValue());// angleBeam+angleInterval > m_maxBendingAngle.getValue()
-            case1c=false;
-            case1b=false;
+		// 3. treatment of the different case..
+		unsigned n0, n1;
+		interpolation->getNodeIndices(b, n0, n1);
+		bool case1a = (n0==n1);
+
+		if(prev_stretch)
+		{
+			////CASE 1: previous beam was stretched:
+			// find the case that necessitates to stop the interval:
+			// (a) rigidification
+			// (b) current beam not stretched
+			// (c) too large bending angle...
+			// (d) last beam ! [ see after the loop "for" ]
+			//// => store the information : index [begin end], Pos [begin end]
+
+			bool case1b = (rest_length*alarmLength > length);
+			bool case1c = (angleBeam >= 0.99*m_maxBendingAngle.getValue());// angleBeam+angleInterval > m_maxBendingAngle.getValue()
+			case1c=false;
+			case1b=false;
+
+			if (case1a || case1b || case1c) // CASE 1 (a) + (b) + (c)
+			{
+				if(this->f_printLog.getValue())
+				{
+					std::cout<<" beam "<<b<<" case 1 detected (a):"<<n0<<" == ?"<<n1<<"  (b) :"<<
+					rest_length*alarmLength<<" > ?"<<length<<"  (c) : "<<angleBeam+angleInterval<< " > ?" <<m_maxBendingAngle.getValue() <<std::endl;
+				}
+
+				Real angleBuf= angleBeam+angleInterval;
+
+				// Stop the rigidification
+				// the interval ends at the beginning of the current beam
+				intervalDef.posEnd = P0; // store the position
+				intervalDef.IdxEnd = n0; // store the index of the dof
+
+				Transform DOF0_H_local0, DOF1_H_local1;
+				interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
+
+				intervalDef.dof_H_end = DOF0_H_local0; // store the transform from dof to pos
+
+				interpolation->getSplinePoints(b,xfree,P0,P1,P2,P3);
+
+				Transform global_H_local0_free, global_H_local1_free;
+				interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
+				intervalDef.posFreeEnd  = global_H_local0_free.getOrigin(); // store the free position
+
+				intervalDef.rest_length=rest_length_interval; // store the rest_length
+
+				if(this->f_printLog.getValue())
+				std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
+
+				// ends the interval
+				prev_stretch=false;
+				angleInterval=0.0;
+				rest_length_interval=0.0;
+
+				// verify that the interval length is not null:
+				if ((intervalDef.posBegin-intervalDef.posEnd).norm() < 0.0000001)
+					serr<<"WARNING interval of size = 0 detected => 1 beam has a bendingAngle > m_maxBendingAngle"<<sendl;
+				else
+					_constraintIntervals.push_back(intervalDef);
+
+				// isolate the case 1 (c)
+				if (!case1a && !case1b && case1c) //
+				{
+					if(this->f_printLog.getValue())
+						std::cout<<" isolate case 1(c)"<<std::endl;
+
+					// create a new interval:
+					prev_stretch=true;
+					angleInterval = angleBeam;
+					rest_length_interval = rest_length;
+
+					// store the information of the beginning of the new interval
+					// -> it corresponds to the end of the previous interval
+					intervalDef.dof_H_begin = DOF0_H_local0;
+					intervalDef.IdxBegin = n0;
+					intervalDef.posBegin = intervalDef.posEnd;
+					intervalDef.posFreeBegin = intervalDef.posFreeEnd;
+				}
+			}
+			else
+			{
+				// Continue the rigidification
+				angleInterval+=angleBeam;
+				rest_length_interval += rest_length;
+			}
+		}
+		else
+		{
+			//// CASE 2: previous beam was not stretched:
+			// (a) the current beam is stretched: start the interval => store index_begin Pos_begin
+			//     veriy the bending angle (in case the interval= the beam)
+			// (b) the current beam is not stretched=> nothing to do !
+
+			bool case2a = (rest_length*alarmLength < length);
+			case2a=true;
+
+			if (  case2a && !case1a ) // CASE 2 (a)
+			{
+				if( this->f_printLog.getValue())
+					std::cout<<" beam "<<b<<" case 2 (a) detected "<<rest_length*alarmLength<<" < ?"<<length<<std::endl;
+				// create a new interval:
+				prev_stretch=true;
+				angleInterval = angleBeam;
+				rest_length_interval = rest_length;
+
+				// store the information of the beginning of the new interval
+				// -> it corresponds to the position of node 0 of the beam
+				Transform DOF0_H_local0, DOF1_H_local1;
+				interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
+
+				Transform global_H_local0, global_H_local1;
+				interpolation->computeTransform2(b,  global_H_local0,  global_H_local1, x);
 
 
-
-            if (case1a || case1b || case1c) // CASE 1 (a) + (b) + (c)
-            {
-                if( this->f_printLog.getValue())
-                {
-                    std::cout<<" beam "<<b<<" case 1 detected (a):"<<n0<<" == ?"<<n1<<"  (b) :"<<
-                               rest_length*alarmLength<<" > ?"<<length<<"  (c) : "<<angleBeam+angleInterval<< " > ?" <<m_maxBendingAngle.getValue() <<std::endl;
-                }
-
-               Real angleBuf= angleBeam+angleInterval;
-
-                // Stop the rigidification
-                // the interval ends at the beginning of the current beam
-               intervalDef.posEnd = P0; // store the position
-               intervalDef.IdxEnd = n0; // store the index of the dof
-
-               Transform DOF0_H_local0, DOF1_H_local1;
-               interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
-
-               intervalDef.dof_H_end = DOF0_H_local0; // store the transform from dof to pos
-
-               interpolation->getSplinePoints(b,xfree,P0,P1,P2,P3);
-
-               Transform global_H_local0_free, global_H_local1_free;
-               interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
-               intervalDef.posFreeEnd  = global_H_local0_free.getOrigin(); // store the free position
-
-               intervalDef.rest_length=rest_length_interval; // store the rest_length
-
-               std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
-
-               // ends the interval
-               prev_stretch=false;
-               angleInterval=0.0;
-               rest_length_interval=0.0;
-
-               // verify that the interval length is not null:
-               if ((intervalDef.posBegin-intervalDef.posEnd).norm() < 0.0000001)
-                   serr<<"WARNING interval of size = 0 detected => 1 beam has a bendingAngle > m_maxBendingAngle"<<sendl;
-               else
-                   _constraintIntervals.push_back(intervalDef);
-
-               // isolate the case 1 (c)
-               if (!case1a && !case1b && case1c) //
-               {
-                   std::cout<<" isolate case 1(c)"<<std::endl;
-
-                   // create a new interval:
-                   prev_stretch=true;
-                   angleInterval = angleBeam;
-                   rest_length_interval = rest_length;
-
-                   // store the information of the beginning of the new interval
-                   // -> it corresponds to the end of the previous interval
-                   intervalDef.dof_H_begin = DOF0_H_local0;
-                   intervalDef.IdxBegin = n0;
-                   intervalDef.posBegin = intervalDef.posEnd;
-                   intervalDef.posFreeBegin = intervalDef.posFreeEnd;
-
-               }
-            }
-            else
-            {
-
-                    // Continue the rigidification
-                    angleInterval+=angleBeam;
-                    rest_length_interval += rest_length;
-
-            }
+				Transform global_H_local0_free, global_H_local1_free;
+				interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
 
 
-        }
-        else
-        {
-            //// CASE 2: previous beam was not stretched:
-            // (a) the current beam is stretched: start the interval => store index_begin Pos_begin
-            //     veriy the bending angle (in case the interval= the beam)
-            // (b) the current beam is not stretched=> nothing to do !
+				intervalDef.dof_H_begin = DOF0_H_local0;
+				intervalDef.IdxBegin = n0;
+				intervalDef.posBegin = global_H_local0.getOrigin();
+				intervalDef.posFreeBegin = global_H_local0_free.getOrigin();
+			}
+			else
+			{
+				if( this->f_printLog.getValue())
+					std::cout<<" beam "<<b<<" case 2 (b) detected "<<rest_length*alarmLength<<" > ?"<<length<<" or n0="<<n0<<" ==? "<<"n1="<<n1 <<std::endl;
+			}
+		}
+	}
 
-            bool case2a = (rest_length*alarmLength < length);
-            case2a=true;
+	unsigned int b = interpolation->getNumBeams()-1;
+	unsigned n0, n1;
+	interpolation->getNodeIndices(b, n0, n1);
+	if(prev_stretch) // case 1(d)
+	{
+		if( this->f_printLog.getValue())
+			std::cout<<" case 1 (d) detected on the last beam"<<std::endl;
 
-            if (  case2a && !case1a ) // CASE 2 (a)
-            {
-                if( this->f_printLog.getValue())
-                {
-                    std::cout<<" beam "<<b<<" case 2 (a) detected "<<rest_length*alarmLength<<" < ?"<<length<<std::endl;
-                }
-                // create a new interval:
-                prev_stretch=true;
-                angleInterval = angleBeam;
-                rest_length_interval = rest_length;
+		// store the information of the beginning of the new interval
+		// -> it corresponds to the position of node 0 of the beam
+		Transform DOF0_H_local0, DOF1_H_local1;
+		interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
 
-                // store the information of the beginning of the new interval
-                // -> it corresponds to the position of node 0 of the beam
-                Transform DOF0_H_local0, DOF1_H_local1;
-                interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
+		Transform global_H_local0, global_H_local1;
 
-                Transform global_H_local0, global_H_local1;
-                interpolation->computeTransform2(b,  global_H_local0,  global_H_local1, x);
-
-
-                Transform global_H_local0_free, global_H_local1_free;
-                interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
+		interpolation->computeTransform2(b,  global_H_local0,  global_H_local1, x);
 
 
-                intervalDef.dof_H_begin = DOF0_H_local0;
-                intervalDef.IdxBegin = n0;
-                intervalDef.posBegin = global_H_local0.getOrigin();
-                intervalDef.posFreeBegin = global_H_local0_free.getOrigin();
-
-            }
-            else
-            {
-
-                if( this->f_printLog.getValue())
-                {
-                    std::cout<<" beam "<<b<<" case 2 (b) detected "<<rest_length*alarmLength<<" > ?"<<length<<" or n0="<<n0<<" ==? "<<"n1="<<n1 <<std::endl;
-                }
-            }
-
-        }
+		Transform global_H_local0_free, global_H_local1_free;
+		interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
 
 
-    }
+		intervalDef.dof_H_end = DOF1_H_local1;
+		intervalDef.IdxEnd = n1;
+		intervalDef.posEnd = global_H_local1.getOrigin();
+		intervalDef.posFreeEnd = global_H_local1_free.getOrigin();
+		intervalDef.rest_length=rest_length_interval; // store the rest_length
 
-    unsigned int b = interpolation->getNumBeams()-1;
-    unsigned n0, n1;
-    interpolation->getNodeIndices(b, n0, n1);
-    if(prev_stretch) // case 1(d)
-    {
-        if( this->f_printLog.getValue())
-        {
-            std::cout<<" case 1 (d) detected on the last beam"<<std::endl;
-        }
+		if(this->f_printLog.getValue())
+		std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
 
-        // store the information of the beginning of the new interval
-        // -> it corresponds to the position of node 0 of the beam
-        Transform DOF0_H_local0, DOF1_H_local1;
-        interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
-
-        Transform global_H_local0, global_H_local1;
-
-        interpolation->computeTransform2(b,  global_H_local0,  global_H_local1, x);
-
-
-        Transform global_H_local0_free, global_H_local1_free;
-        interpolation->computeTransform2(b,  global_H_local0_free,  global_H_local1_free, xfree);
-
-
-        intervalDef.dof_H_end = DOF1_H_local1;
-        intervalDef.IdxEnd = n1;
-        intervalDef.posEnd = global_H_local1.getOrigin();
-        intervalDef.posFreeEnd = global_H_local1_free.getOrigin();
-        intervalDef.rest_length=rest_length_interval; // store the rest_length
-
-        std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
-
-        _constraintIntervals.push_back(intervalDef);
-
-    }
-
-
-
+		_constraintIntervals.push_back(intervalDef);
+	}
 }
 
 template<class DataTypes>
@@ -367,12 +347,14 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
         Vec3 lever1 = x[n1].getOrientation().rotate( _constraintIntervals[i].dof_H_end.getOrigin()  );
 
 
-        if(lever0.norm() > 0.0001)
-            std::cout<<" lever0 ="<<lever0<<" dir ="<<dir<<std::endl;
+		if(this->f_printLog.getValue())
+		{
+			if(lever0.norm() > 0.0001)
+				std::cout<<" lever0 ="<<lever0<<" dir ="<<dir<<std::endl;
 
-        if(lever1.norm() > 0.0001)
-            std::cout<<" lever1 ="<<lever1<<" -dir ="<<-dir<<std::endl;
-
+			if(lever1.norm() > 0.0001)
+				std::cout<<" lever1 ="<<lever1<<" -dir ="<<-dir<<std::endl;
+		}
 
 
 
@@ -385,7 +367,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 
     }
     constraintId +=nbConstraints;
-    std::cout<<"end buildConstraintMatrix "<<std::endl;
+	if(this->f_printLog.getValue())
+		std::cout<<"end buildConstraintMatrix "<<std::endl;
 }
 
 
