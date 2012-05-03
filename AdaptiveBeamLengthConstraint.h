@@ -113,26 +113,27 @@ public:
 private:
     void detectElongation(const VecCoord &x, const VecCoord& xfree);
 
-    typedef struct
-    {
-       // definition of an interval which length is "constrained"
-        // positions begin /  end of the interval
-       Vec3 posBegin, posEnd;
+	typedef struct
+	{
+		// definition of an interval which length is "constrained"
+		// positions begin /  end of the interval
+		Vec3 posBegin, posEnd;
 
-       // positions free : begin / end of the interval
-       Vec3 posFreeBegin, posFreeEnd;
+		// positions free : begin / end of the interval
+		Vec3 posFreeBegin, posFreeEnd;
 
-       // index of the dofs: begin / end of the interval
-       unsigned int IdxBegin, IdxEnd;
+		// index of the dofs: begin / end of the interval
+		unsigned int IdxBegin, IdxEnd;
 
-       // transform from dof to begin/end of the interval
-       Transform dof_H_begin, dof_H_end;
+		// transform from dof to begin/end of the interval
+		Transform dof_H_begin, dof_H_end;
 
-       // rest length of the interval (if no stretching)
-       Real rest_length;
+		// rest length of the interval (if no stretching)
+		Real rest_length;
 
-
-    } IntervalDefinition;
+		// is it in elongation
+		bool active;
+	} IntervalDefinition;
 
     std::vector<IntervalDefinition> _constraintIntervals;
 
@@ -141,13 +142,14 @@ private:
 class AdaptiveBeamLengthConstraintResolution : public core::behavior::ConstraintResolution
 {
 public:
-	AdaptiveBeamLengthConstraintResolution(double* initF=NULL) : _initF(initF) { nbLines = 1; }
+	AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : _initF(initF), _active(active) { nbLines = 1; }
 	virtual void init(int line, double** /*w*/, double* force);
 	virtual void resolution(int line, double** w, double* d, double* force);
 	virtual void store(int line, double* force, bool /*convergence*/);
 	
 protected:
 	double* _initF;
+	bool* _active;
 };
 
 } // namespace constraintset

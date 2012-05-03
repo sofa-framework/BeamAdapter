@@ -48,14 +48,16 @@ void AdaptiveBeamLengthConstraintResolution::init(int line, double** /*w*/, doub
 void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
 {
     force[line] -= d[line] / w[line][line];
-    if(force[line] < 0)
-            force[line] = 0;
+	if(force[line] < 0)
+		force[line] = 0;
 }
 
 void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool /*convergence*/)
 {
 	if(_initF)
 		*_initF = force[line];
+	if(_active)
+		*_active = (force[line] != 0);
 }
 
 template<class DataTypes>
@@ -293,6 +295,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 
   //  std::cout<<"begin buildConstraintMatrix "<<std::endl;
 	violations.clear();
+	Real alarmLength = m_alarmLength.getValue();
     Real constrainedLength = m_constrainedLength.getValue();
 
 	nbConstraints = 0;
@@ -333,18 +336,20 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
         dir.normalize();
         Real length_free= dot(dir, PbPeFree);
 
-
       //  std::cout<<" dot(dir, PbPeFree) ="<<dot(dir, PbPeFree)<<"  - length_free="<<length_free<<"  - length ="<<length<<std::endl;
 
+/*		if(length_free > _constraintIntervals[i].rest_length * alarmLength)
+			_constraintIntervals[i].active = true;
+		else
+			_constraintIntervals[i].active = false;
+*/
+		// put the violation in a buffer
+		violations.push_back(_constraintIntervals[i].rest_length * constrainedLength - length_free);
 
+		// project the  direction of the constraint (considered as a force) in the DOF frame
 
-        // put the violation in a buffer
-        violations.push_back(_constraintIntervals[i].rest_length * constrainedLength - length_free);
-
-        // project the  direction of the constraint (considered as a force) in the DOF frame
-
-        Vec3 lever0 = x[n0].getOrientation().rotate( _constraintIntervals[i].dof_H_begin.getOrigin() );
-        Vec3 lever1 = x[n1].getOrientation().rotate( _constraintIntervals[i].dof_H_end.getOrigin()  );
+		Vec3 lever0 = x[n0].getOrientation().rotate( _constraintIntervals[i].dof_H_begin.getOrigin() );
+		Vec3 lever1 = x[n1].getOrientation().rotate( _constraintIntervals[i].dof_H_end.getOrigin()  );
 
 
 		if(this->f_printLog.getValue())
@@ -356,14 +361,12 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 				std::cout<<" lever1 ="<<lever1<<" -dir ="<<-dir<<std::endl;
 		}
 
+		MatrixDerivRowIterator c_it = c.writeLine(cid + nbConstraints);
 
+		c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
+		c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );
 
-        MatrixDerivRowIterator c_it = c.writeLine(cid + nbConstraints);
-
-        c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
-        c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );
-
-        nbConstraints++;
+		nbConstraints++;
 
     }
     constraintId +=nbConstraints;
@@ -399,7 +402,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vecto
     unsigned int nb = violations.size();
     for(unsigned int i=0; i<nb; i++)
     {
-        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(); //&prevForces[activatedBeamsAbscissa[i]]
+        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &_constraintIntervals[i].active); //&prevForces[activatedBeamsAbscissa[i]]
         offset++;
     }
 
@@ -437,6 +440,10 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const core::visual::VisualPar
     glBegin(GL_LINES);
     for(unsigned int i=0; i<_constraintIntervals.size(); i++)
     {
+		if(_constraintIntervals[i].active)
+			glColor4f(1.0f,0.5f,0.0f,1.0f);
+		else
+			glColor4f(0.0f,1.0f,0.0f,1.0f);
         helper::gl::glVertexT(_constraintIntervals[i].posBegin);
         helper::gl::glVertexT(_constraintIntervals[i].posEnd);
     }
