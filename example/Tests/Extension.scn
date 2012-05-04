@@ -7,26 +7,18 @@
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />
-	<!--<VisualStyle name="VisualStyle" displayFlags="showBehaviorModels showForceFields showCollisionModels" />-->
-
-
-
-<!-- !! MOTION !! 	-->
+	
    <Node name="BVH">
     <MechanicalObject name="Articulations" template="Vec1d"/>
-	<!--<UncoupledConstraintCorrection compliance="0.0001"/>-->
     <Node name="6D_DOFs1">
       <MechanicalObject name="6D_Dof" template="Rigid"/>
       <UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
 	  <ArticulatedSystemMapping input1="@../Articulations" input2="" output="@6D_Dof"/>
 	  
     </Node>
-    <ArticulatedHierarchyContainer filename="Extension.bvh"/>
-    <ArticulatedHierarchyBVHController />
-  </Node>
-
-
-<!--------------------------- SUTURE REST SHAPE  -------------------------------->
+		<ArticulatedHierarchyContainer filename="Extension.bvh"/>
+		<ArticulatedHierarchyBVHController />
+	</Node>
 
 	<Node name="topoLines_suture">
 		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="4"  straightLength="4" spireDiameter="4000.0" spireHeight="0.0"
@@ -39,20 +31,10 @@
 		<MechanicalObject template="Rigid" name="dofTopo1" />
 	</Node>	
 
-	
-
 	<Node name="AdaptiveBeam">
 		<EulerImplicit rayleighStiffness="0.08" rayleighMass="0.08" printLog="false" />
 		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
-		
-		<!--
-		<RegularGrid name="meshLinesCombined"
-		nx="60" ny="1" nz="1"
-		xmin="0.0" xmax="1.0"
-		ymin="0" ymax="0"
-		zmin="1" zmax="1"
-		/>	-->	
-		
+
 		<EdgeSetTopologyContainer name="meshSuture" />
 		<EdgeSetTopologyModifier   name="Modifier" />
 		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
@@ -62,9 +44,9 @@
 		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
 
 		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.05" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.0" elongationFactor="10" /> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.0" elongationFactor="10" />
 		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-4 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="1e6"/>
-<!--		<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>	-->
+		<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>
 		<RestShapeSpringsForceField stiffness="1e4"  angularStiffness="1e1"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="15" external_points="1" />
 
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
@@ -76,8 +58,6 @@
 			<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
 			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" /> 
 		</Node>
-		
-		
 		
 		<Node name="Collis">
 				<RegularGrid name="test"
@@ -98,44 +78,14 @@
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
-			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.03" input="@../../topoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="6" radius="0.03" input="@../../topoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
 			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
-				<VisualModel  name="VisualBody" fileMesh="mesh/caducee_snake.obj"   />
+				<VisualModel  name="VisualBody" />
 				<IdentityMapping input="@../Quads" output="@VisualBody"/>
 			</Node>	
 		</Node>
-	
-	
-
 	</Node>
-
-
-  <!-- <BilateralInteractionConstraint template="Rigid" object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/ConstrainedFames/AttachedFrame" first_point="1" second_point="0" /> -->
-
-
-
- <!--
-	<Node name="CollidedPoints">
-		<MechanicalObject name="DOFs1" position="0 0 40" />		
-		<FixedConstraint name="m_fixedConstraint" indices="0" />
-		<Point radius="10"/>
-	</Node> 
-	
-	
-
-	<Node name="CollisionModel"> 
-		<MeshObjLoader name="meshLoader" filename="mesh/phantom.obj" triangulate="true" flipNormals="1"/>
-		<Mesh position="@meshLoader.position"  triangles="@meshLoader.triangles"/>
-		<MechanicalObject name="DOFs1" position="0 0 400" scale="3" ry="90"/>	
-			<Triangle simulated="0" moving="0"/>	
-		<Line simulated="0" moving="0"/>
-		<Point simulated="0" moving="0"/>
-		<OglModel name="Visual" fileMesh="mesh/phantom.obj" color="1 0 0 0.3" scale="3" ry="90"/>
-	</Node>
-	
-	
-	-->
 </Node>
 
