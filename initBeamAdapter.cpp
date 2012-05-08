@@ -67,19 +67,15 @@ namespace component
 
 	const char* getModuleComponentList()
 	{
-		std::string commonentlist;
-
-		commonentlist += " WireRestShape"                    ;
-		commonentlist += " BeamInterpolation"                ;
-		commonentlist += " WireBeamInterpolation"            ;
-		commonentlist += " AdaptiveBeamForceFieldAndMass"    ;
-		commonentlist += " AdaptiveBeamController"           ;
-		commonentlist += " InterventionalRadiologyController";
-		commonentlist += " AdaptiveBeamMapping"              ;
-		commonentlist += " MultiAdaptiveBeamMapping"  ;
-                commonentlist += " AdaptiveBeamLengthConstraint " ;
-		//commonentlist += "";
-		return commonentlist.c_str();
+		return	" WireRestShape"
+				" BeamInterpolation"
+				" WireBeamInterpolation"
+				" AdaptiveBeamForceFieldAndMass"
+				" AdaptiveBeamController"
+				" InterventionalRadiologyController"
+				" AdaptiveBeamMapping"
+				" MultiAdaptiveBeamMapping"
+				" AdaptiveBeamLengthConstraint";
 	}
 
 
