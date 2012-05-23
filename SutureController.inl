@@ -61,6 +61,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
+, m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
 {
 }
@@ -598,10 +599,30 @@ void SutureController<DataTypes>::applyController()
 
 	sofa::helper::vector<Real> &nodeCurvAbs = *m_nodeCurvAbs.beginEdit();
 	nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
-
-    datax->endEdit();
-    datav->endEdit();
 	m_nodeCurvAbs.endEdit();
+
+	VecCoord& ctrlPts = *m_controlPoints.beginEdit();
+	ctrlPts.clear();
+
+	unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
+	Transform global_H0_local,  global_H1_local;
+	for (unsigned int b=0; b<numBeams; b++)
+	{
+		m_adaptiveinterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
+		Coord pt;
+		pt.getCenter() = global_H0_local.getOrigin();
+		pt.getOrientation() = global_H0_local.getOrientation();
+		ctrlPts.push_back(pt);
+	}
+	Coord pt;
+	pt.getCenter() = global_H1_local.getOrigin();
+	pt.getOrientation() = global_H1_local.getOrientation();
+	ctrlPts.push_back(pt);
+	
+	m_controlPoints.endEdit();
+	
+	datax->endEdit();
+    datav->endEdit();
 }
 
 

@@ -321,7 +321,7 @@ protected:
 //    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
     Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
 
-
+	Data< VecCoord > m_controlPoints;
 
 
 
