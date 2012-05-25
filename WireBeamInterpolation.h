@@ -153,7 +153,7 @@ public:
 	virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
 	virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 	virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
-	void getCurvAbsAtBeam(unsigned int &edgeInList_input, Real& baryCoord_input, Real& x_output);
+	void getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output);
 	bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 	bool getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& x, Real& x_output, const Real& tolerance);
 
@@ -223,6 +223,8 @@ public:
 	}
 };
 
+// When the Newton method doesn't converge when searching for the closest projection on the curve,
+//  we will start a dichotomic search, for now a unoptimized brute force approach.
 template<class DataTypes>
 class ProjectionSearch
 {
@@ -234,8 +236,8 @@ public:
 	typedef Vec<3, Real> Vec3;
 
 	ProjectionSearch(WireBeamInterpolation<DataTypes>* inter, const Vec3& x_input, const VecCoord& vecX, Real& xcurv_output, const Real& tol)
-		: interpolation(inter), x(vecX), target(x_input), e(xcurv_output), tolerance(tol), found(false) 
-		, totalIterations(0), quadraticIterations(0), searchDirection(0) {}
+		: interpolation(inter), x(vecX), target(x_input), e(xcurv_output), tolerance(tol), found(false)
+		, totalIterations(0), dichotomicIterations(0), searchDirection(0) {}
 
 	WireBeamInterpolation<DataTypes> *interpolation; // The interpolation using this class
 	const VecCoord& x;			// The positions of the beams we are working on
@@ -244,18 +246,18 @@ public:
 	Real tolerance;				// Tolerance for the end of the search (projection of the estimation on the tangent is < than tolerance)
 	unsigned int beamIndex,		// The current beam for the search
 	totalIterations,			// # of iterations (including beam changes)
-	quadraticIterations;		// # of iterations for the current beam
+	dichotomicIterations;		// # of iterations for the current beam
 	int searchDirection;		// When we change beam, which direction is it ?
-	Real e,	le;					// Current estimation of the projection, and its value in the current beam ([0,1])
-	Real s1, s2, s3, sk;		// Abscissa of the quadratic method interval (and the estimation)
-	Real de, ds1, ds2, ds3, dsk;// Distances to the point for each of these abscissa
+	Real e,	le, de;				// Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target
 	Real beamStart, beamEnd;	// Abscissa of the current beam extremities
-	Real dBeamStart, dBeamEnd;	// Distances to the point for the current beam extremities
+	Real segStart, segEnd;		// Abscissa of the current search segment extremities
+	Real range, rangeSampling;	// The length of the current search segment, and the distance between 2 sampling points
 	Vec3 P0,P1,P2,P3;			// Current beam control points
+	static const unsigned int sampling = 10; // How many points do we consider each step ? (at least > 3 or it will never converge)
+	Real distTab[sampling+1];			// Array of distances
 
 	bool doSearch(Real& result);
 	void initSearch(Real curvAbs);
-	void quadraticMinimization();
 	void newtonMethod();
 	bool changeCurrentBeam(int index);
 	Real computeDistAtCurvAbs(Real curvAbs);
