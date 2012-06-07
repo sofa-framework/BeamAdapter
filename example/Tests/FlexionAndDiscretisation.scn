@@ -43,8 +43,8 @@
 		<LinearSolverConstraintCorrection wire_optimization="true"/>
 
 		<WireBeamInterpolation name="interpolSuture" WireRestShape="@../TopoLines_suture/sutureRestShape" radius="2" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass name="sutureForceField" interpolation="interpolSuture" massDensity="1e-4"/>
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-170 0 0 0 0 0 1" interpolation="interpolSuture"  threshold="1e-3" maxBendingAngle="0.4"/>
+		<AdaptiveBeamForceFieldAndMass name="sutureForceField" interpolation="@interpolSuture" massDensity="1e-4"/>
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-170 0 0 0 0 0 1" interpolation="@interpolSuture"  threshold="1e-3" maxBendingAngle="0.4"/>
 		
 		<Node name="Collis">
 			<RegularGrid name="grid"
@@ -54,7 +54,7 @@
 			zmin="0" zmax="0"
 			/>
 			<MechanicalObject name="points" showIndices="0"/>
-			<AdaptiveBeamMapping  name="collisMap"  interpolation="../interpolSuture" useCurvAbs="1" printLog="0"/> 
+			<AdaptiveBeamMapping  name="collisMap"  interpolation="@../interpolSuture" useCurvAbs="1" printLog="0"/> 
 			<Line proximity="0.0" LineActiverPath="../container" />
 			<Point proximity="0.0" PointActiverPath="../container" group="10" />
 		</Node>		
@@ -65,7 +65,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius=".5" input="@../../TopoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
-			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../interpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../interpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.6 0.6 0.6" />

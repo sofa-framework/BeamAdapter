@@ -53,17 +53,18 @@ namespace controller
 
 template <class DataTypes>
 SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTypes>* _adaptiveinterpolation)
-: m_adaptiveinterpolation(_adaptiveinterpolation)
-, startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
+: startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
 , threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
 , maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
-, m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
 , useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
+, m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
 , m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
 {
+	if(_adaptiveinterpolation)
+		m_adaptiveinterpolation.set(_adaptiveinterpolation);
 }
 
 template <class DataTypes>
@@ -72,10 +73,11 @@ void SutureController<DataTypes>::init()
 	this->f_listening.setValue(true);
 	Inherit::init();
 
-	if (m_adaptiveinterpolation == NULL)
-	{
-		getWireBeamInterpolation();
-	}
+	if(!m_adaptiveinterpolation)
+		m_adaptiveinterpolation.set(this->getContext()->get<WInterpolation>(core::objectmodel::BaseContext::Local));
+
+	if(!m_adaptiveinterpolation)
+		serr << "No Beam Interpolation found, the component can not work!" << sendl;
 
 	m_adaptiveinterpolation->setControlled(true);
 
@@ -222,9 +224,41 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 		return false;
 	}
 
+	// When there are rigid segments, # of dofs is different than # of edges and beams
+	unsigned int numRigidPts = 0;
+	helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+	int nbRigidAbs = rigidCurvAbs->size();
+	if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
+	{
+		const helper::vector<Real>& curvAbs = m_nodeCurvAbs.getValue();
+		RealConstIterator it;
+		unsigned int i = 0, nbCurvAbs = curvAbs.size(), tmpNumRigidPts = 0;
+		for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
+		{
+			Real start, end;
+			start = *it++;
+			end = *it++;
+
+			// Look for the start of the rigid segment
+			while(i<nbCurvAbs && curvAbs[i] < start)
+				i++;
+			
+			// Count the # of points in this rigid segment
+			while(i<nbCurvAbs && curvAbs[i] < end)
+			{
+				i++;
+				tmpNumRigidPts++;
+			}
+
+			if(!tmpNumRigidPts)
+				tmpNumRigidPts = 1;	// At least one beam for this rigid segment
+			numRigidPts += tmpNumRigidPts;
+		}
+	}
+
 	if (m_topology != NULL)
 	{
-		if (m_topology->getNbPoints() != numDofs || m_topology->getNbEdges() != (numDofs-1))
+		if (m_topology->getNbPoints() != numDofs || m_topology->getNbEdges() != (numDofs+numRigidPts-1))
 			return false;
 	}
 	else
@@ -235,7 +269,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 
 	if (m_adaptiveinterpolation != NULL)
 	{
-		if (m_adaptiveinterpolation->getNumBeams() != (numDofs - 1))
+		if (m_adaptiveinterpolation->getNumBeams() != (numDofs + numRigidPts - 1))
 			return false;
 	}
 	else
@@ -244,37 +278,11 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 		return false;
 	}
 
-	if (m_nodeCurvAbs.getValue().size() != numDofs)
+	if (m_nodeCurvAbs.getValue().size() != (numDofs + numRigidPts))
 		return false;
 
 	return true;
 }
-
-
-template <class DataTypes>
-void SutureController<DataTypes>::getWireBeamInterpolation()
-{
-	using namespace core::objectmodel;
-
-	BaseContext * c = this->getContext();
-
-	const helper::vector< std::string >& interpolName = m_interpolationPath.getValue();
-
-	if (interpolName.empty())
-	{
-		m_adaptiveinterpolation = c->get< WInterpolation >(BaseContext::Local);
-	}
-	else
-	{
-		m_adaptiveinterpolation = c->get< WInterpolation >(m_interpolationPath.getValue()[0]);
-	}
-
-	if (m_adaptiveinterpolation == NULL)
-		serr << "No Beam Interpolation found !!! the component can not work" << sendl;
-	else
-		sout << "Interpolation named " << m_adaptiveinterpolation->getName() << " found (for " << this->getName() << ")" << sendl;
-}
-
 
 ///////////// TODO: Faire une fonction qui recalcule entièrement la topologie (pour remplacer addNodesAndEdge et removeNodesAndEdge
 

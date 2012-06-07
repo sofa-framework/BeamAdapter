@@ -310,24 +310,11 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* /*cp
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::init()
 {
-    if (m_adaptativebeamInterpolation==NULL) {
-            ///////// get the Adaptive Interpolation component ///////
-            //std::vector<sofa::core::behavior::LinearSolver*> solvers;
-            core::objectmodel::BaseContext * c = this->getContext();
+	if (!m_adaptativebeamInterpolation) 
+		m_adaptativebeamInterpolation.set(this->getContext()->get<BInterpolation>());
 
-            const helper::vector<std::string>& interpolName = m_interpolationPath.getValue();
-            if (interpolName.empty()) {
-                m_adaptativebeamInterpolation = c->get<BInterpolation>(core::objectmodel::BaseContext::Local);
-            } else {
-                m_adaptativebeamInterpolation = c->get<BInterpolation>(m_interpolationPath.getValue()[0]);
-            }
-
-            if(m_adaptativebeamInterpolation==NULL)
-                serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
-            else
-                sout<<" interpolation named"<<m_adaptativebeamInterpolation->getName()<<" found (for "<<this->getName()<<")"<<sendl;
-    }
-
+	if (!m_adaptativebeamInterpolation)
+		serr<<"No Beam Interpolation found, the component can not work!"<<sendl;
 }
 
 template <class TIn, class TOut>

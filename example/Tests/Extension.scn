@@ -56,7 +56,7 @@
 		<Node name="ConstrainedFames">
 			<MechanicalObject name="AttachedFrame" template="Rigid" position=" 0 0 0 0 0 0 1" />
 			<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
-			<AdaptiveBeamMapping  name="FrameMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" /> 
+			<AdaptiveBeamMapping  name="FrameMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" /> 
 		</Node>
 		
 		<Node name="Collis">
@@ -67,7 +67,7 @@
 				zmin="0" zmax="0"
 				/>
 				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
-				<AdaptiveBeamMapping  name="collisMap"  interpolation="../InterpolSuture" useCurvAbs="1" printLog="0"/> 
+				<AdaptiveBeamMapping  name="collisMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0"/> 
 				<Line proximity="0.0" group="1"  selfCollision="1" />
 				<Point proximity="0.0" group="1" selfCollision="1"/>
 		</Node>	
@@ -79,7 +79,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="6" radius="0.03" input="@../../topoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
-			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
 				<VisualModel  name="VisualBody" />

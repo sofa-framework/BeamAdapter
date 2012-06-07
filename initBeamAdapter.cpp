@@ -85,13 +85,16 @@ namespace component
 } 
 
 
-SOFA_LINK_CLASS(BaseRestShape)
-SOFA_LINK_CLASS(WireRestShape)
-SOFA_LINK_CLASS(BeamInterpolation)
-SOFA_LINK_CLASS(WireBeamInterpolation)
-SOFA_LINK_CLASS(AdaptiveBeamForceFieldAndMass)
+SOFA_LINK_CLASS(AdaptiveBeamConstraint)
 SOFA_LINK_CLASS(AdaptiveBeamController)
-SOFA_LINK_CLASS(InterventionalRadiologyController)
+SOFA_LINK_CLASS(AdaptiveBeamForceFieldAndMass)
+SOFA_LINK_CLASS(AdaptiveBeamLengthConstraint)
 SOFA_LINK_CLASS(AdaptiveBeamMapping)
+SOFA_LINK_CLASS(BaseRestShape)
+SOFA_LINK_CLASS(BeamInterpolation)
+SOFA_LINK_CLASS(ImplicitSurfaceAdaptiveConstraint)
+SOFA_LINK_CLASS(InterventionalRadiologyController)
 SOFA_LINK_CLASS(MultiAdaptiveBeamMapping)
-
+SOFA_LINK_CLASS(SutureController)
+SOFA_LINK_CLASS(WireBeamInterpolation)
+SOFA_LINK_CLASS(WireRestShape)

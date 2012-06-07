@@ -102,15 +102,6 @@ public:
 
     typedef typename helper::set<Real>::const_iterator RealConstIterator;
 
-
-protected :
-
-    WInterpolation* m_adaptiveinterpolation;
-    //sofa::core::objectmodel::DataObjectRef m_interpolationPath;
-
-
-public :
-
 	/**
 	 * @name Point & Line Activer interface
 	 */
@@ -233,11 +224,6 @@ public :
 private:
 	
 	/**
-	 * @brief Get the adaptive interpolation component.
-	 */
-	void getWireBeamInterpolation();
-
-	/**
 	 * @brief Checks if the controlled MechanicalState and Topology have already been initialized.
 	 */
 	bool wireIsAlreadyInitialized();
@@ -298,9 +284,9 @@ protected:
     Data< Coord > startingPos;
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
-    Data< helper::vector< std::string > > m_interpolationPath;
     Data< bool > useDummyController;
 	Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end) 
+	SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments;
@@ -315,15 +301,10 @@ protected:
     std::list< Real > listOfImposedNodesOnXcurv;
 
 
-
-
-
 //    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
     Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
 
 	Data< VecCoord > m_controlPoints;
-
-
 
     /////////// Interface for topology changes
 

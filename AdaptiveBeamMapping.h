@@ -127,7 +127,7 @@ public:
     Data< double > proximity;
     Data<bool> contactDuplicate;
     Data<std::string> nameOfInputMap;
-    Data< helper::vector< std::string > > m_interpolationPath;
+    SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
 	
     AdaptiveBeamMapping()
         : Inherit()
@@ -136,8 +136,7 @@ public:
     , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
     , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
     , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
-    , m_adaptativebeamInterpolation(NULL)
+    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
     , m_inputMapping(NULL)
     , isSubMapping(false)
     , isBarycentricMapping(false)
@@ -151,13 +150,14 @@ public:
     , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
     , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
     , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
-    , m_adaptativebeamInterpolation(_interpolation)
+    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
     , m_inputMapping(NULL)
     , isSubMapping(_isSubMapping)
     , isBarycentricMapping(false)
     {
-        }
+		if(_interpolation)
+			m_adaptativebeamInterpolation.set(_interpolation);
+    }
 
 	void printIstrumentInfo()const
 	{
@@ -261,7 +261,6 @@ protected:
 
     sofa::helper::vector< PosPointDefinition > pointBeamDistribution;
     // for continuous_friction_contact:
-    BInterpolation* m_adaptativebeamInterpolation;
     AdaptiveBeamMapping<TIn, TOut> *m_inputMapping;
     sofa::helper::vector<unsigned int> idPointSubMap;
     bool isSubMapping;

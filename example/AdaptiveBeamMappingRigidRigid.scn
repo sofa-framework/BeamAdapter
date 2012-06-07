@@ -14,7 +14,7 @@
 
 		<Node name="Collision">
 			<MechanicalObject name="CollisionDOFs" template="Rigid" />
-			<AdaptiveBeamMapping  useCurvAbs="1"  points="1.1 0 0" input="@../DOFs" output="@CollisionDOFs" />
+			<AdaptiveBeamMapping  useCurvAbs="1" interpolation="@../BeamInterpolation" points="1.1 0 0" input="@../DOFs" output="@CollisionDOFs" />
 			 <!--points="0 0 0  0.2 0 0  0.4 0 0  0.6 0 0  0.8 0 0"-->
 			<Node name="Visual">
 				<Object type="OglModel" name="VisualModel" fileMesh="mesh/cube.obj" color="red" scale="0.01"/>

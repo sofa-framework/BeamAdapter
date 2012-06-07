@@ -103,7 +103,7 @@
       <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
       <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.16" object1="topoLines_cath/meshLinesCath" object2="ContainerCath"   flipNormals="true" tags="Cath"/>
       
-      <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" tags="Cath" isMechanical="false"  interpolation="../InterpolCatheter" />
+      <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" tags="Cath" isMechanical="false"  interpolation="@../InterpolCatheter" />
       <Node name="VisuOgl">
 			<OglShader vertFilename="shaders/generalRenderingShader.vert" fragFilename="shaders/generalRenderingShader.frag" />
 			<OglShaderDefineMacro id="BORDER_OPACIFYING" />
@@ -125,7 +125,7 @@
       <QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
       <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
       <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.07" object1="topoLines_coils/meshLinesCoils" object2="ContainerCoils"  flipNormals="true" listening="true"  tags="Coils" /> 
-      <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" tags="Coils" isMechanical="false"   interpolation="../InterpolCoils"/>
+      <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" tags="Coils" isMechanical="false"   interpolation="@../InterpolCoils"/>
       <Node name="VisuOgl">
 	<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
 	<IdentityMapping object1="Quads" object2="Visual"/>

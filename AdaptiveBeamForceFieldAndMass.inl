@@ -86,21 +86,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::init()
 {
 
     //std::vector<sofa::core::behavior::LinearSolver*> solvers;
-    BaseContext * c = this->getContext();
+    
 
+    if(!m_interpolation)
+        m_interpolation.set(this->getContext()->get<BInterpolation>(core::objectmodel::BaseContext::Local));
 
-    const helper::vector<std::string>& interpolName = m_interpolationPath.getValue();
-    if (interpolName.empty()) {
-        m_interpolation= c->get<BInterpolation>(core::objectmodel::BaseContext::Local);
-    } else {
-
-        m_interpolation = c->get<BInterpolation>(m_interpolationPath.getValue()[0]);
-    }
-
-    if(m_interpolation==NULL)
-        serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
-    else
-        sout<<" interpolation named"<<m_interpolation->getName()<<" found (for "<<this->getName()<<")"<<sendl;
+    if(!m_interpolation)
+        serr<<"No Beam Interpolation found, the component can not work!"<<sendl;
 
     this->core::behavior::ForceField<DataTypes>::init();
 
@@ -515,7 +507,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	Real EIz = (Real)(_E * _Iz);
 
 
-
 	// Find shear-deformation parameters
 	if (_Asy == 0)
 		phiy = 0.0;
@@ -530,7 +521,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam,BeamLoc
 	b.k_loc00.clear(); b.k_loc01.clear(); b.k_loc10.clear(); b.k_loc11.clear();
 
 	// diagonal values
-    b.k_loc00[0][0] = b.k_loc11[0][0] = _elongationFactor.getValue()*_E*_A/_L;
+    b.k_loc00[0][0] = b.k_loc11[0][0] = _E*_A/_L;
 	b.k_loc00[1][1] = b.k_loc11[1][1] = (Real)(12.0*EIz/(L3*(1.0+phiy)));
 	b.k_loc00[2][2] = b.k_loc11[2][2]   = (Real)(12.0*EIy/(L3*(1.0+phiz)));
 	b.k_loc00[3][3] = b.k_loc11[3][3]   = _G*_J/_L;
@@ -738,6 +729,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge( VecDeriv& df, con
 	F0 = bLM.loc0_Ad_ref.multTranspose(f0);
 	F1 = bLM.loc1_Ad_ref.multTranspose(f1);
 
+//	std::cout << bIndex << "\t" << F0 << std::endl << "\t" << F1 << std::endl;
 
 	// put the result in df
 	for (unsigned int i=0; i<6; i++)
@@ -851,7 +843,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const core::Mechan
 	Real kFact = (Real)mparams->kFactor();
 	Real mFact = (Real)mparams->mFactor();
 
-
+	Real totalMass = 0;
 	unsigned int numBeams = m_interpolation->getNumBeams();
 
 	//<<"addMBKToMatrix called mFact ="<<mFact<<std::endl;
@@ -906,6 +898,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const core::Mechan
 		{
 			for (int j=0;j<6;j++)
 			{
+				totalMass += M00(i,j)*mFact + M11(i,j)*mFact;
 				r.matrix->add(index0[i], index0[j],  M00(i,j)*mFact);
 				r.matrix->add(index0[i], index1[j],  M01(i,j)*mFact);
 				r.matrix->add(index1[i], index0[j],  M10(i,j)*mFact);
@@ -916,6 +909,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const core::Mechan
 
 
 	}
+
+//	std::cout << totalMass << std::endl;
 
 }
 
@@ -941,10 +936,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const core::visual::VisualPa
 		//<<" draw : global_H0_local ="<<global_H0_local<<"  x["<<node0Idx<<"].getCenter= "<<x[node0Idx].getCenter()<<std::endl;
 
 
-                if (vparams->displayFlags().getShowBehaviorModels() && node0Idx!=node1Idx)
+        if (vparams->displayFlags().getShowBehaviorModels() && node0Idx!=node1Idx)
 			drawElement(vparams, b, global_H0_local, global_H1_local);
 
-                if(vparams->displayFlags().getShowForceFields())
+        if(vparams->displayFlags().getShowForceFields())
 		{
 
 			// /  test ///
@@ -959,13 +954,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const core::visual::VisualPa
 			}
 
 
-                        if(node0Idx==node1Idx)
-                        {
-                            vparams->drawTool()->drawLines(points,2, Vec<4,float>(0,0,1,1));// rigidification case !!
-                            continue;
-                        }
-                        else
-                            vparams->drawTool()->drawLines(points,2, Vec<4,float>(1,0,0,1));// other case
+            if(node0Idx==node1Idx)
+            {
+                vparams->drawTool()->drawLines(points,2, Vec<4,float>(0,0,1,1));// rigidification case !!
+                continue;
+            }
+            else
+                vparams->drawTool()->drawLines(points,2, Vec<4,float>(1,0,0,1));// other case
 
 			// test2 : interpolate frame : //
 

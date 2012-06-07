@@ -85,7 +85,7 @@
       <QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
       <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
       <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="2" input="@../../topoLines_cath/meshLinesCath" output="@ContainerCath" flipNormals="true"/>
-      <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
+      <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
       <Node name="VisuOgl">
         <OglModel name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" />
@@ -100,7 +100,7 @@
       <QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
       <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
       <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="1" input="@../../topoLines_guide/meshLinesGuide" output="@ContainerGuide"  flipNormals="true" listening="true"/>
-      <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
+      <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="@../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
       <Node name="VisuOgl">
         <OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>
         <IdentityMapping input="@../Quads" output="@Visual"/>
