@@ -44,6 +44,8 @@
 #include <sofa/component/collision/PointModel.h>
 #include <sofa/component/collision/LineModel.h>
 
+#include "WireBeamInterpolation.h"
+
 #include "initBeamAdapter.h"
 
 namespace sofa
