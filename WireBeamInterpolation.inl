@@ -128,12 +128,12 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
 	vector< double > &lengthList = *this->m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-    vector< CurvAbscissa > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    vector< Vec2 > &curvAbsList = *this->m_curvAbsList.beginEdit();
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
 
-    curvAbsList.push_back(CurvAbscissa(x0, x1));
+    curvAbsList.push_back(Vec2(x0, x1));
 
     // as an angle is set between DOFs and Beam, they are no more aligned
     this->dofsAndBeamsAligned.setValue(false);
@@ -165,14 +165,14 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 {
 	if (this->isControlled() && this->m_restShape!=NULL)
 	{
-        const CurvAbscissa &curvAbs = this->m_curvAbsList.getValue()[edgeInList];
+        const Vec2 &curvAbs = this->m_curvAbsList.getValue()[edgeInList];
 
-		Real x_middle = (curvAbs.first() + curvAbs.second()) / 2;
+		Real x_middle = (curvAbs.x() + curvAbs.y()) / 2;
 		Transform global_H_local_middle, global_H_local_0, global_H_local_1;
 
 		this->m_restShape.get()->getRestTransformOnX(global_H_local_middle, x_middle);
-		this->m_restShape.get()->getRestTransformOnX(global_H_local_0, curvAbs.first());
-		this->m_restShape.get()->getRestTransformOnX(global_H_local_1, curvAbs.second());
+		this->m_restShape.get()->getRestTransformOnX(global_H_local_0, curvAbs.x());
+		this->m_restShape.get()->getRestTransformOnX(global_H_local_1, curvAbs.y());
 
 		local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
 		local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
@@ -494,19 +494,19 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
 	vector< double > &lengthList = *this->m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-    vector< CurvAbscissa > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    vector< Vec2 > &curvAbsList = *this->m_curvAbsList.beginEdit();
 
 	const unsigned int curvAbsListSize = curvAbsList.size();
 
     for (unsigned int e = 1; e < curvAbsListSize; e++)
     {
-        if (fabs(curvAbsList[e].first() - x_break) < eps)
+        if (fabs(curvAbsList[e].x() - x_break) < eps)
         {
             duplicatePoint = e;
             this->_numBeamsNotUnderControl = curvAbsListSize - e;
         }
 
-        if (curvAbsList[e].first() > (x_break - eps))
+        if (curvAbsList[e].x() > (x_break - eps))
         {
             edgeList[i] = edgeList[e];
             lengthList[i] = lengthList[e];

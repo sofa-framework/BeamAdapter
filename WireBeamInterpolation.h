@@ -104,10 +104,9 @@ public:
 	typedef typename Inherited::Transform Transform;
 	typedef typename Inherited::SpatialVector SpatialVector;
 
+	typedef typename Inherited::Vec2 Vec2;
 	typedef typename Inherited::Vec3 Vec3;
 	typedef typename Inherited::Vec6 Vec6;
-
-    typedef typename Inherited::CurvAbscissa CurvAbscissa;
 
 	WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = NULL);
 

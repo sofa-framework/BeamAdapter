@@ -268,7 +268,7 @@ void BeamInterpolation<DataTypes>::clear()
 	vector< double > &lengthList = *m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
-    vector< CurvAbscissa > &curvAbsList = *m_curvAbsList.beginEdit();
+    vector< Vec2 > &curvAbsList = *m_curvAbsList.beginEdit();
 
     if(this->brokenInTwo)
     {
@@ -302,9 +302,9 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
 	vector< double > &lengthList = *m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *m_DOF0TransformNode0.beginEdit();
 	vector< Transform > &DOF1TransformNode1 = *m_DOF1TransformNode1.beginEdit();
-    vector< CurvAbscissa > &curvAbsList = *m_curvAbsList.beginEdit();
+    vector< Vec2 > &curvAbsList = *m_curvAbsList.beginEdit();
 	
-    curvAbsList.push_back(CurvAbscissa(x0, x1));
+    curvAbsList.push_back(Vec2(x0, x1));
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
@@ -377,15 +377,15 @@ template<class DataTypes>
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv)
 {
-	x_curv = m_curvAbsList.getValue()[beam].second();
+	x_curv = m_curvAbsList.getValue()[beam].y();
 }
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end)
 {
-	CurvAbscissa ca = m_curvAbsList.getValue()[beam];
-	x_curv_start = ca.first();
-	x_curv_end = ca.second();
+	Vec2 ca = m_curvAbsList.getValue()[beam];
+	x_curv_start = ca.x();
+	x_curv_end = ca.y();
 }
 
 
