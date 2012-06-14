@@ -58,13 +58,11 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
 , useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
-, m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
+, m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _adaptiveinterpolation)
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
 , m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
 {
-	if(_adaptiveinterpolation)
-		m_adaptiveinterpolation.set(_adaptiveinterpolation);
 }
 
 template <class DataTypes>
@@ -232,7 +230,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 	{
 		const helper::vector<Real>& curvAbs = m_nodeCurvAbs.getValue();
 		RealConstIterator it;
-		unsigned int i = 0, nbCurvAbs = curvAbs.size(), tmpNumRigidPts = 0;
+		unsigned int i = 0, nbCurvAbs = curvAbs.size();
 		for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
 		{
 			Real start, end;
@@ -244,6 +242,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 				i++;
 			
 			// Count the # of points in this rigid segment
+			unsigned int tmpNumRigidPts = 0;
 			while(i<nbCurvAbs && curvAbs[i] < end)
 			{
 				i++;
