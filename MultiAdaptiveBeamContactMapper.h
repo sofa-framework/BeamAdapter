@@ -69,7 +69,8 @@ public:
     typedef component::controller::InterventionalRadiologyController<InDataTypes> InterventionalRadiologyController;
 
     MCollisionModel* model;
-    simulation::Node* child;
+    //    simulation::Node* child;
+    simulation::Node::SPtr child;
     typename MMapping::SPtr mapping;
     MMechanicalState* outmodel;
     InterventionalRadiologyController* m_ircontroller;

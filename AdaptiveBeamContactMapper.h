@@ -66,7 +66,8 @@ public:
     typedef component::mapping::AdaptiveBeamMapping< InDataTypes, typename AdaptiveBeamContactMapper::DataTypes > MMapping;
 
     MCollisionModel* model;
-    simulation::Node* child;
+    //    simulation::Node* child;
+    simulation::Node::SPtr child;
     typename MMapping::SPtr mapping;
     MMechanicalState* outmodel;
     int nbp;

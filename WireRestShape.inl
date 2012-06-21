@@ -142,9 +142,8 @@ void WireRestShape<DataTypes>::init()
     const sofa::core::objectmodel::TagSet &tags = this->getTags() ;
     for (core::objectmodel::TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
     {
-        sofa::core::objectmodel::Tag Test = *it;
         std::cerr<<"!!!!!!!!!!!! \n ERROR  : NEED TO FIX line 146 in WireRestShape.inl !!!\n!!!!!!!!"<<std::endl;
-       // this->getContext()->get( edge2QuadMap , Test, sofa::core::objectmodel::BaseContext::SearchRoot );
+	dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get( edge2QuadMap , *it, sofa::core::objectmodel::BaseContext::SearchRoot );
     }
     if(edge2QuadMap==NULL)
     {

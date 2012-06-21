@@ -89,7 +89,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::init()
     
 
     if(!m_interpolation)
-        m_interpolation.set(this->getContext()->get<BInterpolation>(core::objectmodel::BaseContext::Local));
+        m_interpolation.set(dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get<BInterpolation>(core::objectmodel::BaseContext::Local));
 
     if(!m_interpolation)
         serr<<"No Beam Interpolation found, the component can not work!"<<sendl;

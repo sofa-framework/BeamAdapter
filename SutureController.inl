@@ -72,7 +72,10 @@ void SutureController<DataTypes>::init()
 	Inherit::init();
 
 	if(!m_adaptiveinterpolation)
-		m_adaptiveinterpolation.set(this->getContext()->get<WInterpolation>(core::objectmodel::BaseContext::Local));
+           {
+	      core::objectmodel::BaseContext *c=this->getContext();
+	      m_adaptiveinterpolation.set(c->get<WInterpolation>(core::objectmodel::BaseContext::Local));
+	   }
 
 	if(!m_adaptiveinterpolation)
 		serr << "No Beam Interpolation found, the component can not work!" << sendl;

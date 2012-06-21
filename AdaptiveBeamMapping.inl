@@ -311,7 +311,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::init()
 {
 	if (!m_adaptativebeamInterpolation) 
-		m_adaptativebeamInterpolation.set(this->getContext()->get<BInterpolation>());
+	   	m_adaptativebeamInterpolation.set(dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get<BInterpolation>());
 
 	if (!m_adaptativebeamInterpolation)
 		serr<<"No Beam Interpolation found, the component can not work!"<<sendl;
