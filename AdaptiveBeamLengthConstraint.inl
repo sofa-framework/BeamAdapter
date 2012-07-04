@@ -149,7 +149,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
 					rest_length*alarmLength<<" > ?"<<length<<"  (c) : "<<angleBeam+angleInterval<< " > ?" <<m_maxBendingAngle.getValue() <<std::endl;
 				}
 
-				Real angleBuf= angleBeam+angleInterval;
+			//	Real angleBuf= angleBeam+angleInterval;
 
 				// Stop the rigidification
 				// the interval ends at the beginning of the current beam
@@ -290,12 +290,12 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams * /*cParams*/ /* PARAMS FIRST */, DataMatrixDeriv &c_d, unsigned int &constraintId, const DataVecCoord &x_d)
+void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams * /*cParams*/ /* PARAMS FIRST */, DataMatrixDeriv &c_d, unsigned int &constraintId, const DataVecCoord & /*x_d*/)
 {
 
   //  std::cout<<"begin buildConstraintMatrix "<<std::endl;
 	violations.clear();
-	Real alarmLength = m_alarmLength.getValue();
+//	Real alarmLength = m_alarmLength.getValue();
     Real constrainedLength = m_constrainedLength.getValue();
 
 	nbConstraints = 0;
@@ -332,7 +332,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
         // compute the violation and the local direction of the constraint
         Vec3 dir = _constraintIntervals[i].posEnd - _constraintIntervals[i].posBegin;
         Vec3 PbPeFree= _constraintIntervals[i].posFreeEnd - _constraintIntervals[i].posFreeBegin;
-        Real length = dir.norm();
+//        Real length = dir.norm();
         dir.normalize();
         Real length_free= dot(dir, PbPeFree);
 
