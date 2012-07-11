@@ -27,7 +27,7 @@
 	<Node name="AdaptiveBeam">
 		<EulerImplicit rayleighStiffness="0.08" rayleighMass="0.08" printLog="false" />
 		<!--<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> -->
-		<CGLinear
+		  <CGLinearSolver />
 		
 		<EdgeSetTopologyContainer name="meshSuture" />
 		<EdgeSetTopologyModifier   name="Modifier" />
@@ -37,8 +37,8 @@
 		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
 
 		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.05" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1.0"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-0.9 0 0 0 0 0 1" interpolation="InterpolSuture"  threshold="1e-3" maxBendingAngle="0.6"/>
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="@InterpolSuture" massDensity="1.0"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-0.9 0 0 0 0 0 1" interpolation="@InterpolSuture"  threshold="1e-3" maxBendingAngle="0.6"/>
 
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 	</Node>
@@ -47,7 +47,10 @@
         <MechanicalObject template="Rigid" name="DOFs" position="0 0 -0.2 0 0 0 1    1.35 0 -1.5 0 0 0 1" />
     </Node>
 
-   <AdaptiveBeamConstraint interpolation="@AdaptiveBeam/InterpolSuture" object1="AdaptiveBeam/DOFs" object2="Fixed/DOFs" />
+   <AdaptiveBeamConstraint interpolation="@AdaptiveBeam/InterpolSuture" object1="@AdaptiveBeam/DOFs" object2="@
+   
+   
+   Fixed/DOFs" />
 
 </Node>
 

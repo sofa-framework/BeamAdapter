@@ -81,7 +81,7 @@
 		<Node name="Collis">
 				<EdgeSetTopologyContainer name="collisEdgeSet" />
 				<EdgeSetTopologyModifier   name="colliseEdgeModifier" />
-				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
+				<MechanicalObject name="CollisionDOFs" />  
 				<MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0"/> 
 				<Line proximity="0.0" group="1"/>
 				<Point proximity="0.0" group="1"/>
