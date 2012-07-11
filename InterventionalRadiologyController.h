@@ -91,7 +91,7 @@ public:
     typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
 
 	typedef MechanicalStateController<DataTypes> Inherit;
-  typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WBeamInterpolation;
+	typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WBeamInterpolation;
 
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
