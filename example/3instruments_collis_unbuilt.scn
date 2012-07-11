@@ -62,13 +62,13 @@
 							controlledInstrument="0" startingPos="0 0 0 0 -0.7071068 0 0.7071068" speed="0." instruments="InterpolCatheter InterpolGuide InterpolCoils" />
 
 		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="1" printLog="1"/> 
-		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="InterpolCatheter" massDensity="0.00000155"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@InterpolCatheter" massDensity="0.00000155"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
 
 		<WireBeamInterpolation name="InterpolGuide" WireRestShape="@../topoLines_guide/GuideRestShape" radius="0.9" printLog="1"/> 
-		<AdaptiveBeamForceFieldAndMass name="GuideForceField" interpolation="InterpolGuide" massDensity="0.00000155"/> 	
+		<AdaptiveBeamForceFieldAndMass name="GuideForceField" interpolation="@InterpolGuide" massDensity="0.00000155"/> 	
 
 		<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.1" printLog="1"/> 
-		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="InterpolCoils" massDensity="0.000021"/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="@InterpolCoils" massDensity="0.000021"/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
 
 		
 
@@ -95,7 +95,7 @@
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="2" input="@../../topoLines_cath/meshLinesCath" output="@ContainerCath" flipNormals="true"/>
 
-			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
@@ -110,7 +110,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="1" input="@../../topoLines_guide/meshLinesGuide" output="@ContainerGuide"  flipNormals="true" listening="true"/> 
-			<AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
+			<AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="@../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>
 				<IdentityMapping input="@../Quads" output="@Visual"/>
@@ -124,7 +124,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.3"  input="@../../topoLines_coils/meshLinesCoils" output="@ContainerCoils"  flipNormals="true" listening="true" /> 
-			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="../InterpolCoils" input="@../DOFs" output="@Quads" isMechanical="false" />
+			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="@../InterpolCoils" input="@../DOFs" output="@Quads" isMechanical="false" />
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.2 0.8 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
 				<IdentityMapping input="@../Quads" output="@Visual"/>
