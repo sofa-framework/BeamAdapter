@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -103,9 +104,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">AdaptiveBeamConstraint&lt; DataTypes &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="sofa::component::constraintset::AdaptiveBeamConstraint" --><h3>template&lt;class DataTypes&gt;<br/>
- class sofa::component::constraintset::AdaptiveBeamConstraint&lt; DataTypes &gt;</h3>
+<!-- doxytag: class="sofa::component::constraintset::AdaptiveBeamConstraint" -->
+<p><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a> Class.  
+ <a href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#details">More...</a></p>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class DataTypes&gt;<br/>
+class sofa::component::constraintset::AdaptiveBeamConstraint&lt; DataTypes &gt;</h3>
 
+<p><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a> Class. </p>
+</div>
+<p><code>#include &lt;<a class="el" href="_adaptive_beam_constraint_8h_source.html">AdaptiveBeamConstraint.h</a>&gt;</code></p>
 
 <p><a href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -192,28 +200,77 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>internalInit</b> ()</
 Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a08d90b44549babc6b8c5154f371aa12f"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::cid" ref="a08d90b44549babc6b8c5154f371aa12f" args="" -->
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>cid</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0baee0be4215b8ee613bd86b72ad7af7"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::nbConstraints" ref="a0baee0be4215b8ee613bd86b72ad7af7" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>nbConstraints</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#a0baee0be4215b8ee613bd86b72ad7af7">nbConstraints</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92ea8d2668b6847593c228bed8c1d81c"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::violations" ref="a92ea8d2668b6847593c228bed8c1d81c" args="" -->
 std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>violations</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abe2122e607eb591d5a6e85142fd1324c"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::previousPositions" ref="abe2122e607eb591d5a6e85142fd1324c" args="" -->
-std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>previousPositions</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8a234a9e995c30446c647e15250dd24"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::displacements" ref="ad8a234a9e995c30446c647e15250dd24" args="" -->
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>displacements</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#abe2122e607eb591d5a6e85142fd1324c">previousPositions</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#ad8a234a9e995c30446c647e15250dd24">displacements</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae05ca301634c247a763ae18a2567fe7d"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::projected" ref="ae05ca301634c247a763ae18a2567fe7d" args="" -->
 std::vector&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>projected</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec0f2a92579d4cbb34110b3acb6a845e"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::m_interpolation" ref="aec0f2a92579d4cbb34110b3acb6a845e" args="" -->
-SingleLink<br class="typebreak"/>
+<tr><td class="memItemLeft" align="right" valign="top">SingleLink<br class="typebreak"/>
 &lt; <a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a><br class="typebreak"/>
 &lt; DataTypes &gt;<br class="typebreak"/>
 , <a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">fem::WireBeamInterpolation</a><br class="typebreak"/>
 &lt; DataTypes &gt;<br class="typebreak"/>
-, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_interpolation</b></td></tr>
+, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a></td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/<a class="el" href="_adaptive_beam_constraint_8h_source.html">AdaptiveBeamConstraint.h</a></li>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/AdaptiveBeamConstraint.inl</li>
-</ul>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="ad8a234a9e995c30446c647e15250dd24"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::displacements" ref="ad8a234a9e995c30446c647e15250dd24" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; <a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#ad8a234a9e995c30446c647e15250dd24">displacements</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>displacement=double for compatibility with constraint resolution </p>
+
+</div>
+</div>
+<a class="anchor" id="aec0f2a92579d4cbb34110b3acb6a845e"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::m_interpolation" ref="aec0f2a92579d4cbb34110b3acb6a845e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SingleLink&lt;<a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>&lt;DataTypes&gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">fem::WireBeamInterpolation</a>&lt;DataTypes&gt;, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK&gt; <a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>link to the interpolation component in the scene </p>
+
+</div>
+</div>
+<a class="anchor" id="a0baee0be4215b8ee613bd86b72ad7af7"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::nbConstraints" ref="a0baee0be4215b8ee613bd86b72ad7af7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#a0baee0be4215b8ee613bd86b72ad7af7">nbConstraints</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>number of constraints created </p>
+
+</div>
+</div>
+<a class="anchor" id="abe2122e607eb591d5a6e85142fd1324c"></a><!-- doxytag: member="sofa::component::constraintset::AdaptiveBeamConstraint::previousPositions" ref="abe2122e607eb591d5a6e85142fd1324c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Real&gt; <a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#abe2122e607eb591d5a6e85142fd1324c">previousPositions</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>the position on which each point was projected </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -237,7 +294,7 @@ SingleLink<br class="typebreak"/>
       <li class="navelem"><b>constraintset</b>      </li>
       <li class="navelem"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

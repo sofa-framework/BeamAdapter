@@ -24,8 +24,10 @@ namespace component
 namespace constraint
 {
 
-
-// parent class for all Probe type
+/*!
+ * \class Probe
+ * \brief Parent class for all Probe type
+ */
 class Probe
 {
 public:
@@ -99,8 +101,10 @@ public:
 
 
 
-
-// Probe class for contact (with friction) with an implicit surface
+/*!
+ * \class ImplSurfContact
+ * \brief Probe class for contact (with friction) with an implicit surface
+ */
 class ImplSurfContact	:	public Probe
 {
 public:
@@ -159,7 +163,10 @@ private:
 
 
 
-
+/*!
+ * \class ImplicitSurfaceAdaptiveConstraint
+ * \brief ImplicitSurfaceAdaptiveConstraint Class
+ */
 template<class DataTypes>
 class ImplicitSurfaceAdaptiveConstraint : public core::behavior::BaseInteractionConstraint
 {
@@ -183,8 +190,8 @@ public:
 
 
 protected:
-    MechanicalState* object1; // MechanicalState that drives the implicit surface : for now, not used//
-    MechanicalState* object2; // MechanicalState of the points constrained by the implicit surface //
+    MechanicalState* object1; ///< MechanicalState that drives the implicit surface : for now, not used//
+    MechanicalState* object2; ///< MechanicalState of the points constrained by the implicit surface //
     bool yetIntegrated;
 
     unsigned int cid;
@@ -374,6 +381,10 @@ public:
 
 
 /////////////////////////////////////////////////////////
+/*!
+ * \class ImplicitSurfaceAdaptiveConstraintResolution
+ * \brief ImplicitSurfaceAdaptiveConstraintResolution Class
+ */
 template<class DataTypes>
 class ImplicitSurfaceAdaptiveConstraintResolution : public core::behavior::ConstraintResolution
 {

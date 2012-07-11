@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -104,9 +105,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">WireRestShape&lt; DataTypes &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="sofa::component::engine::WireRestShape" --><h3>template&lt;class DataTypes&gt;<br/>
- class sofa::component::engine::WireRestShape&lt; DataTypes &gt;</h3>
+<!-- doxytag: class="sofa::component::engine::WireRestShape" -->
+<p>Describe the shape functions on multiple segments.  
+ <a href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#details">More...</a></p>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class DataTypes&gt;<br/>
+class sofa::component::engine::WireRestShape&lt; DataTypes &gt;</h3>
 
+<p>Describe the shape functions on multiple segments. </p>
+<p>Describe the shape functions on multiple segments using curvilinear abscissa </p>
+</div>
+<p><code>#include &lt;<a class="el" href="_wire_rest_shape_8h_source.html">WireRestShape.h</a>&gt;</code></p>
 
 <p><a href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -160,18 +169,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reinit</b> ()</td></t
 void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa531d54a158009ed00adb9783eca4870"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::bwdInit" ref="aa531d54a158009ed00adb9783eca4870" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bwdInit</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac159f8ffd7099031e103855ee85d1603"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getReleaseCurvAbs" ref="ac159f8ffd7099031e103855ee85d1603" args="()" -->
-virtual Real&#160;</td><td class="memItemRight" valign="bottom"><b>getReleaseCurvAbs</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">getReleaseCurvAbs</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d00cca8813dc2570df6b59138b0ad32"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::releaseWirePart" ref="a4d00cca8813dc2570df6b59138b0ad32" args="()" -->
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseWirePart</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0876fdbe3161c709e4dfa6512c63f251"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getRestTransformOnX" ref="a0876fdbe3161c709e4dfa6512c63f251" args="(Transform &amp;global_H_local, const Real &amp;x)" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getRestTransformOnX</b> (Transform &amp;global_H_local, const Real &amp;x)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4fbee2e7d9cff2bae946c8eafdd42dc1"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getSamplingParameters" ref="a4fbee2e7d9cff2bae946c8eafdd42dc1" args="(helper::vector&lt; Real &gt; &amp;xP_noticeable, helper::vector&lt; int &gt; &amp;nbP_density)" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getSamplingParameters</b> (helper::vector&lt; Real &gt; &amp;xP_noticeable, helper::vector&lt; int &gt; &amp;nbP_density)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af595689d832b75e0a5d1d165436f6c85"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getYoungModulusAtX" ref="af595689d832b75e0a5d1d165436f6c85" args="(const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson)" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getYoungModulusAtX</b> (const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae074d6fe822f8f67a1f751e62269f1e"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getInterpolationParam" ref="aae074d6fe822f8f67a1f751e62269f1e" args="(const Real &amp;x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getInterpolationParam</b> (const Real &amp;x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a> (Transform &amp;global_H_local, const Real &amp;x)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a4fbee2e7d9cff2bae946c8eafdd42dc1">getSamplingParameters</a> (helper::vector&lt; Real &gt; &amp;xP_noticeable, helper::vector&lt; int &gt; &amp;nbP_density)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af595689d832b75e0a5d1d165436f6c85">getYoungModulusAtX</a> (const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#aae074d6fe822f8f67a1f751e62269f1e">getInterpolationParam</a> (const Real &amp;x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a222fb3d3657e24f0cba46d137fb266e6">LoadFile</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf4111cc27e67189d6f67210df29630c"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::InitRestConfig" ref="acf4111cc27e67189d6f67210df29630c" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>InitRestConfig</b> ()</td></tr>
@@ -264,6 +268,87 @@ sofa::component::topology::Edge2QuadTopologicalMapping *&#160;</td><td class="me
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>edgeSetInNode</b></td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="aae074d6fe822f8f67a1f751e62269f1e"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getInterpolationParam" ref="aae074d6fe822f8f67a1f751e62269f1e" args="(const Real &amp;x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#aae074d6fe822f8f67a1f751e62269f1e">getInterpolationParam</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_curv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_rho</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Iy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Iz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Asy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Asz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_J</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>this function gives the mass density and the <a class="el" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">BeamSection</a> data depending on the beam position </p>
+
+</div>
+</div>
+<a class="anchor" id="ac159f8ffd7099031e103855ee85d1603"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getReleaseCurvAbs" ref="ac159f8ffd7099031e103855ee85d1603" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Real <a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">getReleaseCurvAbs</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>For coils: a part of the coil instrument can be brokenIn2 (by default the point of release is the end of the straight length) </p>
+
+</div>
+</div>
 <a class="anchor" id="a39125871d0f44f0abfbb3c047d6e98fc"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getRestPosNonProcedural" ref="a39125871d0f44f0abfbb3c047d6e98fc" args="(Real &amp;abs, Coord &amp;p)" -->
 <div class="memitem">
 <div class="memproto">
@@ -292,6 +377,96 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>edgeSetInNode</b></td
 
 </div>
 </div>
+<a class="anchor" id="a0876fdbe3161c709e4dfa6512c63f251"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getRestTransformOnX" ref="a0876fdbe3161c709e4dfa6512c63f251" args="(Transform &amp;global_H_local, const Real &amp;x)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a> </td>
+          <td>(</td>
+          <td class="paramtype">Transform &amp;&#160;</td>
+          <td class="paramname"><em>global_H_local</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function is called by the force field to evaluate the rest position of each beam </p>
+
+</div>
+</div>
+<a class="anchor" id="a4fbee2e7d9cff2bae946c8eafdd42dc1"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getSamplingParameters" ref="a4fbee2e7d9cff2bae946c8eafdd42dc1" args="(helper::vector&lt; Real &gt; &amp;xP_noticeable, helper::vector&lt; int &gt; &amp;nbP_density)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a4fbee2e7d9cff2bae946c8eafdd42dc1">getSamplingParameters</a> </td>
+          <td>(</td>
+          <td class="paramtype">helper::vector&lt; Real &gt; &amp;&#160;</td>
+          <td class="paramname"><em>xP_noticeable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">helper::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>nbP_density</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function provides a vector with the curviliar abscissa of the noticeable point(s) and the minimum density (number of points) between them </p>
+
+</div>
+</div>
+<a class="anchor" id="af595689d832b75e0a5d1d165436f6c85"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::getYoungModulusAtX" ref="af595689d832b75e0a5d1d165436f6c85" args="(const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af595689d832b75e0a5d1d165436f6c85">getYoungModulusAtX</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_curv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>youngModulus</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>cPoisson</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position </p>
+
+</div>
+</div>
 <a class="anchor" id="a222fb3d3657e24f0cba46d137fb266e6"></a><!-- doxytag: member="sofa::component::engine::WireRestShape::LoadFile" ref="a222fb3d3657e24f0cba46d137fb266e6" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -305,16 +480,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>edgeSetInNode</b></td
       </table>
 </div>
 <div class="memdoc">
+<p>Functions enabling to load and use a geometry given from OBJ external file </p>
 <p>renumber the vertices</p>
 <p>check for the first corner of the edge</p>
 <p>close file </p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/<a class="el" href="_wire_rest_shape_8h_source.html">WireRestShape.h</a></li>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/WireRestShape.inl</li>
-</ul>
 </div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -338,7 +510,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>edgeSetInNode</b></td
       <li class="navelem"><b>engine</b>      </li>
       <li class="navelem"><a class="el" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html">WireRestShape</a>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

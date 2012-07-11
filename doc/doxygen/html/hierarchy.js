@@ -24,6 +24,7 @@ var hierarchy =
     [ "AdaptiveBeamForceFieldAndMass< DataTypes >::BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html", null ],
     [ "WireRestShape< DataTypes >::BeamSection", "structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html", null ],
     [ "BeamInterpolation< DataTypes >::BeamSection", "structsofa_1_1component_1_1fem_1_1_beam_interpolation_1_1_beam_section.html", null ],
+    [ "ContactMapper", "class_contact_mapper.html", null ],
     [ "ImplicitSurfaceAdaptiveConstraint< DataTypes >", "classsofa_1_1component_1_1constraint_1_1_implicit_surface_adaptive_constraint.html", null ],
     [ "ImplicitSurfaceAdaptiveConstraintResolution< DataTypes >", "classsofa_1_1component_1_1constraint_1_1_implicit_surface_adaptive_constraint_resolution.html", null ],
     [ "InterventionalRadiologyController< DataTypes >", "classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html", null ],

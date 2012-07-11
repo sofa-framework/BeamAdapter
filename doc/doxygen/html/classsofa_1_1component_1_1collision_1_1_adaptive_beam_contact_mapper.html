@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -168,8 +169,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanup</b> ()</td></
 MMechanicalState *&#160;</td><td class="memItemRight" valign="bottom"><b>createMapping</b> (const char *name=&quot;contactPoints&quot;)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada388d17b93c54a1a0f6edddbe0953ab"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::resize" ref="ada388d17b93c54a1a0f6edddbe0953ab" args="(int size)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resize</b> (int size)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb671249953d719abd109b236cff494f"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::addBaryPoint" ref="abb671249953d719abd109b236cff494f" args="(const Vector3 &amp;baryP, int splineId, Real &amp;r)" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>addBaryPoint</b> (const Vector3 &amp;baryP, int splineId, Real &amp;r)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html#abb671249953d719abd109b236cff494f">addBaryPoint</a> (const Vector3 &amp;baryP, int splineId, Real &amp;r)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac5c54df7ed3b930268c8d7752c101725"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::update" ref="ac5c54df7ed3b930268c8d7752c101725" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad4256d564c89e33662dd22579d2415ac"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::updateXfree" ref="ad4256d564c89e33662dd22579d2415ac" args="()" -->
@@ -187,10 +187,41 @@ MMechanicalState *&#160;</td><td class="memItemRight" valign="bottom"><b>outmode
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa89d5245a960e74475c8e7d33b602abe"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::nbp" ref="aa89d5245a960e74475c8e7d33b602abe" args="" -->
 int&#160;</td><td class="memItemRight" valign="bottom"><b>nbp</b></td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/<a class="el" href="_adaptive_beam_contact_mapper_8h_source.html">AdaptiveBeamContactMapper.h</a></li>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/AdaptiveBeamContactMapper.inl</li>
-</ul>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="abb671249953d719abd109b236cff494f"></a><!-- doxytag: member="sofa::component::collision::AdaptiveBeamContactMapper::addBaryPoint" ref="abb671249953d719abd109b236cff494f" args="(const Vector3 &amp;baryP, int splineId, Real &amp;r)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html#abb671249953d719abd109b236cff494f">addBaryPoint</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Vector3 &amp;&#160;</td>
+          <td class="paramname"><em>baryP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>splineId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>A barycentric coordinate of a spline is define by its curvilinear coordinate and its radius in baryP argument here, the first is curvilinear, second is radius, third is not use for instance </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -214,7 +245,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>nbp</b></td></tr>
       <li class="navelem"><b>collision</b>      </li>
       <li class="navelem"><a class="el" href="classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html">AdaptiveBeamContactMapper</a>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

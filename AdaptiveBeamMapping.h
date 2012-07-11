@@ -70,6 +70,10 @@ namespace component
 namespace mapping
 {
 
+/*!
+ * \class AdaptiveBeamMapping
+ * @brief AdaptiveBeamMapping Class
+ */
 template <class TIn, class TOut>
 class AdaptiveBeamMapping : public core::Mapping<TIn, TOut>
 {
@@ -122,11 +126,11 @@ public:
 
 
 public:
-    Data<bool> useCurvAbs;
-    Data< sofa::helper::vector< Vec3 > > points;
-    Data< double > proximity;
-    Data<bool> contactDuplicate;
-    Data<std::string> nameOfInputMap;
+    Data<bool> useCurvAbs;							/*!< true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same */
+    Data< sofa::helper::vector< Vec3 > > points;	/*!< defines the mapped points along the beam axis (in beam frame local coordinates) */
+    Data< double > proximity;						/*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
+    Data<bool> contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
+    Data<std::string> nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
     SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
 	
     AdaptiveBeamMapping()

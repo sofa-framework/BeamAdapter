@@ -14,6 +14,7 @@ var annotated =
     [ "AdaptiveBeamForceFieldAndMass< DataTypes >::BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html", "classsofa_1_1component_1_1forcefield_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices" ],
     [ "WireRestShape< DataTypes >::BeamSection", "structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html", "structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section" ],
     [ "BeamInterpolation< DataTypes >::BeamSection", "structsofa_1_1component_1_1fem_1_1_beam_interpolation_1_1_beam_section.html", "structsofa_1_1component_1_1fem_1_1_beam_interpolation_1_1_beam_section" ],
+    [ "ContactMapper", "class_contact_mapper.html", null ],
     [ "ContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4.html", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4" ],
     [ "ContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4" ],
     [ "ImplicitSurfaceAdaptiveConstraint< DataTypes >", "classsofa_1_1component_1_1constraint_1_1_implicit_surface_adaptive_constraint.html", "classsofa_1_1component_1_1constraint_1_1_implicit_surface_adaptive_constraint" ],

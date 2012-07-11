@@ -43,6 +43,9 @@ namespace constraintset
 {
 using sofa::helper::vector;
 
+/*!
+ * \class AdaptiveBeamLengthConstraint
+ */
 template<class DataTypes>
 class AdaptiveBeamLengthConstraint : public core::behavior::Constraint<DataTypes>
 {

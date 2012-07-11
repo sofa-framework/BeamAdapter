@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -140,107 +141,107 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00042"></a>00042 {
 <a name="l00043"></a>00043 <span class="keyword">using</span> sofa::helper::vector;
 <a name="l00044"></a>00044 
-<a name="l00045"></a>00045 <span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;
-<a name="l00046"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">00046</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a> : <span class="keyword">public</span> core::behavior::PairInteractionConstraint&lt;DataTypes&gt;
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048 <span class="keyword">public</span>:
-<a name="l00049"></a>00049         SOFA_CLASS(SOFA_TEMPLATE(<a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
-<a name="l00052"></a>00052         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
-<a name="l00053"></a>00053         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::MatrixDeriv MatrixDeriv;
-<a name="l00054"></a>00054         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
-<a name="l00055"></a>00055         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
-<a name="l00056"></a>00056         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Deriv Deriv;
-<a name="l00057"></a>00057         <span class="keyword">typedef</span> <span class="keyword">typename</span> Coord::value_type Real;
-<a name="l00058"></a>00058         <span class="keyword">typedef</span> <span class="keyword">typename</span> core::behavior::MechanicalState&lt;DataTypes&gt; MechanicalState;
-<a name="l00059"></a>00059         <span class="keyword">typedef</span> <span class="keyword">typename</span> core::behavior::PairInteractionConstraint&lt;DataTypes&gt; Inherit;
-<a name="l00060"></a>00060         <span class="keyword">typedef</span> core::objectmodel::Data&lt;VecCoord&gt;               DataVecCoord;
-<a name="l00061"></a>00061         <span class="keyword">typedef</span> core::objectmodel::Data&lt;VecDeriv&gt;               DataVecDeriv;
-<a name="l00062"></a>00062         <span class="keyword">typedef</span> core::objectmodel::Data&lt;MatrixDeriv&gt;    DataMatrixDeriv;
-<a name="l00063"></a>00063         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::Transform Transform;
-<a name="l00064"></a>00064         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::SpatialVector SpatialVector;
-<a name="l00065"></a>00065         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord::Pos Pos;
-<a name="l00066"></a>00066         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord::Rot Rot;
-<a name="l00067"></a>00067         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;3, Real&gt; Vec3;
-<a name="l00068"></a>00068         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;6, Real&gt; Vec6;
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="keyword">protected</span>:
-<a name="l00071"></a>00071         
-<a name="l00072"></a>00072         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cid;
-<a name="l00073"></a>00073                 
-<a name="l00074"></a>00074         <span class="keywordtype">int</span> nbConstraints; <span class="comment">// number of constraints created</span>
-<a name="l00075"></a>00075         std::vector&lt;Real&gt; violations;
-<a name="l00076"></a>00076         std::vector&lt;Real&gt; previousPositions;<span class="comment">// the position on which each point was projected</span>
-<a name="l00077"></a>00077         std::vector&lt;double&gt; displacements;      <span class="comment">// displacement=double for compatibility with constraint resolution</span>
-<a name="l00078"></a>00078         std::vector&lt;bool&gt; projected;
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080         SingleLink&lt;AdaptiveBeamConstraint&lt;DataTypes&gt;, <a class="code" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">fem::WireBeamInterpolation&lt;DataTypes&gt;</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK&gt; m_interpolation;
-<a name="l00081"></a>00081         
-<a name="l00082"></a>00082         <span class="keywordtype">void</span> internalInit();
+<a name="l00049"></a>00049 <span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;
+<a name="l00050"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">00050</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a> : <span class="keyword">public</span> core::behavior::PairInteractionConstraint&lt;DataTypes&gt;
+<a name="l00051"></a>00051 {
+<a name="l00052"></a>00052 <span class="keyword">public</span>:
+<a name="l00053"></a>00053         SOFA_CLASS(SOFA_TEMPLATE(<a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a>,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
+<a name="l00056"></a>00056         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
+<a name="l00057"></a>00057         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::MatrixDeriv MatrixDeriv;
+<a name="l00058"></a>00058         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
+<a name="l00059"></a>00059         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
+<a name="l00060"></a>00060         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Deriv Deriv;
+<a name="l00061"></a>00061         <span class="keyword">typedef</span> <span class="keyword">typename</span> Coord::value_type Real;
+<a name="l00062"></a>00062         <span class="keyword">typedef</span> <span class="keyword">typename</span> core::behavior::MechanicalState&lt;DataTypes&gt; MechanicalState;
+<a name="l00063"></a>00063         <span class="keyword">typedef</span> <span class="keyword">typename</span> core::behavior::PairInteractionConstraint&lt;DataTypes&gt; Inherit;
+<a name="l00064"></a>00064         <span class="keyword">typedef</span> core::objectmodel::Data&lt;VecCoord&gt;               DataVecCoord;
+<a name="l00065"></a>00065         <span class="keyword">typedef</span> core::objectmodel::Data&lt;VecDeriv&gt;               DataVecDeriv;
+<a name="l00066"></a>00066         <span class="keyword">typedef</span> core::objectmodel::Data&lt;MatrixDeriv&gt;    DataMatrixDeriv;
+<a name="l00067"></a>00067         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::Transform Transform;
+<a name="l00068"></a>00068         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::SpatialVector SpatialVector;
+<a name="l00069"></a>00069         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord::Pos Pos;
+<a name="l00070"></a>00070         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord::Rot Rot;
+<a name="l00071"></a>00071         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;3, Real&gt; Vec3;
+<a name="l00072"></a>00072         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;6, Real&gt; Vec6;
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074 <span class="keyword">protected</span>:
+<a name="l00075"></a>00075         
+<a name="l00076"></a>00076         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cid;
+<a name="l00077"></a>00077                 
+<a name="l00078"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#a0baee0be4215b8ee613bd86b72ad7af7">00078</a>         <span class="keywordtype">int</span> <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#a0baee0be4215b8ee613bd86b72ad7af7">nbConstraints</a>;                                              
+<a name="l00079"></a>00079         std::vector&lt;Real&gt; violations;
+<a name="l00080"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#abe2122e607eb591d5a6e85142fd1324c">00080</a>         std::vector&lt;Real&gt; <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#abe2122e607eb591d5a6e85142fd1324c">previousPositions</a>;    
+<a name="l00081"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#ad8a234a9e995c30446c647e15250dd24">00081</a>         std::vector&lt;double&gt; <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#ad8a234a9e995c30446c647e15250dd24">displacements</a>;              
+<a name="l00082"></a>00082         std::vector&lt;bool&gt; projected;
 <a name="l00083"></a>00083 
-<a name="l00084"></a>00084         
-<a name="l00085"></a>00085         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>(MechanicalState* object1, MechanicalState* object2)
-<a name="l00086"></a>00086         : Inherit(object1, object2)
-<a name="l00087"></a>00087         , m_interpolation(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
-<a name="l00088"></a>00088         {
-<a name="l00089"></a>00089         }
-<a name="l00090"></a>00090         
-<a name="l00091"></a>00091         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>(MechanicalState* <span class="keywordtype">object</span>)
-<a name="l00092"></a>00092         : Inherit(<span class="keywordtype">object</span>, <span class="keywordtype">object</span>)
-<a name="l00093"></a>00093         , m_interpolation(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
-<a name="l00094"></a>00094         {
-<a name="l00095"></a>00095         }
-<a name="l00096"></a>00096 
-<a name="l00097"></a>00097         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>()
-<a name="l00098"></a>00098         : m_interpolation(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
+<a name="l00085"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">00085</a>         SingleLink&lt;AdaptiveBeamConstraint&lt;DataTypes&gt;, <a class="code" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">fem::WireBeamInterpolation&lt;DataTypes&gt;</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK&gt; <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a>;
+<a name="l00086"></a>00086         
+<a name="l00087"></a>00087         <span class="keywordtype">void</span> internalInit();
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089         
+<a name="l00090"></a>00090         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a>(MechanicalState* object1, MechanicalState* object2)
+<a name="l00091"></a>00091         : Inherit(object1, object2)
+<a name="l00092"></a>00092         , <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a>(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
+<a name="l00093"></a>00093         {
+<a name="l00094"></a>00094         }
+<a name="l00095"></a>00095         
+<a name="l00096"></a>00096         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html" title="AdaptiveBeamConstraint Class.">AdaptiveBeamConstraint</a>(MechanicalState* <span class="keywordtype">object</span>)
+<a name="l00097"></a>00097         : Inherit(object, object)
+<a name="l00098"></a>00098         , <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a>(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
 <a name="l00099"></a>00099         {
 <a name="l00100"></a>00100         }
-<a name="l00101"></a>00101         
-<a name="l00102"></a>00102         <span class="keyword">virtual</span> ~<a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html">AdaptiveBeamConstraint</a>()
-<a name="l00103"></a>00103         {
-<a name="l00104"></a>00104         }
-<a name="l00105"></a>00105 <span class="keyword">public</span>:
-<a name="l00106"></a>00106         <span class="keyword">virtual</span> <span class="keywordtype">void</span> reset();
-<a name="l00107"></a>00107         
-<a name="l00108"></a>00108         <span class="keyword">virtual</span> <span class="keywordtype">void</span> init();
-<a name="l00109"></a>00109         
-<a name="l00110"></a>00110         <span class="keywordtype">void</span> buildConstraintMatrix(<span class="keyword">const</span> core::ConstraintParams* cParams <span class="comment">/* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/</span>, DataMatrixDeriv &amp;c1, DataMatrixDeriv &amp;c2, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;cIndex, <span class="keyword">const</span> DataVecCoord &amp;x1, <span class="keyword">const</span> DataVecCoord &amp;x2);
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112         <span class="keywordtype">void</span> getConstraintViolation(<span class="keyword">const</span> core::ConstraintParams* cParams <span class="comment">/* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/</span>, defaulttype::BaseVector *v, <span class="keyword">const</span> DataVecCoord &amp;x1, <span class="keyword">const</span> DataVecCoord &amp;x2
-<a name="l00113"></a>00113                 , <span class="keyword">const</span> DataVecDeriv &amp;v1, <span class="keyword">const</span> DataVecDeriv &amp;v2);
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115         <span class="keyword">virtual</span> <span class="keywordtype">void</span> getConstraintResolution(std::vector&lt;core::behavior::ConstraintResolution*&gt;&amp; resTab, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&amp; offset);
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102         AdaptiveBeamConstraint()
+<a name="l00103"></a>00103         : <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint.html#aec0f2a92579d4cbb34110b3acb6a845e">m_interpolation</a>(initLink(<span class="stringliteral">&quot;interpolation&quot;</span>, <span class="stringliteral">&quot;link to the interpolation component in the scene&quot;</span>))
+<a name="l00104"></a>00104         {
+<a name="l00105"></a>00105         }
+<a name="l00106"></a>00106         
+<a name="l00107"></a>00107         <span class="keyword">virtual</span> ~AdaptiveBeamConstraint()
+<a name="l00108"></a>00108         {
+<a name="l00109"></a>00109         }
+<a name="l00110"></a>00110 <span class="keyword">public</span>:
+<a name="l00111"></a>00111         <span class="keyword">virtual</span> <span class="keywordtype">void</span> reset();
+<a name="l00112"></a>00112         
+<a name="l00113"></a>00113         <span class="keyword">virtual</span> <span class="keywordtype">void</span> init();
+<a name="l00114"></a>00114         
+<a name="l00115"></a>00115         <span class="keywordtype">void</span> buildConstraintMatrix(<span class="keyword">const</span> core::ConstraintParams* cParams <span class="comment">/* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/</span>, DataMatrixDeriv &amp;c1, DataMatrixDeriv &amp;c2, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;cIndex, <span class="keyword">const</span> DataVecCoord &amp;x1, <span class="keyword">const</span> DataVecCoord &amp;x2);
 <a name="l00116"></a>00116 
-<a name="l00117"></a>00117         <span class="keywordtype">void</span> draw(<span class="keyword">const</span> core::visual::VisualParams* vparams);
-<a name="l00118"></a>00118 };
+<a name="l00117"></a>00117         <span class="keywordtype">void</span> getConstraintViolation(<span class="keyword">const</span> core::ConstraintParams* cParams <span class="comment">/* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/</span>, defaulttype::BaseVector *v, <span class="keyword">const</span> DataVecCoord &amp;x1, <span class="keyword">const</span> DataVecCoord &amp;x2
+<a name="l00118"></a>00118                 , <span class="keyword">const</span> DataVecDeriv &amp;v1, <span class="keyword">const</span> DataVecDeriv &amp;v2);
 <a name="l00119"></a>00119 
-<a name="l00120"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html">00120</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html">AdaptiveBeamConstraintResolution</a> : <span class="keyword">public</span> core::behavior::ConstraintResolution
-<a name="l00121"></a>00121 {
-<a name="l00122"></a>00122 <span class="keyword">public</span>:
-<a name="l00123"></a>00123         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html">AdaptiveBeamConstraintResolution</a>(<span class="keywordtype">double</span>* sliding = NULL)
-<a name="l00124"></a>00124         : _slidingDisp(sliding) { nbLines = 3; }
-<a name="l00125"></a>00125         <span class="keyword">virtual</span> <span class="keywordtype">void</span> init(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* force);
-<a name="l00126"></a>00126     <span class="keywordtype">void</span> resolution(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* d, <span class="keywordtype">double</span>* force, <span class="keywordtype">double</span>* <span class="comment">/*dfree*/</span>)
-<a name="l00127"></a>00127     {
-<a name="l00128"></a>00128         resolution(line,w,d,force);
-<a name="l00129"></a>00129     }
-<a name="l00130"></a>00130         <span class="keyword">virtual</span> <span class="keywordtype">void</span> resolution(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* d, <span class="keywordtype">double</span>* force);
-<a name="l00131"></a>00131         <span class="keyword">virtual</span> <span class="keywordtype">void</span> store(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>* force, <span class="keywordtype">bool</span> <span class="comment">/*convergence*/</span>);
-<a name="l00132"></a>00132         
-<a name="l00133"></a>00133 <span class="keyword">protected</span>:
-<a name="l00134"></a>00134         <span class="keywordtype">double</span>* _slidingDisp;
-<a name="l00135"></a>00135         <span class="keywordtype">double</span> slidingW;
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137 };
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139 } <span class="comment">// namespace constraintset</span>
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141 } <span class="comment">// namespace component</span>
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143 } <span class="comment">// namespace sofa</span>
-<a name="l00144"></a>00144 
-<a name="l00145"></a>00145 <span class="preprocessor">#endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H</span>
+<a name="l00120"></a>00120         <span class="keyword">virtual</span> <span class="keywordtype">void</span> getConstraintResolution(std::vector&lt;core::behavior::ConstraintResolution*&gt;&amp; resTab, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&amp; offset);
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122         <span class="keywordtype">void</span> draw(<span class="keyword">const</span> core::visual::VisualParams* vparams);
+<a name="l00123"></a>00123 };
+<a name="l00124"></a>00124 
+<a name="l00129"></a><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html">00129</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html" title="AdaptiveBeamConstraintResolution Class.">AdaptiveBeamConstraintResolution</a> : <span class="keyword">public</span> core::behavior::ConstraintResolution
+<a name="l00130"></a>00130 {
+<a name="l00131"></a>00131 <span class="keyword">public</span>:
+<a name="l00132"></a>00132         <a class="code" href="classsofa_1_1component_1_1constraintset_1_1_adaptive_beam_constraint_resolution.html" title="AdaptiveBeamConstraintResolution Class.">AdaptiveBeamConstraintResolution</a>(<span class="keywordtype">double</span>* sliding = NULL)
+<a name="l00133"></a>00133         : _slidingDisp(sliding) { nbLines = 3; }
+<a name="l00134"></a>00134         <span class="keyword">virtual</span> <span class="keywordtype">void</span> init(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* force);
+<a name="l00135"></a>00135     <span class="keywordtype">void</span> resolution(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* d, <span class="keywordtype">double</span>* force, <span class="keywordtype">double</span>* <span class="comment">/*dfree*/</span>)
+<a name="l00136"></a>00136     {
+<a name="l00137"></a>00137         resolution(line,w,d,force);
+<a name="l00138"></a>00138     }
+<a name="l00139"></a>00139         <span class="keyword">virtual</span> <span class="keywordtype">void</span> resolution(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>** w, <span class="keywordtype">double</span>* d, <span class="keywordtype">double</span>* force);
+<a name="l00140"></a>00140         <span class="keyword">virtual</span> <span class="keywordtype">void</span> store(<span class="keywordtype">int</span> line, <span class="keywordtype">double</span>* force, <span class="keywordtype">bool</span> <span class="comment">/*convergence*/</span>);
+<a name="l00141"></a>00141         
+<a name="l00142"></a>00142 <span class="keyword">protected</span>:
+<a name="l00143"></a>00143         <span class="keywordtype">double</span>* _slidingDisp;
+<a name="l00144"></a>00144         <span class="keywordtype">double</span> slidingW;
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146 };
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148 } <span class="comment">// namespace constraintset</span>
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150 } <span class="comment">// namespace component</span>
+<a name="l00151"></a>00151 
+<a name="l00152"></a>00152 } <span class="comment">// namespace sofa</span>
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154 <span class="preprocessor">#endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -261,7 +262,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul>
       <li class="navelem"><b>AdaptiveBeamConstraint.h</b>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:26 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:24 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -71,7 +71,8 @@ namespace controller
 {
 
 
-/**
+/*!
+ * \class InterventionalRadiologyController
  * @brief InterventionalRadiologyController Class
  *
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.

@@ -74,6 +74,7 @@ namespace controller
 
 
 /**
+ * \class SutureController
  * @brief SutureController Class
  *
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.

@@ -70,6 +70,7 @@ namespace controller
 
 
 /**
+ * \class AdaptiveBeamController
  * @brief AdaptiveBeamController Class
  *
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
@@ -95,8 +96,8 @@ public:
       typedef  sofa::component::fem::BeamInterpolation<DataTypes> BInterpolation;
 
 protected :
-    BInterpolation* m_adaptiveinterpolation;
-     Data< helper::vector< std::string > > m_interpolationPath;
+      BInterpolation* m_adaptiveinterpolation;
+      Data< helper::vector< std::string > > m_interpolationPath;
 
 public :
 

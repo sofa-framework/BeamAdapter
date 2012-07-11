@@ -66,6 +66,10 @@ namespace forcefield
     using namespace sofa::component::fem;
 	using engine::WireRestShape;
 
+/*!
+ * \class AdaptiveBeamForceFieldAndMass
+ * @brief AdaptiveBeamForceFieldAndMass Class
+ */
 template<class DataTypes>
 class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
 {
@@ -107,8 +111,9 @@ public:
     typedef Mat<6, 6, Real> Matrix6x6;
 
 protected :
-    // pointer to the interpolation
+    /*! pointer to the interpolation */
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+	/*! pointer to the interpolation */
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
 
 public:
@@ -158,10 +163,10 @@ public:
     void drawElement(const core::visual::VisualParams* vparams, int beam, Transform &global_H0_local, Transform &global_H1_local);
 
 
-    Data<bool> _timoshenko;
-    Data<bool> _computeMass;
-    Data<Real> _massDensity;
-    Data<bool> _shearStressComputation;
+    Data<bool> _timoshenko; /*!< use Timoshenko beam (non-null section shear area) */
+    Data<bool> _computeMass; /*!< if false, only compute the stiff elastic model */
+    Data<Real> _massDensity; /*!< Density of the mass (usually in kg/m^3) */
+    Data<bool> _shearStressComputation; /*!< if false, suppress the shear stress in the computation */
 
 
 protected:
@@ -175,7 +180,10 @@ protected:
 //	void accumulateForceLarge( VecDeriv& f, const VecCoord& x, int i, Index a, Index b);
 	//void accumulateDampingLarge( Vector& f, Index elementIndex );
 
-
+    /*!
+     * \class BeamLocalMatrices
+     * @brief BeamLocalMatrices Class
+     */
     class BeamLocalMatrices{
 
     public:

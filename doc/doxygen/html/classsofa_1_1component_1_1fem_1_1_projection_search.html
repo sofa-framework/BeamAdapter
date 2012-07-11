@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -103,9 +104,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">ProjectionSearch&lt; DataTypes &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="sofa::component::fem::ProjectionSearch" --><h3>template&lt;class DataTypes&gt;<br/>
- class sofa::component::fem::ProjectionSearch&lt; DataTypes &gt;</h3>
+<!-- doxytag: class="sofa::component::fem::ProjectionSearch" --><hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class DataTypes&gt;<br/>
+class sofa::component::fem::ProjectionSearch&lt; DataTypes &gt;</h3>
 
+<p>When the Newton method doesn't converge when searching for the closest projection on the curve, we will start a dichotomic search, for now a unoptimized brute force approach. </p>
+</div>
+<p><code>#include &lt;<a class="el" href="_wire_beam_interpolation_8h_source.html">WireBeamInterpolation.h</a>&gt;</code></p>
 
 <p><a href="classsofa_1_1component_1_1fem_1_1_projection_search-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -122,9 +127,9 @@ typedef Vec&lt; 3, Real &gt;&#160;</td><td class="memItemRight" valign="bottom">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad14279de34c872eea1edbde7b766e777"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::ProjectionSearch" ref="ad14279de34c872eea1edbde7b766e777" args="(WireBeamInterpolation&lt; DataTypes &gt; *inter, const Vec3 &amp;x_input, const VecCoord &amp;vecX, Real &amp;xcurv_output, const Real &amp;tol)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>ProjectionSearch</b> (<a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">WireBeamInterpolation</a>&lt; DataTypes &gt; *inter, const Vec3 &amp;x_input, const VecCoord &amp;vecX, Real &amp;xcurv_output, const Real &amp;tol)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81625b705d5bfdb82267d108aad507ec"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::doSearch" ref="a81625b705d5bfdb82267d108aad507ec" args="(Real &amp;result)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>doSearch</b> (Real &amp;result)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#ad14279de34c872eea1edbde7b766e777">ProjectionSearch</a> (<a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">WireBeamInterpolation</a>&lt; DataTypes &gt; *inter, const Vec3 &amp;x_input, const VecCoord &amp;vecX, Real &amp;xcurv_output, const Real &amp;tol)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81625b705d5bfdb82267d108aad507ec">doSearch</a> (Real &amp;result)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41985bc19370f7d8b476f092488d6a88"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::initSearch" ref="a41985bc19370f7d8b476f092488d6a88" args="(Real curvAbs)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initSearch</b> (Real curvAbs)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a94fdd49474f378266b5d893aa592bb09"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::newtonMethod" ref="a94fdd49474f378266b5d893aa592bb09" args="()" -->
@@ -140,59 +145,270 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1643c12c83ceaa91c522174bb970e040"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::interpolation" ref="a1643c12c83ceaa91c522174bb970e040" args="" -->
 <a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">WireBeamInterpolation</a><br class="typebreak"/>
 &lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>interpolation</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a716ebb1791c397cfebeae21167727708"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::x" ref="a716ebb1791c397cfebeae21167727708" args="" -->
-const VecCoord &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>x</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e4568e08701210545017dc672b84d03"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::target" ref="a2e4568e08701210545017dc672b84d03" args="" -->
-Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>target</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7141f237b2648c631ce5b73215683565"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::found" ref="a7141f237b2648c631ce5b73215683565" args="" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>found</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0102bfc7976f59cb21427e913865c316"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::tolerance" ref="a0102bfc7976f59cb21427e913865c316" args="" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>tolerance</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9209389d296d133ac738e14b3ed76b5a"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::beamIndex" ref="a9209389d296d133ac738e14b3ed76b5a" args="" -->
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>beamIndex</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae4c0cf5243034d60a9ffd252e4c913a3"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::totalIterations" ref="ae4c0cf5243034d60a9ffd252e4c913a3" args="" -->
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>totalIterations</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae486e4ef512b0da09fc8be8ea409a8e4"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::dichotomicIterations" ref="ae486e4ef512b0da09fc8be8ea409a8e4" args="" -->
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>dichotomicIterations</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3943bf871afcb349871979ac4c16ee3b"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::searchDirection" ref="a3943bf871afcb349871979ac4c16ee3b" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>searchDirection</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa1fcc0be4e1d66b92dc65fb54d8a550"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::e" ref="afa1fcc0be4e1d66b92dc65fb54d8a550" args="" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>e</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const VecCoord &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a716ebb1791c397cfebeae21167727708">x</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a2e4568e08701210545017dc672b84d03">target</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a7141f237b2648c631ce5b73215683565">found</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a0102bfc7976f59cb21427e913865c316">tolerance</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a9209389d296d133ac738e14b3ed76b5a">beamIndex</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#ae4c0cf5243034d60a9ffd252e4c913a3">totalIterations</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#ae486e4ef512b0da09fc8be8ea409a8e4">dichotomicIterations</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a3943bf871afcb349871979ac4c16ee3b">searchDirection</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#afa1fcc0be4e1d66b92dc65fb54d8a550">e</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad10b2d7bc7ff10b0660d76a997862959"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::le" ref="ad10b2d7bc7ff10b0660d76a997862959" args="" -->
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>le</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad49cc38de685e8714108915e0fe9c6bd"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::de" ref="ad49cc38de685e8714108915e0fe9c6bd" args="" -->
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>de</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb08a299327eb4b1bba4fe597d6037db"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::beamStart" ref="afb08a299327eb4b1bba4fe597d6037db" args="" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>beamStart</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#afb08a299327eb4b1bba4fe597d6037db">beamStart</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a53791379dc922240fc6a0e5aa0a93de6"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::beamEnd" ref="a53791379dc922240fc6a0e5aa0a93de6" args="" -->
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>beamEnd</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52c0e83f23ccceba8afadfd4cf0fea39"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::segStart" ref="a52c0e83f23ccceba8afadfd4cf0fea39" args="" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>segStart</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a52c0e83f23ccceba8afadfd4cf0fea39">segStart</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab457e5be75ec7a13a6fb41fe76df63d6"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::segEnd" ref="ab457e5be75ec7a13a6fb41fe76df63d6" args="" -->
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>segEnd</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89d18a60e3c8fecaeafb9560894345a5"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::range" ref="a89d18a60e3c8fecaeafb9560894345a5" args="" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>range</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a89d18a60e3c8fecaeafb9560894345a5">range</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb7479c8283bf7c6ab9037c6d5447439"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::rangeSampling" ref="acb7479c8283bf7c6ab9037c6d5447439" args="" -->
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>rangeSampling</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22d86e972040f1b9b7a4295143b88ee1"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::P0" ref="a22d86e972040f1b9b7a4295143b88ee1" args="" -->
-Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P0</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a22d86e972040f1b9b7a4295143b88ee1">P0</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abc033ce3ab2a60034243f0457b6d7a81"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::P1" ref="abc033ce3ab2a60034243f0457b6d7a81" args="" -->
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P1</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a60913c59ddc0d00ae1843a666ff83480"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::P2" ref="a60913c59ddc0d00ae1843a666ff83480" args="" -->
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P2</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22d4756d9864c99b4696874615818e1a"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::P3" ref="a22d4756d9864c99b4696874615818e1a" args="" -->
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P3</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09c23199e32b927797786847439202e7"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::distTab" ref="a09c23199e32b927797786847439202e7" args="[sampling+1]" -->
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>distTab</b> [sampling+1]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a09c23199e32b927797786847439202e7">distTab</a> [<a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81d2d57e2dd2587b9c0ba1b7880871ac">sampling</a>+1]</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81d2d57e2dd2587b9c0ba1b7880871ac"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::sampling" ref="a81d2d57e2dd2587b9c0ba1b7880871ac" args="" -->
-static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>sampling</b> = 10</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81d2d57e2dd2587b9c0ba1b7880871ac">sampling</a> = 10</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/<a class="el" href="_wire_beam_interpolation_8h_source.html">WireBeamInterpolation.h</a></li>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/WireBeamInterpolation.inl</li>
-</ul>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a81625b705d5bfdb82267d108aad507ec"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::doSearch" ref="a81625b705d5bfdb82267d108aad507ec" args="(Real &amp;result)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81625b705d5bfdb82267d108aad507ec">doSearch</a> </td>
+          <td>(</td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>result</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Array of distances </p>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a9209389d296d133ac738e14b3ed76b5a"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::beamIndex" ref="a9209389d296d133ac738e14b3ed76b5a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a9209389d296d133ac738e14b3ed76b5a">beamIndex</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tolerance for the end of the search (projection of the estimation on the tangent is &lt; than tolerance) </p>
+
+</div>
+</div>
+<a class="anchor" id="afb08a299327eb4b1bba4fe597d6037db"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::beamStart" ref="afb08a299327eb4b1bba4fe597d6037db" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#afb08a299327eb4b1bba4fe597d6037db">beamStart</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target </p>
+
+</div>
+</div>
+<a class="anchor" id="ae486e4ef512b0da09fc8be8ea409a8e4"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::dichotomicIterations" ref="ae486e4ef512b0da09fc8be8ea409a8e4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#ae486e4ef512b0da09fc8be8ea409a8e4">dichotomicIterations</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p># of iterations (including beam changes) </p>
+
+</div>
+</div>
+<a class="anchor" id="a09c23199e32b927797786847439202e7"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::distTab" ref="a09c23199e32b927797786847439202e7" args="[sampling+1]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a09c23199e32b927797786847439202e7">distTab</a>[<a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81d2d57e2dd2587b9c0ba1b7880871ac">sampling</a>+1]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>How many points do we consider each step ? (at least &gt; 3 or it will never converge) </p>
+
+</div>
+</div>
+<a class="anchor" id="afa1fcc0be4e1d66b92dc65fb54d8a550"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::e" ref="afa1fcc0be4e1d66b92dc65fb54d8a550" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#afa1fcc0be4e1d66b92dc65fb54d8a550">e</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>When we change beam, which direction is it ? </p>
+
+</div>
+</div>
+<a class="anchor" id="a7141f237b2648c631ce5b73215683565"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::found" ref="a7141f237b2648c631ce5b73215683565" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a7141f237b2648c631ce5b73215683565">found</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The point to be projected on the curve </p>
+
+</div>
+</div>
+<a class="anchor" id="a22d86e972040f1b9b7a4295143b88ee1"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::P0" ref="a22d86e972040f1b9b7a4295143b88ee1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vec3 <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a22d86e972040f1b9b7a4295143b88ee1">P0</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The length of the current search segment, and the distance between 2 sampling points </p>
+
+</div>
+</div>
+<a class="anchor" id="a89d18a60e3c8fecaeafb9560894345a5"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::range" ref="a89d18a60e3c8fecaeafb9560894345a5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a89d18a60e3c8fecaeafb9560894345a5">range</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Abscissa of the current search segment extremities </p>
+
+</div>
+</div>
+<a class="anchor" id="a81d2d57e2dd2587b9c0ba1b7880871ac"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::sampling" ref="a81d2d57e2dd2587b9c0ba1b7880871ac" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a81d2d57e2dd2587b9c0ba1b7880871ac">sampling</a> = 10<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Current beam control points </p>
+
+</div>
+</div>
+<a class="anchor" id="a3943bf871afcb349871979ac4c16ee3b"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::searchDirection" ref="a3943bf871afcb349871979ac4c16ee3b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a3943bf871afcb349871979ac4c16ee3b">searchDirection</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p># of iterations for the current beam </p>
+
+</div>
+</div>
+<a class="anchor" id="a52c0e83f23ccceba8afadfd4cf0fea39"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::segStart" ref="a52c0e83f23ccceba8afadfd4cf0fea39" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a52c0e83f23ccceba8afadfd4cf0fea39">segStart</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Abscissa of the current beam extremities </p>
+
+</div>
+</div>
+<a class="anchor" id="a2e4568e08701210545017dc672b84d03"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::target" ref="a2e4568e08701210545017dc672b84d03" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vec3 <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a2e4568e08701210545017dc672b84d03">target</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The positions of the beams we are working on </p>
+
+</div>
+</div>
+<a class="anchor" id="a0102bfc7976f59cb21427e913865c316"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::tolerance" ref="a0102bfc7976f59cb21427e913865c316" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a0102bfc7976f59cb21427e913865c316">tolerance</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>True when the estimation is acceptable for the given tolerance </p>
+
+</div>
+</div>
+<a class="anchor" id="ae4c0cf5243034d60a9ffd252e4c913a3"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::totalIterations" ref="ae4c0cf5243034d60a9ffd252e4c913a3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#ae4c0cf5243034d60a9ffd252e4c913a3">totalIterations</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The current beam for the search </p>
+
+</div>
+</div>
+<a class="anchor" id="a716ebb1791c397cfebeae21167727708"></a><!-- doxytag: member="sofa::component::fem::ProjectionSearch::x" ref="a716ebb1791c397cfebeae21167727708" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const VecCoord&amp; <a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html#a716ebb1791c397cfebeae21167727708">x</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The interpolation using this class </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -216,7 +432,7 @@ static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>
       <li class="navelem"><b>fem</b>      </li>
       <li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1_projection_search.html">ProjectionSearch</a>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

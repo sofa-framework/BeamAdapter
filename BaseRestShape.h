@@ -54,7 +54,9 @@ namespace component
 namespace engine
 {
 
-
+/*! \class BaseRestShape
+ * \brief Describe the shape functions in a single segment
+ */
 template <class DataTypes>
 class BaseRestShape : public sofa::core::DataEngine
 {
@@ -74,8 +76,6 @@ public:
 	/**
 	 * @brief Default Constructor.
 	 */
-
-
 	BaseRestShape()
 	: length(initData(&length, (Real)1.0, "length", "total length of the wire instrument"))
 	, density(initData(&density, "densityOfBeams", "density of beams between key points"))
@@ -94,7 +94,9 @@ public:
 	~BaseRestShape(){}
 
 
-	// for coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+	/*!
+	 * for coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+	 */
 	virtual Real getReleaseCurvAbs(){return length.getValue();}
 
 
@@ -102,18 +104,24 @@ public:
 	virtual void releaseWirePart();
 
 
-	// this function is called by the force field to evaluate the rest position of each beam
+	/*!
+	 * this function is called by the force field to evaluate the rest position of each beam
+	 */
 	virtual void getRestTransformOnX(Transform &global_H_local, const Real &x) ;
 
         virtual void getCollisionSampling(Real &dx, const Real & /*x_curv*/){dx=length.getValue();}
 
-	// this function provides a vector with the curviliar abscissa of the noticeable point(s)
-	// and the minimum density (number of points) between them
+	/*!
+	 * This function provides a vector with the curvilinear abscissa of the noticeable point(s)
+	 * and the minimum density (number of points) between them.
+	 */
 	virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density);
 
 	virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &/*numLines*/){dx=length.getValue();}
 
-	//this function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+	/*!
+	 * this function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+	 */
 	virtual void getYoungModulusAtX(Real& /*x_curv*/, Real& youngModulus, Real& cPoisson);
 
 
@@ -124,11 +132,11 @@ public:
 
 protected:
 
-	Data<Real> length;
-	Data< sofa::helper::vector<int> > density;
-	Data< sofa::helper::vector<Real> > keyPoints;
-	Data<Real> _poissonRatio;
-	Data<Real> _youngModulus1;
+	Data<Real> length;  							/*!< Total length of the wire instrument */
+	Data< sofa::helper::vector<int> > density; 		/*!< Density of beams between key points */
+	Data< sofa::helper::vector<Real> > keyPoints; 	/*!< Key points of the shape (curv absc) */
+	Data<Real> _poissonRatio; 						/*!< Poisson Ratio */
+	Data<Real> _youngModulus1; 						/*!< Young Modulus */
 
 
 public :

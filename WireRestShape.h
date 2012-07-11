@@ -55,6 +55,13 @@ namespace engine
 {
 
 
+
+/*!
+ * \class WireRestShape
+ * \brief Describe the shape functions on multiple segments
+ *
+ *  Describe the shape functions on multiple segments using curvilinear abscissa
+ */
 template <class DataTypes>
 class WireRestShape : public sofa::core::DataEngine
 {
@@ -70,11 +77,10 @@ public:
 	typedef sofa::defaulttype::Vec<2, Real> Vec2;
 	typedef sofa::defaulttype::Quat Quat;
 	typedef typename sofa::helper::vector<Vec2>::iterator vecIt;
-	/**
+
+	/*!
 	 * @brief Default Constructor.
 	 */
-
-
 	 WireRestShape():
 	 procedural( initData(&procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
 	, fileName( initData(&fileName, std::string(""), "filename","data of filename") )
@@ -101,7 +107,7 @@ public:
 	{
 	}
 
-	 /**
+	 /*!
 	  * @brief Default Destructor.
 	  */
 	 ~WireRestShape(){}
@@ -116,28 +122,38 @@ public:
 	 void bwdInit();
 
 
-	 // for coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+	 /*!
+	  * For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+	  */
 	 virtual Real getReleaseCurvAbs(){return straightLength.getValue();}
 	 // todo => topological change !
 	 virtual void releaseWirePart();
 
 
-
-	 // this function is called by the force field to evaluate the rest position of each beam
+	 /*!
+	  * This function is called by the force field to evaluate the rest position of each beam
+	  */
 	 virtual void getRestTransformOnX(Transform &global_H_local, const Real &x);
 
-
-	 // this function provides a vector with the curviliar abscissa of the noticeable point(s)
-	 // and the minimum density (number of points) between them
+	 /*!
+	  * This function provides a vector with the curviliar abscissa of the noticeable point(s)
+	  * and the minimum density (number of points) between them
+	  */
 	 virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density);
 
-	 //this function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+	 /*!
+	  * This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+	  */
 	 virtual void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
 
-	 //this function gives the mass density and the BeamSection data depending on the beam position
+	 /*!
+	  * this function gives the mass density and the BeamSection data depending on the beam position
+	  */
 	 void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
 
-	 //Functions enabling to load and use a geometry given from OBJ external file
+	 /*!
+	  * Functions enabling to load and use a geometry given from OBJ external file
+	  */
 	 void LoadFile();
 
 	 void InitRestConfig();

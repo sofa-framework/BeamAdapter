@@ -65,17 +65,20 @@ using namespace sofa::core::topology;
 using namespace sofa::defaulttype;
 
 
-/** Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
-  - Adaptive beam interpolation
-  - Adaptive Force and Mass computation
-  - Adaptive Mapping
 
-  TODO : put in a separate class what is specific to wire shape !
+/*!
+ * \class BeamInterpolation
+ *
+ * Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
+ * - Adaptive beam interpolation
+ * - Adaptive Force and Mass computation
+ * - Adaptive Mapping
+ *
+ * \todo : put in a separate class what is specific to wire shape !
+ *
+ * AdaptiveBeam Interpolation provides the basis of the Beam computation
+ * As the computation is adaptive, the interpolation can be modified at each time step.
  */
-
-
-/// AdaptiveBeam Interpolation provides the basis of the Beam computation
-/// As the computation is adaptive, the interpolation can be modified at each time step.
 template<class DataTypes>
 class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
 {
@@ -224,14 +227,14 @@ public:
 
 	struct BeamSection{
 		// double _L; //length
-		double _r; //radius of the section
-		double _rInner; //inner radius of the section if beam is hollow
+		double _r; 			///<radius of the section
+		double _rInner;		///<inner radius of the section if beam is hollow
 		double _Iy;
-		double _Iz; //Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
-		double _J;  //Polar moment of inertia (J = Iy + Iz)
-		double _A; // A is the cross-sectional area;
-		double _Asy; //_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-		double _Asz; //_Asz is the z-direction effective shear area;
+		double _Iz; 		///< Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
+		double _J;  		///< Polar moment of inertia (J = Iy + Iz)
+		double _A; 			///< A is the cross-sectional area;
+		double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
+		double _Asz; 		///< _Asz is the z-direction effective shear area;
 	};
 	BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantRadius;}
 
@@ -343,35 +346,35 @@ public:
 
 
 protected :
-	// DATA INPUT (that could change in real-time)
-	//1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
+	/// DATA INPUT (that could change in real-time)
+	///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
 	Data< VecElementID > m_edgeList;
 	const VecEdges *_topologyEdges;
 
-	//2.m_lengthList: list of the length of each beam
+	///2.m_lengthList: list of the length of each beam
 	Data< vector< double > > m_lengthList;
 
-	//3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
-	// Indexation based on the num of Edge
+	///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
+	/// Indexation based on the num of Edge
 	Data< vector< Transform > > m_DOF0TransformNode0;
 
-	//4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
+	///4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
 	Data< vector< Transform > > m_DOF1TransformNode1;
 
     Data< vector< Vec2 > > m_curvAbsList;
 
-	// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
+	/// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
 	BeamSection _constantRadius;
 
 	// Topology
 
-	// pointer to the topology
+	/// pointer to the topology
 	sofa::core::topology::BaseMeshTopology* _topology;
 
-	// verify that the m_edgeList always contains existing edges
+	/// verify that the m_edgeList always contains existing edges
 	bool verifyTopology();
 
-	// pointer on mechanical state
+	/// pointer on mechanical state
 	sofa::core::behavior::MechanicalState<DataTypes> *_mstate;
 
 	// pointer on an external rest-shape

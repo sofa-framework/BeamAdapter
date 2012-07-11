@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -107,13 +108,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br/>
 class sofa::component::fem::WireBeamInterpolation&lt; DataTypes &gt;</h3>
 
+<p>AdaptiveBeam Interpolation provides the basis of the Beam computation As the computation is adaptive, the interpolation can be modified at each time step.</p>
 <p>Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.</p>
 <ul>
 <li>Adaptive beam interpolation</li>
 <li>Adaptive Force and Mass computation</li>
 <li>Adaptive Mapping</li>
 </ul>
-<p>TODO : put in a separate class what is specific to wire shape ! AdaptiveBeam Interpolation provides the basis of the Beam computation As the computation is adaptive, the interpolation can be modified at each time step. </p>
+<p>TODO : put in a separate class what is specific to wire shape ! </p>
 </div>
 <p><code>#include &lt;<a class="el" href="_wire_beam_interpolation_8h_source.html">WireBeamInterpolation.h</a>&gt;</code></p>
 <div class="dynheader">
@@ -256,16 +258,12 @@ SingleLink<br class="typebreak"/>
       </table>
 </div>
 <div class="memdoc">
-<p>Pre-construction check method called by ObjectFactory. Check that DataTypes matches the MechanicalState. </p>
+<p>link on an external rest-shape </p>
 
 <p>Reimplemented from <a class="el" href="classsofa_1_1component_1_1fem_1_1_beam_interpolation.html#a04fb2d79216e44851cde2e431122c34b">BeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/<a class="el" href="_wire_beam_interpolation_8h_source.html">WireBeamInterpolation.h</a></li>
-<li>/home/alex/Documents/Dev/Sofa/applications/plugins/BeamAdapter/WireBeamInterpolation.inl</li>
-</ul>
 </div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -289,7 +287,7 @@ SingleLink<br class="typebreak"/>
       <li class="navelem"><b>fem</b>      </li>
       <li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1_wire_beam_interpolation.html">WireBeamInterpolation</a>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -1,6 +1,7 @@
 var NAVTREE =
 [
   [ "BeamAdapter", "index.html", [
+    [ "Related Pages", "pages.html", "pages" ],
     [ "Classes", null, [
       [ "Class List", "annotated.html", "annotated" ],
       [ "Class Index", "classes.html", null ],

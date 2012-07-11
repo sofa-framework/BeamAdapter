@@ -65,19 +65,18 @@ using sofa::helper::vector;
 using namespace sofa::core::topology;
 using namespace sofa::component::engine;
 
-
-
-/** Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
-  - Adaptive beam interpolation
-  - Adaptive Force and Mass computation
-  - Adaptive Mapping
-
-  TODO : put in a separate class what is specific to wire shape !
+/*!
+ * \class WireBeamInterpolation
+ * AdaptiveBeam Interpolation provides the basis of the Beam computation
+ * As the computation is adaptive, the interpolation can be modified at each time step.
+ *
+ * Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
+ * - Adaptive beam interpolation
+ * - Adaptive Force and Mass computation
+ * - Adaptive Mapping
+ *
+ * TODO : put in a separate class what is specific to wire shape !
  */
-
-
-/// AdaptiveBeam Interpolation provides the basis of the Beam computation
-/// As the computation is adaptive, the interpolation can be modified at each time step.
 template<class DataTypes>
 class WireBeamInterpolation : public virtual sofa::component::fem::BeamInterpolation<DataTypes>
 {
@@ -176,8 +175,7 @@ public:
 
 protected :
         
-    // link on an external rest-shape...
-    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape;
+    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
 
 public:
@@ -222,8 +220,9 @@ public:
 	}
 };
 
-// When the Newton method doesn't converge when searching for the closest projection on the curve,
-//  we will start a dichotomic search, for now a unoptimized brute force approach.
+/*! When the Newton method doesn't converge when searching for the closest projection on the curve,
+ *  we will start a dichotomic search, for now a unoptimized brute force approach.
+ */
 template<class DataTypes>
 class ProjectionSearch
 {
@@ -234,26 +233,29 @@ public:
 
 	typedef Vec<3, Real> Vec3;
 
+	/**
+	 * @brief Default Constructor.
+	 */
 	ProjectionSearch(WireBeamInterpolation<DataTypes>* inter, const Vec3& x_input, const VecCoord& vecX, Real& xcurv_output, const Real& tol)
 		: interpolation(inter), x(vecX), target(x_input), e(xcurv_output), tolerance(tol), found(false)
 		, totalIterations(0), dichotomicIterations(0), searchDirection(0) {}
 
-	WireBeamInterpolation<DataTypes> *interpolation; // The interpolation using this class
-	const VecCoord& x;			// The positions of the beams we are working on
-	Vec3 target;				// The point to be projected on the curve
-	bool found;					// True when the estimation is acceptable for the given tolerance
-	Real tolerance;				// Tolerance for the end of the search (projection of the estimation on the tangent is < than tolerance)
-	unsigned int beamIndex,		// The current beam for the search
-	totalIterations,			// # of iterations (including beam changes)
-	dichotomicIterations;		// # of iterations for the current beam
-	int searchDirection;		// When we change beam, which direction is it ?
-	Real e,	le, de;				// Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target
-	Real beamStart, beamEnd;	// Abscissa of the current beam extremities
-	Real segStart, segEnd;		// Abscissa of the current search segment extremities
-	Real range, rangeSampling;	// The length of the current search segment, and the distance between 2 sampling points
-	Vec3 P0,P1,P2,P3;			// Current beam control points
-	static const unsigned int sampling = 10; // How many points do we consider each step ? (at least > 3 or it will never converge)
-	Real distTab[sampling+1];			// Array of distances
+	WireBeamInterpolation<DataTypes> *interpolation; 			/*! The interpolation using this class */
+	const VecCoord& x;											/*! The positions of the beams we are working on*/
+	Vec3 target;												/*! The point to be projected on the curve*/
+	bool found;													/*! True when the estimation is acceptable for the given tolerance*/
+	Real tolerance;												/*! Tolerance for the end of the search (projection of the estimation on the tangent is < than tolerance)*/
+	unsigned int beamIndex,									/*! The current beam for the search */
+	totalIterations,											/*! # of iterations (including beam changes) */
+	dichotomicIterations;										/*! # of iterations for the current beam */
+	int searchDirection;										/*! When we change beam, which direction is it ? */
+	Real e,	le, de;												/*! Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target */
+	Real beamStart, beamEnd;									/*! Abscissa of the current beam extremities */
+	Real segStart, segEnd;										/*! Abscissa of the current search segment extremities */
+	Real range, rangeSampling;									/*! The length of the current search segment, and the distance between 2 sampling points */
+	Vec3 P0,P1,P2,P3;											/*! Current beam control points */
+	static const unsigned int sampling = 10; 				/*! How many points do we consider each step ? (at least > 3 or it will never converge) */
+	Real distTab[sampling+1];									/*! Array of distances  */
 
 	bool doSearch(Real& result);
 	void initSearch(Real curvAbs);

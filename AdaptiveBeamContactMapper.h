@@ -49,7 +49,10 @@ namespace collision
 
 using namespace sofa::defaulttype;
 
-/// Base class for all mappers using RigidMapping
+/*!
+ * \class AdaptiveBeamContactMapper
+ * \brief Base class for all mappers using RigidMapping
+ */
 template < class TCollisionModel, class DataTypes >
 class AdaptiveBeamContactMapper : public BaseContactMapper<DataTypes>
 {
@@ -95,8 +98,10 @@ public:
         nbp = 0;
     }
 
-    //A barycentric coordinate of a spline is define by its curvilinear coordinate and its radius
-    //in baryP argument here, the first is curvilinear, second is radius, third is not use for instance
+    /*!
+     * A barycentric coordinate of a spline is define by its curvilinear coordinate and its radius
+     * in baryP argument here, the first is curvilinear, second is radius, third is not use for instance
+     */
     int addBaryPoint(const Vector3& baryP, int splineId, Real& r)
     {
         int i = nbp++;
@@ -145,7 +150,10 @@ public:
 };
 
 
-/// Mapper for BSplineModel
+/*!
+ * \class ContactMapper
+ * @brief Mapper for BSplineModel
+ */
 template<class DataTypes>
 class ContactMapper<BSplineModel<1> , DataTypes> : public AdaptiveBeamContactMapper<BSplineModel<1> , DataTypes>
 {

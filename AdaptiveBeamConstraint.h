@@ -42,6 +42,10 @@ namespace constraintset
 {
 using sofa::helper::vector;
 
+/*!
+ * \class AdaptiveBeamConstraint
+ * @brief AdaptiveBeamConstraint Class
+ */
 template<class DataTypes>
 class AdaptiveBeamConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
 {
@@ -71,12 +75,13 @@ protected:
 	
 	unsigned int cid;
 		
-	int nbConstraints; // number of constraints created
+	int nbConstraints; 						/*!< number of constraints created */
 	std::vector<Real> violations;
-        std::vector<Real> previousPositions;// the position on which each point was projected
-        std::vector<double> displacements; 	// displacement=double for compatibility with constraint resolution
+	std::vector<Real> previousPositions;	/*!< the position on which each point was projected */
+	std::vector<double> displacements; 		/*!< displacement=double for compatibility with constraint resolution */
 	std::vector<bool> projected;
 
+	/*! link to the interpolation component in the scene */
 	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 	
 	void internalInit();
@@ -117,6 +122,10 @@ public:
 	void draw(const core::visual::VisualParams* vparams);
 };
 
+/*!
+ * \class AdaptiveBeamConstraintResolution
+ * @brief AdaptiveBeamConstraintResolution Class
+ */
 class AdaptiveBeamConstraintResolution : public core::behavior::ConstraintResolution
 {
 public:
@@ -131,7 +140,7 @@ public:
 	virtual void store(int line, double* force, bool /*convergence*/);
 	
 protected:
-        double* _slidingDisp;
+	double* _slidingDisp;
 	double slidingW;
 
 };

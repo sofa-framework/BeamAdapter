@@ -63,6 +63,10 @@ namespace component
 namespace mapping
 {
 
+/*!
+ * \class MultiAdaptiveBeamMapping
+ * @brief MultiAdaptiveBeamMapping Class
+ */
 template <class TIn, class TOut>
 class MultiAdaptiveBeamMapping : public core::Mapping<TIn, TOut>
 {

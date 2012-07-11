@@ -52,6 +52,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -149,131 +150,131 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00051"></a>00051 <span class="keyword">using namespace </span>sofa::defaulttype;
 <a name="l00052"></a>00052 
 <a name="l00053"></a>00053 
-<a name="l00055"></a>00055 <span class="keyword">template</span> &lt; <span class="keyword">class</span> TCollisionModel, <span class="keyword">class</span> DataTypes &gt;
-<a name="l00056"></a><a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html">00056</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="Base class for all mappers using RigidMapping.">MultiAdaptiveBeamContactMapper</a> : <span class="keyword">public</span> <a class="code" href="class_base_contact_mapper.html">BaseContactMapper</a>&lt;DataTypes&gt;
-<a name="l00057"></a>00057 {
-<a name="l00058"></a>00058 <span class="keyword">public</span>:
-<a name="l00059"></a>00059     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Real Real;
-<a name="l00060"></a>00060     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
-<a name="l00061"></a>00061     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
-<a name="l00062"></a>00062     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
-<a name="l00063"></a>00063     <span class="keyword">typedef</span> TCollisionModel MCollisionModel;
-<a name="l00064"></a>00064     <span class="keyword">typedef</span> <span class="keyword">typename</span> MCollisionModel::InDataTypes InDataTypes;
-<a name="l00065"></a>00065     <span class="keyword">typedef</span> core::behavior::MechanicalState&lt;InDataTypes&gt; InMechanicalState;
-<a name="l00066"></a>00066     <span class="keyword">typedef</span> core::behavior::MechanicalState&lt;typename MultiAdaptiveBeamContactMapper::DataTypes&gt; MMechanicalState;
-<a name="l00067"></a>00067     <span class="keyword">typedef</span> component::container::MechanicalObject&lt;typename MultiAdaptiveBeamContactMapper::DataTypes&gt; MMechanicalObject;
-<a name="l00068"></a>00068     <span class="keyword">typedef</span> <a class="code" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html">component::mapping::MultiAdaptiveBeamMapping&lt; InDataTypes, typename MultiAdaptiveBeamContactMapper::DataTypes &gt;</a> <a class="code" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html">MMapping</a>;
-<a name="l00069"></a>00069     <span class="keyword">typedef</span> <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">component::controller::InterventionalRadiologyController&lt;InDataTypes&gt;</a> <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>;
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     MCollisionModel* model;
-<a name="l00072"></a>00072     <span class="comment">//    simulation::Node* child;</span>
-<a name="l00073"></a>00073     simulation::Node::SPtr child;
-<a name="l00074"></a>00074     <span class="keyword">typename</span> MMapping::SPtr mapping;
-<a name="l00075"></a>00075     MMechanicalState* outmodel;
-<a name="l00076"></a>00076     <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>* m_ircontroller;
-<a name="l00077"></a>00077     <span class="keywordtype">int</span> nbp;
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079     <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="Base class for all mappers using RigidMapping.">MultiAdaptiveBeamContactMapper</a>()
-<a name="l00080"></a>00080     : model(NULL), child(NULL), mapping(NULL), outmodel(NULL), nbp(0)
-<a name="l00081"></a>00081     {
-<a name="l00082"></a>00082     }
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084     <span class="keywordtype">void</span> setCollisionModel(MCollisionModel* model)
-<a name="l00085"></a>00085     {
-<a name="l00086"></a>00086         this-&gt;model = model;
-<a name="l00087"></a>00087     }
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089     <span class="keywordtype">void</span> cleanup();
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091     MMechanicalState* createMapping(<span class="keyword">const</span> <span class="keywordtype">char</span>* name=<span class="stringliteral">&quot;contactPoints&quot;</span>);
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093     <span class="keywordtype">void</span> resize(<span class="keywordtype">int</span> size)
-<a name="l00094"></a>00094     {
-<a name="l00095"></a>00095         <span class="keywordflow">if</span> (mapping!=NULL)
-<a name="l00096"></a>00096             mapping-&gt;clear(size);
-<a name="l00097"></a>00097         nbp = 0;
-<a name="l00098"></a>00098     }
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100     <span class="comment">//A barycentric coordinate of a spline is define by its curvilinear coordinate and its radius</span>
-<a name="l00101"></a>00101     <span class="comment">//in baryP argument here, the first is curvilinear, second is radius, third is not use for instance</span>
-<a name="l00102"></a>00102     <span class="keywordtype">int</span> addBaryPoint(<span class="keyword">const</span> Vector3&amp; baryP, <span class="keywordtype">int</span> splineId, Real&amp; r)
-<a name="l00103"></a>00103     {
-<a name="l00104"></a>00104         <span class="keywordtype">int</span> i = nbp++;
-<a name="l00105"></a>00105         <span class="keywordflow">if</span> ((<span class="keywordtype">int</span>)outmodel-&gt;getX()-&gt;size() &lt;= i)
-<a name="l00106"></a>00106             outmodel-&gt;resize(i+1);
-<a name="l00107"></a>00107         <span class="keywordflow">if</span> (mapping)
-<a name="l00108"></a>00108         {
-<a name="l00109"></a>00109                 CubicBezierCurve&lt;2&gt; cb(this-&gt;model, splineId);
-<a name="l00110"></a>00110                 <span class="keywordtype">int</span> localsplineId;
-<a name="l00111"></a>00111                 <span class="keywordtype">int</span> edgeId = model-&gt;comuteEdgeIdFromSplineId(splineId,localsplineId);
-<a name="l00112"></a>00112                 <span class="keywordflow">if</span> ( cb.isCubicBezier() )
-<a name="l00113"></a>00113                         i = mapping-&gt;addBaryPoint(edgeId,baryP,<span class="keyword">true</span>);
-<a name="l00114"></a>00114                 <span class="keywordflow">else</span>
-<a name="l00115"></a>00115                         i = mapping-&gt;addBaryPoint(edgeId,baryP,<span class="keyword">false</span>);
-<a name="l00116"></a>00116             r=cb.r();
-<a name="l00117"></a>00117         }
-<a name="l00118"></a>00118         <span class="keywordflow">else</span>
-<a name="l00119"></a>00119         {
-<a name="l00120"></a>00120             std::cout &lt;&lt; <span class="stringliteral">&quot;WARNING[MultiAdaptiveBeamContactMapper] AdaptiveBeamMapping is not created&quot;</span> &lt;&lt; std::endl;
-<a name="l00121"></a>00121         }
-<a name="l00122"></a>00122         <span class="keywordflow">return</span> i;
-<a name="l00123"></a>00123     }
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127         <span class="keywordtype">void</span> update()
-<a name="l00128"></a>00128     {
-<a name="l00129"></a>00129         <span class="keywordflow">if</span> (mapping!=NULL)
-<a name="l00130"></a>00130         {
-<a name="l00131"></a>00131             core::BaseMapping* map = mapping.get();
-<a name="l00132"></a>00132             map-&gt;apply(core::MechanicalParams::defaultInstance(), core::VecCoordId::position(), core::ConstVecCoordId::position());
-<a name="l00133"></a>00133             map-&gt;applyJ(core::MechanicalParams::defaultInstance(), core::VecDerivId::velocity(), core::ConstVecDerivId::velocity());
-<a name="l00134"></a>00134         }
-<a name="l00135"></a>00135     }
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137     <span class="keywordtype">void</span> updateXfree()
-<a name="l00138"></a>00138     {
-<a name="l00139"></a>00139         <span class="keywordflow">if</span> (mapping!=NULL)
-<a name="l00140"></a>00140         {
-<a name="l00141"></a>00141             core::BaseMapping* map = mapping.get();
-<a name="l00142"></a>00142             map-&gt;apply(core::MechanicalParams::defaultInstance(), core::VecCoordId::freePosition(), core::ConstVecCoordId::freePosition());
-<a name="l00143"></a>00143             map-&gt;applyJ(core::MechanicalParams::defaultInstance(), core::VecDerivId::freeVelocity(), core::ConstVecDerivId::freeVelocity());
-<a name="l00144"></a>00144         }
-<a name="l00145"></a>00145     }
-<a name="l00146"></a>00146 };
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148 
-<a name="l00150"></a>00150 <span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;
-<a name="l00151"></a><a class="code" href="classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html">00151</a> <span class="keyword">class </span>ContactMapper&lt;BSplineModel&lt;2&gt;, DataTypes&gt; : <span class="keyword">public</span> <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="Base class for all mappers using RigidMapping.">MultiAdaptiveBeamContactMapper</a>&lt;BSplineModel&lt;2&gt;, DataTypes&gt;
-<a name="l00152"></a>00152 {
-<a name="l00153"></a>00153 <span class="keyword">public</span>:
-<a name="l00154"></a>00154         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Real Real;
-<a name="l00155"></a>00155         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
-<a name="l00156"></a>00156 };
-<a name="l00157"></a>00157 
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 
+<a name="l00058"></a>00058 <span class="keyword">template</span> &lt; <span class="keyword">class</span> TCollisionModel, <span class="keyword">class</span> DataTypes &gt;
+<a name="l00059"></a><a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html">00059</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="MultiAdaptiveBeamContactMapper Class.">MultiAdaptiveBeamContactMapper</a> : <span class="keyword">public</span> <a class="code" href="class_base_contact_mapper.html">BaseContactMapper</a>&lt;DataTypes&gt;
+<a name="l00060"></a>00060 {
+<a name="l00061"></a>00061 <span class="keyword">public</span>:
+<a name="l00062"></a>00062     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Real Real;
+<a name="l00063"></a>00063     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
+<a name="l00064"></a>00064     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
+<a name="l00065"></a>00065     <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
+<a name="l00066"></a>00066     <span class="keyword">typedef</span> TCollisionModel MCollisionModel;
+<a name="l00067"></a>00067     <span class="keyword">typedef</span> <span class="keyword">typename</span> MCollisionModel::InDataTypes InDataTypes;
+<a name="l00068"></a>00068     <span class="keyword">typedef</span> core::behavior::MechanicalState&lt;InDataTypes&gt; InMechanicalState;
+<a name="l00069"></a>00069     <span class="keyword">typedef</span> core::behavior::MechanicalState&lt;typename MultiAdaptiveBeamContactMapper::DataTypes&gt; MMechanicalState;
+<a name="l00070"></a>00070     <span class="keyword">typedef</span> component::container::MechanicalObject&lt;typename MultiAdaptiveBeamContactMapper::DataTypes&gt; MMechanicalObject;
+<a name="l00071"></a>00071     <span class="keyword">typedef</span> <a class="code" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html" title="MultiAdaptiveBeamMapping Class.">component::mapping::MultiAdaptiveBeamMapping&lt; InDataTypes, typename MultiAdaptiveBeamContactMapper::DataTypes &gt;</a> <a class="code" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html" title="MultiAdaptiveBeamMapping Class.">MMapping</a>;
+<a name="l00072"></a>00072     <span class="keyword">typedef</span> <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">component::controller::InterventionalRadiologyController&lt;InDataTypes&gt;</a> <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>;
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074     MCollisionModel* model;
+<a name="l00075"></a>00075     <span class="comment">//    simulation::Node* child;</span>
+<a name="l00076"></a>00076     simulation::Node::SPtr child;
+<a name="l00077"></a>00077     <span class="keyword">typename</span> MMapping::SPtr mapping;
+<a name="l00078"></a>00078     MMechanicalState* outmodel;
+<a name="l00079"></a>00079     <a class="code" href="classsofa_1_1component_1_1controller_1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>* m_ircontroller;
+<a name="l00080"></a>00080     <span class="keywordtype">int</span> nbp;
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082     <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="MultiAdaptiveBeamContactMapper Class.">MultiAdaptiveBeamContactMapper</a>()
+<a name="l00083"></a>00083     : model(NULL), child(NULL), mapping(NULL), outmodel(NULL), nbp(0)
+<a name="l00084"></a>00084     {
+<a name="l00085"></a>00085     }
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087     <span class="keywordtype">void</span> setCollisionModel(MCollisionModel* model)
+<a name="l00088"></a>00088     {
+<a name="l00089"></a>00089         this-&gt;model = model;
+<a name="l00090"></a>00090     }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <span class="keywordtype">void</span> cleanup();
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094     MMechanicalState* createMapping(<span class="keyword">const</span> <span class="keywordtype">char</span>* name=<span class="stringliteral">&quot;contactPoints&quot;</span>);
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096     <span class="keywordtype">void</span> resize(<span class="keywordtype">int</span> size)
+<a name="l00097"></a>00097     {
+<a name="l00098"></a>00098         <span class="keywordflow">if</span> (mapping!=NULL)
+<a name="l00099"></a>00099             mapping-&gt;clear(size);
+<a name="l00100"></a>00100         nbp = 0;
+<a name="l00101"></a>00101     }
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103     <span class="comment">//A barycentric coordinate of a spline is define by its curvilinear coordinate and its radius</span>
+<a name="l00104"></a>00104     <span class="comment">//in baryP argument here, the first is curvilinear, second is radius, third is not use for instance</span>
+<a name="l00105"></a>00105     <span class="keywordtype">int</span> addBaryPoint(<span class="keyword">const</span> Vector3&amp; baryP, <span class="keywordtype">int</span> splineId, Real&amp; r)
+<a name="l00106"></a>00106     {
+<a name="l00107"></a>00107         <span class="keywordtype">int</span> i = nbp++;
+<a name="l00108"></a>00108         <span class="keywordflow">if</span> ((<span class="keywordtype">int</span>)outmodel-&gt;getX()-&gt;size() &lt;= i)
+<a name="l00109"></a>00109             outmodel-&gt;resize(i+1);
+<a name="l00110"></a>00110         <span class="keywordflow">if</span> (mapping)
+<a name="l00111"></a>00111         {
+<a name="l00112"></a>00112                 CubicBezierCurve&lt;2&gt; cb(this-&gt;model, splineId);
+<a name="l00113"></a>00113                 <span class="keywordtype">int</span> localsplineId;
+<a name="l00114"></a>00114                 <span class="keywordtype">int</span> edgeId = model-&gt;comuteEdgeIdFromSplineId(splineId,localsplineId);
+<a name="l00115"></a>00115                 <span class="keywordflow">if</span> ( cb.isCubicBezier() )
+<a name="l00116"></a>00116                         i = mapping-&gt;addBaryPoint(edgeId,baryP,<span class="keyword">true</span>);
+<a name="l00117"></a>00117                 <span class="keywordflow">else</span>
+<a name="l00118"></a>00118                         i = mapping-&gt;addBaryPoint(edgeId,baryP,<span class="keyword">false</span>);
+<a name="l00119"></a>00119             r=cb.r();
+<a name="l00120"></a>00120         }
+<a name="l00121"></a>00121         <span class="keywordflow">else</span>
+<a name="l00122"></a>00122         {
+<a name="l00123"></a>00123             std::cout &lt;&lt; <span class="stringliteral">&quot;WARNING[MultiAdaptiveBeamContactMapper] AdaptiveBeamMapping is not created&quot;</span> &lt;&lt; std::endl;
+<a name="l00124"></a>00124         }
+<a name="l00125"></a>00125         <span class="keywordflow">return</span> i;
+<a name="l00126"></a>00126     }
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         <span class="keywordtype">void</span> update()
+<a name="l00131"></a>00131     {
+<a name="l00132"></a>00132         <span class="keywordflow">if</span> (mapping!=NULL)
+<a name="l00133"></a>00133         {
+<a name="l00134"></a>00134             core::BaseMapping* map = mapping.get();
+<a name="l00135"></a>00135             map-&gt;apply(core::MechanicalParams::defaultInstance(), core::VecCoordId::position(), core::ConstVecCoordId::position());
+<a name="l00136"></a>00136             map-&gt;applyJ(core::MechanicalParams::defaultInstance(), core::VecDerivId::velocity(), core::ConstVecDerivId::velocity());
+<a name="l00137"></a>00137         }
+<a name="l00138"></a>00138     }
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140     <span class="keywordtype">void</span> updateXfree()
+<a name="l00141"></a>00141     {
+<a name="l00142"></a>00142         <span class="keywordflow">if</span> (mapping!=NULL)
+<a name="l00143"></a>00143         {
+<a name="l00144"></a>00144             core::BaseMapping* map = mapping.get();
+<a name="l00145"></a>00145             map-&gt;apply(core::MechanicalParams::defaultInstance(), core::VecCoordId::freePosition(), core::ConstVecCoordId::freePosition());
+<a name="l00146"></a>00146             map-&gt;applyJ(core::MechanicalParams::defaultInstance(), core::VecDerivId::freeVelocity(), core::ConstVecDerivId::freeVelocity());
+<a name="l00147"></a>00147         }
+<a name="l00148"></a>00148     }
+<a name="l00149"></a>00149 };
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 
+<a name="l00153"></a>00153 <span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;
+<a name="l00154"></a><a class="code" href="classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html">00154</a> <span class="keyword">class </span><a class="code" href="class_contact_mapper.html" title="Mapper for BSplineModel.">ContactMapper</a>&lt;BSplineModel&lt;2&gt;, DataTypes&gt; : <span class="keyword">public</span> <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="MultiAdaptiveBeamContactMapper Class.">MultiAdaptiveBeamContactMapper</a>&lt;BSplineModel&lt;2&gt;, DataTypes&gt;
+<a name="l00155"></a>00155 {
+<a name="l00156"></a>00156 <span class="keyword">public</span>:
+<a name="l00157"></a>00157         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Real Real;
+<a name="l00158"></a>00158         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord Coord;
+<a name="l00159"></a>00159 };
 <a name="l00160"></a>00160 
-<a name="l00161"></a>00161 <span class="preprocessor">#if defined(WIN32) &amp;&amp; !defined(SOFA_BUILD_COMPONENT_COLLISION)</span>
-<a name="l00162"></a>00162 <span class="preprocessor"></span>
-<a name="l00163"></a>00163 <span class="preprocessor">        #ifndef SOFA_DOUBLE</span>
-<a name="l00164"></a>00164 <span class="preprocessor"></span>        <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="Base class for all mappers using RigidMapping.">MultiAdaptiveBeamContactMapper&lt;BSplineModel&lt;2&gt;</a>,Vec3fTypes&gt;;
-<a name="l00165"></a>00165 <span class="preprocessor">        #endif</span>
-<a name="l00166"></a>00166 <span class="preprocessor"></span><span class="preprocessor">        #ifndef SOFA_FLOAT</span>
-<a name="l00167"></a>00167 <span class="preprocessor"></span>        <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="Base class for all mappers using RigidMapping.">MultiAdaptiveBeamContactMapper&lt;BSplineModel&lt;2&gt;</a>,Vec3dTypes&gt;;
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162 
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164 <span class="preprocessor">#if defined(WIN32) &amp;&amp; !defined(SOFA_BUILD_COMPONENT_COLLISION)</span>
+<a name="l00165"></a>00165 <span class="preprocessor"></span>
+<a name="l00166"></a>00166 <span class="preprocessor">        #ifndef SOFA_DOUBLE</span>
+<a name="l00167"></a>00167 <span class="preprocessor"></span>        <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="MultiAdaptiveBeamContactMapper Class.">MultiAdaptiveBeamContactMapper&lt;BSplineModel&lt;2&gt;</a>,Vec3fTypes&gt;;
 <a name="l00168"></a>00168 <span class="preprocessor">        #endif</span>
-<a name="l00169"></a>00169 <span class="preprocessor"></span>
-<a name="l00170"></a>00170         <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API ContactMapper&lt;BSplineModel&lt;2&gt;&gt;;
-<a name="l00171"></a>00171 <span class="preprocessor">#endif</span>
+<a name="l00169"></a>00169 <span class="preprocessor"></span><span class="preprocessor">        #ifndef SOFA_FLOAT</span>
+<a name="l00170"></a>00170 <span class="preprocessor"></span>        <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html" title="MultiAdaptiveBeamContactMapper Class.">MultiAdaptiveBeamContactMapper&lt;BSplineModel&lt;2&gt;</a>,Vec3dTypes&gt;;
+<a name="l00171"></a>00171 <span class="preprocessor">        #endif</span>
 <a name="l00172"></a>00172 <span class="preprocessor"></span>
-<a name="l00173"></a>00173 
-<a name="l00174"></a>00174 } <span class="comment">// namespace collision</span>
-<a name="l00175"></a>00175 
-<a name="l00176"></a>00176 } <span class="comment">// namespace component</span>
-<a name="l00177"></a>00177 
-<a name="l00178"></a>00178 } <span class="comment">// namespace sofa</span>
-<a name="l00179"></a>00179 
-<a name="l00180"></a>00180 <span class="preprocessor">#endif </span><span class="comment">/* SOFA_COMPONENT_COLLISION_MULTIADAPTIVEBEAMCONTACTMAPPER_H */</span>
+<a name="l00173"></a>00173         <span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="class_contact_mapper.html" title="Mapper for BSplineModel.">ContactMapper&lt;BSplineModel&lt;2&gt;</a>&gt;;
+<a name="l00174"></a>00174 <span class="preprocessor">#endif</span>
+<a name="l00175"></a>00175 <span class="preprocessor"></span>
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177 } <span class="comment">// namespace collision</span>
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179 } <span class="comment">// namespace component</span>
+<a name="l00180"></a>00180 
+<a name="l00181"></a>00181 } <span class="comment">// namespace sofa</span>
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183 <span class="preprocessor">#endif </span><span class="comment">/* SOFA_COMPONENT_COLLISION_MULTIADAPTIVEBEAMCONTACTMAPPER_H */</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -294,7 +295,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul>
       <li class="navelem"><b>MultiAdaptiveBeamContactMapper.h</b>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 16:11:27 for BeamAdapter by
+    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

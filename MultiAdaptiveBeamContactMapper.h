@@ -51,7 +51,10 @@ namespace collision
 using namespace sofa::defaulttype;
 
 
-/// Base class for all mappers using RigidMapping
+/*!
+ * \class MultiAdaptiveBeamContactMapper
+ * @brief MultiAdaptiveBeamContactMapper Class
+ */
 template < class TCollisionModel, class DataTypes >
 class MultiAdaptiveBeamContactMapper : public BaseContactMapper<DataTypes>
 {
