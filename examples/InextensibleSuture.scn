@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.01" gravity="0 -980 0">
  	<RequiredPlugin pluginName="BeamAdapter"/>
-	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields showInteractionForceFields hideWireFrame" />
+	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields showInteractionForceFields" />
  	<FreeMotionAnimationLoop />
 	<GenericConstraintSolver tolerance="1e-10"  maxIterations="1000" unbuilt="false" printLog="0"/>
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>
@@ -103,7 +103,7 @@
 				ymin="0" ymax="0"
 				zmin="0" zmax="0"
 				/>
-				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
+				<MechanicalObject name="CollisionDOFs"/>
 				<AdaptiveBeamMapping  name="collisMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" mapMasses="0" mapForces="0"/> 
 				<Line proximity="0.0" group="1"  selfCollision="0" />
 				<Point proximity="0.0" group="1" selfCollision="0"/>

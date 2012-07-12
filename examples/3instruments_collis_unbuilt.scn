@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.01" gravity="0 0 -9810">
 	<RequiredPlugin pluginName="BeamAdapter"/>
-	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
+	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
  	<FreeMotionAnimationLoop />
 	<LCPConstraintSolver mu="0.1" tolerance="1e-10" maxIt="50" build_lcp="false" displayDebug="false"/>
 	<!--<GenericConstraintSolver tolerance="1e-10"  maxIterations="1000" unbuilt="false"/>-->
