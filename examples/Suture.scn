@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.01" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -0">
+<Node name="root" dt="0.01" gravity="0 0 -0">
+	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
  	<FreeMotionMasterSolver />
 	<GenericConstraintSolver tolerance="1e-10"  maxIterations="1000" unbuilt="false"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
@@ -48,8 +49,8 @@
 		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
 
 		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="1.0" printLog="0"/> 
-		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="0.00000155"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="0 0 0 0 0 0 1" interpolation="InterpolSuture" useDummyController="true"/>
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="@InterpolSuture" massDensity="0.00000155"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="0 0 0 0 0 0 1" interpolation="@InterpolSuture" useDummyController="true"/>
 
 		
 		
