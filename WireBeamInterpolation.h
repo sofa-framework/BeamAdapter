@@ -191,8 +191,9 @@ public:
 	static typename T::SPtr  create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 	{
 		WireRestShape<DataTypes>* _restShape = NULL;
-		bool                  _pathCheckedOk = false;
+		bool _pathCheckedOk = false;
 		std::string _restShapePath;
+		bool pathOK = false;
 
 		if(arg)
 		{
@@ -201,12 +202,19 @@ public:
 				_restShapePath = arg->getAttribute("WireRestShape");
 				context->findLinkDest(_restShape, _restShapePath, NULL);
 				_pathCheckedOk = true;
-			}
 
-			if(_restShape == NULL)
+				if(_restShape == NULL)
+					context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+				else
+					pathOK = true;
+			}
+			else
+				context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+
+
+			if (!pathOK)
 			{
 				_restShapePath=" ";
-				context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
 				_restShape = new WireRestShape<DataTypes>();
 				_pathCheckedOk = false;
 			}

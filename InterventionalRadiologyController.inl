@@ -947,9 +947,9 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         if(xabs > xmax_prev + threshold.getValue())
         {
         	if (this->f_printLog.getValue()){
-				std::cerr<<" WARNING case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<std::endl;
-				std::cout<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<nodeCurvAbs<<std::endl;
-				std::cout<<" modifiedCurvAbs ="<<modifiedCurvAbs<<std::endl;
+				serr<<" WARNING case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
+				sout<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<nodeCurvAbs<<sendl;
+				sout<<" modifiedCurvAbs ="<<modifiedCurvAbs<<sendl;
         	}
             // case 1 (the abs curv is further than the previous state of the instrument)
             ////// verifier qu'il s'agit bien d'un instrument qu'on est en train de controller

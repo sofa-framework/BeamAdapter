@@ -65,6 +65,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >
 , m_ircontroller(_ircontroller)
 , isBarycentricMapping(false)
 {
+	this->addAlias(&m_controlerPath, "controller");
 }
 
 
@@ -76,6 +77,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 , m_ircontroller(NULL)
 , isBarycentricMapping(false)
 {
+	this->addAlias(&m_controlerPath, "controller");
 }
 
 
@@ -320,7 +322,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 		}
 	}
 
-	std::cout<<" aaaaaaaaaaa numSeg found in MultiAdaptiveBeamMapping="<<numSeg<<std::endl;
+	sout<<" aaaaaaaaaaa numSeg found in MultiAdaptiveBeamMapping="<<numSeg<<sendl;
 
 
 	// add points

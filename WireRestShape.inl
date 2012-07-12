@@ -95,7 +95,8 @@ void WireRestShape<DataTypes>::init()
         this->InitRestConfig();
     }
 
-    std::cout<<"WireRestShape begin init"<<std::endl;
+    if (f_printLog.getValue())
+    	sout<<"WireRestShape begin init"<<sendl;
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
@@ -106,7 +107,9 @@ void WireRestShape<DataTypes>::init()
 
 
     if(_topology != NULL)
-        std::cout<<" FIND topology named "<< _topology->getName()<<std::endl;
+    {
+    	if (f_printLog.getValue()) sout<<"found topology named "<< _topology->getName()<<sendl;
+    }
     else
     	serr << "cannot find topology container" << sendl;
 
@@ -149,7 +152,7 @@ void WireRestShape<DataTypes>::init()
     }
     if(edge2QuadMap==NULL)
     {
-        sout<<" no edge2Quad map found"<<sendl;
+    	sout <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
     }
 
 
@@ -207,7 +210,8 @@ void WireRestShape<DataTypes>::init()
         numEdgesCollis.endEdit();
     }
 
-     std::cout<<"WireRestShape end init"<<std::endl;
+    if (f_printLog.getValue())
+    	sout<<"WireRestShape end init"<<sendl;
 
 
 	// Prepare beam sections
