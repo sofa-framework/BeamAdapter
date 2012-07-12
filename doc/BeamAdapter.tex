@@ -48,6 +48,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %=======================================================================================%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Installation}
+
+Uncomment the line $$\textbf{DEFINES += SOFA\_HAVE\_BEAMADAPTER}$$ in \textit{sofa-local.prf} (or \textit{sofa-default.prf} if you have not created \textit{sofa-local.prf}). 
+Then, run qmake and make.
+
 \section{Sofa Datatypes}
 \subsection{RigidType}
 \subsection{SolidType}
@@ -58,7 +63,7 @@ For the general introduction of beam theory and equations, see p.509~\cite{FEMBo
 B-splines in general and B\'{e}zier splines in particulary can see in ~\cite{Bspline} or more detail in ~\cite{CourseGeo}. A spline tool can see at~\cite{SplineTool}. Here assumed several general formula. In general, a B\'{e}zier curve order $n$ is determined by $n+1$ control points (characteristic polygone) $P_{i,0 \leqslant i \leqslant n} $. Its trajectory is :
 \[B(t) = \sum_{i=0}^n \hat{\textbf{B}} _{i,n}(t) . P_i   \]
 Where $\hat{\textbf{B}} _{i,n}(t)$ are Bernstein polynomial given by 
-\[\hat{\textbf{B}} _{i,n}(t) =  \complement_n^i .t^i.(1-t)^{n-i}  \]
+\[\hat{\textbf{B}} _{i,n}(t) =  \binom{n}{i} .t^i.(1-t)^{n-i}  \]
 The most usually used is the cubic B\'{e}zier , where trajectory is given by  
 \[(1-t)^3.P_0    + 3.(1-t)^2 t.P_1    +   3.t^2(1-t).P_3   +  t^3.P_3\]
 \begin{center}
@@ -72,14 +77,40 @@ The most usually used is the cubic B\'{e}zier , where trajectory is given by
 \begin{center}
  \includegraphics[scale=0.4]{UMLBeamAdapter}
 \end{center}
-\subsection{WireRestShape }
+
+\subsection{WireRestShape}
+
+Define the rest shape of a wire.
+
+The data \textit{procedural} defines if the rest shape is generated procedurally, or loaded from a file with the data \textit{filename}. 
+It is possible to scale the rest shape loaded from a file with the parameter \textit{nonProceduralScale}.
+The wire has a total length defined in \textit{length}.
+
+The procedural rest shape is composed of a straight segment with a spring-like shape on the tip.
+These shapes are defined with the following parameters:
+\begin{itemize}
+  \item \textit{straightLength} : length of the straight segment
+  \item \textit{spireDiameter} : spring diameter
+  \item \textit{spireHeight} : spring height
+\end{itemize}
+
+
+The component will implicitly get a \textbf{sofa::core::topology::TopologyContainer} to build the rest shape topology, with a \textbf{sofa::component::topology::EdgeSetGeometryAlgorithms} and a \textbf{sofa::~component::~topology::EdgeSetTopologyModifier}, generally in the same node in the scene graph.
+
 \subsection{BeamInterpolation }
+
+Describe the interpolation between the two frames of a beam. It is based on B\'ezier splines.
+
+The component needs a \textbf{sofa::core::topology::BaseMeshTopology} to work on it.
+
 \subsection{AdaptiveBeamForceFieldAndMass }
 \subsection{AdaptiveBeamController }
 \subsection{AdaptiveBeamMapping }
 \subsection{WireBeamInterpolation }
 \subsection{InterventionalRadiologyController }
 \subsection{MultiAdaptiveMapping }
+
+
 \bibliographystyle{siam}
-\bibliography{AdaptativeBeam}
+\bibliography{BeamAdapter}
 \end{document}

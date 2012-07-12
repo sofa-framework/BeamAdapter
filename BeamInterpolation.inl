@@ -313,7 +313,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     QuatX.axisToQuat(Vec3(1,0,0), angle);
     QuatX.normalize();
 
-    // as a angle is set between DOFs and Beam, they are no more aligned
+    // as an angle is set between DOFs and Beam, they are no more aligned
     this->dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(Transform(Vec3(0, 0, 0), QuatX ));
     DOF1TransformNode1.push_back(Transform(Vec3(0, 0, 0), QuatX ));

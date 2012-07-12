@@ -107,6 +107,8 @@ void WireRestShape<DataTypes>::init()
 
     if(_topology != NULL)
         std::cout<<" FIND topology named "<< _topology->getName()<<std::endl;
+    else
+    	serr << "cannot find topology container" << sendl;
 
     this->getContext()->get(edgeGeo);
     this->getContext()->get(edgeMod);
@@ -132,7 +134,7 @@ void WireRestShape<DataTypes>::init()
         Real px = i*dx;
         _topology->addPoint( px, 0, 0);
     }
-        // add segments
+	// add segments
     for (int i=0; i<numEdges.getValue(); i++)
     {
         _topology->addEdge(i,i+1);
@@ -143,7 +145,7 @@ void WireRestShape<DataTypes>::init()
     for (core::objectmodel::TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
     {
         std::cerr<<"!!!!!!!!!!!! \n ERROR  : NEED TO FIX line 146 in WireRestShape.inl !!!\n!!!!!!!!"<<std::endl;
-	dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get( edge2QuadMap , *it, sofa::core::objectmodel::BaseContext::SearchRoot );
+        dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get( edge2QuadMap , *it, sofa::core::objectmodel::BaseContext::SearchRoot );
     }
     if(edge2QuadMap==NULL)
     {
