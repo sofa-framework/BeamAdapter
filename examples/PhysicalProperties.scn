@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <Node name="root" dt="0.01" gravity="0 0 -9810" >
 	<VisualStyle displayFlags="showBehaviorModels" />
 	<FreeMotionAnimationLoop />
@@ -34,8 +35,8 @@
 		<MechanicalObject template="Rigid" name="DOFs" /> 
 
 		<WireBeamInterpolation name="Interpolation" WireRestShape="@../TopoLines/RestShape" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass interpolation="Interpolation" instrumentParameters="@../TopoLines/RestShape"/>
-		<SutureController template="Rigid" startingPos="-100 0 0 0 0 0 1" interpolation="Interpolation" threshold="1" maxBendingAngle="0.1"/>
+		<AdaptiveBeamForceFieldAndMass interpolation="@Interpolation" instrumentParameters="@../TopoLines/RestShape"/>
+		<SutureController template="Rigid" startingPos="-100 0 0 0 0 0 1" interpolation="@Interpolation" threshold="1" maxBendingAngle="0.1"/>
 		<FixedConstraint name="FixedConstraint" indices="0" />
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 		
@@ -46,7 +47,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius=".5" input="@../../TopoLines/EdgesContainer" output="@QuadsContainer" flipNormals="true"/>
-			<AdaptiveBeamMapping useCurvAbs="1" printLog="0" interpolation="@../Interpolation" input="@../DOFs" output="@Quads" isMechanical="false"  />
+			<AdaptiveBeamMapping useCurvAbs="1" printLog="0" interpolation="@../Interpolation" input="@../DOFs" output="@Quads" isMechanical="false" mapForces="0" mapMasses="0" />
 
 			<Node name="VisuOgl">
 				<OglModel name="Visual" color="0.6 0.6 0.6" />
@@ -70,7 +71,7 @@
 				<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 				<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 				<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="1.5" input="@../grid" output="@QuadsContainer" flipNormals="true"/>
-				<AdaptiveBeamMapping interpolation="@../../Interpolation" input="@../Subpart" output="@Quads" useCurvAbs="1"/> 
+				<AdaptiveBeamMapping interpolation="@../../Interpolation" input="@../Subpart" output="@Quads" useCurvAbs="1" mapForces="0" mapMasses="0"/> 
 
 				<Node name="VisuOgl">
 					<OglModel name="Visual" color="0.6 0.6 0.6" />

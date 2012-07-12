@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.05" showVisualModels="1" showBehaviorModels="0" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 0.00001">
+<Node name="root" dt="0.05" gravity="0 0 0.00001">
+  <VisualStyle displayFlags="showVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
   <FreeMotionMasterSolver />
   <LCPConstraintSolver mu="0.1" tolerance="1e-10" maxIt="100" />
   <!--<RequiredPlugin pluginName="BeamAdapter_1_0.dll" />-->
@@ -61,14 +62,14 @@
     <MechanicalObject template="Rigid" name="DOFs" debugViewIndices="0"/>
 
     <WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="1" printLog="1"/>
-    <AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="InterpolCatheter" massDensity="0.00000155"/>
+    <AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@InterpolCatheter" massDensity="0.00000155"/>
     <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->
 
     <WireBeamInterpolation name="InterpolGuide" WireRestShape="@../topoLines_guide/GuideRestShape" radius="0.9" printLog="1"/>
-    <AdaptiveBeamForceFieldAndMass name="GuideForceField" interpolation="InterpolGuide" massDensity="0.00000155"/>
+    <AdaptiveBeamForceFieldAndMass name="GuideForceField" interpolation="@InterpolGuide" massDensity="0.00000155"/>
 
     <WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.1" printLog="1"/>
-    <AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="InterpolCoils" massDensity="0.000021"/>
+    <AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="@InterpolCoils" massDensity="0.000021"/>
     <!-- platine E = 168000 MPa // 21000 Kg/m3-->
 
     <!--<XiCathAdaptiveController  name="xiCathController" printLog="0" numbDevice="3" xtip="0.0 0.0 0.0" rotationInstrument="0 0 0" scale=""1" />-->
