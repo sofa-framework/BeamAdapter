@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<Node name="root" gravity="0 -9.81 0" dt="0.001" showBehaviorModels="1" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
+<Node name="root" gravity="0 -9.81 0" dt="0.001" >
 	
 	<RequiredPlugin pluginName="BeamAdapter"/>
+	<VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
 	<MasterConstraintSolver />
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>
 	<BruteForceDetection name="N2" />
@@ -64,11 +65,11 @@
    </Node>
    
   
-   <BilateralInteractionConstraint object1="BVH/6D_DOFs1/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="1" second_point="26" />
-   <BilateralInteractionConstraint object1="BVH/6D_DOFs1/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="0" second_point="6" />
-   <BilateralInteractionConstraint object1="6D_DOF_fixed/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="0" second_point="2" />
-   <BilateralInteractionConstraint object1="6D_DOF_fixed/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="1" second_point="3" />    
-   <BilateralInteractionConstraint object1="6D_DOF_fixed/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="2" second_point="4" />
-   <BilateralInteractionConstraint object1="6D_DOF_fixed/6D_Dof" object2="AdaptiveBeam/DOFs" first_point="3" second_point="5" />  
+   <BilateralInteractionConstraint object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="1" second_point="26" />
+   <BilateralInteractionConstraint object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="0" second_point="6" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="0" second_point="2" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="1" second_point="3" />    
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="2" second_point="4" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="3" second_point="5" />  
 
 </Node>

@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.01" showVisualModels="1" showBehaviorModels="0" showCollisionModels="0" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -981">
+<Node name="root" dt="0.01" gravity="0 0 -981">
 
-	<RequiredPlugin pluginName="BeamAdapter"/>
+  <RequiredPlugin pluginName="BeamAdapter"/>
+  <VisualStyle displayFlags="showVisualModels hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
   <MasterConstraintSolver printLog="false" maxIterations="20" tolerance="1e-8" />
   <CollisionPipeline verbose="0" name="CollisionPipeline"/>
   <BruteForceDetection name="N2" />
@@ -60,7 +61,7 @@
 		 ymin="0" ymax="0"
 		 zmin="1" zmax="1"
 		 />		
-    <MechanicalObject template="Rigid" name="DOFs" debugViewIndices="0"/> 
+    <MechanicalObject template="Rigid" name="DOFs"/> 
     <AdaptiveBeamController template="Rigid" interventionalRadiology="1" printLog="0" xtip="0.455 0.0679"  step="0.226304" rotationInstrument="0 0" 
 			    controlledInstrument="0" tags="Control" 
 			    startingPos="66.4606 44.3883 46.4518 0.557086 -0.742781 0.371391 0"/> 
@@ -84,7 +85,7 @@
     <Node name="Collis">
       <EdgeSetTopologyContainer name="collisEdgeSet" />
       <EdgeSetTopologyModifier   name="colliseEdgeModifier" />
-      <MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
+      <MechanicalObject name="CollisionDOFs"/>
       <AdaptiveBeamMapping  name="collisMap"  useCurvAbs="1" printLog="0" fromSeveralInterpolations="1" tags="Cath Guide Coils"/> 				
       <Line proximity="0.0" group="1" selfCollision="0" LineActiverEngine="../../InstrumentCombined"/>
       <Point proximity="0.0" group="1" selfCollision="0" PointActiverEngine="../../InstrumentCombined"/>

@@ -44,7 +44,7 @@
 			zmin="0" zmax="0"
 			/>
 			<MechanicalObject name="points" showIndices="0"/>
-			<AdaptiveBeamMapping  name="collisMap"  interpolation="@../interpolSuture" useCurvAbs="1" printLog="0"/> 
+			<AdaptiveBeamMapping  name="collisMap"  interpolation="@../interpolSuture" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0"/> 
 			<Line proximity="0.0" LineActiverPath="../container"/>
 			<Point proximity="0.0" PointActiverPath="../container" group="20" />
 		</Node>	
@@ -93,7 +93,7 @@
 			zmin="0" zmax="0"
 			/>
 			<MechanicalObject name="points" showIndices="0"/>
-			<AdaptiveBeamMapping  name="collisMap"  interpolation="@../interpolSuture" useCurvAbs="1" printLog="0"/> 
+			<AdaptiveBeamMapping  name="collisMap"  interpolation="@../interpolSuture" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0"/> 
 			<Line proximity="0.0" LineActiverPath="../container"/>
 			<Point proximity="0.0" PointActiverPath="../container" group="20" />
 		</Node>	

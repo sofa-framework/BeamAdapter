@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.002" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="1" showWireFrame="0" gravity="0 -9800 0">
+<Node name="root" dt="0.002"  gravity="0 -9800 0">
 
 	<RequiredPlugin pluginName="BeamAdapter"/>
+	 <VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings showForceFields" />
 	<Node name="topoLines_suture">
 		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="100"  straightLength="100" spireDiameter="1000.0" spireHeight="0.0"
 					    densityOfBeams="10 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="2e9"/>		
@@ -24,8 +25,8 @@
 		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
 
 		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.1" printLog="0" dofsAndBeamsAligned="false"/> 
-		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="InterpolSuture" massDensity="1e-2" elongationFactor="1" />
-		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="0 0 20 0 0 0 1" interpolation="InterpolSuture"  threshold="0.25" maxBendingAngle="1e6"/>
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="@InterpolSuture" massDensity="1e-2" elongationFactor="1" />
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="0 0 20 0 0 0 1" interpolation="@InterpolSuture"  threshold="0.25" maxBendingAngle="1e6"/>
 	<!--	<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>	-->
 
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
@@ -34,7 +35,7 @@
 		
 		<Node name="ConstrainedFames">
 			<MechanicalObject name="AttachedFrame" template="Rigid" position="0 0 0 0 0 0 1" />
-			<AdaptiveBeamMapping  name="FrameMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" points="100 0 0" /> 
+			<AdaptiveBeamMapping  name="FrameMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" points="100 0 0" mapMasses="0" mapForces="0"/> 
 			<ConstantForceField points="0" forces="1e5 0 0  0 0 0 1" />
 		</Node>	
 		
@@ -45,8 +46,8 @@
 				ymin="0" ymax="0"
 				zmin="0" zmax="0"
 				/>
-				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
-				<AdaptiveBeamMapping  name="collisMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0"/> 
+				<MechanicalObject name="CollisionDOFs"/>
+				<AdaptiveBeamMapping  name="collisMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" mapMasses="0" mapForces="0"/> 
 				<Line proximity="0.0" group="1"  selfCollision="1" />
 				<Point proximity="0.0" group="1" selfCollision="1"/>
 		</Node>	
@@ -58,7 +59,7 @@
 			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="6" radius="0.25" input="@../../topoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
-			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  mapMasses="0" mapForces="0" />
 
 			<Node name="VisuOgl">
 				<VisualModel  name="VisualBody" />

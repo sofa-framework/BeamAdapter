@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.01" showVisualModels="0" showBehaviorModels="0" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -981">
+<Node name="root" dt="0.01" gravity="0 0 -981">
   
 	<RequiredPlugin pluginName="BeamAdapter"/>
+	<VisualStyle displayFlags="hideVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields" />
   <!-- <InputEventReader listening="true" filename="/dev/input/by-id/usb-Microsoft_Microsoft®_2.4GHz_Transceiver_v5.0-event-mouse" /> -->
   <!--<InputEventReader listening="true" filename="/dev/input/event3" />-->
   
@@ -61,7 +62,7 @@
 		 ymin="0" ymax="0"
 		 zmin="1" zmax="1"
 		 />		
-    <MechanicalObject template="Rigid" name="DOFs" debugViewIndices="0"/> 
+    <MechanicalObject template="Rigid" name="DOFs"/> 
     <!--<AdaptiveBeamController template="Rigid" interventionalRadiology="1" printLog="0" xtip="0.455 0.0679"  step="0.15" rotationInstrument="0 0" 
 			    controlledInstrument="0" tags="Control" 
 			    startingPos="66.4606 44.3883 46.4518 0.557086 -0.742781 0.371391 0"/> -->
@@ -73,12 +74,12 @@
     <!--<AdaptiveBeamInterpolation name="InterpolCatheter" radius="0.16" straightRestShape="0"  printLog="0" tags="Cath" /> -->
 	<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.16" printLog="1"/> 
 
-    <AdaptiveBeamForceFieldAndMass name="CatheterForceField"  youngModulus="5" massDensity="0.00000005" poisson="0.1" tags="Cath"  interpolation="InterpolCatheter"/>    
+    <AdaptiveBeamForceFieldAndMass name="CatheterForceField"  youngModulus="5" massDensity="0.00000005" poisson="0.1" tags="Cath"  interpolation="@InterpolCatheter"/>    
     
     <!--<AdaptiveBeamInterpolation name="InterpolCoils" radius="0.07" straightRestShape="0"  printLog="0" tags="Coils"/> -->
 	<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.07" printLog="1"/>
 
-    <AdaptiveBeamForceFieldAndMass name="CoilsForceField"  youngModulus="9" massDensity="0.000000025"  tags="Coils"   interpolation="InterpolCoils"/>
+    <AdaptiveBeamForceFieldAndMass name="CoilsForceField"  youngModulus="9" massDensity="0.000000025"  tags="Coils"   interpolation="@InterpolCoils"/>
     
     <LinearSolverConstraintCorrection printLog="false" wire_optimization="true" />
     
@@ -88,8 +89,8 @@
     <Node name="Collis">
       <EdgeSetTopologyContainer name="collisEdgeSet" />
       <EdgeSetTopologyModifier   name="colliseEdgeModifier" />
-      <MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
-	  <MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0"/> 
+      <MechanicalObject name="CollisionDOFs"/>
+	  <MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0"/> 
       <!-- <AdaptiveBeamMapping  name="collisMap"  useCurvAbs="1" printLog="0" fromSeveralInterpolations="1" tags="Cath Coils"/> 	-->			
       <Line proximity="0.0" group="1" selfCollision="1" LineActiverPath="../m_ircontroller"/>
       <Point proximity="0.0" group="1" selfCollision="1" PointActiverPath="../m_ircontroller"/>
