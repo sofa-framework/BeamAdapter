@@ -5,7 +5,9 @@
     <MinProximityIntersection name="Proximity" alarmDistance="0.03" contactDistance="0.02" />
     <CollisionResponse name="Response" response="default" />
     <CollisionGroup name="Group" />-->
-   <Node name="beam">
+   
+      <RequiredPlugin pluginName="BeamAdapter"/>
+      <Node name="beam">
       <EulerImplicit rayleighStiffness="0" rayleighMass="0"  printLog="false" />
 	  <!--      <BTDLinearSolver template="BTDMatrix6d"  printLog="false" verbose="true" />  -->
 	  <LULinearSolver />

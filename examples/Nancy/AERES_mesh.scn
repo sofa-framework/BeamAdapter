@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.01" showVisualModels="0" showBehaviorModels="0" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -981">
   
+	<RequiredPlugin pluginName="BeamAdapter"/>
   <!-- <InputEventReader listening="true" filename="/dev/input/by-id/usb-Microsoft_Microsoft®_2.4GHz_Transceiver_v5.0-event-mouse" /> -->
   <!--<InputEventReader listening="true" filename="/dev/input/event3" />-->
   

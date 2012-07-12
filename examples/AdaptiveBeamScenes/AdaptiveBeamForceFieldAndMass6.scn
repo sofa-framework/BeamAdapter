@@ -7,6 +7,7 @@
     <CollisionGroup name="Group" />-->
 	
 	
+	<RequiredPlugin pluginName="BeamAdapter"/>
 	<Node name="AdaptiveBeam">
       <EulerImplicit rayleighStiffness="0.2" rayleighMass="0" printLog="false" />
       	  <LULinearSolver verbose="0"/>

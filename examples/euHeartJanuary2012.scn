@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.05" gravity="0 0 0.00001">
+ 	<RequiredPlugin pluginName="BeamAdapter"/>
   <VisualStyle displayFlags="showVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
   <FreeMotionMasterSolver />
   <LCPConstraintSolver mu="0.1" tolerance="1e-10" maxIt="100" build_lcp="false"/>

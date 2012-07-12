@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <Node name="root" gravity="0 -9.81 0" dt="0.01" showVisualModels="0" showBehaviorModels="0" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
+	<RequiredPlugin pluginName="BeamAdapter"/>
 	<MasterContactSolver />
 	<LCPConstraintSolver tolerance="0.00000001"  mu="0.8" />
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>

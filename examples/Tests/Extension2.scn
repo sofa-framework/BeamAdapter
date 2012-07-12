@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.002" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="1" showWireFrame="0" gravity="0 -9800 0">
 
+	<RequiredPlugin pluginName="BeamAdapter"/>
 	<Node name="topoLines_suture">
 		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="100"  straightLength="100" spireDiameter="1000.0" spireHeight="0.0"
 					    densityOfBeams="10 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="2e9"/>		

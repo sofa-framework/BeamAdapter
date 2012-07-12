@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" gravity="0 -9.81 0" dt="0.01" showBehaviorModels="1" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
+	
+	<RequiredPlugin pluginName="BeamAdapter"/>
 	<MasterConstraintSolver />
 
 	

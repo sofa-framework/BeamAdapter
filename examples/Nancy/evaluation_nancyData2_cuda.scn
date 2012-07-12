@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.01" showVisualModels="1" showBehaviorModels="0" showCollisionModels="0" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -981">
 
+	<RequiredPlugin pluginName="BeamAdapter"/>
   <MasterConstraintSolver printLog="false" maxIterations="20" tolerance="1e-8" />
   <CollisionPipeline verbose="0" name="CollisionPipeline"/>
   <BruteForceDetection name="N2" />

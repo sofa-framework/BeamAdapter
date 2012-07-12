@@ -1,4 +1,7 @@
+<?xml version="1.0"?>
 <Node name="root"  dt="0.005" gravity="0 0 -9810">
+	
+	<RequiredPlugin pluginName="BeamAdapter"/>
 	<FreeMotionAnimationLoop/>
 	<GenericConstraintSolver tolerance="1e-3" maxIterations="200" printLog="0" />
 	
