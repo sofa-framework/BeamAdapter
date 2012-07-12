@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<Node name="root" dt="0.1" showVisualModels="0" showBehaviorModels="1" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 -0.01 0">
- 	<GenericConstraintSolver tolerance="1e-6"/>
+<Node name="root" dt="0.1" gravity="0 -0.01 0">
+ 	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
+	<GenericConstraintSolver tolerance="1e-6"/>
 	<FreeMotionMasterSolver />
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />

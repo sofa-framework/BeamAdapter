@@ -47,11 +47,11 @@
 		<MechanicalObject template="Rigid" name="DOFs"/> 
 
 		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.4" printLog="1"/> 
-		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="InterpolCatheter" massDensity="0.0000155"/>  <!-- silicone E = 1000 MPa // 1550 Kg/m3-->	
+		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@InterpolCatheter" massDensity="0.0000155"/>  <!-- silicone E = 1000 MPa // 1550 Kg/m3-->	
 
 
 		<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.2" printLog="1"/> 
-		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="InterpolCoils" massDensity="0.00021"/>  <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="@InterpolCoils" massDensity="0.00021"/>  <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
 				
 		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.51 0.3"  step="0.2" rotationInstrument="0 0 " 
 							controlledInstrument="0" startingPos="143 77 175 0.5 -0.8 0 0.5" speed="0." instruments="InterpolCatheter  InterpolCoils" />						
@@ -65,7 +65,8 @@
 				<EdgeSetTopologyContainer name="collisEdgeSet" />
 				<EdgeSetTopologyModifier   name="colliseEdgeModifier" />
 				<MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
-				<MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0"/> 
+				<MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0"
+				/> 
 				<Line proximity="0.0" group="1" selfCollision="0"/>
 				<Point proximity="0.0" group="1" selfCollision="0"/>
 		</Node>	

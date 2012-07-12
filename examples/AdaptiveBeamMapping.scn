@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<Node name="root" gravity="0 -9.81 0" dt="0.01" showBehaviorModels="1" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
- 
+<Node name="root" gravity="0 -9.81 0" dt="0.01" >
+	<VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
+
 	<Node name="AdaptiveBeam2">
 		<EulerImplicit rayleighStiffness="0" rayleighMass="0" printLog="false" />
 		<BTDLinearSolver verbose="0"/>
@@ -13,7 +14,7 @@
 			<CubeTopology nx="20" ny="2" nz="2" min="0 -0.1 -0.1" max="3 0.1 0.1" />
 			<MechanicalObject template="Vec3d" name="collision"/>
 			<Triangle color="0.5 1 0.5 1" />
-			<AdaptiveBeamMapping isMechanical="true" input="@../DOFs"  output="@collision"/>		
+			<AdaptiveBeamMapping isMechanical="true" input="@../DOFs"  output="@collision" mapForces="0" mapMasses="0"/>		
 		</Node>
 	</Node>  
 
