@@ -243,6 +243,9 @@ bool BeamInterpolation<DataTypes>::verifyTopology()
 		}
 
 		this->_topologyEdges = &this->_topology->getEdges();
+		if (this->f_printLog.getValue())
+			sout << "the vector _topologyEdges is now set with " << _topologyEdges->size() << " edges" << sendl;
+
 
 		const VecElementID &edgeList = m_edgeList.getValue();
 
@@ -426,7 +429,7 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
+int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
                                                             Transform& local0_H_local1, Quat& local_R_local0, const VecCoord &x)
 {
 
@@ -434,7 +437,11 @@ void BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Tr
 
     // 1. Get the indices of element and nodes
     unsigned int node0Idx, node1Idx;
-    getNodeIndices( edgeInList,  node0Idx, node1Idx );
+    if (getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
+	{
+		serr << "[computeTransform2] Error in getNodeIndices(). Aborting....." << sendl;
+		return -1;
+	}
 
 
 
@@ -473,15 +480,22 @@ void BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Tr
 
     global_H1_local = global_H_local1 * local0_HR_local1.inversed();
 
+    return 1;
+
 }
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,  Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x)
+int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,  Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x)
 {
     // 1. Get the indices of element and nodes
     unsigned int node0Idx, node1Idx;
-    getNodeIndices( edgeInList,  node0Idx, node1Idx );
+    if ( getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
+    {
+    	serr << "[computeTransform2] Error in getNodeIndices(). Aborting....." << sendl;
+    	return -1;
+    }
+
 
 
 
@@ -496,6 +510,8 @@ void BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,  T
         // - add a optional transformation
      global_H_local0 = global_H_DOF0*DOF0_H_local0;
      global_H_local1 = global_H_DOF1*DOF1_H_local1;
+
+     return 1; //without error
 }
 
 template<class DataTypes>
@@ -516,11 +532,12 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx )
+int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx )
 {
     if ( this->_topologyEdges==NULL)
     {
-        serr<<" in  getNodeIndices no _topologyEdges defined"<<sendl;
+        serr<<"In BeamInterpolation::getNodeIndices() no edges topology defined"<<sendl;
+        return -1;
     }
 
     // 1. Get the indices of element and nodes
@@ -528,6 +545,8 @@ void BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsig
     core::topology::BaseMeshTopology::Edge edge=  (*this->_topologyEdges)[e];
     node0Idx = edge[0];
     node1Idx = edge[1];
+
+    return 1;
 }
 
 
@@ -552,7 +571,11 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3)
 {
     Transform global_H_local0, global_H_local1;
-    computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
+    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
+    {
+    	serr << "[getSplinePoints] error with computeTransform2. Aborting...." << sendl;
+    	return;
+    }
 
    // << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
     const Real& _L = this->m_lengthList.getValue()[edgeInList];
@@ -630,6 +653,7 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
     this->getSplinePoints(edgeInList, x, P0, P1, P2, P3);
     ///////// TODO :
     unsigned int node0Idx, node1Idx;
+    sout << "in computeStrechAndTwist" << sendl;
     this->getNodeIndices(edgeInList,node0Idx,node1Idx);
 
     Real length0, length1;
@@ -727,7 +751,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     }
     else
     {
-        // TODO => remove call to computeTransform2 => make something faster !
+        /// \todo remove call to computeTransform2 => make something faster !
         Transform global_H_local0, global_H_local1;
         computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
         Vec3 DP=global_H_local0.getOrigin() - global_H_local1.getOrigin();
@@ -897,7 +921,11 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol)
 {
     Transform global_H_local0, global_H_local1;
-    computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
+    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
+    {
+		serr << "[InterpolateTransformUsingSpline] error with computeTransform2. Aborting...." << sendl;
+		return;
+	}
 
     const Real& _L = this->m_lengthList.getValue()[edgeInList];
 

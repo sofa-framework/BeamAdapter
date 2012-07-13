@@ -191,7 +191,6 @@ public:
 	static typename T::SPtr  create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 	{
 		WireRestShape<DataTypes>* _restShape = NULL;
-		bool _pathCheckedOk = false;
 		std::string _restShapePath;
 		bool pathOK = false;
 
@@ -201,7 +200,6 @@ public:
 			{
 				_restShapePath = arg->getAttribute("WireRestShape");
 				context->findLinkDest(_restShape, _restShapePath, NULL);
-				_pathCheckedOk = true;
 
 				if(_restShape == NULL)
 					context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
@@ -216,7 +214,6 @@ public:
 			{
 				_restShapePath=" ";
 				_restShape = new WireRestShape<DataTypes>();
-				_pathCheckedOk = false;
 			}
 		}
 
@@ -245,25 +242,33 @@ public:
 	 * @brief Default Constructor.
 	 */
 	ProjectionSearch(WireBeamInterpolation<DataTypes>* inter, const Vec3& x_input, const VecCoord& vecX, Real& xcurv_output, const Real& tol)
-		: interpolation(inter), x(vecX), target(x_input), e(xcurv_output), tolerance(tol), found(false)
-		, totalIterations(0), dichotomicIterations(0), searchDirection(0) {}
+			: interpolation(inter),
+			x(vecX),
+			target(x_input),
+			found(false),
+			tolerance(tol),
+			totalIterations(0),
+			dichotomicIterations(0),
+			searchDirection(0),
+			e(xcurv_output)
+	{}
 
-	WireBeamInterpolation<DataTypes> *interpolation; 			/*! The interpolation using this class */
-	const VecCoord& x;											/*! The positions of the beams we are working on*/
-	Vec3 target;												/*! The point to be projected on the curve*/
-	bool found;													/*! True when the estimation is acceptable for the given tolerance*/
-	Real tolerance;												/*! Tolerance for the end of the search (projection of the estimation on the tangent is < than tolerance)*/
-	unsigned int beamIndex,									/*! The current beam for the search */
-	totalIterations,											/*! # of iterations (including beam changes) */
-	dichotomicIterations;										/*! # of iterations for the current beam */
-	int searchDirection;										/*! When we change beam, which direction is it ? */
-	Real e,	le, de;												/*! Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target */
-	Real beamStart, beamEnd;									/*! Abscissa of the current beam extremities */
-	Real segStart, segEnd;										/*! Abscissa of the current search segment extremities */
-	Real range, rangeSampling;									/*! The length of the current search segment, and the distance between 2 sampling points */
-	Vec3 P0,P1,P2,P3;											/*! Current beam control points */
-	static const unsigned int sampling = 10; 				/*! How many points do we consider each step ? (at least > 3 or it will never converge) */
-	Real distTab[sampling+1];									/*! Array of distances  */
+	WireBeamInterpolation<DataTypes> *interpolation; 			///< The interpolation using this class
+	const VecCoord& x;											///< The positions of the beams we are working on*/
+	Vec3 target;												///< The point to be projected on the curve*/
+	bool found;													///< True when the estimation is acceptable for the given tolerance*/
+	Real tolerance;												///< Tolerance for the end of the search (projection of the estimation on the tangent is < than tolerance)*/
+	unsigned int beamIndex,									///< The current beam for the search
+	totalIterations,											///< # of iterations (including beam changes)
+	dichotomicIterations;										///< # of iterations for the current beam
+	int searchDirection;										///< When we change beam, which direction is it ?
+	Real e,	le, de;												///< Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target
+	Real beamStart, beamEnd;									///< Abscissa of the current beam extremities
+	Real segStart, segEnd;										///< Abscissa of the current search segment extremities
+	Real range, rangeSampling;									///< The length of the current search segment, and the distance between 2 sampling points
+	Vec3 P0,P1,P2,P3;											///< Current beam control points
+	static const unsigned int sampling = 10; 				///< How many points do we consider each step ? (at least > 3 or it will never converge)
+	Real distTab[sampling+1];									///< Array of distances
 
 	bool doSearch(Real& result);
 	void initSearch(Real curvAbs);

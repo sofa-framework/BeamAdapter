@@ -91,14 +91,14 @@ template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x, const VecCoord& xfree)
 {
 	Vec3 P0,P1,P2,P3;
-	Real length, rest_length, length_interval, rest_length_interval;
+	Real length, rest_length/*, length_interval*/, rest_length_interval; //commented to remove compilation warning
 	Real alarmLength = m_alarmLength.getValue();
 	bool prev_stretch = false;
 
 	fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 
 	// storage of the length (and the rest_length)  of the interval being stretched
-	length_interval=0.0;
+//	length_interval=0.0; //commented to remove compilation warning
 	rest_length_interval=0.0;
 
 	// storage of the interval information

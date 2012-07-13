@@ -111,19 +111,19 @@ public:
     typedef Mat<6, 6, Real> Matrix6x6;
 
 protected :
-    /*! pointer to the interpolation */
+    /// pointer to the interpolation
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
-	/*! pointer to the interpolation */
+	/// pointer to the interpolation
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
 
 public:
     AdaptiveBeamForceFieldAndMass( )
     : m_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
+	, m_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
     , _timoshenko(initData(&_timoshenko,true,"timoshenko","use Timoshenko beam (non-null section shear area)"))
     , _computeMass(initData(&_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
     , _massDensity(initData(&_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , _shearStressComputation(initData(&_shearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
-	, m_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
     {
         _localBeamMatrices.resize(2);
     }
@@ -163,10 +163,10 @@ public:
     void drawElement(const core::visual::VisualParams* vparams, int beam, Transform &global_H0_local, Transform &global_H1_local);
 
 
-    Data<bool> _timoshenko; /*!< use Timoshenko beam (non-null section shear area) */
-    Data<bool> _computeMass; /*!< if false, only compute the stiff elastic model */
-    Data<Real> _massDensity; /*!< Density of the mass (usually in kg/m^3) */
-    Data<bool> _shearStressComputation; /*!< if false, suppress the shear stress in the computation */
+    Data<bool> _timoshenko; ///< use Timoshenko beam (non-null section shear area)
+    Data<bool> _computeMass; ///< if false, only compute the stiff elastic model
+    Data<Real> _massDensity; ///< Density of the mass (usually in kg/m^3)
+    Data<bool> _shearStressComputation; ///< if false, suppress the shear stress in the computation
 
 
 protected:

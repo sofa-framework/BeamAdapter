@@ -638,7 +638,7 @@ void SutureController<DataTypes>::applyController()
 
 //////*************** PRIVATE FUNCTIONS ****************//
 
-// this function calls ComputeTotalBendingRotationAngle on the beams between xmin and xmax
+/// this function calls ComputeTotalBendingRotationAngle on the beams between xmin and xmax
 template <class DataTypes>
 void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos)
 {
@@ -707,7 +707,7 @@ void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& x
 }
 
 
-// this function computes the tangent value on a series of discrete points (store also the curv_abs of these discrete points)
+/// this function computes the tangent value on a series of discrete points (store also the curv_abs of these discrete points)
 template <class DataTypes>
 void SutureController<DataTypes>::computeTangentOnDiscretePoints(sofa::helper::vector<Vec3> TangTable, sofa::helper::vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos)
 {

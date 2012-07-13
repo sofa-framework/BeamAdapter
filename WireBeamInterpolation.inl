@@ -598,12 +598,12 @@ bool ProjectionSearch<DataTypes>::doSearch(Real& result)
 			// We will compute 10 samples
 			range = segEnd - segStart;
 			rangeSampling = range / sampling;
-			for(int i=0; i<=sampling; i++)
+			for(unsigned int i=0; i<=sampling; i++)
 			{
-				Real curvAbs = segStart + rangeSampling * i;
+				Real curvAbs = segStart + rangeSampling * (Real)i;
 				distTab[i] = computeDistAtCurvAbs(curvAbs);
 			}
-			int minIndex = std::min_element(distTab, distTab + sampling + 1) - distTab;	// Where is the minimum
+			unsigned int minIndex = std::min_element(distTab, distTab + sampling + 1) - distTab;	// Where is the minimum
 			e = segStart + rangeSampling * minIndex;
 			if(testForProjection(e))
 			{
@@ -683,7 +683,7 @@ void ProjectionSearch<DataTypes>::newtonMethod()
 
 	e = beamStart + (beamEnd - beamStart) * le;
 
-	// NOTE : bx+d_bx-1.0 ne donne pas une estimation correcte de la position dans l'autre beam, puisque sa longueur peut être différente !
+	// NOTE : bx+d_bx-1.0 ne donne pas une estimation correcte de la position dans l'autre beam, puisque sa longueur peut ï¿½tre diffï¿½rente !
 }
 
 template<class DataTypes>

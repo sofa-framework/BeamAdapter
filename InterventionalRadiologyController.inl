@@ -295,7 +295,7 @@ void InterventionalRadiologyController<DataTypes>::computeVertexT()
  * \todo fix the mouse event with better controls
  */
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent *mev)
+void InterventionalRadiologyController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent */*mev*/)
 {
 //    int PosX = mev->getPosX();
 //    int PosY = mev->getPosY();

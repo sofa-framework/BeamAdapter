@@ -228,6 +228,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
 		Transform global_H_local0, global_H_local1;
 
 		// 1. get the current transform of the beam:
+		sout << "in addForce" << sendl;
 		m_interpolation->computeTransform2(b, global_H_local0, global_H_local1, x);
 
 
@@ -917,7 +918,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const core::Mechan
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const core::visual::VisualParams *vparams)
 {
-        if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
+	if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
 	if (!this->mstate) return;
 
 	const VecCoord& x = *this->mstate->getX();
