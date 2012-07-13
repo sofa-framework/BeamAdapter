@@ -152,7 +152,7 @@ void WireRestShape<DataTypes>::init()
     }
     if(edge2QuadMap==NULL)
     {
-    	sout <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
+    	serr <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
     }
 
 
@@ -635,19 +635,19 @@ void WireRestShape<DataTypes>::LoadFile()
 
    Vec3 vtemp;
    Vec2 etemp;
-   char* errResult = NULL;
+//   char* errResult = NULL; //commented to remove compilation warning
    while (fscanf(f, "%s", buf) != EOF)
        {
                switch (buf[0])
                {
                        case '#':
-                           errResult = fgets(buf, sizeof(buf), f);
+//                           errResult = fgets(buf, sizeof(buf), f); //commented to remove compilation warning
                                break;
                        case 'v':
                                switch (buf[1])
                                {
                                        case '\0':
-                                               errResult =fgets(buf, sizeof(buf), f);
+//                                               errResult =fgets(buf, sizeof(buf), f); //commented to remove compilation warning
                                                sscanf(buf, "%lf %lf %lf", &result[0], &result[1], &result[2]);
                                                vtemp = Vec3(result[0], result[1], result[2]);
                                                vtemp *= 1.0;
@@ -662,7 +662,7 @@ void WireRestShape<DataTypes>::LoadFile()
                                switch (buf[1])
                                {
                                        case '\0':
-                                               errResult =fgets(buf, sizeof(buf), f);
+//                                               errResult =fgets(buf, sizeof(buf), f); //commented to remove compilation warning
                                                sscanf(buf, "%u %u", &edge[0], &edge[1]);
                                                etemp = Vec2(edge[0]-1, edge[1]-1);
                                                edges.push_back(etemp);

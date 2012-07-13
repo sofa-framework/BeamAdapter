@@ -293,16 +293,13 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 	///////// STEP 3 : get the edgeSet topology and fill it with segments
 	this->getContext()->get(_topology);
 
-	if(_topology != NULL)
-		std::cout<<" FIND topology named "<< _topology->getName()<<std::endl;
+	if(_topology != NULL && this->f_printLog.getValue() )
+		sout<<" FIND topology named "<< _topology->getName()<<sendl;
 
 	this->getContext()->get(_edgeMod);
 
 	if (_edgeMod == NULL)
-	{
 		serr << "EdgeSetController has no binding EdgeSetTopologyModifier." << sendl;
-
-	}
 
 	// fill topology :
 	_topology->clear();
