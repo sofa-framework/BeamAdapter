@@ -44,6 +44,8 @@
 #include <sofa/component/topology/EdgeSetTopologyModifier.h>
 #include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/Edge2QuadTopologicalMapping.h>
+#include <sofa/core/loader/MeshLoader.h>
+#include <sofa/component/loader/MeshObjLoader.h>
 
 namespace sofa
 {
@@ -83,10 +85,9 @@ public:
 	 */
 	 WireRestShape():
 	 procedural( initData(&procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
-	, fileName( initData(&fileName, std::string(""), "filename","data of filename") )
 	, NonProceduralScale( initData ( &NonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
 	, length(initData(&length, (Real)1.0, "length", "total length of the wire instrument"))
-	, straightLength(initData(&straightLength, (Real)1.0, "straightLength", "length of the initial straight shape"))
+	, straightLength(initData(&straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
 	, spireDiameter(initData(&spireDiameter, (Real)0.1, "spireDiameter", "diameter of the spire"))
 	, spireHeight(initData(&spireHeight, (Real)0.01, "spireHeight", "height between each spire"))
 	, density(initData(&density, "densityOfBeams", "density of beams between key points"))
@@ -104,7 +105,10 @@ public:
 	, _massDensity2(initData(&_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
 	, brokenIn2(initData(&brokenIn2, (bool)false, "brokenIn2", ""))
 	, edge2QuadMap(NULL)
+	, drawRestShape(initData(&drawRestShape, (bool)false, "draw", "draw rest shape"))
 	{
+		 spireDiameter.setGroup("Procedural");
+		 spireHeight.setGroup("Procedural");
 	}
 
 	 /*!
@@ -120,6 +124,8 @@ public:
 	 void update(){ }
 
 	 void bwdInit();
+
+	 void draw(const core::visual::VisualParams* vparams);
 
 
 	 /*!
@@ -154,13 +160,11 @@ public:
 	 /*!
 	  * Functions enabling to load and use a geometry given from OBJ external file
 	  */
-	 void LoadFile();
-
 	 void InitRestConfig();
-
 	 void getRestPosNonProcedural(Real& abs, Coord &p);
-
 	 void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
+	 void InitFromLoader();
+	 bool checkTopology();
 
 
 
@@ -191,7 +195,7 @@ public:
 	 template<class T>
 	 static typename T::SPtr create(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 	 {
-                 return core::objectmodel::BaseObject::create(obj, context, arg);
+		 return core::objectmodel::BaseObject::create(obj, context, arg);
 	 }
 
 	 virtual std::string getTemplateName() const
@@ -208,7 +212,6 @@ protected:
 
 	 // Analitical creation of wire shape...
 	 Data<bool> procedural;
-	 Data<std::string> fileName;
 	 Data<Real> NonProceduralScale;
 	 Data<Real> length;
 	 Data<Real> straightLength;
@@ -226,33 +229,37 @@ protected:
 	 Data<Real> _youngModulus2;
 
 	 //Data required for the File loading
-	 sofa::helper::vector<Vec3> localRestPositions;
-	 sofa::helper::vector<Transform> localRestTransforms;
-	 sofa::helper::vector<Real> curvAbs;
-	 double absOfGeometry;
+	 sofa::helper::vector<Vec3> 		localRestPositions;
+	 sofa::helper::vector<Transform> 	localRestTransforms;
+	 sofa::helper::vector<Real> 		curvAbs;
+	 double 							absOfGeometry;
 
 	 // Radius
 	 Data<Real> _radius1, _radius2, _innerRadius1, _innerRadius2;
 	 struct BeamSection{
-		double _r; //radius of the section
-		double _rInner; //inner radius of the section if beam is hollow
+		double _r; 			///>radius of the section
+		double _rInner; 	///>inner radius of the section if beam is hollow
 		double _Iy;
-		double _Iz; //Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
-		double _J;  //Polar moment of inertia (J = Iy + Iz)
-		double _A; // A is the cross-sectional area;
-		double _Asy; //_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-		double _Asz; //_Asz is the z-direction effective shear area;
+		double _Iz; 		///>Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
+		double _J;  		///>Polar moment of inertia (J = Iy + Iz)
+		double _A; 			///> A is the cross-sectional area;
+		double _Asy; 		///>_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
+		double _Asz; 		///>_Asz is the z-direction effective shear area;
 	 };
 	 BeamSection beamSection1, beamSection2;
 	 Data<Real> _massDensity1, _massDensity2;
 
 	 // broken in 2 case
 	 Data< bool > brokenIn2;
+
 	 sofa::core::topology::TopologyContainer* _topology;
 	 sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
 	 sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
 	 sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap;
+	 sofa::core::loader::MeshLoader* loader;
 	 bool edgeSetInNode;
+
+	 Data<bool>	drawRestShape;
 
 };
 

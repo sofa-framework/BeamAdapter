@@ -260,7 +260,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 
 	if (m_topology != NULL)
 	{
-		if (m_topology->getNbPoints() != numDofs || m_topology->getNbEdges() != (numDofs+numRigidPts-1))
+		if ((unsigned int)m_topology->getNbPoints() != numDofs || (unsigned int)m_topology->getNbEdges() != (numDofs+numRigidPts-1))
 			return false;
 	}
 	else

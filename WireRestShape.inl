@@ -43,6 +43,10 @@
 #include <sofa/component/topology/QuadSetTopologyModifier.h>
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
+#include <sofa/core/topology/Topology.h>
+
+#include <iostream>
+#include <fstream>
 
 #define PI 3.14159265
 #define EPSILON 0.0000000001
@@ -81,26 +85,33 @@ void WireRestShape<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 &x, 
 
         output=input*inputRoutput;
     }
-
-
 }
 
 template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
 
-    if(procedural==false)
-    {
-        this->LoadFile();
-        this->InitRestConfig();
-    }
-
     if (f_printLog.getValue())
     	sout<<"WireRestShape begin init"<<sendl;
+
+    if(!procedural.getValue())
+    {
+    	//get the mesh loader
+    	this->getContext()->get(loader);
+
+    	if (!loader)
+    		serr << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" << sendl;
+    	else
+    	{
+    		if (f_printLog.getValue()) sout << "Found a mesh with " << loader->edges.getValue().size() << " edges" << sendl;
+    		InitFromLoader();
+    		InitRestConfig();
+    	}
+    }
+
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
-
 
      this->getContext()->get(_topology);
     //_topology = this->getContext()->getMeshTopology();
@@ -117,9 +128,7 @@ void WireRestShape<DataTypes>::init()
     this->getContext()->get(edgeMod);
 
     if (edgeGeo == NULL)
-    {
         serr << "EdgeSetController has no binding EdgeSetGeometryAlgorithms." << sendl;
-    }
 
     if (edgeMod == NULL)
     {
@@ -131,36 +140,30 @@ void WireRestShape<DataTypes>::init()
     _topology->clear();
     _topology->cleanup();
     Real dx = this->length.getValue() / numEdges.getValue();
-        // add points
+
+	// add points
     for ( int i=0; i<numEdges.getValue()+1; i++)
-    {
-        Real px = i*dx;
-        _topology->addPoint( px, 0, 0);
-    }
+        _topology->addPoint( i*dx, 0, 0);
 	// add segments
     for (int i=0; i<numEdges.getValue(); i++)
-    {
         _topology->addEdge(i,i+1);
-    }
 
     //// get the possible Topological mapping (with tags)
     const sofa::core::objectmodel::TagSet &tags = this->getTags() ;
     for (core::objectmodel::TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
     {
-        std::cerr<<"!!!!!!!!!!!! \n ERROR  : NEED TO FIX line 146 in WireRestShape.inl !!!\n!!!!!!!!"<<std::endl;
+        std::cerr<<"!!!!!!!!!!!! \n ERROR  : NEED TO FIX line 148 in WireRestShape.inl !!!\n!!!!!!!!"<<std::endl;
         dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get( edge2QuadMap , *it, sofa::core::objectmodel::BaseContext::SearchRoot );
     }
-    if(edge2QuadMap==NULL)
-    {
-    	serr <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
-    }
 
+    if(!edge2QuadMap)
+    	serr <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
     sofa::helper::vector<Real> &keyPointList = (*keyPoints.beginEdit());
-    if(keyPointList.size() == 0)
+    if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
         if(straightLength.getValue()>= 0.001*this->length.getValue() && straightLength.getValue() <=  0.999*length.getValue())
@@ -180,12 +183,10 @@ void WireRestShape<DataTypes>::init()
         {
             densityList.clear();
 
-
             if(straightLength.getValue()>= 0.001*this->length.getValue() )
             {
                 int numNodes = (int) floor(5.0*straightLength.getValue() / length.getValue() );
                 densityList.push_back(numNodes);
-
             }
             if( straightLength.getValue() <=  0.999*length.getValue())
             {
@@ -194,18 +195,14 @@ void WireRestShape<DataTypes>::init()
             }
         }
         density.endEdit();
-
-
     }
 
-    if( numEdgesCollis.getValue().size() ==0)
+    if(!numEdgesCollis.getValue().size())
     {
         sofa::helper::vector<int> &densityCol =  (*numEdgesCollis.beginEdit());
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
-        {
             densityCol[i] = 20;
-        }
 
         numEdgesCollis.endEdit();
     }
@@ -213,29 +210,28 @@ void WireRestShape<DataTypes>::init()
     if (f_printLog.getValue())
     	sout<<"WireRestShape end init"<<sendl;
 
-
 	// Prepare beam sections
-	double r = this->_radius1.getValue();
-	double rInner = this->_innerRadius1.getValue();
-	this->beamSection1._r = r;
-	this->beamSection1._rInner = rInner;
-	this->beamSection1._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-	this->beamSection1._Iy = this->beamSection1._Iz ;
-	this->beamSection1._J = this->beamSection1._Iz + this->beamSection1._Iy;
-	this->beamSection1._A = M_PI*(r*r - rInner*rInner);
-	this->beamSection1._Asy = 0.0;
-	this->beamSection1._Asz = 0.0;
+	double r 					= this->_radius1.getValue();
+	double rInner 				= this->_innerRadius1.getValue();
+	this->beamSection1._r 		= r;
+	this->beamSection1._rInner 	= rInner;
+	this->beamSection1._Iz		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+	this->beamSection1._Iy 		= this->beamSection1._Iz ;
+	this->beamSection1._J 		= this->beamSection1._Iz + this->beamSection1._Iy;
+	this->beamSection1._A 		= M_PI*(r*r - rInner*rInner);
+	this->beamSection1._Asy 	= 0.0;
+	this->beamSection1._Asz 	= 0.0;
 
-	r = this->_radius2.getValue();
-	rInner = this->_innerRadius2.getValue();
-	this->beamSection2._r = r;
-	this->beamSection2._rInner = rInner;
-	this->beamSection2._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-	this->beamSection2._Iy = this->beamSection2._Iz ;
-	this->beamSection2._J = this->beamSection2._Iz + this->beamSection2._Iy;
-	this->beamSection2._A = M_PI*(r*r - rInner*rInner);
-	this->beamSection2._Asy = 0.0;
-	this->beamSection2._Asz = 0.0;
+	r 							= this->_radius2.getValue();
+	rInner 						= this->_innerRadius2.getValue();
+	this->beamSection2._r 		= r;
+	this->beamSection2._rInner 	= rInner;
+	this->beamSection2._Iz 		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+	this->beamSection2._Iy 		= this->beamSection2._Iz ;
+	this->beamSection2._J 		= this->beamSection2._Iz + this->beamSection2._Iy;
+	this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
+	this->beamSection2._Asy 	= 0.0;
+	this->beamSection2._Asz 	= 0.0;
 }
 
 
@@ -246,7 +242,6 @@ void WireRestShape<DataTypes>::bwdInit()
     sofa::core::objectmodel::BaseContext* context = this->getContext();
     core::behavior::MechanicalState<DataTypes> *mState;
 
-
     mState = dynamic_cast< core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
     if (!mState)
         serr << "MechanicalStateController has no binding MechanicalState" << sendl;
@@ -255,12 +250,9 @@ void WireRestShape<DataTypes>::bwdInit()
 
     Real step=this->length.getValue()/(x.size()-1);
 
-
     x[0].clear();
     for (unsigned int i=1; i<x.size(); i++)
     {
-
-
         Real x1= step*i;
         Transform global_H_local1;
 
@@ -272,7 +264,6 @@ void WireRestShape<DataTypes>::bwdInit()
      }
 
   */
-
 }
 
 
@@ -335,8 +326,6 @@ void WireRestShape<DataTypes>::releaseWirePart(){
         }
 
     }
-
-
 
     std::cout<<" Wire Part is brokenIn2... should implement a topo change !"<<std::endl;
 }
@@ -471,7 +460,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         return;
     }
     
-    if(procedural == true)
+    if(procedural.getValue())
     {
         Real projetedLength = spireDiameter.getValue()*PI;
         Real lengthSpire=sqrt(spireHeight.getValue()*spireHeight.getValue() + projetedLength*projetedLength );
@@ -486,8 +475,6 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         Real numSpire=lengthCurve/lengthSpire;
         Real theta= 2*PI*numSpire;
         //std::cout<<"numSpire = "<<numSpire<<"  - theta = "<<theta<<" lengthSpire ="<<lengthSpire<<std::endl;
-
-
 
         // computation of the Quat
         Quat Qtheta;
@@ -507,7 +494,6 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
     }
     else
     {
-
         x_used = x_used - straightLength.getValue();
         x_used = x_used/(length.getValue()-straightLength.getValue()) * absOfGeometry;
 
@@ -517,7 +503,6 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         this->getRestPosNonProcedural(x_used,p);
         Vec3 PosEndCurve = p.getCenter();
 
-
         //std::cout<<"PosEndCurve"<<PosEndCurve<<std::endl;
 
         Quat ExtremityQuat = p.getOrientation();
@@ -526,8 +511,6 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
         global_H_local.set(ExtremityPos,ExtremityQuat);
     }
-    
-    
 }
 
 
@@ -576,12 +559,12 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
 
 		if(_radius1.isSet())
 		{
-			_A=beamSection1._A;
-			_Iy=beamSection1._Iy;
-			_Iz=beamSection1._Iz;
-			_Asy=beamSection1._Asy;
-			_Asz=beamSection1._Asz;
-			_J=beamSection1._J;
+			_A		=beamSection1._A;
+			_Iy		=beamSection1._Iy;
+			_Iz		=beamSection1._Iz;
+			_Asy	=beamSection1._Asy;
+			_Asz	=beamSection1._Asz;
+			_J		=beamSection1._J;
 		}
 	}
 	else
@@ -593,164 +576,156 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
 
 		if(_radius2.isSet())
 		{
-			_A=beamSection2._A;
-			_Iy=beamSection2._Iy;
-			_Iz=beamSection2._Iz;
-			_Asy=beamSection2._Asy;
-			_Asz=beamSection2._Asz;
-			_J=beamSection2._J;
+			_A		=beamSection2._A;
+			_Iy		=beamSection2._Iy;
+			_Iz		=beamSection2._Iz;
+			_Asy	=beamSection2._Asy;
+			_Asz	=beamSection2._Asz;
+			_J		=beamSection2._J;
 		}
 		else if(_radius1.isSet())
 		{
-			_A=beamSection1._A;
-			_Iy=beamSection1._Iy;
-			_Iz=beamSection1._Iz;
-			_Asy=beamSection1._Asy;
-			_Asz=beamSection1._Asz;
-			_J=beamSection1._J;
+			_A		=beamSection1._A;
+			_Iy		=beamSection1._Iy;
+			_Iz		=beamSection1._Iz;
+			_Asy	=beamSection1._Asy;
+			_Asz	=beamSection1._Asz;
+			_J		=beamSection1._J;
 		}
 	}
 }
 
+template <class DataTypes>
+bool WireRestShape<DataTypes>::checkTopology()
+{
+	if (!loader->edges.getValue().size())
+	{
+		serr << "There is no edges in the topology loaded by " << loader->getName() << sendl;
+		return false;
+	}
+
+	if (loader->triangles.getValue().size())
+	{
+		serr << "There are triangles in the topology loaded by " << loader->getName() << sendl;
+		return false;
+	}
+
+	if (loader->quads.getValue().size())
+	{
+		serr << "There are quads in the topology loaded by " << loader->getName() << sendl;
+		return false;
+	}
+
+	if (loader->polygons.getValue().size())
+	{
+		serr << "There are polygons in the topology loaded by " << loader->getName() << sendl;
+		return false;
+	}
+
+	/// \todo check if the topology is like a wire
+
+
+	return true;
+}
+
+
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::LoadFile()
+void WireRestShape<DataTypes>::InitFromLoader()
 {
+	if (!checkTopology())
+		return;
 
-    char buf[512];
-    double result[3];
-    unsigned int edge[3];
-    FILE* f = fopen(fileName.getValue().c_str(), "r");
-    sofa::helper::vector<Vec3> vr, vertices;
+    sofa::helper::vector<Vec3> vertices;
     sofa::helper::vector<Vec2> edges;
-   if(!f)
-   {
-       std::cerr<<"Unable to open "<<fileName.getValue().c_str()<<std::endl;
-        return;
-   }
-   else
-   {
-       std::cout<<"File named "<<fileName.getValue().c_str()<<" open"<<std::endl;
-   }
 
-   Vec3 vtemp;
-   Vec2 etemp;
-//   char* errResult = NULL; //commented to remove compilation warning
-   while (fscanf(f, "%s", buf) != EOF)
-       {
-               switch (buf[0])
-               {
-                       case '#':
-//                           errResult = fgets(buf, sizeof(buf), f); //commented to remove compilation warning
-                               break;
-                       case 'v':
-                               switch (buf[1])
-                               {
-                                       case '\0':
-//                                               errResult =fgets(buf, sizeof(buf), f); //commented to remove compilation warning
-                                               sscanf(buf, "%lf %lf %lf", &result[0], &result[1], &result[2]);
-                                               vtemp = Vec3(result[0], result[1], result[2]);
-                                               vtemp *= 1.0;
-                                               //restPositions.push_back(vtemp);
-                                               vr.push_back(vtemp);
-                                               break;
-                                       default:
-                                               break;
-                               }
-                               break;
-                         case 'f':
-                               switch (buf[1])
-                               {
-                                       case '\0':
-//                                               errResult =fgets(buf, sizeof(buf), f); //commented to remove compilation warning
-                                               sscanf(buf, "%u %u", &edge[0], &edge[1]);
-                                               etemp = Vec2(edge[0]-1, edge[1]-1);
-                                               edges.push_back(etemp);
-                                               break;
-                                       default:
-                                               break;
-                               }
-                               break;
-                        default: break;
-               }
-       }
+    //get the topology position
+    typedef  sofa::helper::vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
+    topoPosition &topoVertices = (*loader->positions.beginEdit());
+
+    //copy the topology edges in a local vector
+    typedef  sofa::helper::vector<sofa::core::topology::Topology::Edge > topoEdge;
+    topoEdge &topoEdges = (*loader->edges.beginEdit());
+    for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
+    	edges.push_back(Vec2((*it)[0], (*it)[1]));
+    loader->edges.endEdit();
 
     /** renumber the vertices  **/
-   sofa::helper::vector<unsigned int> pouet;
-   for(unsigned int i =0; i < vr.size(); i++)
-       pouet.push_back(2);
+   sofa::helper::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
+   for(unsigned int i =0; i < topoVertices.size(); i++)
+	   verticesConnexion.push_back(2);
+
    for(unsigned int i = 0; i < edges.size(); i++)
    {
         Vec2 ed = edges[i];
-        unsigned e1 = floor(ed[0]);
-        unsigned e2 = floor(ed[1]);
-        pouet[e1]--;
-        pouet[e2]--;
-        //std::cout << "edge index = "<< i << "/decr " << e1 << " and " << e2 << std::endl;
+        unsigned int e1 = floor(ed[0]);
+        unsigned int e2 = floor(ed[1]);
+        verticesConnexion[e1]--;
+        verticesConnexion[e2]--;
    }
-   /// check for the first corner of the edge
+   if (this->f_printLog.getValue())
+	   sout << "Successfully compute the vertex connexion" << sendl;
+
+   // check for the first corner of the edge
    unsigned int firstIndex = 0;
    bool found = false;
-   while((firstIndex < pouet.size()) && !found)
+   while((firstIndex < verticesConnexion.size()) && !found)
    {
-       if(pouet[firstIndex] == 1)
+       if(verticesConnexion[firstIndex] == 1)
            found = true;
        else
            firstIndex++;
    }
 
-   if(firstIndex == pouet.size())
-       std::cout << "Houston, we've got a problem" << std::endl;
-
-   vertices.push_back(vr[firstIndex]);
-//   std::cout << "FIRST is : "<< firstIndex << " added " << std::endl;
-   while(edges.size() > 0)
+   if(firstIndex == verticesConnexion.size())
    {
-       vecIt it = edges.begin();
-       vecIt end = edges.end();
-
-        bool notFound = true;
-        //std::cout << " new loop start ==== " << std::endl;
-        while (notFound && (it != end))
-        {
-
-            Vec2 ed = (*it);
-            vecIt toDel = it;
-            it++;
-            if(ed[0] == firstIndex)
-            {
-                vertices.push_back(vr[ed[1]]);
-                firstIndex = ed[1];
-                //std::cout << firstIndex << " added " << std::endl;
-                edges.erase(toDel);
-                notFound = false;
-
-            }
-            else if(ed[1] == firstIndex)
-            {
-                vertices.push_back(vr[ed[0]]);
-                firstIndex = ed[0];
-                //std::cout << firstIndex << " added " << std::endl;
-                edges.erase(toDel);
-                notFound = false;
-            }
-
-        }
+       serr << "The first vertex of the beam structure is not found, probably because of a closed structure" << sendl;
+       return;
    }
-   //std::cout << vertices.size() << " vertices added (compared to " << vr.size() <<" vertices of init shape)" << std::endl;
-    localRestPositions = vertices;//vr;
+
+   vertices.push_back(topoVertices[firstIndex]);
+
+	while(edges.size() > 0)
+	{
+		vecIt it = edges.begin();
+		vecIt end = edges.end();
+
+		bool notFound = true;
+		while (notFound && (it != end))
+		{
+			Vec2 ed = (*it);
+			vecIt toDel = it;
+			it++;
+			if(ed[0] == firstIndex)
+			{
+				vertices.push_back(topoVertices[ed[1]]);
+				firstIndex = ed[1];
+				//std::cout << firstIndex << " added " << std::endl;
+				edges.erase(toDel);
+				notFound = false;
+
+			}
+			else if(ed[1] == firstIndex)
+			{
+				vertices.push_back(topoVertices[ed[0]]);
+				firstIndex = ed[0];
+				//std::cout << firstIndex << " added " << std::endl;
+				edges.erase(toDel);
+				notFound = false;
+			}
+		}
+	}
+
+	if (this->f_printLog.getValue())
+		sout << "Successfully computed the topology" << sendl;
+
+	localRestPositions = vertices;
 
     for(unsigned int i = 0; i < localRestPositions.size() - 1; i++)
-    {
-        localRestPositions[i] = localRestPositions[i]*NonProceduralScale.getValue();
-    }
+        localRestPositions[i] *= NonProceduralScale.getValue();
 
-
-   /** close file **/
-   fclose(f);
+    loader->positions.endEdit();
 }
-
-
 
 
 template <class DataTypes>
@@ -781,33 +756,27 @@ void WireRestShape<DataTypes>::InitRestConfig()
 
         localRestTransforms[i+1].setOrigin(localPos);
 
-        std::cout <<"localRestTransforms ="<<localRestTransforms[i]<<std::endl;
+		//        if (this->f_printLog.getValue())
+		//        	sout <<"localRestTransforms ="<<localRestTransforms[i]<<sendl;
 
         curvAbs.push_back(tot);
 
         //std::cout << "++++++++++++----------------++++++++++++++++++localRestPositions = " << localRestPositions[i] << std::endl;
         //std::cout << "++++++++++++----------------++++++++++++++++++curveAbs = " << tot << std::endl;
-
-
     }
     absOfGeometry = tot;
-    std::cout <<"longueur extremity ="<<absOfGeometry<<std::endl;
-    Real NewLength = straightLength.getValue() + absOfGeometry;
-    length.setValue(NewLength);
 
+    Real newLength = straightLength.getValue() + absOfGeometry;
+    length.setValue(newLength);
 
-
+    if (f_printLog.getValue())
+    	sout <<"Length of the loaded shape = "<< absOfGeometry << ", total length with straight length = " << newLength << sendl;
 }
-
-
-
-
 
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
 {
-
    /*** find the range which includes the "requested" abs ***/
    double startingAbs = 0; unsigned int index = 0;
 
@@ -820,13 +789,11 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
    //std::cout<<"index/localRestPositionsMAX = "<<index<<"/"<<localRestPositions.size()<<std::endl;
    //std::cout<<"abs = "<<abs<<std::endl;
 
-
-
    /*** OOB ***/
    if(abs > startingAbs)
    {
-       std::cerr << "abs = "<<abs<<" et startingAbs = "<< startingAbs<< std::endl;
-       std::cerr << "[Warning] Out of bound position request" << std::endl;
+       serr << "abs = "<<abs<<" et startingAbs = "<< startingAbs<< sendl;
+       serr << "[Warning] Out of bound position request" << sendl;
        return ;
    }
    else /*** Expected case ***/
@@ -842,8 +809,6 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
 
       /// std::cout<<" abs ="<<abs<<" - curvAbs["<<index-1<<"]:"<<curvAbs[index-1]<<" - curvAbs["<<index<<"]:"<<curvAbs[index]<<" - curvAbs["<<index+1<<"]:"<<curvAbs[index+1]<<std::endl;
 
-
-
        alpha = (abs - curvAbs[index-1] ) / (curvAbs[index] - curvAbs[index-1]);
        one_minus_alpha = 1 - alpha;
        result = localRestTransforms[index - 1].getOrigin() * one_minus_alpha + localRestTransforms[index].getOrigin() * alpha;
@@ -852,12 +817,9 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
 
        slerp.normalize();
 
-
        p.getCenter() = result;
 
        p.getOrientation() = slerp;
-
-
    }
 }
 
@@ -895,10 +857,25 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q,
 
 }
 
+template<class DataTypes>
+void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*/)
+{
+	if (!drawRestShape.getValue())
+		return;
 
+	glDisable(GL_LIGHTING);
+	glColor3d(1.0,0.0,0.0);
+	glPointSize(10.0);
+	for (unsigned int i = 0 ; i < localRestPositions.size(); i++)
+	{
+		glBegin(GL_POINTS);
+			glVertex3d(localRestPositions[i][0],localRestPositions[i][1],localRestPositions[i][2]);
+		glEnd();
+	}
+	glPointSize(1.0);
+	glEnable(GL_LIGHTING);
 
-
-
+}
 
 
 
