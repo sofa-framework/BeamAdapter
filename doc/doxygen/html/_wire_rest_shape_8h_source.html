@@ -143,194 +143,201 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor">#include &lt;sofa/component/topology/EdgeSetTopologyModifier.h&gt;</span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &lt;sofa/component/topology/EdgeSetGeometryAlgorithms.h&gt;</span>
 <a name="l00046"></a>00046 <span class="preprocessor">#include &lt;sofa/component/topology/Edge2QuadTopologicalMapping.h&gt;</span>
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <span class="keyword">namespace </span>sofa
-<a name="l00049"></a>00049 {
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051 <span class="keyword">namespace </span>component
-<a name="l00052"></a>00052 {
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="keyword">namespace </span>engine
-<a name="l00055"></a>00055 {
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 
+<a name="l00047"></a>00047 <span class="preprocessor">#include &lt;sofa/core/loader/MeshLoader.h&gt;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &lt;sofa/component/loader/MeshObjLoader.h&gt;</span>
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050 <span class="keyword">namespace </span>sofa
+<a name="l00051"></a>00051 {
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053 <span class="keyword">namespace </span>component
+<a name="l00054"></a>00054 {
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056 <span class="keyword">namespace </span>engine
+<a name="l00057"></a>00057 {
 <a name="l00058"></a>00058 
-<a name="l00065"></a>00065 <span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;
-<a name="l00066"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html">00066</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html" title="Describe the shape functions on multiple segments.">WireRestShape</a> : <span class="keyword">public</span> sofa::core::DataEngine
-<a name="l00067"></a>00067 {
-<a name="l00068"></a>00068 <span class="keyword">public</span>:
-<a name="l00069"></a>00069         SOFA_CLASS(<a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html" title="Describe the shape functions on multiple segments.">WireRestShape</a>,sofa::core::DataEngine);
-<a name="l00070"></a>00070         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
-<a name="l00071"></a>00071         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
-<a name="l00072"></a>00072         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord    Coord   ;
-<a name="l00073"></a>00073         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Deriv    Deriv   ;
-<a name="l00074"></a>00074         <span class="keyword">typedef</span> <span class="keyword">typename</span> Coord::value_type   Real    ;
-<a name="l00075"></a>00075         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::Transform Transform;
-<a name="l00076"></a>00076         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;3, Real&gt; Vec3;
-<a name="l00077"></a>00077         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;2, Real&gt; Vec2;
-<a name="l00078"></a>00078         <span class="keyword">typedef</span> sofa::defaulttype::Quat Quat;
-<a name="l00079"></a>00079         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::helper::vector&lt;Vec2&gt;::iterator vecIt;
-<a name="l00080"></a>00080 
-<a name="l00084"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0">00084</a>          <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0" title="Default Constructor.">WireRestShape</a>():
-<a name="l00085"></a>00085          procedural( initData(&amp;procedural,(bool)true,<span class="stringliteral">&quot;procedural&quot;</span>,<span class="stringliteral">&quot;is the guidewire shape mathemetically defined ?&quot;</span>) )
-<a name="l00086"></a>00086         , fileName( initData(&amp;fileName, std::string(<span class="stringliteral">&quot;&quot;</span>), <span class="stringliteral">&quot;filename&quot;</span>,<span class="stringliteral">&quot;data of filename&quot;</span>) )
-<a name="l00087"></a>00087         , NonProceduralScale( initData ( &amp;NonProceduralScale, (Real)1.0, <span class="stringliteral">&quot;nonProceduralScale&quot;</span>, <span class="stringliteral">&quot;scale of the model defined by file&quot;</span> ) )
-<a name="l00088"></a>00088         , length(initData(&amp;length, (Real)1.0, <span class="stringliteral">&quot;length&quot;</span>, <span class="stringliteral">&quot;total length of the wire instrument&quot;</span>))
-<a name="l00089"></a>00089         , straightLength(initData(&amp;straightLength, (Real)1.0, <span class="stringliteral">&quot;straightLength&quot;</span>, <span class="stringliteral">&quot;length of the initial straight shape&quot;</span>))
-<a name="l00090"></a>00090         , spireDiameter(initData(&amp;spireDiameter, (Real)0.1, <span class="stringliteral">&quot;spireDiameter&quot;</span>, <span class="stringliteral">&quot;diameter of the spire&quot;</span>))
-<a name="l00091"></a>00091         , spireHeight(initData(&amp;spireHeight, (Real)0.01, <span class="stringliteral">&quot;spireHeight&quot;</span>, <span class="stringliteral">&quot;height between each spire&quot;</span>))
-<a name="l00092"></a>00092         , density(initData(&amp;density, <span class="stringliteral">&quot;densityOfBeams&quot;</span>, <span class="stringliteral">&quot;density of beams between key points&quot;</span>))
-<a name="l00093"></a>00093         , keyPoints(initData(&amp;keyPoints,<span class="stringliteral">&quot;keyPoints&quot;</span>,<span class="stringliteral">&quot;key points of the shape (curv absc)&quot;</span>))
-<a name="l00094"></a>00094         , numEdges(initData(&amp;numEdges, 10, <span class="stringliteral">&quot;numEdges&quot;</span>,<span class="stringliteral">&quot;number of Edges for the visual model&quot;</span>))
-<a name="l00095"></a>00095         , numEdgesCollis(initData(&amp;numEdgesCollis,<span class="stringliteral">&quot;numEdgesCollis&quot;</span>, <span class="stringliteral">&quot;number of Edges for the collision model&quot;</span> ))
-<a name="l00096"></a>00096         , _poissonRatio(initData(&amp;_poissonRatio,(Real)0.49,<span class="stringliteral">&quot;poissonRatio&quot;</span>,<span class="stringliteral">&quot;Poisson Ratio&quot;</span>))
-<a name="l00097"></a>00097         , _youngModulus1(initData(&amp;_youngModulus1,(Real)5000,<span class="stringliteral">&quot;youngModulus&quot;</span>,<span class="stringliteral">&quot;Young Modulus&quot;</span>))
-<a name="l00098"></a>00098         , _youngModulus2(initData(&amp;_youngModulus2,(Real)3000,<span class="stringliteral">&quot;youngModulusExtremity&quot;</span>,<span class="stringliteral">&quot;youngModulus for beams at the extremity\nonly if not straight&quot;</span>))
-<a name="l00099"></a>00099         , _radius1(initData(&amp;_radius1,(Real)1.0f,<span class="stringliteral">&quot;radius&quot;</span>,<span class="stringliteral">&quot;radius&quot;</span>))
-<a name="l00100"></a>00100         , _radius2(initData(&amp;_radius2,(Real)1.0f,<span class="stringliteral">&quot;radiusExtremity&quot;</span>,<span class="stringliteral">&quot;radius for beams at the extremity\nonly if not straight&quot;</span>))
-<a name="l00101"></a>00101         , _innerRadius1(initData(&amp;_innerRadius1,(Real)0.0f,<span class="stringliteral">&quot;innerRadius&quot;</span>,<span class="stringliteral">&quot;inner radius if it applies&quot;</span>))
-<a name="l00102"></a>00102         , _innerRadius2(initData(&amp;_innerRadius2,(Real)0.0f,<span class="stringliteral">&quot;innerRadiusExtremity&quot;</span>,<span class="stringliteral">&quot;inner radius for beams at the extremity\nonly if not straight&quot;</span>))
-<a name="l00103"></a>00103         , _massDensity1(initData(&amp;_massDensity1,(Real)1.0,<span class="stringliteral">&quot;massDensity&quot;</span>, <span class="stringliteral">&quot;Density of the mass (usually in kg/m^3)&quot;</span> ))
-<a name="l00104"></a>00104         , _massDensity2(initData(&amp;_massDensity2,(Real)1.0,<span class="stringliteral">&quot;massDensityExtremity&quot;</span>, <span class="stringliteral">&quot;Density of the mass at the extremity\nonly if not straight&quot;</span> ))
-<a name="l00105"></a>00105         , brokenIn2(initData(&amp;brokenIn2, (bool)false, <span class="stringliteral">&quot;brokenIn2&quot;</span>, <span class="stringliteral">&quot;&quot;</span>))
-<a name="l00106"></a>00106         , edge2QuadMap(NULL)
-<a name="l00107"></a>00107         {
-<a name="l00108"></a>00108         }
-<a name="l00109"></a>00109 
-<a name="l00113"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a1e1b37a19fdb47f5bef75493132e9594">00113</a>          <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a1e1b37a19fdb47f5bef75493132e9594" title="Default Destructor.">~WireRestShape</a>(){}
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115          <span class="keywordtype">void</span> RotateFrameForAlignX(<span class="keyword">const</span> sofa::defaulttype::Quat &amp;input, Vec3 &amp;x, sofa::defaulttype::Quat &amp;output);
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117          <span class="keywordtype">void</span> init();
-<a name="l00118"></a>00118          <span class="keywordtype">void</span> reinit(){ }
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120          <span class="keywordtype">void</span> update(){ }
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122          <span class="keywordtype">void</span> bwdInit();
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 
+<a name="l00067"></a>00067 <span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;
+<a name="l00068"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html">00068</a> <span class="keyword">class </span><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html" title="Describe the shape functions on multiple segments.">WireRestShape</a> : <span class="keyword">public</span> sofa::core::DataEngine
+<a name="l00069"></a>00069 {
+<a name="l00070"></a>00070 <span class="keyword">public</span>:
+<a name="l00071"></a>00071         SOFA_CLASS(<a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html" title="Describe the shape functions on multiple segments.">WireRestShape</a>,sofa::core::DataEngine);
+<a name="l00072"></a>00072         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecCoord VecCoord;
+<a name="l00073"></a>00073         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::VecDeriv VecDeriv;
+<a name="l00074"></a>00074         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Coord    Coord   ;
+<a name="l00075"></a>00075         <span class="keyword">typedef</span> <span class="keyword">typename</span> DataTypes::Deriv    Deriv   ;
+<a name="l00076"></a>00076         <span class="keyword">typedef</span> <span class="keyword">typename</span> Coord::value_type   Real    ;
+<a name="l00077"></a>00077         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::defaulttype::SolidTypes&lt;Real&gt;::Transform Transform;
+<a name="l00078"></a>00078         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;3, Real&gt; Vec3;
+<a name="l00079"></a>00079         <span class="keyword">typedef</span> sofa::defaulttype::Vec&lt;2, Real&gt; Vec2;
+<a name="l00080"></a>00080         <span class="keyword">typedef</span> sofa::defaulttype::Quat Quat;
+<a name="l00081"></a>00081         <span class="keyword">typedef</span> <span class="keyword">typename</span> sofa::helper::vector&lt;Vec2&gt;::iterator vecIt;
+<a name="l00082"></a>00082 
+<a name="l00086"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0">00086</a>          <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0" title="Default Constructor.">WireRestShape</a>():
+<a name="l00087"></a>00087          procedural( initData(&amp;procedural,(bool)true,<span class="stringliteral">&quot;procedural&quot;</span>,<span class="stringliteral">&quot;is the guidewire shape mathemetically defined ?&quot;</span>) )
+<a name="l00088"></a>00088         , NonProceduralScale( initData ( &amp;NonProceduralScale, (Real)1.0, <span class="stringliteral">&quot;nonProceduralScale&quot;</span>, <span class="stringliteral">&quot;scale of the model defined by file&quot;</span> ) )
+<a name="l00089"></a>00089         , length(initData(&amp;length, (Real)1.0, <span class="stringliteral">&quot;length&quot;</span>, <span class="stringliteral">&quot;total length of the wire instrument&quot;</span>))
+<a name="l00090"></a>00090         , straightLength(initData(&amp;straightLength, (Real)0.0, <span class="stringliteral">&quot;straightLength&quot;</span>, <span class="stringliteral">&quot;length of the initial straight shape&quot;</span>))
+<a name="l00091"></a>00091         , spireDiameter(initData(&amp;spireDiameter, (Real)0.1, <span class="stringliteral">&quot;spireDiameter&quot;</span>, <span class="stringliteral">&quot;diameter of the spire&quot;</span>))
+<a name="l00092"></a>00092         , spireHeight(initData(&amp;spireHeight, (Real)0.01, <span class="stringliteral">&quot;spireHeight&quot;</span>, <span class="stringliteral">&quot;height between each spire&quot;</span>))
+<a name="l00093"></a>00093         , density(initData(&amp;density, <span class="stringliteral">&quot;densityOfBeams&quot;</span>, <span class="stringliteral">&quot;density of beams between key points&quot;</span>))
+<a name="l00094"></a>00094         , keyPoints(initData(&amp;keyPoints,<span class="stringliteral">&quot;keyPoints&quot;</span>,<span class="stringliteral">&quot;key points of the shape (curv absc)&quot;</span>))
+<a name="l00095"></a>00095         , numEdges(initData(&amp;numEdges, 10, <span class="stringliteral">&quot;numEdges&quot;</span>,<span class="stringliteral">&quot;number of Edges for the visual model&quot;</span>))
+<a name="l00096"></a>00096         , numEdgesCollis(initData(&amp;numEdgesCollis,<span class="stringliteral">&quot;numEdgesCollis&quot;</span>, <span class="stringliteral">&quot;number of Edges for the collision model&quot;</span> ))
+<a name="l00097"></a>00097         , _poissonRatio(initData(&amp;_poissonRatio,(Real)0.49,<span class="stringliteral">&quot;poissonRatio&quot;</span>,<span class="stringliteral">&quot;Poisson Ratio&quot;</span>))
+<a name="l00098"></a>00098         , _youngModulus1(initData(&amp;_youngModulus1,(Real)5000,<span class="stringliteral">&quot;youngModulus&quot;</span>,<span class="stringliteral">&quot;Young Modulus&quot;</span>))
+<a name="l00099"></a>00099         , _youngModulus2(initData(&amp;_youngModulus2,(Real)3000,<span class="stringliteral">&quot;youngModulusExtremity&quot;</span>,<span class="stringliteral">&quot;youngModulus for beams at the extremity\nonly if not straight&quot;</span>))
+<a name="l00100"></a>00100         , _radius1(initData(&amp;_radius1,(Real)1.0f,<span class="stringliteral">&quot;radius&quot;</span>,<span class="stringliteral">&quot;radius&quot;</span>))
+<a name="l00101"></a>00101         , _radius2(initData(&amp;_radius2,(Real)1.0f,<span class="stringliteral">&quot;radiusExtremity&quot;</span>,<span class="stringliteral">&quot;radius for beams at the extremity\nonly if not straight&quot;</span>))
+<a name="l00102"></a>00102         , _innerRadius1(initData(&amp;_innerRadius1,(Real)0.0f,<span class="stringliteral">&quot;innerRadius&quot;</span>,<span class="stringliteral">&quot;inner radius if it applies&quot;</span>))
+<a name="l00103"></a>00103         , _innerRadius2(initData(&amp;_innerRadius2,(Real)0.0f,<span class="stringliteral">&quot;innerRadiusExtremity&quot;</span>,<span class="stringliteral">&quot;inner radius for beams at the extremity\nonly if not straight&quot;</span>))
+<a name="l00104"></a>00104         , _massDensity1(initData(&amp;_massDensity1,(Real)1.0,<span class="stringliteral">&quot;massDensity&quot;</span>, <span class="stringliteral">&quot;Density of the mass (usually in kg/m^3)&quot;</span> ))
+<a name="l00105"></a>00105         , _massDensity2(initData(&amp;_massDensity2,(Real)1.0,<span class="stringliteral">&quot;massDensityExtremity&quot;</span>, <span class="stringliteral">&quot;Density of the mass at the extremity\nonly if not straight&quot;</span> ))
+<a name="l00106"></a>00106         , brokenIn2(initData(&amp;brokenIn2, (bool)false, <span class="stringliteral">&quot;brokenIn2&quot;</span>, <span class="stringliteral">&quot;&quot;</span>))
+<a name="l00107"></a>00107         , edge2QuadMap(NULL)
+<a name="l00108"></a>00108         , drawRestShape(initData(&amp;drawRestShape, (bool)false, <span class="stringliteral">&quot;draw&quot;</span>, <span class="stringliteral">&quot;draw rest shape&quot;</span>))
+<a name="l00109"></a>00109         {
+<a name="l00110"></a>00110                  spireDiameter.setGroup(<span class="stringliteral">&quot;Procedural&quot;</span>);
+<a name="l00111"></a>00111                  spireHeight.setGroup(<span class="stringliteral">&quot;Procedural&quot;</span>);
+<a name="l00112"></a>00112         }
+<a name="l00113"></a>00113 
+<a name="l00117"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a1e1b37a19fdb47f5bef75493132e9594">00117</a>          <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a1e1b37a19fdb47f5bef75493132e9594" title="Default Destructor.">~WireRestShape</a>(){}
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119          <span class="keywordtype">void</span> RotateFrameForAlignX(<span class="keyword">const</span> sofa::defaulttype::Quat &amp;input, Vec3 &amp;x, sofa::defaulttype::Quat &amp;output);
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121          <span class="keywordtype">void</span> init();
+<a name="l00122"></a>00122          <span class="keywordtype">void</span> reinit(){ }
 <a name="l00123"></a>00123 
-<a name="l00124"></a>00124 
-<a name="l00128"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">00128</a>          <span class="keyword">virtual</span> Real <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">getReleaseCurvAbs</a>(){<span class="keywordflow">return</span> straightLength.getValue();}
-<a name="l00129"></a>00129          <span class="comment">// todo =&gt; topological change !</span>
-<a name="l00130"></a>00130          <span class="keyword">virtual</span> <span class="keywordtype">void</span> releaseWirePart();
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 
-<a name="l00136"></a>00136          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a>(Transform &amp;global_H_local, <span class="keyword">const</span> Real &amp;x);
+<a name="l00124"></a>00124          <span class="keywordtype">void</span> update(){ }
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126          <span class="keywordtype">void</span> bwdInit();
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128          <span class="keywordtype">void</span> draw(<span class="keyword">const</span> core::visual::VisualParams* vparams);
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 
+<a name="l00134"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">00134</a>          <span class="keyword">virtual</span> Real <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac159f8ffd7099031e103855ee85d1603">getReleaseCurvAbs</a>(){<span class="keywordflow">return</span> straightLength.getValue();}
+<a name="l00135"></a>00135          <span class="comment">// todo =&gt; topological change !</span>
+<a name="l00136"></a>00136          <span class="keyword">virtual</span> <span class="keywordtype">void</span> releaseWirePart();
 <a name="l00137"></a>00137 
-<a name="l00142"></a>00142          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a4fbee2e7d9cff2bae946c8eafdd42dc1">getSamplingParameters</a>(helper::vector&lt;Real&gt;&amp; xP_noticeable, helper::vector&lt;int&gt;&amp; nbP_density);
+<a name="l00138"></a>00138 
+<a name="l00142"></a>00142          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a>(Transform &amp;global_H_local, <span class="keyword">const</span> Real &amp;x);
 <a name="l00143"></a>00143 
-<a name="l00147"></a>00147          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af595689d832b75e0a5d1d165436f6c85">getYoungModulusAtX</a>(<span class="keyword">const</span> Real&amp; x_curv, Real&amp; youngModulus, Real&amp; cPoisson);
-<a name="l00148"></a>00148 
-<a name="l00152"></a>00152          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#aae074d6fe822f8f67a1f751e62269f1e">getInterpolationParam</a>(<span class="keyword">const</span> Real&amp; x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy , Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J);
-<a name="l00153"></a>00153 
-<a name="l00157"></a>00157          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a222fb3d3657e24f0cba46d137fb266e6">LoadFile</a>();
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159          <span class="keywordtype">void</span> InitRestConfig();
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a39125871d0f44f0abfbb3c047d6e98fc">getRestPosNonProcedural</a>(Real&amp; abs, Coord &amp;p);
-<a name="l00162"></a>00162 
-<a name="l00163"></a>00163          <span class="keywordtype">void</span> computeOrientation(<span class="keyword">const</span> Vec3&amp; AB, <span class="keyword">const</span> Quat&amp; Q, Quat &amp;result);
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166 
-<a name="l00167"></a>00167          <span class="keyword">virtual</span> Real getLength()
-<a name="l00168"></a>00168          {
-<a name="l00169"></a>00169                  <span class="keywordflow">if</span>(brokenIn2.getValue())
-<a name="l00170"></a>00170                          <span class="keywordflow">return</span> straightLength.getValue();
-<a name="l00171"></a>00171                  <span class="keywordflow">else</span>
-<a name="l00172"></a>00172                          <span class="keywordflow">return</span> length.getValue();
-<a name="l00173"></a>00173          }
-<a name="l00174"></a>00174 
-<a name="l00175"></a>00175          <span class="keyword">virtual</span> <span class="keywordtype">void</span> getCollisionSampling(Real &amp;dx, <span class="keyword">const</span> Real &amp;x_curv);
-<a name="l00176"></a>00176 
-<a name="l00177"></a>00177          <span class="keyword">virtual</span> <span class="keywordtype">void</span> getNumberOfCollisionSegment(Real &amp;dx, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;numLines)
-<a name="l00178"></a>00178          {
-<a name="l00179"></a>00179                  numLines = 0;
-<a name="l00180"></a>00180                  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i=0; i&lt;numEdgesCollis.getValue().size(); i++)
-<a name="l00181"></a>00181                  {
-<a name="l00182"></a>00182                          numLines += (<span class="keywordtype">unsigned</span> int)numEdgesCollis.getValue()[i];
-<a name="l00183"></a>00183                  }
-<a name="l00184"></a>00184                  dx=length.getValue()/numLines;
-<a name="l00185"></a>00185          }
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187 
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189 
-<a name="l00191"></a>00191          <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
-<a name="l00192"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306">00192</a>          <span class="keyword">static</span> <span class="keyword">typename</span> T::SPtr <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306" title="Construction method called by ObjectFactory.">create</a>(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-<a name="l00193"></a>00193          {
-<a name="l00194"></a>00194                  <span class="keywordflow">return</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306" title="Construction method called by ObjectFactory.">core::objectmodel::BaseObject::create</a>(obj, context, arg);
-<a name="l00195"></a>00195          }
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197          <span class="keyword">virtual</span> std::string getTemplateName()<span class="keyword"> const</span>
-<a name="l00198"></a>00198 <span class="keyword">         </span>{
-<a name="l00199"></a>00199                  <span class="keywordflow">return</span> templateName(<span class="keyword">this</span>);
-<a name="l00200"></a>00200          }
-<a name="l00201"></a>00201 
-<a name="l00202"></a>00202          <span class="keyword">static</span> std::string templateName(<span class="keyword">const</span> WireRestShape&lt;DataTypes&gt;* = NULL)
-<a name="l00203"></a>00203          {
-<a name="l00204"></a>00204                  <span class="keywordflow">return</span> DataTypes::Name();
-<a name="l00205"></a>00205          }
-<a name="l00206"></a>00206 
-<a name="l00207"></a>00207 <span class="keyword">protected</span>:
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209          <span class="comment">// Analitical creation of wire shape...</span>
-<a name="l00210"></a>00210          Data&lt;bool&gt; procedural;
-<a name="l00211"></a>00211          Data&lt;std::string&gt; fileName;
-<a name="l00212"></a>00212          Data&lt;Real&gt; NonProceduralScale;
-<a name="l00213"></a>00213          Data&lt;Real&gt; length;
-<a name="l00214"></a>00214          Data&lt;Real&gt; straightLength;
-<a name="l00215"></a>00215          Data&lt;Real&gt; spireDiameter;
-<a name="l00216"></a>00216          Data&lt;Real&gt; spireHeight;
-<a name="l00217"></a>00217          Data&lt; sofa::helper::vector&lt;int&gt; &gt; density;
-<a name="l00218"></a>00218          Data&lt; sofa::helper::vector&lt;Real&gt; &gt; keyPoints;
-<a name="l00219"></a>00219          Data&lt; int &gt; numEdges;
-<a name="l00220"></a>00220          Data&lt; sofa::helper::vector&lt;int&gt; &gt; numEdgesCollis;
-<a name="l00221"></a>00221 
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223          <span class="comment">//User Data about the Young modulus</span>
-<a name="l00224"></a>00224          Data&lt;Real&gt; _poissonRatio;
-<a name="l00225"></a>00225          Data&lt;Real&gt; _youngModulus1;
-<a name="l00226"></a>00226          Data&lt;Real&gt; _youngModulus2;
-<a name="l00227"></a>00227 
-<a name="l00228"></a>00228          <span class="comment">//Data required for the File loading</span>
-<a name="l00229"></a>00229          sofa::helper::vector&lt;Vec3&gt; localRestPositions;
-<a name="l00230"></a>00230          sofa::helper::vector&lt;Transform&gt; localRestTransforms;
-<a name="l00231"></a>00231          sofa::helper::vector&lt;Real&gt; curvAbs;
-<a name="l00232"></a>00232          <span class="keywordtype">double</span> absOfGeometry;
-<a name="l00233"></a>00233 
-<a name="l00234"></a>00234          <span class="comment">// Radius</span>
-<a name="l00235"></a>00235          Data&lt;Real&gt; _radius1, _radius2, _innerRadius1, _innerRadius2;
-<a name="l00236"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">00236</a>          <span class="keyword">struct </span><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">BeamSection</a>{
-<a name="l00237"></a>00237                 <span class="keywordtype">double</span> _r; <span class="comment">//radius of the section</span>
-<a name="l00238"></a>00238                 <span class="keywordtype">double</span> _rInner; <span class="comment">//inner radius of the section if beam is hollow</span>
-<a name="l00239"></a>00239                 <span class="keywordtype">double</span> _Iy;
-<a name="l00240"></a>00240                 <span class="keywordtype">double</span> _Iz; <span class="comment">//Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;</span>
-<a name="l00241"></a>00241                 <span class="keywordtype">double</span> _J;  <span class="comment">//Polar moment of inertia (J = Iy + Iz)</span>
-<a name="l00242"></a>00242                 <span class="keywordtype">double</span> _A; <span class="comment">// A is the cross-sectional area;</span>
-<a name="l00243"></a>00243                 <span class="keywordtype">double</span> _Asy; <span class="comment">//_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam</span>
-<a name="l00244"></a>00244                 <span class="keywordtype">double</span> _Asz; <span class="comment">//_Asz is the z-direction effective shear area;</span>
-<a name="l00245"></a>00245          };
-<a name="l00246"></a>00246          <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">BeamSection</a> beamSection1, beamSection2;
-<a name="l00247"></a>00247          Data&lt;Real&gt; _massDensity1, _massDensity2;
-<a name="l00248"></a>00248 
-<a name="l00249"></a>00249          <span class="comment">// broken in 2 case</span>
-<a name="l00250"></a>00250          Data&lt; bool &gt; brokenIn2;
-<a name="l00251"></a>00251          sofa::core::topology::TopologyContainer* _topology;
-<a name="l00252"></a>00252          sofa::component::topology::EdgeSetGeometryAlgorithms&lt;DataTypes&gt;* edgeGeo;
-<a name="l00253"></a>00253          sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
-<a name="l00254"></a>00254          sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap;
-<a name="l00255"></a>00255          <span class="keywordtype">bool</span> edgeSetInNode;
-<a name="l00256"></a>00256 
-<a name="l00257"></a>00257 };
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259 
-<a name="l00260"></a>00260 } <span class="comment">// namespace engine</span>
+<a name="l00148"></a>00148          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a4fbee2e7d9cff2bae946c8eafdd42dc1">getSamplingParameters</a>(helper::vector&lt;Real&gt;&amp; xP_noticeable, helper::vector&lt;int&gt;&amp; nbP_density);
+<a name="l00149"></a>00149 
+<a name="l00153"></a>00153          <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#af595689d832b75e0a5d1d165436f6c85">getYoungModulusAtX</a>(<span class="keyword">const</span> Real&amp; x_curv, Real&amp; youngModulus, Real&amp; cPoisson);
+<a name="l00154"></a>00154 
+<a name="l00158"></a>00158          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#aae074d6fe822f8f67a1f751e62269f1e">getInterpolationParam</a>(<span class="keyword">const</span> Real&amp; x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy , Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J);
+<a name="l00159"></a>00159 
+<a name="l00163"></a>00163          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#acf4111cc27e67189d6f67210df29630c">InitRestConfig</a>();
+<a name="l00164"></a>00164          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a39125871d0f44f0abfbb3c047d6e98fc">getRestPosNonProcedural</a>(Real&amp; abs, Coord &amp;p);
+<a name="l00165"></a>00165          <span class="keywordtype">void</span> computeOrientation(<span class="keyword">const</span> Vec3&amp; AB, <span class="keyword">const</span> Quat&amp; Q, Quat &amp;result);
+<a name="l00166"></a>00166          <span class="keywordtype">void</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a6184070f77713a13d8c8047af9301a83">InitFromLoader</a>();
+<a name="l00167"></a>00167          <span class="keywordtype">bool</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#a1b8890729fb2495abcdf8f2d7b293961">checkTopology</a>();
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171          <span class="keyword">virtual</span> Real getLength()
+<a name="l00172"></a>00172          {
+<a name="l00173"></a>00173                  <span class="keywordflow">if</span>(brokenIn2.getValue())
+<a name="l00174"></a>00174                          <span class="keywordflow">return</span> straightLength.getValue();
+<a name="l00175"></a>00175                  <span class="keywordflow">else</span>
+<a name="l00176"></a>00176                          <span class="keywordflow">return</span> length.getValue();
+<a name="l00177"></a>00177          }
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179          <span class="keyword">virtual</span> <span class="keywordtype">void</span> getCollisionSampling(Real &amp;dx, <span class="keyword">const</span> Real &amp;x_curv);
+<a name="l00180"></a>00180 
+<a name="l00181"></a>00181          <span class="keyword">virtual</span> <span class="keywordtype">void</span> getNumberOfCollisionSegment(Real &amp;dx, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;numLines)
+<a name="l00182"></a>00182          {
+<a name="l00183"></a>00183                  numLines = 0;
+<a name="l00184"></a>00184                  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i=0; i&lt;numEdgesCollis.getValue().size(); i++)
+<a name="l00185"></a>00185                  {
+<a name="l00186"></a>00186                          numLines += (<span class="keywordtype">unsigned</span> int)numEdgesCollis.getValue()[i];
+<a name="l00187"></a>00187                  }
+<a name="l00188"></a>00188                  dx=length.getValue()/numLines;
+<a name="l00189"></a>00189          }
+<a name="l00190"></a>00190 
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192 
+<a name="l00193"></a>00193 
+<a name="l00195"></a>00195          <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
+<a name="l00196"></a><a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306">00196</a>          <span class="keyword">static</span> <span class="keyword">typename</span> T::SPtr <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306" title="Construction method called by ObjectFactory.">create</a>(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
+<a name="l00197"></a>00197          {
+<a name="l00198"></a>00198                  <span class="keywordflow">return</span> <a class="code" href="classsofa_1_1component_1_1engine_1_1_wire_rest_shape.html#ac44648c6c7524b1982228ce39becf306" title="Construction method called by ObjectFactory.">core::objectmodel::BaseObject::create</a>(obj, context, arg);
+<a name="l00199"></a>00199          }
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201          <span class="keyword">virtual</span> std::string getTemplateName()<span class="keyword"> const</span>
+<a name="l00202"></a>00202 <span class="keyword">         </span>{
+<a name="l00203"></a>00203                  <span class="keywordflow">return</span> templateName(<span class="keyword">this</span>);
+<a name="l00204"></a>00204          }
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206          <span class="keyword">static</span> std::string templateName(<span class="keyword">const</span> WireRestShape&lt;DataTypes&gt;* = NULL)
+<a name="l00207"></a>00207          {
+<a name="l00208"></a>00208                  <span class="keywordflow">return</span> DataTypes::Name();
+<a name="l00209"></a>00209          }
+<a name="l00210"></a>00210 
+<a name="l00211"></a>00211 <span class="keyword">protected</span>:
+<a name="l00212"></a>00212 
+<a name="l00213"></a>00213          <span class="comment">// Analitical creation of wire shape...</span>
+<a name="l00214"></a>00214          Data&lt;bool&gt; procedural;
+<a name="l00215"></a>00215          Data&lt;Real&gt; NonProceduralScale;
+<a name="l00216"></a>00216          Data&lt;Real&gt; length;
+<a name="l00217"></a>00217          Data&lt;Real&gt; straightLength;
+<a name="l00218"></a>00218          Data&lt;Real&gt; spireDiameter;
+<a name="l00219"></a>00219          Data&lt;Real&gt; spireHeight;
+<a name="l00220"></a>00220          Data&lt; sofa::helper::vector&lt;int&gt; &gt; density;
+<a name="l00221"></a>00221          Data&lt; sofa::helper::vector&lt;Real&gt; &gt; keyPoints;
+<a name="l00222"></a>00222          Data&lt; int &gt; numEdges;
+<a name="l00223"></a>00223          Data&lt; sofa::helper::vector&lt;int&gt; &gt; numEdgesCollis;
+<a name="l00224"></a>00224 
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226          <span class="comment">//User Data about the Young modulus</span>
+<a name="l00227"></a>00227          Data&lt;Real&gt; _poissonRatio;
+<a name="l00228"></a>00228          Data&lt;Real&gt; _youngModulus1;
+<a name="l00229"></a>00229          Data&lt;Real&gt; _youngModulus2;
+<a name="l00230"></a>00230 
+<a name="l00231"></a>00231          <span class="comment">//Data required for the File loading</span>
+<a name="l00232"></a>00232          sofa::helper::vector&lt;Vec3&gt;             localRestPositions;
+<a name="l00233"></a>00233          sofa::helper::vector&lt;Transform&gt;        localRestTransforms;
+<a name="l00234"></a>00234          sofa::helper::vector&lt;Real&gt;             curvAbs;
+<a name="l00235"></a>00235          <span class="keywordtype">double</span>                                                         absOfGeometry;
+<a name="l00236"></a>00236 
+<a name="l00237"></a>00237          <span class="comment">// Radius</span>
+<a name="l00238"></a>00238          Data&lt;Real&gt; _radius1, _radius2, _innerRadius1, _innerRadius2;
+<a name="l00239"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">00239</a>          <span class="keyword">struct </span><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">BeamSection</a>{
+<a name="l00240"></a>00240                 <span class="keywordtype">double</span> _r;                      
+<a name="l00241"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#aaaf94e9eb3386aa6b7cc03b5df40d406">00241</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#aaaf94e9eb3386aa6b7cc03b5df40d406" title="&gt;radius of the section">_rInner</a>;         
+<a name="l00242"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a4fbee621082134ea53a5cd584cfbab69">00242</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a4fbee621082134ea53a5cd584cfbab69" title="&gt;inner radius of the section if beam is hollow">_Iy</a>;
+<a name="l00243"></a>00243                 <span class="keywordtype">double</span> _Iz;             
+<a name="l00244"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#af368a48cd9a239ed881f2053692bc11c">00244</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#af368a48cd9a239ed881f2053692bc11c" title="&gt;Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;">_J</a>;              
+<a name="l00245"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a917b0c6f7f54c334d83f71c2843baf3f">00245</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a917b0c6f7f54c334d83f71c2843baf3f" title="&gt;Polar moment of inertia (J = Iy + Iz)">_A</a>;                      
+<a name="l00246"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a84ed1ca54bfce4334957eaa53bf72a44">00246</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#a84ed1ca54bfce4334957eaa53bf72a44" title="&gt; A is the cross-sectional area;">_Asy</a>;            
+<a name="l00247"></a><a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#ad4fd80e24eea92043d69a17d6df7d487">00247</a>                 <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html#ad4fd80e24eea92043d69a17d6df7d487" title="&gt;_Asy is the y-direction effective shear area = 10/9 (for solid circular section) or 0 for a non-Timo...">_Asz</a>;            
+<a name="l00248"></a>00248          };
+<a name="l00249"></a>00249          <a class="code" href="structsofa_1_1component_1_1engine_1_1_wire_rest_shape_1_1_beam_section.html">BeamSection</a> beamSection1, beamSection2;
+<a name="l00250"></a>00250          Data&lt;Real&gt; _massDensity1, _massDensity2;
+<a name="l00251"></a>00251 
+<a name="l00252"></a>00252          <span class="comment">// broken in 2 case</span>
+<a name="l00253"></a>00253          Data&lt; bool &gt; brokenIn2;
+<a name="l00254"></a>00254 
+<a name="l00255"></a>00255          sofa::core::topology::TopologyContainer* _topology;
+<a name="l00256"></a>00256          sofa::component::topology::EdgeSetGeometryAlgorithms&lt;DataTypes&gt;* edgeGeo;
+<a name="l00257"></a>00257          sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
+<a name="l00258"></a>00258          sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap;
+<a name="l00259"></a>00259          sofa::core::loader::MeshLoader* loader;
+<a name="l00260"></a>00260          <span class="keywordtype">bool</span> edgeSetInNode;
 <a name="l00261"></a>00261 
-<a name="l00262"></a>00262 } <span class="comment">// namespace component</span>
+<a name="l00262"></a>00262          Data&lt;bool&gt;     drawRestShape;
 <a name="l00263"></a>00263 
-<a name="l00264"></a>00264 } <span class="comment">// namespace sofa</span>
+<a name="l00264"></a>00264 };
 <a name="l00265"></a>00265 
-<a name="l00266"></a>00266 <span class="preprocessor">#endif </span><span class="comment">/* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H */</span>
+<a name="l00266"></a>00266 
+<a name="l00267"></a>00267 } <span class="comment">// namespace engine</span>
+<a name="l00268"></a>00268 
+<a name="l00269"></a>00269 } <span class="comment">// namespace component</span>
+<a name="l00270"></a>00270 
+<a name="l00271"></a>00271 } <span class="comment">// namespace sofa</span>
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273 <span class="preprocessor">#endif </span><span class="comment">/* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H */</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -351,7 +358,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul>
       <li class="navelem"><b>WireRestShape.h</b>      </li>
 
-    <li class="footer">Generated on Wed Jul 11 2012 18:18:25 for BeamAdapter by
+    <li class="footer">Generated on Thu Jul 19 2012 16:57:12 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['range',['range',['../classsofa_1_1component_1_1fem_1_1_projection_search.html#a89d18a60e3c8fecaeafb9560894345a5',1,'sofa::component::fem::ProjectionSearch']]]
+  ['rangesampling',['rangeSampling',['../classsofa_1_1component_1_1fem_1_1_projection_search.html#acb7479c8283bf7c6ab9037c6d5447439',1,'sofa::component::fem::ProjectionSearch']]]
 ];

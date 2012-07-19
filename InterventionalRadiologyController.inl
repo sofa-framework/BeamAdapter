@@ -67,7 +67,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , angularStep(initData(&angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
 , speed(initData(&speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
 , startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-, threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
+, threshold(initData(&threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
 {
     //edgeSetInNode=true;
     _fixedConstraint = NULL;

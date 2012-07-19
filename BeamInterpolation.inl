@@ -120,6 +120,17 @@ template <class DataTypes>
     this->_constantRadius._r = this->radius.getValue();
     this->_constantRadius._rInner = this->innerRadius.getValue();
     double r = this->radius.getValue();
+    if (r <= 0.0)
+    {
+    	serr << "Radius must be positive" << sendl;
+    	if (r>0)
+    	{
+			serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
+    		r = -r;
+    	}
+    }
+
+
     double rInner = this->innerRadius.getValue();
 
     this->_constantRadius._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
