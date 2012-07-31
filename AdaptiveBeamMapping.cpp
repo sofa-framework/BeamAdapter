@@ -83,7 +83,7 @@ int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and veloc
 
 #ifndef SOFA_FLOAT
 template<>
-void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
+void SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
 {
         VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in= dIn.getValue();

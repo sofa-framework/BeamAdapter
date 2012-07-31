@@ -646,7 +646,8 @@ void AdaptiveBeamMapping< TIn, TOut>::draw(const core::visual::VisualParams* vpa
 
 
 
-
+template<>
+void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn );
 
 } // namespace mapping
 
