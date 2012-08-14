@@ -388,6 +388,17 @@ void AdaptiveBeamMapping< TIn, TOut>::beginAddContactPoint()
 
 
 template <class TIn, class TOut>
+int AdaptiveBeamMapping< TIn, TOut>::addContactPoint(const Vec3& bary)
+{
+	int index = points.getValue().size();
+	points.beginEdit()->push_back(bary);
+	points.endEdit();
+	if(this->toModel->getX()->size() <= index)
+		this->toModel->resize(index+1);
+	return index;
+}
+
+template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::computeIdxAndBaryCoordsForAbs(unsigned int &b, Real &x_bary, const Real &x_abs )
 {
 

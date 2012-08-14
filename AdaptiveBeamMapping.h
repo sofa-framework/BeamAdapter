@@ -154,13 +154,11 @@ public:
     , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
     , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
     , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
+    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _interpolation)
     , m_inputMapping(NULL)
     , isSubMapping(_isSubMapping)
     , isBarycentricMapping(false)
     {
-		if(_interpolation)
-			m_adaptativebeamInterpolation.set(_interpolation);
     }
 
 	void printIstrumentInfo()const
@@ -195,6 +193,8 @@ public:
         points.endEdit();
         return i;
     }
+
+	int addContactPoint(const Vec3& bary);
 
     void setBarycentricMapping()
     {
