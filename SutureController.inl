@@ -57,6 +57,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
 , maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
 , useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
+, fixRigidTransforms(initData(&fixRigidTransforms, false, "fixRigidTransforms", "fix the sampling and transformations of rigid segments"))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _adaptiveinterpolation)
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
@@ -575,12 +576,16 @@ void SutureController<DataTypes>::applyController()
 
     sofa::helper::vector<Real> newCurvAbs;
 
+	this->storeRigidSegmentsTransformations();
+
     if (useDummyController.getValue())
         this->dummyController(newCurvAbs);
     else
         this->computeSampling(newCurvAbs, x);
 
     this->addImposedCurvAbs(newCurvAbs, 0.0001);
+
+	this->verifyRigidSegmentsSampling(newCurvAbs);
 
 #ifdef DEBUG
     std::cout<<" newCurvAbs = "<<newCurvAbs<<"  - nodeCurvAbs = "<<m_nodeCurvAbs.getValue()<<std::endl;
@@ -606,6 +611,9 @@ void SutureController<DataTypes>::applyController()
         std::cout<<" "<<m_adaptiveinterpolation->getLength(b);
     std::cout<<" "<<std::endl;
 #endif
+
+	this->verifyRigidSegmentsTransformations();
+	prevRigidCurvSegments = rigidCurveSegments;
 
 	sofa::helper::vector<Real> &nodeCurvAbs = *m_nodeCurvAbs.beginEdit();
 	nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
@@ -1257,6 +1265,151 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 #endif
 
 
+}
+
+template <class DataTypes>
+void SutureController<DataTypes>::verifyRigidSegmentsSampling(sofa::helper::vector<Real> &newCurvAbs)
+{	// Making sure we keep the same sampling in the rigid segments from one timestep to the next
+	if(!fixRigidTransforms.getValue())
+		return;
+
+	const sofa::helper::vector<Real> &oldCurvAbs = m_nodeCurvAbs.getValue();
+	sofa::helper::vector<Real>::iterator newIter, newIter2;
+	sofa::helper::vector<Real>::const_iterator oldIter, oldIter2;
+	newIter = newCurvAbs.begin();
+	oldIter = oldCurvAbs.begin();
+
+	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	// For each segment
+	for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
+	{
+		if(std::find(prevRigidCurvSegments.begin(), prevRigidCurvSegments.end(), *rigidIter) == prevRigidCurvSegments.end())
+			continue;	// If this is a new segment, don't modify it
+
+		Real start = rigidIter->first, end = rigidIter->second;
+
+		// Find indices in the curvAbs lists corresponding to the start of the rigid segment
+		newIter = std::upper_bound(newIter, newCurvAbs.end(), start);
+		oldIter = std::upper_bound(oldIter, oldCurvAbs.end(), start);
+
+		newIter2 = newIter;
+		oldIter2 = oldIter;
+
+		// Find indices in the curvAbs lists corresponding to the end of the rigid segment
+		newIter2 = std::upper_bound(newIter, newCurvAbs.end(), end);
+		oldIter2 = std::upper_bound(oldIter, oldCurvAbs.end(), end);
+
+		// Removing what was computed in this timestep
+		newIter = newCurvAbs.erase(newIter, newIter2);
+		// And replacing by the data of the previous timestep
+		newCurvAbs.insert(newIter, oldIter, oldIter2);
+	}
+}
+
+template <class DataTypes>
+void SutureController<DataTypes>::storeRigidSegmentsTransformations()
+{
+	if(!fixRigidTransforms.getValue())
+		return;
+
+	prevRigidTransforms.clear();
+
+	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	// For each rigid segment
+	for(rigidIter = prevRigidCurvSegments.begin(); rigidIter != prevRigidCurvSegments.end(); ++rigidIter)
+	{
+		double rigidStart = rigidIter->first, rigidEnd = rigidIter->second;
+
+		// For all curv abs in this segment
+		unsigned int beamId, lastBeamId;
+		Real bary;
+		m_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
+		m_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
+
+		while(beamId < lastBeamId)
+		{
+			// Save the transformation
+			//  (we consider that we don't cut rigid beams so transformations are the same for 2 beams in the same curv abs)
+			Real curvAbs0, curvAbs1;
+			m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
+
+			Transform t0, t1;
+			m_adaptiveinterpolation->getDOFtoLocalTransform(beamId, t0, t1);
+			prevRigidTransforms[curvAbs0] = t0;
+			prevRigidTransforms[curvAbs1] = t1;
+
+			++beamId;
+		}
+	}
+
+/*	int nb = m_adaptiveinterpolation->getNumBeams();
+	for(int i=0;i<nb; ++i)
+	{
+		Real curvAbs0, curvAbs1;
+		m_adaptiveinterpolation->getAbsCurvXFromBeam(i, curvAbs0, curvAbs1);
+
+		Transform t0, t1;
+		m_adaptiveinterpolation->getDOFtoLocalTransform(i, t0, t1);
+		prevRigidTransforms[curvAbs0] = t0;
+		prevRigidTransforms[curvAbs1] = t1;
+	}	*/
+}
+
+template <class DataTypes>
+void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
+{
+	if(!fixRigidTransforms.getValue())
+		return;
+
+/*	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	// For each rigid segment
+	for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
+	{
+		if(std::find(prevRigidCurvSegments.begin(), prevRigidCurvSegments.end(), *rigidIter) == prevRigidCurvSegments.end())
+			continue;	// If this is a new segment, don't modify it
+
+		Real rigidStart = rigidIter->first, rigidEnd = rigidIter->second;
+
+		// For all curv abs in this segment
+		unsigned int beamId, lastBeamId;
+		Real bary;
+		m_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
+		m_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
+
+		while(beamId < lastBeamId)
+		{
+			// Load the transformations and replace what was computer this timestep
+			Real curvAbs0, curvAbs1;
+			m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
+
+			std::map<Real, Transform>::const_iterator iter;
+			iter = prevRigidTransforms.find(curvAbs0);
+			if(iter != prevRigidTransforms.end())
+				m_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, false);
+
+			iter = prevRigidTransforms.find(curvAbs1);
+			if(iter != prevRigidTransforms.end())
+				m_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, true);
+
+			++beamId;
+		}
+	}	*/
+
+	int nb = m_adaptiveinterpolation->getNumBeams();
+	for(int i=0;i<nb; ++i)
+	{
+		Real curvAbs0, curvAbs1;
+		m_adaptiveinterpolation->getAbsCurvXFromBeam(i, curvAbs0, curvAbs1);
+
+		std::map<Real, Transform>::const_iterator iter;
+		iter = prevRigidTransforms.find(curvAbs0);
+		if(iter != prevRigidTransforms.end())
+			m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, false);
+
+		iter = prevRigidTransforms.find(curvAbs1);
+		if(iter != prevRigidTransforms.end())
+			m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, true);
+	}
 }
 
 template <class DataTypes>

@@ -275,8 +275,11 @@ private:
     // little function to verify that the rigidCurveSegments are sorted
     bool verifyRigidCurveSegmentSort();
 
+	// make sure the sampling does not change for the rigid segments
+	void verifyRigidSegmentsSampling(sofa::helper::vector<Real> &newCurvAbs);
 
-
+	void storeRigidSegmentsTransformations();
+	void verifyRigidSegmentsTransformations();
 
 protected:
 
@@ -287,14 +290,15 @@ protected:
     Data< Coord > startingPos;
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
-    Data< bool > useDummyController;
+    Data< bool > useDummyController, fixRigidTransforms;
 	Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end) 
 	SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control
-    sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments;
+    sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments, prevRigidCurvSegments;
     sofa::helper::vector< bool > rigidBeamList;
     sofa::helper::vector<Transform> vec_global_H_gravityCenter;
+	std::map<Real, Transform> prevRigidTransforms;
 
     /////// for re-interpolation
     sofa::helper::vector<Transform> vec_global_H_node;
