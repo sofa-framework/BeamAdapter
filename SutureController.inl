@@ -1293,7 +1293,9 @@ void SutureController<DataTypes>::verifyRigidSegmentsSampling(sofa::helper::vect
 		oldIter = std::upper_bound(oldIter, oldCurvAbs.end(), start);
 
 		newIter2 = newIter;
+		--newIter;
 		oldIter2 = oldIter;
+		--oldIter;
 
 		// Find indices in the curvAbs lists corresponding to the end of the rigid segment
 		newIter2 = std::upper_bound(newIter, newCurvAbs.end(), end);
@@ -1361,7 +1363,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 	if(!fixRigidTransforms.getValue())
 		return;
 
-/*	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
 	// For each rigid segment
 	for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
 	{
@@ -1378,7 +1380,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 
 		while(beamId < lastBeamId)
 		{
-			// Load the transformations and replace what was computer this timestep
+			// Load the transformations and replace what was computed this timestep
 			Real curvAbs0, curvAbs1;
 			m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
 
@@ -1393,8 +1395,9 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 
 			++beamId;
 		}
-	}	*/
-
+	}	
+	/*
+	// TODO : adapt this simpler method to rigid segments that have been modified (the transformation need to change)
 	int nb = m_adaptiveinterpolation->getNumBeams();
 	for(int i=0;i<nb; ++i)
 	{
@@ -1409,7 +1412,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 		iter = prevRigidTransforms.find(curvAbs1);
 		if(iter != prevRigidTransforms.end())
 			m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, true);
-	}
+	}*/
 }
 
 template <class DataTypes>

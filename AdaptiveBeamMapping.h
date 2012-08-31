@@ -131,29 +131,17 @@ public:
     Data< double > proximity;						/*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
     Data<bool> contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
     Data<std::string> nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
+    Data<int> nbPointsPerBeam;						/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
     SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
-	
-    AdaptiveBeamMapping()
-        : Inherit()
-    , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-    , points(initData(&points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
-    , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
-    , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
-    , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"))
-    , m_inputMapping(NULL)
-    , isSubMapping(false)
-    , isBarycentricMapping(false)
-    {
-	}
 
-    AdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,BeamInterpolation< TIn >* _interpolation=NULL,bool _isSubMapping=false)
+    AdaptiveBeamMapping(core::State< In >* from=NULL, core::State< Out >* to=NULL,BeamInterpolation< TIn >* _interpolation=NULL, bool _isSubMapping=false)
         : Inherit(from, to)
     , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
     , points(initData(&points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
     , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
     , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
     , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
+    , nbPointsPerBeam(initData(&nbPointsPerBeam, 0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _interpolation)
     , m_inputMapping(NULL)
     , isSubMapping(_isSubMapping)

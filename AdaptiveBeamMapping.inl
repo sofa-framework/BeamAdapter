@@ -390,7 +390,7 @@ void AdaptiveBeamMapping< TIn, TOut>::beginAddContactPoint()
 template <class TIn, class TOut>
 int AdaptiveBeamMapping< TIn, TOut>::addContactPoint(const Vec3& bary)
 {
-	int index = points.getValue().size();
+	unsigned int index = points.getValue().size();
 	points.beginEdit()->push_back(bary);
 	points.endEdit();
 	if(this->toModel->getX()->size() <= index)
@@ -435,22 +435,62 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
 		if (curvAbs)
 		{
-			for (unsigned int i=0; i<pts.size(); i++)
-			{
+			int ptsPerBeam = nbPointsPerBeam.getValue();
+			if(ptsPerBeam)
+			{	// Recreating the distribution based on the current sampling of the beams
+				unsigned int nbBeams = m_adaptativebeamInterpolation->getNumBeams();
+				for(unsigned int b=0; b<nbBeams; ++b)
+				{
+					for(int i=0; i<ptsPerBeam; ++i)
+					{
+						PosPointDefinition beamDistrib;
+						beamDistrib.beamId = b;
+						beamDistrib.baryPoint[0] = (Real)i / ptsPerBeam;
+						beamDistrib.baryPoint[1] = 0.0;
+						beamDistrib.baryPoint[2] = 0.0;
 
-				unsigned int b=0;
-				Real x_abs = pts[i][0];
-				Real x_bary = 0.0;
+						pointBeamDistribution.push_back(beamDistrib);
+					}
+				}
 
-				computeIdxAndBaryCoordsForAbs(b, x_bary,  x_abs );
+				if(nbBeams)
+				{	// Last point
+					PosPointDefinition beamDistrib;
+					beamDistrib.beamId = nbBeams-1;
+					beamDistrib.baryPoint[0] = 1.0;
+					beamDistrib.baryPoint[1] = 0.0;
+					beamDistrib.baryPoint[2] = 0.0;
 
-				PosPointDefinition beamDistrib;
-				beamDistrib.beamId = (int) b;
-				beamDistrib.baryPoint[0] = x_bary;
-				beamDistrib.baryPoint[1] = pts[i][1];
-				beamDistrib.baryPoint[2] = pts[i][2];
+					pointBeamDistribution.push_back(beamDistrib);
+				}
 
-				pointBeamDistribution.push_back(beamDistrib);
+				BaseMeshTopology* topo = getContext()->getMeshTopology();
+				if(topo)
+				{
+					topo->clear();
+					int nbEdges = pointBeamDistribution.size() - 1;
+					for(int i=0; i<nbEdges; ++i)
+						topo->addEdge(i, i+1);
+				}
+			}
+			else
+			{	// We use the points Data
+				for (unsigned int i=0; i<pts.size(); i++)
+				{
+					unsigned int b=0;
+					Real x_abs = pts[i][0];
+					Real x_bary = 0.0;
+
+					computeIdxAndBaryCoordsForAbs(b, x_bary,  x_abs );
+
+					PosPointDefinition beamDistrib;
+					beamDistrib.beamId = b;
+					beamDistrib.baryPoint[0] = x_bary;
+					beamDistrib.baryPoint[1] = pts[i][1];
+					beamDistrib.baryPoint[2] = pts[i][2];
+
+					pointBeamDistribution.push_back(beamDistrib);
+				}
 			}
 		}
 		else
