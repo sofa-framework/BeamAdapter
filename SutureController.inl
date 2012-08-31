@@ -1274,12 +1274,12 @@ void SutureController<DataTypes>::verifyRigidSegmentsSampling(sofa::helper::vect
 		return;
 
 	const sofa::helper::vector<Real> &oldCurvAbs = m_nodeCurvAbs.getValue();
-	sofa::helper::vector<Real>::iterator newIter, newIter2;
-	sofa::helper::vector<Real>::const_iterator oldIter, oldIter2;
+	typename sofa::helper::vector<Real>::iterator newIter, newIter2;
+	typename sofa::helper::vector<Real>::const_iterator oldIter, oldIter2;
 	newIter = newCurvAbs.begin();
 	oldIter = oldCurvAbs.begin();
 
-	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
 	// For each segment
 	for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
 	{
@@ -1316,7 +1316,7 @@ void SutureController<DataTypes>::storeRigidSegmentsTransformations()
 
 	prevRigidTransforms.clear();
 
-	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
 	// For each rigid segment
 	for(rigidIter = prevRigidCurvSegments.begin(); rigidIter != prevRigidCurvSegments.end(); ++rigidIter)
 	{
@@ -1363,7 +1363,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 	if(!fixRigidTransforms.getValue())
 		return;
 
-	sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+	typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
 	// For each rigid segment
 	for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
 	{
@@ -1384,7 +1384,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 			Real curvAbs0, curvAbs1;
 			m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
 
-			std::map<Real, Transform>::const_iterator iter;
+			typename std::map<Real, Transform>::const_iterator iter;
 			iter = prevRigidTransforms.find(curvAbs0);
 			if(iter != prevRigidTransforms.end())
 				m_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, false);

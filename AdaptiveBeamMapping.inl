@@ -464,7 +464,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 					pointBeamDistribution.push_back(beamDistrib);
 				}
 
-				BaseMeshTopology* topo = getContext()->getMeshTopology();
+				BaseMeshTopology* topo = this->getContext()->getMeshTopology();
 				if(topo)
 				{
 					topo->clear();
