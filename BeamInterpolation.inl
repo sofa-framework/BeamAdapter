@@ -912,6 +912,7 @@ void BeamInterpolation<DataTypes>::ComputeTotalBendingRotationAngle(Real& Bendin
         BendingAngle=0.0;
 
         unsigned int numComputationPoints = (unsigned int) ceil((baryCoordMax-baryCoordMin)*(L/dx_computation));
+		numComputationPoints = std::max(numComputationPoints, 3u);
 
         for (unsigned int i=0; i<numComputationPoints; i++)
         {

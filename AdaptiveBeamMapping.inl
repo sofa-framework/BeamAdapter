@@ -438,14 +438,23 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 			int ptsPerBeam = nbPointsPerBeam.getValue();
 			if(ptsPerBeam)
 			{	// Recreating the distribution based on the current sampling of the beams
+				helper::WriteAccessor< Data< sofa::helper::vector<Real> > > waSegmentsCurvAbs = segmentsCurvAbs;
+				waSegmentsCurvAbs.clear();
+
 				unsigned int nbBeams = m_adaptativebeamInterpolation->getNumBeams();
+				Real segStart, segEnd, segLength;
 				for(unsigned int b=0; b<nbBeams; ++b)
 				{
+					m_adaptativebeamInterpolation->getAbsCurvXFromBeam(b, segStart, segEnd);
+					segLength = segEnd - segStart;
+
 					for(int i=0; i<ptsPerBeam; ++i)
 					{
+						Real p = (Real)i / ptsPerBeam;
+						waSegmentsCurvAbs.push_back(segStart + segLength * p);
 						PosPointDefinition beamDistrib;
 						beamDistrib.beamId = b;
-						beamDistrib.baryPoint[0] = (Real)i / ptsPerBeam;
+						beamDistrib.baryPoint[0] = p;
 						beamDistrib.baryPoint[1] = 0.0;
 						beamDistrib.baryPoint[2] = 0.0;
 
@@ -455,6 +464,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
 				if(nbBeams)
 				{	// Last point
+					waSegmentsCurvAbs.push_back(segEnd);
 					PosPointDefinition beamDistrib;
 					beamDistrib.beamId = nbBeams-1;
 					beamDistrib.baryPoint[0] = 1.0;
