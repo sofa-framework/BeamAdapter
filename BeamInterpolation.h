@@ -204,7 +204,7 @@ public:
 
 
 	// compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
-	void ComputeTotalBendingRotationAngle(Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
+	Real ComputeTotalBendingRotationAngle(const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
 											const Real& baryCoordMin, const Real& baryCoordMax);
 
 

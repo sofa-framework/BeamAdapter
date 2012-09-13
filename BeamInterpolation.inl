@@ -894,38 +894,40 @@ void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord, co
 /// and computation of an angle (acos) between these successive tangents
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::ComputeTotalBendingRotationAngle(Real& BendingAngle, const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
-                                                                    const Real& baryCoordMin, const Real& baryCoordMax)
+typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::ComputeTotalBendingRotationAngle(const Real& dx_computation, 
+    const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
+    const Real& baryCoordMin, const Real& baryCoordMax)
 {
 
-        Vec3 P0,P1,P2,P3, t0, t1;
+    Vec3 P0,P1,P2,P3, t0, t1;
 
-        P0=global_H_local0.getOrigin();
-        P3=global_H_local1.getOrigin();
-        P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-        P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
+    P0=global_H_local0.getOrigin();
+    P3=global_H_local1.getOrigin();
+    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
+    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
 
 
-        t0= P0*(-3*(1-baryCoordMin)*(1-baryCoordMin)) + P1*(3-12*baryCoordMin+9*baryCoordMin*baryCoordMin) + P2*(6*baryCoordMin-9*baryCoordMin*baryCoordMin) + P3*(3*baryCoordMin*baryCoordMin);
-        t0.normalize();
+    t0= P0*(-3*(1-baryCoordMin)*(1-baryCoordMin)) + P1*(3-12*baryCoordMin+9*baryCoordMin*baryCoordMin) + P2*(6*baryCoordMin-9*baryCoordMin*baryCoordMin) + P3*(3*baryCoordMin*baryCoordMin);
+    t0.normalize();
 
-        BendingAngle=0.0;
+    Real BendingAngle=0.0;
 
-        unsigned int numComputationPoints = (unsigned int) ceil((baryCoordMax-baryCoordMin)*(L/dx_computation));
-		numComputationPoints = std::max(numComputationPoints, 3u);
+    unsigned int numComputationPoints = (unsigned int) ceil((baryCoordMax-baryCoordMin)*(L/dx_computation));
+    numComputationPoints = std::max(numComputationPoints, 3u);
 
-        for (unsigned int i=0; i<numComputationPoints; i++)
-        {
-            Real bx= ((Real)((i+1)/numComputationPoints))*(baryCoordMax-baryCoordMin) + baryCoordMin;
-            t1 =  P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
-            t1.normalize();
+    for (unsigned int i=0; i<numComputationPoints; i++)
+    {
+        Real bx= ((Real)((i+1)/numComputationPoints))*(baryCoordMax-baryCoordMin) + baryCoordMin;
+        t1 =  P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
+        t1.normalize();
 
-            if(dot(t0,t1)<1.0)
-                BendingAngle += acos(dot(t0,t1));
+        if(dot(t0,t1)<1.0)
+            BendingAngle += acos(dot(t0,t1));
 
-            t0=t1;
-        }
+        t0=t1;
+    }
 
+    return BendingAngle;
 }
 
 

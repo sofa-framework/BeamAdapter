@@ -116,9 +116,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
 
 		// 2. compute the bending angle
 		Transform Tnode0, Tnode1;
-		Real angleBeam=0.0;
 		interpolation->computeTransform2(b,Tnode0,Tnode1,x);
-		interpolation->ComputeTotalBendingRotationAngle(angleBeam, rest_length/10.0, Tnode0, Tnode1,rest_length , 0.0, 1.0);
+		Real angleBeam = interpolation->ComputeTotalBendingRotationAngle(rest_length/10.0, Tnode0, Tnode1,rest_length , 0.0, 1.0);
 
 
 		// 3. treatment of the different case..

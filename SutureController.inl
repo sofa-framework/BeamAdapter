@@ -648,20 +648,18 @@ void SutureController<DataTypes>::applyController()
 
 /// this function calls ComputeTotalBendingRotationAngle on the beams between xmin and xmax
 template <class DataTypes>
-void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos)
+typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeBendingAngle(const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos)
 {
 
     //test for verification
     if (xmax < xmin || dx_comput==0.0){
         serr<<"wrong parameters in computeBendingAngle function"<<sendl;
-        angle=0.0;
-        return;
+        return 0.0;
     }
 
     if (xmax > m_adaptiveinterpolation->getRestTotalLength()){
         serr<<" in computeBendingAngle : max > getRestTotalLength"<<sendl;
-        angle=0.0;
-        return;
+        return 0.0;
     }
 
 
@@ -673,20 +671,16 @@ void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& x
     m_adaptiveinterpolation->getBeamAtCurvAbs(xmax, idBeamMax, baryCoordMax);
     m_adaptiveinterpolation->computeTransform2(idBeamMin,Tnode0,Tnode1, Pos);
 
-
-    angle=0.0;
-
     if (idBeamMin==idBeamMax)
     {
-        m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(angle, dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
          //std::cout<<" idBeamMin==idBeamMax, angle ="<<angle<<std::endl;
-        return;
+        return m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
     }
 
     if (idBeamMin>idBeamMax)
     {
         serr<<"ERROR in computeBendingAngle"<<sendl;
-        return;
+        return 0.0;
     }
 
     //////////
@@ -694,24 +688,20 @@ void SutureController<DataTypes>::computeBendingAngle(Real& angle, const Real& x
 
     // compute the angle for the first beam
 
-    Real angleBeam=0.0;
-    m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(angleBeam, dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, 1.0);
-    angle+=angleBeam;
+    Real angle = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, 1.0);
 
     unsigned int b=idBeamMin+1;
     while(b<idBeamMax)
     {
         m_adaptiveinterpolation->computeTransform2(b,Tnode0,Tnode1,Pos);
-        m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(angleBeam, dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(b), 0.0, 1.0);
-        angle+=angleBeam;
+        angle += m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(b), 0.0, 1.0);
         b++;
     }
 
     m_adaptiveinterpolation->computeTransform2(idBeamMax,Tnode0,Tnode1,Pos);
-    m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(angleBeam, dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMax), 0.0, baryCoordMax);
+    angle += m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMax), 0.0, baryCoordMax);
 
-    angle+=angleBeam;
-
+	return angle;
 }
 
 
@@ -1127,10 +1117,8 @@ bool SutureController<DataTypes>::verifyRigidCurveSegmentSort()
 template <class DataTypes>
 void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &newCurvAbs, VecCoord &x)
 {
-
     helper::vector<Real> xP_noticeable;
     helper::vector<int> nbP_density;
-
 
     m_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
@@ -1139,12 +1127,70 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         return;
     }
 
+	std::vector<Real> beamsCurvature;
+	unsigned int nbBeams = m_adaptiveinterpolation->getNumBeams();
+	beamsCurvature.resize(nbBeams);
 
-    if(!verifyRigidCurveSegmentSort()){
-        serr<<" WARNING : rigidCurveSegments are not correctly sorted !"<<sendl;
-    }
+	// Computing the curvature of each beam (from the previous timestep)
+	for(unsigned int b=0; b<nbBeams; ++b)
+	{
+		Real beamLength = m_adaptiveinterpolation->getLength(b);
+		Transform Tnode0, Tnode1;
+		m_adaptiveinterpolation->computeTransform2(b, Tnode0, Tnode1, x);
 
+		beamsCurvature[b] = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
+	}
 
+	sofa::helper::vector<Real> newCurvAbs_notSecure;
+	newCurvAbs_notSecure.clear();
+	Real currentCurvAbs = 0.0, currentAngle = 0.0, maxAngle = maxBendingAngle.getValue();
+	unsigned int currentBeam = 0;
+	for(unsigned int part=0; part<nbP_density.size(); part++)
+	{
+		Real maxBeamLength = (xP_noticeable[part+1] - xP_noticeable[part]) / nbP_density[part];
+
+		while(currentCurvAbs < xP_noticeable[part+1]-threshold.getValue())
+		{
+			newCurvAbs_notSecure.push_back(currentCurvAbs);
+			Real maxCurvAbs = std::min(currentCurvAbs + maxBeamLength, xP_noticeable[part+1]);
+
+			while(currentBeam < nbBeams)
+			{
+				Real beamStart, beamEnd, beamLength;
+				m_adaptiveinterpolation->getAbsCurvXFromBeam(currentBeam, beamStart, beamEnd);
+				beamLength = beamEnd - beamStart;
+
+				Real beamAngle = beamsCurvature[currentBeam];				// Curvature of the whole beam
+				Real baryStart = (beamEnd - currentCurvAbs) / beamLength;	// Where we are currently on the beam [0-1]
+				Real remainingbeamAngle = beamAngle * baryStart;			// This is the curvature from the current abs to the end of the beam
+				if(currentAngle + remainingbeamAngle > maxAngle)			// The new beam will end somewhere on this beam
+				{
+					Real baryEnd = (maxAngle - currentAngle) / beamAngle;
+					currentCurvAbs += beamLength * baryEnd;
+					if(currentCurvAbs > maxCurvAbs)
+						currentCurvAbs = maxCurvAbs;
+					currentAngle = 0.0;
+					break;
+				}
+				else if(beamEnd > maxCurvAbs)								// We got to a limit
+				{
+					currentCurvAbs = maxCurvAbs;
+					currentAngle = 0.0;
+					break;
+				}
+				else														// Continue to next beam
+				{
+					currentAngle += remainingbeamAngle;
+					currentCurvAbs += beamLength * baryStart;
+					++currentBeam;
+				}
+			}
+		}
+
+		newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
+	}
+
+/*
     Real sutureLength= m_adaptiveinterpolation->getRestTotalLength();
     Real dx=sutureLength/100.0;	// TODO : pourquoi 100 et pas un Data ou un nombre dépendant de la densité ?
     Real BendingAngle=0.0;
@@ -1170,9 +1216,9 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
             newCurvAbs_notSecure.push_back(L_add);
 
             if (L_add+L_beam_straight < xP_noticeable[part+1])
-                this->computeBendingAngle(BendingAngle, L_add, L_add+L_beam_straight, dx, x);
+                BendingAngle = this->computeBendingAngle(L_add, L_add+L_beam_straight, dx, x);
             else
-                this->computeBendingAngle(BendingAngle, L_add, xP_noticeable[part+1], dx, x);
+                BendingAngle = this->computeBendingAngle(L_add, xP_noticeable[part+1], dx, x);
 
             Real L_beam = L_beam_straight;
             if (BendingAngle>maxBendingAngle.getValue())
@@ -1181,6 +1227,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         }
         newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
     }
+	*/
     /*
 
 	// TEMP TEST : remove aligned dofs
@@ -1233,6 +1280,9 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 		}
 	}
     */
+
+	if(!verifyRigidCurveSegmentSort())
+		serr<<" WARNING : rigidCurveSegments are not correctly sorted !"<<sendl;
 
     this->rigidCurveSegments.clear();
 	helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;

@@ -241,7 +241,7 @@ private:
     void removeNodesAndEdge(unsigned int num);
 
     // internal function: compute the bending angle between curv abs xmin and xmax
-    void computeBendingAngle(Real& angle, const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos);
+    Real computeBendingAngle(const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos);
 
 
     // this function computes the tangent value on a series of discrete points (store also the curv_abs of these discrete points)
