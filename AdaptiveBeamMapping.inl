@@ -442,7 +442,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 				waSegmentsCurvAbs.clear();
 
 				unsigned int nbBeams = m_adaptativebeamInterpolation->getNumBeams();
-				Real segStart, segEnd, segLength;
+				InReal segStart, segEnd, segLength;
 				for(unsigned int b=0; b<nbBeams; ++b)
 				{
 					m_adaptativebeamInterpolation->getAbsCurvXFromBeam(b, segStart, segEnd);
