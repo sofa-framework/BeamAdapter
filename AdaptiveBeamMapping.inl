@@ -42,6 +42,7 @@
 #include <sofa/core/Mapping.inl>
 
 #include <sofa/simulation/common/AnimateBeginEvent.h>
+#include <sofa/helper/AdvancedTimer.h>
 
 
 namespace sofa
@@ -62,28 +63,38 @@ using namespace sofa::defaulttype;
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* /*mparams*/ /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
+    sofa::helper::AdvancedTimer::stepBegin("AdaptiveBeamMappingApply");
 	VecCoord& out = *dOut.beginEdit();
 	const InVecCoord& in= dIn.getValue();
 
 	x_buf_used=false;
 
+    sofa::helper::AdvancedTimer::stepBegin("pointsRedistribution");
 	// => dans le cas où on utilise un controller adaptatif il faut redistribuer les points à chaque pas de temps...
 	if (useCurvAbs.getValue() && !contactDuplicate.getValue())
 		computeDistribution();
 
+    sofa::helper::AdvancedTimer::stepEnd("pointsRedistribution");
 
+
+    sofa::helper::AdvancedTimer::stepBegin("resizeToModel&Out");
 	if (!isSubMapping)
 	{
 		this->toModel->resize( pointBeamDistribution.size() );
 		out.resize(pointBeamDistribution.size());
 	}
+    sofa::helper::AdvancedTimer::stepEnd("resizeToModel&Out");
+
+    m_adaptativebeamInterpolation->updateBezierPoints(in);
+
+    sofa::helper::AdvancedTimer::stepBegin("computeNewInterpolation");
 
 	for (unsigned int i=0; i<pointBeamDistribution.size(); i++)
 	{
 		PosPointDefinition  ppd = pointBeamDistribution[i];
 		sofa::defaulttype::Vec<3, InReal> pos;
 		const Vec3 localPos(0.,ppd.baryPoint[1],ppd.baryPoint[2]);
-		m_adaptativebeamInterpolation->interpolatePointUsingSpline(ppd.beamId, ppd.baryPoint[0], localPos, in, pos );
+        m_adaptativebeamInterpolation->interpolatePointUsingSpline(ppd.beamId, ppd.baryPoint[0], localPos, in, pos,false);
 		if(isSubMapping){
 			if(idPointSubMap.size()>0)
 				out[idPointSubMap[i]] = pos;}
@@ -91,9 +102,10 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* /*mpar
 			out[i] = pos;
 
 	}
+    sofa::helper::AdvancedTimer::stepEnd("computeNewInterpolation");
 
-
-	dOut.endEdit();
+    dOut.endEdit();
+    sofa::helper::AdvancedTimer::stepEnd("AdaptiveBeamMappingApply");
 
 }
 
@@ -102,6 +114,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* /*mparams*/ /* PARAMS FIRST */, Data<VecDeriv>& dOut, const Data<InVecDeriv>& dIn)
 {
 
+    sofa::helper::AdvancedTimer::stepBegin("AdaptiveBeamMappingApplyJ");
 	VecDeriv& out = *dOut.beginEdit();
 	const InVecDeriv& in= dIn.getValue();
 
@@ -158,12 +171,14 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* /*mpa
 
 	dOut.endEdit();
 	dataInX.endEdit();
+    sofa::helper::AdvancedTimer::stepEnd("AdaptiveBeamMappingApplyJ");
 }
 
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* /*mparams*/ /* PARAMS FIRST */, Data<InVecDeriv>& dOut, const Data<VecDeriv>& dIn)
 {
 
+    sofa::helper::AdvancedTimer::stepBegin("AdaptiveBeamMappingMechanicalApplyJT");
 	InVecDeriv& out = *dOut.beginEdit();
 	const VecDeriv& in= dIn.getValue();
 
@@ -200,7 +215,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* /*mp
 	}
 
 	dOut.endEdit();
-
+    sofa::helper::AdvancedTimer::stepEnd("AdaptiveBeamMappingMechanicalApplyJT");
 }
 
 
@@ -212,7 +227,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* /*mp
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* /*cparams*/ /* PARAMS FIRST */, Data<InMatrixDeriv>& dOut, const Data<OutMatrixDeriv>& dIn)
 {
-
+    sofa::helper::AdvancedTimer::stepBegin("AdaptiveBeamMappingConstrainApplyJT");
 	InMatrixDeriv& out = *dOut.beginEdit();
 	const OutMatrixDeriv& in = dIn.getValue();
 
@@ -304,6 +319,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* /*cp
 
 
 	dOut.endEdit();
+    sofa::helper::AdvancedTimer::stepEnd("AdaptiveBeamMappingConstraintApplyJT");
 }
 
 

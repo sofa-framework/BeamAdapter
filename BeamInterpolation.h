@@ -43,6 +43,7 @@
 #include <sofa/core/objectmodel/Data.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
+#include <sofa/component/container/MechanicalObject.h>
 
 #include <sofa/helper/vector.h>
 #include <sofa/defaulttype/Vec.h>
@@ -106,12 +107,18 @@ public:
 	typedef Vec<3, Real> Vec3;
 	typedef Vec<6, Real> Vec6;
 
+    typedef helper::vector<Vec3> VecVec3;
+
+    // These vector is related to Bézier nodes
+    typedef helper::vector<sofa::defaulttype::Vec<3, double> > VecVec3d;
+
 
 	BeamInterpolation()
 	: radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (for now only constant radius are used)"))
 	, innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
 	, dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-	, m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
+    , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes> >())
+    , m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
 	, m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
 	, m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
 	, m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
@@ -122,6 +129,8 @@ public:
 		this->brokenInTwo=false;
 		_isControlled=false;
 		this->_numBeamsNotUnderControl = 0;
+        mStateNodes->setName("bezierNodes");
+        this->addSlave(mStateNodes);
 	}
 
 	virtual ~BeamInterpolation(){}
@@ -130,6 +139,9 @@ public:
 	void bwdInit();
 	void reinit(){init(); bwdInit(); }
 	void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
+
+
+
 
 	/**
 	 * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...) 
@@ -163,8 +175,16 @@ public:
 
 
 	// spline base interpolation of points and transformation
-	void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult);
-	void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
+    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult) {
+        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true);
+    }
+    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute);
+
+    void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
+
+    void updateBezierPoints( const VecCoord &x);
+    void updateBezierPoints( const VecCoord &x, unsigned int index, VecVec3d& v);
+
 
 	// getLength / setLength => provides the rest length of each spline
 	Real getLength(unsigned int edgeInList)
@@ -185,12 +205,12 @@ public:
 
 
 	void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
-	void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol);
+    void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol);
     // generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
-	void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
+    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
 
 	void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
-												Transform &global_H_localInterpol, Deriv &v_interpol);
+                                                Transform &global_H_localInterpol, Deriv &v_interpol);
 
 
 	// 3DOF mapping
@@ -347,6 +367,8 @@ public:
 
 protected :
 	/// DATA INPUT (that could change in real-time)
+    sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes>::SPtr mStateNodes;
+
 	///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
 	Data< VecElementID > m_edgeList;
 	const VecEdges *_topologyEdges;

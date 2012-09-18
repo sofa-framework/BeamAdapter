@@ -156,7 +156,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
 	sofa::core::objectmodel::BaseContext* context = this->getContext();
 
-	_mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
+    _mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
 
 	if (_mstate == NULL)
 	{
@@ -551,6 +551,7 @@ int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsign
         return -1;
     }
 
+
     // 1. Get the indices of element and nodes
     ElementID e = this->m_edgeList.getValue()[edgeInList] ;
     core::topology::BaseMeshTopology::Edge edge=  (*this->_topologyEdges)[e];
@@ -743,49 +744,132 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
 }
 
 
+
+
+
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult)
+void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult,bool recompute)
 {
+    if(recompute){
 
-   // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
-    const Real& _L = this->m_lengthList.getValue()[edgeInList];
+        // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
+        const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
-    if(localPos.norm() >_L*1e-10)
-    {
-        Vec3 x_local(0,0,0);
-        Transform global_H_localInterpol;
+        if(localPos.norm() >_L*1e-10)
+        {
+            Vec3 x_local(0,0,0);
+            Transform global_H_localInterpol;
 
-        this->InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol );
+            this->InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
 
-        posResult = global_H_localInterpol.getOrigin() + global_H_localInterpol.getOrientation().rotate(localPos);
+            posResult = global_H_localInterpol.getOrigin() + global_H_localInterpol.getOrientation().rotate(localPos);
+
+        }
+        else
+        {
+            /// \todo remove call to computeTransform2 => make something faster !
+            Transform global_H_local0, global_H_local1;
+            computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
+            Vec3 DP=global_H_local0.getOrigin() - global_H_local1.getOrigin();
+
+            if( DP.norm()< _L*0.01 )
+            {
+                posResult = global_H_local0.getOrigin();
+                return;
+            }
+
+
+            Vec3 P0,P1,P2,P3;
+
+            P0=global_H_local0.getOrigin();
+            P3=global_H_local1.getOrigin();
+
+            P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0);
+            P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0);
+
+            Real bx=baryCoord;
+
+            posResult = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+
+
+        }
 
     }
     else
     {
-        /// \todo remove call to computeTransform2 => make something faster !
-        Transform global_H_local0, global_H_local1;
-        computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
-        Vec3 DP=global_H_local0.getOrigin() - global_H_local1.getOrigin();
 
-        if( DP.norm()< _L*0.01 )
+        const Real& _L = this->m_lengthList.getValue()[edgeInList];
+
+        if(localPos.norm() >_L*1e-10)
         {
-        	posResult = global_H_local0.getOrigin();
-        	return;
+            Vec3 x_local(0,0,0);
+            Transform global_H_localInterpol;
+
+            this->InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
+
+            posResult = global_H_localInterpol.getOrigin() + global_H_localInterpol.getOrientation().rotate(localPos);
+
         }
+        else
+        {
+            const VecVec3d& v = mStateNodes->read(sofa::core::ConstVecCoordId::position())->getValue();
+            Vec3 P0,P1,P2,P3;
 
+            P0=v[edgeInList*3];
+            P3=v[edgeInList*3+3];
+            P1=v[edgeInList*3+1];
+            P2=v[edgeInList*3+2];
 
-        Vec3 P0,P1,P2,P3;
+            Vec3 DP= P0 - P3;
 
-        P0=global_H_local0.getOrigin();
-        P3=global_H_local1.getOrigin();
+            if( DP.norm()< _L*0.01 )
+            {
+                posResult = P0;
+                return;
+            }
 
-        P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0);
-        P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0);
+            Real bx=baryCoord;
 
-        Real bx=baryCoord;
-
-        posResult = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+            posResult = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+        }
     }
+
+}
+
+template<class DataTypes>
+void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x){
+    //Mechanical Object to stock Bezier points.
+    Data<VecVec3d>* datax = mStateNodes->write(sofa::core::VecCoordId::position());
+    VecVec3d& v = *datax->beginEdit();
+    v.resize(this->m_edgeList.getValue().size()*3+1);
+
+
+    for(unsigned int i=0; i< this->m_edgeList.getValue().size(); i++){
+            updateBezierPoints(x,i,v);
+
+    }
+    datax->endEdit();
+}
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigned int index, VecVec3d& v){
+
+    // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
+    const Real& _L = this->m_lengthList.getValue()[index];
+
+
+    /// \todo remove call to computeTransform2 => make something faster !
+    Transform global_H_local0, global_H_local1;
+    computeTransform2(index,  global_H_local0,  global_H_local1, x);
+
+    //Mechanical Object to stock Bezier points
+
+
+    v[index*3] =global_H_local0.getOrigin(); //P0
+    v[index*3+1]=global_H_local1.getOrigin(); //P1
+    v[index*3+2]= v[index*3] + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0); //P2
+    v[index*3+3]= v[index*3+1] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P3
+
 
 }
 

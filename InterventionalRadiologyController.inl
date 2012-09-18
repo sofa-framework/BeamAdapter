@@ -43,6 +43,7 @@
 #include <sofa/core/objectmodel/KeypressedEvent.h>
 #include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
+#include <sofa/helper/AdvancedTimer.h>
 
 
 
@@ -884,6 +885,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //// STEP 1
     ////find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
+    sofa::helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
 //    int last_instrument=0; //commented to remove compilation warning
     sofa::helper::vector<Real> xbegin;
@@ -910,6 +912,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
     }
 
+
     //// SOME VERIF OF STEP 1
     // if the totalLength is 0, move the first instrument
     if(totalLengthCombined<0.0001)
@@ -920,6 +923,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         applyInterventionalRadiologyController();
         return;
     }
+    sofa::helper::AdvancedTimer::stepEnd("step1");
+
 
     //// STEP 2:
     //// get the noticeable points that need to be simulated
@@ -927,9 +932,10 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     // Fill=> newCurvAbs which provides a vector with curvilinear abscissa of each simulated node
     //     => id_instrument_table which provides for each simulated node, the id of all instruments which belong this node
     //     => xbegin (theoritical curv abs of the beginning point of the instrument (could be negative) xbegin= xtip - intrumentLength)
+    sofa::helper::AdvancedTimer::stepBegin("step2");
     sofa::helper::vector< sofa::helper::vector<int> > id_instrument_table;
     this->interventionalRadiologyComputeSampling(newCurvAbs,id_instrument_table, xbegin);
-
+    sofa::helper::AdvancedTimer::stepEnd("step2");
 
 
 
@@ -937,6 +943,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     ////STEP 3
        // Re-interpolate the positions and the velocities
     /////////////////////////
+    sofa::helper::AdvancedTimer::stepBegin("step3");
     unsigned int nbeam=newCurvAbs.size()-1; // number of simulated beams
     unsigned int nnode=newCurvAbs.size(); // number of simulated nodes
 
@@ -1040,7 +1047,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
 
     }
-
+    sofa::helper::AdvancedTimer::stepEnd("step3");
 
 
  ////STEP 4
@@ -1048,6 +1055,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
  /////////////////////////
     //const sofa::helper::vector<sofa::core::topology::BaseMeshTopology::Edge>* edgeTopo = this->_topology->getEdges();
     // TODO: verifier que les edges sont bien "ordonnés"
+    sofa::helper::AdvancedTimer::stepBegin("step4");
     unsigned int numEdges= numControlledNodes-1;
 
     // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
@@ -1087,11 +1095,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             }
         }
     }
-
+    sofa::helper::AdvancedTimer::stepEnd("step4");
 
     ////STEP 5
     // Fix the not simulated nodes
     /////////////////////////
+    sofa::helper::AdvancedTimer::stepBegin("step5");
     unsigned int first_simulated_node = numControlledNodes - nbeam;
     fixFirstNodesWithUntil(first_simulated_node);
 
@@ -1100,6 +1109,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     nodeCurvAbs = newCurvAbs;
     id_instrument_curvAbs_table = id_instrument_table;
+    sofa::helper::AdvancedTimer::stepEnd("step5");
 
     if (this->f_printLog.getValue()){
 		std::cout<<"id_instrument_curvAbs_table = \n";
