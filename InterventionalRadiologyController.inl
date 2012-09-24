@@ -69,6 +69,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , speed(initData(&speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
 , startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
 , threshold(initData(&threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
+, m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 {
     //edgeSetInNode=true;
     _fixedConstraint = NULL;
@@ -334,17 +335,6 @@ void InterventionalRadiologyController<DataTypes>::onMouseEvent(core::objectmode
 //    rot_instrument[idx] += PosXcorr;
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 template <class DataTypes>
@@ -620,11 +610,12 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
 
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComputeSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table,
-                                                                               const sofa::helper::vector<Real> &xbegin)
+                                                                               const sofa::helper::vector<Real> &xbegin, const Real& xend)
 
 {
 
-    // Step 1 = put the noticeable points
+    // Step 1 = put the noticeable Nodes
+    double maxAbsLength=0.0;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
         helper::vector<Real> xP_noticeable_I;
@@ -638,12 +629,55 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
             if (curvAbs_xP>0.0)   // all the noticiable point that have a negative curv abs are not simulated => considered as outside of the patient...
             {
                 newCurvAbs.push_back(curvAbs_xP);
+
+                if (curvAbs_xP > maxAbsLength)
+                    maxAbsLength=curvAbs_xP;
             }
 
         }
     }
 
 
+
+
+
+
+    // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
+    // When there are rigid segments, # of dofs is different than # of edges and beams
+    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    int nb = rigidCurvAbs->size();
+
+    bool begin=true;
+    if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
+    {
+        RealConstIterator it;
+        for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
+        {
+            Real abs;
+            abs = *it++;
+            if (abs<xend) // verify that the rigidified part is not outside the model
+            {
+                if(begin)
+                {
+                    newCurvAbs.push_back(abs-this->step.getValue());
+                }
+                else
+                {
+                    if (abs+this->step.getValue()<maxAbsLength)
+                        newCurvAbs.push_back(abs+this->step.getValue());
+                }
+                begin = !begin;
+                newCurvAbs.push_back(abs);
+
+
+            }
+        }
+    }
+
+
+
+
+    // Step 2 => add the beams given the sampling parameters
 
     Real x_sampling = 0.0;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
@@ -693,12 +727,17 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
                                         sofa::helper::vector<int> &id_instrument_list, sofa::helper::vector<int> &removeEdge)
 {
 
+
     if(id_instrument_list.size() != x_point_list.size())
     {
                 if ( this->f_printLog.getValue() )
                         serr<<" pb: interventionalRadiologyCollisionControls : the list do not have the same size !!"<<sendl;
         return;
     }
+
+
+
+
 
 
 
@@ -712,11 +751,14 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     int first_instru_on_x = id_instrument_curvAbs_table[node][0];
 
     sofa::helper::vector<unsigned int> SegRemove;
+
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
         SegRemove.push_back(0);
 
+
     for (int i=x_point_list.size()-1; i>=0; i--)
     {
+
         //1.  we determin if the point is on a dropped part of the instrument
         int instrument_id = id_instrument_list[i];
 
@@ -766,6 +808,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     }
 
+
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
     {
         if(SegRemove[it]!=0)
@@ -775,6 +818,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
             removeEdge.push_back(SegRemove[it]);
         }
     }
+
 
 
 
@@ -885,13 +929,14 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //// STEP 1
     ////find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
+    Real xend;
     sofa::helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
 //    int last_instrument=0; //commented to remove compilation warning
     sofa::helper::vector<Real> xbegin;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
-        Real xend= this->xtip.getValue()[i];
+         xend= this->xtip.getValue()[i];
         Real xb = xend - this->m_instrumentsList[i]->getRestTotalLength();
         xbegin.push_back(xb);
 
@@ -911,7 +956,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
         }
     }
-
 
     //// SOME VERIF OF STEP 1
     // if the totalLength is 0, move the first instrument
@@ -934,7 +978,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     //     => xbegin (theoritical curv abs of the beginning point of the instrument (could be negative) xbegin= xtip - intrumentLength)
     sofa::helper::AdvancedTimer::stepBegin("step2");
     sofa::helper::vector< sofa::helper::vector<int> > id_instrument_table;
-    this->interventionalRadiologyComputeSampling(newCurvAbs,id_instrument_table, xbegin);
+    this->interventionalRadiologyComputeSampling(newCurvAbs,id_instrument_table, xbegin, totalLengthCombined);
     sofa::helper::AdvancedTimer::stepEnd("step2");
 
 
@@ -1102,7 +1146,62 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     /////////////////////////
     sofa::helper::AdvancedTimer::stepBegin("step5");
     unsigned int first_simulated_node = numControlledNodes - nbeam;
+
+    //1. Fix the nodes (beginning of the instruments) that are not "out"
     fixFirstNodesWithUntil(first_simulated_node);
+
+    //2. Fix the node that are "fixed"
+    // When there are rigid segments, # of dofs is different than # of edges and beams
+    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+
+    bool rigid=false;
+    unsigned int nbRigidAbs = rigidCurvAbs->size();
+    if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
+    {
+        RealConstIterator it = rigidCurvAbs->begin();
+
+        for (unsigned int i=0; i<newCurvAbs.size(); i++)
+        {
+            std::cout<<"it "<<(*it)<<std::endl;
+            if (newCurvAbs[i] < ((*it)+0.001) && newCurvAbs[i] > ((*it)-0.001)) // node= border of the rigid segment
+            {
+                std::cout<<" border dtected"<<std::endl;
+
+                std::cout<<"  -  abs_curv ="<<  newCurvAbs[i]<<" i="<<i<<" rigid="<<rigid<<std::endl;
+
+                if (!rigid)
+                {
+                    rigid=true;
+                    _fixedConstraint->addConstraint(first_simulated_node+i);
+                }
+                else
+                {
+                    _fixedConstraint->addConstraint(first_simulated_node+i);
+                    rigid=false;
+                }
+                it++;
+
+                std::cout<<" rigidCurvAbs->end() ="<<(*rigidCurvAbs->end())<<" it="<<(*it)<<std::endl;
+                if(it==rigidCurvAbs->end())
+                    break;
+
+
+            }
+            else
+            {
+                std::cout<<"abs_curv ="<<  newCurvAbs[i]<<" i="<<i<<" rigid="<<rigid<<std::endl;
+                if(rigid)
+                    _fixedConstraint->addConstraint(first_simulated_node+i);
+            }
+
+        }
+
+    }
+
+
+
+
+
 
 
     ///////////// BUF id_instrument_curvAbs_table and nodeCurvAbs
@@ -1116,6 +1215,9 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 		for (unsigned int i=0; i<id_instrument_curvAbs_table.size();i++)
 			std::cout<<id_instrument_curvAbs_table[i]<<" end control"<<std::endl;
     }
+
+
+
 
 
 
@@ -1226,6 +1328,19 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 
             }
         }
+
+        if(listNewNode.size() ==0)
+        {
+            std::cerr<<" \n \n ERROR: no instrument find for curvAbs"<<newCurvAbs[i]<<std::endl;
+            Real xend= this->xtip.getValue()[0];
+            Real xbegin = xend - this->m_instrumentsList[0]->getRestTotalLength();
+
+            std::cerr<<"Test for instrument [0] xend="<<xend<<"   xbegin"<<xbegin<<std::endl;
+        }
+
+
+
+
         id_instrument_table.push_back(listNewNode);
 
     }

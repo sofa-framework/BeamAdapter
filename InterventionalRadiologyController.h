@@ -97,6 +97,9 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
+
+    typedef typename helper::set<Real>::const_iterator RealConstIterator;
+
 protected:
 
     //conditional elements for construction of InterventionalRadiologyController
@@ -108,6 +111,9 @@ public:
     /////////////// Point & Line Activer interface
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
+
+       // std::cout<<"activePoint is called : "<<activated_Points_buf<<std::endl;
+
 
 
          return activated_Points_buf[index];
@@ -221,7 +227,7 @@ protected:
     void applyInterventionalRadiologyController(void);
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     void interventionalRadiologyComputeSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table,
-                                                const sofa::helper::vector<Real> &xBegin);
+                                                const sofa::helper::vector<Real> &xBegin, const Real& xEnd);
     void sortCurvAbs(sofa::helper::vector<Real> &CurvAbs,  sofa::helper::vector< sofa::helper::vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const sofa::helper::vector<Real>& newNodeCurvAbs, sofa::helper::vector<Real>& modifiedNodeCurvAbs,
                           const sofa::helper::vector< sofa::helper::vector<int> >& newTable);
@@ -238,7 +244,7 @@ protected:
     Data<Real> speed;
     Data<Coord> startingPos;
     Data<Real> threshold;
-
+    Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
 
     bool FF, RW;
     sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *_fixedConstraint;

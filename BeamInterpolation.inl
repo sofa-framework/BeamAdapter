@@ -886,7 +886,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 {
 
 
-    Vec3 P0,P1,P2,P3,dP01, dP12;
+    Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
 
     // find the spline points
     P0=global_H_local0.getOrigin();
@@ -902,11 +902,12 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
     dP01 = P1-P0;
     dP12 = P2-P1;
+    dP03 = P3-P0;
 
 
 
 
-    if(dP01*dP12<0.0)
+    if(dP01*dP12<0.0 && dP03.norm()<0.4*L)
     {
 
         // The beam is very compressed => it leads to a non correct interpolation using spline

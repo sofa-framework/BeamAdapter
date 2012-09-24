@@ -68,7 +68,9 @@ typename AdaptiveBeamContactMapper<TCollisionModel,DataTypes>::MMechanicalState*
     InMechanicalState* instate = model->getMechanicalState();
     if (instate!=NULL)
     {
-        simulation::Node* parent = dynamic_cast<simulation::Node*>(instate->getContext());
+
+        BaseContext* instateContext= instate->getContext();
+        simulation::Node* parent = dynamic_cast<simulation::Node*>(instateContext);
 		BeamInterpolation<InDataTypes>* _interpolation;
 		instate->getContext()->get(_interpolation);
         if (parent==NULL )
@@ -81,7 +83,8 @@ typename AdaptiveBeamContactMapper<TCollisionModel,DataTypes>::MMechanicalState*
             std::cerr << "ERROR: AdaptiveBeamContactMapper only works if having BeamInterpolation .\n";
             return NULL;
         }
-        child = parent->createChild(name);
+        simulation::Node::SPtr childPtr= parent->createChild(name);
+        child = childPtr.get();
         parent->addChild(child); child->updateSimulationContext();
         typename MMechanicalObject::SPtr outmodel = sofa::core::objectmodel::New<MMechanicalObject>();
         child->addObject(outmodel);
@@ -98,7 +101,8 @@ typename AdaptiveBeamContactMapper<TCollisionModel,DataTypes>::MMechanicalState*
             std::cerr << "ERROR: AdaptiveBeamContactMapper only works for scenegraph scenes.\n";
             return NULL;
         }
-        child = parent->createChild(name);
+        simulation::Node::SPtr childPtr=  parent->createChild(name);
+        child =childPtr.get();
         parent->addChild(child); child->updateSimulationContext();
         typename MMechanicalObject::SPtr outmodel = sofa::core::objectmodel::New<MMechanicalObject>();
 

@@ -78,7 +78,8 @@ typename MultiAdaptiveBeamContactMapper<TCollisionModel,DataTypes>::MMechanicalS
             return NULL;
         }
 
-        child = parent->createChild(name);
+        simulation::Node::SPtr childPtr=  parent->createChild(name);
+        child =childPtr.get();
         parent->addChild(child); child->updateSimulationContext();
         typename MMechanicalObject::SPtr outmodel = sofa::core::objectmodel::New<MMechanicalObject>();
         child->addObject(outmodel);
@@ -98,8 +99,8 @@ typename MultiAdaptiveBeamContactMapper<TCollisionModel,DataTypes>::MMechanicalS
             std::cerr << "ERROR: MultiAdaptiveBeamContactMapper only works for scenegraph scenes.\n";
             return NULL;
         }
-
-        child = parent->createChild(name);
+        simulation::Node::SPtr childPtr=  parent->createChild(name);
+        child =childPtr.get();
         parent->addChild(child); child->updateSimulationContext();
         typename MMechanicalObject::SPtr outmodel = sofa::core::objectmodel::New<MMechanicalObject>();
         outmodel->useMask.setValue(true);
