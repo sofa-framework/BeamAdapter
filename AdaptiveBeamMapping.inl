@@ -61,7 +61,7 @@ using namespace sofa::defaulttype;
 
 
 template <class TIn, class TOut>
-void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* /*mparams*/ /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
+void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
     sofa::helper::AdvancedTimer::stepBegin("AdaptiveBeamMappingApply");
 	VecCoord& out = *dOut.beginEdit();
@@ -85,7 +85,22 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* /*mpar
 	}
     sofa::helper::AdvancedTimer::stepEnd("resizeToModel&Out");
 
-    m_adaptativebeamInterpolation->updateBezierPoints(in);
+
+    sofa::core::MultiVecCoordId xfree = sofa::core::VecCoordId::freePosition();
+    sofa::core::MultiVecCoordId x = sofa::core::VecCoordId::position();
+
+    const sofa::core::ConstMultiVecCoordId &xId = mparams->x();
+    sofa::core::ConstVecId xtest = xId.getId(this->fromModel);
+
+    if( xtest == xfree.getId(this->fromModel))
+    {
+        std::cout<<"free Motion"<<std::endl;
+    }
+
+
+    std::cout<<" ***************** apply x=  "<<mparams->x()<<"  xId"<<xtest <<std::endl;
+
+    m_adaptativebeamInterpolation->updateBezierPoints(in, xtest);
 
     sofa::helper::AdvancedTimer::stepBegin("computeNewInterpolation");
 

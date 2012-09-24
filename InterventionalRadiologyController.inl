@@ -1371,13 +1371,6 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
 
 
 
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::applyController()
-{
-
-}
-
-
 
 
 

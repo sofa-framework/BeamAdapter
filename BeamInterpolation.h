@@ -182,7 +182,11 @@ public:
 
     void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
 
-    void updateBezierPoints( const VecCoord &x);
+
+    //vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
+    void updateBezierPoints( const VecCoord &x, sofa::core::ConstVecId &vId_Out);
+
+
     void updateBezierPoints( const VecCoord &x, unsigned int index, VecVec3d& v);
 
 

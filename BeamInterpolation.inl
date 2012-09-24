@@ -837,22 +837,26 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 }
 
 template<class DataTypes>
-void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x){
+void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::ConstVecId &vId_Out){
     //Mechanical Object to stock Bezier points.
+
+    std::cout<<" in updateBezierPoints vId_Out ="<<vId_Out<<std::endl;
+
+
     Data<VecVec3d>* datax = mStateNodes->write(sofa::core::VecCoordId::position());
-    VecVec3d& v = *datax->beginEdit();
-    v.resize(this->m_edgeList.getValue().size()*3+1);
+    VecVec3d& bezierPosVec = *datax->beginEdit();
+    bezierPosVec.resize(this->m_edgeList.getValue().size()*3+1);
 
 
     for(unsigned int i=0; i< this->m_edgeList.getValue().size(); i++){
-            updateBezierPoints(x,i,v);
+            updateBezierPoints(x,i,bezierPosVec);
 
     }
     datax->endEdit();
 }
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigned int index, VecVec3d& v){
+void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigned int index, VecVec3d& bezierPosVec){
 
     // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
     const Real& _L = this->m_lengthList.getValue()[index];
@@ -865,10 +869,10 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
     //Mechanical Object to stock Bezier points
 
 
-    v[index*3] =global_H_local0.getOrigin(); //P0
-    v[index*3+1]=global_H_local1.getOrigin(); //P1
-    v[index*3+2]= v[index*3] + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0); //P2
-    v[index*3+3]= v[index*3+1] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P3
+    bezierPosVec[index*3] =global_H_local0.getOrigin(); //P0
+    bezierPosVec[index*3+1]=global_H_local1.getOrigin(); //P1
+    bezierPosVec[index*3+2]= bezierPosVec[index*3] + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0); //P2
+    bezierPosVec[index*3+3]= bezierPosVec[index*3+1] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P3
 
 
 }

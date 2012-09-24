@@ -197,7 +197,7 @@ public:
 	/**
 	 * @brief Apply the controller modifications to the controlled MechanicalState.
 	 */
-	virtual void applyController(void);
+    virtual void applyController(void){      }
 
 	/**
 	 * @brief
@@ -258,7 +258,6 @@ protected:
 
 
     /////////// Interface for other Adaptive Control
-
 	sofa::core::topology::BaseMeshTopology* _topology;
 	sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
 	sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
@@ -268,6 +267,13 @@ protected:
 	virtual void computeVertexT();
 
 	Real edgeTLength;
+
+    /////// for rigidity control
+    sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments, prevRigidCurvSegments;
+    sofa::helper::vector< bool > rigidBeamList;
+    sofa::helper::vector<Transform> vec_global_H_gravityCenter;
+    std::map<Real, Transform> prevRigidTransforms;
+
 
 
 public:
