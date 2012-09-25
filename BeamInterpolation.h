@@ -176,15 +176,15 @@ public:
 
 	// spline base interpolation of points and transformation
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult) {
-        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true);
+        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, sofa::core::ConstVecCoordId::position());
     }
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute);
+    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId &vecXId);
 
     void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
 
 
     //vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
-    void updateBezierPoints( const VecCoord &x, sofa::core::ConstVecId &vId_Out);
+    void updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out);
 
 
     void updateBezierPoints( const VecCoord &x, unsigned int index, VecVec3d& v);

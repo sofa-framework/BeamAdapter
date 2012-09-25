@@ -86,30 +86,45 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparam
     sofa::helper::AdvancedTimer::stepEnd("resizeToModel&Out");
 
 
-    sofa::core::MultiVecCoordId xfree = sofa::core::VecCoordId::freePosition();
+
     sofa::core::MultiVecCoordId x = sofa::core::VecCoordId::position();
+    sofa::core::MultiVecCoordId xfree = sofa::core::VecCoordId::freePosition();
 
     const sofa::core::ConstMultiVecCoordId &xId = mparams->x();
-    sofa::core::ConstVecId xtest = xId.getId(this->fromModel);
+    sofa::core::ConstVecCoordId xtest = xId.getId(this->fromModel);
 
     if( xtest == xfree.getId(this->fromModel))
     {
-        std::cout<<"free Motion"<<std::endl;
+        std::cout<<" X_FREE MOTION DETECTED"<<std::endl;
+        sofa::core::VecCoordId xfree_in = sofa::core::VecCoordId::freePosition();
+        m_adaptativebeamInterpolation->updateBezierPoints(in, xfree_in);
+
     }
+    else if( xtest == x.getId(this->fromModel))
+    {
+        std::cout<<" X MOTION DETECTED"<<std::endl;
+        sofa::core::VecCoordId x_in = sofa::core::VecCoordId::position();
+        m_adaptativebeamInterpolation->updateBezierPoints(in, x_in);
+    }
+
 
 
     std::cout<<" ***************** apply x=  "<<mparams->x()<<"  xId"<<xtest <<std::endl;
 
-    m_adaptativebeamInterpolation->updateBezierPoints(in, xtest);
+
 
     sofa::helper::AdvancedTimer::stepBegin("computeNewInterpolation");
+
+    if(isSubMapping)
+        std::cout<<" SUBMAPPING: PointBeamDistribution="<<std::endl;
 
 	for (unsigned int i=0; i<pointBeamDistribution.size(); i++)
 	{
 		PosPointDefinition  ppd = pointBeamDistribution[i];
 		sofa::defaulttype::Vec<3, InReal> pos;
+        std::cout<<"(["<<ppd.beamId<<"]"<<ppd.baryPoint<<")"<<std::endl;
 		const Vec3 localPos(0.,ppd.baryPoint[1],ppd.baryPoint[2]);
-        m_adaptativebeamInterpolation->interpolatePointUsingSpline(ppd.beamId, ppd.baryPoint[0], localPos, in, pos,false);
+        m_adaptativebeamInterpolation->interpolatePointUsingSpline(ppd.beamId, ppd.baryPoint[0], localPos, in, pos, false, xtest);
 		if(isSubMapping){
 			if(idPointSubMap.size()>0)
 				out[idPointSubMap[i]] = pos;}

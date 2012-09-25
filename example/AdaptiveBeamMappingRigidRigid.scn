@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 -9.81 0" dt="0.01" showBehaviorModels="1" showCollisionModels="1" showBoundingCollisionModels="0" showForceFields="1">
+
+	<Node name="AdaptiveBeam">
+		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+		<BTDLinearSolver verbose="1"/>
+		<MechanicalObject template="Rigid" name="DOFs" position="0 0 0 0 0 0 1  0.5 0.5 0 0 0 0 1    1 0.5 0 0 0 0.7071068  0.7071068 "/> 
+		<Mesh name="lines" lines="0 1 1 2" /> 
+		<FixedConstraint name="FixedConstraint" indices="0" />
+		<!--<AdaptiveBeamController template="Rigid"/>-->
+		<BeamInterpolation name="BeamInterpolation" radius="0.1" /> 
+		<AdaptiveBeamForceFieldAndMass name="BeamForceField" massDensity="5"/> 
+		<LinearSolverConstraintCorrection />
+
+		<Node name="Collision">
+			<MechanicalObject name="CollisionDOFs" template="Rigid" />
+			<AdaptiveBeamMapping  useCurvAbs="1" interpolation="@../BeamInterpolation" points="1.1 0 0" input="@../DOFs" output="@CollisionDOFs" />
+			 <!--points="0 0 0  0.2 0 0  0.4 0 0  0.6 0 0  0.8 0 0"-->
+			<Node name="Visual">
+				<Object type="OglModel" name="VisualModel" fileMesh="mesh/cube.obj" color="red" scale="0.01"/>
+				<RigidMapping  input="@../CollisionDOFs" output="@VisualModel"/>
+			</Node>
+		</Node>
+	</Node>
+
+	<Node name="TestConstraint">
+		<MechanicalObject template="Rigid" name="test" position="0.9 0.4 0 0 0 0 1"/> 
+		<!--<Point/>-->
+	</Node>
+</Node>

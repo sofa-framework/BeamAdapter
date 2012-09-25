@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.01" showVisualModels="0" showBehaviorModels="0" showCollisionModels="1" showMappings="0" showForceFields="0" showWireFrame="0" gravity="0 0 -981">
+  
+  <!-- <InputEventReader listening="true" filename="/dev/input/by-id/usb-Microsoft_Microsoft®_2.4GHz_Transceiver_v5.0-event-mouse" /> -->
+  <!--<InputEventReader listening="true" filename="/dev/input/event3" />-->
+  
+  
+  <!-- <MasterConstraintSolver printLog="false" maxIterations="200" tolerance="1e-8" /> -->
+  <FreeMotionAnimationLoop />  
+  <LCPConstraintSolver maxIt="200" tolerance="1e-8" mu="0.1" build_lcp="false" displayDebug="false" printLog="false"/>
+  
+  
+  <Object type="CollisionPipeline" name="CollisionPipeline" depth="6" verbose="0" draw="0"/>
+  <Object type="BruteForceDetection" name="N2" />
+  <Object type="LocalMinDistance" name="Proximity" alarmDistance="0.3" contactDistance="0.15" angleCone="0.0" coneFactor="0.3"/>
+  <!--  <Object type="LocalMinDistance" name="Proximity" alarmDistance="2" contactDistance="0.2" angleCone="0.2"/> -->
+  <Object type="CollisionResponse" name="Response" response="FrictionContact" />
+  <Object type="CollisionGroup" name="Group" />
+  
+  <!-- Mesh Surface Model -->
+  <MeshVTKLoader name="vesselLoader" filename="bm_dec3.vtk" flipNormals="1" />
+
+  <Node name="Vessels">
+    <Object type="MechanicalObject" template="Rigid" scale="1"/>   
+    <Object type="MeshTopology" name="CollisionModel" src="@../vesselLoader" />
+	<MechanicalObject src="@../vesselLoader"  />
+    <Object type="Triangle"  simulated="0" moving="0" color="0.5 0.5 0.5 1.0" /> 
+    <Object type="Line" simulated="0" moving="0"/>
+    <Object type="Point" simulated="0" moving="0"/>
+  </Node>
+  
+  <!-- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -->
+  <Node name="topoLines_cath">
+    <WireRestShape template="Rigid" printLog="0" name="catheterRestShape" length="200"  straightLength="190" spireDiameter="20" spireHeight="0.0" tags="Cath"
+		   densityOfBeams="38 2" numEdges="400" numEdgesCollis="190 10"  youngModulus="5" youngModulusExtremity="5"/> 	
+    
+    <EdgeSetTopologyContainer name="meshLinesCath" />
+    <EdgeSetTopologyModifier   name="Modifier" />
+    <EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+    <EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+    <MechanicalObject template="Rigid" name="dofTopo1" />
+  </Node>	
+  
+  <Node name="topoLines_coils">
+    <WireRestShape template="Rigid" printLog="1" name="CoilRestShape" length="200"  straightLength="10" spireDiameter="6" spireHeight="0.22" tags="Coils"
+		   densityOfBeams="10 70" numEdges="400" numEdgesCollis="10 190"  youngModulus="9" youngModulusExtremity="9"/>
+    <EdgeSetTopologyContainer name="meshLinesCoils" />
+    <EdgeSetTopologyModifier   name="Modifier" />
+    <EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+    <EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+    <MechanicalObject template="Rigid" name="dofTopo3" />
+  </Node>	
+  
+  <Node name="InstrumentCombined">
+    <EulerImplicit rayleighStiffness="0.01" rayleighMass="0.03" printLog="false" />
+    <BTDLinearSolver verbose="0"/>
+    <RegularGrid name="meshLinesCombined"
+		 nx="80" ny="1" nz="1"
+		 xmin="0.0" xmax="1.0"
+		 ymin="0" ymax="0"
+		 zmin="1" zmax="1"
+		 />		
+    <MechanicalObject template="Rigid" name="DOFs" debugViewIndices="0"/> 
+    <!--<AdaptiveBeamController template="Rigid" interventionalRadiology="1" printLog="0" xtip="0.455 0.0679"  step="0.15" rotationInstrument="0 0" 
+			    controlledInstrument="0" tags="Control" 
+			    startingPos="66.4606 44.3883 46.4518 0.557086 -0.742781 0.371391 0"/> -->
+				
+	<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.455 0.0679"  step="0.15" rotationInstrument="0 0 " 
+			controlledInstrument="0" startingPos="66.4606 44.3883 47.4518 0.557086 -0.742781 0.371391 0" speed="0" instruments="InterpolCatheter  InterpolCoils" />						
+			
+    
+    <!--<AdaptiveBeamInterpolation name="InterpolCatheter" radius="0.16" straightRestShape="0"  printLog="0" tags="Cath" /> -->
+	<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="0.16" printLog="1"/> 
+
+    <AdaptiveBeamForceFieldAndMass name="CatheterForceField"  youngModulus="5" massDensity="0.00000005" poisson="0.1" tags="Cath"  interpolation="InterpolCatheter"/>    
+    
+    <!--<AdaptiveBeamInterpolation name="InterpolCoils" radius="0.07" straightRestShape="0"  printLog="0" tags="Coils"/> -->
+	<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.07" printLog="1"/>
+
+    <AdaptiveBeamForceFieldAndMass name="CoilsForceField"  youngModulus="9" massDensity="0.000000025"  tags="Coils"   interpolation="InterpolCoils"/>
+    
+    <LinearSolverConstraintCorrection printLog="false" wire_optimization="true" />
+    
+    <FixedConstraint name="FixedConstraint" indices="0" />
+    
+
+    <Node name="Collis">
+      <EdgeSetTopologyContainer name="collisEdgeSet" />
+      <EdgeSetTopologyModifier   name="colliseEdgeModifier" />
+      <MechanicalObject name="CollisionDOFs" debugViewIndices="0"/>
+	  <MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0"/> 
+      <!-- <AdaptiveBeamMapping  name="collisMap"  useCurvAbs="1" printLog="0" fromSeveralInterpolations="1" tags="Cath Coils"/> 	-->			
+      <Line proximity="0.0" group="1" selfCollision="1" LineActiverPath="../m_ircontroller"/>
+      <Point proximity="0.0" group="1" selfCollision="1" PointActiverPath="../m_ircontroller"/>
+    </Node>			
+	
+    
+    <Node name="VisuCatheter">
+      <MechanicalObject name="Quads" />
+      <QuadSetTopologyContainer  name="ContainerCath" />
+      <QuadSetTopologyModifier   name="Modifier" />
+      <QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+      <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+      <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.16" object1="topoLines_cath/meshLinesCath" object2="ContainerCath"   flipNormals="true" tags="Cath"/>
+      
+      <AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" tags="Cath" isMechanical="false"  interpolation="@../InterpolCatheter" />
+      <Node name="VisuOgl">
+			<OglShader vertFilename="shaders/generalRenderingShader.vert" fragFilename="shaders/generalRenderingShader.frag" />
+			<OglShaderDefineMacro id="BORDER_OPACIFYING" />
+			<OglShaderDefineMacro id="PHONG" />
+			<OglShaderDefineMacro id="DOUBLE_SIDED" />
+			<OglFloatVariable id="coeffAngle" value="0.1"/>
+			<OglFloatVariable id="border_alpha" value="0.3"/>
+			<OglFloatVariable id="border_gamma" value="0.001"/>
+			<OglModel premultipliedAlpha="1" name="Visual" material="texture Ambient 1 0.2 0.2 0.2 1.0 Diffuse 1 0.2 0.2 0.2 0.1 Specular 0 0.8 0.8 0.8 1.0 Emissive 0 0.25 0.05 0.05 0.0 Shininess 1 250"/>
+			<IdentityMapping object1="Quads" object2="Visual"/>
+      </Node>		
+    </Node>
+
+    
+    <Node name="VisuCoils">
+      <MechanicalObject name="Quads" />
+      <QuadSetTopologyContainer  name="ContainerCoils" />
+      <QuadSetTopologyModifier   name="Modifier" />
+      <QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+      <QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+      <Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.07" object1="topoLines_coils/meshLinesCoils" object2="ContainerCoils"  flipNormals="true" listening="true"  tags="Coils" /> 
+      <AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" tags="Coils" isMechanical="false"   interpolation="@../InterpolCoils"/>
+      <Node name="VisuOgl">
+	<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
+	<IdentityMapping object1="Quads" object2="Visual"/>
+      </Node>		
+    </Node>   
+
+  </Node>
+  
+  <Node name="VisuTriangles2" >
+    <MeshOffLoader name="trianglesLoader" filename="surfimp_totalinv.off" />
+    <OglModel src="@trianglesLoader" color="0.75 0.0 0.0 0.2" />
+  </Node>
+  
+</Node>
+

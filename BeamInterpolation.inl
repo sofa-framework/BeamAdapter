@@ -748,7 +748,7 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult,bool recompute)
+void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult,bool recompute, const sofa::core::ConstVecCoordId &vecXId)
 {
     if(recompute){
 
@@ -812,13 +812,13 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
         }
         else
         {
-            const VecVec3d& v = mStateNodes->read(sofa::core::ConstVecCoordId::position())->getValue();
+            const VecVec3d& v = mStateNodes->read(vecXId)->getValue();
             Vec3 P0,P1,P2,P3;
 
-            P0=v[edgeInList*3];
-            P3=v[edgeInList*3+3];
-            P1=v[edgeInList*3+1];
-            P2=v[edgeInList*3+2];
+            P0=v[edgeInList*4];
+            P1=v[edgeInList*4+1];
+            P2=v[edgeInList*4+2];
+            P3=v[edgeInList*4+3];
 
             Vec3 DP= P0 - P3;
 
@@ -837,15 +837,15 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 }
 
 template<class DataTypes>
-void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::ConstVecId &vId_Out){
+void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out){
     //Mechanical Object to stock Bezier points.
 
     std::cout<<" in updateBezierPoints vId_Out ="<<vId_Out<<std::endl;
 
 
-    Data<VecVec3d>* datax = mStateNodes->write(sofa::core::VecCoordId::position());
+    Data<VecVec3d>* datax = mStateNodes->write(vId_Out);
     VecVec3d& bezierPosVec = *datax->beginEdit();
-    bezierPosVec.resize(this->m_edgeList.getValue().size()*3+1);
+    bezierPosVec.resize(this->m_edgeList.getValue().size()*4);
 
 
     for(unsigned int i=0; i< this->m_edgeList.getValue().size(); i++){
@@ -869,10 +869,10 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
     //Mechanical Object to stock Bezier points
 
 
-    bezierPosVec[index*3] =global_H_local0.getOrigin(); //P0
-    bezierPosVec[index*3+1]=global_H_local1.getOrigin(); //P1
-    bezierPosVec[index*3+2]= bezierPosVec[index*3] + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0); //P2
-    bezierPosVec[index*3+3]= bezierPosVec[index*3+1] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P3
+    bezierPosVec[index*4] =global_H_local0.getOrigin(); //P0
+    bezierPosVec[index*4+3]=global_H_local1.getOrigin(); //P3
+    bezierPosVec[index*4+1]= bezierPosVec[index*4] + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0); //P1
+    bezierPosVec[index*4+2]= bezierPosVec[index*4+3] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P2
 
 
 }
