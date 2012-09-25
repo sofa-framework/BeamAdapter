@@ -61,6 +61,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _adaptiveinterpolation)
 , m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
+, m_curvatureList(initData(&m_curvatureList, "curvatureList", "List of the beams curvature (abscissa - curvature)"))
 , m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
 {
@@ -1131,14 +1132,18 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 	unsigned int nbBeams = m_adaptiveinterpolation->getNumBeams();
 	beamsCurvature.resize(nbBeams);
 
+	helper::WriteAccessor< Data< sofa::helper::vector<Vec2> > > curvatureList = m_curvatureList;
+	curvatureList.clear();
+	curvatureList.resize(nbBeams);
 	// Computing the curvature of each beam (from the previous timestep)
 	for(unsigned int b=0; b<nbBeams; ++b)
 	{
 		Real beamLength = m_adaptiveinterpolation->getLength(b);
+		m_adaptiveinterpolation->getAbsCurvXFromBeam(b, curvatureList[b][0]);
 		Transform Tnode0, Tnode1;
 		m_adaptiveinterpolation->computeTransform2(b, Tnode0, Tnode1, x);
 
-		beamsCurvature[b] = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
+		curvatureList[b][1] = beamsCurvature[b] = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
 	}
 
 	sofa::helper::vector<Real> newCurvAbs_notSecure;
