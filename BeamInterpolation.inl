@@ -840,7 +840,7 @@ template<class DataTypes>
 void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out){
     //Mechanical Object to stock Bezier points.
 
-    std::cout<<" in updateBezierPoints vId_Out ="<<vId_Out<<std::endl;
+//	std::cout<<" in updateBezierPoints vId_Out ="<<vId_Out<<std::endl;
 
 
     Data<VecVec3d>* datax = mStateNodes->write(vId_Out);
