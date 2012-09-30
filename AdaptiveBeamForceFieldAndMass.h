@@ -113,7 +113,7 @@ public:
 protected :
     /// pointer to the interpolation
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
-	/// pointer to the interpolation
+    /// pointer to the WireRestShape
 	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
 
 public:

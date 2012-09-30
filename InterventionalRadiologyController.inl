@@ -737,12 +737,6 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
 
 
-
-
-
-
-
-
       // we enter the point from the tip to the end of the combined instrument
 
     // x_abs_curv provides the value of the curv abs along the combined instrument
@@ -759,7 +753,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     for (int i=x_point_list.size()-1; i>=0; i--)
     {
 
-        //1.  we determin if the point is on a dropped part of the instrument
+        //1.  we determin if the poin ument
         int instrument_id = id_instrument_list[i];
 
         // x_max for the instrument that is controlled (not dropped part)
@@ -862,6 +856,81 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
         //std::cout<<" point "<<i<<" x_point = "<< x_point<< " instrument_id = "<<instrument_id<<" x_max_instrument ="<<x_max_instrument<<"  x_tip_instrument = "<<x_tip_instrument<<std::endl;
 
     }
+
+
+}
+
+
+template <class DataTypes>
+void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table)
+{
+    std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
+
+// 0. useful for rigidification
+    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+
+    unsigned int nbRigidAbs = rigidCurvAbs->size();
+
+    if(curv_abs.size() != id_instrument_table.size())
+        serr<<" id_instrument_table.size() is not equal to curv_abs.size()"<<sendl;
+
+
+// 1. clear the information related to the collision for each instrument
+   for (unsigned int instr=0; instr<m_instrumentsList.size(); instr++)
+       m_instrumentsList[instr]->clearCollisionOnBeam();
+
+// 2.   for each node along the structure, detect the "visible" instrument (the one with the largest section is supposed to be the first in the list)
+//      if visible, the beam is assigned for collision on this instrument
+
+    for (unsigned int p=0; p<id_instrument_table.size()-1; p++)
+    {
+        unsigned int instr0;
+        if(id_instrument_table.size()==1 )
+        {
+            instr0=id_instrument_table[0][0];
+            m_instrumentsList[ instr0 ]->addCollisionOnBeam(p);
+        }
+        else
+        {
+            instr0=id_instrument_table[p+1][0];// get the first instrument
+
+
+        ////// beam p should be assigned to instrument num instr0
+
+ //3 .  Before assignement, verification that the beam is not on a rigidified part !
+            bool rigid=false;
+            RealConstIterator it = rigidCurvAbs->begin();
+            std::cout<<"( *it) begin "<<(*it)<<" (*it) end"<< (* rigidCurvAbs->end())<<std::endl;
+            while (it!=rigidCurvAbs->end())
+            {
+                std::cout<<" curv_abs[p+1] =  "<<curv_abs[p+1]<<" (*it)"<<(*it)<<std::endl;
+                if(curv_abs[p+1] <= (*it) )
+                {
+                    break;
+                }
+                else
+                {
+                    std::cout<<"++++++++++\n Rigidification detected "<<std::endl;
+                    rigid = !rigid;
+                    it++;
+                }
+            }
+
+            if (rigid)
+            {
+                std::cout<<" beam "<<p<<" is detected to be rigidified"<<std::endl;
+            }
+
+            if(!rigid)
+            {
+                m_instrumentsList[ instr0 ]->addCollisionOnBeam(p);
+            }
+        }
+
+    }
+
+
+
 
 
 }
@@ -1197,6 +1266,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
 
     }
+
+
+    ////STEP 6
+    // Activate Beam List for collision of each instrument
+    /////////////////////////
+    activateBeamListForCollision(newCurvAbs,id_instrument_table);
 
 
 

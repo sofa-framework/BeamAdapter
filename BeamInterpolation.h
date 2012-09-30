@@ -123,6 +123,7 @@ public:
 	, m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
 	, m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
 	, m_curvAbsList(initData(&m_curvAbsList, "curvAbsList", ""))
+    , m_beamCollision(initData(&m_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
 	, _topology(NULL)
 	, _mstate(NULL)
 	{
@@ -179,6 +180,9 @@ public:
         interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, sofa::core::ConstVecCoordId::position());
     }
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId &vecXId);
+
+
+    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
 
     void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
 
@@ -369,6 +373,22 @@ public:
 	}
 
 
+    /// Set collision information
+    void addCollisionOnBeam(unsigned int b)
+    {
+        sofa::helper::vector<int>& beamCollisList = (*m_beamCollision.beginEdit());
+        beamCollisList.push_back(b);
+        m_beamCollision.endEdit();
+    }
+
+    void clearCollisionOnBeam()
+    {
+        sofa::helper::vector<int>& beamCollisList = (*m_beamCollision.beginEdit());
+        beamCollisList.clear();
+        m_beamCollision.endEdit();
+    }
+
+
 protected :
 	/// DATA INPUT (that could change in real-time)
     sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes>::SPtr mStateNodes;
@@ -388,6 +408,11 @@ protected :
 	Data< vector< Transform > > m_DOF1TransformNode1;
 
     Data< vector< Vec2 > > m_curvAbsList;
+
+
+    ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
+    Data< sofa::helper::vector<int> > m_beamCollision;
+
 
 	/// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
 	BeamSection _constantRadius;

@@ -797,6 +797,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     }
     else
     {
+        // no need to recompute the positions of the Spline  => we will read their value in the vector which id is vecXId
 
         const Real& _L = this->m_lengthList.getValue()[edgeInList];
 
@@ -835,6 +836,28 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     }
 
 }
+
+
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t )
+{
+
+    const VecVec3d& splinePos = mStateNodes->read(vecXId)->getValue();
+    Vec3 P0,P1,P2,P3;
+
+    P0=splinePos[edgeInList*4];
+    P1=splinePos[edgeInList*4+1];
+    P2=splinePos[edgeInList*4+2];
+    P3=splinePos[edgeInList*4+3];
+
+    Real bx=baryCoord;
+
+    t  = P0*-3*(1-bx)*(1-bx) + P1*(3-12*bx+ 9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*3*bx*bx;
+
+
+}
+
 
 template<class DataTypes>
 void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out){

@@ -21,22 +21,18 @@ SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 
 int ImplicitSurfaceAdaptiveConstraintClass = core::RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
 #ifndef SOFA_FLOAT
-.add< ImplicitSurfaceAdaptiveConstraint<Vec3dTypes> >()
 .add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >()
 #endif
 #ifndef SOFA_DOUBLE
-//.add< ImplicitSurfaceAdaptiveConstraint<Vec3fTypes> >()
-//.add< ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes> >()
+.add< ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes> >()
 #endif
 ;
 
 #ifndef SOFA_FLOAT
-template class ImplicitSurfaceAdaptiveConstraint<Vec3dTypes>;
 template class ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes>;
 #endif
 #ifndef SOFA_DOUBLE
-//template class ImplicitSurfaceAdaptiveConstraint<Vec3fTypes>;
-//template class ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes>;
+template class ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes>;
 #endif
 
 } // namespace constraint

@@ -233,6 +233,8 @@ protected:
                           const sofa::helper::vector< sofa::helper::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
 
+    void activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table);
+
 
 
 
@@ -276,75 +278,6 @@ protected:
 
 
 
-public:
-
-	/** Creation of InterventionalRadiologyController
-	  * The creation of InterventionalRadiologyController require several Interpolations
-	  * Generally, Interpolations are placed in the same context
-
-
-	template<class T>
-	static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
-	{
-		bool canCreate = false;
-		vector< WireBeamInterpolation<DataTypes>* > _instrumentlist;
-
-		if(arg->getAttribute("instruments",NULL) != NULL){
-			canCreate = sofa::core::objectmodel::VectorObjectRef::parseAll< WireBeamInterpolation<DataTypes> >("instruments", arg,_instrumentlist);
-		}
-
-		if(arg->getAttribute("instruments",NULL) == NULL){
-			context->get< WireBeamInterpolation<DataTypes> > ( &_instrumentlist, core::objectmodel::BaseContext::SearchUp );
-		}
-
-		if( _instrumentlist.empty() )
-			return false;
-
-        return core::objectmodel::BaseObject::canCreate(obj, context, arg);
-	}
-
-
-        template<class T>
-        static typename T::SPtr  create(T* , core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-	{
-		bool canCreate = false;
-		vector< WireBeamInterpolation<DataTypes>* > _instrumentlist;
-		sofa::helper::vector<std::string> _instrumentspath;
-
-		if(arg->getAttribute("instruments",NULL) == NULL){
-			context->get< WireBeamInterpolation<DataTypes> > ( &_instrumentlist, core::objectmodel::BaseContext::SearchUp );
-			_instrumentspath.clear();
-			if(!_instrumentlist.empty()){
-				for(unsigned int i=0;i<_instrumentlist.size();i++)
-				{
-					std::string _inspath="@"+_instrumentlist[i]->getName();
-					_instrumentspath.push_back(_inspath);
-				}
-			}
-		}
-		else{
-			canCreate = sofa::core::objectmodel::VectorObjectRef::parseAll< WireBeamInterpolation<DataTypes> >("instruments", arg,_instrumentlist);
-			_instrumentspath.clear();
-			if(!_instrumentlist.empty()){
-				for(unsigned int i=0;i<_instrumentlist.size();i++)
-				{
-					std::string _inspath="@"+_instrumentlist[i]->getName();
-					_instrumentspath.push_back(_inspath);
-				}
-			}
-		}
-
-		std::cout<<"=============== SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H create _instrumentspath "<<_instrumentspath.size()<<" "<<_instrumentspath<<std::endl;
-                typename T::SPtr obj = sofa::core::objectmodel::New<T>(_instrumentlist);
-		if (context) context->addObject(obj);
-		if (arg) obj->parse(arg);
-		obj->setPathToInstruments(_instrumentspath);
-
-                return obj;
-
-
-	}
-          */
 
 
 

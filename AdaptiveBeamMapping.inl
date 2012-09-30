@@ -99,6 +99,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparam
         sofa::core::VecCoordId xfree_in = sofa::core::VecCoordId::freePosition();
         m_adaptativebeamInterpolation->updateBezierPoints(in, xfree_in);
 
+
     }
     else if( xtest == x.getId(this->fromModel))
     {
