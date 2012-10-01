@@ -210,7 +210,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 
 
                 potentialContact pt;
-                unsigned int bi=(unsigned int) floor(p/10);
+                unsigned int bi=(unsigned int) floor(p/10.0);
                 pt.beamId = listBeam[bi];
                 pt.posSampleId = p;
                 Real bc = (p+1-(10*bi))/10.0;
@@ -295,7 +295,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     if (all_activated)
     {
         list_B.clear();
-        for ( int i=0; i<numBeams; i++)
+        for ( unsigned int i=0; i<numBeams; i++)
             list_B.push_back(i);
 
     }
@@ -495,7 +495,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const sofa::core::ConstraintParams* cParams, defaulttype::BaseVector *v, const DataVecCoord &/*x1*/, const DataVecCoord &x2
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const sofa::core::ConstraintParams* /*cParams*/, defaulttype::BaseVector *v, const DataVecCoord &/*x1*/, const DataVecCoord &x2
                                                                                , const DataVecDeriv &/*v1*/, const DataVecDeriv &/*v2*/)
 {
 #ifdef DEBUG
