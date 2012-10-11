@@ -39,7 +39,8 @@ HEADERS += \
 AdaptiveBeamLengthConstraint.h \
 AdaptiveBeamLengthConstraint.inl \
 ImplicitSurfaceAdaptiveConstraint.h \
-ImplicitSurfaceAdaptiveConstraint.inl
+ImplicitSurfaceAdaptiveConstraint.inl \
+UnbuiltGenericConstraintSolver.h 
 
 
 SOURCES += \
@@ -59,7 +60,8 @@ MultiAdaptiveBeamContactMapper.cpp\
                 SutureController.cpp	\
                 AdaptiveBeamConstraint.cpp          \
 AdaptiveBeamLengthConstraint.cpp \
-ImplicitSurfaceAdaptiveConstraint.cpp
+ImplicitSurfaceAdaptiveConstraint.cpp \
+UnbuiltGenericConstraintSolver.cpp
 
 	  
 		  
