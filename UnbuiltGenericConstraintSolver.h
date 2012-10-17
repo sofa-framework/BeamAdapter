@@ -40,6 +40,8 @@
 #include <sofa/helper/set.h>
 #include <sofa/helper/map.h>
 
+#include "initBeamAdapter.h"
+
 namespace sofa
 {
 
@@ -56,14 +58,13 @@ using core::behavior::ConstraintResolution;
 
 class UnbuiltGenericConstraintSolver;
 
-class SOFA_CONSTRAINT_API UnbuiltGenericConstraintProblem : public GenericConstraintProblem
+class SOFA_BEAMADAPTER_API UnbuiltGenericConstraintProblem : public GenericConstraintProblem
 {
 public:
-
 	// For unbuilt version :
-	SparseMatrix<double> Wdiag;
-        std::list<unsigned int> constraints_sequence;
-	std::vector<core::behavior::BaseConstraintCorrection*> cclist_elem1, cclist_elem2;
+    SparseMatrix<double> Wdiag;
+    std::list<unsigned int> constraints_sequence;
+    std::vector<core::behavior::BaseConstraintCorrection*> cclist_elem1, cclist_elem2;
 
     UnbuiltGenericConstraintProblem(const GenericConstraintProblem& cp)
         : GenericConstraintProblem(cp)
@@ -74,20 +75,19 @@ public:
     }
     ~UnbuiltGenericConstraintProblem() { this->freeConstraintResolutions(); }
 
-
     void unbuiltGaussSeidel(double timeout=0, UnbuiltGenericConstraintSolver* solver = NULL);
 };
 
 
 
-class SOFA_CONSTRAINT_API UnbuiltGenericConstraintSolver : public GenericConstraintSolver
+class SOFA_BEAMADAPTER_API UnbuiltGenericConstraintSolver : public GenericConstraintSolver
 {
 	typedef std::vector<core::behavior::BaseConstraintCorrection*> list_cc;
 	typedef std::vector<list_cc> VecListcc;
 	typedef sofa::core::MultiVecId MultiVecId;
 
 public:
-    SOFA_CLASS(UnbuiltGenericConstraintSolver, sofa::component::constraintset::GenericConstraintSolver);
+    SOFA_CLASS(UnbuiltGenericConstraintSolver, GenericConstraintSolver);
 protected:
     UnbuiltGenericConstraintSolver();
     virtual ~UnbuiltGenericConstraintSolver();
@@ -102,15 +102,8 @@ public:
 	Data<bool> scaleTolerance, allVerified, schemeCorrection;
 	Data<std::map < std::string, sofa::helper::vector<double> > > graphErrors, graphConstraints /*, graphForces */;
 
-
-private:
-
+protected:
     UnbuiltGenericConstraintProblem *unbuit_current_cp;
-
-    //UnbuiltGenericConstraintProblem cp1, cp2, cp3;
-    //UnbuiltGenericConstraintProblem *current_cp, *last_cp;
-    //std::vector<core::behavior::BaseConstraintCorrection*> constraintCorrections;
-
 };
 
 } // namespace constraintset

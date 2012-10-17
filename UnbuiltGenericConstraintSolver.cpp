@@ -53,35 +53,8 @@ namespace component
 namespace constraintset
 {
 
-
-#define MAX_NUM_CONSTRAINTS 3000
-//#define DISPLAY_TIME
-
 UnbuiltGenericConstraintSolver::UnbuiltGenericConstraintSolver()
-: displayTime(initData(&displayTime, false, "displayTime","Display time for each important step of UnbuiltGenericConstraintSolver."))
-, maxIt( initData(&maxIt, 1000, "maxIterations", "maximal number of iterations of the Gauss-Seidel algorithm"))
-, tolerance( initData(&tolerance, 0.001, "tolerance", "residual error threshold for termination of the Gauss-Seidel algorithm"))
-, sor( initData(&sor, 1.0, "sor", "Successive Over Relaxation parameter (0-2)"))
-, scaleTolerance( initData(&scaleTolerance, true, "scaleTolerance", "Scale the error tolerance with the number of constraints"))
-, allVerified( initData(&allVerified, false, "allVerified", "All contraints must be verified (each constraint's error < tolerance)"))
-, schemeCorrection( initData(&schemeCorrection, false, "schemeCorrection", "Apply new scheme where compliance is progressively corrected"))
-, graphErrors( initData(&graphErrors,"graphErrors","Sum of the constraints' errors at each iteration"))
-, graphConstraints( initData(&graphConstraints,"graphConstraints","Graph of each constraint's error at the end of the resolution"))
-//, graphForces( initData(&graphForces,"graphForces","Graph of each constraint's force at each step of the resolution"))
 {
-	addAlias(&maxIt, "maxIt");
-
-	graphErrors.setWidget("graph");
-	graphErrors.setGroup("Graph");
-
-	graphConstraints.setWidget("graph");
-	graphConstraints.setGroup("Graph");
-
-    current_cp = &cp1;
-    last_cp=NULL;
-
-//	graphForces.setWidget("graph");
-//	graphForces.setGroup("Graph2");
 }
 
 UnbuiltGenericConstraintSolver::~UnbuiltGenericConstraintSolver()
@@ -90,8 +63,6 @@ UnbuiltGenericConstraintSolver::~UnbuiltGenericConstraintSolver()
 
 bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *cParams, MultiVecId /*res1*/, MultiVecId /*res2*/)
 {
-
-
     unbuit_current_cp = new UnbuiltGenericConstraintProblem( (*current_cp) );
 	unsigned int numConstraints = 0;
 
