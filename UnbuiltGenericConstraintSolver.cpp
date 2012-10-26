@@ -53,9 +53,10 @@ namespace component
 namespace constraintset
 {
 
-UnbuiltGenericConstraintSolver::UnbuiltGenericConstraintSolver()
+UnbuiltGenericConstraintSolver::UnbuiltGenericConstraintSolver() : GenericConstraintSolver()
 {
 }
+
 
 UnbuiltGenericConstraintSolver::~UnbuiltGenericConstraintSolver()
 {
@@ -188,7 +189,11 @@ bool UnbuiltGenericConstraintSolver::solveSystem(const core::ConstraintParams * 
 
 	if(this->f_printLog.getValue())
     {
-        std::cout<<"no display of the unbuilt system currently available"<<std::endl;
+        std::cout<<"i \t \t dfree \t \t f"<<std::endl;
+        for (unsigned int i=0; i<unbuit_current_cp->getDimension(); i++)
+        {
+            std::cout<<""<<i<<"\t \t "<<unbuit_current_cp->getDfree()[i]<<" \t \t"<<unbuit_current_cp->getF()[i]<<std::endl;
+        }
         //afficheLCP(unbuit_current_cp->getDfree(), unbuit_current_cp->getW(), unbuit_current_cp->getF(), unbuit_current_cp->getDimension());
     }
 
@@ -203,8 +208,11 @@ bool UnbuiltGenericConstraintSolver::solveSystem(const core::ConstraintParams * 
 // unbuilt Gauss Seidel: the
 void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, UnbuiltGenericConstraintSolver* solver)
 {
+
 	if(!dimension) 
 		return;
+
+
 
 	double t0 = (double)CTime::getTime() ;
 	double timeScale = 1.0 / (double)CTime::getTicksPerSec();
@@ -257,8 +265,10 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 
     bool warning=false;
 
-	for(i=0; i<maxIterations; i++)
+    for(i=0; i<this->maxIterations; i++)
 	{
+
+
 		bool constraintsAreVerified = true;
         if(sor != 1.0)
 		{
@@ -294,6 +304,7 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 			if(cclist_elem2[j]) cclist_elem2[j]->addConstraintDisplacement(d, j, j+nb-1);
 
 			//3. the specific resolution of the constraint(s) is called 
+
 
 
 
