@@ -12,9 +12,10 @@ ROOT Hips
 
 
 MOTION
-Frames:    3
-Frame Time: 0.05
+Frames:    5
+Frame Time: 0.01
 0
-2
-4
-6
+-2
+0
+1
+1
