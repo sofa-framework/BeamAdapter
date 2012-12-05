@@ -40,6 +40,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <string>
 #include <sofa/core/Mapping.inl>
+#include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/simulation/common/AnimateBeginEvent.h>
 

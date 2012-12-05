@@ -19,6 +19,8 @@
 #include <sofa/helper/system/thread/CTime.h>
 #include <sofa/component/constraintset/UnilateralInteractionConstraint.h>
 
+#include <sofa/core/visual/VisualParams.h>
+
 
 double TimeResolution = 0.0;
 double TimeCount = 0.0;

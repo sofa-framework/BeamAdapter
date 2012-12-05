@@ -63,6 +63,8 @@
 #include <sofa/helper/gl/Axis.h>
 //#include <sofa/simulation/common/Node.h>
 
+#include <sofa/core/visual/VisualParams.h>
+
 
 
 

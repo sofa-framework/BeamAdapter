@@ -64,7 +64,7 @@ UnbuiltGenericConstraintSolver::~UnbuiltGenericConstraintSolver()
 
 bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *cParams, MultiVecId /*res1*/, MultiVecId /*res2*/)
 {
-    unbuit_current_cp = new UnbuiltGenericConstraintProblem( (*current_cp) );
+    unbuit_current_cp = new UnbuiltGenericConstraintProblem( *(this->current_cp) );
 	unsigned int numConstraints = 0;
 
     sofa::helper::AdvancedTimer::stepBegin("Accumulate Constraint");

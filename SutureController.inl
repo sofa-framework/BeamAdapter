@@ -40,6 +40,8 @@
 #include "SutureController.h"
 #include "WireBeamInterpolation.h"
 
+#include <sofa/core/visual/VisualParams.h>
+
 //#define DEBUG
 
 namespace sofa
