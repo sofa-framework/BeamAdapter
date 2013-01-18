@@ -236,6 +236,10 @@ public:
     void addidPointSubMap(unsigned int _id){idPointSubMap.push_back(_id);}
     void setuseCurvAbs(bool _value){useCurvAbs.setValue(_value);}
 
+    const sofa::helper::vector< PosPointDefinition >& getPointBeamDistribution() const
+    {
+        return pointBeamDistribution;
+    }
 
 protected:
 
