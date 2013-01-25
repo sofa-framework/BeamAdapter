@@ -34,6 +34,14 @@ namespace sofa
 
 namespace component
 {
+	extern "C" {
+		SOFA_BEAMADAPTER_API void initExternalModule();
+		SOFA_BEAMADAPTER_API const char* getModuleLicense();
+		SOFA_BEAMADAPTER_API const char* getModuleName();
+		SOFA_BEAMADAPTER_API const char* getModuleVersion();
+		SOFA_BEAMADAPTER_API const char* getModuleDescription();
+		SOFA_BEAMADAPTER_API const char* getModuleComponentList();
+	}
 
 	//Here are just several convenient functions to help user to know what contains the plugin
 	

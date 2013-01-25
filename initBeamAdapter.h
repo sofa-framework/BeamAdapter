@@ -37,27 +37,5 @@
 #  define SOFA_BEAMADAPTER_API SOFA_IMPORT_DYNAMIC_LIBRARY
 #endif
 
-namespace sofa
-{
-
-namespace component
-{
-
-	//Here are just several convenient functions to help user to know what contains the plugin
-
-	extern "C" {
-		SOFA_BEAMADAPTER_API void initExternalModule();
-		SOFA_BEAMADAPTER_API const char* getModuleLicense();
-		SOFA_BEAMADAPTER_API const char* getModuleName();
-		SOFA_BEAMADAPTER_API const char* getModuleVersion();
-		SOFA_BEAMADAPTER_API const char* getModuleDescription();
-		SOFA_BEAMADAPTER_API const char* getModuleComponentList();
-	}
-
-
-
-} 
-
-} 
 
 #endif /* SOFA_PLUGIN_BEAM_ADAPTER_H */
