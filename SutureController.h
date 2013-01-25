@@ -176,6 +176,11 @@ public:
 	/**
 	 * @brief Begin Animation event callback.
 	 */
+	virtual void onBeginAnimationStep(const double dt);
+
+	/**
+	 * @brief Begin Animation event callback.
+	 */
 	virtual void onEndAnimationStep(const double dt);
 
 	//@}
@@ -320,6 +325,9 @@ protected:
     sofa::core::topology::TopologyContainer* m_topology;
 
     void dummyController(sofa::helper::vector<Real> &newCurvAbs);
+
+	//// If true update interpolation and subgraph on beginAnimationStep
+	Data< bool > m_updateOnBeginAnimationStep;
 };
 
 #if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)

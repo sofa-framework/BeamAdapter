@@ -41,6 +41,8 @@
 #include "WireBeamInterpolation.h"
 
 #include <sofa/core/visual/VisualParams.h>
+#include <sofa/simulation/common/MechanicalVisitor.h>
+#include <sofa/simulation/common/UpdateMappingVisitor.h>
 
 //#define DEBUG
 
@@ -66,6 +68,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , m_curvatureList(initData(&m_curvatureList, "curvatureList", "List of the beams curvature (abscissa - curvature)"))
 , m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
+, m_updateOnBeginAnimationStep(initData(&m_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
 {
 }
 
@@ -75,11 +78,11 @@ void SutureController<DataTypes>::init()
 	this->f_listening.setValue(true);
 	Inherit::init();
 
-	if(!m_adaptiveinterpolation)
-           {
-	      core::objectmodel::BaseContext *c=this->getContext();
-	      m_adaptiveinterpolation.set(c->get<WInterpolation>(core::objectmodel::BaseContext::Local));
-	   }
+	if (!m_adaptiveinterpolation)
+	{
+		core::objectmodel::BaseContext *c=this->getContext();
+		m_adaptiveinterpolation.set(c->get<WInterpolation>(core::objectmodel::BaseContext::Local));
+	}
 
 	if(!m_adaptiveinterpolation)
 		serr << "No Beam Interpolation found, the component can not work!" << sendl;
@@ -351,9 +354,32 @@ void SutureController<DataTypes>::removeNodesAndEdge(unsigned int num)
 
 
 template <class DataTypes>
+void SutureController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
+{
+	if (m_updateOnBeginAnimationStep.getValue())
+	{
+		applyController();
+	}
+	
+	// Propagate modifications
+	
+	simulation::MechanicalPropagatePositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(),VecCoordId::position(),VecDerivId::velocity(),
+#ifdef SOFA_SUPPORT_MAPPED_MASS
+		VecDerivId::dx(),
+#endif
+		true).execute( this->getContext() );
+
+	simulation::UpdateMappingVisitor(core::ExecParams::defaultInstance()).execute(this->getContext());
+}
+
+
+template <class DataTypes>
 void SutureController<DataTypes>::onEndAnimationStep(const double /*dt*/)
 {
-	applyController();
+	if (!m_updateOnBeginAnimationStep.getValue())
+	{
+		applyController();
+	}
 }
 
 
@@ -559,10 +585,6 @@ void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &
 
     std::cout<<" result : newCurvAbs  ="<<newCurvAbs<<std::endl;
 #endif
-
-
-
-
 }
 
 
@@ -607,7 +629,7 @@ void SutureController<DataTypes>::applyController()
 
     this->applyNewSampling(newCurvAbs, m_nodeCurvAbs.getValue(), x, v);
 
- #ifdef DEBUG
+#ifdef DEBUG
     std::cout<<"After.... Beam  lengths = ";
 
     for (unsigned int b=0; b<m_adaptiveinterpolation->getNumBeams(); b++)
@@ -1491,11 +1513,7 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
         vparams->drawTool()->drawFrame(vec_global_H_gravityCenter[i].getOrigin(), vec_global_H_gravityCenter[i].getOrientation(), sizeArrows );
 
     }
-
-
-
 }
-
 
 } // namespace controller
 
