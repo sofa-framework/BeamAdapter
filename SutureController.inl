@@ -363,9 +363,9 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 	
 	// Propagate modifications
 	
-	simulation::MechanicalPropagatePositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(),VecCoordId::position(),VecDerivId::velocity(),
+    simulation::MechanicalPropagatePositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity(),
 #ifdef SOFA_SUPPORT_MAPPED_MASS
-		VecDerivId::dx(),
+        sofa::core::VecDerivId::dx(),
 #endif
 		true).execute( this->getContext() );
 
