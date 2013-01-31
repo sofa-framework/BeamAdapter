@@ -1045,8 +1045,11 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
                 rigidification=true;
 
                 // add a transformation between the node 1 and the gravity center on previous beam
-                Transform GravityCenter_H_node1 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
-                m_adaptiveinterpolation->setTransformBetweenDofAndNode(s-1,GravityCenter_H_node1,1);
+				if(s)
+                {
+					Transform GravityCenter_H_node1 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
+					m_adaptiveinterpolation->setTransformBetweenDofAndNode(s-1,GravityCenter_H_node1,1);
+				}
 
             }
 
