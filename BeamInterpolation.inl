@@ -865,7 +865,7 @@ void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa:
 
 //	std::cout<<" in updateBezierPoints vId_Out ="<<vId_Out<<std::endl;
 
-
+	mStateNodes->resize(this->m_edgeList.getValue().size()*4);
     Data<VecVec3d>* datax = mStateNodes->write(vId_Out);
     VecVec3d& bezierPosVec = *datax->beginEdit();
     bezierPosVec.resize(this->m_edgeList.getValue().size()*4);
