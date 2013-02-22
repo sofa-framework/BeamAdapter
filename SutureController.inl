@@ -881,7 +881,7 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
     bool rigidification;
     rigidification=false;
     unsigned int Rseg=0;
-    Real length_of_rigidSegment ;
+    Real length_of_rigidSegment=0;
 
 
     for (unsigned int s=0; s<rigidBeamList.size();s++)

@@ -299,7 +299,7 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 
 	// Initialize with the first vertex
 	Transform globalHlocal0, globalHlocal1;
-	computeTransform2(0, globalHlocal0, globalHlocal1, x);
+	this->computeTransform2(0, globalHlocal0, globalHlocal1, x);
 	Real closestDist = (x_input-globalHlocal0.getOrigin()).norm2();
 	Real beamBary = 0.0;
 	bool projected = false;
@@ -310,7 +310,7 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 	unsigned int nb = this->getNumBeams();
 	for(unsigned int i=0; i<nb; i++)	// Check each segment and each vertex
 	{
-		computeTransform2(i, globalHlocal0, globalHlocal1, x);
+		this->computeTransform2(i, globalHlocal0, globalHlocal1, x);
 		Vec3 A = globalHlocal0.getOrigin(), B = globalHlocal1.getOrigin();
 		Real r = ((x_input-A) * (B-A)) / (B-A).norm2();
 

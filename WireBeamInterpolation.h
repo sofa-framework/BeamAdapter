@@ -202,12 +202,12 @@ public:
 				context->findLinkDest(_restShape, _restShapePath, NULL);
 
 				if(_restShape == NULL)
-					context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+				  context->serr << "WARNING("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
 				else
 					pathOK = true;
 			}
 			else
-				context->serr << "WARNING("<<className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+				context->serr << "WARNING("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
 
 
 			if (!pathOK)

@@ -194,7 +194,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 		lengthList.clear();
 
 		const unsigned int edgeListSize = m_edgeList.getValue().size();
-		unsigned int nd0Id, nd1Id;
+		unsigned int nd0Id=0, nd1Id=0;
 	
 		for (unsigned int i = 0; i < edgeListSize; i++)
 		{
