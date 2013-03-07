@@ -212,7 +212,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 
 
                 potentialContact pt;
-                unsigned int bi=(unsigned int) floor(p/10.0);
+                unsigned int bi = p / 10;
                 pt.beamId = listBeam[bi];
                 pt.posSampleId = p;
                 Real bc = (p+1-(10*bi))/10.0;

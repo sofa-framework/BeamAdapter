@@ -9,62 +9,61 @@ DEFINES += SOFA_BUILD_BEAMADAPTER
 
 
 HEADERS += \
-		initBeamAdapter.h                     \
-		WireRestShape.h                       \
-		WireRestShape.inl                     \
-                BaseRestShape.h                       \
+		AdaptiveBeamConstraint.h              \
+		AdaptiveBeamConstraint.inl            \
+		AdaptiveBeamContactMapper.h           \
+		AdaptiveBeamContactMapper.inl         \
+		AdaptiveBeamController.h              \
+		AdaptiveBeamController.inl            \
+		AdaptiveBeamForceFieldAndMass.h       \
+		AdaptiveBeamForceFieldAndMass.inl     \
+		AdaptiveBeamLengthConstraint.h        \
+		AdaptiveBeamLengthConstraint.inl      \
+		AdaptiveBeamMapping.h                 \
+		AdaptiveBeamMapping.inl               \
+		BaseRestShape.h                       \
 		BaseRestShape.inl                     \
 		BeamInterpolation.h                   \
 		BeamInterpolation.inl                 \
-		WireBeamInterpolation.h               \
-		WireBeamInterpolation.inl             \
-		AdaptiveBeamForceFieldAndMass.h       \
-		AdaptiveBeamForceFieldAndMass.inl     \
-		AdaptiveBeamController.h              \
-		AdaptiveBeamController.inl            \
+		ImplicitSurfaceAdaptiveConstraint.h   \
+		ImplicitSurfaceAdaptiveConstraint.inl \
+		initBeamAdapter.h                     \
 		InterventionalRadiologyController.h   \
 		InterventionalRadiologyController.inl \
-		AdaptiveBeamMapping.h                 \
-                AdaptiveBeamMapping.inl               \
-		AdaptiveBeamContactMapper.h\
-		AdaptiveBeamContactMapper.inl\
-		MultiAdaptiveBeamContactMapper.h\
-		MultiAdaptiveBeamContactMapper.inl\
+		MultiAdaptiveBeamContactMapper.h      \
+		MultiAdaptiveBeamContactMapper.inl    \
 		MultiAdaptiveBeamMapping.h            \
-		MultiAdaptiveBeamMapping.inl           	\
-                SutureController.h			\
-                SutureController.inl		\
-		AdaptiveBeamConstraint.h 		\
-                AdaptiveBeamConstraint.inl             \
-AdaptiveBeamLengthConstraint.h \
-AdaptiveBeamLengthConstraint.inl \
-ImplicitSurfaceAdaptiveConstraint.h \
-ImplicitSurfaceAdaptiveConstraint.inl \
-UnbuiltGenericConstraintSolver.h 
+		MultiAdaptiveBeamMapping.inl          \
+		SutureController.h                    \
+		SutureController.inl                  \
+		UnbuiltGenericConstraintSolver.h      \
+		WireBeamInterpolation.h               \
+		WireBeamInterpolation.inl             \
+		WireRestShape.h                       \
+		WireRestShape.inl                     \
 
 
 SOURCES += \
-		initBeamAdapter.cpp                   \
-		WireRestShape.cpp                     \
-				BaseRestShape.cpp                     \
-		WireBeamInterpolation.cpp             \
-		BeamInterpolation.cpp                 \
-		AdaptiveBeamForceFieldAndMass.cpp     \
+		AdaptiveBeamConstraint.cpp            \
+		AdaptiveBeamContactMapper.cpp         \
 		AdaptiveBeamController.cpp            \
+		AdaptiveBeamForceFieldAndMass.cpp     \
+		AdaptiveBeamFrictionContact.cpp       \
+		AdaptiveBeamLengthConstraint.cpp      \
+		AdaptiveBeamMapping.cpp               \
+		BaseRestShape.cpp                     \
+		BeamInterpolation.cpp                 \
+		ImplicitSurfaceAdaptiveConstraint.cpp \
+		initBeamAdapter.cpp                   \
 		InterventionalRadiologyController.cpp \
-		AdaptiveBeamMapping.cpp               \   
-AdaptiveBeamContactMapper.cpp\
-AdaptiveBeamFrictionContact.cpp\
-MultiAdaptiveBeamContactMapper.cpp\
-		MultiAdaptiveBeamMapping.cpp 		\
-                SutureController.cpp	\
-                AdaptiveBeamConstraint.cpp          \
-AdaptiveBeamLengthConstraint.cpp \
-ImplicitSurfaceAdaptiveConstraint.cpp \
-UnbuiltGenericConstraintSolver.cpp
+		MultiAdaptiveBeamContactMapper.cpp    \
+		MultiAdaptiveBeamMapping.cpp          \
+		SutureController.cpp                  \
+		UnbuiltGenericConstraintSolver.cpp    \
+		WireBeamInterpolation.cpp             \
+		WireRestShape.cpp                     \
 
-	  
-		  
+
 README_FILE = BeamAdapter.txt
 
 unix : QMAKE_POST_LINK = cp $$SRC_DIR/$$README_FILE $$LIB_DESTDIR
