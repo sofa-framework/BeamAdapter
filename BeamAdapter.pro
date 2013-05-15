@@ -41,6 +41,8 @@ HEADERS += \
 		WireBeamInterpolation.inl             \
 		WireRestShape.h                       \
 		WireRestShape.inl                     \
+		SteerableCatheter.h                   \
+		SteerableCatheter.inl                 \
 
 
 SOURCES += \
@@ -62,6 +64,7 @@ SOURCES += \
 		UnbuiltGenericConstraintSolver.cpp    \
 		WireBeamInterpolation.cpp             \
 		WireRestShape.cpp                     \
+		SteerableCatheter.cpp                 \
 
 
 README_FILE = BeamAdapter.txt

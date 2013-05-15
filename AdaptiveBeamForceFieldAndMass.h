@@ -51,7 +51,7 @@
 #include <sofa/defaulttype/Mat.h>
 
 #include <sofa/core/objectmodel/BaseObject.h>
-
+#include <sofa/core/visual/VisualParams.h>
 
 namespace sofa
 {

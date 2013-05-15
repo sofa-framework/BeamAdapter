@@ -48,6 +48,7 @@
 #include <sofa/component/topology/EdgeSetTopologyModifier.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/core/objectmodel/Event.h>
+#include <sofa/core/visual/VisualParams.h>
 
 
 using namespace sofa::component::fem;

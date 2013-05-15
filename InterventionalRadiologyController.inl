@@ -193,7 +193,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     	m_instrumentsList[i]->setControlled(true);
     	/// \todo : automatically sort by radius
     }
-    sout<<"  +++++++++++++++++ "<<sendl;
+    //sout<<"  +++++++++++++++++ "<<sendl;
 
     context->get(_fixedConstraint);
     if(_fixedConstraint==NULL)
@@ -864,7 +864,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table)
 {
-    std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
+    //std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
 
 // 0. useful for rigidification
     helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
@@ -900,7 +900,7 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
  //3 .  Before assignement, verification that the beam is not on a rigidified part !
             bool rigid=false;
             RealConstIterator it = rigidCurvAbs->begin();
-            std::cout<<"( *it) begin "<<(*it)<<" (*it) end"<< (* rigidCurvAbs->end())<<std::endl;
+            //std::cout<<"( *it) begin "<<(*it)<<" (*it) end"<< (* rigidCurvAbs->end())<<std::endl;
             while (it!=rigidCurvAbs->end())
             {
                 std::cout<<" curv_abs[p+1] =  "<<curv_abs[p+1]<<" (*it)"<<(*it)<<std::endl;
