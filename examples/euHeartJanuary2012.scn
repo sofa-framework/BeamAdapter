@@ -20,8 +20,9 @@
   <!--------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -------------------------------->
 
   <Node name="topoLines_cath">
-    <WireRestShape template="Rigid" printLog="0" name="catheterRestShape" length="1400.0"  straightLength="1320" spireDiameter="100.0" spireHeight="0.0"
-					    densityOfBeams="20 3" numEdges="200" numEdgesCollis="42 6"  youngModulus="2500" youngModulusExtremity="1000"/>
+    <SteerableCatheter template="Rigid" printLog="0" name="catheterRestShape" length="1400.0"  straightLength="1320" spireDiameter="100.0" spireHeight="0.0"
+					densityOfBeams="20 3" numEdges="200" numEdgesCollis="42 6"  youngModulus="2500" youngModulusExtremity="1000"
+					bendingRate="100" angleMax="270"/>
     <!-- silicone -->
 
     <EdgeSetTopologyContainer name="meshLinesCath" />
@@ -122,21 +123,7 @@
 
 
 
-  <Node name="heart">
-    <MeshObjLoader name="meshLoader" filename="mesh/CavaVeinAndHeart.obj" triangulate="true" flipNormals="1"/>
-    <Mesh position="@meshLoader.position"  triangles="@meshLoader.triangles"/>
-    <!--<Mesh position="0 0 0"  triangles="@meshLoader.triangles"/>-->
-    <MechanicalObject name="DOFs1" position="0 0 0" scale="60" rx="90" rz="90"/>
-    <Triangle simulated="0" moving="0"/>
-    <Line simulated="0" moving="0"/>
-    <Point simulated="0" moving="0"/>
-    <!--<OglModel name="Visual" fileMesh="mesh/CavaVeinHeartobj_new.obj" color="1 0 0 0.3" position="@DOFs1.position" scale="@DOFs1.scale" rx="@DOFs1.rx" rz="@DOFs1.rz"/>-->
-    <OglModel name="Visual" fileMesh="mesh/CavaVeinAndHeart.obj" color="1 0 0 0.3" position="0 0 0" scale="60" rx="90" rz="90" />
-    <!--depthTest="false" cullFace="0" alphaBlend="true" sfactor="GL_ONE" dfactor="GL_ONE" />-->
-    <!--<OglShader name="Shading" vertFilename="shaders/xray1pass.vert" fragFilename="shaders/xray1pass.frag" backfaceWriting="true"
-               clampVertexColor="false" />
-    <OglFloatVariable id="AbsorptionParam" value="0.0035" />-->
-  </Node>
+
 
 
 
