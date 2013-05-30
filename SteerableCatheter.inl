@@ -86,11 +86,16 @@ void SteerableCatheter<DataTypes>::init()
 
         // Reajust the initial spireDiameter (associated angle) to be multiple of incrementalAngleRadian
         Real _spireDiameter = this->spireDiameter.getValue();
-        if(_spireDiameter==0.0)
-        {
-            currentAngleRadian = flatAngle * PI / 360;
-            this->spireDiameter.setValue( tipLength / currentAngleRadian );
-        }
+		if(_spireDiameter>maxUnbendingDiameter || _spireDiameter == 0.0)
+		{
+			if(_spireDiameter>maxUnbendingDiameter)
+				std::cout<<"(SteerableCatheter) Wrong spireDiameter: must be below "<<maxUnbendingDiameter<<std::endl;
+			else
+				std::cout<<"(SteerableCatheter) Wrong spireDiameter: must be non-zero (==infinite curvature) "<<std::endl;
+			_spireDiameter = maxUnbendingDiameter;
+			currentAngleRadian = flatAngle * PI / 360;
+			this->spireDiameter.setValue( maxUnbendingDiameter );
+		}
         else
         {
             if(tipLength != 0.0)
@@ -101,7 +106,11 @@ void SteerableCatheter<DataTypes>::init()
                 this->spireDiameter.setValue( tipLength / currentAngleRadian );
             }
             else
+			{
                 this->spireDiameter.setValue( 0.0 );
+				currentAngleRadian = 0.0;
+				this->f_listening.setValue(false);
+			}
         }
     }
 }
