@@ -89,14 +89,20 @@ void SteerableCatheter<DataTypes>::init()
         if(_spireDiameter==0.0)
         {
             currentAngleRadian = flatAngle * PI / 360;
+            this->spireDiameter.setValue( tipLength / currentAngleRadian );
         }
         else
         {
-            Real initialAngleRadian  = tipLength/_spireDiameter;
-            unsigned int initialAngleIncrement = (unsigned int)(initialAngleRadian/incrementalAngleRadian);
-            currentAngleRadian = initialAngleIncrement*incrementalAngleRadian;
+            if(tipLength != 0.0)
+            {
+                Real initialAngleRadian  = tipLength/_spireDiameter;
+                unsigned int initialAngleIncrement = (unsigned int)(initialAngleRadian/incrementalAngleRadian);
+                currentAngleRadian = initialAngleIncrement*incrementalAngleRadian;
+                this->spireDiameter.setValue( tipLength / currentAngleRadian );
+            }
+            else
+                this->spireDiameter.setValue( 0.0 );
         }
-        this->spireDiameter.setValue( tipLength / currentAngleRadian );
     }
 }
 
