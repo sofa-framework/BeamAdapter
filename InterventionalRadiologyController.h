@@ -224,7 +224,7 @@ protected:
     sofa::helper::vector<bool> activated_Points_buf;
 
     ////////// Interface for interventionalRadiology instruments:
-    void applyInterventionalRadiologyController(void);
+    virtual void applyInterventionalRadiologyController(void);
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     void interventionalRadiologyComputeSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table,
                                                 const sofa::helper::vector<Real> &xBegin, const Real& xEnd);
