@@ -328,6 +328,7 @@ protected:
 
 	//// If true update interpolation and subgraph on beginAnimationStep
 	Data< bool > m_updateOnBeginAnimationStep;
+    Data< bool> m_applyOrientationFirstInCreateNeedle;
 };
 
 #if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)

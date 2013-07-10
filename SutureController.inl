@@ -69,6 +69,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
 , m_updateOnBeginAnimationStep(initData(&m_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
+, m_applyOrientationFirstInCreateNeedle(initData(&m_applyOrientationFirstInCreateNeedle, false, "applyOrientationFirstInCreateNeedle", "if true, it sets first the orientation, then the rotation for a init node of the needle"))
 {
 }
 
@@ -119,8 +120,14 @@ void SutureController<DataTypes>::initWireModel()
 	// on initialise le "wire" en prenant la position de départ + la forme au repos + la discretisation proposée...
 	Transform global_T_init;
 	const Coord startPos = startingPos.getValue();
-	global_T_init.setOrigin(startPos.getCenter());
-	global_T_init.setOrientation(startPos.getOrientation());
+
+    if (m_applyOrientationFirstInCreateNeedle.getValue()) {
+        global_T_init.setOrientation(startPos.getOrientation());
+        global_T_init.setOrigin(startPos.getCenter());
+    } else {
+        global_T_init.setOrigin(startPos.getCenter());
+        global_T_init.setOrientation(startPos.getOrientation());
+    }
 
 
 	helper::vector< Real > xP_noticeable;
