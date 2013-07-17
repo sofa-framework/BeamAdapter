@@ -31,6 +31,8 @@ double TimeProjection2= 0.0;
 //#define DEBUG_PROJECTION
 //#define DEBUG_LAST_CONSTRAINT_ONLY
 
+//#define DEBUG_DFREE_COMPUTATION
+
 
 namespace sofa
 {
@@ -121,6 +123,13 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
     else
         all_activated=false;
 
+    // STEP 5: init domain
+    m_domainSample.clear();
+    m_domainSample.push_back(-1);
+
+    // STEP 6: init marching cube
+        mc = new sofaeve::implicit::MarchingCube();
+
 
 }
 
@@ -197,11 +206,34 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 
     unsigned int numBeams= m_wireBinterpolation->getNumBeams();
 
+
+    vectorIntIterator it;
+    while( m_domainSample.size() < m_posSample.size() )
+    {
+        it=m_domainSample.begin();
+        m_domainSample.insert(it,-1);
+    }
+
+    while ( m_domainSample.size() > m_posSample.size() )
+    {
+        it=m_domainSample.begin();
+        m_domainSample.erase(it);
+    }
+
+#ifdef DEBUG
+    if(m_domainSample.size()!= m_posSample.size() )
+    {
+        serr<<" domain and pos samples do not have the same size : cancel detection"<<send:
+        return;
+    }
+#endif
     for (unsigned int p=0; p<m_posSample.size(); p++)
     {
         Vec3d pos=(Vec3d)m_posSample[p];
-        Real value = _contact_surface->getValue(pos);
-        Vec3 grad = (Vec3)_contact_surface->getGradient(pos);
+        m_domainSample[p] = _contact_surface->getDomain(pos, m_domainSample[p]);
+        Real value = _contact_surface->getValue(pos, m_domainSample[p]);
+        Vec3 grad = (Vec3)_contact_surface->getGradient(pos, m_domainSample[p]);
+
         Real gradNorm= grad.norm();
         if (gradNorm > 1e-12 )
         {
@@ -262,7 +294,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                     }
                     else
                     {
-                        std::cout<<" warning n and t are far from being perp => contact cancelled"<<std::endl;
+                       // std::cout<<" warning n and t are far from being perp => contact cancelled"<<std::endl;
                         continue;
                     }
 
@@ -316,7 +348,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
 
     m_posSample.resize(10*numBeams);
 
-
     //PosSample corresponds to points that are placed along the spline which position is stored in sofa::core::VecCoordId::position()
     // the following code verify that the position is correct:
     std::cout<<" in buildConstraintMatrix: cParams->x()="<<cParams->x()<<std::endl;
@@ -341,20 +372,22 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     for (unsigned int bi=0; bi<numBeams; bi++)
     {
         unsigned int b= list_B[bi];
+#ifdef DEBUG
         std::cout<<" interpolate point on beam b="<<b<<" bary Coord:";
-
+#endif
         for (unsigned int p=0;p<10; p++)
         {
             Vec3 localPos(0,0,0);
             Real baryCoord = (p+1)/10.0;
-
+#ifdef DEBUG
             std::cout<<" ("<<baryCoord<<") ";
-
+#endif
 
             m_wireBinterpolation->interpolatePointUsingSpline(b, baryCoord, localPos, x2buf, m_posSample[10*bi+p], false, x_in);
         }
+ #ifdef DEBUG
         std::cout<<" "<<std::endl;
-
+#endif
     }
 #ifdef DEBUG
     std::cout<<" * 1st step ok: m_posSample = "<<m_posSample<<std::endl;
@@ -449,7 +482,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
     if ( fabs(dTest) <=0.01*alarmDistance.getValue())  // actual position is already in contact
     {
+ #ifdef DEBUG_DFREE_COMPUTATION
         std::cout<<" case 1"<<std::endl;
+#endif
         dfree_t = dot(t, freePos-Pos);
         dfree_s = dot(s, freePos-Pos);
     }
@@ -461,14 +496,18 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
             // not in contact yet...
             dfree_t =0.0;
             dfree_s =0.0;
+ #ifdef DEBUG_DFREE_COMPUTATION
             std::cout<<" case 2"<<std::endl;
+#endif
         }
         else if (dTest<=0.0)
         {
             // already in contact
             dfree_t = dot(t, freePos-Pos);
             dfree_s = dot(s, freePos-Pos);
+ #ifdef DEBUG_DFREE_COMPUTATION
             std::cout<<" case 3"<<std::endl;
+ #endif
         }
         else
         {
@@ -481,7 +520,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
             dfree_t = dot(t, freePos-Pt);
             dfree_s = dot(s, freePos-Pt);
+#ifdef DEBUG_DFREE_COMPUTATION
             std::cout<<" case 4"<<std::endl;
+#endif
         }
 
     }
@@ -490,7 +531,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
         // no significant variation of d between actual position and free position
         dfree_t =0.0;
         dfree_s =0.0;
+#ifdef DEBUG_DFREE_COMPUTATION
         std::cout<<" case 5"<<std::endl;
+#endif
     }
 
 }
@@ -654,61 +697,75 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     glEnd();
 
 
-/*
 
-    if (visualization.getValue() && _nbConstraints>0)
+    glEnable(GL_LIGHTING);
+    // glDisable(GL_BLEND);
+
+    if (visualization.getValue() && m_posSample.size()>0)
     {
 
-        glDisable(GL_LIGHTING);
-        glPointSize(2);
-        glBegin(GL_POINTS);
-        double dx = (PosMax.getValue()[0] -PosMin.getValue()[0])/10;
-        double dy = (PosMax.getValue()[1] -PosMin.getValue()[1])/10;
-        double dz = (PosMax.getValue()[2] -PosMin.getValue()[2])/10;
-        double x = PosMin.getValue()[0];
+        std::cout<<" Visualization "<<std::endl;
+        std::cout<<" m_domainSample"<<m_domainSample<<std::endl;
 
+        double dx = (PosMax.getValue()[0] -PosMin.getValue()[0])/50;
+        double dy = (PosMax.getValue()[1] -PosMin.getValue()[1])/50;
+        double dz = (PosMax.getValue()[2] -PosMin.getValue()[2])/50;
+        double z = PosMin.getValue()[2];
+        int idx =0;
 
+        double mmin = 150;
+        double mmax = -150;
 
-        while(x<=PosMax.getValue()[0])
+        defaulttype::Vec3d PosLastPoint=m_posSample[m_posSample.size()-1];
+
+        //std::cout<<" mc_data =";
+        while(z<=PosMax.getValue()[2])
         {
             double y = PosMin.getValue()[1];
             while(y<=PosMax.getValue()[1])
             {
-                double z = PosMin.getValue()[2];
+                double x = PosMin.getValue()[0];
 
 
-                while(z<=PosMax.getValue()[2])
+                while(x<=PosMax.getValue()[0])
                 {
                     defaulttype::Vec3d Pos(x,y,z);
-#ifdef DEBUG_LAST_CONSTRAINT_ONLY
-                    Pos += lp[_nbNodes-1].pos();
-                    if(_contact_surface->getValue(Pos,lp[_nbNodes-1]._domain ) > 0){
-#else
-                    Pos += lp[_nbConstraints-1].pos();
-                    if(_contact_surface->getValue(Pos,lp[_nbConstraints-1]._domain ) > 0){
-#endif
-                        glColor4f(1.0f,0.0f,0.0f,1.0f);
-                        helper::gl::glVertexT(Pos);
-                        }
-                    else{
-                        glColor4f(0.0f,1.0f,1.0f,1.0f);
-                        helper::gl::glVertexT(Pos);
-                        }
+                    Pos += PosLastPoint;
+                    //Pos += PP;
+                    double test = _contact_surface->getValue(Pos, m_domainSample[m_posSample.size()-1]);
+                    if(test > mmax)
+                        mmax = test;
+                    if(test < mmin)
+                        mmin = test;
+                    mc_data[idx] = test;
+                    //std::cout << test << " ";
+                    idx++;
 
-                    z = z+dz;
+                    x = x+dx;
                 }
                 y = y+dy;
 
             }
-            x = x+dx;
+            z = z+dz;
         }
 
-        glEnd();
-        glPointSize(1);
-        //listProbe.endEdit();
+        glPolygonMode(GL_FRONT, GL_LINE);
+
+
+        mc->buildMesh(mc_data, 50, 50, 50, _isoValue);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+        defaulttype::Vec3d Pos(PosMin.getValue()[0],PosMin.getValue()[1],PosMin.getValue()[2]);
+        Pos += PosLastPoint;
+        mc->draw(Pos[0], Pos[1], Pos[2], 0.2, 0.2, 0.2);
+
+
 
     }
-    */
+
+
 
 #ifdef DEBUG
     std::cout<<" leaving draw"<<std::endl;

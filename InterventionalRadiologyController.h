@@ -47,7 +47,6 @@
 #include <sofa/core/DataEngine.h>
 #include <sofa/component/collision/PointModel.h>
 #include <sofa/component/collision/LineModel.h>
-#include <sofa/component/collision/BSplineModel.h>
 
 
 using namespace sofa::component::fem;

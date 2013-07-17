@@ -18,6 +18,10 @@
 
 #include "WireBeamInterpolation.h"
 
+
+#include <../applications/plugins/SofaEVE/Implicit/Isosurface.h>
+
+
 namespace sofa
 {
 
@@ -84,6 +88,7 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
+    typedef typename sofa::helper::vector<int>::iterator vectorIntIterator;
 
 protected :
     /// pointer to the interpolation
@@ -97,6 +102,9 @@ protected :
     Data<bool> visualization;
     Data<defaulttype::Vec3d> PosMin;
     Data<defaulttype::Vec3d> PosMax;
+    sofaeve::implicit::MarchingCube * mc;
+    double mc_data[100000000];
+    Real _isoValue;
 
     // domain
     Data<int> init_domain;
@@ -136,6 +144,7 @@ public:
     , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
     , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
     {
+        _isoValue=0.0;
     }
 
     ImplicitSurfaceAdaptiveConstraint(MechanicalState* /*object*/)
@@ -149,6 +158,7 @@ public:
     , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
     , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
     {
+        _isoValue=0.0;
     }
 
     ImplicitSurfaceAdaptiveConstraint()
@@ -162,6 +172,7 @@ public:
     , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
     , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
     {
+        _isoValue=0.0;
     }
 
      ~ImplicitSurfaceAdaptiveConstraint()
@@ -211,6 +222,7 @@ public:
 
 private:
     sofa::helper::vector<Vec3> m_posSample;
+    sofa::helper::vector<int> m_domainSample;
 
     struct potentialContact{
         unsigned int beamId;
@@ -221,6 +233,7 @@ private:
     };
 
     sofa::helper::vector<potentialContact> m_VecPotentialContact;
+
 
 
     // internal functions

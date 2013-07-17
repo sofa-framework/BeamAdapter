@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.002" gravity="0 -98.81 0">
  	<RequiredPlugin pluginName="BeamAdapter"/>
-	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields " />
+	<VisualStyle displayFlags="hideVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields " />
  	<FreeMotionAnimationLoop />
-	<GenericConstraintSolver tolerance="1e-4"  maxIterations="100" unbuilt="true"/>
+	<UnbuiltGenericConstraintSolver tolerance="1e-4"  maxIterations="100" printLog="true"/>
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
@@ -100,7 +100,7 @@
 			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
-				<VisualModel  name="VisualBody" fileMesh="mesh/caducee_snake.obj"   />
+				<VisualModel  name="VisualBody"  />
 				<IdentityMapping input="@../Quads" output="@VisualBody"/>
 			</Node>	
 		</Node>

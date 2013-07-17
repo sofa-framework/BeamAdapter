@@ -263,25 +263,6 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::reinit()
 {
     applyController();
-    /*
-    /////////////////////////////////////////// ctn_DEV
-    // Test for work with BSplineModel<2>
-    sofa::component::collision::BSplineModel<2>* m_bsplineModel;
-    this->getContext()->get(m_bsplineModel);
-    if(m_bsplineModel ==NULL)
-    {
-    	serr<<"BSplineModel<2> not found on the same context"<<sendl;
-    }
-    else
-    {
-    	m_bsplineModel->setRadius(0.);
-    	m_bsplineModel->setTags(0);
-		std::cout<<"BeamAdapter interventionalRadiologyCollisionControls::init()" <<std::endl;
-    }
-
-    /////////////////////////////////////////// ctn_DEV
-    */
-
 }
 
 
@@ -864,8 +845,10 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table)
 {
-    //std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
 
+#ifdef DEBUG
+    std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
+#endif
 // 0. useful for rigidification
     helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 
@@ -900,27 +883,33 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
  //3 .  Before assignement, verification that the beam is not on a rigidified part !
             bool rigid=false;
             RealConstIterator it = rigidCurvAbs->begin();
-            //std::cout<<"( *it) begin "<<(*it)<<" (*it) end"<< (* rigidCurvAbs->end())<<std::endl;
+#ifdef DEBUG
+            std::cout<<"( *it) begin "<<(*it)<<" (*it) end"<< (* rigidCurvAbs->end())<<std::endl;
+#endif
             while (it!=rigidCurvAbs->end())
             {
+#ifdef DEBUG
                 std::cout<<" curv_abs[p+1] =  "<<curv_abs[p+1]<<" (*it)"<<(*it)<<std::endl;
+ #endif
                 if(curv_abs[p+1] <= (*it) )
                 {
                     break;
                 }
                 else
                 {
+#ifdef DEBUG
                     std::cout<<"++++++++++\n Rigidification detected "<<std::endl;
+#endif
                     rigid = !rigid;
                     it++;
                 }
             }
-
+#ifdef DEBUG
             if (rigid)
             {
                 std::cout<<" beam "<<p<<" is detected to be rigidified"<<std::endl;
             }
-
+#endif
             if(!rigid)
             {
                 m_instrumentsList[ instr0 ]->addCollisionOnBeam(p);
@@ -939,44 +928,6 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyController()
 {
-
-    /*
-	   /////////////////////////////////////////// ctn_DEV
-	    // setting for work with BSplineModel<2>
-	    sofa::component::collision::BSplineModel<2>* m_bsplineModel;
-	    this->getContext()->get(m_bsplineModel);
-	    if(m_bsplineModel ==NULL)
-	    {
-	    	serr<<"BSplineModel<2> not found on the same context"<<sendl;
-	    }
-	    else
-	    {
-	    	//nbNodes in control
-	    	int nbControlledNodes = id_instrument_curvAbs_table.size();
-	    	int nbControlledEdge  = nbControlledNodes - 1;
-	    	int totalNbEdges = this->getTotalNbEdges();
-	    	for(int nodeId=1;nodeId<nbControlledNodes;nodeId++)
-	    	{
-	    		const int edgeControlledId=nodeId-1;
-	    		const int edgeId=totalNbEdges-(nbControlledEdge-edgeControlledId);
-
-	    		const sofa::helper::vector<int>&  id_instrument_table_on_node= id_instrument_curvAbs_table[nodeId];
-	    		Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(nodeId-1)._r;
-	    		for(unsigned int i=1;i<id_instrument_table_on_node.size();i++)
-	    		{
-	    			if(radius < m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(edgeId)._r)
-	    				radius = m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(edgeId)._r;
-	    		}
-	    		//tagging this edge to be a spline -- TODO can be eventually a straight line if set tag to 1
-	    		m_bsplineModel->setElementTag(edgeId,2);
-	    		m_bsplineModel->setElementRadius(edgeId,radius);
-	    		std::cout<<"BeamAdapterapplyIRC "<<" id_instrument_list[" <<edgeId <<"]    radius:"<<radius <<std::endl;
-	    	}
-	    }
-		std::cout<<"BeamAdapter applyInterventionalRadiologyController" <<std::endl;
-
-	    /////////////////////////////////////////// ctn_DEV
-        */
 
 
 

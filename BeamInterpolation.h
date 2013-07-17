@@ -117,6 +117,7 @@ public:
 	: radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (for now only constant radius are used)"))
 	, innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
 	, dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
+    , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
     , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes> >())
     , m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
 	, m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
@@ -269,6 +270,7 @@ public:
 	Data<Real> radius;
 	Data<Real> innerRadius;
 	Data<bool> dofsAndBeamsAligned;
+    Data<Real> defaultYoungModulus;
 
 	///////// for AdaptiveControllers
 	bool isControlled(){return _isControlled;}
@@ -311,7 +313,7 @@ public:
 
 	virtual void getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 	{
-		youngModulus = (Real) 1000000.0;
+        youngModulus = (Real) defaultYoungModulus.getValue();
 		cPoisson     = (Real) 0.4;
 	}
 

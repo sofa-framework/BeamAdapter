@@ -11,8 +11,6 @@ DEFINES += SOFA_BUILD_BEAMADAPTER
 HEADERS += \
 		AdaptiveBeamConstraint.h              \
 		AdaptiveBeamConstraint.inl            \
-		AdaptiveBeamContactMapper.h           \
-		AdaptiveBeamContactMapper.inl         \
 		AdaptiveBeamController.h              \
 		AdaptiveBeamController.inl            \
 		AdaptiveBeamForceFieldAndMass.h       \
@@ -21,21 +19,17 @@ HEADERS += \
 		AdaptiveBeamLengthConstraint.inl      \
 		AdaptiveBeamMapping.h                 \
 		AdaptiveBeamMapping.inl               \
-		BaseRestShape.h                       \
+                BaseRestShape.h                       \
 		BaseRestShape.inl                     \
 		BeamInterpolation.h                   \
 		BeamInterpolation.inl                 \
-		ImplicitSurfaceAdaptiveConstraint.h   \
-		ImplicitSurfaceAdaptiveConstraint.inl \
 		initBeamAdapter.h                     \
 		InterventionalRadiologyController.h   \
 		InterventionalRadiologyController.inl \
-		MultiAdaptiveBeamContactMapper.h      \
-		MultiAdaptiveBeamContactMapper.inl    \
 		MultiAdaptiveBeamMapping.h            \
-		MultiAdaptiveBeamMapping.inl          \
-		SutureController.h                    \
-		SutureController.inl                  \
+		MultiAdaptiveBeamMapping.inl           	\
+                SutureController.h			\
+                SutureController.inl		\
 		UnbuiltGenericConstraintSolver.h      \
 		WireBeamInterpolation.h               \
 		WireBeamInterpolation.inl             \
@@ -47,26 +41,49 @@ HEADERS += \
 
 SOURCES += \
 		AdaptiveBeamConstraint.cpp            \
-		AdaptiveBeamContactMapper.cpp         \
 		AdaptiveBeamController.cpp            \
 		AdaptiveBeamForceFieldAndMass.cpp     \
-		AdaptiveBeamFrictionContact.cpp       \
 		AdaptiveBeamLengthConstraint.cpp      \
 		AdaptiveBeamMapping.cpp               \
-		BaseRestShape.cpp                     \
+                BaseRestShape.cpp                     \
 		BeamInterpolation.cpp                 \
-		ImplicitSurfaceAdaptiveConstraint.cpp \
 		initBeamAdapter.cpp                   \
 		InterventionalRadiologyController.cpp \
-		MultiAdaptiveBeamContactMapper.cpp    \
-		MultiAdaptiveBeamMapping.cpp          \
-		SutureController.cpp                  \
+		MultiAdaptiveBeamMapping.cpp 		\
+                SutureController.cpp	\
 		UnbuiltGenericConstraintSolver.cpp    \
 		WireBeamInterpolation.cpp             \
 		WireRestShape.cpp                     \
 		SteerableCatheter.cpp                 \
 
 
+contains(DEFINES,SOFA_DEV2){
+HEADERS +=  \
+            AdaptiveBeamContactMapper.h\
+            AdaptiveBeamContactMapper.inl\
+            AdaptiveBeamFrictionContact.h \
+            AdaptiveBeamFrictionContact.inl \
+            MultiAdaptiveBeamContactMapper.h\
+            MultiAdaptiveBeamContactMapper.inl
+
+SOURCES +=  \
+            AdaptiveBeamContactMapper.cpp\
+            AdaptiveBeamFrictionContact.cpp\
+            MultiAdaptiveBeamContactMapper.cpp
+
+}
+
+
+contains(DEFINES,SOFA_HAVE_SOFAEVE){
+HEADERS +=  \
+                ImplicitSurfaceAdaptiveConstraint.h   \
+                ImplicitSurfaceAdaptiveConstraint.inl
+
+SOURCES +=  \
+                ImplicitSurfaceAdaptiveConstraint.cpp
+}
+	  
+		  
 README_FILE = BeamAdapter.txt
 
 unix : QMAKE_POST_LINK = cp $$SRC_DIR/$$README_FILE $$LIB_DESTDIR
