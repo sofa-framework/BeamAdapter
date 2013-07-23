@@ -287,6 +287,8 @@ private:
 	void storeRigidSegmentsTransformations();
 	void verifyRigidSegmentsTransformations();
 
+	void updateControlPointsPositions();
+
 protected:
 
     ////// for point and line activer

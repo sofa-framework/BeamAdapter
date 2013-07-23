@@ -106,6 +106,7 @@ void SutureController<DataTypes>::reinit()
     this->getMechanicalState()->cleanup();
     init();
     applyController();
+	updateControlPointsPositions();
 }
 
 
@@ -387,6 +388,8 @@ void SutureController<DataTypes>::onEndAnimationStep(const double /*dt*/)
 	{
 		applyController();
 	}
+
+	updateControlPointsPositions();
 }
 
 
@@ -651,26 +654,6 @@ void SutureController<DataTypes>::applyController()
 	nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
 	m_nodeCurvAbs.endEdit();
 
-	VecCoord& ctrlPts = *m_controlPoints.beginEdit();
-	ctrlPts.clear();
-
-	unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
-	Transform global_H0_local,  global_H1_local;
-	for (unsigned int b=0; b<numBeams; b++)
-	{
-		m_adaptiveinterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
-		Coord pt;
-		pt.getCenter() = global_H0_local.getOrigin();
-		pt.getOrientation() = global_H0_local.getOrientation();
-		ctrlPts.push_back(pt);
-	}
-	Coord pt;
-	pt.getCenter() = global_H1_local.getOrigin();
-	pt.getOrientation() = global_H1_local.getOrientation();
-	ctrlPts.push_back(pt);
-	
-	m_controlPoints.endEdit();
-	
 	datax->endEdit();
     datav->endEdit();
 }
@@ -1502,6 +1485,31 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 		if(iter != prevRigidTransforms.end())
 			m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, true);
 	}*/
+}
+
+template <class DataTypes>
+void SutureController<DataTypes>::updateControlPointsPositions()
+{
+	VecCoord& ctrlPts = *m_controlPoints.beginEdit();
+	ctrlPts.clear();
+
+	unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
+	Transform global_H0_local, global_H1_local;
+	const VecCoord& x = this->getMechanicalState()->write(sofa::core::VecCoordId::position())->getValue();
+	for (unsigned int b = 0; b < numBeams; b++)
+	{
+		m_adaptiveinterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
+		Coord pt;
+		pt.getCenter() = global_H0_local.getOrigin();
+		pt.getOrientation() = global_H0_local.getOrientation();
+		ctrlPts.push_back(pt);
+	}
+	Coord pt;
+	pt.getCenter() = global_H1_local.getOrigin();
+	pt.getOrientation() = global_H1_local.getOrientation();
+	ctrlPts.push_back(pt);
+
+	m_controlPoints.endEdit();
 }
 
 template <class DataTypes>
