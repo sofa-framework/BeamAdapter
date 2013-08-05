@@ -28,8 +28,10 @@
 #include <cstring>
 #include <string>
 
+#ifdef SOFA_DEV
 #include "AdaptiveBeamContactMapper.h"
 #include "MultiAdaptiveBeamContactMapper.h"
+#endif // SOFA_DEV
 
 namespace sofa
 {

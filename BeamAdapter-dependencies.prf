@@ -1,5 +1,5 @@
 includeOnce($$_FILE_) {
-	declare(BeamAdapter, applications/plugins/BeamAdapter, SofaAdvancedConstraint sofa_component_advanced sofa_volumetric_data SofaEVE)
+	declare(BeamAdapter, applications/plugins/BeamAdapter, SofaAdvancedConstraint sofa_component_advanced sofa_constraint sofa_volumetric_data SofaEVE)
 	
 	enable(BeamAdapter)
 

@@ -81,9 +81,9 @@ int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and veloc
 
 
 
-#ifndef SOFA_FLOAT
+
 template<>
-void SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
+void SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
 {
         VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in= dIn.getValue();
@@ -113,7 +113,7 @@ void SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::appl
 }
 
 template<>
-void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJonPoint(unsigned int i, SpatialVector& VNode0input, SpatialVector& VNode1input, Deriv& vOutput, const  InVecCoord& x)
+void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJonPoint(unsigned int i, SpatialVector& VNode0input, SpatialVector& VNode1input, Deriv& vOutput, const  InVecCoord& x)
 {
     //1. get the curvilinear abs;
     PosPointDefinition  ppd = pointBeamDistribution[i];
@@ -160,12 +160,12 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJonPoint(unsigned in
     Real a3=bx*bx*bx;
     //vOutput.getVCenter() = V0*a0 + V1*a1 + V2*a2 + V3*a3;
     //vOutput.getVOrientation() = W0*(a0+a1) + W3*(a2+a3);
-    Rigid3dTypes::setDPos(vOutput,V0*a0 + V1*a1 + V2*a2 + V3*a3);
-    Rigid3dTypes::setDRot(vOutput,W0*(a0+a1) + W3*(a2+a3));
+    Rigid3Types::setDPos(vOutput,V0*a0 + V1*a1 + V2*a2 + V3*a3);
+    Rigid3Types::setDRot(vOutput,W0*(a0+a1) + W3*(a2+a3));
 }
 
 template<>
-void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x)
+void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x)
 {
 
 
@@ -175,8 +175,8 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJTonPoint(unsigned i
 	Real bx = ppd.baryPoint[0];
 
         SpatialVector f6DofInput;
-        f6DofInput.setForce(Rigid3dTypes::getDPos(finput));
-        f6DofInput.setTorque(Rigid3dTypes::getDRot(finput));
+        f6DofInput.setForce(Rigid3Types::getDPos(finput));
+        f6DofInput.setTorque(Rigid3Types::getDRot(finput));
 
 
         m_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(ppd.beamId, bx, Vec3(0,ppd.baryPoint[1],ppd.baryPoint[2]), x,
@@ -186,7 +186,7 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::applyJTonPoint(unsigned i
 }
 
 template <>
-void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::computeJacobianOnPoint(unsigned int i, const  InVecCoord& x)
+void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsigned int i, const  InVecCoord& x)
 {
 
 
@@ -205,8 +205,8 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::computeJacobianOnPoint(un
         v_DOF0.clear();
         //v_DOF0.setLinearVelocity(Id.getVCenter());
         //v_DOF0.setAngularVelocity(Id.getVOrientation());
-        v_DOF0.setLinearVelocity(Rigid3dTypes::getDPos(Id));
-        v_DOF0.setAngularVelocity(Rigid3dTypes::getDRot(Id));
+        v_DOF0.setLinearVelocity(Rigid3Types::getDPos(Id));
+        v_DOF0.setAngularVelocity(Rigid3Types::getDRot(Id));
         v_DOF1.clear();
         applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
         J(0,j)=Vresult[0]; J(1,j)=Vresult[1]; J(2,j)=Vresult[2]; J(3,j)=Vresult[3]; J(4,j)=Vresult[4]; J(5,j)=Vresult[5];
@@ -220,8 +220,8 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::computeJacobianOnPoint(un
     //  6 colonnes
         v_DOF0.clear();
         v_DOF1.clear();
-        v_DOF1.setLinearVelocity(Rigid3dTypes::getDPos(Id));
-        v_DOF1.setAngularVelocity(Rigid3dTypes::getDRot(Id));
+        v_DOF1.setLinearVelocity(Rigid3Types::getDPos(Id));
+        v_DOF1.setAngularVelocity(Rigid3Types::getDRot(Id));
         applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
         J(0,j+6)=Vresult[0]; J(1,j+6)=Vresult[1]; J(2,j+6)=Vresult[2]; J(3,j+6)=Vresult[3]; J(4,j+6)=Vresult[4]; J(5,j+6)=Vresult[5];
 //    //3 colonnes
@@ -253,7 +253,7 @@ void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::computeJacobianOnPoint(un
 
 
 template <>
-int AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::addPoint (const Coord& c, int )
+int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& c, int )
 {
     int i = points.getValue().size();
     Vec3 test = c.getCenter();
@@ -263,10 +263,6 @@ int AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::addPoint (const Coord& c, 
 }
 
 
-#endif
-
-
-
 
 #ifndef SOFA_FLOAT
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   >;
@@ -274,6 +270,7 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTyp
 #endif
 #ifndef SOFA_DOUBLE
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping< Rigid3fTypes, Vec3fTypes >;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3fTypes, Rigid3fTypes >;
 #endif
 
 #ifndef SOFA_FLOAT

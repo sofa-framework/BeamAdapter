@@ -107,18 +107,21 @@ public:
 	typedef Vec<3, Real> Vec3;
 	typedef Vec<6, Real> Vec6;
 
-    typedef helper::vector<Vec3> VecVec3;
+	//    typedef helper::vector<Vec3> VecVec3;
 
     // These vector is related to Bézier nodes
+#ifndef SOFA_FLOAT
     typedef helper::vector<sofa::defaulttype::Vec<3, double> > VecVec3d;
-
+#else
+    typedef helper::vector<sofa::defaulttype::Vec<3, float> > VecVec3d;
+#endif
 
 	BeamInterpolation()
 	: radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (for now only constant radius are used)"))
 	, innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
 	, dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
-    , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes> >())
+    , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
     , m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
 	, m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
 	, m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
@@ -393,7 +396,7 @@ public:
 
 protected :
 	/// DATA INPUT (that could change in real-time)
-    sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3dTypes>::SPtr mStateNodes;
+    sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types>::SPtr mStateNodes;
 
 	///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
 	Data< VecElementID > m_edgeList;
