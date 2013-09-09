@@ -759,6 +759,7 @@ template<>
 void AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn );
 #endif
 #ifndef SOFA_DOUBLE
+template<>
 void AdaptiveBeamMapping<Rigid3fTypes, Rigid3fTypes >::apply(const core::MechanicalParams* /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn );
 #endif
 } // namespace mapping
