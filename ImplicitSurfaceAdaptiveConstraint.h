@@ -18,8 +18,11 @@
 
 #include "WireBeamInterpolation.h"
 
+//#define SOFAEVE  //temporary fix for compilation, this component does not work without SOFAEVE (which is however not accessible easily)
 
+#ifdef SOFAEVE
 #include <../applications/plugins/SofaEVE/Implicit/Isosurface.h>
+#endif
 
 
 namespace sofa
@@ -102,7 +105,9 @@ protected :
     Data<bool> visualization;
     Data<defaulttype::Vec3d> PosMin;
     Data<defaulttype::Vec3d> PosMax;
+#ifdef SOFAEVE
     sofaeve::implicit::MarchingCube * mc;
+#endif
     double mc_data[100000000];
     Real _isoValue;
 

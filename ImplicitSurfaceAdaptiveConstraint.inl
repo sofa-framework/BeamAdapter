@@ -31,6 +31,7 @@ double TimeProjection2= 0.0;
 //#define DEBUG_PROJECTION
 //#define DEBUG_LAST_CONSTRAINT_ONLY
 
+
 //#define DEBUG_DFREE_COMPUTATION
 
 
@@ -128,7 +129,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
     m_domainSample.push_back(-1);
 
     // STEP 6: init marching cube
+#ifdef SOFAEVE
         mc = new sofaeve::implicit::MarchingCube();
+#endif
 
 
 }
@@ -752,14 +755,18 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
         glPolygonMode(GL_FRONT, GL_LINE);
 
 
+#ifdef SOFAEVE
         mc->buildMesh(mc_data, 50, 50, 50, _isoValue);
+#endif
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
         defaulttype::Vec3d Pos(PosMin.getValue()[0],PosMin.getValue()[1],PosMin.getValue()[2]);
         Pos += PosLastPoint;
+#ifdef SOFAEVE
         mc->draw(Pos[0], Pos[1], Pos[2], 0.2, 0.2, 0.2);
+#endif
 
 
 

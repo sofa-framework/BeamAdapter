@@ -17,6 +17,8 @@ namespace constraint
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
 
+#ifdef SOFAEVE
+
 SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 
 int ImplicitSurfaceAdaptiveConstraintClass = core::RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
@@ -34,6 +36,8 @@ template class ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes>;
 #ifndef SOFA_DOUBLE
 template class ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes>;
 #endif
+
+#endif  // SOFAEVE
 
 } // namespace constraint
 
