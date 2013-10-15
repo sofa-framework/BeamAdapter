@@ -483,12 +483,14 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
 		if (curvAbs)
 		{
-			int ptsPerBeam = nbPointsPerBeam.getValue();
+			double ptsPerBeam = nbPointsPerBeam.getValue();
 			if(ptsPerBeam)
 			{	// Recreating the distribution based on the current sampling of the beams
 				helper::WriteAccessor< Data< sofa::helper::vector<Real> > > waSegmentsCurvAbs = segmentsCurvAbs;
 				waSegmentsCurvAbs.clear();
 
+				double step = 1.0 / ptsPerBeam;
+				double posInBeam = 0;
 				unsigned int nbBeams = m_adaptativebeamInterpolation->getNumBeams();
 				InReal segStart, segEnd, segLength;
 				for(unsigned int b=0; b<nbBeams; ++b)
@@ -496,21 +498,22 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 					m_adaptativebeamInterpolation->getAbsCurvXFromBeam(b, segStart, segEnd);
 					segLength = segEnd - segStart;
 
-					for(int i=0; i<ptsPerBeam; ++i)
+					for (; posInBeam <= 1.0; posInBeam += step)
 					{
-						Real p = (Real)i / ptsPerBeam;
-						waSegmentsCurvAbs.push_back(segStart + segLength * p);
+						waSegmentsCurvAbs.push_back(segStart + segLength * posInBeam);
 						PosPointDefinition beamDistrib;
 						beamDistrib.beamId = b;
-						beamDistrib.baryPoint[0] = p;
+						beamDistrib.baryPoint[0] = posInBeam;
 						beamDistrib.baryPoint[1] = 0.0;
 						beamDistrib.baryPoint[2] = 0.0;
 
 						pointBeamDistribution.push_back(beamDistrib);
 					}
+
+					posInBeam -= 1.0;
 				}
 
-				if(nbBeams)
+				if (nbBeams && fabs(posInBeam - step) > 0.01)
 				{	// Last point
 					waSegmentsCurvAbs.push_back(segEnd);
 					PosPointDefinition beamDistrib;

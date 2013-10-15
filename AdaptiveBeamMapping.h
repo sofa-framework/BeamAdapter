@@ -132,7 +132,7 @@ public:
     Data< double > proximity;						/*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
     Data<bool> contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
     Data<std::string> nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
-    Data<int> nbPointsPerBeam;						/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
+    Data<double> nbPointsPerBeam;					/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
 	Data< sofa::helper::vector< Real > > segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
     SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
 
@@ -143,7 +143,7 @@ public:
     , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
     , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
     , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , nbPointsPerBeam(initData(&nbPointsPerBeam, 0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
+    , nbPointsPerBeam(initData(&nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , segmentsCurvAbs(initData(&segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
     , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _interpolation)
     , m_inputMapping(NULL)
