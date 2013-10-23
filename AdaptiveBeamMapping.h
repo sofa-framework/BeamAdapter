@@ -178,7 +178,7 @@ public:
     {
 
         int i = points.getValue().size();
-        Vec3 test = c;
+        Vec3 test(c[0],c[1],c[2]);
 
         points.beginEdit()->push_back(test);
         points.endEdit();

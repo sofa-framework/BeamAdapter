@@ -580,33 +580,34 @@ void AdaptiveBeamMapping< TIn, TOut>::computeJacobianOnPoint(unsigned int i, con
 
 	for (unsigned int j=0; j<3; j++)
 	{
-		Deriv Id(0,0,0), Vresult;
+		Deriv Id, Vresult;
+		Vec3 Idv(0,0,0);
 		Id[j]=1.0;
 		SpatialVector v_DOF0, v_DOF1;
 
 		//3 colonnes
 		v_DOF0.clear();
-		v_DOF0.setLinearVelocity(Id);
+		v_DOF0.setLinearVelocity(Idv);
 		v_DOF1.clear();
 		applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
 		J(0,j)=Vresult[0]; J(1,j)=Vresult[1]; J(2,j)=Vresult[2];
 		//3 colonnes
 		v_DOF0.clear();
-		v_DOF0.setAngularVelocity(Id);
+		v_DOF0.setAngularVelocity(Idv);
 		v_DOF1.clear();
 		applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
 		J(0,j+3)=Vresult[0]; J(1,j+3)=Vresult[1]; J(2,j+3)=Vresult[2];
 		//3 colonnes
 		v_DOF0.clear();
 		v_DOF1.clear();
-		v_DOF1.setLinearVelocity(Id);
+		v_DOF1.setLinearVelocity(Idv);
 
 		applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
 		J(0,j+6)=Vresult[0]; J(1,j+6)=Vresult[1]; J(2,j+6)=Vresult[2];
 		//3 colonnes
 		v_DOF0.clear();
 		v_DOF1.clear();
-		v_DOF1.setAngularVelocity(Id);
+		v_DOF1.setAngularVelocity(Idv);
 		applyJonPoint(i, v_DOF0, v_DOF1, Vresult, x);
 		J(0,j+9)=Vresult[0]; J(1,j+9)=Vresult[1]; J(2,j+9)=Vresult[2];
 
@@ -672,8 +673,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJonPoint(unsigned int i, SpatialVecto
 		Real a1=3*bx*(1-bx)*(1-bx);
 		Real a2=3*bx*bx*(1-bx);
 		Real a3=bx*bx*bx;
-		vOutput = V0*a0 + V1*a1 + V2*a2 + V3*a3;
-		vOutput += DV0*(a0+a1) + DV3*(a2+a3);
+		vOutput = V0*a0 + V1*a1 + V2*a2 + V3*a3 + DV0*(a0+a1) + DV3*(a2+a3);
 
 	}
 	else
