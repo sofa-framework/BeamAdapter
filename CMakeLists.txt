@@ -88,11 +88,12 @@ endif()
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} )
 
 set(COMPILER_DEFINES "SOFA_BUILD_BEAMADAPTER")
-set(LINKER_DEPENDENCIES SofaAdvancedConstraint SofaComponentAdvanced SofaVolumetricData )
+set(LINKER_DEPENDENCIES SofaConstraint SofaComponentAdvanced SofaVolumetricData )
 
 if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
     #list(APPEND LINKER_DEPENDENCIES SofaCUDA)
     #list(APPEND LINKER_DEPENDENCIES SofaCUDADev)
+    set(LINKER_DEPENDENCIES SofaAdvancedConstraint)    
 endif()
 
 #
