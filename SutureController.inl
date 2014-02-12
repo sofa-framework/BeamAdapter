@@ -70,12 +70,13 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , m_topology(0)
 , m_updateOnBeginAnimationStep(initData(&m_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
 , m_applyOrientationFirstInCreateNeedle(initData(&m_applyOrientationFirstInCreateNeedle, false, "applyOrientationFirstInCreateNeedle", "if true, it sets first the orientation, then the rotation for a init node of the needle"))
+, m_reinitilizeWireOnInit(initData(&m_reinitilizeWireOnInit, false, "reinitilizeWireOnInit"," reinitialize the wire everytime init() is called (for planning purposes)" ))
 {
 }
 
 template <class DataTypes>
 void SutureController<DataTypes>::init()
-{
+{    
 	this->f_listening.setValue(true);
 	Inherit::init();
 
@@ -95,14 +96,14 @@ void SutureController<DataTypes>::init()
 	/// @TODO : verifier que la topologie est celle d'un wire
 	this->getContext()->get(m_topology);
 
-	if (!wireIsAlreadyInitialized())
+    if (m_reinitilizeWireOnInit.getValue() || !wireIsAlreadyInitialized())
 		initWireModel();
 }
 
 
 template <class DataTypes>
 void SutureController<DataTypes>::reinit()
-{
+{ 
     this->getMechanicalState()->cleanup();
     init();
     applyController();
@@ -119,7 +120,7 @@ void SutureController<DataTypes>::initWireModel()
 	m_topology->cleanup();
 	
 	// on initialise le "wire" en prenant la position de départ + la forme au repos + la discretisation proposée...
-	Transform global_T_init;
+    Transform global_T_init;
 	const Coord startPos = startingPos.getValue();
 
     if (m_applyOrientationFirstInCreateNeedle.getValue()) {
