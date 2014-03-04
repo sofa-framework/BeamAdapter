@@ -66,7 +66,7 @@
 		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="@InterpolCoils" massDensity="0.000021"/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
 
 		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="2.01 1.3 0.3"  step="3.0" rotationInstrument="0 0 0" 
-							controlledInstrument="0" startingPos="0 0 0 0 -0.7071068 0 0.7071068" speed="0." instruments="InterpolCatheter InterpolGuide InterpolCoils" />
+							controlledInstrument="0" startingPos="0 0 0 0 -0.7071068 0 0.7071068" speed="10." instruments="InterpolCatheter InterpolGuide InterpolCoils" />
 
 		<LinearSolverConstraintCorrection printLog="false" />
 

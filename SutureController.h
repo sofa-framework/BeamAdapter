@@ -40,9 +40,9 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 
-#include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/collision/PointModel.h>
-#include <sofa/component/collision/LineModel.h>
+#include <UserInteraction/controller/MechanicalStateController.h>
+#include <MeshCollision/PointModel.h>
+#include <MeshCollision/LineModel.h>
 
 #include "WireBeamInterpolation.h"
 

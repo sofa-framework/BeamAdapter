@@ -40,13 +40,13 @@
 
 #include "BeamInterpolation.h"
 #include <sofa/core/topology/BaseMeshTopology.h>
-#include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/topology/EdgeSetTopologyModifier.h>
+#include <UserInteraction/controller/MechanicalStateController.h>
+#include <BaseTopology/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/component/projectiveconstraintset/FixedConstraint.h>
+#include <BoundaryCondition/projectiveconstraintset/FixedConstraint.h>
 #include <sofa/core/DataEngine.h>
-#include <sofa/component/collision/PointModel.h>
-#include <sofa/component/collision/LineModel.h>
+#include <MeshCollision/PointModel.h>
+#include <MeshCollision/LineModel.h>
 
 
 using namespace sofa::component::fem;

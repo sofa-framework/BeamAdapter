@@ -123,7 +123,7 @@ template <class DataTypes>
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
-{
+{	
 	VecElementID &edgeList = *this->m_edgeList.beginEdit();
 	vector< double > &lengthList = *this->m_lengthList.beginEdit();
 	vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();

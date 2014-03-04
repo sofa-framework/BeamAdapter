@@ -46,8 +46,8 @@
 #include <sofa/helper/vector.h>
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/defaulttype/Mat.h>
-#include <sofa/component/topology/EdgeSetTopologyModifier.h>
-#include <sofa/core/topology/BaseMeshTopology.h>
+#include <BaseTopology/EdgeSetTopologyModifier.h>
+// #include <BaseTopology/BaseMeshTopology.h>
 #include <sofa/core/objectmodel/Event.h>
 
 using namespace sofa::component::controller;

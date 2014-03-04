@@ -12,12 +12,12 @@
 #include <sofa/helper/gl/template.h>
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
-#include <sofa/component/topology/RegularGridTopology.h>
-#include <sofa/component/mass/AddMToMatrixFunctor.h>
-#include <sofa/component/topology/TopologyData.inl>
+#include <BaseTopology/RegularGridTopology.h>
+#include <BaseMechanics/AddMToMatrixFunctor.h>
+#include <BaseTopology/TopologyData.inl>
 
 #include <sofa/helper/system/thread/CTime.h>
-#include <sofa/component/constraintset/UnilateralInteractionConstraint.h>
+#include <Constraint/constraintset/UnilateralInteractionConstraint.h>
 
 #include <sofa/core/visual/VisualParams.h>
 

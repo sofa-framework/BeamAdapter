@@ -7,14 +7,14 @@
 #include <sofa/core/visual/VisualModel.h>
 #include <sofa/helper/gl/template.h>
 #include <iostream>
-#include <sofa/component/container/ImplicitSurfaceContainer.h>
+#include <VolumetricData/container/ImplicitSurfaceContainer.h>
 
 #include <sofa/defaulttype/Mat.h>
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/core/objectmodel/Event.h>
 #include <sofa/helper/vector.h>
-#include <sofa/component/topology/TopologyData.h>
+#include <BaseTopology/TopologyData.h>
 
 #include "WireBeamInterpolation.h"
 

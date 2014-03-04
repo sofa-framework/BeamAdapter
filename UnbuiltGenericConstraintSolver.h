@@ -25,8 +25,8 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_UNBUILTGENERICCONSTRAINTSOLVER_H
 #define SOFA_COMPONENT_CONSTRAINTSET_UNBUILTGENERICCONSTRAINTSOLVER_H
 
-#include <sofa/component/constraintset/GenericConstraintSolver.h>
-#include <sofa/component/constraintset/ConstraintSolverImpl.h>
+#include <Constraint/constraintset/GenericConstraintSolver.h>
+#include <Constraint/constraintset/ConstraintSolverImpl.h>
 #include <sofa/core/behavior/BaseConstraint.h>
 #include <sofa/core/behavior/ConstraintSolver.h>
 #include <sofa/core/behavior/BaseConstraintCorrection.h>
@@ -34,8 +34,8 @@
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/MechanicalVisitor.h>
 
-#include <sofa/component/linearsolver/FullMatrix.h>
-#include <sofa/component/linearsolver/SparseMatrix.h>
+#include <BaseLinearSolver/FullMatrix.h>
+#include <BaseLinearSolver/SparseMatrix.h>
 
 #include <sofa/helper/set.h>
 #include <sofa/helper/map.h>

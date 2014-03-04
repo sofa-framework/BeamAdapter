@@ -27,7 +27,7 @@
 
 #include "AdaptiveBeamConstraint.h"
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/component/constraintset/BilateralInteractionConstraint.h>
+#include <Constraint/constraintset/BilateralInteractionConstraint.h>
 
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/helper/gl/template.h>

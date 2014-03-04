@@ -39,8 +39,8 @@
 
 #include "WireRestShape.h"
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
-#include <sofa/component/topology/QuadSetTopologyModifier.h>
+#include <BaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <BaseTopology/QuadSetTopologyModifier.h>
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
 #include <sofa/core/topology/Topology.h>
@@ -170,6 +170,7 @@ void WireRestShape<DataTypes>::init()
             keyPointList.push_back(straightLength.getValue());
         keyPointList.push_back(length.getValue());
     }
+
     keyPoints.endEdit();
 
 
@@ -419,7 +420,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
      // verify that size of numEdgesCollis  =  size of keyPoints-1
      if( numEdgesCollis.getValue().size() != keyPoints.getValue().size()-1)
      {
-         serr<<"ooooo\n ooo Problem size of numEdgesCollis  !=  size of keyPoints-1 "<<sendl;
+         serr<<"ooooo\n ooo Problem size of numEdgesCollis ()" << numEdgesCollis.getValue().size() << " !=  size of keyPoints-1 " << keyPoints.getValue().size()-1 <<sendl;
          numLines = (unsigned int)numEdgesCollis.getValue()[0];
          dx=length.getValue()/numLines;
          return;
