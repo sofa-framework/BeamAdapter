@@ -39,8 +39,10 @@
 
 #include "BaseRestShape.h"
 #include <sofa/core/behavior/MechanicalState.h>
-#include <BaseTopology/EdgeSetGeometryAlgorithms.h>
-#include <BaseTopology/QuadSetTopologyModifier.h>
+// #include <BaseTopology/EdgeSetGeometryAlgorithms.h>
+// #include <BaseTopology/QuadSetTopologyModifier.h>
+#include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/QuadSetTopologyModifier.h>
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
 

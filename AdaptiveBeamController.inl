@@ -41,7 +41,8 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
-#include <BaseTopology/EdgeSetGeometryAlgorithms.h>
+//#include <BaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 
 
