@@ -555,7 +555,7 @@ bool ProjectionSearch<DataTypes>::doSearch(Real& result)
 	if(found)
 	{
 		result = e;
-		return true;
+		return testForProjection(result);
 	}
 
 	// Look if the new estimate is closer to the target than the previous estimate
@@ -572,7 +572,7 @@ bool ProjectionSearch<DataTypes>::doSearch(Real& result)
 			{
 				// Go back to global curv abs
 				result = beamStart + (beamEnd - beamStart) * le;
-				return true;
+                return testForProjection(result);
 			}
 
 			dist = computeDistAtCurvAbs(e);
