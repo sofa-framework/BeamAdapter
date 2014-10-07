@@ -230,6 +230,8 @@ public:
       */
 	void addNodeOnXcurv(const Real& x_curv){listOfImposedNodesOnXcurv.push_back(x_curv);}
 	void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
+    
+    void insertActualNoticeablePoint(Real _absc);
 
 
 
@@ -335,6 +337,7 @@ protected:
 	Data< bool > m_updateOnBeginAnimationStep;
     Data< bool> m_applyOrientationFirstInCreateNeedle;
     Data< bool > m_reinitilizeWireOnInit;
+    Data<helper::vector<Real> > m_actualStepNoticeablePoints;
 };
 
 #if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)

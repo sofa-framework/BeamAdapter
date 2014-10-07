@@ -71,6 +71,7 @@ SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTyp
 , m_updateOnBeginAnimationStep(initData(&m_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
 , m_applyOrientationFirstInCreateNeedle(initData(&m_applyOrientationFirstInCreateNeedle, false, "applyOrientationFirstInCreateNeedle", "if true, it sets first the orientation, then the rotation for a init node of the needle"))
 , m_reinitilizeWireOnInit(initData(&m_reinitilizeWireOnInit, false, "reinitilizeWireOnInit"," reinitialize the wire everytime init() is called (for planning purposes)" ))
+, m_actualStepNoticeablePoints(initData(&m_actualStepNoticeablePoints, "m_actualStepNoticeablePoints", "points (as curv. absc.) that are to be considered when computing a new sampling in the actual time step"))
 {
 }
 
@@ -1140,6 +1141,26 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     helper::vector<int> nbP_density;
 
     m_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
+    
+    helper::ReadAccessor< Data< helper::vector<Real> > > actualNoticeable = this->m_actualStepNoticeablePoints;
+    if (!actualNoticeable.empty()) {
+        xP_noticeable.insert(xP_noticeable.end(), actualNoticeable.begin(), actualNoticeable.end());
+        std::sort(xP_noticeable.begin(), xP_noticeable.end());                
+        
+        int density = nbP_density[0];
+        nbP_density.clear();
+        Real beamLength = m_adaptiveinterpolation->getRestTotalLength();
+        for (size_t i = 1; i < xP_noticeable.size(); i++) {
+            Real diff = xP_noticeable[i] - xP_noticeable[i-1];        
+            nbP_density.push_back(int((diff/beamLength)*Real(density)+1));
+        }
+        
+        std::cout << "Noticeable Points = " << xP_noticeable << std::endl;
+        std::cout << "Density  = " << nbP_density << std::endl;
+        
+        helper::WriteAccessor< Data< helper::vector<Real> > > wActualNoticeable = this->m_actualStepNoticeablePoints;
+        wActualNoticeable.clear();        
+    }
 
     if(xP_noticeable.size()<2){
         serr<<" xP_noticeable_buf.size()= "<<xP_noticeable.size()<<sendl;
@@ -1517,6 +1538,12 @@ void SutureController<DataTypes>::updateControlPointsPositions()
 	ctrlPts.push_back(pt);
 
 	m_controlPoints.endEdit();
+}
+
+template <class DataTypes>
+void SutureController<DataTypes>::insertActualNoticeablePoint(Real _absc) {
+    helper::WriteAccessor< Data< helper::vector<Real> > > actualNoticeable = this->m_actualStepNoticeablePoints;    
+    actualNoticeable.push_back(_absc);    
 }
 
 template <class DataTypes>
