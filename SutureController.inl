@@ -1323,15 +1323,21 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 		addRigidCurvAbs(newCurvAbs_notSecure, 0.0001);
 	}
 
-    ///// Verify that there is no beams with null length ///
+    ///// Verify that there are no beams with null length ///
+    /// DEBUG: should not remove the last abscissa (spoils the object)
     newCurvAbs.clear();
     newCurvAbs.push_back(newCurvAbs_notSecure[0]);
-    for (unsigned int i=1; i<newCurvAbs_notSecure.size(); i++)
+    for (unsigned int i=1; i<newCurvAbs_notSecure.size()-1; i++)
     {
         if (newCurvAbs_notSecure[i] > newCurvAbs_notSecure[i-1]+threshold.getValue())
             newCurvAbs.push_back(newCurvAbs_notSecure[i]);
     }
-
+    size_t lastSec = newCurvAbs.size()-1;
+    size_t lastNSec = newCurvAbs_notSecure.size()-1;
+    if (newCurvAbs_notSecure[lastNSec] < newCurvAbs[lastSec]+threshold.getValue()) {
+        newCurvAbs.pop_back();
+    }
+    newCurvAbs.push_back(newCurvAbs_notSecure[lastNSec]);
 #ifdef DEBUG
     std::cout<<" compute Sampling: newCurvAbs="<<newCurvAbs<<"   xP_noticeable="<<xP_noticeable<<"   nbP_density="<<nbP_density<<std::endl;
 
