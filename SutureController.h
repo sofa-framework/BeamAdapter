@@ -294,7 +294,7 @@ private:
 
 	void updateControlPointsPositions();
 
-protected:
+public:
 
     ////// for point and line activer
     sofa::helper::vector<Real> xAbs_collisionPoints_buf;
