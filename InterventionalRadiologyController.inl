@@ -519,7 +519,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
                 else
                 {
                     std::cout << "Current data is " << currentSensorData << " // " << sensorMotionData[currentSensorData][1] << std::endl;
-                    x_instr_tip[id] = sensorMotionData[currentSensorData][1];
+                    x_instr_tip[id] += sensorMotionData[currentSensorData][1];
                     std::cout << "motion is --- " << x_instr_tip[id] << std::endl;
                 }               
             }
