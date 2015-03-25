@@ -238,8 +238,7 @@ protected:
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
 
     void activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table);
-
-
+    void loadMotionData(std::string filename);
 
 
     Data<int> controlledInstrument;
@@ -251,10 +250,16 @@ protected:
     Data<Coord> startingPos;
     Data<Real> threshold;
     Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    Data <std::string> motionFilename;
 
-    bool FF, RW;
+    
+
+    bool FF, RW, sensored;
     sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *_fixedConstraint;
     sofa::helper::vector<int> droppedInstruments;
+
+    sofa::helper::vector<Vec3d> sensorMotionData;
+    unsigned int currentSensorData;
 
     sofa::helper::vector<Real> nodeCurvAbs;
     sofa::helper::vector< sofa::helper::vector<int> > id_instrument_curvAbs_table;

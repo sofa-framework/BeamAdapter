@@ -71,6 +71,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
 , threshold(initData(&threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
+, motionFilename(initData(&motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 {
     //edgeSetInNode=true;
     _fixedConstraint = NULL;
@@ -152,11 +153,13 @@ void InterventionalRadiologyController<DataTypes>::init()
      {
 		 FF=true;
 		 RW=false;
+         sensored = false;
      }
-
-
-
-
+    if (motionFilename.getValue().c_str() != NULL)
+    {
+        FF = true; sensored = true; currentSensorData = 0;
+        loadMotionData(motionFilename.getValue());
+    }
 
 
     // get the topology & tools for topology changes
@@ -235,6 +238,33 @@ void InterventionalRadiologyController<DataTypes>::init()
 
 	reinit();
 
+}
+
+template<class DataTypes>
+void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string filename)
+{
+    if (!sofa::helper::system::DataRepository.findFile(filename))
+    {
+        std::cerr << "File " << filename << " not found " << std::endl;
+        return;
+    }   
+    std::ifstream file(filename.c_str());
+
+    std::string line;
+    Vec3 result;
+    while( std::getline(file,line) )
+    {
+        if (line.empty()) continue;
+        std::cout << line << std::endl;
+        std::istringstream values(line);
+        values >> result[0] >> result[1] >> result[2];
+        result[0] /= 1000;
+        sensorMotionData.push_back(result);
+    }
+    
+    file.close();
+
+    std::cout << "Motion sensor: " << sensorMotionData.size() << " events recorded" << std::endl;
 }
 
 
@@ -468,8 +498,31 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     		id=0;
     	}
     	if (FF)
-    	{
-    		x_instr_tip[id] += speed.getValue() * context->getDt();
+    	{            
+            if (!sensored) x_instr_tip[id] += speed.getValue() * context->getDt();
+            else
+            {
+                // x_instr_tip[id] += sensorMotionData[1000 * context->getTime()][1];  
+                unsigned int newSensorData = currentSensorData + 1;
+                
+                // std::cout << "Current time is " << context->getTime() << std::endl;
+
+                while( sensorMotionData[newSensorData][0] < context->getTime() )
+                {
+                    currentSensorData = newSensorData;
+                    newSensorData++;
+                }
+                if(newSensorData >= sensorMotionData.size())
+                {
+                    x_instr_tip[id] = 0;
+                }
+                else
+                {
+                    std::cout << "Current data is " << currentSensorData << " // " << sensorMotionData[currentSensorData][1] << std::endl;
+                    x_instr_tip[id] = sensorMotionData[currentSensorData][1];
+                    std::cout << "motion is --- " << x_instr_tip[id] << std::endl;
+                }               
+            }
     	}
     	if (RW)
     	{
@@ -481,9 +534,9 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     			RW = false;
     		}
     	}
-
-
     }
+
+    
     ///////// The tip of the instrument can not be further than its total length
     ////// \todo => dropp !!
 
