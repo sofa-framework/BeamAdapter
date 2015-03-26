@@ -76,6 +76,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
     //edgeSetInNode=true;
     _fixedConstraint = NULL;
     this->dropCall = false;
+    sensored =false;
 
     /*
     if (!_instrumentlist.empty())
@@ -155,7 +156,7 @@ void InterventionalRadiologyController<DataTypes>::init()
 		 RW=false;
          sensored = false;
      }
-    if (motionFilename.getValue().c_str() != NULL)
+    if (!motionFilename.getValue().empty())
     {
         FF = true; sensored = true; currentSensorData = 0;
         loadMotionData(motionFilename.getValue());
@@ -486,10 +487,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
     sofa::core::objectmodel::BaseContext* context = this->getContext();
-
-
     sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
-
     if(FF || RW)
     {
     	int id = controlledInstrument.getValue();
@@ -499,14 +497,14 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     	}
     	if (FF)
     	{            
-            if (!sensored) x_instr_tip[id] += speed.getValue() * context->getDt();
+            if (!sensored)
+                x_instr_tip[id] += speed.getValue() * context->getDt();
             else
             {
                 // x_instr_tip[id] += sensorMotionData[1000 * context->getTime()][1];  
                 unsigned int newSensorData = currentSensorData + 1;
                 
                 // std::cout << "Current time is " << context->getTime() << std::endl;
-
                 while( sensorMotionData[newSensorData][0] < context->getTime() )
                 {
                     currentSensorData = newSensorData;
@@ -539,11 +537,9 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     
     ///////// The tip of the instrument can not be further than its total length
     ////// \todo => dropp !!
-
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     	if (x_instr_tip[i] > this->m_instrumentsList[i]->getRestTotalLength() )
     		x_instr_tip[i] = this->m_instrumentsList[i]->getRestTotalLength();
-
     if (this->f_printLog.getValue())
     {
     	sout << "[onBeginAnimationStep] Size of xtip is now " << x_instr_tip.size() << sendl;
