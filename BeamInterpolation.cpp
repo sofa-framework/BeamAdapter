@@ -54,21 +54,21 @@ using namespace sofa::defaulttype;
 
 SOFA_DECL_CLASS(BeamInterpolation)
 
-// Register in the Factory
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
-#ifndef SOFA_FLOAT
-.add< BeamInterpolation<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< BeamInterpolation<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< BeamInterpolation<Rigid3dTypes> >()
 #endif
 ;
 
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
 #endif
 
 } // namespace fem

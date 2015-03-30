@@ -25,7 +25,7 @@
 //
 // C++ Implementation : InterventionalRadiologyController
 //
-// Description: 
+// Description:
 //
 //
 // Author: Christian Duriez, INRIA
@@ -45,7 +45,7 @@ namespace sofa
 {
 
 namespace component
-{ 
+{
 
 
 namespace controller
@@ -57,22 +57,21 @@ using namespace sofa::defaulttype;
 
 SOFA_DECL_CLASS(InterventionalRadiologyController)
 
-// Register in the Factory	
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int InterventionalRadiologyControllerClass = core::RegisterObject("")
-#ifndef SOFA_FLOAT
-.add< InterventionalRadiologyController<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< InterventionalRadiologyController<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< InterventionalRadiologyController<Rigid3dTypes> >()
 #endif
 ;
 
-
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3fTypes>;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3dTypes>;
 #endif
 
 

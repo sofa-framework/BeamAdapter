@@ -52,20 +52,21 @@ namespace forcefield
 using namespace sofa::defaulttype;
 SOFA_DECL_CLASS(AdaptiveBeamForceFieldAndMass)
 
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements")
-#ifndef SOFA_FLOAT
-.add< AdaptiveBeamForceFieldAndMass<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< AdaptiveBeamForceFieldAndMass<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< AdaptiveBeamForceFieldAndMass<Rigid3dTypes> >()
 #endif
 ;
 
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3fTypes>;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3dTypes>;
 #endif
 
 } // namespace forcefield

@@ -24,7 +24,7 @@
  ******************************************************************************/
 //
 //
-// Description: 
+// Description:
 //
 //
 // Author: Christian Duriez, INRIA
@@ -43,7 +43,7 @@ namespace sofa
 {
 
 namespace component
-{ 
+{
 
 namespace engine
 {
@@ -53,6 +53,7 @@ using namespace sofa::defaulttype;
 SOFA_DECL_CLASS(BaseRestShape)
 
 
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int BaseRestShapeClass = core::RegisterObject("Straignt Rest Shape")
 #ifndef SOFA_FLOAT
 .add< BaseRestShape<Rigid3dTypes> >()

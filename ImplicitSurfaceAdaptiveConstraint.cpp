@@ -21,20 +21,21 @@ using namespace sofa::helper;
 
 SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int ImplicitSurfaceAdaptiveConstraintClass = core::RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
-#ifndef SOFA_FLOAT
-.add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >()
 #endif
 ;
 
-#ifndef SOFA_FLOAT
-template class ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes>;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+template class ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes>;
 #endif
 
 #endif  // SOFAEVE

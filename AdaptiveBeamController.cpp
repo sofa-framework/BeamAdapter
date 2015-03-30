@@ -25,7 +25,7 @@
 //
 // C++ Implementation : AdaptiveBeamController
 //
-// Description: 
+// Description:
 //
 //
 // Author: Christian Duriez, INRIA
@@ -45,7 +45,7 @@ namespace sofa
 {
 
 namespace component
-{ 
+{
 
 
 namespace controller
@@ -57,38 +57,22 @@ using namespace sofa::defaulttype;
 
 SOFA_DECL_CLASS(AdaptiveBeamController)
 
-// Register in the Factory	
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamControllerClass = core::RegisterObject("")
-//.add< AdaptiveBeamController<Vec3dTypes> >()
-//.add< AdaptiveBeamController<Vec3fTypes> >()
-//.add< AdaptiveBeamController<Vec2dTypes> >()
-//.add< AdaptiveBeamController<Vec2fTypes> >()
-//.add< AdaptiveBeamController<Vec1dTypes> >()
-//.add< AdaptiveBeamController<Vec1fTypes> >()
-#ifndef SOFA_FLOAT
-.add< AdaptiveBeamController<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< AdaptiveBeamController<Rigid3fTypes> >()
 #endif
-//.add< AdaptiveBeamController<Rigid2dTypes> >()
-//.add< AdaptiveBeamController<Rigid2fTypes> >()
+#ifdef SOFA_WITH_DOUBLE
+.add< AdaptiveBeamController<Rigid3dTypes> >()
+#endif
 ;
 
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec3dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec3fTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec2dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec2fTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec1dTypes>;
-//template class SOFA_COMPONENT_CONTROLLER_API AdaptiveBeamController<Vec1fTypes>;
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3fTypes>;
 #endif
-//template class AdaptiveBeamController<Rigid2dTypes>;
-//template class AdaptiveBeamController<Rigid2fTypes>;
+#ifdef SOFA_WITH_DOUBLE
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3dTypes>;
+#endif
 
 
 } // namespace controller

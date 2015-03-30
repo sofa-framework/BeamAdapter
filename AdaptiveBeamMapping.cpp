@@ -54,27 +54,22 @@ using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
 
-
-
-
-
 // Register in the Factory
 int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-#ifndef SOFA_FLOAT
+#ifdef SOFA_WITH_DOUBLE
 .add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >()
 .add< AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes > >()
 #endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< AdaptiveBeamMapping< Rigid3fTypes, Vec3fTypes > >()
 #endif
-#ifndef SOFA_FLOAT
-#ifndef SOFA_DOUBLE
+
+#ifdef SOFA_WITH_FLOAT
+#ifdef SOFA_WITH_DOUBLE
 .add< AdaptiveBeamMapping< Rigid3dTypes, Vec3fTypes > >()
 .add< AdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes > >()
 #endif
 #endif
-//.add< AdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes > >()
-//.add< AdaptiveBeamMapping< Rigid3fTypes, Vec3fTypes > >()
 ;
 
 

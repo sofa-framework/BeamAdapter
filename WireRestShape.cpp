@@ -24,7 +24,7 @@
  ******************************************************************************/
 //
 //
-// Description: 
+// Description:
 //
 //
 // Author: Christian Duriez, INRIA
@@ -43,7 +43,7 @@ namespace sofa
 {
 
 namespace component
-{ 
+{
 
 namespace engine
 {
@@ -52,21 +52,21 @@ using namespace sofa::defaulttype;
 
 SOFA_DECL_CLASS(WireRestShape)
 
-
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireRestShapeClass = core::RegisterObject("")
-#ifndef SOFA_FLOAT
-.add< WireRestShape<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 .add< WireRestShape<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< WireRestShape<Rigid3dTypes> >()
 #endif
 ;
 
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3fTypes>;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3dTypes>;
 #endif
 
 

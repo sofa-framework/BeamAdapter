@@ -42,20 +42,21 @@ using namespace sofa::helper;
 
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
-int AdaptiveBeamConstraintClass = core::RegisterObject("TODO-AdaptiveBeamConstraint")
-#ifndef SOFA_FLOAT
-.add< AdaptiveBeamConstraint<Rigid3dTypes> >()
-#endif
-#ifndef SOFA_DOUBLE
+//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
+int AdaptiveBeamConstraintClass = core::RegisterObject("TODO")
+#ifdef SOFA_WITH_FLOAT
 .add< AdaptiveBeamConstraint<Rigid3fTypes> >()
+#endif
+#ifdef SOFA_WITH_DOUBLE
+.add< AdaptiveBeamConstraint<Rigid3dTypes> >()
 #endif
 ;
 
-#ifndef SOFA_FLOAT
-template class AdaptiveBeamConstraint<Rigid3dTypes>;
-#endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 template class AdaptiveBeamConstraint<Rigid3fTypes>;
+#endif
+#ifdef SOFA__WITH_DOUBLE
+template class AdaptiveBeamConstraint<Rigid3dTypes>;
 #endif
 
 } // namespace constraintset
