@@ -93,8 +93,8 @@ public:
     typedef typename DataTypes::Coord    Coord   ;
     typedef typename DataTypes::Deriv    Deriv   ;
     typedef typename Coord::value_type   Real    ;
-    typedef Vec<3, Real> Vec3;
-    typedef Vec<2, Real> Vec2;
+    typedef sofa::defaulttype::Vec<3, Real> Vec3;
+    typedef sofa::defaulttype::Vec<2, Real> Vec2;
 
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
     typedef sofa::helper::vector< ElementID > VecElementID;

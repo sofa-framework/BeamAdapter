@@ -126,8 +126,8 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
     Real baryCoord;
     unsigned int beam;
 
-    ReadAccessor<Data<VecCoord> > x1free=this->mstate1->read(sofa::core::ConstVecCoordId::freePosition()) ;
-    ReadAccessor<Data<VecCoord> > x2free=this->mstate1->read(sofa::core::ConstVecCoordId::freePosition()) ;
+    helper::ReadAccessor<Data<VecCoord> > x1free=this->mstate1->read(sofa::core::ConstVecCoordId::freePosition()) ;
+    helper::ReadAccessor<Data<VecCoord> > x2free=this->mstate1->read(sofa::core::ConstVecCoordId::freePosition()) ;
 
     unsigned int m2 = x2free.size();
     fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
@@ -152,7 +152,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const core::Constr
 
         // Position and frame on the curve
         interpolation->getBeamAtCurvAbs(previousPositions[i], beam, baryCoord);
-        interpolation->computeTransform2(beam, Tnode0, Tnode1, x1free);
+        interpolation->computeTransform2(beam, Tnode0, Tnode1, x1free.ref());
         interpolation->InterpolateTransformUsingSpline(Tresult, baryCoord, Tnode0, Tnode1, interpolation->getLength(beam));
         Pos p = Tresult.getOrigin();
         Pos dir, dir1, dir2;
@@ -235,8 +235,10 @@ void AdaptiveBeamConstraint<DataTypes>::draw(const core::visual::VisualParams* v
     glDisable(GL_LIGHTING);
     glPointSize(10);
     glBegin(GL_POINTS);
-    unsigned int m = this->mstate2->getSize();
-    const VecCoord& x = *this->mstate2->getX();
+
+    helper::ReadAccessor<Data<VecCoord> > x = this->mstate2->read(sofa::core::ConstVecCoordId::position()) ;
+    unsigned int m = x.size();
+
     for(unsigned int i=0; i<m; i++)
     {
         glColor4f(0.0f,1.0f,projected[i]?1:0.0f,1.0f);
