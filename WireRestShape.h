@@ -41,13 +41,9 @@
 #include "initBeamAdapter.h"
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/DataEngine.h>
-// #include <BaseTopology/EdgeSetTopologyModifier.h>
-// #include <BaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
-//#include <TopologyMapping/topology/Edge2QuadTopologicalMapping.h>
 #include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
-// #include <Loader/loader/MeshLoader.h>
 #include <SofaLoader/MeshObjLoader.h>
 
 namespace sofa

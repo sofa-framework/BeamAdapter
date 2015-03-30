@@ -43,7 +43,6 @@
 #include <sofa/core/objectmodel/Data.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
-//#include <BaseMechanics/MechanicalObject.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 
 #include <sofa/helper/vector.h>

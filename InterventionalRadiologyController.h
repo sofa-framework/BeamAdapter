@@ -39,17 +39,11 @@
 #define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 
 #include "WireBeamInterpolation.h"
-//#include <UserInteraction/controller/MechanicalStateController.h>
-//#include <BaseTopology/EdgeSetTopologyModifier.h>
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
-// #include <BaseTopology/BaseMeshTopology.h>
 #include <sofa/defaulttype/SolidTypes.h>
-//#include <BoundaryCondition/projectiveconstraintset/FixedConstraint.h>
 #include <SofaBoundaryCondition/FixedConstraint.h>
 #include <sofa/core/DataEngine.h>
-//#include <MeshCollision/PointModel.h>
-//#include <MeshCollision/LineModel.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
 

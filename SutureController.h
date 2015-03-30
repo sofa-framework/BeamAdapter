@@ -40,9 +40,6 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 
-// #include <UserInteraction/controller/MechanicalStateController.h>
-// #include <MeshCollision/PointModel.h>
-// #include <MeshCollision/LineModel.h>
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
