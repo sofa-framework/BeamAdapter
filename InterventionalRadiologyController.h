@@ -41,17 +41,17 @@
 #include "WireBeamInterpolation.h"
 //#include <UserInteraction/controller/MechanicalStateController.h>
 //#include <BaseTopology/EdgeSetTopologyModifier.h>
-#include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/topology/EdgeSetTopologyModifier.h>
+#include <SofaUserInteraction/MechanicalStateController.h>
+#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 // #include <BaseTopology/BaseMeshTopology.h>
 #include <sofa/defaulttype/SolidTypes.h>
 //#include <BoundaryCondition/projectiveconstraintset/FixedConstraint.h>
-#include <sofa/component/projectiveconstraintset/FixedConstraint.h>
+#include <SofaBoundaryCondition/FixedConstraint.h>
 #include <sofa/core/DataEngine.h>
 //#include <MeshCollision/PointModel.h>
 //#include <MeshCollision/LineModel.h>
-#include <sofa/component/collision/PointModel.h>
-#include <sofa/component/collision/LineModel.h>
+#include <SofaMeshCollision/PointModel.h>
+#include <SofaMeshCollision/LineModel.h>
 
 
 using namespace sofa::component::fem;
@@ -62,13 +62,13 @@ namespace sofa
 
 namespace component
 {
-	namespace topology
-	{
-		template <class T>
-		class EdgeSetGeometryAlgorithms;
+    namespace topology
+    {
+        template <class T>
+        class EdgeSetGeometryAlgorithms;
 
-		class EdgeSetTopologyModifier;
-	}
+        class EdgeSetTopologyModifier;
+    }
 
 
 namespace controller
@@ -86,17 +86,17 @@ class InterventionalRadiologyController : public MechanicalStateController<DataT
 {
 public:
   SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
-	typedef typename DataTypes::VecCoord VecCoord;
-	typedef typename DataTypes::VecDeriv VecDeriv;
-	typedef typename DataTypes::Coord    Coord   ;
-	typedef typename DataTypes::Deriv    Deriv   ;
-	typedef typename Coord::value_type   Real    ;
+    typedef typename DataTypes::VecCoord VecCoord;
+    typedef typename DataTypes::VecDeriv VecDeriv;
+    typedef typename DataTypes::Coord    Coord   ;
+    typedef typename DataTypes::Deriv    Deriv   ;
+    typedef typename Coord::value_type   Real    ;
 
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
     typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
 
-	typedef MechanicalStateController<DataTypes> Inherit;
-	typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WBeamInterpolation;
+    typedef MechanicalStateController<DataTypes> Inherit;
+    typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WBeamInterpolation;
 
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
@@ -138,54 +138,54 @@ public:
 
     typedef Vec<3, Real> Vec3;
 
-	/**
-	 * @brief Default Constructor.
-	 */
+    /**
+     * @brief Default Constructor.
+     */
     InterventionalRadiologyController();
 
-	/**
-	 * @brief Default Destructor.
-	 */
+    /**
+     * @brief Default Destructor.
+     */
     virtual ~InterventionalRadiologyController(){};
 
-	/**
-	 * @brief SceneGraph callback initialization method.
-	 */
-	virtual void init();
+    /**
+     * @brief SceneGraph callback initialization method.
+     */
+    virtual void init();
 
     virtual void bwdInit();
 
     virtual void reinit();
 
-	/**
-	 * @name Controller Interface
-	 */
-	//@{
+    /**
+     * @name Controller Interface
+     */
+    //@{
 
-	/**
-	 * @brief Mouse event callback.
-	 */
+    /**
+     * @brief Mouse event callback.
+     */
     virtual void onMouseEvent(core::objectmodel::MouseEvent *);
 
-	/**
-	 * @brief Keyboard key pressed event callback.
-	 */
+    /**
+     * @brief Keyboard key pressed event callback.
+     */
     virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *);
 
 
-	/**
-	 * @brief Begin Animation event callback.
-	 */
-	virtual void onBeginAnimationStep(const double dt);
+    /**
+     * @brief Begin Animation event callback.
+     */
+    virtual void onBeginAnimationStep(const double dt);
 
-	//@}
+    //@}
 
-	/**
-	 * @name Accessors
-	 */
-	//@{
+    /**
+     * @name Accessors
+     */
+    //@{
 
-	virtual std::string getTemplateName() const
+    virtual std::string getTemplateName() const
     {
       return templateName(this);
     }
@@ -195,22 +195,22 @@ public:
       return DataTypes::Name();
     }
 
-	//@}
+    //@}
 
 
-	/**
-	 * @brief Apply the controller modifications to the controlled MechanicalState.
-	 */
+    /**
+     * @brief Apply the controller modifications to the controlled MechanicalState.
+     */
     virtual void applyController(void){      }
 
-	/**
-	 * @brief
-	 */
+    /**
+     * @brief
+     */
     virtual bool modifyTopology(void){ return false;}
- 
-	/**
-	 * @brief
-	 */
+
+    /**
+     * @brief
+     */
     virtual void draw(const core::visual::VisualParams*){}
 
     void interventionalRadiologyCollisionControls(sofa::helper::vector<Real> &x_point_list,
@@ -252,7 +252,7 @@ protected:
     Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     Data <std::string> motionFilename;
 
-    
+
 
     bool FF, RW, sensored;
     sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *_fixedConstraint;
@@ -269,15 +269,15 @@ protected:
 
 
     /////////// Interface for other Adaptive Control
-	sofa::core::topology::BaseMeshTopology* _topology;
-	sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
-	sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
-	Coord refPos;
+    sofa::core::topology::BaseMeshTopology* _topology;
+    sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
+    sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
+    Coord refPos;
     helper::vector<Real> vertexT; //=> replace by curvilinearAbs;
 
-	virtual void computeVertexT();
+    virtual void computeVertexT();
 
-	Real edgeTLength;
+    Real edgeTLength;
 
     /////// for rigidity control
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments, prevRigidCurvSegments;

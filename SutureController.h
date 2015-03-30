@@ -43,9 +43,9 @@
 // #include <UserInteraction/controller/MechanicalStateController.h>
 // #include <MeshCollision/PointModel.h>
 // #include <MeshCollision/LineModel.h>
-#include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/collision/PointModel.h>
-#include <sofa/component/collision/LineModel.h>
+#include <SofaUserInteraction/MechanicalStateController.h>
+#include <SofaMeshCollision/PointModel.h>
+#include <SofaMeshCollision/LineModel.h>
 
 #include "WireBeamInterpolation.h"
 
@@ -59,16 +59,16 @@ namespace component
 
 namespace topology
 {
-	template <class T>
-	class EdgeSetGeometryAlgorithms;
+    template <class T>
+    class EdgeSetGeometryAlgorithms;
 
-	class EdgeSetTopologyModifier;
+    class EdgeSetTopologyModifier;
 }
 
 namespace fem
 {
-	template <class T>
-	class WireBeamInterpolation;
+    template <class T>
+    class WireBeamInterpolation;
 }
 
 
@@ -86,15 +86,15 @@ template<class DataTypes>
 class SutureController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
 {
 public:
-	SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
 
-	typedef typename DataTypes::VecCoord VecCoord;
-	typedef typename DataTypes::VecDeriv VecDeriv;
-	typedef typename DataTypes::Coord    Coord   ;
-	typedef typename DataTypes::Deriv    Deriv   ;
-	typedef typename Coord::value_type   Real    ;
+    typedef typename DataTypes::VecCoord VecCoord;
+    typedef typename DataTypes::VecDeriv VecDeriv;
+    typedef typename DataTypes::Coord    Coord   ;
+    typedef typename DataTypes::Deriv    Deriv   ;
+    typedef typename Coord::value_type   Real    ;
     typedef Vec<3, Real> Vec3;
-	typedef Vec<2, Real> Vec2;
+    typedef Vec<2, Real> Vec2;
 
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
     typedef sofa::helper::vector< ElementID > VecElementID;
@@ -109,15 +109,15 @@ public:
 
     typedef typename helper::set<Real>::const_iterator RealConstIterator;
 
-	/**
-	 * @name Point & Line Activer interface
-	 */
-	//@{
+    /**
+     * @name Point & Line Activer interface
+     */
+    //@{
 
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
         if (index >= (int)xAbs_collisionPoints_buf.size() || index < 0)
-			return false;
+            return false;
 
         if (xAbs_collisionPoints_buf[index] > 10.0)
             return true;
@@ -127,10 +127,10 @@ public:
 
     bool activeLine(int index, core::CollisionModel * /*cm*/ = 0)
     {
-		const int next_index = index + 1;
+        const int next_index = index + 1;
 
         if (next_index >= (int)xAbs_collisionPoints_buf.size() || next_index < 0)
-			return false;
+            return false;
 
         if (xAbs_collisionPoints_buf[next_index] > 10.0)
             return true;
@@ -138,22 +138,22 @@ public:
         return false;
     }
 
-	//@}
+    //@}
 
-	/**
-	 * @brief Default Constructor.
-	 */
+    /**
+     * @brief Default Constructor.
+     */
     SutureController(WInterpolation* _adaptiveinterpolation = NULL);
 
-	/**
-	 * @brief Default Destructor.
-	 */
+    /**
+     * @brief Default Destructor.
+     */
     virtual ~SutureController(){};
 
-	/**
-	 * @brief SceneGraph callback initialization method.
-	 */
-	virtual void init();
+    /**
+     * @brief SceneGraph callback initialization method.
+     */
+    virtual void init();
 
     virtual void bwdInit(){applyController();}
 
@@ -161,65 +161,65 @@ public:
 
     virtual void reset(){ init(); applyController();}
 
-	/**
-	 * @name Controller Interface
-	 */
-	//@{
+    /**
+     * @name Controller Interface
+     */
+    //@{
 
-	/**
-	 * @brief Mouse event callback.
-	 */
+    /**
+     * @brief Mouse event callback.
+     */
     virtual void onMouseEvent(core::objectmodel::MouseEvent *){}
 
-	/**
-	 * @brief Keyboard key pressed event callback.
-	 */
+    /**
+     * @brief Keyboard key pressed event callback.
+     */
     virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *){}
 
-	/**
-	 * @brief Begin Animation event callback.
-	 */
-	virtual void onBeginAnimationStep(const double dt);
+    /**
+     * @brief Begin Animation event callback.
+     */
+    virtual void onBeginAnimationStep(const double dt);
 
-	/**
-	 * @brief Begin Animation event callback.
-	 */
-	virtual void onEndAnimationStep(const double dt);
+    /**
+     * @brief Begin Animation event callback.
+     */
+    virtual void onEndAnimationStep(const double dt);
 
-	//@}
+    //@}
 
-	/**
-	 * @name Accessors
-	 */
-	//@{
+    /**
+     * @name Accessors
+     */
+    //@{
 
-	virtual std::string getTemplateName() const
+    virtual std::string getTemplateName() const
     {
-		return templateName(this);
+        return templateName(this);
     }
 
     static std::string templateName(const SutureController<DataTypes>* = NULL)
     {
-		return DataTypes::Name();
+        return DataTypes::Name();
     }
 
-	//@}
+    //@}
 
 
-	/**
-	 * @brief Apply the controller modifications to the controlled MechanicalState.
-	 */
-	virtual void applyController(void);
+    /**
+     * @brief Apply the controller modifications to the controlled MechanicalState.
+     */
+    virtual void applyController(void);
 
-	/**
-	 * @brief
-	 */
-	virtual bool modifyTopology(void){ return false;}
- 
-	/**
-	 * @brief
-	 */
-	virtual void draw(const core::visual::VisualParams*);
+    /**
+     * @brief
+     */
+    virtual bool modifyTopology(void){ return false;}
+
+    /**
+     * @brief
+     */
+    virtual void draw(const core::visual::VisualParams*);
 
 
 
@@ -228,24 +228,24 @@ public:
       * @brief addNodeOnXcurv (const Real& x_curv) will add a node at abs curv "x_curv" in the list of the imposed node
       *        this list is the used in the controller for the sampling of nodes of the suture model
       */
-	void addNodeOnXcurv(const Real& x_curv){listOfImposedNodesOnXcurv.push_back(x_curv);}
-	void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
-    
+    void addNodeOnXcurv(const Real& x_curv){listOfImposedNodesOnXcurv.push_back(x_curv);}
+    void clearNodesOnXcurv(){listOfImposedNodesOnXcurv.clear();}
+
     void insertActualNoticeablePoint(Real _absc);
 
 
 
 private:
-	
-	/**
-	 * @brief Checks if the controlled MechanicalState and Topology have already been initialized.
-	 */
-	bool wireIsAlreadyInitialized();
 
-	/**
-	 * @brief "Wire" initialization from the starting position, rest shape, propozed discretization...
-	 */
-	void initWireModel();
+    /**
+     * @brief Checks if the controlled MechanicalState and Topology have already been initialized.
+     */
+    bool wireIsAlreadyInitialized();
+
+    /**
+     * @brief "Wire" initialization from the starting position, rest shape, propozed discretization...
+     */
+    void initWireModel();
 
     void recreateTopology();
     void addNodesAndEdge(unsigned int num, Real &xend);
@@ -286,13 +286,13 @@ private:
     // little function to verify that the rigidCurveSegments are sorted
     bool verifyRigidCurveSegmentSort();
 
-	// make sure the sampling does not change for the rigid segments
-	void verifyRigidSegmentsSampling(sofa::helper::vector<Real> &newCurvAbs);
+    // make sure the sampling does not change for the rigid segments
+    void verifyRigidSegmentsSampling(sofa::helper::vector<Real> &newCurvAbs);
 
-	void storeRigidSegmentsTransformations();
-	void verifyRigidSegmentsTransformations();
+    void storeRigidSegmentsTransformations();
+    void verifyRigidSegmentsTransformations();
 
-	void updateControlPointsPositions();
+    void updateControlPointsPositions();
 
 public:
 
@@ -304,14 +304,14 @@ public:
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
     Data< bool > useDummyController, fixRigidTransforms;
-	Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end) 
-	SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
+    Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments, prevRigidCurvSegments;
     sofa::helper::vector< bool > rigidBeamList;
     sofa::helper::vector<Transform> vec_global_H_gravityCenter;
-	std::map<Real, Transform> prevRigidTransforms;
+    std::map<Real, Transform> prevRigidTransforms;
 
     /////// for re-interpolation
     sofa::helper::vector<Transform> vec_global_H_node;
@@ -323,9 +323,9 @@ public:
 
 //    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
     Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
-	Data< sofa::helper::vector<Vec2> > m_curvatureList;
+    Data< sofa::helper::vector<Vec2> > m_curvatureList;
 
-	Data< VecCoord > m_controlPoints;
+    Data< VecCoord > m_controlPoints;
 
     /////////// Interface for topology changes
 
@@ -333,8 +333,8 @@ public:
 
     void dummyController(sofa::helper::vector<Real> &newCurvAbs);
 
-	//// If true update interpolation and subgraph on beginAnimationStep
-	Data< bool > m_updateOnBeginAnimationStep;
+    //// If true update interpolation and subgraph on beginAnimationStep
+    Data< bool > m_updateOnBeginAnimationStep;
     Data< bool> m_applyOrientationFirstInCreateNeedle;
     Data< bool > m_reinitilizeWireOnInit;
     Data<helper::vector<Real> > m_actualStepNoticeablePoints;

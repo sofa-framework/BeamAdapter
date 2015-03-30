@@ -41,8 +41,8 @@
 #include <sofa/core/behavior/MechanicalState.h>
 // #include <BaseTopology/EdgeSetGeometryAlgorithms.h>
 // #include <BaseTopology/QuadSetTopologyModifier.h>
-#include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
-#include <sofa/component/topology/QuadSetTopologyModifier.h>
+#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <SofaBaseTopology/QuadSetTopologyModifier.h>
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
 
@@ -63,14 +63,14 @@ template<class DataTypes>
 void BaseRestShape<DataTypes>::init()
 {
 
-	sofa::helper::vector<int> & _density   =*density.beginEdit();
-	sofa::helper::vector<Real>& _keyPoints =*keyPoints.beginEdit();
+    sofa::helper::vector<int> & _density   =*density.beginEdit();
+    sofa::helper::vector<Real>& _keyPoints =*keyPoints.beginEdit();
 
-	_density.resize(1)  ; _density[0]  =       10 ;
-	_keyPoints.resize(2); _keyPoints[0]= (Real)0.; _keyPoints[1]= length.getValue();
+    _density.resize(1)  ; _density[0]  =       10 ;
+    _keyPoints.resize(2); _keyPoints[0]= (Real)0.; _keyPoints[1]= length.getValue();
 
-	density.endEdit();
-	keyPoints.endEdit();
+    density.endEdit();
+    keyPoints.endEdit();
 
 }
 
@@ -85,12 +85,12 @@ void BaseRestShape<DataTypes>::releaseWirePart()
 template <class DataTypes>
 void BaseRestShape<DataTypes>::getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density)
 {
-	xP_noticeable.resize(keyPoints.getValue().size());
-	nbP_density.resize(density.getValue().size());
+    xP_noticeable.resize(keyPoints.getValue().size());
+    nbP_density.resize(density.getValue().size());
 
-	nbP_density[0]   = density.getValue()[0];
-	xP_noticeable[0] = keyPoints.getValue()[0];
-	xP_noticeable[1] = keyPoints.getValue()[1];
+    nbP_density[0]   = density.getValue()[0];
+    xP_noticeable[0] = keyPoints.getValue()[0];
+    xP_noticeable[1] = keyPoints.getValue()[1];
 }
 
 
@@ -98,27 +98,27 @@ void BaseRestShape<DataTypes>::getSamplingParameters(helper::vector<Real>& xP_no
 template <class DataTypes>
 void BaseRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, const Real &x)
 {
-	Real x_used = x ;
+    Real x_used = x ;
 
-	if(x_used>length.getValue())
-		x_used=length.getValue();
+    if(x_used>length.getValue())
+        x_used=length.getValue();
 
-	if(x_used<0.0)
-		x_used=0.0;
+    if(x_used<0.0)
+        x_used=0.0;
 
-	if( x_used < length.getValue())
-	{
-		global_H_local.set(Vec3(x_used, 0.0, 0.0 ), sofa::defaulttype::Quat());
-		return;
-	}
+    if( x_used < length.getValue())
+    {
+        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), sofa::defaulttype::Quat());
+        return;
+    }
 }
 
 
 template <class DataTypes>
 void BaseRestShape<DataTypes>::getYoungModulusAtX(Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
-	youngModulus = _youngModulus1.getValue() ;
-	cPoisson     = _poissonRatio.getValue();
+    youngModulus = _youngModulus1.getValue() ;
+    cPoisson     = _poissonRatio.getValue();
 }
 
 

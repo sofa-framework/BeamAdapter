@@ -39,10 +39,9 @@
 
 #include "WireRestShape.h"
 #include <sofa/core/behavior/MechanicalState.h>
-// #include <BaseTopology/EdgeSetGeometryAlgorithms.h>
-// #include <BaseTopology/QuadSetTopologyModifier.h>
-#include <sofa/component/topology/EdgeSetGeometryAlgorithms.h>
-#include <sofa/component/topology/QuadSetTopologyModifier.h>
+#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <SofaBaseTopology/QuadSetTopologyModifier.h>
+
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
 #include <sofa/core/topology/Topology.h>
@@ -94,21 +93,21 @@ void WireRestShape<DataTypes>::init()
 {
 
     if (f_printLog.getValue())
-    	sout<<"WireRestShape begin init"<<sendl;
+        sout<<"WireRestShape begin init"<<sendl;
 
     if(!procedural.getValue())
     {
-    	//get the mesh loader
-    	this->getContext()->get(loader);
+        //get the mesh loader
+        this->getContext()->get(loader);
 
-    	if (!loader)
-    		serr << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" << sendl;
-    	else
-    	{
-    		if (f_printLog.getValue()) sout << "Found a mesh with " << loader->edges.getValue().size() << " edges" << sendl;
-    		InitFromLoader();
-    		InitRestConfig();
-    	}
+        if (!loader)
+            serr << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" << sendl;
+        else
+        {
+            if (f_printLog.getValue()) sout << "Found a mesh with " << loader->edges.getValue().size() << " edges" << sendl;
+            InitFromLoader();
+            InitRestConfig();
+        }
     }
 
     //////////////////////////////////////////////
@@ -121,10 +120,10 @@ void WireRestShape<DataTypes>::init()
 
     if(_topology != NULL)
     {
-    	if (f_printLog.getValue()) sout<<"found topology named "<< _topology->getName()<<sendl;
+        if (f_printLog.getValue()) sout<<"found topology named "<< _topology->getName()<<sendl;
     }
     else
-    	serr << "cannot find topology container" << sendl;
+        serr << "cannot find topology container" << sendl;
 
     this->getContext()->get(edgeGeo);
     this->getContext()->get(edgeMod);
@@ -143,10 +142,10 @@ void WireRestShape<DataTypes>::init()
     _topology->cleanup();
     Real dx = this->length.getValue() / numEdges.getValue();
 
-	// add points
+    // add points
     for ( int i=0; i<numEdges.getValue()+1; i++)
         _topology->addPoint( i*dx, 0, 0);
-	// add segments
+    // add segments
     for (int i=0; i<numEdges.getValue(); i++)
         _topology->addEdge(i,i+1);
 
@@ -159,7 +158,7 @@ void WireRestShape<DataTypes>::init()
     }
 
     if(!edge2QuadMap)
-    	serr <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
+        serr <<"[WARNING] No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
@@ -211,30 +210,30 @@ void WireRestShape<DataTypes>::init()
     }
 
     if (f_printLog.getValue())
-    	sout<<"WireRestShape end init"<<sendl;
+        sout<<"WireRestShape end init"<<sendl;
 
-	// Prepare beam sections
-	double r 					= this->_radius1.getValue();
-	double rInner 				= this->_innerRadius1.getValue();
-	this->beamSection1._r 		= r;
-	this->beamSection1._rInner 	= rInner;
-	this->beamSection1._Iz		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-	this->beamSection1._Iy 		= this->beamSection1._Iz ;
-	this->beamSection1._J 		= this->beamSection1._Iz + this->beamSection1._Iy;
-	this->beamSection1._A 		= M_PI*(r*r - rInner*rInner);
-	this->beamSection1._Asy 	= 0.0;
-	this->beamSection1._Asz 	= 0.0;
+    // Prepare beam sections
+    double r 					= this->_radius1.getValue();
+    double rInner 				= this->_innerRadius1.getValue();
+    this->beamSection1._r 		= r;
+    this->beamSection1._rInner 	= rInner;
+    this->beamSection1._Iz		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+    this->beamSection1._Iy 		= this->beamSection1._Iz ;
+    this->beamSection1._J 		= this->beamSection1._Iz + this->beamSection1._Iy;
+    this->beamSection1._A 		= M_PI*(r*r - rInner*rInner);
+    this->beamSection1._Asy 	= 0.0;
+    this->beamSection1._Asz 	= 0.0;
 
-	r 							= this->_radius2.getValue();
-	rInner 						= this->_innerRadius2.getValue();
-	this->beamSection2._r 		= r;
-	this->beamSection2._rInner 	= rInner;
-	this->beamSection2._Iz 		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-	this->beamSection2._Iy 		= this->beamSection2._Iz ;
-	this->beamSection2._J 		= this->beamSection2._Iz + this->beamSection2._Iy;
-	this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
-	this->beamSection2._Asy 	= 0.0;
-	this->beamSection2._Asz 	= 0.0;
+    r 							= this->_radius2.getValue();
+    rInner 						= this->_innerRadius2.getValue();
+    this->beamSection2._r 		= r;
+    this->beamSection2._rInner 	= rInner;
+    this->beamSection2._Iz 		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+    this->beamSection2._Iy 		= this->beamSection2._Iz ;
+    this->beamSection2._J 		= this->beamSection2._Iz + this->beamSection2._Iy;
+    this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
+    this->beamSection2._Asy 	= 0.0;
+    this->beamSection2._Asz 	= 0.0;
 }
 
 
@@ -462,7 +461,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         global_H_local.set(Vec3(x_used, 0.0, 0.0 ), sofa::defaulttype::Quat());
         return;
     }
-    
+
     if(procedural.getValue())
     {
         Real projetedLength = spireDiameter.getValue()*PI;
@@ -539,13 +538,13 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
     }
     else
     {
-		if(_E2 == 0.0)
-		{
-			youngModulus = _E1;
-		//	std::cout<<"WARNING : second Young Modulus defined as zero -- only E1 is used"<<std::endl;	// Uncomment if you want a message flood
-		}
-		else
-			youngModulus = _E2;
+        if(_E2 == 0.0)
+        {
+            youngModulus = _E1;
+        //	std::cout<<"WARNING : second Young Modulus defined as zero -- only E1 is used"<<std::endl;	// Uncomment if you want a message flood
+        }
+        else
+            youngModulus = _E2;
     }
 
     return;
@@ -555,80 +554,80 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
 template <class DataTypes>
 void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
 {
-	if(x_curv <= this->straightLength.getValue())
-	{
-		if(_massDensity1.isSet())
-			_rho = _massDensity1.getValue();
+    if(x_curv <= this->straightLength.getValue())
+    {
+        if(_massDensity1.isSet())
+            _rho = _massDensity1.getValue();
 
-		if(_radius1.isSet())
-		{
-			_A		=beamSection1._A;
-			_Iy		=beamSection1._Iy;
-			_Iz		=beamSection1._Iz;
-			_Asy	=beamSection1._Asy;
-			_Asz	=beamSection1._Asz;
-			_J		=beamSection1._J;
-		}
-	}
-	else
-	{
-		if(_massDensity2.isSet())
-			_rho = _massDensity2.getValue();
-		else if(_massDensity1.isSet())
-			_rho = _massDensity1.getValue();
+        if(_radius1.isSet())
+        {
+            _A		=beamSection1._A;
+            _Iy		=beamSection1._Iy;
+            _Iz		=beamSection1._Iz;
+            _Asy	=beamSection1._Asy;
+            _Asz	=beamSection1._Asz;
+            _J		=beamSection1._J;
+        }
+    }
+    else
+    {
+        if(_massDensity2.isSet())
+            _rho = _massDensity2.getValue();
+        else if(_massDensity1.isSet())
+            _rho = _massDensity1.getValue();
 
-		if(_radius2.isSet())
-		{
-			_A		=beamSection2._A;
-			_Iy		=beamSection2._Iy;
-			_Iz		=beamSection2._Iz;
-			_Asy	=beamSection2._Asy;
-			_Asz	=beamSection2._Asz;
-			_J		=beamSection2._J;
-		}
-		else if(_radius1.isSet())
-		{
-			_A		=beamSection1._A;
-			_Iy		=beamSection1._Iy;
-			_Iz		=beamSection1._Iz;
-			_Asy	=beamSection1._Asy;
-			_Asz	=beamSection1._Asz;
-			_J		=beamSection1._J;
-		}
-	}
+        if(_radius2.isSet())
+        {
+            _A		=beamSection2._A;
+            _Iy		=beamSection2._Iy;
+            _Iz		=beamSection2._Iz;
+            _Asy	=beamSection2._Asy;
+            _Asz	=beamSection2._Asz;
+            _J		=beamSection2._J;
+        }
+        else if(_radius1.isSet())
+        {
+            _A		=beamSection1._A;
+            _Iy		=beamSection1._Iy;
+            _Iz		=beamSection1._Iz;
+            _Asy	=beamSection1._Asy;
+            _Asz	=beamSection1._Asz;
+            _J		=beamSection1._J;
+        }
+    }
 }
 
 template <class DataTypes>
 bool WireRestShape<DataTypes>::checkTopology()
 {
-	if (!loader->edges.getValue().size())
-	{
-		serr << "There is no edges in the topology loaded by " << loader->getName() << sendl;
-		return false;
-	}
+    if (!loader->edges.getValue().size())
+    {
+        serr << "There is no edges in the topology loaded by " << loader->getName() << sendl;
+        return false;
+    }
 
-	if (loader->triangles.getValue().size())
-	{
-		serr << "There are triangles in the topology loaded by " << loader->getName() << sendl;
-		return false;
-	}
+    if (loader->triangles.getValue().size())
+    {
+        serr << "There are triangles in the topology loaded by " << loader->getName() << sendl;
+        return false;
+    }
 
-	if (loader->quads.getValue().size())
-	{
-		serr << "There are quads in the topology loaded by " << loader->getName() << sendl;
-		return false;
-	}
+    if (loader->quads.getValue().size())
+    {
+        serr << "There are quads in the topology loaded by " << loader->getName() << sendl;
+        return false;
+    }
 
-	if (loader->polygons.getValue().size())
-	{
-		serr << "There are polygons in the topology loaded by " << loader->getName() << sendl;
-		return false;
-	}
+    if (loader->polygons.getValue().size())
+    {
+        serr << "There are polygons in the topology loaded by " << loader->getName() << sendl;
+        return false;
+    }
 
-	/// \todo check if the topology is like a wire
+    /// \todo check if the topology is like a wire
 
 
-	return true;
+    return true;
 }
 
 
@@ -636,8 +635,8 @@ bool WireRestShape<DataTypes>::checkTopology()
 template <class DataTypes>
 void WireRestShape<DataTypes>::InitFromLoader()
 {
-	if (!checkTopology())
-		return;
+    if (!checkTopology())
+        return;
 
     sofa::helper::vector<Vec3> vertices;
     sofa::helper::vector<Vec2> edges;
@@ -650,13 +649,13 @@ void WireRestShape<DataTypes>::InitFromLoader()
     typedef  sofa::helper::vector<sofa::core::topology::Topology::Edge > topoEdge;
     topoEdge &topoEdges = (*loader->edges.beginEdit());
     for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
-    	edges.push_back(Vec2((*it)[0], (*it)[1]));
+        edges.push_back(Vec2((*it)[0], (*it)[1]));
     loader->edges.endEdit();
 
     /** renumber the vertices  **/
    sofa::helper::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
    for(unsigned int i =0; i < topoVertices.size(); i++)
-	   verticesConnexion.push_back(2);
+       verticesConnexion.push_back(2);
 
    for(unsigned int i = 0; i < edges.size(); i++)
    {
@@ -667,7 +666,7 @@ void WireRestShape<DataTypes>::InitFromLoader()
         verticesConnexion[e2]--;
    }
    if (this->f_printLog.getValue())
-	   sout << "Successfully compute the vertex connexion" << sendl;
+       sout << "Successfully compute the vertex connexion" << sendl;
 
    // check for the first corner of the edge
    unsigned int firstIndex = 0;
@@ -688,41 +687,41 @@ void WireRestShape<DataTypes>::InitFromLoader()
 
    vertices.push_back(topoVertices[firstIndex]);
 
-	while(edges.size() > 0)
-	{
-		vecIt it = edges.begin();
-		vecIt end = edges.end();
+    while(edges.size() > 0)
+    {
+        vecIt it = edges.begin();
+        vecIt end = edges.end();
 
-		bool notFound = true;
-		while (notFound && (it != end))
-		{
-			Vec2 ed = (*it);
-			vecIt toDel = it;
-			it++;
-			if(ed[0] == firstIndex)
-			{
-				vertices.push_back(topoVertices[ed[1]]);
-				firstIndex = ed[1];
-				//std::cout << firstIndex << " added " << std::endl;
-				edges.erase(toDel);
-				notFound = false;
+        bool notFound = true;
+        while (notFound && (it != end))
+        {
+            Vec2 ed = (*it);
+            vecIt toDel = it;
+            it++;
+            if(ed[0] == firstIndex)
+            {
+                vertices.push_back(topoVertices[ed[1]]);
+                firstIndex = ed[1];
+                //std::cout << firstIndex << " added " << std::endl;
+                edges.erase(toDel);
+                notFound = false;
 
-			}
-			else if(ed[1] == firstIndex)
-			{
-				vertices.push_back(topoVertices[ed[0]]);
-				firstIndex = ed[0];
-				//std::cout << firstIndex << " added " << std::endl;
-				edges.erase(toDel);
-				notFound = false;
-			}
-		}
-	}
+            }
+            else if(ed[1] == firstIndex)
+            {
+                vertices.push_back(topoVertices[ed[0]]);
+                firstIndex = ed[0];
+                //std::cout << firstIndex << " added " << std::endl;
+                edges.erase(toDel);
+                notFound = false;
+            }
+        }
+    }
 
-	if (this->f_printLog.getValue())
-		sout << "Successfully computed the topology" << sendl;
+    if (this->f_printLog.getValue())
+        sout << "Successfully computed the topology" << sendl;
 
-	localRestPositions = vertices;
+    localRestPositions = vertices;
 
     for(unsigned int i = 0; i < localRestPositions.size() - 1; i++)
         localRestPositions[i] *= NonProceduralScale.getValue();
@@ -759,8 +758,8 @@ void WireRestShape<DataTypes>::InitRestConfig()
 
         localRestTransforms[i+1].setOrigin(localPos);
 
-		//        if (this->f_printLog.getValue())
-		//        	sout <<"localRestTransforms ="<<localRestTransforms[i]<<sendl;
+        //        if (this->f_printLog.getValue())
+        //        	sout <<"localRestTransforms ="<<localRestTransforms[i]<<sendl;
 
         curvAbs.push_back(tot);
 
@@ -773,7 +772,7 @@ void WireRestShape<DataTypes>::InitRestConfig()
     length.setValue(newLength);
 
     if (f_printLog.getValue())
-    	sout <<"Length of the loaded shape = "<< absOfGeometry << ", total length with straight length = " << newLength << sendl;
+        sout <<"Length of the loaded shape = "<< absOfGeometry << ", total length with straight length = " << newLength << sendl;
 }
 
 
@@ -863,20 +862,20 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q,
 template<class DataTypes>
 void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*/)
 {
-	if (!drawRestShape.getValue())
-		return;
+    if (!drawRestShape.getValue())
+        return;
 
-	glDisable(GL_LIGHTING);
-	glColor3d(1.0,0.0,0.0);
-	glPointSize(10.0);
-	for (unsigned int i = 0 ; i < localRestPositions.size(); i++)
-	{
-		glBegin(GL_POINTS);
-			glVertex3d(localRestPositions[i][0],localRestPositions[i][1],localRestPositions[i][2]);
-		glEnd();
-	}
-	glPointSize(1.0);
-	glEnable(GL_LIGHTING);
+    glDisable(GL_LIGHTING);
+    glColor3d(1.0,0.0,0.0);
+    glPointSize(10.0);
+    for (unsigned int i = 0 ; i < localRestPositions.size(); i++)
+    {
+        glBegin(GL_POINTS);
+            glVertex3d(localRestPositions[i][0],localRestPositions[i][1],localRestPositions[i][2]);
+        glEnd();
+    }
+    glPointSize(1.0);
+    glEnable(GL_LIGHTING);
 
 }
 

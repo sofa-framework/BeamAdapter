@@ -88,14 +88,14 @@ endif()
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} )
 
 set(COMPILER_DEFINES "SOFA_BUILD_BEAMADAPTER")
-set(LINKER_DEPENDENCIES SofaConstraint SofaComponentAdvanced SofaVolumetricData SofaAdvancedConstraint)
+set(LINKER_DEPENDENCIES SofaConstraint SofaComponentAdvanced SofaVolumetricData )
 
-if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
-    set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
+#if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
+    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
     #list(APPEND LINKER_DEPENDENCIES SofaCUDA)
     #list(APPEND LINKER_DEPENDENCIES SofaCUDADev)
-    set(LINKER_DEPENDENCIES SofaAdvancedConstraint)    
-endif()
+    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)    
+#endif()
 
 #
 # Organize projects into folders

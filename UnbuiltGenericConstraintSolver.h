@@ -25,10 +25,8 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_UNBUILTGENERICCONSTRAINTSOLVER_H
 #define SOFA_COMPONENT_CONSTRAINTSET_UNBUILTGENERICCONSTRAINTSOLVER_H
 
-// #include <Constraint/constraintset/GenericConstraintSolver.h>
-// #include <Constraint/constraintset/ConstraintSolverImpl.h>
-#include <sofa/component/constraintset/GenericConstraintSolver.h>
-#include <sofa/component/constraintset/ConstraintSolverImpl.h>
+#include <SofaConstraint/GenericConstraintSolver.h>
+#include <SofaConstraint/ConstraintSolverImpl.h>
 #include <sofa/core/behavior/BaseConstraint.h>
 #include <sofa/core/behavior/ConstraintSolver.h>
 #include <sofa/core/behavior/BaseConstraintCorrection.h>
@@ -36,10 +34,8 @@
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/MechanicalVisitor.h>
 
-// #include <BaseLinearSolver/FullMatrix.h>
-// #include <BaseLinearSolver/SparseMatrix.h>
-#include <sofa/component/linearsolver/FullMatrix.h>
-#include <sofa/component/linearsolver/SparseMatrix.h>
+#include <SofaBaseLinearSolver/FullMatrix.h>
+#include <SofaBaseLinearSolver/SparseMatrix.h>
 
 #include <sofa/helper/set.h>
 #include <sofa/helper/map.h>
@@ -65,7 +61,7 @@ class UnbuiltGenericConstraintSolver;
 class SOFA_BEAMADAPTER_API UnbuiltGenericConstraintProblem : public GenericConstraintProblem
 {
 public:
-	// For unbuilt version :
+    // For unbuilt version :
     SparseMatrix<double> Wdiag;
     std::list<unsigned int> constraints_sequence;
     std::vector<core::behavior::BaseConstraintCorrection*> cclist_elem1, cclist_elem2;
@@ -86,9 +82,9 @@ public:
 
 class SOFA_BEAMADAPTER_API UnbuiltGenericConstraintSolver : public GenericConstraintSolver
 {
-	typedef std::vector<core::behavior::BaseConstraintCorrection*> list_cc;
-	typedef std::vector<list_cc> VecListcc;
-	typedef sofa::core::MultiVecId MultiVecId;
+    typedef std::vector<core::behavior::BaseConstraintCorrection*> list_cc;
+    typedef std::vector<list_cc> VecListcc;
+    typedef sofa::core::MultiVecId MultiVecId;
 
 public:
     SOFA_CLASS(UnbuiltGenericConstraintSolver, GenericConstraintSolver);
@@ -97,8 +93,8 @@ protected:
     virtual ~UnbuiltGenericConstraintSolver();
 public:
 
-	bool buildSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
-	bool solveSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
+    bool buildSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
+    bool solveSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
 
     //Data<bool> displayTime;
     //Data<int> maxIt;

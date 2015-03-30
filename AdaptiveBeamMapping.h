@@ -46,7 +46,7 @@
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/defaulttype/Mat.h>
 //#include <BaseTopology/EdgeSetTopologyModifier.h>
-#include <sofa/component/topology/EdgeSetTopologyModifier.h>
+#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/core/objectmodel/Event.h>
 #include <sofa/core/visual/VisualParams.h>
@@ -80,23 +80,23 @@ template <class TIn, class TOut>
 class AdaptiveBeamMapping : public core::Mapping<TIn, TOut>
 {
 public:
-	SOFA_CLASS(SOFA_TEMPLATE2(AdaptiveBeamMapping,TIn,TOut), SOFA_TEMPLATE2(core::Mapping,TIn,TOut));
+    SOFA_CLASS(SOFA_TEMPLATE2(AdaptiveBeamMapping,TIn,TOut), SOFA_TEMPLATE2(core::Mapping,TIn,TOut));
 
     typedef core::Mapping<TIn, TOut> Inherit;
     typedef TIn In;
     typedef TOut Out;
 
-	typedef typename Out::Coord::value_type Real          ;
-	typedef typename Out::Coord             Coord         ;
-	typedef typename Out::Deriv             Deriv         ;
-	typedef typename Out::VecCoord          VecCoord      ;
-	typedef typename Out::VecDeriv          VecDeriv      ;
+    typedef typename Out::Coord::value_type Real          ;
+    typedef typename Out::Coord             Coord         ;
+    typedef typename Out::Deriv             Deriv         ;
+    typedef typename Out::VecCoord          VecCoord      ;
+    typedef typename Out::VecDeriv          VecDeriv      ;
     typedef typename Out::MatrixDeriv       OutMatrixDeriv;
 
     typedef typename In::Coord::value_type  InReal       ;
-	typedef typename In::Deriv              InDeriv      ;
-	typedef typename In::VecCoord           InVecCoord   ;
-	typedef typename In::VecDeriv           InVecDeriv   ;
+    typedef typename In::Deriv              InDeriv      ;
+    typedef typename In::VecCoord           InVecCoord   ;
+    typedef typename In::VecDeriv           InVecDeriv   ;
     typedef typename In::MatrixDeriv        InMatrixDeriv;
 
     typedef helper::vector<unsigned int>                                         VecIndex    ;
@@ -134,7 +134,7 @@ public:
     Data<bool> contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
     Data<std::string> nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
     Data<double> nbPointsPerBeam;					/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
-	Data< sofa::helper::vector< Real > > segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
+    Data< sofa::helper::vector< Real > > segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
     SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
 
     AdaptiveBeamMapping(core::State< In >* from=NULL, core::State< Out >* to=NULL,BeamInterpolation< TIn >* _interpolation=NULL, bool _isSubMapping=false)
@@ -153,24 +153,24 @@ public:
     {
     }
 
-	void printIstrumentInfo()const
-	{
-		if (isSubMapping)//ctn_DEV
-		{
-			std::cout<<"Instrument Named "<<m_adaptativebeamInterpolation->getName()<<std::endl
-					<<" MState1:"<<this->fromModel->getName()<< "  size:"<<this->fromModel->getSize()<<std::endl
-					<<" MState2:"<<this->toModel->getName()<< "  size:"<<this->toModel->getSize()<<std::endl
-					<<"idPointSubMap."<<idPointSubMap.size()<<std::endl
-					<<"pointBeamDistribution."<<pointBeamDistribution.size()<<std::endl<<std::endl;
-		}
-	}
+    void printIstrumentInfo()const
+    {
+        if (isSubMapping)//ctn_DEV
+        {
+            std::cout<<"Instrument Named "<<m_adaptativebeamInterpolation->getName()<<std::endl
+                    <<" MState1:"<<this->fromModel->getName()<< "  size:"<<this->fromModel->getSize()<<std::endl
+                    <<" MState2:"<<this->toModel->getName()<< "  size:"<<this->toModel->getSize()<<std::endl
+                    <<"idPointSubMap."<<idPointSubMap.size()<<std::endl
+                    <<"pointBeamDistribution."<<pointBeamDistribution.size()<<std::endl<<std::endl;
+        }
+    }
     virtual ~AdaptiveBeamMapping(){}
-	
-	void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in);
-	
-	void applyJ(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecDeriv>& out, const Data<InVecDeriv>& in);
-	
-	void applyJT(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<InVecDeriv>& out, const Data<VecDeriv>& in);
+
+    void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in);
+
+    void applyJ(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecDeriv>& out, const Data<InVecDeriv>& in);
+
+    void applyJT(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<InVecDeriv>& out, const Data<VecDeriv>& in);
 
     void applyJT(const core::ConstraintParams *cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in);
 
@@ -186,42 +186,42 @@ public:
         return i;
     }
 
-	int addContactPoint(const Vec3& bary);
+    int addContactPoint(const Vec3& bary);
 
     void setBarycentricMapping()
     {
-    	isBarycentricMapping=true;
-    	points.beginEdit()->clear();points.endEdit();
+        isBarycentricMapping=true;
+        points.beginEdit()->clear();points.endEdit();
     }
-	int addBaryPoint(const int& _beamId,const Vec3& _baryCoord,bool /*todo_straightline_spline_option*/)
-	//TODO add parameter label for different cases : unactive, linear, spline
-	{
-		//attention, beamId here is not the edge Id, but the id of a vec_edge_list defined in BeamInterpolation
-		int newpointId = pointBeamDistribution.size();
-		pointBeamDistribution.resize(newpointId+1);
-		pointBeamDistribution[newpointId].baryPoint=_baryCoord;
-		pointBeamDistribution[newpointId].beamId=_beamId;
-		return newpointId;
-	}
-	//void clear(){};////// CTN_DEV todo for ContactMapper
-	//clear the mapping in functions of size given
-	void clear(int size)
-	{
-		this->clearidPointSubMap();
-		pointBeamDistribution.clear();
-		if ( size>0 && !isSubMapping)
-		{
-			pointBeamDistribution.reserve ( size );
-	        points.beginEdit()->reserve ( size ); points.endEdit();
-			this->getMechTo()[0]->resize(size);
-		}
-		else
-		//case where this clear is call by a Multimapping, all component will be clear to null size
-		{
-	        points.beginEdit()->resize(0); points.endEdit();
-			this->getMechTo()[0]->resize(0);
-		}
-	}
+    int addBaryPoint(const int& _beamId,const Vec3& _baryCoord,bool /*todo_straightline_spline_option*/)
+    //TODO add parameter label for different cases : unactive, linear, spline
+    {
+        //attention, beamId here is not the edge Id, but the id of a vec_edge_list defined in BeamInterpolation
+        int newpointId = pointBeamDistribution.size();
+        pointBeamDistribution.resize(newpointId+1);
+        pointBeamDistribution[newpointId].baryPoint=_baryCoord;
+        pointBeamDistribution[newpointId].beamId=_beamId;
+        return newpointId;
+    }
+    //void clear(){};////// CTN_DEV todo for ContactMapper
+    //clear the mapping in functions of size given
+    void clear(int size)
+    {
+        this->clearidPointSubMap();
+        pointBeamDistribution.clear();
+        if ( size>0 && !isSubMapping)
+        {
+            pointBeamDistribution.reserve ( size );
+            points.beginEdit()->reserve ( size ); points.endEdit();
+            this->getMechTo()[0]->resize(size);
+        }
+        else
+        //case where this clear is call by a Multimapping, all component will be clear to null size
+        {
+            points.beginEdit()->resize(0); points.endEdit();
+            this->getMechTo()[0]->resize(0);
+        }
+    }
 
     void computeIdxAndBaryCoordsForAbs(unsigned int &b, Real &x_bary, const Real &x_abs );
 
@@ -230,7 +230,7 @@ public:
     void reset(){init();  computeDistribution();}
     void reinit(){init(); computeDistribution();}
 
-	void draw(const core::visual::VisualParams*);
+    void draw(const core::visual::VisualParams*);
 
     void beginAddContactPoint();
 
