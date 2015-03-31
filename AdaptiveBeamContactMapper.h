@@ -27,11 +27,11 @@
 
 #include <sofa/helper/system/config.h>
 #include <sofa/helper/Factory.h>
-#include <sofa/component/container/MechanicalObject.h>
+#include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/Simulation.h>
-#include <sofa/component/collision/BaseContactMapper.h>
-#include <sofa/component/collision/BSplineModel.h> //ctn_DEV
+#include <SofaBaseCollision/BaseContactMapper.h>
+#include <SofaAdvancedConstraint/BSplineModel.h> //ctn_DEV
 #include <sofa/core/VecId.h>
 #include <iostream>
 
