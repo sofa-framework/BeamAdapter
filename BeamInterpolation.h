@@ -121,6 +121,7 @@ public:
     , innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
     , dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
+    , straight(initData(&straight,true,"straight","If true, will consider straight beams for the rest position"))
     , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
     , m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
     , m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
@@ -144,9 +145,6 @@ public:
     void bwdInit();
     void reinit(){init(); bwdInit(); }
     void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
-
-
-
 
     /**
      * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...)
@@ -274,6 +272,7 @@ public:
     Data<Real> innerRadius;
     Data<bool> dofsAndBeamsAligned;
     Data<Real> defaultYoungModulus;
+    Data<bool> straight;
 
     ///////// for AdaptiveControllers
     bool isControlled(){return _isControlled;}
@@ -348,7 +347,7 @@ public:
     }
 
 
-    virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
+
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
     virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );

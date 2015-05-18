@@ -75,6 +75,7 @@ namespace component
 namespace fem
 {
 
+using core::behavior::MechanicalState;
 
 //////////// useful tool
 
@@ -440,8 +441,12 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
 
 
 template<class DataTypes>
-int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
-                                                            Transform& local0_H_local1, Quat& local_R_local0, const VecCoord &x)
+int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,
+                                                   Transform &global_H0_local,
+                                                   Transform &global_H1_local,
+                                                   Transform &local0_H_local1,
+                                                   Quat &local_R_local0,
+                                                   const VecCoord &x)
 {
 
     //<<"computeTransform for edge"<< edgeInList<<std::endl;
@@ -453,8 +458,6 @@ int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Tra
         serr << "[computeTransform2] Error in getNodeIndices(). Aborting....." << sendl;
         return -1;
     }
-
-
 
     //2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
     Transform DOF0_H_local0, DOF1_H_local1;
@@ -470,10 +473,7 @@ int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Tra
     Transform global_H_local1 = global_H_DOF1*DOF1_H_local1;
 
 
-
-
-
- // 4. Compute the local frame
+     // 4. Compute the local frame
 
     // SIMPLIFICATION: local = local0:
     local_R_local0.clear();
@@ -497,7 +497,10 @@ int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,  Tra
 
 
 template<class DataTypes>
-int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,  Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x)
+int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,
+                                                    Transform &global_H_local0,
+                                                    Transform &global_H_local1,
+                                                    const VecCoord &x)
 {
     // 1. Get the indices of element and nodes
     unsigned int node0Idx, node1Idx;
@@ -507,43 +510,76 @@ int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,  Tr
         return -1;
     }
 
-
-
-
-    //2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
+    // 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
     Transform DOF0_H_local0, DOF1_H_local1;
     getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
-
 
     // 3. Computes the transformation global To local for both nodes
     Transform global_H_DOF0(x[node0Idx].getCenter(),x[node0Idx].getOrientation());
     Transform global_H_DOF1(x[node1Idx].getCenter(),x[node1Idx].getOrientation());
-        // - add a optional transformation
-     global_H_local0 = global_H_DOF0*DOF0_H_local0;
-     global_H_local1 = global_H_DOF1*DOF1_H_local1;
+    // - add a optional transformation
+    global_H_local0 = global_H_DOF0*DOF0_H_local0;
+    global_H_local1 = global_H_DOF1*DOF1_H_local1;
 
-     return 1; //without error
+    return 1; //without error
 }
 
-template<class DataTypes>
-void BeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest)
-{
-    // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
-    local0_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList],0,0), Quat());
-}
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
-    // the beam is straight: local is in the middle of local0 and local1
-    // the transformation between local0 and local1 is provided by the length of the beam
-    local_H_local0_rest.set(-Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
-    local_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+
+    if(straight.getValue())
+    {
+        // the beam is straight: local is in the middle of local0 and local1
+        // the transformation between local0 and local1 is provided by the length of the beam
+        local_H_local0_rest.set(-Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+    }
+    else
+    {
+        MechanicalState<DataTypes>* state = dynamic_cast<MechanicalState<DataTypes>*>(getContext()->getMechanicalState());
+
+        if(state)
+        {
+            unsigned int node0Id, node1Id;
+            getNodeIndices(edgeInList,node0Id,node1Id);
+
+            Coord global_0 = state->read(core::VecCoordId::restPosition())->getValue()[node0Id];
+            Coord global_1 = state->read(core::VecCoordId::restPosition())->getValue()[node1Id];
+
+            Transform global_H_DOF0 = Transform(global_0.getCenter(),global_0.getOrientation());
+            Transform global_H_DOF1 = Transform(global_1.getCenter(),global_1.getOrientation());
+
+            Transform DOF0_H_local0, DOF1_H_local1;
+            getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
+
+            Transform global_H_local_0 = global_H_DOF0*DOF0_H_local0;
+            Transform global_H_local_1 = global_H_DOF1*DOF1_H_local1;
+
+            Transform global_H_local_middle;
+
+            Vec3 result = global_H_local_0.getOrigin() * 0.5 + global_H_local_1.getOrigin() * 0.5;
+            Quat slerp;
+            slerp.slerp( global_H_local_0.getOrientation(), global_H_local_1.getOrientation(), 0.5, true );
+            slerp.normalize();
+
+            global_H_local_middle.setOrigin(result);
+            global_H_local_middle.setOrientation(slerp);
+
+            local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
+            local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
+        }
+        else
+            serr<<"This component needs a context mechanical state if straight is set to false."<<sendl;
+    }
 }
 
 
 template<class DataTypes>
-int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx )
+int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
+                                                 unsigned int &node0Idx,
+                                                 unsigned int &node1Idx )
 {
     if ( this->_topologyEdges==NULL)
     {
@@ -744,13 +780,17 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
 }
 
 
-
-
-
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult,bool recompute, const sofa::core::ConstVecCoordId &vecXId)
+void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edgeInList,
+                                                               const Real& baryCoord,
+                                                               const Vec3& localPos,
+                                                               const VecCoord &x,
+                                                               Vec3& posResult,
+                                                               bool recompute,
+                                                               const sofa::core::ConstVecCoordId &vecXId)
 {
-    if(recompute){
+    if(recompute)
+    {
 
         // <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
         const Real& _L = this->m_lengthList.getValue()[edgeInList];
@@ -838,7 +878,6 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 }
 
 
-
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t )
 {
@@ -911,7 +950,6 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
                                                                            const Transform &global_H_local1,
                                                                            const Real &L)
 {
-
 
     Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
 
@@ -1044,7 +1082,11 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::Comput
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol)
+void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int edgeInList,
+                                                                   const Real& baryCoord,
+                                                                   const Vec3& localPos,
+                                                                   const VecCoord &x,
+                                                                   Transform &global_H_localInterpol)
 {
     Transform global_H_local0, global_H_local1;
     if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
@@ -1126,7 +1168,6 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
 
 
 
-
 ////////////////////
 // BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline
 // 3DoF (reverse) mapping of a force (finput) that is positionned / to the centerline of a beam
@@ -1190,8 +1231,6 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
     FNode0output = DOF0Global_H_local0 * (f0+f1);
     FNode1output = DOF1Global_H_local1 * (f2+f3);
 }
-
-
 
 
 ////////////////////
@@ -1265,8 +1304,6 @@ bool BeamInterpolation<DataTypes>::breaksInTwo(const Real& /*x_min_out*/,  Real&
 {
     return false;
 }
-
-
 
 
 }// namespace fem
