@@ -1,0 +1,9 @@
+# CMake package configuration file for the BeamAdapter plugin
+
+@PACKAGE_INIT@
+
+find_package(SofaBase REQUIRED)
+find_package(SofaGeneral REQUIRED)
+find_package(SofaFramework REQUIRED)
+
+check_required_components(BeamAdapter)

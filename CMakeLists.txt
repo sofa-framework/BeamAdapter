@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
-
 project("BeamAdapter")
 
-include(${SOFA_CMAKE_DIR}/preProject.cmake)
+set(BEAMADAPTER_MAJOR_VERSION 1)
+set(BEAMADAPTER_MINOR_VERSION 0)
+set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION})
+
+#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
   AdaptiveBeamConstraint.h
@@ -56,15 +59,9 @@ set(SOURCE_FILES
   SteerableCatheter.cpp
   )
 
-
-
-
 set(README_FILE "BeamAdapter.txt" )
 
-#message(status "BeamAdapter")
-
-
-if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
+if(PLUGIN_SOFAADVANCEDCONSTRAINT)
 set(HEADER_FILES ${HEADER_FILES}
   AdaptiveBeamContactMapper.h
   AdaptiveBeamContactMapper.inl
@@ -85,46 +82,41 @@ set(SOURCE_FILES ${SOURCE_FILES}
         #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} )
-
-set(COMPILER_DEFINES "SOFA_BUILD_BEAMADAPTER")
-set(LINKER_DEPENDENCIES SofaConstraint SofaComponentAdvanced SofaVolumetricData SofaAdvancedConstraint)
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 
-# Define the SOFA_WITH_FLOAT and SOFA_WITH_DOUBLE macro
-# these two macro can be used to activate the compilation
-# of float or double specific version of the components.
-#
-# the template to use is:
-# ifdef SOFA_WITH_FLOAT
-#    .... your "float" version of your code
-# endif // SOFA_WITH_FLOAT
-# ifdef SOFA_WITH_DOUBLE
-#    .... your "double" version of your code
-# endif // SOFA_WITH_DOUBLE
-#
-# This two macros should replace the SOFA_DOUBLE/SOFA_FLOAT
-# that are very confusing because they were working
-# in an "inverse" way:
-#
-# ifndef SOFA_FLOAT
-#    .... the "double" version of the code
-# endif // SOFA_FLOAT
-# ifndef SOFA_DOUBLE
-#    .... the "float" version of the code
-# endif // SOFA_DOUBLE
-if(SOFA-MISC_USE_FLOAT)
-    AddCompilerDefinitions("SOFA_WITH_FLOAT")
-endif(SOFA-MISC_USE_FLOAT)
-if(SOFA-MISC_USE_DOUBLE)
-    AddCompilerDefinitions("SOFA_WITH_DOUBLE")
-endif(SOFA-MISC_USE_DOUBLE)
-if(NOT SOFA-MISC_USE_FLOAT AND NOT SOFA-MISC_USE_DOUBLE)
-    AddCompilerDefinitions("SOFA_WITH_FLOAT")
-    AddCompilerDefinitions("SOFA_WITH_DOUBLE")
-endif(NOT SOFA-MISC_USE_FLOAT AND NOT SOFA-MISC_USE_DOUBLE)
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_BEAMADAPTER")
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${HEADER_FILES}")
+
+target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>")
+target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
+target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
+
+find_package(SofaFramework REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction)
 
 
+if(${SOFA_FLOATING_POINT_TYPE} STREQUAL float)
+    add_definitions(-DSOFA_WITH_FLOAT)
+endif()
+if(${SOFA_FLOATING_POINT_TYPE} STREQUAL double)
+    add_definitions(-DSOFA_WITH_DOUBLE)
+endif()
+if(${SOFA_FLOATING_POINT_TYPE} STREQUAL both)
+    add_definitions(-DSOFA_WITH_FLOAT)
+    add_definitions(-DSOFA_WITH_DOUBLE)
+endif()
+
+## Install rules for the library and headers; CMake package configurations files
+sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
+
+# if only this was possible...
+#if(SOFA_BUILD_TESTS)
+#    add_subdirectory(BeamAdapter_test)
+#endif()
+
+# this paragraph has not been ported to the new build system yet...
 #if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
     #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
     #list(APPEND LINKER_DEPENDENCIES SofaCUDA)
@@ -138,6 +130,3 @@ endif(NOT SOFA-MISC_USE_FLOAT AND NOT SOFA-MISC_USE_DOUBLE)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "plugins")
-
-
-include(${SOFA_CMAKE_DIR}/postProject.cmake)
