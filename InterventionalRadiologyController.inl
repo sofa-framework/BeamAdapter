@@ -71,6 +71,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , threshold(initData(&threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , motionFilename(initData(&motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
+, indexFirstNode(initData(&indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 {
     //edgeSetInNode=true;
     _fixedConstraint = NULL;
@@ -276,7 +277,7 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     stPos.getOrientation().normalize();
     startingPos.setValue(stPos);
 
-    //VecCoord& x = *(this->getMechanicalState()->getX());
+    //VecCoord& x = *(this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     helper::WriteAccessor<Data<VecCoord> > x = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     for(unsigned int i=0; i<x.size(); i++)
     {
@@ -426,6 +427,16 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
                     id=0;
                 }
                 x_instr_tip[id] += step.getValue();
+                /*for (unsigned int i =0; i<= id; i++)
+                {
+                    x_instr_tip[i] += step.getValue();
+                }
+
+                for (unsigned int i =0; i< 10; i++)
+                {
+                    serr<<"The id is "<<id<<" ##############################################################"<<sendl;
+                }*/
+
 
                 this->xtip.endEdit();
             }
@@ -498,7 +509,15 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
         {
             if (!sensored)
                 x_instr_tip[id] += speed.getValue() * context->getDt();
-            else
+            /*{for (unsigned int i=0;i<=id;i++)
+                {
+                    x_instr_tip[i] += speed.getValue() * context->getDt();
+                }
+                for (unsigned int i=0;i<=id;i++)
+                {
+                    serr<<"Je passe ici ####################################################################"<<sendl;
+                }}*/
+        else
             {
                 // x_instr_tip[id] += sensorMotionData[1000 * context->getTime()][1];
                 unsigned int newSensorData = currentSensorData + 1;
@@ -1064,7 +1083,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     unsigned int nnode_old= nodeCurvAbs.size(); // previous number of simulated nodes;
 
-    //VecCoord& x = (*this->getMechanicalState()->getX());
+    //VecCoord& x = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     VecCoord& x = *datax->beginEdit();
 
@@ -1425,7 +1444,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int first_simulated_Node)
 {
-    //VecCoord& xMstate = (*this->getMechanicalState()->getX());
+    //VecCoord& xMstate = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     //VecDeriv& vMstate = (*this->getMechanicalState()->getV());
 
     helper::WriteAccessor<Data<VecCoord> > xMstate = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
@@ -1435,12 +1454,13 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
     // set the position to startingPos for all the nodes that are not simulated
     // and add a fixedConstraint
     _fixedConstraint->clearConstraints();
-    for(unsigned int i=0; i<first_simulated_Node ; i++)
+    for(unsigned int i=0; i<first_simulated_Node-1 ; i++)
     {
         xMstate[i]=startingPos.getValue();
         vMstate[i].clear();
         _fixedConstraint->addConstraint(i);
     }
+    indexFirstNode = first_simulated_Node-1 ;
 
 }
 

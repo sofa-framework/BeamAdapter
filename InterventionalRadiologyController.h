@@ -48,6 +48,7 @@
 #include <SofaMeshCollision/LineModel.h>
 
 
+
 using namespace sofa::component::fem;
 using namespace sofa::helper;
 
@@ -245,6 +246,7 @@ protected:
     Data<Real> threshold;
     Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     Data <std::string> motionFilename;
+    Data<unsigned int> indexFirstNode; // First Node simulated
 
 
 

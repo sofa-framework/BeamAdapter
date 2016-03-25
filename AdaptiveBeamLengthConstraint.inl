@@ -80,7 +80,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::internalInit()
 
     if(!m_interpolation.get())
     {
-        serr << "Could not find the beam interpolation" << sout;
+        // serr << "Could not find the beam interpolation" << sout;
         return;
     }
 

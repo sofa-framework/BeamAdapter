@@ -18,8 +18,8 @@ set(HEADER_FILES
   AdaptiveBeamLengthConstraint.inl
   AdaptiveBeamMapping.h
   AdaptiveBeamMapping.inl
-  BaseRestShape.h
-  BaseRestShape.inl
+  #BaseRestShape.h
+  #BaseRestShape.inl
   BeamInterpolation.h
   BeamInterpolation.inl
   ImplicitSurfaceAdaptiveConstraint.h
@@ -46,7 +46,7 @@ set(SOURCE_FILES
   AdaptiveBeamForceFieldAndMass.cpp
   AdaptiveBeamLengthConstraint.cpp
   AdaptiveBeamMapping.cpp
-  BaseRestShape.cpp
+  #BaseRestShape.cpp
   BeamInterpolation.cpp
   ImplicitSurfaceAdaptiveConstraint.cpp
   initBeamAdapter.cpp

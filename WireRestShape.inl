@@ -45,6 +45,7 @@
 #include <sofa/simulation/common/Node.h>
 #include <sofa/simulation/common/TopologyChangeVisitor.h>
 #include <sofa/core/topology/Topology.h>
+#include <sofa/core/visual/VisualParams.h>
 
 #include <iostream>
 #include <fstream>
