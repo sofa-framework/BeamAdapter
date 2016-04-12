@@ -106,7 +106,47 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 
     }
 }
 
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
+{
+    if ( this->crossSectionShape.getValue() == "elliptic")
+    {
+        /* code */
+    }
+    else if ( this->crossSectionShape.getValue() == "square" )
+    {
 
+    }
+    else if ( this->crossSectionShape.getValue() == "rectangular" )
+    {
+
+    }
+    else // ( this->crossSectionShape.getValue() == "circular")
+    {
+        std::cout << "CROSS SECTION SHAPE !!!! " << this->crossSectionShape.getValue() << std::endl;
+        this->_constantRadius._r = this->radius.getValue();
+        this->_constantRadius._rInner = this->innerRadius.getValue();
+        double r = this->radius.getValue();
+        if (r <= 0.0)
+        {
+            serr << "Radius must be positive" << sendl;
+            if (r>0)
+            {
+                serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
+                r = -r;
+            }
+        }
+        double rInner = this->innerRadius.getValue();
+        this->_constantRadius._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+        //_Iz = M_PI*(r*r*r*r)/4.0;
+        this->_constantRadius._Iy = this->_constantRadius._Iz ;
+        this->_constantRadius._J = this->_constantRadius._Iz + this->_constantRadius._Iy;
+        this->_constantRadius._A = M_PI*(r*r - rInner*rInner);
+
+        this->_constantRadius._Asy = 0.0;
+        this->_constantRadius._Asz = 0.0;
+    }
+}
 
 
 /* ************* ADAPTIVE INTERPOLATION ************** */
@@ -116,34 +156,9 @@ template <class DataTypes>
 {
     this->f_printLog.setValue(true);
 
+    computeCrossSectionInertiaMatrix();
+
     sofa::core::objectmodel::BaseContext* context = this->getContext();
-
-    this->_constantRadius._r = this->radius.getValue();
-    this->_constantRadius._rInner = this->innerRadius.getValue();
-    double r = this->radius.getValue();
-    if (r <= 0.0)
-    {
-        serr << "Radius must be positive" << sendl;
-        if (r>0)
-        {
-            serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
-            r = -r;
-        }
-    }
-
-
-    double rInner = this->innerRadius.getValue();
-
-    this->_constantRadius._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-
-    //_Iz = M_PI*(r*r*r*r)/4.0;
-    this->_constantRadius._Iy = this->_constantRadius._Iz ;
-    this->_constantRadius._J = this->_constantRadius._Iz + this->_constantRadius._Iy;
-    this->_constantRadius._A = M_PI*(r*r - rInner*rInner);
-
-    this->_constantRadius._Asy = 0.0;
-    this->_constantRadius._Asz = 0.0;
-
     // Init Adaptive Topology:
     this->_topology = context->getMeshTopology();
 }

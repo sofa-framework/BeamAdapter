@@ -117,8 +117,14 @@ public:
 #endif
 
     BeamInterpolation()
-    : radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (for now only constant radius are used)"))
+    : crossSectionShape(initData(&crossSectionShape, std::string("circular"), "crossSectionShape", "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
+    , radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (if circular cross-section is considered)"))
     , innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
+    , sideLength(initData(&sideLength, (Real)1.0f, "sideLength", "side length of the beam (if square cross-section is considered)"))
+    , smallRadius(initData(&smallRadius, (Real)1.0f, "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
+    , largeRadius(initData(&largeRadius, (Real)1.0f, "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
+    , smallSideLength(initData(&smallSideLength, (Real)1.0f, "smallSideLength", "small side length of the beam (if rectangular cross-section is considered)"))
+    , largeSideLength(initData(&largeSideLength, (Real)1.0f, "largeSideLength", "large side length of the beam (if rectangular cross-section is considered)"))
     , dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
     , straight(initData(&straight,true,"straight","If true, will consider straight beams for the rest position"))
@@ -150,6 +156,8 @@ public:
      * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...)
      */
     bool interpolationIsAlreadyInitialized();
+
+    void computeCrossSectionInertiaMatrix();
 
     unsigned int getNumBeamsNotUnderControl(){return this->_numBeamsNotUnderControl;}
     unsigned int getNumBeams(){return this->m_edgeList.getValue().size();}
@@ -268,11 +276,21 @@ public:
     };
     BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantRadius;}
 
-    Data<Real> radius;
-    Data<Real> innerRadius;
-    Data<bool> dofsAndBeamsAligned;
-    Data<Real> defaultYoungModulus;
-    Data<bool> straight;
+    Data<std::string>   crossSectionShape;
+    // Circular Cross Section
+    Data<Real>          radius;
+    Data<Real>          innerRadius;
+    // Square Cross Section
+    Data<Real>          sideLength;
+    // Elliptic Cross Section
+    Data<Real>          smallRadius;
+    Data<Real>          largeRadius;
+    // Rectangular Cross Section
+    Data<Real>          smallSideLength;
+    Data<Real>          largeSideLength;
+    Data<bool>          dofsAndBeamsAligned;
+    Data<Real>          defaultYoungModulus;
+    Data<bool>          straight;
 
     ///////// for AdaptiveControllers
     bool isControlled(){return _isControlled;}

@@ -55,7 +55,7 @@
 		/>		
 		<MechanicalObject template="Rigid" name="DOFs"/> 
 
-		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="2" printLog="1"/> 
+		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" crossSectionShape="circular" radius="2" printLog="1"/> 
 		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@InterpolCatheter" massDensity="0.00000155"/> <!-- silicone E = 1000 MPa // 1550 Kg/m3-->	
 
 		<WireBeamInterpolation name="InterpolGuide" WireRestShape="@../topoLines_guide/GuideRestShape" radius="1" printLog="1"/> 
