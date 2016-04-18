@@ -51,6 +51,7 @@
 
 #include <sofa/core/objectmodel/BaseObject.h>
 
+#include <sofa/helper/OptionsGroup.h>
 
 namespace sofa
 {
@@ -117,14 +118,14 @@ public:
 #endif
 
     BeamInterpolation()
-    : crossSectionShape(initData(&crossSectionShape, std::string("circular"), "crossSectionShape", "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
+     : crossSectionShape(initData(&crossSectionShape, sofa::helper::OptionsGroup(3,"circular","elliptic (not available)","rectangular"), "crossSectionShape", "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
     , radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (if circular cross-section is considered)"))
     , innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
     , sideLength(initData(&sideLength, (Real)1.0f, "sideLength", "side length of the beam (if square cross-section is considered)"))
     , smallRadius(initData(&smallRadius, (Real)1.0f, "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
     , largeRadius(initData(&largeRadius, (Real)1.0f, "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
-    , smallSideLength(initData(&smallSideLength, (Real)1.0f, "smallSideLength", "small side length of the beam (if rectangular cross-section is considered)"))
-    , largeSideLength(initData(&largeSideLength, (Real)1.0f, "largeSideLength", "large side length of the beam (if rectangular cross-section is considered)"))
+    , lengthY(initData(&lengthY, (Real)1.0f, "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
+    , lengthZ(initData(&lengthZ, (Real)1.0f, "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
     , dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
     , straight(initData(&straight,true,"straight","If true, will consider straight beams for the rest position"))
@@ -267,16 +268,16 @@ public:
         // double _L; //length
         double _r; 			///<radius of the section
         double _rInner;		///<inner radius of the section if beam is hollow
-        double _Iy;
-        double _Iz; 		///< Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
+        double _Iy;         /// < Iy and Iz are the cross-section moment of inertia (assuming mass ratio = 1) about the y and z axis;
+        double _Iz; 		/// < see https://en.wikipedia.org/wiki/Second_moment_of_area
         double _J;  		///< Polar moment of inertia (J = Iy + Iz)
         double _A; 			///< A is the cross-sectional area;
         double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
         double _Asz; 		///< _Asz is the z-direction effective shear area;
     };
-    BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantRadius;}
+    BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantSection;}
 
-    Data<std::string>   crossSectionShape;
+    Data<helper::OptionsGroup>   crossSectionShape;
     // Circular Cross Section
     Data<Real>          radius;
     Data<Real>          innerRadius;
@@ -286,8 +287,8 @@ public:
     Data<Real>          smallRadius;
     Data<Real>          largeRadius;
     // Rectangular Cross Section
-    Data<Real>          smallSideLength;
-    Data<Real>          largeSideLength;
+    Data<Real>          lengthY;
+    Data<Real>          lengthZ;
     Data<bool>          dofsAndBeamsAligned;
     Data<Real>          defaultYoungModulus;
     Data<bool>          straight;
@@ -437,7 +438,7 @@ protected :
 
 
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
-    BeamSection _constantRadius;
+    BeamSection _constantSection;
 
     // Topology
 

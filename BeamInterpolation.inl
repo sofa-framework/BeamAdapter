@@ -109,23 +109,30 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 {
-    if ( this->crossSectionShape.getValue() == "elliptic")
+    if ( this->crossSectionShape.getValue().getSelectedItem() == "elliptic")
     {
         /* code */
     }
-    else if ( this->crossSectionShape.getValue() == "square" )
+    else if ( this->crossSectionShape.getValue().getSelectedItem() == "rectangular" )
     {
+        Real Ly = this->lengthY.getValue();
+        Real Lz = this->lengthZ.getValue();
 
-    }
-    else if ( this->crossSectionShape.getValue() == "rectangular" )
-    {
+        this->_constantSection._Iy=Ly*Lz*Lz*Lz/12.0;
+        this->_constantSection._Iz=Lz*Ly*Ly*Ly/12.0;
+        this->_constantSection._J=this->_constantSection._Iy + this->_constantSection._Iz;
+        this->_constantSection._A = Ly*Lz;
+
+        this->_constantSection._Asy = 0.0;
+        this->_constantSection._Asz = 0.0;
+
 
     }
     else // ( this->crossSectionShape.getValue() == "circular")
     {
-        std::cout << "CROSS SECTION SHAPE !!!! " << this->crossSectionShape.getValue() << std::endl;
-        this->_constantRadius._r = this->radius.getValue();
-        this->_constantRadius._rInner = this->innerRadius.getValue();
+        std::cout << "CROSS SECTION SHAPE !!!! " << this->crossSectionShape.getValue().getSelectedItem() << std::endl;
+        this->_constantSection._r = this->radius.getValue();
+        this->_constantSection._rInner = this->innerRadius.getValue();
         double r = this->radius.getValue();
         if (r <= 0.0)
         {
@@ -137,14 +144,14 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
             }
         }
         double rInner = this->innerRadius.getValue();
-        this->_constantRadius._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+        this->_constantSection._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
         //_Iz = M_PI*(r*r*r*r)/4.0;
-        this->_constantRadius._Iy = this->_constantRadius._Iz ;
-        this->_constantRadius._J = this->_constantRadius._Iz + this->_constantRadius._Iy;
-        this->_constantRadius._A = M_PI*(r*r - rInner*rInner);
+        this->_constantSection._Iy = this->_constantSection._Iz ;
+        this->_constantSection._J = this->_constantSection._Iz + this->_constantSection._Iy;
+        this->_constantSection._A = M_PI*(r*r - rInner*rInner);
 
-        this->_constantRadius._Asy = 0.0;
-        this->_constantRadius._Asz = 0.0;
+        this->_constantSection._Asy = 0.0;
+        this->_constantSection._Asz = 0.0;
     }
 }
 
