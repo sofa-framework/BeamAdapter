@@ -42,10 +42,13 @@
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <SofaBaseTopology/QuadSetTopologyModifier.h>
 
-#include <sofa/simulation/common/Node.h>
-#include <sofa/simulation/common/TopologyChangeVisitor.h>
+#include <sofa/simulation/Node.h>
+#include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/topology/Topology.h>
 #include <sofa/core/visual/VisualParams.h>
+
+#include <sofa/helper/gl/template.h>
+#include <sofa/helper/system/glut.h>
 
 #include <iostream>
 #include <fstream>

@@ -46,7 +46,7 @@
 #include <sofa/core/objectmodel/Event.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
 #include <sofa/core/objectmodel/KeyreleasedEvent.h>
-#include <sofa/simulation/common/AnimateBeginEvent.h>
+#include <sofa/simulation/AnimateBeginEvent.h>
 
 //For angle computation
 #define PI 3.14159265359

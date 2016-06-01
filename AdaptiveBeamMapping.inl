@@ -42,7 +42,7 @@
 #include <sofa/core/Mapping.inl>
 #include <sofa/core/visual/VisualParams.h>
 
-#include <sofa/simulation/common/AnimateBeginEvent.h>
+#include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/helper/AdvancedTimer.h>
 
 

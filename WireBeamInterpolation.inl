@@ -60,7 +60,7 @@
 #include <sofa/helper/OptionsGroup.h>
 
 #include <sofa/helper/gl/Cylinder.h>
-#include <sofa/simulation/common/Simulation.h>
+#include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
 //#include <sofa/simulation/common/Node.h>
 
