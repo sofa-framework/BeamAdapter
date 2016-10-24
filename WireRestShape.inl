@@ -108,7 +108,7 @@ void WireRestShape<DataTypes>::init()
             serr << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" << sendl;
         else
         {
-            if (f_printLog.getValue()) sout << "Found a mesh with " << loader->edges.getValue().size() << " edges" << sendl;
+            if (f_printLog.getValue()) sout << "Found a mesh with " << loader->d_edges.getValue().size() << " edges" << sendl;
             InitFromLoader();
             InitRestConfig();
         }
@@ -604,25 +604,25 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
 template <class DataTypes>
 bool WireRestShape<DataTypes>::checkTopology()
 {
-    if (!loader->edges.getValue().size())
+    if (!loader->d_edges.getValue().size())
     {
         serr << "There is no edges in the topology loaded by " << loader->getName() << sendl;
         return false;
     }
 
-    if (loader->triangles.getValue().size())
+    if (loader->d_triangles.getValue().size())
     {
         serr << "There are triangles in the topology loaded by " << loader->getName() << sendl;
         return false;
     }
 
-    if (loader->quads.getValue().size())
+    if (loader->d_quads.getValue().size())
     {
         serr << "There are quads in the topology loaded by " << loader->getName() << sendl;
         return false;
     }
 
-    if (loader->polygons.getValue().size())
+    if (loader->d_polygons.getValue().size())
     {
         serr << "There are polygons in the topology loaded by " << loader->getName() << sendl;
         return false;
@@ -647,14 +647,14 @@ void WireRestShape<DataTypes>::InitFromLoader()
 
     //get the topology position
     typedef  sofa::helper::vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
-    topoPosition &topoVertices = (*loader->positions.beginEdit());
+    topoPosition &topoVertices = (*loader->d_positions.beginEdit());
 
     //copy the topology edges in a local vector
     typedef  sofa::helper::vector<sofa::core::topology::Topology::Edge > topoEdge;
-    topoEdge &topoEdges = (*loader->edges.beginEdit());
+    topoEdge &topoEdges = (*loader->d_edges.beginEdit());
     for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
         edges.push_back(Vec2((*it)[0], (*it)[1]));
-    loader->edges.endEdit();
+    loader->d_edges.endEdit();
 
     /** renumber the vertices  **/
    sofa::helper::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
@@ -730,7 +730,7 @@ void WireRestShape<DataTypes>::InitFromLoader()
     for(unsigned int i = 0; i < localRestPositions.size() - 1; i++)
         localRestPositions[i] *= NonProceduralScale.getValue();
 
-    loader->positions.endEdit();
+    loader->d_positions.endEdit();
 }
 
 
