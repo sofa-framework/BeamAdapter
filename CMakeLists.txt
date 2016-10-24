@@ -96,18 +96,6 @@ find_package(SofaFramework REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction)
 
-
-if(${SOFA_FLOATING_POINT_TYPE} STREQUAL float)
-    add_definitions(-DSOFA_WITH_FLOAT)
-endif()
-if(${SOFA_FLOATING_POINT_TYPE} STREQUAL double)
-    add_definitions(-DSOFA_WITH_DOUBLE)
-endif()
-if(${SOFA_FLOATING_POINT_TYPE} STREQUAL both)
-    add_definitions(-DSOFA_WITH_FLOAT)
-    add_definitions(-DSOFA_WITH_DOUBLE)
-endif()
-
 ## Install rules for the library and headers; CMake package configurations files
 sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
 
