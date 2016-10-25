@@ -920,7 +920,8 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
 // 0. useful for rigidification
     helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 
-    unsigned int nbRigidAbs = rigidCurvAbs->size();
+    //WARNING REMOVAL : UNUSED variable. Will need to be erased or used by the author of this code
+    //unsigned int nbRigidAbs = rigidCurvAbs->size();
 
     if(curv_abs.size() != id_instrument_table.size())
         serr<<" id_instrument_table.size() is not equal to curv_abs.size()"<<sendl;
