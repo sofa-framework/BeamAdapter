@@ -693,7 +693,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
 
     // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
     int nb = rigidCurvAbs->size();
 
     bool begin=true;
@@ -918,7 +918,7 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
     std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
 #endif
 // 0. useful for rigidification
-    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 
     //WARNING REMOVAL : UNUSED variable. Will need to be erased or used by the author of this code
     //unsigned int nbRigidAbs = rigidCurvAbs->size();
@@ -1241,7 +1241,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //2. Fix the node that are "fixed"
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
 
     bool rigid=false;
     unsigned int nbRigidAbs = rigidCurvAbs->size();
