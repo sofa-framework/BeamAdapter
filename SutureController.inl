@@ -244,7 +244,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 
     // When there are rigid segments, # of dofs is different than # of edges and beams
     unsigned int numRigidPts = 0;
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
     int nbRigidAbs = rigidCurvAbs->size();
     if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
     {
@@ -1329,7 +1329,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         serr<<" WARNING : rigidCurveSegments are not correctly sorted !"<<sendl;
 
     this->rigidCurveSegments.clear();
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
     int nb = rigidCurvAbs->size();
     if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
     {

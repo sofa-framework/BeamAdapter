@@ -104,7 +104,7 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
     typedef sofa::component::fem::WireBeamInterpolation<DataTypes> WInterpolation;
 
-    typedef typename std::set<Real>::const_iterator RealConstIterator;
+    typedef typename helper::set<Real>::const_iterator RealConstIterator;
 
     /**
      * @name Point & Line Activer interface
@@ -301,7 +301,7 @@ public:
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
     Data< bool > useDummyController, fixRigidTransforms;
-    Data< std::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control

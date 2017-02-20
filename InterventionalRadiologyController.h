@@ -97,7 +97,7 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
 
-    typedef typename std::set<Real>::const_iterator RealConstIterator;
+    typedef typename helper::set<Real>::const_iterator RealConstIterator;
 
 protected:
 
@@ -244,7 +244,7 @@ protected:
     Data<Real> speed;
     Data<Coord> startingPos;
     Data<Real> threshold;
-    Data< std::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     Data <std::string> motionFilename;
     Data<unsigned int> indexFirstNode; // First Node simulated
 
