@@ -72,12 +72,12 @@
 		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="1 0 0"  step="2.0" rotationInstrument="0 0 0" 
 							controlledInstrument="0" startingPos="0 0 0 0 -0.7071068 0 0.7071068" speed="0." instruments="InterpolCatheter InterpolGuide InterpolCoils" />
 
-		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
+		<LinearSolverConstraintCorrection printLog="false" wire_optimization="false"/>
 
 		<FixedConstraint name="FixedConstraint" indices="0" />
 		<ControllerVerification controller="@m_ircontroller" KeyPressedEvents="0++"/>
 
-		<Node name="Collis">
+		<Node name="Collis" activated="false">
 				<EdgeSetTopologyContainer name="collisEdgeSet" />
 				<EdgeSetTopologyModifier   name="colliseEdgeModifier" />
 				<MechanicalObject name="CollisionDOFs" />
