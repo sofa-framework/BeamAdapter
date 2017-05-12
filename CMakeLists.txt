@@ -100,9 +100,9 @@ target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics 
 sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
 
 # if only this was possible...
-#if(SOFA_BUILD_TESTS)
-#    add_subdirectory(BeamAdapter_test)
-#endif()
+if(SOFA_BUILD_TESTS)
+    add_subdirectory(BeamAdapter_test)
+endif()
 
 # this paragraph has not been ported to the new build system yet...
 #if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
