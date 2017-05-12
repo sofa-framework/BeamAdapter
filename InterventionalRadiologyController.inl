@@ -72,6 +72,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , motionFilename(initData(&motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , indexFirstNode(initData(&indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
+, d_CurvAbs(initData(&d_CurvAbs,"CurvAbs", "curvi-linear abscissa of the DOFs" ))
 {
     //edgeSetInNode=true;
     _fixedConstraint = NULL;
@@ -693,7 +694,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
 
     // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    const std::vector< Real > *rigidCurvAbs = &m_rigidCurvAbs.getValue();
     int nb = rigidCurvAbs->size();
 
     bool begin=true;
@@ -918,7 +919,7 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
     std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
 #endif
 // 0. useful for rigidification
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+     const std::vector< Real >  *rigidCurvAbs = &m_rigidCurvAbs.getValue();
 
     //WARNING REMOVAL : UNUSED variable. Will need to be erased or used by the author of this code
     //unsigned int nbRigidAbs = rigidCurvAbs->size();
@@ -1094,7 +1095,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     sofa::helper::vector<Real> modifiedCurvAbs;
 
+
     this->totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, id_instrument_table);
+    std::cout<<"*******************\n totalLengthIsChanging \n  newCurvAbs = "<<newCurvAbs<<" \n modifiedCurvAbs = "<<modifiedCurvAbs<<" \n id_instrument_table ="<<id_instrument_table<<" \n***********"<<std::endl;
+
+
     Real xmax_prev = nodeCurvAbs[nodeCurvAbs.size()-1];
 
     for (unsigned int p=0; p<nbeam+1; p++)
@@ -1109,6 +1114,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             //2. this is not the case and the node position can be interpolated using previous step positions
         if(xabs > xmax_prev + threshold.getValue())
         {
+            std::cout<<"case1"<<std::endl;
+
             if (this->f_printLog.getValue()){
                 serr<<"case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
                 serr<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<nodeCurvAbs<<sendl;
@@ -1120,6 +1127,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
         else
         {
+            std::cout<<"case2"<<std::endl;
             // case 2 (the node position can be interpolated straightfully using previous step positions)
             unsigned int p0=0;
             while(p0<this->nodeCurvAbs.size())
@@ -1133,10 +1141,14 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
             if(fabs(nodeCurvAbs[p0]-xabs)<threshold.getValue())
             {
+
                 x[idP] = xbuf[idP0];
+                std::cout<<"case2a x["<<idP<<"] = "<<x[idP]<<std::endl;
+
             }
             else
             {
+                std::cout<<"case2b"<<std::endl;
 
                 // the node must be interpolated using beam interpolation
                     //find the instrument
@@ -1146,10 +1158,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                     // test to avoid wrong indices
                 if (b<0)
                 {
+                    std::cout<<"case2bA"<<std::endl;
                     x[p]=this->startingPos.getValue();
                 }
                 else
                 {
+                    std::cout<<"case2bB"<<std::endl;
                     // the position is interpolated
                     Transform global_H_interpol;
                     Real ratio = (xabs - nodeCurvAbs[b])/ (nodeCurvAbs[p0]-nodeCurvAbs[b]);
@@ -1241,7 +1255,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //2. Fix the node that are "fixed"
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    const std::vector< Real > *rigidCurvAbs = &m_rigidCurvAbs.getValue();
 
     bool rigid=false;
     unsigned int nbRigidAbs = rigidCurvAbs->size();
@@ -1350,15 +1364,18 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const s
         while (i>0 && newTable[i].size()==1)
         {
             modifiedNodeCurvAbs[i]-=DLength;
+
+            // force modifiedNode to be "locally" sorted
+            if(modifiedNodeCurvAbs[i]<modifiedNodeCurvAbs[i-1])
+            {
+               modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i-1]+ threshold.getValue();
+            }
+
             i--;
 
         }
 
     }
-
-    /// \todo : be careful !! modifiedNodeCurvAbs is no more necessarily well sorted !!!
-
-
 
 }
 
@@ -1367,13 +1384,17 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const s
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vector<Real> &CurvAbs, sofa::helper::vector< sofa::helper::vector<int> >& id_instrument_table)
 {
-    sofa::helper::vector<Real> newCurvAbs;
+    sofa::helper::vector<Real> &newCurvAbs =(*this->d_CurvAbs.beginEdit());
 
     Real eps = threshold.getValue();
 
 
-    newCurvAbs.clear();
+   // here we sort CurvAbs
+   // a buffer verctor: newCurvAbs will be filled by iteratively removing the minimal values found in CurvAbs and push_back them in newCurvAbs
+   // a threshod is used to remove the values that are "too" similars...
+   // TODO: could be improve by function "sort" ???
 
+    newCurvAbs.clear();
     while(CurvAbs.size()>0)
     {
         Real xmin = 1.0e30;
@@ -1406,7 +1427,8 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 
     CurvAbs = newCurvAbs;
 
-
+    // here we build a table that provides the list of each instrument for each dof in the list of newCurvAbs
+    // dofs can be shared by several instruments
     id_instrument_table.clear();
 
     for (unsigned int i=0; i<newCurvAbs.size(); i++)
@@ -1424,6 +1446,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
             }
         }
 
+
         if(listNewNode.size() ==0)
         {
             std::cerr<<" \n \n ERROR: no instrument find for curvAbs"<<newCurvAbs[i]<<std::endl;
@@ -1439,6 +1462,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
         id_instrument_table.push_back(listNewNode);
 
     }
+    d_CurvAbs.endEdit();
 }
 
 
@@ -1447,6 +1471,8 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
 {
     //VecCoord& xMstate = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     //VecDeriv& vMstate = (*this->getMechanicalState()->getV());
+
+    std::cout<<" ********** \n first_simulated_Node = "<<first_simulated_Node<<"\n ***********"<<std::endl;
 
     helper::WriteAccessor<Data<VecCoord> > xMstate = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     helper::WriteAccessor<Data<VecDeriv> > vMstate = *this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
