@@ -40,6 +40,44 @@ namespace constraintset
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
 
+AdaptiveBeamConstraintResolution::AdaptiveBeamConstraintResolution(double* sliding)
+: m_slidingDisp(sliding)
+{
+    nbLines = 3;
+}
+
+void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
+{
+    SOFA_UNUSED(dfree);
+    resolution(line,w,d,force);
+}
+
+void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force)
+{
+    double f[2];
+    f[0] = force[line]; f[1] = force[line+1];
+
+    force[line] -= d[line] / w[line][line];
+    d[line+1] += w[line+1][line] * (force[line]-f[0]);
+    force[line+1] -= d[line+1] / w[line+1][line+1];
+    d[line+2] += w[line+2][line] * (force[line]-f[0]) + w[line+2][line+1] * (force[line+1]-f[1]);
+}
+
+void AdaptiveBeamConstraintResolution::init(int line, double** w, double* force)
+{
+    SOFA_UNUSED(force);
+    m_slidingW = w[line+2][line+2];
+}
+
+void AdaptiveBeamConstraintResolution::store(int line, double* force, bool convergence)
+{
+    SOFA_UNUSED(convergence);
+    if(m_slidingDisp)
+        *m_slidingDisp = force[line+2] * m_slidingW;
+}
+
+
+/////////////////////////////////////////// FACTORY //////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
@@ -55,9 +93,10 @@ int AdaptiveBeamConstraintClass = core::RegisterObject("TODO")
 #ifdef SOFA_WITH_FLOAT
 template class AdaptiveBeamConstraint<Rigid3fTypes>;
 #endif
-#ifdef SOFA__WITH_DOUBLE
+#ifdef SOFA_WITH_DOUBLE
 template class AdaptiveBeamConstraint<Rigid3dTypes>;
 #endif
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace constraintset
 

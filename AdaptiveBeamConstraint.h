@@ -40,7 +40,6 @@ namespace component
 
 namespace constraintset
 {
-using sofa::helper::vector;
 
 /*!
  * \class AdaptiveBeamConstraint
@@ -73,20 +72,28 @@ public:
 
 protected:
 	
-	unsigned int cid;
+    unsigned int m_cid;
 		
-	int nbConstraints; 						/*!< number of constraints created */
-	std::vector<Real> violations;
-	std::vector<Real> previousPositions;	/*!< the position on which each point was projected */
-	std::vector<double> displacements; 		/*!< displacement=double for compatibility with constraint resolution */
-	std::vector<bool> projected;
+    int m_nbConstraints; 						/*!< number of constraints created */
+    std::vector<Real> m_violations;
+    std::vector<Real> m_previousPositions;	    /*!< the position on which each point was projected */
+    std::vector<double> m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
+    std::vector<bool> m_projected;
+
+    ////////////////////////// Inherited attributes ////////////////////////////
+    /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
+    /// Bring inherited attributes and function in the current lookup context.
+    /// otherwise any access to the base::attribute would require
+    /// the "this->" approach.
+    using sofa::core::behavior::PairInteractionConstraint<DataTypes>::mstate1;
+    using sofa::core::behavior::PairInteractionConstraint<DataTypes>::mstate2;
+    ////////////////////////////////////////////////////////////////////////////
 
 	/*! link to the interpolation component in the scene */
 	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 	
 	void internalInit();
 
-	
 	AdaptiveBeamConstraint(MechanicalState* object1, MechanicalState* object2)
 	: Inherit(object1, object2)
 	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
@@ -107,20 +114,24 @@ protected:
 	virtual ~AdaptiveBeamConstraint()
 	{
 	}
+
 public:
+
 	virtual void reset();
 	
 	virtual void init();
 	
-	void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex, const DataVecCoord &x1, const DataVecCoord &x2);
+    void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/,
+                               DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex, const DataVecCoord &x1, const DataVecCoord &x2);
 
-	void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2
-		, const DataVecDeriv &v1, const DataVecDeriv &v2);
+    void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/,
+                                defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2, const DataVecDeriv &v1, const DataVecDeriv &v2);
 
 	virtual void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
 
 	void draw(const core::visual::VisualParams* vparams);
 };
+
 
 /*!
  * \class AdaptiveBeamConstraintResolution
@@ -129,20 +140,17 @@ public:
 class AdaptiveBeamConstraintResolution : public core::behavior::ConstraintResolution
 {
 public:
-	AdaptiveBeamConstraintResolution(double* sliding = NULL)
-	: _slidingDisp(sliding) { nbLines = 3; }
-	virtual void init(int line, double** w, double* force);
-    void resolution(int line, double** w, double* d, double* force, double* /*dfree*/)
-    {
-        resolution(line,w,d,force);
-    }
+    AdaptiveBeamConstraintResolution(double* sliding = NULL);
+
+    virtual void init(int line, double** w, double* force);
 	virtual void resolution(int line, double** w, double* d, double* force);
-	virtual void store(int line, double* force, bool /*convergence*/);
+    virtual void store(int line, double* force, bool convergence);
+
+    void resolution(int line, double** w, double* d, double* force, double* dfree);
 	
 protected:
-	double* _slidingDisp;
-	double slidingW;
-
+    double* m_slidingDisp;
+    double  m_slidingW;
 };
 
 } // namespace constraintset
