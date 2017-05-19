@@ -51,11 +51,11 @@ namespace component
 namespace fem
 {
 
+namespace _wirebeaminterpolation_
+{
 using namespace sofa::defaulttype;
 
-
 SOFA_DECL_CLASS(WireBeamInterpolation)
-
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
@@ -73,6 +73,8 @@ template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3fTypes>;
 #ifdef SOFA_WITH_DOUBLE
 template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3dTypes>;
 #endif
+
+} // namespace _wirebeaminterpolation_
 
 } // namespace fem
 

@@ -36,6 +36,7 @@
 
 #ifndef SOFA_COMPONENT_CONTROLLER_SutureController_INL
 #define SOFA_COMPONENT_CONTROLLER_SutureController_INL
+#include <sofa/helper/set.h>
 
 #include "SutureController.h"
 #include "WireBeamInterpolation.h"
@@ -43,8 +44,6 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/simulation/MechanicalVisitor.h>
 #include <sofa/simulation/UpdateMappingVisitor.h>
-
-//#define DEBUG
 
 namespace sofa
 {
@@ -54,6 +53,8 @@ namespace component
 
 namespace controller
 {
+
+using sofa::helper::set ;
 
 template <class DataTypes>
 SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTypes>* _adaptiveinterpolation)
