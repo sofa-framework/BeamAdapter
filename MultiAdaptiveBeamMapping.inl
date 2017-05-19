@@ -183,7 +183,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
 		for (unsigned int i=0; i<m_subMappingList.size(); i++)
 		{
-			pointsList[i] = m_subMappingList[i]->points.beginEdit();
+            pointsList[i] = m_subMappingList[i]->d_points.beginEdit();
 			pointsList[i]->clear();
 			m_subMappingList[i]->clearidPointSubMap();
 		}
@@ -196,7 +196,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 		}
 		for (unsigned int i=0; i<m_subMappingList.size(); i++)
 		{
-			m_subMappingList[i]->points.endEdit();
+            m_subMappingList[i]->d_points.endEdit();
 		}
 
 		// handle the possible topological change
