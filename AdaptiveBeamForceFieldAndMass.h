@@ -124,6 +124,7 @@ public:
     , _computeMass(initData(&_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
     , _massDensity(initData(&_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , _shearStressComputation(initData(&_shearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
+    , _reinforceLength(initData(&_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     {
         _localBeamMatrices.resize(2);
     }
@@ -167,6 +168,8 @@ public:
     Data<bool> _computeMass; ///< if false, only compute the stiff elastic model
     Data<Real> _massDensity; ///< Density of the mass (usually in kg/m^3)
     Data<bool> _shearStressComputation; ///< if false, suppress the shear stress in the computation
+    Data<bool> _reinforceLength; ///<if true, perform a separate computation to evaluate the elongation
+
 
 
 protected:
