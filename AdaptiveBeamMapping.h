@@ -127,40 +127,40 @@ public:
 
 
 public:
-    Data<bool> useCurvAbs;							/*!< true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same */
-    Data< sofa::helper::vector< Vec3 > > points;	/*!< defines the mapped points along the beam axis (in beam frame local coordinates) */
-    Data< double > proximity;						/*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
-    Data<bool> contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
-    Data<std::string> nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
-    Data<double> nbPointsPerBeam;					/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
-    Data< sofa::helper::vector< Real > > segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
-    SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptativebeamInterpolation;
+    Data<bool> d_useCurvAbs;							/*!< true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same */
+    Data< sofa::helper::vector< Vec3 > > d_points;	/*!< defines the mapped points along the beam axis (in beam frame local coordinates) */
+    Data< double > d_proximity;						/*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
+    Data<bool> d_contactDuplicate;					/*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
+    Data<std::string> d_nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
+    Data<double> d_nbPointsPerBeam;					/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
+    Data< sofa::helper::vector< Real > > d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
+    SingleLink<AdaptiveBeamMapping<TIn, TOut>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
 
     AdaptiveBeamMapping(core::State< In >* from=NULL, core::State< Out >* to=NULL,BeamInterpolation< TIn >* _interpolation=NULL, bool _isSubMapping=false)
         : Inherit(from, to)
-    , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-    , points(initData(&points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
-    , proximity(initData(&proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
-    , contactDuplicate(initData(&contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
-    , nameOfInputMap(initData(&nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
-    , nbPointsPerBeam(initData(&nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
-    , segmentsCurvAbs(initData(&segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
-    , m_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _interpolation)
+    , d_useCurvAbs(initData(&d_useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
+    , d_points(initData(&d_points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
+    , d_proximity(initData(&d_proximity, 0.0, "proximity", "if positive, the mapping is modified for the constraints to take into account the lever created by the proximity"))
+    , d_contactDuplicate(initData(&d_contactDuplicate,false,"contactDuplicate","if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response)"))
+    , d_nameOfInputMap(initData(&d_nameOfInputMap,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
+    , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
+    , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
+    , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _interpolation)
     , m_inputMapping(NULL)
-    , isSubMapping(_isSubMapping)
-    , isBarycentricMapping(false)
+    , m_isSubMapping(_isSubMapping)
+    , m_isBarycentricMapping(false)
     {
     }
 
     void printIstrumentInfo()const
     {
-        if (isSubMapping)//ctn_DEV
+        if (m_isSubMapping)//ctn_DEV
         {
-            std::cout<<"Instrument Named "<<m_adaptativebeamInterpolation->getName()<<std::endl
+            std::cout<<"Instrument Named "<<l_adaptativebeamInterpolation->getName()<<std::endl
                     <<" MState1:"<<this->fromModel->getName()<< "  size:"<<this->fromModel->getSize()<<std::endl
                     <<" MState2:"<<this->toModel->getName()<< "  size:"<<this->toModel->getSize()<<std::endl
-                    <<"idPointSubMap."<<idPointSubMap.size()<<std::endl
-                    <<"pointBeamDistribution."<<pointBeamDistribution.size()<<std::endl<<std::endl;
+                    <<"idPointSubMap."<<m_idPointSubMap.size()<<std::endl
+                    <<"pointBeamDistribution."<<m_pointBeamDistribution.size()<<std::endl<<std::endl;
         }
     }
     virtual ~AdaptiveBeamMapping(){}
@@ -177,11 +177,11 @@ public:
     int addPoint ( const Coord& c, int /*indexFrom*/ )
     {
 
-        int i = points.getValue().size();
+        int i = d_points.getValue().size();
         Vec3 test(c[0],c[1],c[2]);
 
-        points.beginEdit()->push_back(test);
-        points.endEdit();
+        d_points.beginEdit()->push_back(test);
+        d_points.endEdit();
         return i;
     }
 
@@ -189,17 +189,17 @@ public:
 
     void setBarycentricMapping()
     {
-        isBarycentricMapping=true;
-        points.beginEdit()->clear();points.endEdit();
+        m_isBarycentricMapping=true;
+        d_points.beginEdit()->clear();d_points.endEdit();
     }
     int addBaryPoint(const int& _beamId,const Vec3& _baryCoord,bool /*todo_straightline_spline_option*/)
     //TODO add parameter label for different cases : unactive, linear, spline
     {
         //attention, beamId here is not the edge Id, but the id of a vec_edge_list defined in BeamInterpolation
-        int newpointId = pointBeamDistribution.size();
-        pointBeamDistribution.resize(newpointId+1);
-        pointBeamDistribution[newpointId].baryPoint=_baryCoord;
-        pointBeamDistribution[newpointId].beamId=_beamId;
+        int newpointId = m_pointBeamDistribution.size();
+        m_pointBeamDistribution.resize(newpointId+1);
+        m_pointBeamDistribution[newpointId].baryPoint=_baryCoord;
+        m_pointBeamDistribution[newpointId].beamId=_beamId;
         return newpointId;
     }
     //void clear(){};////// CTN_DEV todo for ContactMapper
@@ -207,17 +207,17 @@ public:
     void clear(int size)
     {
         this->clearidPointSubMap();
-        pointBeamDistribution.clear();
-        if ( size>0 && !isSubMapping)
+        m_pointBeamDistribution.clear();
+        if ( size>0 && !m_isSubMapping)
         {
-            pointBeamDistribution.reserve ( size );
-            points.beginEdit()->reserve ( size ); points.endEdit();
+            m_pointBeamDistribution.reserve ( size );
+            d_points.beginEdit()->reserve ( size ); d_points.endEdit();
             this->getMechTo()[0]->resize(size);
         }
         else
         //case where this clear is call by a Multimapping, all component will be clear to null size
         {
-            points.beginEdit()->resize(0); points.endEdit();
+            d_points.beginEdit()->resize(0); d_points.endEdit();
             this->getMechTo()[0]->resize(0);
         }
     }
@@ -233,13 +233,13 @@ public:
 
     void beginAddContactPoint();
 
-    void clearidPointSubMap(){idPointSubMap.clear();}
-    void addidPointSubMap(unsigned int _id){idPointSubMap.push_back(_id);}
-    void setuseCurvAbs(bool _value){useCurvAbs.setValue(_value);}
+    void clearidPointSubMap(){m_idPointSubMap.clear();}
+    void addidPointSubMap(unsigned int _id){m_idPointSubMap.push_back(_id);}
+    void setuseCurvAbs(bool _value){d_useCurvAbs.setValue(_value);}
 
     const sofa::helper::vector< PosPointDefinition >& getPointBeamDistribution() const
     {
-        return pointBeamDistribution;
+        return m_pointBeamDistribution;
     }
 
 protected:
@@ -252,18 +252,18 @@ protected:
 
     void computeDistribution();
 
-    sofa::core::topology::TopologyContainer* _topology;
+    sofa::core::topology::TopologyContainer* m_topology;
 
 
     bool x_buf_used;
     typename In::VecCoord x_buf;
 
-    sofa::helper::vector< PosPointDefinition > pointBeamDistribution;
+    sofa::helper::vector< PosPointDefinition > m_pointBeamDistribution;
     // for continuous_friction_contact:
     AdaptiveBeamMapping<TIn, TOut> *m_inputMapping;
-    sofa::helper::vector<unsigned int> idPointSubMap;
-    bool isSubMapping;
-    bool isBarycentricMapping;
+    sofa::helper::vector<unsigned int> m_idPointSubMap;
+    bool m_isSubMapping;
+    bool m_isBarycentricMapping;
 
 public :
 
