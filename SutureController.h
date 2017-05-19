@@ -301,7 +301,7 @@ public:
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
     Data< bool > useDummyController, fixRigidTransforms;
-    Data< helper::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    Data< std::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control
