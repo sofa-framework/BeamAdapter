@@ -80,8 +80,7 @@ void AdaptiveBeamConstraintResolution::store(int line, double* force, bool conve
 /////////////////////////////////////////// FACTORY //////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamConstraintClass = core::RegisterObject("TODO")
+int AdaptiveBeamConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
 #ifdef SOFA_WITH_FLOAT
 .add< AdaptiveBeamConstraint<Rigid3fTypes> >()
 #endif

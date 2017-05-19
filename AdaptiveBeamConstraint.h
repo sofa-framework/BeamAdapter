@@ -43,7 +43,7 @@ namespace constraintset
 
 /*!
  * \class AdaptiveBeamConstraint
- * @brief AdaptiveBeamConstraint Class
+ * @brief AdaptiveBeamConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
  */
 template<class DataTypes>
 class AdaptiveBeamConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
