@@ -38,7 +38,6 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-
 namespace sofa
 {
 
@@ -52,7 +51,7 @@ using namespace sofa::defaulttype;
 
 SOFA_DECL_CLASS(WireRestShape)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
+//TODO(damien 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireRestShapeClass = core::RegisterObject("")
 #ifdef SOFA_WITH_FLOAT
 .add< WireRestShape<Rigid3fTypes> >()

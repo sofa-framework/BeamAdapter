@@ -23,21 +23,20 @@
  * Contact information: contact@sofa-framework.org                             *
  ******************************************************************************/
 //
-// C++ Implementation : AdaptiveBeamController
+// C++ Implementation : WireRestShape
 //
 // Description:
 //
-//
-// Author: Christian Duriez, INRIA
+// Contributors:
+//   - Christian Duriez, INRIA
 //
 // Copyright: See COPYING file that comes with this distribution
-//
-//
 //
 
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 
+//TODO(dmarchal 2017-05-17) Do we really need so much include ?
 #include "initBeamAdapter.h"
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/DataEngine.h>
@@ -54,8 +53,6 @@ namespace component
 
 namespace engine
 {
-
-
 
 /*!
  * \class WireRestShape
@@ -82,58 +79,33 @@ public:
     /*!
      * @brief Default Constructor.
      */
-     WireRestShape():
-     procedural( initData(&procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
-    , NonProceduralScale( initData ( &NonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
-    , length(initData(&length, (Real)1.0, "length", "total length of the wire instrument"))
-    , straightLength(initData(&straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
-    , spireDiameter(initData(&spireDiameter, (Real)0.1, "spireDiameter", "diameter of the spire"))
-    , spireHeight(initData(&spireHeight, (Real)0.01, "spireHeight", "height between each spire"))
-    , density(initData(&density, "densityOfBeams", "density of beams between key points"))
-    , keyPoints(initData(&keyPoints,"keyPoints","key points of the shape (curv absc)"))
-    , numEdges(initData(&numEdges, 10, "numEdges","number of Edges for the visual model"))
-    , numEdgesCollis(initData(&numEdgesCollis,"numEdgesCollis", "number of Edges for the collision model" ))
-    , _poissonRatio(initData(&_poissonRatio,(Real)0.49,"poissonRatio","Poisson Ratio"))
-    , _youngModulus1(initData(&_youngModulus1,(Real)5000,"youngModulus","Young Modulus"))
-    , _youngModulus2(initData(&_youngModulus2,(Real)3000,"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
-    , _radius1(initData(&_radius1,(Real)1.0f,"radius","radius"))
-    , _radius2(initData(&_radius2,(Real)1.0f,"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
-    , _innerRadius1(initData(&_innerRadius1,(Real)0.0f,"innerRadius","inner radius if it applies"))
-    , _innerRadius2(initData(&_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
-    , _massDensity1(initData(&_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
-    , _massDensity2(initData(&_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
-    , brokenIn2(initData(&brokenIn2, (bool)false, "brokenIn2", ""))
-    , edge2QuadMap(NULL)
-    , drawRestShape(initData(&drawRestShape, (bool)false, "draw", "draw rest shape"))
-    {
-         spireDiameter.setGroup("Procedural");
-         spireHeight.setGroup("Procedural");
-    }
+     WireRestShape() ;
 
      /*!
       * @brief Default Destructor.
       */
      ~WireRestShape(){}
 
-     void RotateFrameForAlignX(const sofa::defaulttype::Quat &input, Vec3 &x, sofa::defaulttype::Quat &output);
+     void rotateFrameForAlignX(const sofa::defaulttype::Quat &input, Vec3 &x, sofa::defaulttype::Quat &output);
 
-     void init();
-     void reinit(){ }
-
-     void update(){ }
-
-     void bwdInit();
-
-     void draw(const core::visual::VisualParams* vparams);
+     /// These are virtual in-herited from BaseObeject,
+     /// use the override keyword to make things clear http://en.cppreference.com/w/cpp/language/override
+     void init() override ;
+     void reinit() override{ }
+     void update() override { }
+     void bwdInit() override ;
+     void draw(const core::visual::VisualParams* vparams) override ;
 
 
      /*!
       * For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
       */
-     virtual Real getReleaseCurvAbs(){return straightLength.getValue();}
+     virtual Real getReleaseCurvAbs(){return d_straightLength.getValue();}
+
+     //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
+     //we can remove the todo.
      // todo => topological change !
      virtual void releaseWirePart();
-
 
      /*!
       * This function is called by the force field to evaluate the rest position of each beam
@@ -159,36 +131,15 @@ public:
      /*!
       * Functions enabling to load and use a geometry given from OBJ external file
       */
-     void InitRestConfig();
+     void initRestConfig();
      void getRestPosNonProcedural(Real& abs, Coord &p);
      void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
-     void InitFromLoader();
+     void initFromLoader();
      bool checkTopology();
 
-
-
-     virtual Real getLength()
-     {
-         if(brokenIn2.getValue())
-             return straightLength.getValue();
-         else
-             return length.getValue();
-     }
-
-     virtual void getCollisionSampling(Real &dx, const Real &x_curv);
-
-     virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
-     {
-         numLines = 0;
-         for (unsigned i=0; i<numEdgesCollis.getValue().size(); i++)
-         {
-             numLines += (unsigned int)numEdgesCollis.getValue()[i];
-         }
-         dx=length.getValue()/numLines;
-     }
-
-
-
+     virtual Real getLength() ;
+     virtual void getCollisionSampling(Real &dx, const Real &x_curv) ;
+     virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
 
      /// Construction method called by ObjectFactory.
      template<class T>
@@ -208,33 +159,42 @@ public:
      }
 
 protected:
+     /// Analitical creation of wire shape...
+     Data<bool> d_procedural;
+     Data<Real> d_nonProceduralScale;
+     Data<Real> d_length;
+     Data<Real> d_straightLength;
+     Data<Real> d_spireDiameter;
+     Data<Real> d_spireHeight;
+     Data< sofa::helper::vector<int> > d_density;
+     Data< sofa::helper::vector<Real> > d_keyPoints;
+     Data< int > d_numEdges;
+     Data< sofa::helper::vector<int> > d_numEdgesCollis;
 
-     // Analitical creation of wire shape...
-     Data<bool> procedural;
-     Data<Real> NonProceduralScale;
-     Data<Real> length;
-     Data<Real> straightLength;
-     Data<Real> spireDiameter;
-     Data<Real> spireHeight;
-     Data< sofa::helper::vector<int> > density;
-     Data< sofa::helper::vector<Real> > keyPoints;
-     Data< int > numEdges;
-     Data< sofa::helper::vector<int> > numEdgesCollis;
+     /// User Data about the Young modulus
+     Data<Real> d_poissonRatio;
+     Data<Real> d_youngModulus1;
+     Data<Real> d_youngModulus2;
 
+     /// Radius
+     Data<Real> d_radius1;
+     Data<Real> d_radius2;
+     Data<Real> d_innerRadius1;
+     Data<Real> d_innerRadius2;
 
-     //User Data about the Young modulus
-     Data<Real> _poissonRatio;
-     Data<Real> _youngModulus1;
-     Data<Real> _youngModulus2;
+     Data<Real> d_massDensity1;
+     Data<Real> d_massDensity2;
 
-     //Data required for the File loading
-     sofa::helper::vector<Vec3> 		localRestPositions;
-     sofa::helper::vector<Transform> 	localRestTransforms;
-     sofa::helper::vector<Real> 		curvAbs;
-     double 							absOfGeometry;
+     /// broken in 2 case
+     Data<bool> d_brokenIn2;
+     Data<bool>	d_drawRestShape;
 
-     // Radius
-     Data<Real> _radius1, _radius2, _innerRadius1, _innerRadius2;
+     /// Data required for the File loading
+     sofa::helper::vector<Vec3> 		m_localRestPositions;
+     sofa::helper::vector<Transform> 	m_localRestTransforms;
+     sofa::helper::vector<Real> 		m_curvAbs ;
+     double 							m_absOfGeometry {0};
+
      struct BeamSection{
         double _r; 			///>radius of the section
         double _rInner; 	///>inner radius of the section if beam is hollow
@@ -245,23 +205,19 @@ protected:
         double _Asy; 		///>_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
         double _Asz; 		///>_Asz is the z-direction effective shear area;
      };
-     BeamSection beamSection1, beamSection2;
-     Data<Real> _massDensity1, _massDensity2;
+     BeamSection beamSection1;
+     BeamSection beamSection2;
 
-     // broken in 2 case
-     Data< bool > brokenIn2;
-
-     sofa::core::topology::TopologyContainer* _topology;
-     sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
-     sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
-     sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap;
-     sofa::core::loader::MeshLoader* loader;
-     bool edgeSetInNode;
-
-     Data<bool>	drawRestShape;
-
+     sofa::core::topology::TopologyContainer* _topology {nullptr} ;
+     sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo {nullptr};
+     sofa::component::topology::EdgeSetTopologyModifier* edgeMod {nullptr};
+     sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap {nullptr};
+     sofa::core::loader::MeshLoader* loader {nullptr};
+     bool edgeSetInNode {false};
 };
 
+
+//TODO(dmarchal 2017-05-17 Use extern template here to reduce code bloat.
 
 } // namespace engine
 
