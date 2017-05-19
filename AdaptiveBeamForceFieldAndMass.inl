@@ -40,29 +40,17 @@
 #include "AdaptiveBeamForceFieldAndMass.h"
 
 #include <sofa/core/topology/BaseMeshTopology.h>
-//#include <sofa/component/topology/GridTopology.h>
-//#include <sofa/simulation/common/Simulation.h>
 #include <sofa/helper/decompose.h>
-//#include <sofa/helper/gl/template.h>
-//#include <sofa/helper/gl/Axis.h>
-//#include <sofa/helper/rmath.h>
-//#include <assert.h>
-//#include <iostream>
-//#include <set>
-//#include <sofa/helper/system/gl.h>
+
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
-
-//#include <sofa/defaulttype/SolidTypes.inl>
 #include <sofa/helper/OptionsGroup.h>
 
 #include <sofa/helper/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
-//#include <sofa/simulation/common/Node.h>
-
 #include <sofa/core/visual/VisualParams.h>
 
 
@@ -195,6 +183,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
     VecDeriv& f = *dataf.beginEdit() ;
     const VecCoord& x = datax.getValue();
 
+
+
     f.resize(x.size()); // will reset the value ????
 
     unsigned int numBeams = m_interpolation->getNumBeams();
@@ -318,14 +308,17 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
         }
 
 
-        Vec3 P0,P1,P2,P3;
-        Real length;
-        Real rest_length = m_interpolation->getLength(b);
-        m_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
-        m_interpolation->computeActualLength(length, P0,P1,P2,P3);
+        if(_reinforceLength.getValue())
+        {
+            Vec3 P0,P1,P2,P3;
+            Real length;
+            Real rest_length = m_interpolation->getLength(b);
+            m_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
+            m_interpolation->computeActualLength(length, P0,P1,P2,P3);
 
-        U0local[0]=(-length+rest_length)/2;
-        U1local[0]=( length-rest_length)/2;
+            U0local[0]=(-length+rest_length)/2;
+            U1local[0]=( length-rest_length)/2;
+        }
 
 
 
@@ -396,14 +389,15 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const core::MechanicalP
             U1local[i] = u1_0_inLocalFrame.getLinearVelocity()[i];
             U1local[i+3] = u1_0_inLocalFrame.getAngularVelocity()[i];
         }
-        //<<" AdaptiveBeamForceFieldAndMass U_loc  "<<U1local<<std::endl;
+
 
         // compute the force in the local frame:
         Vec6 f0 = beamMatrices->k_loc01 * U1local;
         Vec6 f1 = beamMatrices->k_loc11 * U1local;
          */
 
-        //<<"AdaptiveBeamForceFieldAndMass F_loc0 :"<<f0<<"  F_loc1 :"<<f1<<std::endl;
+        //std::cout<<"AdaptiveBeamForceFieldAndMass F_loc0 :"<<f0<<"  F_loc1 :"<<f1<<std::endl;
+
 
         // compute the force in the global frame
         Vec6 F0_ref = beamMatrices->loc0_Ad_ref.multTranspose(f0);
