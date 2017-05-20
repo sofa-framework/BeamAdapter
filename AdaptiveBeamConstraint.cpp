@@ -37,11 +37,11 @@ namespace component
 namespace constraintset
 {
 
-using namespace sofa::defaulttype;
-using namespace sofa::helper;
+namespace _adaptivebeamconstraint_
+{
 
 AdaptiveBeamConstraintResolution::AdaptiveBeamConstraintResolution(double* sliding)
-: m_slidingDisp(sliding)
+    : m_slidingDisp(sliding)
 {
     nbLines = 3;
 }
@@ -81,21 +81,23 @@ void AdaptiveBeamConstraintResolution::store(int line, double* force, bool conve
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
 int AdaptiveBeamConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamConstraint<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamConstraint<Rigid3dTypes> >()
-#endif
-;
+        #ifdef SOFA_WITH_FLOAT
+        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes> >()
+        #endif
+        #ifdef SOFA_WITH_DOUBLE
+        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes> >()
+        #endif
+        ;
 
 #ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamConstraint<Rigid3fTypes>;
+template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamConstraint<Rigid3dTypes>;
+template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes>;
 #endif
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+} // namespace _adaptivebeamconstraint_
 
 } // namespace constraintset
 

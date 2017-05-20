@@ -25,12 +25,8 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
 #define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
 
-#include "WireBeamInterpolation.h"
 #include <sofa/core/behavior/PairInteractionConstraint.h>
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <iostream>
-#include <sofa/defaulttype/Vec.h>
+#include "WireBeamInterpolation.h"
 
 namespace sofa
 {
@@ -41,117 +37,105 @@ namespace component
 namespace constraintset
 {
 
+namespace _adaptivebeamconstraint_
+{
+
+using sofa::core::behavior::PairInteractionConstraint ;
+using sofa::core::behavior::ConstraintResolution ;
+using sofa::core::visual::VisualParams ;
+using sofa::core::ConstraintParams ;
+using sofa::defaulttype::SolidTypes ;
+using sofa::defaulttype::BaseVector ;
+using sofa::core::objectmodel::Data ;
+using sofa::defaulttype::Vec ;
+using sofa::component::fem::WireBeamInterpolation ;
+
 /*!
  * \class AdaptiveBeamConstraint
  * @brief AdaptiveBeamConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
  */
 template<class DataTypes>
-class AdaptiveBeamConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
+class AdaptiveBeamConstraint : public PairInteractionConstraint<DataTypes>
 {
 public:
-	SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamConstraint,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamConstraint, DataTypes),
+               SOFA_TEMPLATE(PairInteractionConstraint, DataTypes));
 
-	typedef typename DataTypes::VecCoord VecCoord;
-	typedef typename DataTypes::VecDeriv VecDeriv;
-	typedef typename DataTypes::MatrixDeriv MatrixDeriv;
-	typedef typename DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
-	typedef typename DataTypes::Coord Coord;
-	typedef typename DataTypes::Deriv Deriv;
-	typedef typename Coord::value_type Real;
-	typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-	typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
-	typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
-	typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
-	typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
-	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-	typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
-	typedef typename DataTypes::Coord::Pos Pos;
-	typedef typename DataTypes::Coord::Rot Rot;
-	typedef sofa::defaulttype::Vec<3, Real> Vec3;
-	typedef sofa::defaulttype::Vec<6, Real> Vec6;
+    typedef typename DataTypes::VecCoord VecCoord;
+    typedef typename DataTypes::VecDeriv VecDeriv;
+    typedef typename DataTypes::MatrixDeriv MatrixDeriv;
+    typedef typename DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
+    typedef typename DataTypes::Coord Coord;
+    typedef typename DataTypes::Deriv Deriv;
+    typedef typename Coord::value_type Real;
+    typedef typename core::behavior::MechanicalState<DataTypes> TypedMechanicalState;
+    typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
+    typedef Data<VecCoord>		DataVecCoord;
+    typedef Data<VecDeriv>		DataVecDeriv;
+    typedef Data<MatrixDeriv>    DataMatrixDeriv;
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    typedef typename DataTypes::Coord::Pos Pos;
+    typedef typename DataTypes::Coord::Rot Rot;
+    typedef Vec<3, Real> Vec3;
+    typedef Vec<6, Real> Vec6;
+
+    /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+    virtual void init() override ;
+    virtual void reset() override ;
+    virtual void draw(const VisualParams* vparams) override ;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /////////////////////////// Inherited from BaseConstraint //////////////////////////////////////
+    virtual void buildConstraintMatrix(const ConstraintParams* cParams,
+                                       DataMatrixDeriv &c1, DataMatrixDeriv &c2,
+                                       unsigned int &cIndex,
+                                       const DataVecCoord &x1, const DataVecCoord &x2) override ;
+
+    virtual void getConstraintViolation(const ConstraintParams* cParams ,
+                                        BaseVector *v,
+                                        const DataVecCoord &x1, const DataVecCoord &x2,
+                                        const DataVecDeriv &v1, const DataVecDeriv &v2) override;
+
+    virtual void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 protected:
-	
-    unsigned int m_cid;
-		
-    int m_nbConstraints; 						/*!< number of constraints created */
-    std::vector<Real> m_violations;
-    std::vector<Real> m_previousPositions;	    /*!< the position on which each point was projected */
-    std::vector<double> m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
-    std::vector<bool> m_projected;
+    AdaptiveBeamConstraint(TypedMechanicalState* object1, TypedMechanicalState* object2) ;
+    AdaptiveBeamConstraint(TypedMechanicalState* object) ;
+    AdaptiveBeamConstraint() ;
+    virtual ~AdaptiveBeamConstraint(){}
+
+private:
+    void internalInit();
+
+    unsigned int          m_cid;
+    int                   m_nbConstraints; 		/*!< number of constraints created */
+    std::vector<Real>     m_violations;
+    std::vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
+    std::vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
+    std::vector<bool>     m_projected;
+
+    /*! link to the interpolation component in the scene */
+    SingleLink<AdaptiveBeamConstraint<DataTypes>,
+    WireBeamInterpolation<DataTypes>,
+    BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+
 
     ////////////////////////// Inherited attributes ////////////////////////////
     /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
     /// Bring inherited attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
-    using sofa::core::behavior::PairInteractionConstraint<DataTypes>::mstate1;
-    using sofa::core::behavior::PairInteractionConstraint<DataTypes>::mstate2;
+    using PairInteractionConstraint<DataTypes>::mstate1;
+    using PairInteractionConstraint<DataTypes>::mstate2;
     ////////////////////////////////////////////////////////////////////////////
-
-	/*! link to the interpolation component in the scene */
-	SingleLink<AdaptiveBeamConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
-	
-	void internalInit();
-
-	AdaptiveBeamConstraint(MechanicalState* object1, MechanicalState* object2)
-	: Inherit(object1, object2)
-	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-	{
-	}
-	
-	AdaptiveBeamConstraint(MechanicalState* object)
-	: Inherit(object, object)
-	, m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-	{
-	}
-
-	AdaptiveBeamConstraint()
-	: m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-	{
-	}
-	
-	virtual ~AdaptiveBeamConstraint()
-	{
-	}
-
-public:
-
-	virtual void reset();
-	
-	virtual void init();
-	
-    void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/,
-                               DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex, const DataVecCoord &x1, const DataVecCoord &x2);
-
-    void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/,
-                                defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2, const DataVecDeriv &v1, const DataVecDeriv &v2);
-
-	virtual void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
-
-	void draw(const core::visual::VisualParams* vparams);
 };
 
+} // namespace _adaptivebeamconstraint_
 
-/*!
- * \class AdaptiveBeamConstraintResolution
- * @brief AdaptiveBeamConstraintResolution Class
- */
-class AdaptiveBeamConstraintResolution : public core::behavior::ConstraintResolution
-{
-public:
-    AdaptiveBeamConstraintResolution(double* sliding = NULL);
-
-    virtual void init(int line, double** w, double* force);
-	virtual void resolution(int line, double** w, double* d, double* force);
-    virtual void store(int line, double* force, bool convergence);
-
-    void resolution(int line, double** w, double* d, double* force, double* dfree);
-	
-protected:
-    double* m_slidingDisp;
-    double  m_slidingW;
-};
+using _adaptivebeamconstraint_::AdaptiveBeamConstraint ;
 
 } // namespace constraintset
 

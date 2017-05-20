@@ -25,12 +25,11 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_INL
 #define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_INL
 
-#include "AdaptiveBeamConstraint.h"
 #include <sofa/core/visual/VisualParams.h>
-#include <SofaConstraint/BilateralInteractionConstraint.h>
-
-#include <sofa/defaulttype/Vec.h>
 #include <sofa/helper/gl/template.h>
+
+#include "AdaptiveBeamConstraint.h"
+
 namespace sofa
 {
 
@@ -40,13 +39,54 @@ namespace component
 namespace constraintset
 {
 
-using helper::ReadAccessor;
-using std::vector;
-using core::behavior::ConstraintResolution;
-using core::ConstraintParams;
-using sofa::core::ConstVecCoordId;
-using core::visual::VisualParams;
+namespace _adaptivebeamconstraint_
+{
 
+using std::vector;
+using sofa::core::behavior::ConstraintResolution ;
+using sofa::core::ConstVecCoordId;
+using sofa::core::ConstraintParams;
+using sofa::helper::ReadAccessor;
+
+/*!
+ * \class AdaptiveBeamConstraintResolution
+ * @brief AdaptiveBeamConstraintResolution Class
+ */
+class AdaptiveBeamConstraintResolution : public ConstraintResolution
+{
+public:
+    AdaptiveBeamConstraintResolution(double* sliding = nullptr);
+
+    virtual void init(int line, double** w, double* force);
+    virtual void resolution(int line, double** w, double* d, double* force);
+    virtual void store(int line, double* force, bool convergence);
+
+    void resolution(int line, double** w, double* d, double* force, double* dfree);
+
+protected:
+    double* m_slidingDisp;
+    double  m_slidingW;
+};
+
+
+template<class DataTypes>
+AdaptiveBeamConstraint<DataTypes>::AdaptiveBeamConstraint(TypedMechanicalState* object1, TypedMechanicalState* object2)
+    : Inherit(object1, object2)
+    , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
+{
+}
+
+template<class DataTypes>
+AdaptiveBeamConstraint<DataTypes>::AdaptiveBeamConstraint(TypedMechanicalState* object)
+    : AdaptiveBeamConstraint(object, object)
+{
+}
+
+template<class DataTypes>
+AdaptiveBeamConstraint<DataTypes>::AdaptiveBeamConstraint()
+    : AdaptiveBeamConstraint(nullptr, nullptr)
+{
+}
 
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::init()
@@ -82,7 +122,7 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
     m_displacements.clear();
     m_displacements.resize(m2);
 
-    fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+    WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 
     for(unsigned int i=0; i<m2; i++)
     {
@@ -96,8 +136,9 @@ void AdaptiveBeamConstraint<DataTypes>::internalInit()
 }
 
 template<class DataTypes>
-void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams * cParams, DataMatrixDeriv &c1_d,
-                                                              DataMatrixDeriv &c2_d, unsigned int &constraintId,
+void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams * cParams,
+                                                              DataMatrixDeriv &c1_d, DataMatrixDeriv &c2_d,
+                                                              unsigned int &constraintId,
                                                               const DataVecCoord &x1_d, const DataVecCoord &x2_d)
 {
     SOFA_UNUSED(cParams);
@@ -114,7 +155,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const ConstraintPa
     ReadAccessor<Data<VecCoord> > x2free=mstate1->read(ConstVecCoordId::freePosition()) ;
 
     unsigned int m2 = x2free.size();
-    fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+    WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
     MatrixDeriv& c1 = *c1_d.beginEdit();
     MatrixDeriv& c2 = *c2_d.beginEdit();
     const VecCoord& x1= x1_d.getValue();
@@ -190,7 +231,8 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const ConstraintPa
 
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::getConstraintViolation(const ConstraintParams* cParams,
-                                                               defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2,
+                                                               defaulttype::BaseVector *v, const
+                                                               DataVecCoord &x1, const DataVecCoord &x2,
                                                                const DataVecDeriv &v1, const DataVecDeriv &v2)
 {
     SOFA_UNUSED(cParams);
@@ -206,7 +248,8 @@ void AdaptiveBeamConstraint<DataTypes>::getConstraintViolation(const ConstraintP
 
 
 template<class DataTypes>
-void AdaptiveBeamConstraint<DataTypes>::getConstraintResolution(vector<ConstraintResolution*>& resTab, unsigned int& offset)
+void AdaptiveBeamConstraint<DataTypes>::getConstraintResolution(vector<ConstraintResolution*>& resTab,
+                                                                unsigned int& offset)
 {
     unsigned int nb = mstate2->getSize();
     for(unsigned int i=0; i<nb; i++)
@@ -218,9 +261,11 @@ void AdaptiveBeamConstraint<DataTypes>::getConstraintResolution(vector<Constrain
     }
 }
 
+
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
+#ifndef SOFA_NO_OPENGL
     if(!vparams->displayFlags().getShowInteractionForceFields()) return;
 
     glDisable(GL_LIGHTING);
@@ -238,7 +283,10 @@ void AdaptiveBeamConstraint<DataTypes>::draw(const VisualParams* vparams)
 
     glEnd();
     glPointSize(1);
+#endif // SOFA_NO_OPENGL
 }
+
+} // namespace _adaptivebeamconstraint_
 
 } // namespace constraintset
 
