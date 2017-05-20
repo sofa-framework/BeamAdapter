@@ -25,8 +25,10 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
 #define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
 
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include "WireBeamInterpolation.h"
+
 
 namespace sofa
 {
@@ -37,6 +39,11 @@ namespace component
 namespace constraintset
 {
 
+/////////////////////////////////// private namespace pattern //////////////////////////////////////
+/// To avoid the lacking of names imported with with 'using' in the other's component namespace
+/// you should use a private namespace and "export" only this one in the public namespace.
+/// This is done at the end of this file, have a look if you are not used to this pattern.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace _adaptivebeamconstraint_
 {
 
@@ -50,6 +57,9 @@ using sofa::core::objectmodel::Data ;
 using sofa::defaulttype::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Declarations
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
  * \class AdaptiveBeamConstraint
  * @brief AdaptiveBeamConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
@@ -135,6 +145,8 @@ private:
 
 } // namespace _adaptivebeamconstraint_
 
+/// 'Export' the objects defined in the private namespace into the 'public' one so that
+/// we can use them instead as sofa::component::constraintset::AdaptiveBeamConstraint.
 using _adaptivebeamconstraint_::AdaptiveBeamConstraint ;
 
 } // namespace constraintset
