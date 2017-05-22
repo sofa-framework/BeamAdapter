@@ -206,15 +206,15 @@ protected:
     Real                                  m_edgeTLength {0} ;
 };
 
-} // namespace _adaptivebeamcontroller_
+} /// namespace _adaptivebeamcontroller_
 
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 using _adaptivebeamcontroller_::AdaptiveBeamController ;
 
-} // namespace controller
+} /// namespace controller
 
-} // namespace component
+} /// namespace component
 
-} // namespace sofa
+} /// namespace sofa
 
 #endif /* SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H */

@@ -34,12 +34,12 @@
 //
 //
 
-#include "initBeamAdapter.h"
-#include "AdaptiveBeamForceFieldAndMass.inl"
-#include <sofa/defaulttype/VecTypes.h>
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP
+#include "AdaptiveBeamForceFieldAndMass.inl"
 
 namespace sofa
 {
@@ -49,29 +49,42 @@ namespace component
 
 namespace forcefield
 {
-using namespace sofa::defaulttype;
+
+namespace _adaptivebeamforcefieldandmass_
+{
+
+using sofa::core::RegisterObject ;
+
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamForceFieldAndMass)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements")
+int AdaptiveBeamForceFieldAndMassClass = RegisterObject("Adaptive Beam finite elements")
 #ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamForceFieldAndMass<Rigid3fTypes> >()
+.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamForceFieldAndMass<Rigid3dTypes> >()
+.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes> >()
 #endif
 ;
 
 #ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes>;
 #endif
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-} // namespace forcefield
+} /// _adaptivebeamforcefiedlandmass_
 
-} // namespace component
+} /// namespace forcefield
 
-} // namespace sofa
+} /// namespace component
+
+} /// namespace sofa
 

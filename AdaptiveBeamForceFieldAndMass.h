@@ -36,7 +36,6 @@
 #ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
 #define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
 
-
 #include "initBeamAdapter.h"
 #include "BeamInterpolation.h"
 #include "WireRestShape.h"
@@ -53,6 +52,15 @@
 #include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/core/visual/VisualParams.h>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Declarations
+////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace sofa
 {
 
@@ -61,23 +69,36 @@ namespace component
 
 namespace forcefield
 {
-    using sofa::helper::vector;
-    using namespace sofa::core::topology;
-    using namespace sofa::component::fem;
-	using engine::WireRestShape;
+
+/////////////////////////////////// private namespace pattern //////////////////////////////////////
+/// To avoid the lacking of names imported with with 'using' in the other's component namespace
+/// you should use a private namespace and "export" only this one in the public namespace.
+/// This is done at the end of this file, have a look if you are not used to this pattern.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace _adaptivebeamforcefieldandmass_
+{
+
+using sofa::helper::vector;
+//using namespace sofa::core::topology;
+using sofa::component::engine::WireRestShape ;
+using sofa::component::fem::BeamInterpolation ;
+using sofa::core::behavior::MultiMatrixAccessor ;
+using sofa::core::behavior::Mass ;
+using sofa::core::MechanicalParams ;
+using sofa::defaulttype::Vec ;
+using sofa::defaulttype::Mat ;
 
 /*!
  * \class AdaptiveBeamForceFieldAndMass
  * @brief AdaptiveBeamForceFieldAndMass Class
  */
 template<class DataTypes>
-class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
+class AdaptiveBeamForceFieldAndMass : public Mass<DataTypes>
 {
 public:
 
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),  SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
-
-   // SOFA_CLASS2(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),  SOFA_TEMPLATE(core::behavior::Mass,DataTypes), SOFA_TEMPLATE(core::behavior::ForceField,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
+               SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -86,20 +107,19 @@ public:
     typedef typename DataTypes::Coord Coord;
     typedef typename DataTypes::Deriv Deriv;
     typedef typename Coord::value_type Real;
-	typedef core::objectmodel::Data<VecCoord> DataVecCoord;
-	typedef core::objectmodel::Data<VecDeriv> DataVecDeriv;
-    typedef  BeamInterpolation<DataTypes> BInterpolation;
+    typedef core::objectmodel::Data<VecCoord> DataVecCoord;
+    typedef core::objectmodel::Data<VecDeriv> DataVecDeriv;
+    typedef BeamInterpolation<DataTypes> BInterpolation;
 
     typedef unsigned int Index;
     typedef core::topology::BaseMeshTopology::Edge Element;
     typedef sofa::helper::vector<core::topology::BaseMeshTopology::Edge> VecElement;
-	typedef helper::vector<unsigned int> VecIndex;
+    typedef helper::vector<unsigned int> VecIndex;
 
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
-     /// remove ?
-
+    /// remove ?
     typedef Vec<12, Real> Displacement;        ///< the displacement vector
     typedef Mat<3, 3, Real> Transformation; ///< matrix for rigid transformations like rotations
     typedef Mat<12, 12, Real> StiffnessMatrix;
@@ -110,83 +130,11 @@ public:
     typedef Vec<6, Real> Vec6;        ///< the displacement vector
     typedef Mat<6, 6, Real> Matrix6x6;
 
-protected :
-    /// pointer to the interpolation
-	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
-    /// pointer to the WireRestShape
-	SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
-
-public:
-    AdaptiveBeamForceFieldAndMass( )
-    : m_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-	, m_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
-    , _timoshenko(initData(&_timoshenko,true,"timoshenko","use Timoshenko beam (non-null section shear area)"))
-    , _computeMass(initData(&_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
-    , _massDensity(initData(&_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
-    , _shearStressComputation(initData(&_shearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
-    , _reinforceLength(initData(&_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
-    {
-        _localBeamMatrices.resize(2);
-    }
-
-    virtual void init();
-    virtual void reinit();
-
-    // Mass Interface
-    virtual  void addMDx(const core::MechanicalParams* mparams /* PARAMS FIRST */, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
-
-    virtual void addMToMatrix(const core::MechanicalParams *mparams /* PARAMS FIRST */, const sofa::core::behavior::MultiMatrixAccessor* matrix);
-
-    virtual void addMBKToMatrix(const core::MechanicalParams* mparams /* PARAMS FIRST */, const sofa::core::behavior::MultiMatrixAccessor* matrix);
-
-    virtual  void accFromF(const core::MechanicalParams* /* PARAMS FIRST */, DataVecDeriv& , const DataVecDeriv& )
-    {serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
-
-    virtual double getKineticEnergy(const core::MechanicalParams* /* PARAMS FIRST */, const DataVecDeriv& )  const ///< vMv/2 using dof->getV()
-    {serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
-
-    virtual void addGravityToV(const core::MechanicalParams* /* PARAMS FIRST */, DataVecDeriv& )
-    {serr<<"addGravityToV not implemented yet"<<sendl;}
-
-
-
-    // ForceField Interface
-    virtual void addForce (const core::MechanicalParams* mparams /* PARAMS FIRST */, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v);
-
-    virtual void  addDForce(const sofa::core::MechanicalParams* /*mparams*/ /* PARAMS FIRST */, DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
-
-    virtual double getPotentialEnergy(const core::MechanicalParams* /* PARAMS FIRST */, const DataVecCoord& ) const {serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
-
-    void addKToMatrix(const core::MechanicalParams* mparams /* PARAMS FIRST */, const sofa::core::behavior::MultiMatrixAccessor* matrix);
-
-    void draw(const core::visual::VisualParams* vparams);
-
-    void drawElement(const core::visual::VisualParams* vparams, int beam, Transform &global_H0_local, Transform &global_H1_local);
-
-
-    Data<bool> _timoshenko; ///< use Timoshenko beam (non-null section shear area)
-    Data<bool> _computeMass; ///< if false, only compute the stiff elastic model
-    Data<Real> _massDensity; ///< Density of the mass (usually in kg/m^3)
-    Data<bool> _shearStressComputation; ///< if false, suppress the shear stress in the computation
-    Data<bool> _reinforceLength; ///<if true, perform a separate computation to evaluate the elongation
-
-
-
-protected:
-
-
-    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
-    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
-
-//    void computeTransform(int i, Index a, Index b);
-	//void computeRotationLarge( Transformation &r, const Vector &p, Index a, Index b);
-//	void accumulateForceLarge( VecDeriv& f, const VecCoord& x, int i, Index a, Index b);
-	//void accumulateDampingLarge( Vector& f, Index elementIndex );
-
     /*!
      * \class BeamLocalMatrices
      * @brief BeamLocalMatrices Class
      */
+protected:
     class BeamLocalMatrices{
 
     public:
@@ -213,30 +161,102 @@ protected:
         Matrix6x6 m_loc00, m_loc01, m_loc10, m_loc11;
         // adjoint Matrices
         Matrix6x6 loc0_Ad_ref, loc1_Ad_ref;
-
     };
 
+public:
+    AdaptiveBeamForceFieldAndMass( ) ;
+    virtual ~AdaptiveBeamForceFieldAndMass() ;
+
+    /// This is inhereted from BaseObject
+    virtual void init() override ;
+    virtual void reinit() override ;
+    void draw(const core::visual::VisualParams* vparams);
+    void drawElement(const core::visual::VisualParams* vparams, int beam, Transform &global_H0_local, Transform &global_H1_local);
+
+    /// Mass Interface
+    virtual  void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
+
+    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix);
+
+    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
+
+    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
+    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& )
+    {serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
+
+    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
+    virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const ///< vMv/2 using dof->getV()
+    {serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
+
+    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
+    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
+    {serr<<"addGravityToV not implemented yet"<<sendl;}
+
+    /// ForceField Interface
+    virtual void addForce (const MechanicalParams* mparams,
+                           DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v);
+
+    virtual void  addDForce(const MechanicalParams* mparams,
+                            DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
+
+    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
+    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )
+    const {serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
+
+    void addKToMatrix(const MechanicalParams* mparams,
+                      const MultiMatrixAccessor* matrix);
+
     void computeStiffness(int beam, BeamLocalMatrices& beamMatrices);
-    void computeMass(int beam,BeamLocalMatrices& beamMatrices);
+    void computeMass(int beam, BeamLocalMatrices& beamMatrices);
 
-    helper::vector<BeamLocalMatrices> _localBeamMatrices;
 
-    DataVecDeriv data_G;
-    // compute the gravity vector (if necessary)
+    Data<bool> d_timoshenko; ///< use Timoshenko beam (non-null section shear area)
+    Data<bool> d_computeMass; ///< if false, only compute the stiff elastic model
+    Data<Real> d_massDensity; ///< Density of the mass (usually in kg/m^3)
+    Data<bool> d_shearStressComputation; ///< if false, suppress the shear stress in the computation
+    Data<bool> d_reinforceLength; ///<if true, perform a separate computation to evaluate the elongation
+    DataVecDeriv d_dataG;
+
+protected :
+    /// pointer to the interpolation
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+
+    /// pointer to the WireRestShape
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
+
+    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
+    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
+
+    /// compute the gravity vector (if necessary)
     void computeGravityVector();
-    Vec3 gravity;
+    Vec3 m_gravity;
 
-
-
-
-
+    vector<BeamLocalMatrices> d_localBeamMatrices;
 };
 
+/// Instantiate the templates so that
+#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
+#ifdef SOFA_WITH_FLOAT
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes> ;
+#endif
+#ifdef SOFA_WITH_DOUBLE
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes> ;
+#endif
+#endif
 
-} // namespace forcefield
+} /// namespace _adaptivebeamforcefieldandmass_
 
-} // namespace component
+////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
+/// 'Export' the objects defined in the private namespace into the 'public' one.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
 
-} // namespace sofa
+} /// namespace forcefield
+
+} /// namespace component
+
+} /// namespace sofa
+
+
 
 #endif  /* SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H */
