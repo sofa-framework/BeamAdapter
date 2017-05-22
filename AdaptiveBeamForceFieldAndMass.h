@@ -79,10 +79,10 @@ namespace _adaptivebeamforcefieldandmass_
 {
 
 using sofa::helper::vector;
-//using namespace sofa::core::topology;
 using sofa::component::engine::WireRestShape ;
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::behavior::MultiMatrixAccessor ;
+using sofa::core::visual::VisualParams ;
 using sofa::core::behavior::Mass ;
 using sofa::core::MechanicalParams ;
 using sofa::defaulttype::Vec ;
@@ -170,14 +170,11 @@ public:
     /// This is inhereted from BaseObject
     virtual void init() override ;
     virtual void reinit() override ;
-    void draw(const core::visual::VisualParams* vparams);
-    void drawElement(const core::visual::VisualParams* vparams, int beam, Transform &global_H0_local, Transform &global_H1_local);
+    virtual void draw(const VisualParams* vparams) override ;
 
     /// Mass Interface
     virtual  void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
-
     virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix);
-
     virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
@@ -232,9 +229,13 @@ protected :
     Vec3 m_gravity;
 
     vector<BeamLocalMatrices> d_localBeamMatrices;
+
+private:
+    void drawElement(const VisualParams* vparams, int beam,
+                     Transform &global_H0_local, Transform &global_H1_local) ;
 };
 
-/// Instantiate the templates so that
+/// Instantiate the templates so that they are not instiated in each translation unit (see )
 #if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
 #ifdef SOFA_WITH_FLOAT
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes> ;
@@ -246,10 +247,13 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::d
 
 } /// namespace _adaptivebeamforcefieldandmass_
 
+
+
 ////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
+
 
 } /// namespace forcefield
 

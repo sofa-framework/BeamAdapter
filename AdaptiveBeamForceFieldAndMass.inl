@@ -73,7 +73,8 @@ using sofa::core::behavior::ForceField ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::defaulttype::Vector3 ;
 using sofa::defaulttype::Quat ;
-
+using sofa::helper::ReadAccessor ;
+using sofa::core::ConstVecCoordId ;
 using sofa::helper::set ;
 
 
@@ -756,12 +757,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const core::visual::VisualParams *vparams)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
 {
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
     if (!this->mstate) return;
 
-    helper::ReadAccessor<Data<VecCoord> > x = this->mstate->read(sofa::core::ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
 
     unsigned int numBeams = m_interpolation->getNumBeams();
 
@@ -834,7 +835,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const core::visual::VisualPa
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::drawElement(const core::visual::VisualParams *vparams, int beam, Transform &global_H0_local, Transform &global_H1_local)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::drawElement(const VisualParams *vparams, int beam,
+                                                           Transform &global_H0_local, Transform &global_H1_local)
 {
 
 
