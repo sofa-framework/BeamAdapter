@@ -40,6 +40,22 @@ namespace component
 namespace constraintset
 {
 
+namespace _adaptivebeamlengthconstraint_
+{
+
+class AdaptiveBeamLengthConstraintResolution : public core::behavior::ConstraintResolution
+{
+public:
+    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : _initF(initF), _active(active) { nbLines = 1; }
+    virtual void init(int line, double** /*w*/, double* force);
+    virtual void resolution(int line, double** w, double* d, double* force);
+    virtual void store(int line, double* force, bool /*convergence*/);
+
+protected:
+    double* _initF;
+    bool* _active;
+};
+
 void AdaptiveBeamLengthConstraintResolution::init(int line, double** /*w*/, double* force)
 {
     if(_initF)
@@ -61,10 +77,25 @@ void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool
 }
 
 template<class DataTypes>
+AdaptiveBeamLengthConstraint<DataTypes>::AdaptiveBeamLengthConstraint(TypedMechanicalState* object)
+    : Inherit(object)
+    , m_alarmLength(initData(&m_alarmLength, (Real)1.02, "alarmLength", "Elongation before creating a constraint"))
+    , m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam"))
+    , m_maxBendingAngle(initData(&m_maxBendingAngle,  (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one constraint interval"))
+    , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
+{
+}
+
+template<class DataTypes>
+AdaptiveBeamLengthConstraint<DataTypes>::~AdaptiveBeamLengthConstraint()
+{
+}
+
+template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::init()
 {
     this->mstate= dynamic_cast< core::behavior::MechanicalState<DataTypes> *> (this->getContext()->getMechanicalState());
-        assert(this->mstate);
+    assert(this->mstate);
 }
 
 template<class DataTypes>
@@ -83,9 +114,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::internalInit()
         // serr << "Could not find the beam interpolation" << sout;
         return;
     }
-
 }
-
 
 template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x, const VecCoord& xfree)
@@ -98,11 +127,11 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
     fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 
     // storage of the length (and the rest_length)  of the interval being stretched
-//	length_interval=0.0; //commented to remove compilation warning
+    //	length_interval=0.0; //commented to remove compilation warning
     rest_length_interval=0.0;
 
     // storage of the interval information
-    IntervalDefinition intervalDef;
+    IntervalDefinition<Real> intervalDef;
     Real angleInterval=0.0;
 
     for (unsigned int b=0; b<interpolation->getNumBeams(); b++)
@@ -145,10 +174,10 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
                 if(this->f_printLog.getValue())
                 {
                     std::cout<<" beam "<<b<<" case 1 detected (a):"<<n0<<" == ?"<<n1<<"  (b) :"<<
-                    rest_length*alarmLength<<" > ?"<<length<<"  (c) : "<<angleBeam+angleInterval<< " > ?" <<m_maxBendingAngle.getValue() <<std::endl;
+                               rest_length*alarmLength<<" > ?"<<length<<"  (c) : "<<angleBeam+angleInterval<< " > ?" <<m_maxBendingAngle.getValue() <<std::endl;
                 }
 
-            //	Real angleBuf= angleBeam+angleInterval;
+                //	Real angleBuf= angleBeam+angleInterval;
 
                 // Stop the rigidification
                 // the interval ends at the beginning of the current beam
@@ -169,7 +198,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
                 intervalDef.rest_length=rest_length_interval; // store the rest_length
 
                 if(this->f_printLog.getValue())
-                std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
+                    std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
 
                 // ends the interval
                 prev_stretch=false;
@@ -180,7 +209,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
                 if ((intervalDef.posBegin-intervalDef.posEnd).norm() < 0.0000001)
                     serr<<"WARNING interval of size = 0 detected => 1 beam has a bendingAngle > m_maxBendingAngle"<<sendl;
                 else
-                    _constraintIntervals.push_back(intervalDef);
+                    m_constraintIntervals.push_back(intervalDef);
 
                 // isolate the case 1 (c)
                 if (!case1a && !case1b && case1c) //
@@ -282,9 +311,9 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
         intervalDef.rest_length=rest_length_interval; // store the rest_length
 
         if(this->f_printLog.getValue())
-        std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
+            std::cout<<" rest_length_interval ="<<rest_length_interval<<std::endl;
 
-        _constraintIntervals.push_back(intervalDef);
+        m_constraintIntervals.push_back(intervalDef);
     }
 }
 
@@ -292,13 +321,13 @@ template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams * /*cParams*/ /* PARAMS FIRST */, DataMatrixDeriv &c_d, unsigned int &constraintId, const DataVecCoord & /*x_d*/)
 {
 
-  //  std::cout<<"begin buildConstraintMatrix "<<std::endl;
-    violations.clear();
-//	Real alarmLength = m_alarmLength.getValue();
+    //  std::cout<<"begin buildConstraintMatrix "<<std::endl;
+    m_violations.clear();
+    //	Real alarmLength = m_alarmLength.getValue();
     Real constrainedLength = m_constrainedLength.getValue();
 
-    nbConstraints = 0;
-    cid = constraintId;
+    m_nbConstraints = 0;
+    m_cid = constraintId;
     //const VecCoord& x= *this->mstate->getX();
     //const VecCoord& xfree = *this->mstate->getXfree();
 
@@ -309,50 +338,50 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 
     MatrixDeriv& c = *c_d.beginEdit();
 
-    _constraintIntervals.clear();
+    m_constraintIntervals.clear();
     detectElongation( x.ref(), xfree.ref());
 
     if( this->f_printLog.getValue())
     {
-        for (unsigned int i=0; i<_constraintIntervals.size();i++)
+        for (unsigned int i=0; i<m_constraintIntervals.size();i++)
         {
-            std::cout<<"constraint["<<i<<"] between pos: "<<_constraintIntervals[i].posBegin<<" and pos: "<<_constraintIntervals[i].posEnd<<std::endl;
+            std::cout<<"constraint["<<i<<"] between pos: "<<m_constraintIntervals[i].posBegin<<" and pos: "<<m_constraintIntervals[i].posEnd<<std::endl;
 
         }
     }
 
 
     // for each constraint Interval, a constraint is created
-    for (unsigned int i=0; i<_constraintIntervals.size();i++)
+    for (unsigned int i=0; i<m_constraintIntervals.size();i++)
     {
 
         // get the indices of the dofs involved
         unsigned int n0,n1;
-        n0=_constraintIntervals[i].IdxBegin;
-        n1=_constraintIntervals[i].IdxEnd;
+        n0=m_constraintIntervals[i].IdxBegin;
+        n1=m_constraintIntervals[i].IdxEnd;
 
 
         // compute the violation and the local direction of the constraint
-        Vec3 dir = _constraintIntervals[i].posEnd - _constraintIntervals[i].posBegin;
-        Vec3 PbPeFree= _constraintIntervals[i].posFreeEnd - _constraintIntervals[i].posFreeBegin;
-//        Real length = dir.norm();
+        Vec3 dir = m_constraintIntervals[i].posEnd - m_constraintIntervals[i].posBegin;
+        Vec3 PbPeFree= m_constraintIntervals[i].posFreeEnd - m_constraintIntervals[i].posFreeBegin;
+        //        Real length = dir.norm();
         dir.normalize();
         Real length_free= dot(dir, PbPeFree);
 
-      //  std::cout<<" dot(dir, PbPeFree) ="<<dot(dir, PbPeFree)<<"  - length_free="<<length_free<<"  - length ="<<length<<std::endl;
+        //  std::cout<<" dot(dir, PbPeFree) ="<<dot(dir, PbPeFree)<<"  - length_free="<<length_free<<"  - length ="<<length<<std::endl;
 
-/*		if(length_free > _constraintIntervals[i].rest_length * alarmLength)
+        /*		if(length_free > _constraintIntervals[i].rest_length * alarmLength)
             _constraintIntervals[i].active = true;
         else
             _constraintIntervals[i].active = false;
 */
         // put the violation in a buffer
-        violations.push_back(_constraintIntervals[i].rest_length * constrainedLength - length_free);
+        m_violations.push_back(m_constraintIntervals[i].rest_length * constrainedLength - length_free);
 
         // project the  direction of the constraint (considered as a force) in the DOF frame
 
-        Vec3 lever0 = x[n0].getOrientation().rotate( _constraintIntervals[i].dof_H_begin.getOrigin() );
-        Vec3 lever1 = x[n1].getOrientation().rotate( _constraintIntervals[i].dof_H_end.getOrigin()  );
+        Vec3 lever0 = x[n0].getOrientation().rotate( m_constraintIntervals[i].dof_H_begin.getOrigin() );
+        Vec3 lever1 = x[n1].getOrientation().rotate( m_constraintIntervals[i].dof_H_end.getOrigin()  );
 
 
         if(this->f_printLog.getValue())
@@ -364,15 +393,15 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
                 std::cout<<" lever1 ="<<lever1<<" -dir ="<<-dir<<std::endl;
         }
 
-        MatrixDerivRowIterator c_it = c.writeLine(cid + nbConstraints);
+        MatrixDerivRowIterator c_it = c.writeLine(m_cid + m_nbConstraints);
 
         c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
         c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );
 
-        nbConstraints++;
+        m_nbConstraints++;
 
     }
-    constraintId +=nbConstraints;
+    constraintId +=m_nbConstraints;
     if(this->f_printLog.getValue())
         std::cout<<"end buildConstraintMatrix "<<std::endl;
 }
@@ -383,12 +412,12 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const core:
 {
 
 
-    unsigned int nb = violations.size();
+    unsigned int nb = m_violations.size();
 
     for(unsigned int i=0; i<nb; i++)
     {
 
-        v->set(cid+i, violations[i]);
+        v->set(m_cid+i, m_violations[i]);
     }
 
 
@@ -402,10 +431,10 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vecto
 {
 
 
-    unsigned int nb = violations.size();
+    unsigned int nb = m_violations.size();
     for(unsigned int i=0; i<nb; i++)
     {
-        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &_constraintIntervals[i].active); //&prevForces[activatedBeamsAbscissa[i]]
+        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &m_constraintIntervals[i].active); //&prevForces[activatedBeamsAbscissa[i]]
         offset++;
     }
 
@@ -417,66 +446,47 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vecto
 template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
 {
+#ifndef SOFA_NO_OPENGL
     if (!vparams->displayFlags().getShowInteractionForceFields()) return;
 
-    if(_constraintIntervals.size()==0)
+    if(m_constraintIntervals.size()==0)
         return;
-
-
 
     //trace a point at the beginning and at the end of each constraint interval
     glDisable(GL_LIGHTING);
     glPointSize(10);
     glBegin(GL_POINTS);
     glColor4f(0.0f,1.0f,0.0f,1.0f);
-    for(unsigned int i=0; i<_constraintIntervals.size(); i++)
+    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
     {
-        helper::gl::glVertexT(_constraintIntervals[i].posBegin);
-        helper::gl::glVertexT(_constraintIntervals[i].posEnd);
+        helper::gl::glVertexT(m_constraintIntervals[i].posBegin);
+        helper::gl::glVertexT(m_constraintIntervals[i].posEnd);
     }
     glEnd();
 
     glPointSize(1);
 
-    // trace a straight line between the beginning and the end of each interval
     // TODO: change color if constrained Length reached...
+    // trace a straight line between the beginning and the end of each interval
     glBegin(GL_LINES);
-    for(unsigned int i=0; i<_constraintIntervals.size(); i++)
+    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
     {
-        if(_constraintIntervals[i].active)
+        if(m_constraintIntervals[i].active)
             glColor4f(1.0f,0.5f,0.0f,1.0f);
         else
             glColor4f(0.0f,1.0f,0.0f,1.0f);
-        helper::gl::glVertexT(_constraintIntervals[i].posBegin);
-        helper::gl::glVertexT(_constraintIntervals[i].posEnd);
+        helper::gl::glVertexT(m_constraintIntervals[i].posBegin);
+        helper::gl::glVertexT(m_constraintIntervals[i].posEnd);
     }
 
     glEnd();
 
     glEnable(GL_LIGHTING);
 
-
-
-
-    /*
-    if(!vparams->displayFlags().getShowInteractionForceFields()) return;
-
-    glDisable(GL_LIGHTING);
-    glPointSize(10);
-    glBegin(GL_POINTS);
-    unsigned int m = this->mstate2->getSize();
-    const VecCoord& x = *this->mstate2->getX();
-    for(unsigned int i=0; i<m; i++)
-    {
-        glColor4f(0.0f,1.0f,projected[i]?1:0.0f,1.0f);
-        helper::gl::glVertexT(x[i]);
-    }
-
-    glEnd();
-    glPointSize(1);
-     */
-
+#endif // SOFA_NO_OPENGL
 }
+
+} // namespace _adaptivebeamlengthconstraint_
 
 } // namespace constraintset
 

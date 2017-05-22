@@ -38,20 +38,23 @@ namespace component
 namespace constraintset
 {
 
+namespace _adaptivebeamlengthconstraint_
+{
+
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
 
 SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
+//TODO(dmarchal 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamLengthConstraintClass = core::RegisterObject("TODO")
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >()
-#endif
-;
+        #ifdef SOFA_WITH_FLOAT
+        .add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
+        #endif
+        #ifdef SOFA_WITH_DOUBLE
+        .add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >()
+        #endif
+        ;
 
 #ifdef SOFA_WITH_FLOAT
 template class AdaptiveBeamLengthConstraint<Rigid3fTypes>;
@@ -60,9 +63,11 @@ template class AdaptiveBeamLengthConstraint<Rigid3fTypes>;
 template class AdaptiveBeamLengthConstraint<Rigid3dTypes>;
 #endif
 
-} // namespace constraintset
+} /// namespace _adaptivebeamlengthconstraint_
 
-} // namespace component
+} /// namespace constraintset
 
-} // namespace sofa
+} /// namespace component
+
+} /// namespace sofa
 
