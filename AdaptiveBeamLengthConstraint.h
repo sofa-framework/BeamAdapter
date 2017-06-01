@@ -26,7 +26,7 @@
 #define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <map>
+#include <sofa/helper/map.h>
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/behavior/Constraint.h>
@@ -100,6 +100,10 @@ public:
 
 /*!
  * \class AdaptiveBeamLengthConstraint
+ *
+ * More informations about SOFA components:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
 class AdaptiveBeamLengthConstraint : public Constraint<DataTypes>
@@ -153,27 +157,29 @@ protected:
     unsigned int           m_cid {0} ;
     int                    m_nbConstraints {0};
     vector<Real>           m_violations;
-    std::map<Real, double> m_prevForces;	// Map abscissa <-> previous constraint force
+    std::map<Real, double> m_prevForces;	/// Map abscissa <-> previous constraint force
 
-    Data<Real>          m_alarmLength ;
-    Data<Real>          m_constrainedLength ;
-    Data<Real>          m_maxBendingAngle ;
-    SingleLink<AdaptiveBeamLengthConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+    Data<Real>             m_alarmLength ;
+    Data<Real>             m_constrainedLength ;
+    Data<Real>             m_maxBendingAngle ;
+    SingleLink<AdaptiveBeamLengthConstraint<DataTypes>,
+               fem::WireBeamInterpolation<DataTypes>,
+               BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 private:
     void detectElongation(const VecCoord &x, const VecCoord& xfree);
-    vector<IntervalDefinition<Real>> m_constraintIntervals;
+    vector<IntervalDefinition<Real>>                                   m_constraintIntervals;
 };
 
 
-} // namespace _adaptivebeamlengthconstraint_
+} /// namespace _adaptivebeamlengthconstraint_
 
 using _adaptivebeamlengthconstraint_::AdaptiveBeamLengthConstraint ;
 
-} // namespace constraintset
+} /// namespace constraintset
 
-} // namespace component
+} /// namespace component
 
-} // namespace sofa
+} /// namespace sofa
 
 #endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H

@@ -97,6 +97,10 @@ using sofa::helper::vector ;
  *
  * This component provides an interaction technique based on Mouse & Keyboard that allow user to
  * control on an EdgeSet Topology.
+ *
+ * More informations about SOFA components:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
 class AdaptiveBeamController : public MechanicalStateController<DataTypes>,

@@ -36,9 +36,7 @@
 #ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
 #define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
 
-#include "initBeamAdapter.h"
-#include "BeamInterpolation.h"
-#include "WireRestShape.h"
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/core/objectmodel/Data.h>
@@ -51,6 +49,11 @@
 
 #include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/core/visual/VisualParams.h>
+
+#include "initBeamAdapter.h"
+#include "BeamInterpolation.h"
+#include "WireRestShape.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
@@ -91,6 +94,10 @@ using sofa::defaulttype::Mat ;
 /*!
  * \class AdaptiveBeamForceFieldAndMass
  * @brief AdaptiveBeamForceFieldAndMass Class
+ *
+ * More informations about SOFA components:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
 class AdaptiveBeamForceFieldAndMass : public Mass<DataTypes>

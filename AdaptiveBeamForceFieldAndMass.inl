@@ -75,8 +75,7 @@ using sofa::defaulttype::Vector3 ;
 using sofa::defaulttype::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;
-using sofa::helper::set ;
-
+using std::set ;
 
 template <class DataTypes>
 AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()

@@ -112,7 +112,6 @@ public:
      * @name Point & Line Activer interface
      */
     //@{
-
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
         if (index >= (int)xAbs_collisionPoints_buf.size() || index < 0)
@@ -319,11 +318,8 @@ public:
     /////// for imposing nodes along the spline
     std::list< Real > listOfImposedNodesOnXcurv;
 
-
-//    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
     Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
     Data< sofa::helper::vector<Vec2> > m_curvatureList;
-
     Data< VecCoord > m_controlPoints;
 
     /////////// Interface for topology changes

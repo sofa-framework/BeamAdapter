@@ -44,6 +44,13 @@ namespace _adaptivebeamlengthconstraint_
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
 
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
 
 //TODO(dmarchal 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description

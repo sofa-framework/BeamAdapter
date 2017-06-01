@@ -451,12 +451,18 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 
 }
 
-
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SOFA_DECL_CLASS(UnbuiltGenericConstraintSolver);
 
 int UnbuiltGenericConstraintSolverClass = core::RegisterObject("A Generic Constraint Solver using the Linear Complementarity Problem formulation to solve Constraint based components")
 .add< UnbuiltGenericConstraintSolver >();
 
-SOFA_DECL_CLASS(UnbuiltGenericConstraintSolver);
 
 
 } // namespace constraintset

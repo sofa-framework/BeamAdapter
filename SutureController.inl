@@ -54,7 +54,7 @@ namespace component
 namespace controller
 {
 
-using sofa::helper::set ;
+using std::set ;
 
 template <class DataTypes>
 SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTypes>* _adaptiveinterpolation)
@@ -95,6 +95,7 @@ void SutureController<DataTypes>::init()
 
     xAbs_collisionPoints_buf.clear();
 
+    //TODO(dmarchal 2017-06-01) Please specify who/when this will be done
     /// @TODO : verifier que la topologie est celle d'un wire
     this->getContext()->get(m_topology);
 
@@ -243,9 +244,9 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
         return false;
     }
 
-    // When there are rigid segments, # of dofs is different than # of edges and beams
+    /// When there are rigid segments, # of dofs is different than # of edges and beams
     unsigned int numRigidPts = 0;
-    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
     int nbRigidAbs = rigidCurvAbs->size();
     if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
     {
@@ -445,27 +446,16 @@ void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &ne
     rigidSegment.second = 5.5*length/10.0;
     this->rigidCurveSegments.push_back(rigidSegment);
 
-
-
     rigidSegment.first = 7.5*length/10.0;
     rigidSegment.second = 10*length/10.0;
     this->rigidCurveSegments.push_back(rigidSegment);
 
-
-
     addRigidCurvAbs(newCurvAbs, 0.0001);
 
-
-
     Real totalLength = newCurvAbs[newCurvAbs.size()-1];
-
     listOfImposedNodesOnXcurv.push_back(0.23*totalLength);
-
     listOfImposedNodesOnXcurv.push_back(0.57*totalLength);
 
-
-
-   // newCurvAbs.push_back(length);
 #ifdef DEBUG
     std::cout<<"newCurvAbs  = "<<newCurvAbs<<std::endl;
 #endif
@@ -1235,103 +1225,13 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
     }
 
-/*
-    Real sutureLength= m_adaptiveinterpolation->getRestTotalLength();
-    Real dx=sutureLength/100.0;	// TODO : pourquoi 100 et pas un Data ou un nombre dépendant de la densité ?
-    Real BendingAngle=0.0;
-    this->computeBendingAngle(BendingAngle, 0.0, sutureLength, dx, x);
-
-#ifdef DEBUG
-    std::cout<<" BendingAngle ="<<BendingAngle<<std::endl;
-#endif
-
-
-    Real L_add=0.0;
-
-    // in density it is defined the number of beams that are basically asked between
-    sofa::helper::vector<Real> newCurvAbs_notSecure;
-    newCurvAbs_notSecure.clear();
-    for (unsigned int part=0; part<nbP_density.size(); part++)
-    {
-        unsigned int numBeams=nbP_density[part];
-        Real L_beam_straight = (xP_noticeable[part+1] - xP_noticeable[part])/numBeams;
-
-        while(L_add< xP_noticeable[part+1]-threshold.getValue())
-        {
-            newCurvAbs_notSecure.push_back(L_add);
-
-            if (L_add+L_beam_straight < xP_noticeable[part+1])
-                BendingAngle = this->computeBendingAngle(L_add, L_add+L_beam_straight, dx, x);
-            else
-                BendingAngle = this->computeBendingAngle(L_add, xP_noticeable[part+1], dx, x);
-
-            Real L_beam = L_beam_straight;
-            if (BendingAngle>maxBendingAngle.getValue())
-                L_beam*=maxBendingAngle.getValue()/BendingAngle;
-            L_add+=L_beam;
-        }
-        newCurvAbs_notSecure.push_back(xP_noticeable[part+1]);
-    }
-    */
-    /*
-
-    // TEMP TEST : remove aligned dofs
-    if(newCurvAbs_notSecure.size() >= 3)
-    {
-        dx = sutureLength / 20;
-        Real prevAbs = newCurvAbs_notSecure[0], unused=0.0;
-        unsigned int prevBeam = 0;
-        m_adaptiveinterpolation->getBeamAtCurvAbs(prevAbs, prevBeam, unused);
-        int size = newCurvAbs_notSecure.size();
-        for(int i=1; i<size-1; )
-        {
-            Real curvAbs = newCurvAbs_notSecure[i];
-            Real angle = 0;
-            this->computeBendingAngle(angle, prevAbs, curvAbs, dx, x);
-
-            unsigned int beamIndex = 0;
-            m_adaptiveinterpolation->getBeamAtCurvAbs(curvAbs, beamIndex, unused);
-
-            bool stretched = false;
-            for(unsigned int j=beamIndex; j<=beamIndex; j++)
-            {
-                Vec3 P0,P1,P2,P3;
-                Real rest_length = m_adaptiveinterpolation->getLength(j);
-                m_adaptiveinterpolation->getSplinePoints(j,x,P0,P1,P2,P3);
-                Real length = 0.0;
-                m_adaptiveinterpolation->computeActualLength(length, P0,P1,P2,P3);
-
-           //     std::cout<<" test on curvAbs"<<curvAbs<<" - prevBeam="<<prevBeam<<" - beamIndex ="<<beamIndex<<"- length="<<length<<"- rest_length"<<rest_length<<std::endl;
-
-                if( length > 1.01 * rest_length)
-                {
-                    stretched = true;
-                    break;
-                }
-            }
-
-            if(angle<0.1 && stretched)	// less than 2 degrees is considered plan
-            {
-                newCurvAbs_notSecure.erase(newCurvAbs_notSecure.begin() + i);
-                size--;
-            }
-            else
-            {
-                i++;
-                prevAbs = curvAbs;
-
-            }
-            //prevBeam = beamIndex;
-        }
-    }
-    */
-
     if(!verifyRigidCurveSegmentSort())
         serr<<" WARNING : rigidCurveSegments are not correctly sorted !"<<sendl;
 
     this->rigidCurveSegments.clear();
-    helper::ReadAccessor< Data< helper::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
     int nb = rigidCurvAbs->size();
+
     if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
     {
         RealConstIterator it;
@@ -1444,18 +1344,6 @@ void SutureController<DataTypes>::storeRigidSegmentsTransformations()
             ++beamId;
         }
     }
-
-/*	int nb = m_adaptiveinterpolation->getNumBeams();
-    for(int i=0;i<nb; ++i)
-    {
-        Real curvAbs0, curvAbs1;
-        m_adaptiveinterpolation->getAbsCurvXFromBeam(i, curvAbs0, curvAbs1);
-
-        Transform t0, t1;
-        m_adaptiveinterpolation->getDOFtoLocalTransform(i, t0, t1);
-        prevRigidTransforms[curvAbs0] = t0;
-        prevRigidTransforms[curvAbs1] = t1;
-    }	*/
 }
 
 template <class DataTypes>
@@ -1497,23 +1385,6 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
             ++beamId;
         }
     }
-    /*
-    // TODO : adapt this simpler method to rigid segments that have been modified (the transformation need to change)
-    int nb = m_adaptiveinterpolation->getNumBeams();
-    for(int i=0;i<nb; ++i)
-    {
-        Real curvAbs0, curvAbs1;
-        m_adaptiveinterpolation->getAbsCurvXFromBeam(i, curvAbs0, curvAbs1);
-
-        std::map<Real, Transform>::const_iterator iter;
-        iter = prevRigidTransforms.find(curvAbs0);
-        if(iter != prevRigidTransforms.end())
-            m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, false);
-
-        iter = prevRigidTransforms.find(curvAbs1);
-        if(iter != prevRigidTransforms.end())
-            m_adaptiveinterpolation->setTransformBetweenDofAndNode(i, iter->second, true);
-    }*/
 }
 
 template <class DataTypes>

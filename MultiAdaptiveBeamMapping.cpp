@@ -47,16 +47,18 @@ namespace component
 
 namespace mapping
 {
-
-SOFA_DECL_CLASS(MultiAdaptiveBeamMapping)
-
 using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
 
-
-
-
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SOFA_DECL_CLASS(MultiAdaptiveBeamMapping)
 
 // Register in the Factory
 int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")

@@ -78,7 +78,13 @@ void AdaptiveBeamConstraintResolution::store(int line, double* force, bool conve
 }
 
 
-/////////////////////////////////////////// FACTORY //////////////////////////////////////////////
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
 int AdaptiveBeamConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")

@@ -63,6 +63,10 @@ using sofa::component::fem::WireBeamInterpolation ;
 /*!
  * \class AdaptiveBeamConstraint
  * @brief AdaptiveBeamConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
+ *
+ * More informations about SOFA components:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
 class AdaptiveBeamConstraint : public PairInteractionConstraint<DataTypes>

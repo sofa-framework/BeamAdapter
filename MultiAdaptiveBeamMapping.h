@@ -110,7 +110,6 @@ public:
     typedef sofa::component::controller::InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
 
 public:
-
     Data<bool> useCurvAbs;
     Data< helper::vector< std::string > > m_controlerPath;
 
