@@ -36,25 +36,44 @@
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 
-//TODO(dmarchal 2017-05-17) Do we really need so much include ?
 #include "initBeamAdapter.h"
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/DataEngine.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
-#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
-#include <SofaLoader/MeshObjLoader.h>
+
+/// Forward declarations
+namespace sofa {
+    namespace component {
+        namespace topology {
+            template <class T>
+            class EdgeSetGeometryAlgorithms ;
+            class Edge2QuadTopologicalMapping ;
+        }
+    }
+    namespace core {
+        namespace loader {
+            class MeshLoader ;
+        }
+    }
+}
 
 namespace sofa
 {
-
 namespace component
 {
-
 namespace engine
 {
+namespace _wirerestshape_
+{
 
-/*!
+using sofa::defaulttype::Quat;
+using sofa::helper::vector;
+using sofa::core::topology::TopologyContainer;
+using sofa::component::topology::EdgeSetGeometryAlgorithms;
+using sofa::component::topology::EdgeSetTopologyModifier;
+using sofa::component::topology::Edge2QuadTopologicalMapping;
+using sofa::core::loader::MeshLoader;
+
+/**
  * \class WireRestShape
  * \brief Describe the shape functions on multiple segments
  *
@@ -73,10 +92,13 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef sofa::defaulttype::Vec<3, Real> Vec3;
     typedef sofa::defaulttype::Vec<2, Real> Vec2;
-    typedef sofa::defaulttype::Quat Quat;
-    typedef typename sofa::helper::vector<Vec2>::iterator vecIt;
+    typedef typename vector<Vec2>::iterator vecIt;
 
-    /*!
+    typedef typename core::visual::VisualParams VisualParams;
+    typedef typename core::objectmodel::BaseContext BaseContext;
+    typedef typename core::objectmodel::BaseObjectDescription BaseObjectDescription;
+
+    /**
      * @brief Default Constructor.
      */
      WireRestShape() ;
@@ -86,68 +108,7 @@ public:
       */
      ~WireRestShape(){}
 
-     void rotateFrameForAlignX(const sofa::defaulttype::Quat &input, Vec3 &x, sofa::defaulttype::Quat &output);
-
-     /// These are virtual in-herited from BaseObeject,
-     /// use the override keyword to make things clear http://en.cppreference.com/w/cpp/language/override
-     void init() override ;
-     void reinit() override{ }
-     void update() override { }
-     void bwdInit() override ;
-     void draw(const core::visual::VisualParams* vparams) override ;
-
-
-     /*!
-      * For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-      */
-     virtual Real getReleaseCurvAbs(){return d_straightLength.getValue();}
-
-     //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
-     //we can remove the todo.
-     // todo => topological change !
-     virtual void releaseWirePart();
-
-     /*!
-      * This function is called by the force field to evaluate the rest position of each beam
-      */
-     virtual void getRestTransformOnX(Transform &global_H_local, const Real &x);
-
-     /*!
-      * This function provides a vector with the curviliar abscissa of the noticeable point(s)
-      * and the minimum density (number of points) between them
-      */
-     virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density);
-
-     /*!
-      * This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-      */
-     virtual void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
-
-     /*!
-      * this function gives the mass density and the BeamSection data depending on the beam position
-      */
-     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
-
-     /*!
-      * Functions enabling to load and use a geometry given from OBJ external file
-      */
-     void initRestConfig();
-     void getRestPosNonProcedural(Real& abs, Coord &p);
-     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
-     void initFromLoader();
-     bool checkTopology();
-
-     virtual Real getLength() ;
-     virtual void getCollisionSampling(Real &dx, const Real &x_curv) ;
-     virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
-
-     /// Construction method called by ObjectFactory.
-     template<class T>
-     static typename T::SPtr create(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-     {
-         return core::objectmodel::BaseObject::create(obj, context, arg);
-     }
-
+     /////////////////////////// Inherited from Base //////////////////////////////////////////
      virtual std::string getTemplateName() const
      {
          return templateName(this);
@@ -158,6 +119,60 @@ public:
          return DataTypes::Name();
      }
 
+     /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+     virtual void init() override ;
+     virtual void reinit() override{ }
+     virtual void update() override { }
+     virtual void bwdInit() override ;
+     void draw(const VisualParams * vparams) override ;
+
+     /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
+
+     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+     Real getReleaseCurvAbs(){return d_straightLength.getValue();}
+
+     /// This function is called by the force field to evaluate the rest position of each beam
+     void getRestTransformOnX(Transform &global_H_local, const Real &x);
+
+     /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
+
+     /// This function gives the mass density and the BeamSection data depending on the beam position
+     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
+
+     /**
+      * This function provides a vector with the curviliar abscissa of the noticeable point(s)
+      * and the minimum density (number of points) between them
+      */
+     void getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density);
+
+
+     /// Functions enabling to load and use a geometry given from OBJ external file
+     void initRestConfig();
+     void getRestPosNonProcedural(Real& abs, Coord &p);
+     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
+     void initFromLoader();
+     bool checkTopology();
+
+     Real getLength() ;
+     void getCollisionSampling(Real &dx, const Real &x_curv) ;
+     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
+
+     /// Construction method called by ObjectFactory.
+     template<class T>
+     static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)
+     {
+         return core::objectmodel::BaseObject::create(obj, context, arg);
+     }
+
+     //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
+     //we can remove the todo.
+     // todo => topological change !
+     void releaseWirePart();
+
+     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
+
+
 protected:
      /// Analitical creation of wire shape...
      Data<bool> d_procedural;
@@ -166,10 +181,10 @@ protected:
      Data<Real> d_straightLength;
      Data<Real> d_spireDiameter;
      Data<Real> d_spireHeight;
-     Data< sofa::helper::vector<int> > d_density;
-     Data< sofa::helper::vector<Real> > d_keyPoints;
+     Data<vector<int> > d_density;
+     Data<vector<Real> > d_keyPoints;
      Data< int > d_numEdges;
-     Data< sofa::helper::vector<int> > d_numEdgesCollis;
+     Data<vector<int> > d_numEdgesCollis;
 
      /// User Data about the Young modulus
      Data<Real> d_poissonRatio;
@@ -190,9 +205,9 @@ protected:
      Data<bool>	d_drawRestShape;
 
      /// Data required for the File loading
-     sofa::helper::vector<Vec3> 		m_localRestPositions;
-     sofa::helper::vector<Transform> 	m_localRestTransforms;
-     sofa::helper::vector<Real> 		m_curvAbs ;
+     vector<Vec3> 		m_localRestPositions;
+     vector<Transform> 	m_localRestTransforms;
+     vector<Real> 		m_curvAbs ;
      double 							m_absOfGeometry {0};
 
      struct BeamSection{
@@ -208,16 +223,17 @@ protected:
      BeamSection beamSection1;
      BeamSection beamSection2;
 
-     sofa::core::topology::TopologyContainer* _topology {nullptr} ;
-     sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo {nullptr};
-     sofa::component::topology::EdgeSetTopologyModifier* edgeMod {nullptr};
-     sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap {nullptr};
-     sofa::core::loader::MeshLoader* loader {nullptr};
+     TopologyContainer* _topology {nullptr} ;
+     EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo ;
+     EdgeSetTopologyModifier* edgeMod {nullptr} ;
+     Edge2QuadTopologicalMapping* edge2QuadMap ;
+     MeshLoader* loader ;
      bool edgeSetInNode {false};
 };
 
+} // namespace _wirerestshape_
 
-//TODO(dmarchal 2017-05-17 Use extern template here to reduce code bloat.
+using _wirerestshape_::WireRestShape;
 
 } // namespace engine
 

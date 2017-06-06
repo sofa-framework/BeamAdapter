@@ -35,12 +35,12 @@
 
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
-#define VERIF 1
 
-#include "WireRestShape.h"
 #include <sofa/core/behavior/MechanicalState.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <SofaBaseTopology/QuadSetTopologyModifier.h>
+#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
+#include <SofaLoader/MeshObjLoader.h>
 
 #include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
@@ -50,12 +50,15 @@
 #include <sofa/helper/gl/template.h>
 #include <sofa/helper/system/glut.h>
 
+#include "WireRestShape.h"
+
 #include <iostream>
 #include <fstream>
 
 //TODO(dmarchal 2017-05-17): I wonder if these two are not already defined in a std lib ?
 #define PI 3.14159265
 #define EPSILON 0.0000000001
+#define VERIF 1
 
 namespace sofa
 {
@@ -66,6 +69,12 @@ namespace component
 namespace engine
 {
 
+namespace _wirerestshape_
+{
+
+using sofa::helper::vector ;
+using sofa::core::objectmodel::TagSet ;
+using sofa::core::objectmodel::BaseContext ;
 
 /*!
  * @brief Default Constructor.
@@ -134,6 +143,12 @@ void WireRestShape<DataTypes>::init()
 
     msg_info() <<"WireRestShape begin init" ;
 
+    /// Have to add because was remove from the .h due to forward déclarations
+    edgeGeo = nullptr;
+    edge2QuadMap = nullptr;
+    loader = nullptr;
+    ///
+
     if(!d_procedural.getValue())
     {
         //get the mesh loader
@@ -189,13 +204,13 @@ void WireRestShape<DataTypes>::init()
         _topology->addEdge(i,i+1);
 
     //// get the possible Topological mapping (with tags)
-    const sofa::core::objectmodel::TagSet &tags = this->getTags() ;
+    const TagSet &tags = this->getTags() ;
 
     //TODO(dmarchal): replace with for each loop.
-    for (core::objectmodel::TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
+    for (TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
     {
         dmsg_error() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
-        dynamic_cast<core::objectmodel::BaseContext *>(this->getContext())->get( edge2QuadMap , *it, sofa::core::objectmodel::BaseContext::SearchRoot );
+        dynamic_cast<BaseContext *>(this->getContext())->get( edge2QuadMap , *it, BaseContext::SearchRoot );
     }
 
 
@@ -207,7 +222,7 @@ void WireRestShape<DataTypes>::init()
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
-    sofa::helper::vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
+    vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
     if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
@@ -221,7 +236,7 @@ void WireRestShape<DataTypes>::init()
 
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
-        sofa::helper::vector<int> &densityList = (*d_density.beginEdit());
+        vector<int> &densityList = (*d_density.beginEdit());
 
         if(d_density.getValue().size() > keyPointList.size()-1 )
             densityList.resize(keyPointList.size()-1);
@@ -245,7 +260,7 @@ void WireRestShape<DataTypes>::init()
 
     if(!d_numEdgesCollis.getValue().size())
     {
-        sofa::helper::vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
+        vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
             densityCol[i] = 20;
@@ -300,7 +315,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            sofa::helper::vector<unsigned int> edge_remove;
+            vector<unsigned int> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
@@ -330,7 +345,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density)
+void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density)
 {
 
     xP_noticeable.clear();
@@ -406,7 +421,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
     if( x_used < d_straightLength.getValue())
     {
-        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), sofa::defaulttype::Quat());
+        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), Quat());
         return;
     }
 
@@ -575,22 +590,22 @@ void WireRestShape<DataTypes>::initFromLoader()
     if (!checkTopology())
         return;
 
-    sofa::helper::vector<Vec3> vertices;
-    sofa::helper::vector<Vec2> edges;
+    vector<Vec3> vertices;
+    vector<Vec2> edges;
 
     //get the topology position
-    typedef  sofa::helper::vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
+    typedef  vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
     topoPosition &topoVertices = (*loader->d_positions.beginEdit());
 
     //copy the topology edges in a local vector
-    typedef  sofa::helper::vector<sofa::core::topology::Topology::Edge > topoEdge;
+    typedef  vector<sofa::core::topology::Topology::Edge > topoEdge;
     topoEdge &topoEdges = (*loader->d_edges.beginEdit());
     for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
         edges.push_back(Vec2((*it)[0], (*it)[1]));
     loader->d_edges.endEdit();
 
     /** renumber the vertices  **/
-    sofa::helper::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
+    vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
     for(unsigned int i =0; i < topoVertices.size(); i++)
         verticesConnexion.push_back(2);
 
@@ -813,10 +828,10 @@ void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*
 
 }
 
-
+} // namespace _wirerestshape_
+using _wirerestshape_::WireRestShape;
 
 } // namespace engine
-
 
 } // namespace component
 
