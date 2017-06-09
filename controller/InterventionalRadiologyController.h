@@ -38,7 +38,7 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 
-#include "WireBeamInterpolation.h"
+#include "../WireBeamInterpolation.h"
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/SolidTypes.h>

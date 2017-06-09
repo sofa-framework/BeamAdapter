@@ -37,7 +37,7 @@
 
 
 #include "initBeamAdapter.h"
-#include "WireRestShape.h"
+#include "engine/WireRestShape.h"
 #include "BeamInterpolation.h"
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
