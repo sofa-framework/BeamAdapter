@@ -30,7 +30,6 @@
 #include <sofa/helper/system/config.h>
 
 
-
 #ifdef SOFA_BUILD_BEAMADAPTER
 #  define SOFA_BEAMADAPTER_API SOFA_EXPORT_DYNAMIC_LIBRARY
 #else
