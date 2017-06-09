@@ -1,14 +1,14 @@
 list(APPEND HEADER_FILES
-  controller/AdaptiveBeamController.h
-  controller/AdaptiveBeamController.inl
-  controller/InterventionalRadiologyController.h
-  controller/InterventionalRadiologyController.inl
-  controller/SutureController.h
-  controller/SutureController.inl
+  component/controller/AdaptiveBeamController.h
+  component/controller/AdaptiveBeamController.inl
+  component/controller/InterventionalRadiologyController.h
+  component/controller/InterventionalRadiologyController.inl
+  component/controller/SutureController.h
+  component/controller/SutureController.inl
   )
 
 list(APPEND SOURCE_FILES
-  controller/AdaptiveBeamController.cpp
-  controller/InterventionalRadiologyController.cpp
-  controller/SutureController.cpp
+  component/controller/AdaptiveBeamController.cpp
+  component/controller/InterventionalRadiologyController.cpp
+  component/controller/SutureController.cpp
   )

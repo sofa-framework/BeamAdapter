@@ -10,27 +10,27 @@ set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION
 set(HEADER_FILES
   #BaseRestShape.h
   #BaseRestShape.inl
-  initBeamAdapter.h
+  component/initBeamAdapter.h
 
-  BeamInterpolation.h
-  BeamInterpolation.inl
-  WireBeamInterpolation.h
-  WireBeamInterpolation.inl
+  component/BeamInterpolation.h
+  component/BeamInterpolation.inl
+  component/WireBeamInterpolation.h
+  component/WireBeamInterpolation.inl
   )
 
 set(SOURCE_FILES
   #BaseRestShape.cpp
-  initBeamAdapter.cpp
-  BeamInterpolation.cpp
-  WireBeamInterpolation.cpp
+  component/initBeamAdapter.cpp
+  component/BeamInterpolation.cpp
+  component/WireBeamInterpolation.cpp
   )
 
-include(constraint/Constraint.cmake)
-include(controller/Controller.cmake)
-include(engine/Engine.cmake)
-include(forcefield/Forcefield.cmake)
-include(mapping/Mapping.cmake)
-include(solver/Solver.cmake)
+include(component/constraint/Constraint.cmake)
+include(component/controller/Controller.cmake)
+include(component/engine/Engine.cmake)
+include(component/forcefield/Forcefield.cmake)
+include(component/mapping/Mapping.cmake)
+include(component/solver/Solver.cmake)
 
 set(README_FILE "BeamAdapter.txt" )
 

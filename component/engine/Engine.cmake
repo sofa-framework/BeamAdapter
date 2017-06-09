@@ -1,11 +1,11 @@
 list(APPEND HEADER_FILES
-  engine/WireRestShape.h
-  engine/WireRestShape.inl
-  engine/SteerableCatheter.h
-  engine/SteerableCatheter.inl
+  component/engine/WireRestShape.h
+  component/engine/WireRestShape.inl
+  component/engine/SteerableCatheter.h
+  component/engine/SteerableCatheter.inl
   )
 
 list(APPEND SOURCE_FILES
-  engine/WireRestShape.cpp
-  engine/SteerableCatheter.cpp
+  component/engine/WireRestShape.cpp
+  component/engine/SteerableCatheter.cpp
   )

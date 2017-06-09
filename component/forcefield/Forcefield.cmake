@@ -1,8 +1,8 @@
 list(APPEND HEADER_FILES
-  forcefield/AdaptiveBeamForceFieldAndMass.h
-  forcefield/AdaptiveBeamForceFieldAndMass.inl
+  component/forcefield/AdaptiveBeamForceFieldAndMass.h
+  component/forcefield/AdaptiveBeamForceFieldAndMass.inl
   )
 
 list(APPEND SOURCE_FILES
-  forcefield/AdaptiveBeamForceFieldAndMass.cpp
+  component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
   )

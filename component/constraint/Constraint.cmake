@@ -1,14 +1,14 @@
 list(APPEND HEADER_FILES
-  constraint/AdaptiveBeamConstraint.h
-  constraint/AdaptiveBeamConstraint.inl
-  constraint/AdaptiveBeamLengthConstraint.h
-  constraint/AdaptiveBeamLengthConstraint.inl
-  constraint/ImplicitSurfaceAdaptiveConstraint.h
-  constraint/ImplicitSurfaceAdaptiveConstraint.inl
+  component/constraint/AdaptiveBeamConstraint.h
+  component/constraint/AdaptiveBeamConstraint.inl
+  component/constraint/AdaptiveBeamLengthConstraint.h
+  component/constraint/AdaptiveBeamLengthConstraint.inl
+  component/constraint/ImplicitSurfaceAdaptiveConstraint.h
+  component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
   )
 
 list(APPEND SOURCE_FILES
-  constraint/AdaptiveBeamConstraint.cpp
-  constraint/AdaptiveBeamLengthConstraint.cpp
-  constraint/ImplicitSurfaceAdaptiveConstraint.cpp
+  component/constraint/AdaptiveBeamConstraint.cpp
+  component/constraint/AdaptiveBeamLengthConstraint.cpp
+  component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
   )

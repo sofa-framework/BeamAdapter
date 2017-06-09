@@ -1,11 +1,11 @@
 list(APPEND HEADER_FILES
-  mapping/AdaptiveBeamMapping.h
-  mapping/AdaptiveBeamMapping.inl
-  mapping/MultiAdaptiveBeamMapping.h
-  mapping/MultiAdaptiveBeamMapping.inl
+  component/mapping/AdaptiveBeamMapping.h
+  component/mapping/AdaptiveBeamMapping.inl
+  component/mapping/MultiAdaptiveBeamMapping.h
+  component/mapping/MultiAdaptiveBeamMapping.inl
   )
 
 list(APPEND SOURCE_FILES
-  mapping/AdaptiveBeamMapping.cpp
-  mapping/MultiAdaptiveBeamMapping.cpp
+  component/mapping/AdaptiveBeamMapping.cpp
+  component/mapping/MultiAdaptiveBeamMapping.cpp
   )
