@@ -168,9 +168,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
     sofa::helper::vector<int> removeEdgeAtPoint;
 
     // 1. get the new controls
- //   std::cout<<" _xPointList before "<<_xPointList<<std::endl;
     m_ircontroller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
- //   std::cout<<" _xPointList after "<<_xPointList<<std::endl;
 
     if(!isBarycentricMapping)
     {
@@ -194,6 +192,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
             pointsList[ id ]->push_back( Vec3( _xPointList[i], 0, 0) );
             m_subMappingList[id]->addidPointSubMap(i);
         }
+
         for (unsigned int i=0; i<m_subMappingList.size(); i++)
         {
             m_subMappingList[i]->d_points.endEdit();

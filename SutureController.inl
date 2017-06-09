@@ -596,7 +596,6 @@ void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &
 template <class DataTypes>
 void SutureController<DataTypes>::applyController()
 {
-//    std::cout<<"applyController: numBeams =" <<m_adaptiveinterpolation->getNumBeams()<<std::endl;
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     Data<VecDeriv>* datav = this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
     VecCoord& x = *datax->beginEdit();

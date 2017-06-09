@@ -151,13 +151,15 @@ public:
     Data<std::string> d_nameOfInputMap;				/*!< if contactDuplicate==true, it provides the name of the input mapping */
     Data<double> d_nbPointsPerBeam;					/*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
     Data< sofa::helper::vector< Real > > d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
+
     SingleLink<AdaptiveBeamMapping<TIn, TOut>,
-               BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> s_adaptativebeamInterpolation;
+               BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
 
     AdaptiveBeamMapping(State< In >* from=NULL,
                         State< Out >* to=NULL,
                         BeamInterpolation< TIn >* _interpolation=NULL,
                         bool _isSubMapping=false) ;
+
 
     virtual ~AdaptiveBeamMapping(){}
 
@@ -165,14 +167,13 @@ public:
     void applyJ(const core::MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in);
     void applyJT(const core::MechanicalParams *mparams, Data<InVecDeriv>& out, const Data<VecDeriv>& in);
     void applyJT(const core::ConstraintParams *cparams, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in);
-
     void printIstrumentInfo()const ;
 
     int addPoint ( const Coord& c, int /*indexFrom*/ ) ;
     int addContactPoint(const Vec3& bary);
-
     void setBarycentricMapping() ;
     int addBaryPoint(const int& _beamId,const Vec3& _baryCoord,bool /*todo_straightline_spline_option*/) ;
+
 
     //clear the mapping in functions of size given
     void clear(int size) ;
@@ -216,6 +217,7 @@ protected:
     bool m_isSubMapping ;
     bool m_isBarycentricMapping;
 };
+
 
 } /// _adaptivebeammappin_
 
