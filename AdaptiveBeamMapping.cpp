@@ -48,9 +48,11 @@ namespace component
 
 namespace mapping
 {
+
 using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
+
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -64,7 +66,7 @@ SOFA_DECL_CLASS(AdaptiveBeamMapping)
 // Register in the Factory
 int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >()
+.add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >(true) //default template
 .add< AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes > >()
 #endif
 #ifdef SOFA_WITH_FLOAT
@@ -78,9 +80,6 @@ int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and veloc
 #endif
 #endif
 ;
-
-
-
 
 } // namespace mapping
 

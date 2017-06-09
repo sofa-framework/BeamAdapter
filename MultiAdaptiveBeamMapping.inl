@@ -183,14 +183,14 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         {
             pointsList[i] = m_subMappingList[i]->d_points.beginEdit();
             pointsList[i]->clear();
-            m_subMappingList[i]->clearidPointSubMap();
+            m_subMappingList[i]->clearIdPointSubMap();
         }
 
         for (unsigned int i=0; i< _xPointList.size(); i++)
         {
             unsigned int  id = _idm_instrumentList[i];
             pointsList[ id ]->push_back( Vec3( _xPointList[i], 0, 0) );
-            m_subMappingList[id]->addidPointSubMap(i);
+            m_subMappingList[id]->addIdPointSubMap(i);
         }
 
         for (unsigned int i=0; i<m_subMappingList.size(); i++)
@@ -353,7 +353,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::bwdInit()
 
     for (unsigned int i=0; i<m_instrumentList.size(); i++)
     {
-        m_subMappingList[i]->setuseCurvAbs(this->useCurvAbs.getValue());
+        m_subMappingList[i]->setUseCurvAbs(this->useCurvAbs.getValue());
         m_subMappingList[i]->setName(" SubMapping - " + m_instrumentList[i]->getName() );
         m_subMappingList[i]->bwdInit();//////////////////////////////////////////////////
     }
