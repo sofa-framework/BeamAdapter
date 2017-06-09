@@ -8,55 +8,68 @@ set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
-  AdaptiveBeamConstraint.h
-  AdaptiveBeamConstraint.inl
-  AdaptiveBeamController.h
-  AdaptiveBeamController.inl
-  AdaptiveBeamForceFieldAndMass.h
-  AdaptiveBeamForceFieldAndMass.inl
-  AdaptiveBeamLengthConstraint.h
-  AdaptiveBeamLengthConstraint.inl
-  AdaptiveBeamMapping.h
-  AdaptiveBeamMapping.inl
+  constraint/AdaptiveBeamConstraint.h
+  constraint/AdaptiveBeamConstraint.inl
+  constraint/AdaptiveBeamLengthConstraint.h
+  constraint/AdaptiveBeamLengthConstraint.inl
+  constraint/ImplicitSurfaceAdaptiveConstraint.h
+  constraint/ImplicitSurfaceAdaptiveConstraint.inl
+
+  controller/AdaptiveBeamController.h
+  controller/AdaptiveBeamController.inl
+  controller/InterventionalRadiologyController.h
+  controller/InterventionalRadiologyController.inl
+  controller/SutureController.h
+  controller/SutureController.inl
+
+  engine/WireRestShape.h
+  engine/WireRestShape.inl
+  engine/SteerableCatheter.h
+  engine/SteerableCatheter.inl
+
+  forcefield/AdaptiveBeamForceFieldAndMass.h
+  forcefield/AdaptiveBeamForceFieldAndMass.inl
+
+  mapping/AdaptiveBeamMapping.h
+  mapping/AdaptiveBeamMapping.inl
+  mapping/MultiAdaptiveBeamMapping.h
+  mapping/MultiAdaptiveBeamMapping.inl
+
+  solver/UnbuiltGenericConstraintSolver.h
+
   #BaseRestShape.h
   #BaseRestShape.inl
+  initBeamAdapter.h
+
   BeamInterpolation.h
   BeamInterpolation.inl
-  ImplicitSurfaceAdaptiveConstraint.h
-  ImplicitSurfaceAdaptiveConstraint.inl
-  initBeamAdapter.h
-  InterventionalRadiologyController.h
-  InterventionalRadiologyController.inl
-  MultiAdaptiveBeamMapping.h
-  MultiAdaptiveBeamMapping.inl
-  SutureController.h
-  SutureController.inl
-  UnbuiltGenericConstraintSolver.h
   WireBeamInterpolation.h
   WireBeamInterpolation.inl
-  WireRestShape.h
-  WireRestShape.inl
-  SteerableCatheter.h
-  SteerableCatheter.inl
   )
 
 set(SOURCE_FILES
-  AdaptiveBeamConstraint.cpp
-  AdaptiveBeamController.cpp
-  AdaptiveBeamForceFieldAndMass.cpp
-  AdaptiveBeamLengthConstraint.cpp
-  AdaptiveBeamMapping.cpp
+  constraint/AdaptiveBeamConstraint.cpp
+  constraint/AdaptiveBeamLengthConstraint.cpp
+  constraint/ImplicitSurfaceAdaptiveConstraint.cpp
+
+  controller/AdaptiveBeamController.cpp
+  controller/InterventionalRadiologyController.cpp
+  controller/SutureController.cpp
+
+  engine/WireRestShape.cpp
+  engine/SteerableCatheter.cpp
+
+  forcefield/AdaptiveBeamForceFieldAndMass.cpp
+
+  mapping/AdaptiveBeamMapping.cpp
+  mapping/MultiAdaptiveBeamMapping.cpp
+
+  solver/UnbuiltGenericConstraintSolver.cpp
+
   #BaseRestShape.cpp
-  BeamInterpolation.cpp
-  ImplicitSurfaceAdaptiveConstraint.cpp
   initBeamAdapter.cpp
-  InterventionalRadiologyController.cpp
-  MultiAdaptiveBeamMapping.cpp
-  SutureController.cpp
-  UnbuiltGenericConstraintSolver.cpp
+  BeamInterpolation.cpp
   WireBeamInterpolation.cpp
-  WireRestShape.cpp
-  SteerableCatheter.cpp
   )
 
 set(README_FILE "BeamAdapter.txt" )
