@@ -41,6 +41,32 @@ namespace constraintset
 namespace _adaptivebeamlengthconstraint_
 {
 
+
+void AdaptiveBeamLengthConstraintResolution::init(int line, double** w, double* force)
+{
+    SOFA_UNUSED(w);
+
+    if(m_initF)
+        force[line] = *m_initF;
+}
+void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
+{
+    force[line] -= d[line] / w[line][line];
+    if(force[line] < 0)
+        force[line] = 0;
+}
+
+void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool convergence)
+{
+    SOFA_UNUSED(convergence) ;
+
+    if(m_initF)
+        *m_initF = force[line];
+    if(m_active)
+        *m_active = (force[line] != 0);
+}
+
+
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
 
@@ -53,13 +79,12 @@ using namespace sofa::helper;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
 
-//TODO(dmarchal 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamLengthConstraintClass = core::RegisterObject("TODO")
+int AdaptiveBeamLengthConstraintClass = core::RegisterObject("Constrain the length of a beam.")
         #ifdef SOFA_WITH_FLOAT
         .add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
         #endif
         #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >()
+        .add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >(true) // default template
         #endif
         ;
 

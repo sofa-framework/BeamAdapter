@@ -45,10 +45,20 @@ namespace constraintset
 namespace _adaptivebeamlengthconstraint_
 {
 
+using helper::ReadAccessor;
+using sofa::core::ConstVecCoordId;
+using std::stringstream;
+using core::ConstraintParams;
+using defaulttype::BaseVector;
+using core::visual::VisualParams;
+
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : m_initF(initF), m_active(active) { nbLines = 1; }
+    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : m_initF(initF), m_active(active)
+    {
+        nbLines = 1;
+    }
     virtual void init(int line, double** w, double* force);
     virtual void resolution(int line, double** w, double* d, double* force);
     virtual void store(int line, double* force, bool convergence);
@@ -58,27 +68,6 @@ protected:
     bool*      m_active;
 };
 
-void AdaptiveBeamLengthConstraintResolution::init(int line, double** /*w*/, double* force)
-{
-    if(m_initF)
-        force[line] = *m_initF;
-}
-void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
-{
-    force[line] -= d[line] / w[line][line];
-    if(force[line] < 0)
-        force[line] = 0;
-}
-
-void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool convergence)
-{
-    SOFA_UNUSED(convergence) ;
-
-    if(m_initF)
-        *m_initF = force[line];
-    if(m_active)
-        *m_active = (force[line] != 0);
-}
 
 template<class DataTypes>
 AdaptiveBeamLengthConstraint<DataTypes>::AdaptiveBeamLengthConstraint(TypedMechanicalState* object)
@@ -114,9 +103,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::internalInit()
     /// We search for the closest segment, on which to project each point
     /// Convention : object1 is the beam model, object2 is the list of point constraints
     if(!m_interpolation.get())
-    {
         return;
-    }
 }
 
 template<class DataTypes>
@@ -271,8 +258,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
             }
             else
             {
-                dmsg_info()
-                        <<" beam "<<b<<" case 2 (b) detected "<<rest_length*alarmLength<<" > ?"<<length<<" or n0="<<n0<<" ==? "<<"n1="<<n1 ;
+                dmsg_info() <<" beam "<<b<<" case 2 (b) detected "<<rest_length*alarmLength<<" > ?"<<length<<" or n0="<<n0<<" ==? "<<"n1="<<n1 ;
             }
         }
     }
@@ -282,8 +268,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
     interpolation->getNodeIndices(b, n0, n1);
     if(prev_stretch) /// case 1(d)
     {
-        dmsg_info()
-                <<" case 1 (d) detected on the last beam" ;
+        dmsg_info() <<" case 1 (d) detected on the last beam" ;
 
         /// store the information of the beginning of the new interval
         /// -> it corresponds to the position of node 0 of the beam
@@ -312,7 +297,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams* cParams, DataMatrixDeriv &c_d,
+void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams* cParams, DataMatrixDeriv &c_d,
                                                                     unsigned int &constraintId, const DataVecCoord & x_d)
 {
     SOFA_UNUSED(cParams) ;
@@ -324,8 +309,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
     m_nbConstraints = 0;
     m_cid = constraintId;
 
-    helper::ReadAccessor<Data<VecCoord> > x = this->mstate->read(sofa::core::ConstVecCoordId::position()) ;
-    helper::ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(sofa::core::ConstVecCoordId::freePosition()) ;
+    ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
 
     MatrixDeriv& c = *c_d.beginEdit();
 
@@ -334,7 +319,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 
     if( this->f_printLog.getValue())
     {
-        std::stringstream tmp;
+        stringstream tmp;
         for (unsigned int i=0; i<m_constraintIntervals.size();i++)
         {
             tmp <<"constraint["<<i<<"] between pos: "<<m_constraintIntervals[i].posBegin<<" and pos: "<<m_constraintIntervals[i].posEnd << msgendl ;
@@ -364,11 +349,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
         Vec3 lever0 = x[n0].getOrientation().rotate( m_constraintIntervals[i].dof_H_begin.getOrigin() );
         Vec3 lever1 = x[n1].getOrientation().rotate( m_constraintIntervals[i].dof_H_end.getOrigin()  );
 
-        dmsg_info_when(lever0.norm() > 0.0001)
-                << " lever0 ="<<lever0<<" dir ="<<dir ;
-
-        dmsg_info_when(lever1.norm() > 0.0001)
-                <<" lever1 ="<<lever1<<" -dir ="<<-dir ;
+        dmsg_info_when(lever0.norm() > 0.0001) << " lever0 ="<<lever0<<" dir ="<<dir ;
+        dmsg_info_when(lever1.norm() > 0.0001) << " lever1 ="<<lever1<<" -dir ="<<-dir ;
 
         MatrixDerivRowIterator c_it = c.writeLine(m_cid + m_nbConstraints);
 
@@ -383,7 +365,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const core::
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const core::ConstraintParams*, defaulttype::BaseVector *v,
+void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const ConstraintParams*, BaseVector *v,
                                                                      const DataVecCoord &, const DataVecDeriv &)
 {
     unsigned int nb = m_violations.size();
@@ -394,7 +376,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const core:
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab,
+void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab,
                                                                       unsigned int& offset)
 {
     unsigned int nb = m_violations.size();
@@ -405,9 +387,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vecto
     }
 }
 
-
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
+void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
 #ifndef SOFA_NO_OPENGL
     if (!vparams->displayFlags().getShowInteractionForceFields())
