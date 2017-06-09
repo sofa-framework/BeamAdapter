@@ -8,35 +8,6 @@ set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
-  constraint/AdaptiveBeamConstraint.h
-  constraint/AdaptiveBeamConstraint.inl
-  constraint/AdaptiveBeamLengthConstraint.h
-  constraint/AdaptiveBeamLengthConstraint.inl
-  constraint/ImplicitSurfaceAdaptiveConstraint.h
-  constraint/ImplicitSurfaceAdaptiveConstraint.inl
-
-  controller/AdaptiveBeamController.h
-  controller/AdaptiveBeamController.inl
-  controller/InterventionalRadiologyController.h
-  controller/InterventionalRadiologyController.inl
-  controller/SutureController.h
-  controller/SutureController.inl
-
-  engine/WireRestShape.h
-  engine/WireRestShape.inl
-  engine/SteerableCatheter.h
-  engine/SteerableCatheter.inl
-
-  forcefield/AdaptiveBeamForceFieldAndMass.h
-  forcefield/AdaptiveBeamForceFieldAndMass.inl
-
-  mapping/AdaptiveBeamMapping.h
-  mapping/AdaptiveBeamMapping.inl
-  mapping/MultiAdaptiveBeamMapping.h
-  mapping/MultiAdaptiveBeamMapping.inl
-
-  solver/UnbuiltGenericConstraintSolver.h
-
   #BaseRestShape.h
   #BaseRestShape.inl
   initBeamAdapter.h
@@ -48,29 +19,18 @@ set(HEADER_FILES
   )
 
 set(SOURCE_FILES
-  constraint/AdaptiveBeamConstraint.cpp
-  constraint/AdaptiveBeamLengthConstraint.cpp
-  constraint/ImplicitSurfaceAdaptiveConstraint.cpp
-
-  controller/AdaptiveBeamController.cpp
-  controller/InterventionalRadiologyController.cpp
-  controller/SutureController.cpp
-
-  engine/WireRestShape.cpp
-  engine/SteerableCatheter.cpp
-
-  forcefield/AdaptiveBeamForceFieldAndMass.cpp
-
-  mapping/AdaptiveBeamMapping.cpp
-  mapping/MultiAdaptiveBeamMapping.cpp
-
-  solver/UnbuiltGenericConstraintSolver.cpp
-
   #BaseRestShape.cpp
   initBeamAdapter.cpp
   BeamInterpolation.cpp
   WireBeamInterpolation.cpp
   )
+
+include(constraint/Constraint.cmake)
+include(controller/Controller.cmake)
+include(engine/Engine.cmake)
+include(forcefield/Forcefield.cmake)
+include(mapping/Mapping.cmake)
+include(solver/Solver.cmake)
 
 set(README_FILE "BeamAdapter.txt" )
 
