@@ -71,10 +71,10 @@ bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *c
 	// mechanical action executed from root node to propagate the constraints
 	simulation::MechanicalResetConstraintVisitor(cParams).execute(context);
 	// calling buildConstraintMatrix
-	//simulation::MechanicalAccumulateConstraint(&cparams /* PARAMS FIRST */, core::MatrixDerivId::constraintMatrix(), numConstraints).execute(context);
+    //simulation::MechanicalAccumulateConstraint(&cparams /* PARAMS FIRST */, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
 
-	MechanicalSetConstraint(cParams, core::MatrixDerivId::constraintMatrix(), numConstraints).execute(context);
-	MechanicalAccumulateConstraint2(cParams, core::MatrixDerivId::constraintMatrix()).execute(context);
+    MechanicalSetConstraint(cParams, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
+    MechanicalAccumulateConstraint2(cParams, core::MatrixDerivId::constraintJacobian()).execute(context);
 
     // suppress the constraints that are on DOFS currently concerned by projective constraint
     core::MechanicalParams mparams = core::MechanicalParams(*cParams);
