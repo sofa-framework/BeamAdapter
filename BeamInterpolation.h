@@ -65,6 +65,7 @@ namespace fem
 using sofa::helper::vector;
 using namespace sofa::core::topology;
 using namespace sofa::defaulttype;
+using sofa::helper::OptionsGroup;
 
 
 
@@ -136,6 +137,10 @@ public:
     , m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
     , m_curvAbsList(initData(&m_curvAbsList, "curvAbsList", ""))
     , m_beamCollision(initData(&m_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
+    , d_vecID(initData(&d_vecID, OptionsGroup(3,"current","free","rest" ), "vecID", "input pos and vel (current, free pos/vel, rest pos)" ))
+    , d_InterpolationInputs(initData(&d_InterpolationInputs, "InterpolationInputs", "vector containing (beamID, baryCoord)"))
+    , d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
+    , d_InterpolatedVel(initData(&d_InterpolatedVel, "InterpolatedVel", "output Interpolated Velocity"))
     , _topology(NULL)
     , _mstate(NULL)
     {
@@ -145,13 +150,17 @@ public:
         mStateNodes->setName("bezierNodes");
         this->addSlave(mStateNodes);
     }
-
     virtual ~BeamInterpolation(){}
 
     void init();
     void bwdInit();
     void reinit(){init(); bwdInit(); }
     void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
+
+    // In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
+    void storeResetState(){ updateInterpolation();}
+
+    void updateInterpolation();
 
     /**
      * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...)
@@ -435,6 +444,18 @@ protected :
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
     Data< sofa::helper::vector<int> > m_beamCollision;
+
+
+    /// INPUT / OUTPUT FOR DOING EXTERNAL COMPUTATION OF Beam Interpolation (use it as a kind of data engine)
+    ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
+    Data<helper::OptionsGroup > d_vecID;
+    ///Input 2. Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
+    Data< vector< Vec2 > > d_InterpolationInputs;
+
+    ///Output
+    Data< VecCoord > d_InterpolatedPos;
+    Data< VecDeriv > d_InterpolatedVel;
+
 
 
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
