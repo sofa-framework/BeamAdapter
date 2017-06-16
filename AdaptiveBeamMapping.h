@@ -206,7 +206,7 @@ public:
 
     const vector<PosPointDefinition>& getPointBeamDistribution() const {return m_pointBeamDistribution;}
 
-protected:
+
 
     ////////////////////////// Inherited attributes ////////////////////////////
     /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
@@ -216,6 +216,8 @@ protected:
     using Mapping<TIn, TOut>::toModel ;
     using Mapping<TIn, TOut>::fromModel ;
     ////////////////////////////////////////////////////////////////////////////
+
+ protected:
 
     TopologyContainer* m_topology;
 
