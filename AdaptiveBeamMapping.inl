@@ -460,12 +460,20 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     bool curvAbs = this->d_useCurvAbs.getValue();
     if (curvAbs)
     {
-        for (unsigned int i=0; i<pts.size()-1; i++)
+        int cpt=0;
+        std::stringstream tmp;
+        for (unsigned int i=0; cpt < 10 && i<pts.size()-1; i++)
         {
-
-            // TODO : really necessary ?
             if( pts[i][0]>pts[i+1][0])
-                sout<<" when using useCurvAbs==true, points must be sorted according to their curvAbs "<<sendl;
+            {
+                tmp << "invalid ordering at index: " << i << " : " << pts[i][0] << " > " << pts[i][1] << msgendl ;
+                cpt++;
+            }
+        }
+        if(cpt>=10)
+        {
+            msg_warning() <<" when using useCurvAbs==true, points must be sorted according to their curvAbs: " << msgendl
+                          << tmp.str() ;
         }
     }
 
