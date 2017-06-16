@@ -159,7 +159,6 @@ public:
 
     // In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
     void storeResetState(){ updateInterpolation();}
-
     void updateInterpolation();
 
     /**
@@ -171,8 +170,6 @@ public:
 
     unsigned int getNumBeamsNotUnderControl(){return this->_numBeamsNotUnderControl;}
     unsigned int getNumBeams(){return this->m_edgeList.getValue().size();}
-
-//	VecElementID &getEdgeList(){return this->Edge_List;}
 
     void getAbsCurvXFromBeam(int beam, Real& x_curv);
     void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
@@ -263,14 +260,11 @@ public:
     {
         if (this->_mstate==NULL)
         {
-            serr << "WARNING no _mstate found" << sendl;
+            msg_warning() << "No Mechanical state found";
             return 0 ;
         }
         else
-                {
-//                    std::cout<<" get mstate named "<<this->_mstate->name<<"  size ="<<this->_mstate->getSize()<<std::endl;
             return this->_mstate->getSize();
-        }
     }
 
     struct BeamSection{
@@ -312,9 +306,12 @@ public:
 
     virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
 
-    virtual void getSamplingParameters(helper::vector<Real>& /*xP_noticeable*/, helper::vector< int>& /*nbP_density*/)
+    virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector< int>& nbP_density)
     {
-        serr<<"getSamplingParameters is not implemented when _restShape== NULL : TODO !! "<<sendl;
+        SOFA_UNUSED(xP_noticeable);
+        SOFA_UNUSED(nbP_density);
+
+        dmsg_warning() <<"getSamplingParameters is not implemented when _restShape== NULL : TODO !! ";
     }
 
     virtual Real getRestTotalLength()
@@ -328,8 +325,10 @@ public:
         return le;
     }
 
-    virtual void getCollisionSampling(Real &dx, const Real& /*x_localcurv_abs*/)
+    virtual void getCollisionSampling(Real &dx, const Real& x_localcurv_abs)
     {
+        SOFA_UNUSED(x_localcurv_abs);
+
         unsigned int numLines = 30;
         dx = getRestTotalLength()/numLines;
     }
@@ -341,8 +340,12 @@ public:
     }
 
 
-    virtual void getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
+    virtual void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson)
     {
+        SOFA_UNUSED(beamId);
+        SOFA_UNUSED(youngModulus);
+        SOFA_UNUSED(x_curv);
+
         youngModulus = (Real) defaultYoungModulus.getValue();
         cPoisson     = (Real) 0.4;
     }
