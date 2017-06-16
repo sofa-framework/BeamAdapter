@@ -88,7 +88,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
     VecCoord& out = *dOut.beginEdit();
     if(!isBarycentricMapping)
         out.resize(_xPointList.size());
-    else if((int )out.size() != this->getMechTo()[0]->getSize())
+    else if(out.size() != this->getMechTo()[0]->getSize())
         out.resize(this->getMechTo()[0]->getSize());
     dOut.endEdit();
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
@@ -168,9 +168,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
     sofa::helper::vector<int> removeEdgeAtPoint;
 
     // 1. get the new controls
- //   std::cout<<" _xPointList before "<<_xPointList<<std::endl;
     m_ircontroller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
- //   std::cout<<" _xPointList after "<<_xPointList<<std::endl;
 
     if(!isBarycentricMapping)
     {
@@ -185,15 +183,16 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         {
             pointsList[i] = m_subMappingList[i]->d_points.beginEdit();
             pointsList[i]->clear();
-            m_subMappingList[i]->clearidPointSubMap();
+            m_subMappingList[i]->clearIdPointSubMap();
         }
 
         for (unsigned int i=0; i< _xPointList.size(); i++)
         {
             unsigned int  id = _idm_instrumentList[i];
             pointsList[ id ]->push_back( Vec3( _xPointList[i], 0, 0) );
-            m_subMappingList[id]->addidPointSubMap(i);
+            m_subMappingList[id]->addIdPointSubMap(i);
         }
+
         for (unsigned int i=0; i<m_subMappingList.size(); i++)
         {
             m_subMappingList[i]->d_points.endEdit();
@@ -354,7 +353,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::bwdInit()
 
     for (unsigned int i=0; i<m_instrumentList.size(); i++)
     {
-        m_subMappingList[i]->setuseCurvAbs(this->useCurvAbs.getValue());
+        m_subMappingList[i]->setUseCurvAbs(this->useCurvAbs.getValue());
         m_subMappingList[i]->setName(" SubMapping - " + m_instrumentList[i]->getName() );
         m_subMappingList[i]->bwdInit();//////////////////////////////////////////////////
     }

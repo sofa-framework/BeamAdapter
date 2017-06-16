@@ -47,6 +47,8 @@ namespace component
 namespace engine
 {
 
+namespace _wirerestshape_
+{
 using namespace sofa::defaulttype;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
@@ -75,6 +77,7 @@ template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3fTypes>;
 template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3dTypes>;
 #endif
 
+} // namespace _wirerestshape_
 
 }// namespace engine
 

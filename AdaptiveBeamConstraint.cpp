@@ -23,11 +23,11 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include "AdaptiveBeamConstraint.inl"
-
-#include <sofa/defaulttype/Vec3Types.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
+#include <sofa/defaulttype/Vec3Types.h>
+
+#include "AdaptiveBeamConstraint.inl"
 
 namespace sofa
 {

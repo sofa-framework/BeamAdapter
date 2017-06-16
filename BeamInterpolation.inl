@@ -551,6 +551,8 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
 
+
+
     if(straight.getValue())
     {
         // the beam is straight: local is in the middle of local0 and local1
@@ -579,15 +581,23 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
             Transform global_H_local_0 = global_H_DOF0*DOF0_H_local0;
             Transform global_H_local_1 = global_H_DOF1*DOF1_H_local1;
 
-            Transform global_H_local_middle;
 
-            Vec3 result = global_H_local_0.getOrigin() * 0.5 + global_H_local_1.getOrigin() * 0.5;
+            Transform global_H_local_middle;
+            Real baryX = 0.5;
+            Real L = this->getLength(edgeInList);
+
+            this->InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
+
+
+          
+            /*Vec3 result = global_H_local_0.getOrigin() * 0.5 + global_H_local_1.getOrigin() * 0.5;
             Quat slerp;
             slerp.slerp( global_H_local_0.getOrientation(), global_H_local_1.getOrientation(), 0.5, true );
             slerp.normalize();
 
             global_H_local_middle.setOrigin(result);
             global_H_local_middle.setOrientation(slerp);
+                    */
 
             local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
             local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
@@ -961,6 +971,115 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
 
 }
 
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::updateInterpolation(){
+
+    // this function allow to use BeamInterpolation using data (TODO: see if it could fall into engine concept)
+    // inputs :
+    // -   1.Data<helper::OptionsGroup > d_vecID;
+    //         VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
+    //
+    // -   2. Data< vector< Vec2 > > d_InterpolationInputs;
+    //         Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
+
+    // ouptus:
+    // -   1. d_InterpolatedPos  => result interpolate the position (6 D0Fs type rigid: position/quaterion)
+    // -   2. d_InterpolatedVel  => result interpolate the velocities (linear velocity / angular velocity)
+
+
+    bool debug=true;
+
+    if (debug)
+        std::cout<<"entering updateInterpolation"<<std::endl;
+
+    const vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
+    unsigned int numInterpolatedPositions = interpolationInputs.size();
+
+
+    VecCoord &interpolatedPos= (*d_InterpolatedPos.beginEdit());
+    VecDeriv &interpolatedVel = (*d_InterpolatedVel.beginEdit());
+
+    interpolatedPos.resize(numInterpolatedPositions);
+    interpolatedVel.resize(numInterpolatedPositions);
+
+
+
+    ///////// select the input position / velocity DATA /////
+    if (debug)
+        std::cout<<"select the input position  "<<"  selected Item : "<<d_vecID.getValue().getSelectedItem() << std::endl;
+
+    const Data< VecCoord > *x = NULL;
+    //const Data< VecDeriv > *v;
+    bool computeVel = true;
+    if(d_vecID.getValue().getSelectedItem() == "current")
+    {
+        std::cout<<" position " << std::endl;
+        std::cout<< "      ="<< _mstate->read( core::ConstVecCoordId::position() )->getValue( )<<std::endl;
+        x=_mstate->read( core::ConstVecCoordId::position() );
+        //v=_mstate->read( core::VecDerivId::velocity() ) ;
+    }
+    else if(d_vecID.getValue().getSelectedItem() == "free")
+    {
+        x=_mstate->read( core::ConstVecCoordId::freePosition() ) ;
+        //v=_mstate->read( core::VecDerivId::freeVelocity() ) ;
+    }
+    else // rest position
+    {
+        x=_mstate->read( core::ConstVecCoordId::restPosition() ) ;
+        computeVel = false;
+
+    }
+
+    if (debug)
+        std::cout<<"selected Item : "<<d_vecID.getValue().getSelectedItem()<<" compute Vel"<< computeVel <<std::endl;
+
+
+    for (unsigned int i=0; i<numInterpolatedPositions; i++)
+    {
+        unsigned int numBeam =  (unsigned int) interpolationInputs[i][0];
+        Real baryCoord= interpolationInputs[i][1];
+
+
+
+
+        // convert position (RigidTypes) in Transform
+        Transform global_H_local0, global_H_local1;
+        this->computeTransform2(numBeam, global_H_local0, global_H_local1, x->getValue() );
+
+        // compute the length of the spline
+        Vec3 P0,P1,P2,P3;
+        this->getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
+        Real length;
+        this->computeActualLength(length,P0,P1,P2,P3);
+
+        // get the result of the transform:
+        Transform global_H_localResult;
+
+
+        if(computeVel)
+        {
+            //this->InterpolateTransformAndVelUsingSpline(global_H_localResult, baryCoord, );
+            this->InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+        }
+        else
+        {
+            this->InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+        }
+
+
+
+        // assign the result in the output data
+        interpolatedPos[i].getCenter() = global_H_localResult.getOrigin();
+        interpolatedPos[i].getOrientation() = global_H_localResult.getOrientation();
+
+
+
+    }
+    d_InterpolatedPos.endEdit();
+    d_InterpolatedVel.endEdit();
+
+}
 
 /// InterpolateTransformUsingSpline
 /// This function provide an interpolation of a frame that is placed between node0 and node1
