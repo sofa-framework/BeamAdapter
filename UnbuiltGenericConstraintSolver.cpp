@@ -68,13 +68,13 @@ bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *c
     unsigned int numConstraints = 0;
 
     sofa::helper::AdvancedTimer::stepBegin("Accumulate Constraint");
-    // mechanical action executed from root node to propagate the constraints
-    simulation::MechanicalResetConstraintVisitor(cParams).execute(context);
-    // calling buildConstraintMatrix
-    //simulation::MechanicalAccumulateConstraint(&cparams /* PARAMS FIRST */, core::MatrixDerivId::constraintMatrix(), numConstraints).execute(context);
+	// mechanical action executed from root node to propagate the constraints
+	simulation::MechanicalResetConstraintVisitor(cParams).execute(context);
+	// calling buildConstraintMatrix
+    //simulation::MechanicalAccumulateConstraint(&cparams /* PARAMS FIRST */, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
 
-    MechanicalSetConstraint(cParams, core::MatrixDerivId::holonomicC(), numConstraints).execute(context);
-    MechanicalAccumulateConstraint2(cParams, core::MatrixDerivId::holonomicC()).execute(context);
+    MechanicalSetConstraint(cParams, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
+    MechanicalAccumulateConstraint2(cParams, core::MatrixDerivId::constraintJacobian()).execute(context);
 
     // suppress the constraints that are on DOFS currently concerned by projective constraint
     core::MechanicalParams mparams = core::MechanicalParams(*cParams);
