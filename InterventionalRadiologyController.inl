@@ -398,7 +398,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             this->controlledInstrument.setValue(0);
             break;
 
-        case 'A':
+        case 18: // gauche = 18
             {
 
                 int id = controlledInstrument.getValue();
@@ -408,7 +408,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
 
             }
             break;
-        case 'E':
+        case 20: // droite = 20
             {
 
                 int id = controlledInstrument.getValue();
@@ -419,7 +419,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             }
             break;
 
-        case '+':
+        case 19: // fleche haut = 19
             {
                 int id = controlledInstrument.getValue();
                 sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
@@ -443,7 +443,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             }
             break;
 
-        case '-':
+        case 21: // bas = 21
             {
                 int id = controlledInstrument.getValue();
                 sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
