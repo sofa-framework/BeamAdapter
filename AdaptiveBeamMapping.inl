@@ -473,7 +473,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     {
         int cpt=0;
         std::stringstream tmp;
-        for (unsigned int i=0; cpt < 10 && i<pts.size()-1; i++)
+        for (int i=0; cpt < 10 && i<((int)pts.size())-1; i++)
         {
             if( pts[i][0]>pts[i+1][0])
             {
