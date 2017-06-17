@@ -18,7 +18,7 @@
 
 	<Node name='topoLines_cath'>
 		<WireRestShape template='Rigid' printLog='0' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
-					    densityOfBeams='40 10' numEdges='200' numEdgesCollis='40 20'  youngModulus='10000' youngModulusExtremity='10000'/> <!-- silicone -->		
+					    densityOfBeams='40 10' numEdges='200' numEdgesCollis='40 20'  youngModulus='10000' youngModulusExtremity='10000' /> <!-- silicone -->		
 		<EdgeSetTopologyContainer name='meshLinesCath' />
 		<EdgeSetTopologyModifier   name='Modifier' />
 		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
@@ -36,7 +36,7 @@
 	</Node>		
 	<Node name='topoLines_coils'>
 		<WireRestShape template='Rigid' printLog='0' name='CoilRestShape' length='600.0'  straightLength='540.0' spireDiameter='7' spireHeight='5.0'
-						densityOfBeams='40 20' numEdges='400' numEdgesCollis='30 30'  youngModulus='168000' youngModulusExtremity='168000'/>
+						densityOfBeams='40 20' numEdges='400' numEdgesCollis='30 30'  youngModulus='168000' youngModulusExtremity='168000' edge2QuadMappingName='../InstrumentCombined/VisuCoils/topoMap'/>
 		<EdgeSetTopologyContainer name='meshLinesCoils' />
 		<EdgeSetTopologyModifier   name='Modifier' />
 		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
@@ -121,7 +121,7 @@
 			<QuadSetTopologyModifier   name='Modifier' />
 			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
 			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
-			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='0.3'  input='@../../topoLines_coils/meshLinesCoils' output='@ContainerCoils'  flipNormals='true' listening='true' /> 
+			<Edge2QuadTopologicalMapping name='topoMap' nbPointsOnEachCircle='10' radius='0.3'  input='@../../topoLines_coils/meshLinesCoils' output='@ContainerCoils'  flipNormals='true' listening='true' /> 
 			<AdaptiveBeamMapping  name='visuMapCoils' useCurvAbs='1' printLog='0' interpolation='@../InterpolCoils' input='@../DOFs' output='@Quads' isMechanical='false' />
 			<Node name='VisuOgl'>
 				<OglModel name='Visual' color='0.2 0.8 0.2'  material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20' quads='@../ContainerCoils.quads'/>
