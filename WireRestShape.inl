@@ -104,6 +104,7 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
   , d_brokenIn2(initData(&d_brokenIn2, (bool)false, "brokenIn2", ""))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
+  , d_edge2QuadMapStr(initData(&d_edge2QuadMapStr, "edge2QuadMappingName", "when topological change (cutting the wire), link to the topologicalMapping"))
   , edge2QuadMap(nullptr)
 {
     d_spireDiameter.setGroup("Procedural");
@@ -203,21 +204,6 @@ void WireRestShape<DataTypes>::init()
     for (int i=0; i<d_numEdges.getValue(); i++)
         _topology->addEdge(i,i+1);
 
-    //// get the possible Topological mapping (with tags)
-    const TagSet &tags = this->getTags() ;
-
-    //TODO(dmarchal): replace with for each loop.
-    for (TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
-    {
-        dmsg_error() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
-        dynamic_cast<BaseContext *>(this->getContext())->get( edge2QuadMap , *it, BaseContext::SearchRoot );
-    }
-
-
-    //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    if(!edge2QuadMap)
-        msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
-
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
@@ -298,6 +284,14 @@ void WireRestShape<DataTypes>::init()
 template <class DataTypes>
 void WireRestShape<DataTypes>::bwdInit()
 {
+    const std::string path = d_edge2QuadMapStr.getValue();
+    if (path.size() > 0)
+    {
+        this->getContext()->get(edge2QuadMap ,path);
+
+        if(edge2QuadMap==nullptr)
+            msg_error()<< "No Edge2QuadTopologicalMapping map with the path :"<<path<<sendl;
+    }
 }
 
 template <class DataTypes>

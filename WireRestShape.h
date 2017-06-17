@@ -203,6 +203,8 @@ protected:
      /// broken in 2 case
      Data<bool> d_brokenIn2;
      Data<bool>	d_drawRestShape;
+     Data<std::string > d_edge2QuadMapStr;
+
 
      /// Data required for the File loading
      vector<Vec3> 		m_localRestPositions;
