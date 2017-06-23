@@ -92,8 +92,15 @@ AdaptiveBeamConstraint<DataTypes>::AdaptiveBeamConstraint()
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::init()
 {
-    assert(mstate1);
-    assert(mstate2);
+    PairInteractionConstraint<DataTypes>::init();
+
+    if(mstate1 == nullptr || mstate2 == nullptr)
+        msg_error() << "This component needs to be linked to two MechanicalObject.";
+
+    if(!m_interpolation.get())
+        msg_error() << "This component needs to be linked to an Interpolation component.";
+
+    internalInit();
 }
 
 template<class DataTypes>
@@ -105,27 +112,23 @@ void AdaptiveBeamConstraint<DataTypes>::reset()
 template<class DataTypes>
 void AdaptiveBeamConstraint<DataTypes>::internalInit()
 {
-    // TODO(eulalie): I'm not sure that this comment belongs here?
     // We search for the closest segment, on which to project each point
     // Convention : object1 is the beam model, object2 is the list of point constraints
-
-    if(!m_interpolation.get())
-        return;
 
     ReadAccessor<Data<VecCoord> > x1 = mstate1->read(ConstVecCoordId::position()) ;
     ReadAccessor<Data<VecCoord> > x2 = mstate2->read(ConstVecCoordId::position()) ;
 
-    unsigned int m2 = x2.size();
+    unsigned int m2Size = x2.size();
     m_previousPositions.clear();
-    m_previousPositions.resize(m2);
+    m_previousPositions.resize(m2Size);
     m_projected.clear();
-    m_projected.resize(m2);
+    m_projected.resize(m2Size);
     m_displacements.clear();
-    m_displacements.resize(m2);
+    m_displacements.resize(m2Size);
 
     WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
 
-    for(unsigned int i=0; i<m2; i++)
+    for(unsigned int i=0; i<m2Size; i++)
     {
         Real r = -1;
         Vec3 pt = x2[i].getCenter();
