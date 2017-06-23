@@ -38,7 +38,6 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-
 namespace sofa
 {
 
@@ -48,11 +47,20 @@ namespace component
 namespace engine
 {
 
+namespace _wirerestshape_
+{
 using namespace sofa::defaulttype;
 
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(WireRestShape)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
+//TODO(damien 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireRestShapeClass = core::RegisterObject("")
 #ifdef SOFA_WITH_FLOAT
 .add< WireRestShape<Rigid3fTypes> >()
@@ -69,6 +77,7 @@ template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3fTypes>;
 template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3dTypes>;
 #endif
 
+} // namespace _wirerestshape_
 
 }// namespace engine
 

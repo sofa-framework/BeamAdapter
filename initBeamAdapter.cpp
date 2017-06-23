@@ -79,21 +79,21 @@ namespace component
 
 	const char* getModuleComponentList()
 	{
-		return	" WireRestShape"
-				" BeamInterpolation"
-				" WireBeamInterpolation"
-				" AdaptiveBeamForceFieldAndMass"
-				" AdaptiveBeamController"
-				" InterventionalRadiologyController"
-				" AdaptiveBeamMapping"
-				" MultiAdaptiveBeamMapping"
-				" AdaptiveBeamLengthConstraint";
+        return	"AdaptiveBeamConstraint"
+                "AdaptiveBeamController"
+                "AdaptiveBeamForceFieldAndMass"
+                "AdaptiveBeamLengthConstraint"
+                "AdaptiveBeamMapping"
+                "BeamInterpolation"
+                "InterventionalRadiologyController"
+                "MultiAdaptiveBeamMapping"
+                "SteerableCatheter"
+                "SutureController"
+                "UnbuiltGenericConstraintSolver"
+                "WireBeamInterpolation"
+                "WireRestShape";
 	}
-
-
-
 } 
-
 } 
 
 
@@ -102,14 +102,14 @@ SOFA_LINK_CLASS(AdaptiveBeamController)
 SOFA_LINK_CLASS(AdaptiveBeamForceFieldAndMass)
 SOFA_LINK_CLASS(AdaptiveBeamLengthConstraint)
 SOFA_LINK_CLASS(AdaptiveBeamMapping)
-// SOFA_LINK_CLASS(BaseRestShape)
 SOFA_LINK_CLASS(BeamInterpolation)
 SOFA_LINK_CLASS(InterventionalRadiologyController)
 SOFA_LINK_CLASS(MultiAdaptiveBeamMapping)
+SOFA_LINK_CLASS(SteerableCatheter)
 SOFA_LINK_CLASS(SutureController)
+SOFA_LINK_CLASS(UnbuiltGenericConstraintSolver)
 SOFA_LINK_CLASS(WireBeamInterpolation)
 SOFA_LINK_CLASS(WireRestShape)
-
 
 #ifdef SOFA_HAVE_SOFAEVE
     SOFA_LINK_CLASS(ImplicitSurfaceAdaptiveConstraint)

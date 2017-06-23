@@ -177,9 +177,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::handleTopologyChange()
     #endif
 
     core::topology::BaseMeshTopology* topology = this->mstate2->getContext()->getMeshTopology();
-    std::list<const core::topology::TopologyChange *>::const_iterator itBegin=topology->beginChange();
-    std::list<const core::topology::TopologyChange *>::const_iterator itEnd=topology->endChange();
-    std::list<const core::topology::TopologyChange *>::const_iterator it;
+    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator itBegin=topology->beginChange();
+    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator itEnd=topology->endChange();
+    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator it;
     listProbe.handleTopologyEvents(itBegin,itEnd);
 
     #ifdef DEBUG_TOPO_DATA

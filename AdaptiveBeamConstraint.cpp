@@ -22,11 +22,12 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include "AdaptiveBeamConstraint.inl"
-
-#include <sofa/defaulttype/Vec3Types.h>
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
+#include <sofa/defaulttype/Vec3Types.h>
+
+#include "AdaptiveBeamConstraint.inl"
 
 namespace sofa
 {
@@ -37,27 +38,73 @@ namespace component
 namespace constraintset
 {
 
-using namespace sofa::defaulttype;
-using namespace sofa::helper;
+namespace _adaptivebeamconstraint_
+{
 
+AdaptiveBeamConstraintResolution::AdaptiveBeamConstraintResolution(double* sliding)
+    : m_slidingDisp(sliding)
+{
+    nbLines = 3;
+}
+
+void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
+{
+    SOFA_UNUSED(dfree);
+    resolution(line,w,d,force);
+}
+
+void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force)
+{
+    double f[2];
+    f[0] = force[line]; f[1] = force[line+1];
+
+    force[line] -= d[line] / w[line][line];
+    d[line+1] += w[line+1][line] * (force[line]-f[0]);
+    force[line+1] -= d[line+1] / w[line+1][line+1];
+    d[line+2] += w[line+2][line] * (force[line]-f[0]) + w[line+2][line+1] * (force[line+1]-f[1]);
+}
+
+void AdaptiveBeamConstraintResolution::init(int line, double** w, double* force)
+{
+    SOFA_UNUSED(force);
+    m_slidingW = w[line+2][line+2];
+}
+
+void AdaptiveBeamConstraintResolution::store(int line, double* force, bool convergence)
+{
+    SOFA_UNUSED(convergence);
+    if(m_slidingDisp)
+        *m_slidingDisp = force[line+2] * m_slidingW;
+}
+
+
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamConstraintClass = core::RegisterObject("TODO")
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamConstraint<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamConstraint<Rigid3dTypes> >()
-#endif
-;
+int AdaptiveBeamConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
+        #ifdef SOFA_WITH_FLOAT
+        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes> >()
+        #endif
+        #ifdef SOFA_WITH_DOUBLE
+        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes> >()
+        #endif
+        ;
 
 #ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamConstraint<Rigid3fTypes>;
+template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes>;
 #endif
-#ifdef SOFA__WITH_DOUBLE
-template class AdaptiveBeamConstraint<Rigid3dTypes>;
+#ifdef SOFA_WITH_DOUBLE
+template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes>;
 #endif
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+} // namespace _adaptivebeamconstraint_
 
 } // namespace constraintset
 

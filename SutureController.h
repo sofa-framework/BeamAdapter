@@ -39,6 +39,7 @@
 
 #ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
+#include <sofa/helper/set.h>
 
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaMeshCollision/PointModel.h>
@@ -62,16 +63,18 @@ namespace topology
     class EdgeSetTopologyModifier;
 }
 
+/*
 namespace fem
 {
     template <class T>
     class WireBeamInterpolation;
 }
-
+*/
 
 namespace controller
 {
 
+using std::set ;
 
 /**
  * \class SutureController
@@ -110,7 +113,6 @@ public:
      * @name Point & Line Activer interface
      */
     //@{
-
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
         if (index >= (int)xAbs_collisionPoints_buf.size() || index < 0)
@@ -301,7 +303,7 @@ public:
     Data< Real > threshold;
     Data< Real > maxBendingAngle;
     Data< bool > useDummyController, fixRigidTransforms;
-    Data< std::set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
+    Data< set<Real> > m_rigidCurvAbs;	// Pairs (start - end)
     SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_adaptiveinterpolation;
 
     /////// for rigidity control
@@ -317,11 +319,8 @@ public:
     /////// for imposing nodes along the spline
     std::list< Real > listOfImposedNodesOnXcurv;
 
-
-//    sofa::helper::vector<Real> cutCurvAbs; // store the curv abs where the thread is cut
     Data< sofa::helper::vector<Real> > m_nodeCurvAbs;
     Data< sofa::helper::vector<Vec2> > m_curvatureList;
-
     Data< VecCoord > m_controlPoints;
 
     /////////// Interface for topology changes

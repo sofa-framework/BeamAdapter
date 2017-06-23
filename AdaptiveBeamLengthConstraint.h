@@ -25,14 +25,25 @@
 #ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H
 #define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H
 
-#include "WireBeamInterpolation.h"
-#include <sofa/core/behavior/Constraint.h>
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <iostream>
-#include <sofa/defaulttype/Vec.h>
-#include <map>
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#include <sofa/helper/map.h>
 
+#include <sofa/core/behavior/MechanicalState.h>
+#include <sofa/core/behavior/Constraint.h>
+#include <sofa/defaulttype/SolidTypes.h>
+#include <sofa/defaulttype/Vec.h>
+
+#include "WireBeamInterpolation.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Declarations
+////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace sofa
 {
 
@@ -41,124 +52,134 @@ namespace component
 
 namespace constraintset
 {
+
+/////////////////////////////////// private namespace pattern //////////////////////////////////////
+/// To avoid the lacking of names imported with with 'using' in the other's component namespace
+/// you should use a private namespace and "export" only this one in the public namespace.
+/// This is done at the end of this file, have a look if you are not used to this pattern.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace _adaptivebeamlengthconstraint_
+{
+using sofa::core::behavior::ConstraintResolution ;
+using sofa::core::behavior::Constraint ;
+using sofa::core::behavior::MechanicalState ;
+using sofa::core::ConstraintParams ;
+using sofa::core::objectmodel::Data ;
+using sofa::defaulttype::Vec ;
 using sofa::helper::vector;
+using sofa::defaulttype::SolidTypes;
+using sofa::defaulttype::BaseVector ;
+
+
+template<typename Real>
+class IntervalDefinition
+{
+public:
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef Vec<3, Real> Vec3;
+
+    /// definition of an interval which length is "constrained"
+    /// positions begin /  end of the interval
+    Vec3 posBegin, posEnd;
+
+    /// positions free : begin / end of the interval
+    Vec3 posFreeBegin, posFreeEnd;
+
+    /// index of the dofs: begin / end of the interval
+    unsigned int IdxBegin, IdxEnd;
+
+    /// transform from dof to begin/end of the interval
+    Transform dof_H_begin, dof_H_end;
+
+    /// rest length of the interval (if no stretching)
+    Real rest_length;
+
+    /// is it in elongation
+    bool active;
+} ;
 
 /*!
  * \class AdaptiveBeamLengthConstraint
+ *
+ * More informations about SOFA components:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamLengthConstraint : public core::behavior::Constraint<DataTypes>
+class AdaptiveBeamLengthConstraint : public Constraint<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamLengthConstraint,DataTypes), SOFA_TEMPLATE(sofa::core::behavior::Constraint,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamLengthConstraint,DataTypes),
+               SOFA_TEMPLATE(Constraint,DataTypes));
 
-	typedef typename DataTypes::VecCoord VecCoord;
-	typedef typename DataTypes::VecDeriv VecDeriv;
-	typedef typename DataTypes::MatrixDeriv MatrixDeriv;
-	typedef typename DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
-	typedef typename DataTypes::Coord Coord;
-	typedef typename DataTypes::Deriv Deriv;
-	typedef typename Coord::value_type Real;
-	typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-    typedef typename core::behavior::Constraint<DataTypes> Inherit;
-	typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
-	typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
-	typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
-	typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-	typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
-	typedef typename DataTypes::Coord::Pos Pos;
-	typedef typename DataTypes::Coord::Rot Rot;
-	typedef sofa::defaulttype::Vec<3, Real> Vec3;
-	typedef sofa::defaulttype::Vec<6, Real> Vec6;
-    typedef typename  std::map<Real, double>::iterator MapIterator;
+    typedef typename DataTypes::VecCoord VecCoord;
+    typedef typename DataTypes::VecDeriv VecDeriv;
+    typedef typename DataTypes::MatrixDeriv MatrixDeriv;
+    typedef typename DataTypes::MatrixDeriv::RowIterator MatrixDerivRowIterator;
+    typedef typename DataTypes::Coord Coord;
+    typedef typename DataTypes::Deriv Deriv;
+    typedef typename Coord::value_type Real;
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    typedef typename DataTypes::Coord::Pos Pos;
+    typedef typename DataTypes::Coord::Rot Rot;
+    typedef typename std::map<Real, double>::iterator MapIterator;
 
-protected:
-	
-	unsigned int cid;
-		
-	int nbConstraints; // number of constraints created
-	std::vector<Real> violations;
- //   std::vector<unsigned int> activated_beams;	// Not used ?
-	std::map<Real, double> prevForces;	// Map abscissa <-> previous constraint force
-
-    Data<Real> m_alarmLength, m_constrainedLength, m_maxBendingAngle;
-
-    SingleLink<AdaptiveBeamLengthConstraint<DataTypes>, fem::WireBeamInterpolation<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
-	
-	void internalInit();
-	
-    AdaptiveBeamLengthConstraint(MechanicalState* object = NULL)
-    : Inherit(object)
-	, m_alarmLength(initData(&m_alarmLength, (Real)1.02, "alarmLength", "Elongation before creating a constraint"))
-	, m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam"))
-    , m_maxBendingAngle(initData(&m_maxBendingAngle,  (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one constraint interval"))
-    , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-	{
-	}
-	
-    virtual ~AdaptiveBeamLengthConstraint()
-	{
-	}
+    typedef MechanicalState<DataTypes> TypedMechanicalState;
+    typedef Constraint<DataTypes> Inherit;
+    typedef Data<VecCoord>	 	  DataVecCoord;
+    typedef Data<VecDeriv> 		  DataVecDeriv;
+    typedef Data<MatrixDeriv>     DataMatrixDeriv;
+    typedef Vec<3, Real> Vec3;
+    typedef Vec<6, Real> Vec6;
 
 public:
-	virtual void reset();
-	
-	virtual void init();
-	
-	virtual  void buildConstraintMatrix(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, DataMatrixDeriv &c, unsigned int &cIndex, const DataVecCoord &x);
+    virtual void init() override ;
+    virtual void reset() override ;
+    virtual void draw(const core::visual::VisualParams* vparams) override ;
 
-	void getConstraintViolation(const core::ConstraintParams* cParams /* PARAMS FIRST =core::ConstraintParams::defaultInstance()*/, defaulttype::BaseVector *viol, const DataVecCoord &x,const DataVecDeriv &v);
 
-	virtual void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
+    virtual  void buildConstraintMatrix(const ConstraintParams* cParams,
+                                        DataMatrixDeriv &c, unsigned int &cIndex, const DataVecCoord &x) override ;
 
-	void draw(const core::visual::VisualParams* vparams);
+    virtual void getConstraintViolation(const ConstraintParams* cParams, BaseVector *viol,
+                                        const DataVecCoord &x,const DataVecDeriv &v) override ;
+
+    virtual void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+
+
+protected:
+    AdaptiveBeamLengthConstraint(TypedMechanicalState* object = nullptr) ;
+    virtual ~AdaptiveBeamLengthConstraint() ;
+
+    void internalInit();
+
+    unsigned int           m_cid {0} ;
+    int                    m_nbConstraints {0};
+    vector<Real>           m_violations;
+    std::map<Real, double> m_prevForces;	/// Map abscissa <-> previous constraint force
+
+    Data<Real>             m_alarmLength ;
+    Data<Real>             m_constrainedLength ;
+    Data<Real>             m_maxBendingAngle ;
+    SingleLink<AdaptiveBeamLengthConstraint<DataTypes>,
+               fem::WireBeamInterpolation<DataTypes>,
+               BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 private:
     void detectElongation(const VecCoord &x, const VecCoord& xfree);
-
-	typedef struct
-	{
-		// definition of an interval which length is "constrained"
-		// positions begin /  end of the interval
-		Vec3 posBegin, posEnd;
-
-		// positions free : begin / end of the interval
-		Vec3 posFreeBegin, posFreeEnd;
-
-		// index of the dofs: begin / end of the interval
-		unsigned int IdxBegin, IdxEnd;
-
-		// transform from dof to begin/end of the interval
-		Transform dof_H_begin, dof_H_end;
-
-		// rest length of the interval (if no stretching)
-		Real rest_length;
-
-		// is it in elongation
-		bool active;
-	} IntervalDefinition;
-
-    std::vector<IntervalDefinition> _constraintIntervals;
-
+    vector<IntervalDefinition<Real>>                                   m_constraintIntervals;
 };
 
-class AdaptiveBeamLengthConstraintResolution : public core::behavior::ConstraintResolution
-{
-public:
-	AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : _initF(initF), _active(active) { nbLines = 1; }
-	virtual void init(int line, double** /*w*/, double* force);
-	virtual void resolution(int line, double** w, double* d, double* force);
-	virtual void store(int line, double* force, bool /*convergence*/);
-	
-protected:
-	double* _initF;
-	bool* _active;
-};
 
-} // namespace constraintset
+} /// namespace _adaptivebeamlengthconstraint_
 
-} // namespace component
+using _adaptivebeamlengthconstraint_::AdaptiveBeamLengthConstraint ;
 
-} // namespace sofa
+} /// namespace constraintset
+
+} /// namespace component
+
+} /// namespace sofa
 
 #endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_H

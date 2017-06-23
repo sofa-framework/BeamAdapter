@@ -37,14 +37,15 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_INL
 #define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_INL
 
-#include "AdaptiveBeamController.h"
+
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
-//#include <BaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 
+#include "AdaptiveBeamController.h"
 
 
 namespace sofa
@@ -56,76 +57,99 @@ namespace component
 namespace controller
 {
 
+namespace _adaptivebeamcontroller_
+{
+
+using sofa::core::objectmodel::BaseContext ;
+
+//TODO(dmarchal 2017-05-17) to christian & euallie.
+//  This component seems specific to radiology instrument... but its name suggest a very generic behavior
+// (remove in 1 year if not answered).
 template <class DataTypes>
 AdaptiveBeamController<DataTypes>::AdaptiveBeamController()
-: m_adaptiveinterpolation(NULL)
-, m_interpolationPath(initData(&m_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
-, controlledInstrument(initData(&controlledInstrument, 0, "controlledInstrument", "provide the id of the interventional radiology instrument which is under control: press contr + number to change it"))
-, xtip(initData(&xtip,"xtip", "curvilinear abscissa of the tip of each interventional radiology instrument"))
-, rotationInstrument(initData(&rotationInstrument,"rotationInstrument", "angle of rotation for each interventional radiology instrument"))
-, step(initData(&step,(Real)0.1,"step","base step when changing beam length"))
-, angularStep(initData(&angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
-, speed(initData(&speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
-, startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-, threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
+    //TODO(dmarchal 2017-05-17) a Data<vector of string> is a weird beast. Have to write test to validate behavior (remove in 1 year if not done).
+    : d_interpolationPath(initData(&d_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
+    , d_controlledInstrument(initData(&d_controlledInstrument, 0, "controlledInstrument", "provide the id of the interventional radiology instrument which is under control: press contr + number to change it"))
+    , d_xtip(initData(&d_xtip,"xtip", "curvilinear abscissa of the tip of each interventional radiology instrument"))
+    , d_rotationInstrument(initData(&d_rotationInstrument,"rotationInstrument", "angle of rotation for each interventional radiology instrument"))
+    , d_step(initData(&d_step,(Real)0.1,"step","base step when changing beam length"))
+    , d_angularStep(initData(&d_angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
+    , d_speed(initData(&d_speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
+    , d_startingPos(initData(&d_startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
+    , d_threshold(initData(&d_threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
 {
-    _fixedConstraint = NULL;
-    this->dropCall = false;
 }
-
-
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::init()
 {
+    BaseContext* c = this->getContext();
 
-
-    ///////// get the Adaptive Interpolation component ///////
-    //std::vector<sofa::core::behavior::LinearSolver*> solvers;
-    core::objectmodel::BaseContext * c = this->getContext();
-
-    const helper::vector<std::string>& interpolName = m_interpolationPath.getValue();
+    const vector<std::string>& interpolName = d_interpolationPath.getValue();
     if (interpolName.empty()) {
         m_adaptiveinterpolation= c->get<BInterpolation>(core::objectmodel::BaseContext::Local);
     } else {
-
-        m_adaptiveinterpolation = c->get<BInterpolation>(m_interpolationPath.getValue()[0]);
+        m_adaptiveinterpolation = c->get<BInterpolation>(d_interpolationPath.getValue()[0]);
     }
 
-    if(m_adaptiveinterpolation==NULL)
+    if(m_adaptiveinterpolation==nullptr)
         serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
     else
         sout<<" interpolation named"<<m_adaptiveinterpolation->getName()<<" found (for "<<this->getName()<<")"<<sendl;
 
 
     //////// INIT:
+    m_xAbs_collisionPoints_buf.clear();
 
-    xAbs_collisionPoints_buf.clear();
-
-    if(speed.getValue()>0)
+    if(d_speed.getValue()>0)
     {
         FF=true;
         RW=false;
     }
 
-    _topology = this->getContext()->getMeshTopology();
+    m_topology = this->getContext()->getMeshTopology();
     this->f_listening.setValue(true);
 
     Inherit::init();
 
-
+    //TODO(dmarchal 2017-05-17) Please specify who will do that and when this will be done.
     // TODO : VERIFIER QUE LA TOPOLOGIE EST CELLE D'UN WIRE
-
 }
 
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::reinit()
 {
-    applyController();
-
+    AdaptiveBeamController<DataTypes>::applyController();
 }
 
+template <class DataTypes>
+bool AdaptiveBeamController<DataTypes>::activePoint(int index, core::CollisionModel *cm)
+{
+    SOFA_UNUSED(cm) ;
+
+    if (index >= (int)m_xAbs_collisionPoints_buf.size() || index<0)
+        return false;
+
+    if (m_xAbs_collisionPoints_buf[index]>10.0)
+        return true;
+
+    return false;
+}
+
+template <class DataTypes>
+bool AdaptiveBeamController<DataTypes>::activeLine(int index, core::CollisionModel *cm)
+{
+    SOFA_UNUSED(cm) ;
+
+    if ((index+1) >= (int)m_xAbs_collisionPoints_buf.size() || (index+1)<0)
+        return false;
+
+    if (m_xAbs_collisionPoints_buf[index+1]>10.0)
+        return true;
+
+    return false;
+}
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent *mev)
@@ -133,92 +157,87 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEve
     int PosX = mev->getPosX();
     int PosY = mev->getPosY();
 
-
     //Translation input
     Real PosYcorr = 0.0;
-    int idy = controlledInstrument.getValue();
-    sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+    int idy = d_controlledInstrument.getValue();
+    sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
     if (idy >= (int)x_instr_tip.size()){
         std::cerr<<"WARNING controlled Instument num "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
         idy=0;
     }
     PosYcorr = -PosY*0.2;
     x_instr_tip[idy] += PosYcorr;
-    this->xtip.endEdit();
-
-
+    this->d_xtip.endEdit();
 
     //Rotation input
     Real PosXcorr = 0.0;
-    int idx = controlledInstrument.getValue();
-    sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
+    int idx = d_controlledInstrument.getValue();
+    sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
     PosXcorr = PosX*0.015;
     rot_instrument[idx] += PosXcorr;
-
 }
 
-
+//TODO(dmarchal 2017-05-17) Christian & Eulalie, how can user know which key-mouse behavior he
+// can expect ? A kind a of getHelp function may be usefull for controllers ?
+// (remove in 1 year if not answered)
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::KeypressedEvent *kev)
 {
-
     ///////////////////////////////// Control keys for interventonal Radiology simulations:
     switch(kev->getKey())
     {
     case 'D':
-        this->dropCall = true;
+        this->m_dropCall = true;
         break;
 
     case '0':
-        this->controlledInstrument.setValue(0);
+        this->d_controlledInstrument.setValue(0);
         break;
 
     case 'A':
     {
-
-        int id = controlledInstrument.getValue();
-        sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
-        rot_instrument[id] += angularStep.getValue();
-        this->rotationInstrument.endEdit();
+        int id = d_controlledInstrument.getValue();
+        sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        rot_instrument[id] += d_angularStep.getValue();
+        this->d_rotationInstrument.endEdit();
 
     }
-    break;
+        break;
     case 'E':
     {
 
-        int id = controlledInstrument.getValue();
-        sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
-        rot_instrument[id] -= angularStep.getValue();
-        this->rotationInstrument.endEdit();
+        int id = d_controlledInstrument.getValue();
+        sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        rot_instrument[id] -= d_angularStep.getValue();
+        this->d_rotationInstrument.endEdit();
 
     }
-    break;
-
+        break;
     case '+':
     {
-        int id = controlledInstrument.getValue();
-        sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+        int id = d_controlledInstrument.getValue();
+        sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
         if (id >= (int)x_instr_tip.size()){
             std::cerr<<"WARNING controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
             id=0;
         }
-        x_instr_tip[id] += step.getValue();
-        this->xtip.endEdit();
+        x_instr_tip[id] += d_step.getValue();
+        this->d_xtip.endEdit();
     }
-    break;
+        break;
 
     case '-':
     {
-        int id = controlledInstrument.getValue();
-        sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+        int id = d_controlledInstrument.getValue();
+        sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
         if (id >= (int)x_instr_tip.size()){
             std::cerr<<"WARNING controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
             id=0;
         }
-        x_instr_tip[id] -= step.getValue();
-        this->xtip.endEdit();
+        x_instr_tip[id] -= d_step.getValue();
+        this->d_xtip.endEdit();
     }
-    break;
+        break;
 
     case '*':
     {
@@ -232,7 +251,7 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
             FF = true;
         }
     }
-    break;
+        break;
 
     case '/':
     {
@@ -245,12 +264,9 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
             RW = true;
         }
     }
-    break;
-
+        break;
     }
-
 }
-
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
@@ -262,7 +278,6 @@ void AdaptiveBeamController<DataTypes>::onBeginAnimationStep(const double /*dt*/
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::applyController()
 {
-
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     Data<VecDeriv>* datav = this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
     VecCoord& x = *datax->beginEdit();
@@ -289,7 +304,7 @@ void AdaptiveBeamController<DataTypes>::applyController()
         Vec3 P0P1,P1P2,P2P3;
         P0P1=P1-P0; P1P2=P2-P1; P2P3=P3-P2;
         Real l =  P0P1.norm() + P1P2.norm() + P2P3.norm();
-                l+= 30.0*fabs(l-m_adaptiveinterpolation->getLength(b));
+        l+= 30.0*fabs(l-m_adaptiveinterpolation->getLength(b));
 
         totalSplineLength += l;
         splineAbs.push_back(totalSplineLength);
@@ -307,23 +322,19 @@ void AdaptiveBeamController<DataTypes>::applyController()
             j++;
 
         // x_spline est entre splineAbs[j-1] et splineAbs[j]
-                                                          Real ratio = (x_spline - splineAbs[j-1]) / (splineAbs[j] - splineAbs[j-1]);
+        Real ratio = (x_spline - splineAbs[j-1]) / (splineAbs[j] - splineAbs[j-1]);
 
-                                                          if (ratio<0 || ratio >1 )
-                                                              std::cerr<<"WARNING ratio = "<<ratio<<" while it should be between 0 and 1 "<<std::endl;
+        if (ratio<0 || ratio >1 )
+            std::cerr<<"WARNING ratio = "<<ratio<<" while it should be between 0 and 1 "<<std::endl;
 
-                                                          Real x_curv= oldCurvAbs[j-1] + ratio * (oldCurvAbs[j]  - oldCurvAbs[j-1]);
-                                                          newCurvAbs.push_back( x_curv );
+        Real x_curv= oldCurvAbs[j-1] + ratio * (oldCurvAbs[j]  - oldCurvAbs[j-1]);
+        newCurvAbs.push_back( x_curv );
     }
     // the last CurvAbs is known:
     newCurvAbs.push_back(  totalLength );
 
-
-    //newCurvAbs = oldCurvAbs;
-    //unsigned int j;
-
     /////////// Meme modifications a partir de  oldCurvAbs et newCurvAbs
-    //(rmq : pour l'instant, on ne s'occupe pas des 2 extremités du fil)
+    ///(rmq : pour l'instant, on ne s'occupe pas des 2 extremités du fil)
     j=0;
     for (unsigned int i=1; i<newCurvAbs.size()-1; i++)
     {
@@ -331,10 +342,10 @@ void AdaptiveBeamController<DataTypes>::applyController()
         {
             j++;
             if (j>=oldCurvAbs.size()) // DEBUG //
-                    {
+            {
                 std::cerr<<"**************** > WARNING j ="<<j<<">=oldCurvAbs.size()"<<std::endl;
                 return;
-                    }
+            }
         }
 
         Real L = m_adaptiveinterpolation->getLength(j-1);
@@ -344,20 +355,16 @@ void AdaptiveBeamController<DataTypes>::applyController()
         Transform global_H_interpol;
         Vec3 null(0,0,0);
 
-                // ATTENTION !!!!! =>  si j<i on utilise une position et une vitesse que l'on vient de modifier !
-                // Il faudrait stocker avant de modifier !
+        // ATTENTION !!!!! =>  si j<i on utilise une position et une vitesse que l'on vient de modifier !
+        // Il faudrait stocker avant de modifier !
         m_adaptiveinterpolation->InterpolateTransformUsingSpline(j-1,ratio,null,x,global_H_interpol);
         x[i].getCenter() = global_H_interpol.getOrigin();
         x[i].getOrientation() = global_H_interpol.getOrientation();
-                 v[i] = v[j-1] * (1-ratio)  + v[j] * ratio;
-
-
-
+        v[i] = v[j-1] * (1-ratio)  + v[j] * ratio;
 
         // on definie la longeur des beam en fonction des nouvelles abscisses curvilignes:
         L =  newCurvAbs[i] - newCurvAbs[i-1];
         m_adaptiveinterpolation->setLength(i-1,L);
-
     }
     //on definie la longueur de la dernière beam:
     Real L = newCurvAbs[newCurvAbs.size()-1] - newCurvAbs[newCurvAbs.size()-2];
@@ -365,12 +372,9 @@ void AdaptiveBeamController<DataTypes>::applyController()
 
     datax->endEdit();
     datav->endEdit();
-
 }
 
-
-
-
+} // namespace _adaptivebeamcontroller_
 
 } // namespace controller
 

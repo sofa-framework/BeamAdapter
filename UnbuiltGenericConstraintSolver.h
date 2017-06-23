@@ -88,21 +88,14 @@ class SOFA_BEAMADAPTER_API UnbuiltGenericConstraintSolver : public GenericConstr
 
 public:
     SOFA_CLASS(UnbuiltGenericConstraintSolver, GenericConstraintSolver);
-protected:
-    UnbuiltGenericConstraintSolver();
-    virtual ~UnbuiltGenericConstraintSolver();
-public:
 
     bool buildSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
     bool solveSystem(const core::ConstraintParams * /*cParams*/, MultiVecId res1, MultiVecId res2=MultiVecId::null());
 
-    //Data<bool> displayTime;
-    //Data<int> maxIt;
-    //Data<double> tolerance, sor;
-    //Data<bool> scaleTolerance, allVerified, schemeCorrection;
-    //Data<std::map < std::string, sofa::helper::vector<double> > > graphErrors, graphConstraints /*, graphForces */;
-
 protected:
+    UnbuiltGenericConstraintSolver();
+    virtual ~UnbuiltGenericConstraintSolver();
+
     UnbuiltGenericConstraintProblem *unbuit_current_cp;
 };
 

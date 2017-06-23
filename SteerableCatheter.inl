@@ -77,7 +77,7 @@ void SteerableCatheter<DataTypes>::init()
         }
 
         // Initialize the increment for bending/unbending
-        tipLength = this->length.getValue() - this->straightLength.getValue();
+        tipLength = this->d_length.getValue() - this->d_straightLength.getValue();
         maxAngleRadian = (angleMax*PI) / 360; // all angle are actually angle/2
         incrementalAngleRadian = maxAngleRadian / bendingRate;
 
@@ -85,7 +85,7 @@ void SteerableCatheter<DataTypes>::init()
         maxUnbendingDiameter = 360.0 * tipLength / (PI*flatAngle);
 
         // Reajust the initial spireDiameter (associated angle) to be multiple of incrementalAngleRadian
-        Real _spireDiameter = this->spireDiameter.getValue();
+        Real _spireDiameter = this->d_spireDiameter.getValue();
 
         if(_spireDiameter>maxUnbendingDiameter || _spireDiameter == 0.0)
         {
@@ -95,7 +95,7 @@ void SteerableCatheter<DataTypes>::init()
                     std::cout<<"(SteerableCatheter) Wrong spireDiameter: must be non-zero (==infinite curvature) "<<std::endl;
                 _spireDiameter = maxUnbendingDiameter;
                 currentAngleRadian = flatAngle * PI / 360;
-                this->spireDiameter.setValue( maxUnbendingDiameter );
+                this->d_spireDiameter.setValue( maxUnbendingDiameter );
         }
         else
         {
@@ -106,11 +106,11 @@ void SteerableCatheter<DataTypes>::init()
                 if(initialAngleIncrement==0)
                     initialAngleIncrement = 1;
                 currentAngleRadian = (Real)(initialAngleIncrement)*incrementalAngleRadian;
-                this->spireDiameter.setValue( tipLength / currentAngleRadian );
+                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
             }
             else
             {
-                this->spireDiameter.setValue( 0.0 );
+                this->d_spireDiameter.setValue( 0.0 );
                 currentAngleRadian = 0.0;
                 this->f_listening.setValue(false);
             }
@@ -126,7 +126,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
     // Update bending at benginEvent
     if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
     {
-        Real _spireDiameter = this->spireDiameter.getValue();
+        Real _spireDiameter = this->d_spireDiameter.getValue();
 
         //Bending activated
         if(m_activeBending.getValue())
@@ -134,7 +134,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             if(currentAngleRadian < maxAngleRadian)
             {
                 currentAngleRadian += incrementalAngleRadian;
-                this->spireDiameter.setValue( tipLength / currentAngleRadian );
+                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
             }
         }
         //Bending activated
@@ -143,7 +143,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             if(currentAngleRadian > incrementalAngleRadian )
             {
                 currentAngleRadian -= incrementalAngleRadian;
-                this->spireDiameter.setValue( tipLength / currentAngleRadian );
+                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
             }
         }
     }

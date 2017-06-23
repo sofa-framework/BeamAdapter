@@ -33,13 +33,14 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "initBeamAdapter.h"
-#include "AdaptiveBeamController.inl"
 
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
+#include "initBeamAdapter.h"
+#include "AdaptiveBeamController.inl"
 
 namespace sofa
 {
@@ -47,33 +48,39 @@ namespace sofa
 namespace component
 {
 
-
 namespace controller
 {
 
-using namespace sofa::defaulttype;
+namespace _adaptivebeamcontroller_
+{
 
-
-
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamController)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
+//TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamControllerClass = core::RegisterObject("")
 #ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamController<Rigid3fTypes> >()
+.add< AdaptiveBeamController<sofa::defaulttype::Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamController<Rigid3dTypes> >()
+.add< AdaptiveBeamController<sofa::defaulttype::Rigid3dTypes> >()
 #endif
 ;
 
 #ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3dTypes>;
 #endif
 
+} // namespace _adaptivebeamcontroller_
 
 } // namespace controller
 

@@ -34,10 +34,11 @@
 //
 //
 
-#include "AdaptiveBeamMapping.inl"
-#include <sofa/core/ObjectFactory.h>
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
-//#include <sofa/core/Mapping.inl>
+#include <sofa/core/ObjectFactory.h>
+
+#include "AdaptiveBeamMapping.inl"
 
 namespace sofa
 {
@@ -48,16 +49,24 @@ namespace component
 namespace mapping
 {
 
-SOFA_DECL_CLASS(AdaptiveBeamMapping)
-
 using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
 
+
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SOFA_DECL_CLASS(AdaptiveBeamMapping)
+
 // Register in the Factory
 int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >()
+.add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >(true) //default template
 .add< AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes > >()
 #endif
 #ifdef SOFA_WITH_FLOAT
@@ -71,9 +80,6 @@ int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and veloc
 #endif
 #endif
 ;
-
-
-
 
 } // namespace mapping
 

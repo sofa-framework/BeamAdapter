@@ -54,7 +54,13 @@ namespace controller
 using namespace sofa::defaulttype;
 
 
-
+/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
+///
+/// Register the component into the sofa factory.
+/// For more details:
+/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
+///
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(InterventionalRadiologyController)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description

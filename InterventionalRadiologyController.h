@@ -281,12 +281,6 @@ protected:
     sofa::helper::vector< bool > rigidBeamList;
     sofa::helper::vector<Transform> vec_global_H_gravityCenter;
     std::map<Real, Transform> prevRigidTransforms;
-
-
-
-
-
-
 };
 
 } // namespace controller

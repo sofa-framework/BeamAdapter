@@ -45,15 +45,11 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/helper/AdvancedTimer.h>
 
-
-
 namespace sofa
 {
 
 namespace component
 {
-
-
 
 namespace controller
 {

@@ -110,7 +110,6 @@ public:
     typedef sofa::component::controller::InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
 
 public:
-
     Data<bool> useCurvAbs;
     Data< helper::vector< std::string > > m_controlerPath;
 
@@ -196,7 +195,7 @@ public:
             }
             //idPointMapp=m_subMappingList[idInstrument]->addBaryPoint(edgeId,_baryCoord,isStraight);
             m_subMappingList[idInstrument]->addBaryPoint(controledEdgeId,_baryCoord,isStraight);
-            m_subMappingList[idInstrument]->addidPointSubMap(returnId);
+            m_subMappingList[idInstrument]->addIdPointSubMap(returnId);
         }
         return returnId;
     }
@@ -206,7 +205,6 @@ public:
         for(unsigned int i=0;i<m_subMappingList.size();i++)
             m_subMappingList[i]->clear(size);
         this->getMechTo()[0]->resize(0);
-        //this->getMechTo()[0]->resize(size);
     }
 
 

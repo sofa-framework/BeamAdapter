@@ -23,16 +23,14 @@
  * Contact information: contact@sofa-framework.org                             *
  ******************************************************************************/
 //
-// C++ Implementation : AdaptiveBeamController
+// C++ Implementation : WireRestShape
 //
 // Description:
 //
-//
-// Author: Christian Duriez, INRIA
+// Contributors:
+//   - Christian Duriez, INRIA
 //
 // Copyright: See COPYING file that comes with this distribution
-//
-//
 //
 
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
@@ -40,24 +38,42 @@
 
 #include "initBeamAdapter.h"
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/DataEngine.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
-#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
-#include <SofaLoader/MeshObjLoader.h>
+
+/// Forward declarations
+namespace sofa {
+    namespace component {
+        namespace topology {
+            template <class T>
+            class EdgeSetGeometryAlgorithms ;
+            class Edge2QuadTopologicalMapping ;
+        }
+    }
+    namespace core {
+        namespace loader {
+            class MeshLoader ;
+        }
+    }
+}
 
 namespace sofa
 {
-
 namespace component
 {
-
 namespace engine
 {
+namespace _wirerestshape_
+{
 
+using sofa::defaulttype::Quat;
+using sofa::helper::vector;
+using sofa::core::topology::TopologyContainer;
+using sofa::component::topology::EdgeSetGeometryAlgorithms;
+using sofa::component::topology::EdgeSetTopologyModifier;
+using sofa::component::topology::Edge2QuadTopologicalMapping;
+using sofa::core::loader::MeshLoader;
 
-
-/*!
+/**
  * \class WireRestShape
  * \brief Describe the shape functions on multiple segments
  *
@@ -76,127 +92,23 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef sofa::defaulttype::Vec<3, Real> Vec3;
     typedef sofa::defaulttype::Vec<2, Real> Vec2;
-    typedef sofa::defaulttype::Quat Quat;
-    typedef typename sofa::helper::vector<Vec2>::iterator vecIt;
+    typedef typename vector<Vec2>::iterator vecIt;
 
-    /*!
+    typedef typename core::visual::VisualParams VisualParams;
+    typedef typename core::objectmodel::BaseContext BaseContext;
+    typedef typename core::objectmodel::BaseObjectDescription BaseObjectDescription;
+
+    /**
      * @brief Default Constructor.
      */
-     WireRestShape():
-     procedural( initData(&procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
-    , NonProceduralScale( initData ( &NonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
-    , length(initData(&length, (Real)1.0, "length", "total length of the wire instrument"))
-    , straightLength(initData(&straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
-    , spireDiameter(initData(&spireDiameter, (Real)0.1, "spireDiameter", "diameter of the spire"))
-    , spireHeight(initData(&spireHeight, (Real)0.01, "spireHeight", "height between each spire"))
-    , density(initData(&density, "densityOfBeams", "density of beams between key points"))
-    , keyPoints(initData(&keyPoints,"keyPoints","key points of the shape (curv absc)"))
-    , numEdges(initData(&numEdges, 10, "numEdges","number of Edges for the visual model"))
-    , numEdgesCollis(initData(&numEdgesCollis,"numEdgesCollis", "number of Edges for the collision model" ))
-    , _poissonRatio(initData(&_poissonRatio,(Real)0.49,"poissonRatio","Poisson Ratio"))
-    , _youngModulus1(initData(&_youngModulus1,(Real)5000,"youngModulus","Young Modulus"))
-    , _youngModulus2(initData(&_youngModulus2,(Real)3000,"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
-    , _radius1(initData(&_radius1,(Real)1.0f,"radius","radius"))
-    , _radius2(initData(&_radius2,(Real)1.0f,"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
-    , _innerRadius1(initData(&_innerRadius1,(Real)0.0f,"innerRadius","inner radius if it applies"))
-    , _innerRadius2(initData(&_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
-    , _massDensity1(initData(&_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
-    , _massDensity2(initData(&_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
-    , brokenIn2(initData(&brokenIn2, (bool)false, "brokenIn2", ""))
-    , edge2QuadMap(NULL)
-    , drawRestShape(initData(&drawRestShape, (bool)false, "draw", "draw rest shape"))
-    {
-         spireDiameter.setGroup("Procedural");
-         spireHeight.setGroup("Procedural");
-    }
+     WireRestShape() ;
 
      /*!
       * @brief Default Destructor.
       */
      ~WireRestShape(){}
 
-     void RotateFrameForAlignX(const sofa::defaulttype::Quat &input, Vec3 &x, sofa::defaulttype::Quat &output);
-
-     void init();
-     void reinit(){ }
-
-     void update(){ }
-
-     void bwdInit();
-
-     void draw(const core::visual::VisualParams* vparams);
-
-
-     /*!
-      * For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-      */
-     virtual Real getReleaseCurvAbs(){return straightLength.getValue();}
-     // todo => topological change !
-     virtual void releaseWirePart();
-
-
-     /*!
-      * This function is called by the force field to evaluate the rest position of each beam
-      */
-     virtual void getRestTransformOnX(Transform &global_H_local, const Real &x);
-
-     /*!
-      * This function provides a vector with the curviliar abscissa of the noticeable point(s)
-      * and the minimum density (number of points) between them
-      */
-     virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector<int>& nbP_density);
-
-     /*!
-      * This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-      */
-     virtual void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
-
-     /*!
-      * this function gives the mass density and the BeamSection data depending on the beam position
-      */
-     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
-
-     /*!
-      * Functions enabling to load and use a geometry given from OBJ external file
-      */
-     void InitRestConfig();
-     void getRestPosNonProcedural(Real& abs, Coord &p);
-     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
-     void InitFromLoader();
-     bool checkTopology();
-
-
-
-     virtual Real getLength()
-     {
-         if(brokenIn2.getValue())
-             return straightLength.getValue();
-         else
-             return length.getValue();
-     }
-
-     virtual void getCollisionSampling(Real &dx, const Real &x_curv);
-
-     virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
-     {
-         numLines = 0;
-         for (unsigned i=0; i<numEdgesCollis.getValue().size(); i++)
-         {
-             numLines += (unsigned int)numEdgesCollis.getValue()[i];
-         }
-         dx=length.getValue()/numLines;
-     }
-
-
-
-
-     /// Construction method called by ObjectFactory.
-     template<class T>
-     static typename T::SPtr create(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-     {
-         return core::objectmodel::BaseObject::create(obj, context, arg);
-     }
-
+     /////////////////////////// Inherited from Base //////////////////////////////////////////
      virtual std::string getTemplateName() const
      {
          return templateName(this);
@@ -207,34 +119,97 @@ public:
          return DataTypes::Name();
      }
 
+     /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+     virtual void init() override ;
+     virtual void reinit() override{ }
+     virtual void update() override { }
+     virtual void bwdInit() override ;
+     void draw(const VisualParams * vparams) override ;
+
+     /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
+
+     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+     Real getReleaseCurvAbs(){return d_straightLength.getValue();}
+
+     /// This function is called by the force field to evaluate the rest position of each beam
+     void getRestTransformOnX(Transform &global_H_local, const Real &x);
+
+     /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
+     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
+
+     /// This function gives the mass density and the BeamSection data depending on the beam position
+     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
+
+     /**
+      * This function provides a vector with the curviliar abscissa of the noticeable point(s)
+      * and the minimum density (number of points) between them
+      */
+     void getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density);
+
+
+     /// Functions enabling to load and use a geometry given from OBJ external file
+     void initRestConfig();
+     void getRestPosNonProcedural(Real& abs, Coord &p);
+     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
+     void initFromLoader();
+     bool checkTopology();
+
+     Real getLength() ;
+     void getCollisionSampling(Real &dx, const Real &x_curv) ;
+     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
+
+     /// Construction method called by ObjectFactory.
+     template<class T>
+     static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)
+     {
+         return core::objectmodel::BaseObject::create(obj, context, arg);
+     }
+
+     //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
+     //we can remove the todo.
+     // todo => topological change !
+     void releaseWirePart();
+
+     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
+
+
 protected:
+     /// Analitical creation of wire shape...
+     Data<bool> d_procedural;
+     Data<Real> d_nonProceduralScale;
+     Data<Real> d_length;
+     Data<Real> d_straightLength;
+     Data<Real> d_spireDiameter;
+     Data<Real> d_spireHeight;
+     Data<vector<int> > d_density;
+     Data<vector<Real> > d_keyPoints;
+     Data< int > d_numEdges;
+     Data<vector<int> > d_numEdgesCollis;
 
-     // Analitical creation of wire shape...
-     Data<bool> procedural;
-     Data<Real> NonProceduralScale;
-     Data<Real> length;
-     Data<Real> straightLength;
-     Data<Real> spireDiameter;
-     Data<Real> spireHeight;
-     Data< sofa::helper::vector<int> > density;
-     Data< sofa::helper::vector<Real> > keyPoints;
-     Data< int > numEdges;
-     Data< sofa::helper::vector<int> > numEdgesCollis;
+     /// User Data about the Young modulus
+     Data<Real> d_poissonRatio;
+     Data<Real> d_youngModulus1;
+     Data<Real> d_youngModulus2;
 
+     /// Radius
+     Data<Real> d_radius1;
+     Data<Real> d_radius2;
+     Data<Real> d_innerRadius1;
+     Data<Real> d_innerRadius2;
 
-     //User Data about the Young modulus
-     Data<Real> _poissonRatio;
-     Data<Real> _youngModulus1;
-     Data<Real> _youngModulus2;
+     Data<Real> d_massDensity1;
+     Data<Real> d_massDensity2;
 
-     //Data required for the File loading
-     sofa::helper::vector<Vec3> 		localRestPositions;
-     sofa::helper::vector<Transform> 	localRestTransforms;
-     sofa::helper::vector<Real> 		curvAbs;
-     double 							absOfGeometry;
+     /// broken in 2 case
+     Data<bool> d_brokenIn2;
+     Data<bool>	d_drawRestShape;
 
-     // Radius
-     Data<Real> _radius1, _radius2, _innerRadius1, _innerRadius2;
+     /// Data required for the File loading
+     vector<Vec3> 		m_localRestPositions;
+     vector<Transform> 	m_localRestTransforms;
+     vector<Real> 		m_curvAbs ;
+     double 							m_absOfGeometry {0};
+
      struct BeamSection{
         double _r; 			///>radius of the section
         double _rInner; 	///>inner radius of the section if beam is hollow
@@ -245,23 +220,20 @@ protected:
         double _Asy; 		///>_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
         double _Asz; 		///>_Asz is the z-direction effective shear area;
      };
-     BeamSection beamSection1, beamSection2;
-     Data<Real> _massDensity1, _massDensity2;
+     BeamSection beamSection1;
+     BeamSection beamSection2;
 
-     // broken in 2 case
-     Data< bool > brokenIn2;
-
-     sofa::core::topology::TopologyContainer* _topology;
-     sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
-     sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
-     sofa::component::topology::Edge2QuadTopologicalMapping* edge2QuadMap;
-     sofa::core::loader::MeshLoader* loader;
-     bool edgeSetInNode;
-
-     Data<bool>	drawRestShape;
-
+     TopologyContainer* _topology {nullptr} ;
+     EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo ;
+     EdgeSetTopologyModifier* edgeMod {nullptr} ;
+     Edge2QuadTopologicalMapping* edge2QuadMap ;
+     MeshLoader* loader ;
+     bool edgeSetInNode {false};
 };
 
+} // namespace _wirerestshape_
+
+using _wirerestshape_::WireRestShape;
 
 } // namespace engine
 
