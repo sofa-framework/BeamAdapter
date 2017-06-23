@@ -23,19 +23,19 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
-#include "component/constraint/AdaptiveBeamConstraint.h"
-using sofa::component::constraintset::AdaptiveBeamConstraint ;
+#include "component/constraint/AdaptiveBeamSlidingConstraint.h"
+using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
 
 
 namespace sofa
 {
 
 template <typename _DataTypes>
-struct AdaptiveBeamConstraintTest : public Sofa_test<typename _DataTypes::Real>,
-        AdaptiveBeamConstraint<_DataTypes>
+struct AdaptiveBeamSlidingConstraintTest : public Sofa_test<typename _DataTypes::Real>,
+        AdaptiveBeamSlidingConstraint<_DataTypes>
 {
     typedef _DataTypes DataTypes;
-    typedef AdaptiveBeamConstraint<_DataTypes> ThisClass ;
+    typedef AdaptiveBeamSlidingConstraint<_DataTypes> ThisClass ;
 
     void normalBehavior(){
         Simulation* simu;
@@ -52,9 +52,9 @@ struct AdaptiveBeamConstraintTest : public Sofa_test<typename _DataTypes::Real>,
 using testing::Types;
 typedef Types<Rigid3dTypes> DataTypes;
 
-TYPED_TEST_CASE(AdaptiveBeamConstraintTest, DataTypes);
+TYPED_TEST_CASE(AdaptiveBeamSlidingConstraintTest, DataTypes);
 
-TYPED_TEST(AdaptiveBeamConstraintTest, NormalBehavior) {
+TYPED_TEST(AdaptiveBeamSlidingConstraintTest, NormalBehavior) {
     this->normalBehavior() ;
 }
 

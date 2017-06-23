@@ -29,6 +29,8 @@
 
 #include "AdaptiveBeamSlidingConstraint.inl"
 
+using sofa::core::RegisterObject;
+
 namespace sofa
 {
 
@@ -86,7 +88,7 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
 
-int AdaptiveBeamSlidingConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
+int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
         #ifdef SOFA_WITH_FLOAT
         .add< AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3fTypes> >()
         #endif
@@ -111,3 +113,38 @@ template class AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3dTypes>;
 
 } // namespace sofa
 
+
+///////////////////////////////// DEPRECATION MANAGEMENT FOR BACKWARD COMPATIBILITY ///////////////////
+#include "../../utils/deprecatedcomponent.h"
+
+using sofa::core::objectmodel::BaseObject ;
+using sofa::core::objectmodel::BaseContext ;
+using sofa::core::objectmodel::BaseObjectDescription ;
+
+class AdaptiveBeamConstraint : public sofa::component::DeprecatedComponent
+{
+public:
+    /// Pre-construction check method called by ObjectFactory.
+    template<class T>
+    static bool canCreate(T* obj, BaseContext* context, BaseObjectDescription* arg)
+    {
+        SOFA_UNUSED(obj) ;
+        SOFA_UNUSED(context) ;
+        SOFA_UNUSED(arg) ;
+
+        msg_warning("AdaptiveBeamConstraint") << "AdaptiveBeamConstraint is a BeamAdapter v1.0 feature that has been replaced "
+                                                  "by AdaptiveBeamSlidingConstraint. \n "
+                                                  "To remove this error message you either need to: \n "
+                                                  "   - replace AdaptiveBeamConstraint with AdaptiveBeamSlidingConstraint\n "
+                                                  "   - or use the BeamAdapter plugin v1.0 \n ";
+        return false;
+    }
+} ;
+
+// Registering the component
+// see: http://wiki.sofa-framework.org/wiki/ObjectFactory
+SOFA_DECL_CLASS(AdaptiveBeamConstraint)
+
+int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
+.add< AdaptiveBeamConstraint >()
+;
