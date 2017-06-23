@@ -49,6 +49,9 @@ namespace component
 namespace fem
 {
 
+namespace _beaminterpolation_
+{
+
 using namespace sofa::defaulttype;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
@@ -77,9 +80,11 @@ template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
 #endif
 
-} // namespace fem
+} /// namespace _beaminterpolation_
 
-} // namespace component
+} /// namespace fem
 
-} // namespace sofa
+} /// namespace component
+
+} /// namespace sofa
 

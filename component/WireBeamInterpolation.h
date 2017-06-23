@@ -64,6 +64,10 @@ namespace fem
 namespace _wirebeaminterpolation_
 {
 using sofa::component::fem::BeamInterpolation ;
+using sofa::core::topology::BaseMeshTopology ;
+using sofa::defaulttype::Quat ;
+using sofa::defaulttype::Vec ;
+using sofa::defaulttype::Vec3d ;
 using sofa::helper::vector;
 /*!
  * \class WireBeamInterpolation

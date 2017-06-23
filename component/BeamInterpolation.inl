@@ -40,31 +40,17 @@
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <sofa/core/topology/BaseMeshTopology.h>
-//#include <sofa/component/topology/GridTopology.h>
-//#include <sofa/simulation/common/Simulation.h>
 #include <sofa/helper/decompose.h>
-//#include <sofa/helper/gl/template.h>
-//#include <sofa/helper/gl/Axis.h>
-//#include <sofa/helper/rmath.h>
-//#include <assert.h>
-//#include <iostream>
-//#include <set>
-//#include <sofa/helper/system/gl.h>
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-//#include <sofa/defaulttype/SolidTypes.inl>
 #include <sofa/helper/OptionsGroup.h>
 
 #include <sofa/helper/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
-//#include <sofa/simulation/common/Node.h>
-
-
-
 
 namespace sofa
 {
@@ -73,6 +59,9 @@ namespace component
 {
 
 namespace fem
+{
+
+namespace _beaminterpolation_
 {
 
 using core::behavior::MechanicalState;
@@ -107,6 +96,41 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 
 }
 
 template <class DataTypes>
+BeamInterpolation<DataTypes>::BeamInterpolation() :
+   crossSectionShape(initData(&crossSectionShape, sofa::helper::OptionsGroup(3,"circular","elliptic (not available)","rectangular"), "crossSectionShape", "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
+, radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (if circular cross-section is considered)"))
+, innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
+, sideLength(initData(&sideLength, (Real)1.0f, "sideLength", "side length of the beam (if square cross-section is considered)"))
+, smallRadius(initData(&smallRadius, (Real)1.0f, "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
+, largeRadius(initData(&largeRadius, (Real)1.0f, "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
+, lengthY(initData(&lengthY, (Real)1.0f, "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
+, lengthZ(initData(&lengthZ, (Real)1.0f, "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
+, dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
+, defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
+, straight(initData(&straight,true,"straight","If true, will consider straight beams for the rest position"))
+, mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
+, m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
+, m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
+, m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
+, m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
+, m_curvAbsList(initData(&m_curvAbsList, "curvAbsList", ""))
+, m_beamCollision(initData(&m_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
+, d_vecID(initData(&d_vecID, OptionsGroup(3,"current","free","rest" ), "vecID", "input pos and vel (current, free pos/vel, rest pos)" ))
+, d_InterpolationInputs(initData(&d_InterpolationInputs, "InterpolationInputs", "vector containing (beamID, baryCoord)"))
+, d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
+, d_InterpolatedVel(initData(&d_InterpolatedVel, "InterpolatedVel", "output Interpolated Velocity"))
+, _topology(NULL)
+, _mstate(NULL)
+{
+    this->brokenInTwo=false;
+    _isControlled=false;
+    this->_numBeamsNotUnderControl = 0;
+    mStateNodes->setName("bezierNodes");
+    this->addSlave(mStateNodes);
+}
+
+
+template <class DataTypes>
 void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 {
     if ( this->crossSectionShape.getValue().getSelectedItem() == "elliptic")
@@ -125,10 +149,8 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 
         this->_constantSection._Asy = 0.0;
         this->_constantSection._Asz = 0.0;
-
-
     }
-    else // ( this->crossSectionShape.getValue() == "circular")
+    else
     {
         std::cout << "CROSS SECTION SHAPE !!!! " << this->crossSectionShape.getValue().getSelectedItem() << std::endl;
         this->_constantSection._r = this->radius.getValue();
@@ -157,7 +179,6 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 
 
 /* ************* ADAPTIVE INTERPOLATION ************** */
-
 template <class DataTypes>
  void BeamInterpolation<DataTypes>::init()
 {
@@ -166,6 +187,7 @@ template <class DataTypes>
     computeCrossSectionInertiaMatrix();
 
     sofa::core::objectmodel::BaseContext* context = this->getContext();
+
     // Init Adaptive Topology:
     this->_topology = context->getMeshTopology();
 }
@@ -589,7 +611,7 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
             this->InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
 
 
-          
+
             /*Vec3 result = global_H_local_0.getOrigin() * 0.5 + global_H_local_1.getOrigin() * 0.5;
             Quat slerp;
             slerp.slerp( global_H_local_0.getOrientation(), global_H_local_1.getOrientation(), 0.5, true );
@@ -1446,11 +1468,12 @@ bool BeamInterpolation<DataTypes>::breaksInTwo(const Real& /*x_min_out*/,  Real&
     return false;
 }
 
+} /// namespace _beaminterpolation_
 
-}// namespace fem
+} /// namespace fem
 
-} // namespace component
+} /// namespace component
 
-} // namespace sofa
+} /// namespace sofa
 
 #endif  /* SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL */

@@ -62,12 +62,13 @@ namespace component
 namespace fem
 {
 
+namespace _beaminterpolation_
+{
+
 using sofa::helper::vector;
 using namespace sofa::core::topology;
 using namespace sofa::defaulttype;
 using sofa::helper::OptionsGroup;
-
-
 
 /*!
  * \class BeamInterpolation
@@ -86,7 +87,6 @@ template<class DataTypes>
 class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
 {
 public:
-
     SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , sofa::core::objectmodel::BaseObject);
 
     typedef typename DataTypes::VecCoord VecCoord;
@@ -109,8 +109,6 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    //    typedef helper::vector<Vec3> VecVec3;
-
     // These vector is related to Bézier nodes
 #ifndef SOFA_FLOAT
     typedef helper::vector<sofa::defaulttype::Vec<3, double> > VecVec3d;
@@ -118,48 +116,16 @@ public:
     typedef helper::vector<sofa::defaulttype::Vec<3, float> > VecVec3d;
 #endif
 
-    BeamInterpolation()
-     : crossSectionShape(initData(&crossSectionShape, sofa::helper::OptionsGroup(3,"circular","elliptic (not available)","rectangular"), "crossSectionShape", "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
-    , radius(initData(&radius, (Real)1.0f, "radius", "radius of the beam (if circular cross-section is considered)"))
-    , innerRadius(initData(&innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
-    , sideLength(initData(&sideLength, (Real)1.0f, "sideLength", "side length of the beam (if square cross-section is considered)"))
-    , smallRadius(initData(&smallRadius, (Real)1.0f, "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
-    , largeRadius(initData(&largeRadius, (Real)1.0f, "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
-    , lengthY(initData(&lengthY, (Real)1.0f, "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
-    , lengthZ(initData(&lengthZ, (Real)1.0f, "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
-    , dofsAndBeamsAligned(initData(&dofsAndBeamsAligned, true, "dofsAndBeamsAligned", "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-    , defaultYoungModulus(initData(&defaultYoungModulus, (Real) 100000, "defaultYoungModulus", "value of the young modulus if not defined in an other component"))
-    , straight(initData(&straight,true,"straight","If true, will consider straight beams for the rest position"))
-    , mStateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
-    , m_edgeList(initData(&m_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
-    , m_lengthList(initData(&m_lengthList, "lengthList", "list of the length of each beam"))
-    , m_DOF0TransformNode0(initData(&m_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
-    , m_DOF1TransformNode1(initData(&m_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
-    , m_curvAbsList(initData(&m_curvAbsList, "curvAbsList", ""))
-    , m_beamCollision(initData(&m_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
-    , d_vecID(initData(&d_vecID, OptionsGroup(3,"current","free","rest" ), "vecID", "input pos and vel (current, free pos/vel, rest pos)" ))
-    , d_InterpolationInputs(initData(&d_InterpolationInputs, "InterpolationInputs", "vector containing (beamID, baryCoord)"))
-    , d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
-    , d_InterpolatedVel(initData(&d_InterpolatedVel, "InterpolatedVel", "output Interpolated Velocity"))
-    , _topology(NULL)
-    , _mstate(NULL)
-    {
-        this->brokenInTwo=false;
-        _isControlled=false;
-        this->_numBeamsNotUnderControl = 0;
-        mStateNodes->setName("bezierNodes");
-        this->addSlave(mStateNodes);
-    }
+    BeamInterpolation() ;
     virtual ~BeamInterpolation(){}
 
     void init();
     void bwdInit();
-    void reinit(){init(); bwdInit(); }
+    void reinit(){ init(); bwdInit(); }
     void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
 
     // In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
     void storeResetState(){ updateInterpolation();}
-
     void updateInterpolation();
 
     /**
@@ -172,33 +138,32 @@ public:
     unsigned int getNumBeamsNotUnderControl(){return this->_numBeamsNotUnderControl;}
     unsigned int getNumBeams(){return this->m_edgeList.getValue().size();}
 
-//	VecElementID &getEdgeList(){return this->Edge_List;}
-
     void getAbsCurvXFromBeam(int beam, Real& x_curv);
     void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
 
     void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
-
     void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
 
 
     int computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
-            Transform &local0_H_local1,  Quat& local_R_local0, const VecCoord &x);
+                         Transform &local0_H_local1,  Quat& local_R_local0, const VecCoord &x);
 
-    int computeTransform2(unsigned int edgeInList,  Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
+    int computeTransform2(unsigned int edgeInList,
+                          Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
 
-    void getTangent(Vec3& t, const Real& baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
+    void getTangent(Vec3& t, const Real& baryCoord,
+                    const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
 
     int getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx );
 
     void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
             Real &_Asy, Real &_Asz, Real &J);
 
-
-    // spline base interpolation of points and transformation
+    /// spline base interpolation of points and transformation
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult) {
         interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, sofa::core::ConstVecCoordId::position());
     }
+
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId &vecXId);
 
 
@@ -209,8 +174,6 @@ public:
 
     //vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
     void updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out);
-
-
     void updateBezierPoints( const VecCoord &x, unsigned int index, VecVec3d& v);
 
 
@@ -306,8 +269,6 @@ public:
     bool isControlled(){return _isControlled;}
     void setControlled(bool value){_isControlled=value;}
 
-
-
     virtual void clear();
 
     virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
@@ -374,12 +335,9 @@ public:
         }
     }
 
-
-
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
     virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
-
 
     /// Pre-construction check method called by ObjectFactory.
     /// Check that DataTypes matches the MechanicalState.
@@ -472,13 +430,6 @@ protected :
     /// pointer on mechanical state
     sofa::core::behavior::MechanicalState<DataTypes> *_mstate;
 
-    // pointer on an external rest-shape
-    //sofa::component::engine::WireRestShape<DataTypes> *_restShape;
-
-    // bool => tells if the Beams are controlled :
-    // an external controller is providing the list of edge and the length of the beams (only for a wire)
-
-
     // this->brokenInTwo = if true, the wire is in two separate parts
     bool _isControlled;
     bool brokenInTwo;
@@ -495,10 +446,14 @@ extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
 #endif
 #endif
 
-} // namespace fem
+} /// namespace _beaminterpolation_
 
-} // namespace component
+using _beaminterpolation_::BeamInterpolation ;
 
-} // namespace sofa
+} /// namespace fem
+
+} /// namespace component
+
+} /// namespace sofa
 
 #endif  /*SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H*/

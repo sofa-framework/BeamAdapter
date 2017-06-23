@@ -57,17 +57,20 @@ namespace sofa
 
 namespace component
 {
-    namespace topology
-    {
-        template <class T>
-        class EdgeSetGeometryAlgorithms;
+namespace topology
+{
+template <class T>
+class EdgeSetGeometryAlgorithms;
 
-        class EdgeSetTopologyModifier;
-    }
+class EdgeSetTopologyModifier;
+}
 
 
 namespace controller
 {
+
+using sofa::defaulttype::Vec;
+using sofa::defaulttype::Vec3d;
 
 
 /*!
@@ -80,7 +83,7 @@ template<class DataTypes>
 class InterventionalRadiologyController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
 {
 public:
-  SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
     typedef typename DataTypes::Coord    Coord   ;
@@ -111,11 +114,11 @@ public:
     bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
     {
 
-       // std::cout<<"activePoint is called : "<<activated_Points_buf<<std::endl;
+        // std::cout<<"activePoint is called : "<<activated_Points_buf<<std::endl;
 
 
 
-         return activated_Points_buf[index];
+        return activated_Points_buf[index];
 
 
 
@@ -182,12 +185,12 @@ public:
 
     virtual std::string getTemplateName() const
     {
-      return templateName(this);
+        return templateName(this);
     }
 
     static std::string templateName(const InterventionalRadiologyController<DataTypes>* = NULL)
     {
-      return DataTypes::Name();
+        return DataTypes::Name();
     }
 
     //@}
@@ -229,7 +232,7 @@ protected:
                                                 const sofa::helper::vector<Real> &xBegin, const Real& xEnd);
     void sortCurvAbs(sofa::helper::vector<Real> &CurvAbs,  sofa::helper::vector< sofa::helper::vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const sofa::helper::vector<Real>& newNodeCurvAbs, sofa::helper::vector<Real>& modifiedNodeCurvAbs,
-                          const sofa::helper::vector< sofa::helper::vector<int> >& newTable);
+                               const sofa::helper::vector< sofa::helper::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
 
     void activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table);

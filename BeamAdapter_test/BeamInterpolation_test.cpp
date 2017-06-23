@@ -14,6 +14,7 @@ using sofa::component::topology::TetrahedronSetTopologyContainer ;
 
 using sofa::helper::WriteAccessor ;
 using sofa::defaulttype::Rigid3dTypes ;
+using sofa::core::ExecParams ;
 
 #include <SofaSimulationCommon/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML ;
@@ -26,16 +27,12 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
-#include "../../../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
+#include "../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
 
 namespace sofa
 {
 
-
-
-
-
-struct BeamAdapterFirstTest : public Sofa_test<>
+struct BeamAdapterTest : public Sofa_test<>
 {
     void simpleSceneTest(){
         string scene =
@@ -47,11 +44,12 @@ struct BeamAdapterFirstTest : public Sofa_test<>
                 "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
                 "               <BeamInterpolation name='Interpol' radius='0.1'/>"
                 "               <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
-                "               <FixedConstraint indices='0' />"
                 "</Node> " ;
         Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
 
         ASSERT_NE(root.get(), nullptr);
+        root->init(ExecParams::defaultInstance());
+
         MechanicalObject<Rigid3>* MO = nullptr;
         root->getTreeObject(MO);
 
@@ -59,14 +57,12 @@ struct BeamAdapterFirstTest : public Sofa_test<>
         EXPECT_TRUE(MO->getName() == "DOFs") ;
 
         component::forcefield::AdaptiveBeamForceFieldAndMass<Rigid3>* FF  = nullptr;
-
         root->getTreeObject(FF);
-
         ASSERT_NE(FF, nullptr);
     }
 };
 
-TEST_F(BeamAdapterFirstTest, SimpleScene) {
+TEST_F(BeamAdapterTest, checkMinimalScene) {
     ASSERT_NO_THROW(this->simpleSceneTest()) ;
 }
 
