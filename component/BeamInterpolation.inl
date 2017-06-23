@@ -127,26 +127,6 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
         this->_constantSection._rInner = this->innerRadius.getValue();
         double r = this->radius.getValue();
 
-        //////////////////////////////////////////////////////
-        //TODO(eulalie): I think there is something wrong here...
-        //@Christian: I would like to do this instead
-        //
-        //if (r <= 0.0)
-        //{
-        //    r = -r;
-        //    msg_warning() << "Radius must be positive. Use absolute value instead. r = " << r;
-        //}
-        if (r <= 0.0)
-        {
-            serr << "Radius must be positive" << sendl;
-            if (r>0)
-            {
-                serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
-                r = -r;
-            }
-        }
-        ///////////////////////////////////////////////////////
-
         double rInner = this->innerRadius.getValue();
         this->_constantSection._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
         //_Iz = M_PI*(r*r*r*r)/4.0;
@@ -165,10 +145,6 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::init()
 {
-    //TODO(eulalie): I would like to remove this. This choice should be taken by user.
-    //@Christian: do you agree?
-    this->f_printLog.setValue(true);
-
     computeCrossSectionInertiaMatrix();
 
     BaseContext* context = this->getContext();
