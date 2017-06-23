@@ -114,60 +114,6 @@ void AdaptiveBeamMapping< TIn, TOut>::reset()
     reinit();
 }
 
-
-template <class TIn, class TOut>
-void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
-{
-    unsigned int nbPoints = d_points.getValue().size();
-
-    if (nbPoints == 0)
-    {
-        ReadAccessor<Data<VecCoord> > xTo = toModel->read(ConstVecCoordId::position()) ;
-
-        if( xTo.size()==0)
-            msg_warning()<<"No point defined in the AdaptiveBeamMapping.";
-        else
-        {
-            msg_warning()<<"No point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State.";
-
-            vector<Vec3>& points = *(d_points.beginEdit());
-            for(unsigned int i=0; i<xTo.size();i++)
-            {
-                Vec3 p(xTo[i][0], xTo[i][1], xTo[i][2]);
-                points.push_back(p);
-            }
-            d_points.endEdit();
-        }
-    }
-
-    if (d_useCurvAbs.getValue())
-    {
-        for (unsigned int i=0; i<nbPoints-1; i++)
-        {
-            // TODO : really necessary ?
-            const vector<Vec3>& points = d_points.getValue();
-            if(points[i][0]>points[i+1][0])
-                msg_warning() <<"When using useCurvAbs==true, points must be sorted according to their curvAbs.";
-        }
-    }
-
-    l_adaptativebeamInterpolation->bwdInit();
-    computeDistribution();
-    if (!m_isSubMapping)
-        Mapping< TIn, TOut>::init();
-
-    if(d_contactDuplicate.getValue()==true)
-    {
-        fromModel->getContext()->get(m_inputMapping, BaseContext::SearchRoot);
-        if(m_inputMapping==NULL)
-            msg_warning() <<"Can not found the input  Mapping";
-        else
-            msg_info() <<"Input Mapping named "<<m_inputMapping->getName()<<" has been found";
-    }
-
-}
-
-
 template <class TIn, class TOut>
 void AdaptiveBeamMapping<TIn,TOut>::printIstrumentInfo() const
 {
@@ -492,6 +438,71 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     AdvancedTimer::stepEnd("AdaptiveBeamMappingConstraintApplyJT");
 }
 
+template <class TIn, class TOut>
+void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
+{
+
+    const sofa::helper::vector<Vec3>& pts = d_points.getValue();
+
+    if (pts.size() == 0)
+    {
+        helper::ReadAccessor<Data<VecCoord> > xTo = this->toModel->read(sofa::core::ConstVecCoordId::position()) ;
+
+        if( xTo.size()==0)
+        {
+            serr<<" Warning no point defined in the AdaptiveBeamMapping "<<sendl;
+            // _problem = true;
+        }
+        else
+        {
+            sofa::helper::vector<Vec3>& pts2 = *(d_points.beginEdit());
+
+            sout<<"no point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State"<<sendl;
+            for(unsigned int i=0; i<xTo.size();i++)
+            {
+                Vec3 p(xTo[i][0], xTo[i][1], xTo[i][2]);
+                pts2.push_back(p);
+            }
+            d_points.endEdit();
+        }
+    }
+
+
+    bool curvAbs = this->d_useCurvAbs.getValue();
+    if (curvAbs)
+    {
+        int cpt=0;
+        std::stringstream tmp;
+        for (unsigned int i=0; cpt < 10 && i<pts.size()-1; i++)
+        {
+            if( pts[i][0]>pts[i+1][0])
+            {
+                tmp << "- invalid ordering at index: " << i << " : " << pts[i][0] << " > " << pts[i][1] << msgendl ;
+                cpt++;
+            }
+        }
+        if(cpt>=10)
+        {
+            msg_warning() <<" when using useCurvAbs==true, points must be sorted according to their curvAbs: " << msgendl
+                          << tmp.str() ;
+        }
+    }
+
+    l_adaptativebeamInterpolation->bwdInit();
+    computeDistribution();
+    if (!m_isSubMapping)
+    {
+        core::Mapping< TIn, TOut>::init();
+    }
+    if(d_contactDuplicate.getValue()==true)
+    {
+        this->fromModel->getContext()->get(m_inputMapping, sofa::core::objectmodel::BaseContext::SearchRoot);
+        if(m_inputMapping==NULL)
+            serr<<"WARNING : can not found the input  Mapping"<<sendl;
+        else
+            sout<<"input Mapping named "<<m_inputMapping->getName()<<" is found"<<sendl;
+    }
+}
 
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::beginAddContactPoint()

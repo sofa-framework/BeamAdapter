@@ -62,12 +62,13 @@ namespace topology
     class EdgeSetTopologyModifier;
 }
 
+/*
 namespace fem
 {
     template <class T>
     class WireBeamInterpolation;
 }
-
+*/
 
 namespace controller
 {

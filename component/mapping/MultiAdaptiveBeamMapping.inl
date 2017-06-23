@@ -88,7 +88,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
     VecCoord& out = *dOut.beginEdit();
     if(!isBarycentricMapping)
         out.resize(_xPointList.size());
-    else if((int )out.size() != this->getMechTo()[0]->getSize())
+    else if(out.size() != this->getMechTo()[0]->getSize())
         out.resize(this->getMechTo()[0]->getSize());
     dOut.endEdit();
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
