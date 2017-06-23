@@ -66,9 +66,18 @@ namespace _beaminterpolation_
 {
 
 using sofa::helper::vector;
-using namespace sofa::core::topology;
-using namespace sofa::defaulttype;
 using sofa::helper::OptionsGroup;
+using sofa::core::topology::BaseMeshTopology;
+using sofa::core::objectmodel::BaseObjectDescription ;
+using sofa::core::objectmodel::BaseObject ;
+using sofa::core::ConstVecCoordId ;
+using sofa::defaulttype::SolidTypes ;
+using sofa::defaulttype::Vec ;
+using sofa::defaulttype::Quat ;
+using sofa::defaulttype::Rigid3dTypes ;
+using sofa::defaulttype::Rigid3fTypes ;
+using sofa::core::behavior::MechanicalState ;
+using sofa::component::container::MechanicalObject ;
 
 /*!
  * \class BeamInterpolation
@@ -84,10 +93,10 @@ using sofa::helper::OptionsGroup;
  * As the computation is adaptive, the interpolation can be modified at each time step.
  */
 template<class DataTypes>
-class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
+class BeamInterpolation : public virtual BaseObject
 {
 public:
-    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , sofa::core::objectmodel::BaseObject);
+    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , BaseObject);
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -97,46 +106,76 @@ public:
     typedef typename Coord::value_type Real;
     typedef unsigned int Index;
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef sofa::helper::vector<BaseMeshTopology::EdgeID> VecElementID;
-    typedef sofa::helper::vector<BaseMeshTopology::Edge> VecEdges;
-    typedef helper::vector<unsigned int> VecIndex;
+    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef vector<BaseMeshTopology::Edge> VecEdges;
+    typedef vector<unsigned int> VecIndex;
 
-
-    typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-    typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
 
     typedef Vec<2, Real> Vec2;
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    // These vector is related to Bézier nodes
-#ifndef SOFA_FLOAT
-    typedef helper::vector<sofa::defaulttype::Vec<3, double> > VecVec3d;
+    /// These vector is related to Bézier nodes
+#ifdef SOFA_WITH_DOUBLE
+    typedef vector<Vec<3, double> > VectorVec3;
 #else
-    typedef helper::vector<sofa::defaulttype::Vec<3, float> > VecVec3d;
+    typedef vector<Vec<3, float> > VectorVec3;
 #endif
 
+public:
     BeamInterpolation() ;
-    virtual ~BeamInterpolation(){}
+    virtual ~BeamInterpolation() {}
 
-    void init();
-    void bwdInit();
-    void reinit(){ init(); bwdInit(); }
-    void reset(){bwdInit(); this->_numBeamsNotUnderControl=0;}
+    //////////////////////////////////// Exposing this object in the factory ///////////////////////
+    /// Pre-construction check method called by ObjectFactory.
+    /// Check that DataTypes matches the MechanicalState.
+    template<class T>
+    static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, BaseObjectDescription* arg)
+    {
+        if (dynamic_cast<MechanicalState<DataTypes>*>(context->getMechanicalState()) == nullptr)
+        {
+            return false;
+        }
+        return BaseObject::canCreate(obj, context, arg);
+    }
 
-    // In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
-    void storeResetState(){ updateInterpolation();}
+    virtual std::string getTemplateName() const override
+    {
+        return templateName(this);
+    }
+
+    static std::string templateName(const BeamInterpolation<DataTypes>* = nullptr)
+    {
+        return DataTypes::Name();
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////// Inherited from Base ///////////////////////////////////////
+    virtual void init() override ;
+    virtual void bwdInit() override ;
+    virtual void reinit() override ;
+    virtual void reset() override ;
+
+    //TODO(dmarchal@cduriez) Ca me semble détourner l'API pour faire des choses par surprise. A mon avis la bonne solution
+    //est d'implémenter un vrai binding Python pour BeamInterpolation. Avec une fonction updateInterpolation
+    /// In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
+    virtual void storeResetState() override ;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     void updateInterpolation();
-
     /**
      * @brief Returns true if the interpolation is specified in the scene file (case of saved executed scenes...)
      */
     bool interpolationIsAlreadyInitialized();
-
+    bool verifyTopology();
     void computeCrossSectionInertiaMatrix();
 
-    unsigned int getNumBeamsNotUnderControl(){return this->_numBeamsNotUnderControl;}
-    unsigned int getNumBeams(){return this->m_edgeList.getValue().size();}
+    unsigned int getNumBeamsNotUnderControl(){return this->m_numBeamsNotUnderControl;}
+    unsigned int getNumBeams(){return this->d_edgeList.getValue().size();}
 
     void getAbsCurvXFromBeam(int beam, Real& x_curv);
     void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
@@ -157,87 +196,64 @@ public:
     int getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx );
 
     void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
-            Real &_Asy, Real &_Asz, Real &J);
+                               Real &_Asy, Real &_Asz, Real &J);
 
     /// spline base interpolation of points and transformation
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult) {
-        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, sofa::core::ConstVecCoordId::position());
+        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, ConstVecCoordId::position());
     }
 
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId &vecXId);
+    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+                                     const VecCoord &x, Vec3& posResult, bool recompute, const ConstVecCoordId &vecXId);
 
 
-    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
+    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
 
     void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
 
-
-    //vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
+    ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
     void updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out);
-    void updateBezierPoints( const VecCoord &x, unsigned int index, VecVec3d& v);
+    void updateBezierPoints( const VecCoord &x, unsigned int index, VectorVec3& v);
 
+    /// getLength / setLength => provides the rest length of each spline
+    Real getLength(unsigned int edgeInList) ;
+    void setLength(unsigned int edgeInList, Real &length) ;
 
-    // getLength / setLength => provides the rest length of each spline
-    Real getLength(unsigned int edgeInList)
-    {
-        Real _L = this->m_lengthList.getValue()[edgeInList];
-        return _L;
-    }
-
-    void setLength(unsigned int edgeInList, Real &length)
-    {
-        vector<double> &lengthList = *m_lengthList.beginEdit();
-        lengthList[edgeInList] = length;
-        m_lengthList.endEdit();
-    }
-
-    // computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
+    /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
     void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
 
-
     void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
-    void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Transform &global_H_localInterpol);
-    // generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
-    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
+    void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+                                         const VecCoord &x, Transform &global_H_localInterpol);
 
-    void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, const VecDeriv &v,
-                                                Transform &global_H_localInterpol, Deriv &v_interpol);
+    /// generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
+    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord,
+                                         const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
 
+    void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+                                               const VecCoord &x, const VecDeriv &v,
+                                               Transform &global_H_localInterpol, Deriv &v_interpol);
 
-    // 3DOF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const Vec3& finput,
-                                    SpatialVector& FNode0output, SpatialVector& FNode1output );
+    /// 3DOF mapping
+    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+                                   const VecCoord& x, const Vec3& finput,
+                                   SpatialVector& FNode0output, SpatialVector& FNode1output );
 
-    // 6DoF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, const SpatialVector& f6DofInput,
-                                        SpatialVector& FNode0output, SpatialVector& FNode1output );
+    /// 6DoF mapping
+    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+                                   const VecCoord& x, const SpatialVector& f6DofInput,
+                                   SpatialVector& FNode0output, SpatialVector& FNode1output );
 
-
-
-    // compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
-    Real ComputeTotalBendingRotationAngle(const Real& dx_computation, const Transform &global_H_local0, const Transform &global_H_local1,const Real &L,
-                                            const Real& baryCoordMin, const Real& baryCoordMax);
-
+    /// compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
+    Real ComputeTotalBendingRotationAngle(const Real& dx_computation, const Transform &global_H_local0,
+                                          const Transform &global_H_local1,const Real &L,
+                                          const Real& baryCoordMin, const Real& baryCoordMax);
 
     void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
 
-
-    unsigned int getStateSize() const
-    {
-        if (this->_mstate==NULL)
-        {
-            serr << "WARNING no _mstate found" << sendl;
-            return 0 ;
-        }
-        else
-                {
-//                    std::cout<<" get mstate named "<<this->_mstate->name<<"  size ="<<this->_mstate->getSize()<<std::endl;
-            return this->_mstate->getSize();
-        }
-    }
+    unsigned int getStateSize() const ;
 
     struct BeamSection{
-        // double _L; //length
         double _r; 			///<radius of the section
         double _rInner;		///<inner radius of the section if beam is hollow
         double _Iy;         /// < Iy and Iz are the cross-section moment of inertia (assuming mass ratio = 1) about the y and z axis;
@@ -247,166 +263,79 @@ public:
         double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
         double _Asz; 		///< _Asz is the z-direction effective shear area;
     };
-    BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->_constantSection;}
+    BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
 
     Data<helper::OptionsGroup>   crossSectionShape;
-    // Circular Cross Section
-    Data<Real>          radius;
-    Data<Real>          innerRadius;
-    // Square Cross Section
-    Data<Real>          sideLength;
-    // Elliptic Cross Section
-    Data<Real>          smallRadius;
-    Data<Real>          largeRadius;
-    // Rectangular Cross Section
-    Data<Real>          lengthY;
-    Data<Real>          lengthZ;
-    Data<bool>          dofsAndBeamsAligned;
-    Data<Real>          defaultYoungModulus;
-    Data<bool>          straight;
 
-    ///////// for AdaptiveControllers
-    bool isControlled(){return _isControlled;}
-    void setControlled(bool value){_isControlled=value;}
+    /// Circular Cross Section
+    Data<Real>          d_radius;
+    Data<Real>          d_innerRadius;
+
+    /// Square Cross Section
+    Data<Real>          d_sideLength;
+
+    /// Elliptic Cross Section
+    Data<Real>          d_smallRadius;
+    Data<Real>          d_largeRadius;
+
+    /// Rectangular Cross Section
+    Data<Real>          d_lengthY;
+    Data<Real>          d_lengthZ;
+    Data<bool>          d_dofsAndBeamsAligned;
+    Data<Real>          d_defaultYoungModulus;
+    Data<bool>          d_straight;
 
     virtual void clear();
-
     virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
-
-    virtual void getSamplingParameters(helper::vector<Real>& /*xP_noticeable*/, helper::vector< int>& /*nbP_density*/)
-    {
-        serr<<"getSamplingParameters is not implemented when _restShape== NULL : TODO !! "<<sendl;
-    }
-
-    virtual Real getRestTotalLength()
-    {
-        Real le(0.0);
-        const vector< double > &lengthList = m_lengthList.getValue();
-
-        for (unsigned int i = 0; i < lengthList.size(); i++)
-            le += lengthList[i];
-
-        return le;
-    }
-
-    virtual void getCollisionSampling(Real &dx, const Real& /*x_localcurv_abs*/)
-    {
-        unsigned int numLines = 30;
-        dx = getRestTotalLength()/numLines;
-    }
-
-    virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
-    {
-        numLines = 30;
-        dx = getRestTotalLength()/numLines;
-    }
-
-
-    virtual void getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
-    {
-        youngModulus = (Real) defaultYoungModulus.getValue();
-        cPoisson     = (Real) 0.4;
-    }
-
-
-    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
-    {
-        if (beam > (int) (m_DOF0TransformNode0.getValue().size()-1) || beam > (int) (m_DOF1TransformNode1.getValue().size()-1))
-        {
-            serr<<"WARNING setTransformBetweenDofAndNode on non existing beam"<<sendl;
-            return;
-        }
-
-        if (!zeroORone)
-        {
-            vector<Transform> &DOF0_TransformNode0 = *m_DOF0TransformNode0.beginEdit();
-
-            DOF0_TransformNode0[beam] = DOF_H_Node;
-
-            m_DOF0TransformNode0.endEdit();
-        }
-        else
-        {
-            vector<Transform> &DOF1_TransformNode1 = *m_DOF1TransformNode1.beginEdit();
-
-            DOF1_TransformNode1[beam] = DOF_H_Node;
-
-            m_DOF1TransformNode1.endEdit();
-        }
-    }
-
+    virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable,
+                                       helper::vector<int>& nbP_density) ;
+    virtual Real getRestTotalLength() ;
+    virtual void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) ;
+    virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
+    virtual void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) ;
+    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone ) ;
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
+
+    //TODO(dmarchal@cduriez) strange name... seems to be wire based...shouldn't it go to WireBeamInterpolation.
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
+
+    //TODO(dmarchal@cduriez) A assume this one should be in this class.
     virtual bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
 
-    /// Pre-construction check method called by ObjectFactory.
-    /// Check that DataTypes matches the MechanicalState.
-    template<class T>
-    static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
-    {
-        if (dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes>*>(context->getMechanicalState()) == NULL)
-        {
-            return false;
-        }
-        return BaseObject::canCreate(obj, context, arg);
-    }
+    ///////// for AdaptiveControllers
+    bool isControlled(){return m_isControlled;}
+    void setControlled(bool value){m_isControlled=value;}
 
-
-    virtual std::string getTemplateName() const
-    {
-        return templateName(this);
-    }
-
-    static std::string templateName(const BeamInterpolation<DataTypes>* = NULL)
-    {
-        return DataTypes::Name();
-    }
-
-
-    /// Set collision information
-    void addCollisionOnBeam(unsigned int b)
-    {
-        sofa::helper::vector<int>& beamCollisList = (*m_beamCollision.beginEdit());
-        beamCollisList.push_back(b);
-        m_beamCollision.endEdit();
-    }
-
-    void clearCollisionOnBeam()
-    {
-        sofa::helper::vector<int>& beamCollisList = (*m_beamCollision.beginEdit());
-        beamCollisList.clear();
-        m_beamCollision.endEdit();
-    }
-
+    /// Collision information
+    void addCollisionOnBeam(unsigned int b) ;
+    void clearCollisionOnBeam() ;
 
 protected :
     /// DATA INPUT (that could change in real-time)
-    sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types>::SPtr mStateNodes;
+    MechanicalObject<sofa::defaulttype::Vec3Types>::SPtr m_StateNodes;
 
     ///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
-    Data< VecElementID > m_edgeList;
-    const VecEdges *_topologyEdges;
+    Data< VecElementID >        d_edgeList;
+    const VecEdges*             m_topologyEdges {nullptr};
 
     ///2.m_lengthList: list of the length of each beam
-    Data< vector< double > > m_lengthList;
+    Data< vector< double > >    d_lengthList;
 
     ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
     /// Indexation based on the num of Edge
-    Data< vector< Transform > > m_DOF0TransformNode0;
+    Data< vector< Transform > > d_DOF0TransformNode0;
 
     ///4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
-    Data< vector< Transform > > m_DOF1TransformNode1;
+    Data< vector< Transform > > d_DOF1TransformNode1;
 
-    Data< vector< Vec2 > > m_curvAbsList;
-
+    Data< vector< Vec2 > >      d_curvAbsList;
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
-    Data< sofa::helper::vector<int> > m_beamCollision;
-
+    Data< sofa::helper::vector<int> > d_beamCollision;
 
     /// INPUT / OUTPUT FOR DOING EXTERNAL COMPUTATION OF Beam Interpolation (use it as a kind of data engine)
     ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
-    Data<helper::OptionsGroup > d_vecID;
+    Data< OptionsGroup > d_vecID;
     ///Input 2. Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
     Data< vector< Vec2 > > d_InterpolationInputs;
 
@@ -414,34 +343,28 @@ protected :
     Data< VecCoord > d_InterpolatedPos;
     Data< VecDeriv > d_InterpolatedVel;
 
-
-
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
-    BeamSection _constantSection;
+    BeamSection      m_constantSection;
 
-    // Topology
+    /// Topology
 
     /// pointer to the topology
-    sofa::core::topology::BaseMeshTopology* _topology;
-
-    /// verify that the m_edgeList always contains existing edges
-    bool verifyTopology();
+    BaseMeshTopology* m_topology {nullptr};
 
     /// pointer on mechanical state
-    sofa::core::behavior::MechanicalState<DataTypes> *_mstate;
+    MechanicalState<DataTypes>* m_mstate {nullptr} ;
 
-    // this->brokenInTwo = if true, the wire is in two separate parts
-    bool _isControlled;
-    bool brokenInTwo;
-    unsigned int  _numBeamsNotUnderControl;
+    /// this->brokenInTwo = if true, the wire is in two separate parts
+    bool  m_isControlled            {false} ;
+    bool  m_brokenInTwo              {false} ;
+    unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)
-#pragma warning(disable : 4231)
-#ifndef SOFA_FLOAT
+#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_BEAMINTERPOLATION_CPP)
+#ifdef SOFA_WITH_DOUBLE
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
 #endif
-#ifndef SOFA_DOUBLE
+#ifdef SOFA_WITH_FLOAT
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
 #endif
 #endif
