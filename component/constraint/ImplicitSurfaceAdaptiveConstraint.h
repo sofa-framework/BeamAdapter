@@ -16,7 +16,7 @@
 #include <sofa/helper/vector.h>
 #include <SofaBaseTopology/TopologyData.h>
 
-#include "WireBeamInterpolation.h"
+#include "../WireBeamInterpolation.h"
 
 //#define SOFAEVE  //temporary fix for compilation, this component does not work without SOFAEVE (which is however not accessible easily)
 

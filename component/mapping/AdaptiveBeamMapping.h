@@ -48,9 +48,9 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 
-#include "initBeamAdapter.h"
-#include "BeamInterpolation.h"
-#include "AdaptiveBeamController.h"
+#include "../initBeamAdapter.h"
+#include "../BeamInterpolation.h"
+#include "../controller/AdaptiveBeamController.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

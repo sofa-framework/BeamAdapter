@@ -33,7 +33,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "initBeamAdapter.h"
+#include "../initBeamAdapter.h"
 #include "InterventionalRadiologyController.inl"
 
 #include <sofa/core/ObjectFactory.h>

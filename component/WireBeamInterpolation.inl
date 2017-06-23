@@ -36,10 +36,6 @@
 #ifndef SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_INL
 #define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_INL
 
-#include "WireBeamInterpolation.h"
-#include "WireRestShape.h"
-#include "BeamInterpolation.inl"
-
 #include <sofa/core/behavior/ForceField.inl>
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/helper/decompose.h>
@@ -48,12 +44,14 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-//#include <sofa/helper/OptionsGroup.h>
-
 #include <sofa/helper/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
 #include <algorithm>
+
+#include "engine/WireRestShape.h"
+#include "WireBeamInterpolation.h"
+#include "BeamInterpolation.inl"
 
 namespace sofa
 {
