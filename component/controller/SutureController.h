@@ -45,9 +45,8 @@
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
 
-#include "WireBeamInterpolation.h"
-
-#include "initBeamAdapter.h"
+#include "../WireBeamInterpolation.h"
+#include "../initBeamAdapter.h"
 
 namespace sofa
 {

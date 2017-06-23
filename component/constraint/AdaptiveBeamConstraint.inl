@@ -153,7 +153,7 @@ void AdaptiveBeamConstraint<DataTypes>::buildConstraintMatrix(const ConstraintPa
     unsigned int beam;
 
     ReadAccessor<Data<VecCoord> > x1free=mstate1->read(ConstVecCoordId::freePosition()) ;
-    ReadAccessor<Data<VecCoord> > x2free=mstate1->read(ConstVecCoordId::freePosition()) ;
+    ReadAccessor<Data<VecCoord> > x2free=mstate2->read(ConstVecCoordId::freePosition()) ;
 
     unsigned int m2 = x2free.size();
     WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();

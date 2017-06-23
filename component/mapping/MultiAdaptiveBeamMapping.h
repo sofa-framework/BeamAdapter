@@ -36,9 +36,9 @@
 #ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
 #define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
 
-#include "initBeamAdapter.h"
-#include "WireBeamInterpolation.h"
-#include "InterventionalRadiologyController.h"
+#include "../initBeamAdapter.h"
+#include "../WireBeamInterpolation.h"
+#include "../controller/InterventionalRadiologyController.h"
 #include "AdaptiveBeamMapping.h"
 #include <sofa/core/Mapping.h>
 #include <sofa/core/behavior/MechanicalState.h>

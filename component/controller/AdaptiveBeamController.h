@@ -44,7 +44,7 @@
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
 
-#include "BeamInterpolation.h"
+#include "../BeamInterpolation.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

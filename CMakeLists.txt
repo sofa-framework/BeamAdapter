@@ -8,56 +8,29 @@ set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
-  AdaptiveBeamConstraint.h
-  AdaptiveBeamConstraint.inl
-  AdaptiveBeamController.h
-  AdaptiveBeamController.inl
-  AdaptiveBeamForceFieldAndMass.h
-  AdaptiveBeamForceFieldAndMass.inl
-  AdaptiveBeamLengthConstraint.h
-  AdaptiveBeamLengthConstraint.inl
-  AdaptiveBeamMapping.h
-  AdaptiveBeamMapping.inl
   #BaseRestShape.h
   #BaseRestShape.inl
-  BeamInterpolation.h
-  BeamInterpolation.inl
-  ImplicitSurfaceAdaptiveConstraint.h
-  ImplicitSurfaceAdaptiveConstraint.inl
-  initBeamAdapter.h
-  InterventionalRadiologyController.h
-  InterventionalRadiologyController.inl
-  MultiAdaptiveBeamMapping.h
-  MultiAdaptiveBeamMapping.inl
-  SutureController.h
-  SutureController.inl
-  UnbuiltGenericConstraintSolver.h
-  WireBeamInterpolation.h
-  WireBeamInterpolation.inl
-  WireRestShape.h
-  WireRestShape.inl
-  SteerableCatheter.h
-  SteerableCatheter.inl
+  component/initBeamAdapter.h
+
+  component/BeamInterpolation.h
+  component/BeamInterpolation.inl
+  component/WireBeamInterpolation.h
+  component/WireBeamInterpolation.inl
   )
 
 set(SOURCE_FILES
-  AdaptiveBeamConstraint.cpp
-  AdaptiveBeamController.cpp
-  AdaptiveBeamForceFieldAndMass.cpp
-  AdaptiveBeamLengthConstraint.cpp
-  AdaptiveBeamMapping.cpp
   #BaseRestShape.cpp
-  BeamInterpolation.cpp
-  ImplicitSurfaceAdaptiveConstraint.cpp
-  initBeamAdapter.cpp
-  InterventionalRadiologyController.cpp
-  MultiAdaptiveBeamMapping.cpp
-  SutureController.cpp
-  UnbuiltGenericConstraintSolver.cpp
-  WireBeamInterpolation.cpp
-  WireRestShape.cpp
-  SteerableCatheter.cpp
+  component/initBeamAdapter.cpp
+  component/BeamInterpolation.cpp
+  component/WireBeamInterpolation.cpp
   )
+
+include(component/constraint/Constraint.cmake)
+include(component/controller/Controller.cmake)
+include(component/engine/Engine.cmake)
+include(component/forcefield/Forcefield.cmake)
+include(component/mapping/Mapping.cmake)
+include(component/solver/Solver.cmake)
 
 set(README_FILE "BeamAdapter.txt" )
 

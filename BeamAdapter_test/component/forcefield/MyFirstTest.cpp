@@ -26,8 +26,7 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
-
-#include "AdaptiveBeamForceFieldAndMass.h"
+#include "../../../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
 
 namespace sofa
 {
