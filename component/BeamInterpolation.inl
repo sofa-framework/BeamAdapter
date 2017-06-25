@@ -1058,7 +1058,8 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
     /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
     const Real& _L = this->d_lengthList.getValue()[index];
 
-    /// \todo remove call to computeTransform2 => make something faster !
+    /// \todo remove call to
+    /// nsform2 => make something faster !
     Transform global_H_local0, global_H_local1;
     computeTransform2(index,  global_H_local0,  global_H_local1, x);
 
@@ -1501,13 +1502,6 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
     FNode1output = DOF1Global_H_local1 * (f2+f3);
 }
 
-template<class DataTypes>
-bool BeamInterpolation<DataTypes>::breaksInTwo(const Real& /*x_min_out*/,
-                                               Real& /*x_break*/,
-                                               int& /*numBeamsNotUnderControlled*/ )
-{
-    return false;
-}
 
 } /// namespace _beaminterpolation_
 
