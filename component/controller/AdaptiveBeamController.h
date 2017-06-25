@@ -171,8 +171,6 @@ protected:
     Data<Real>                  d_step;
     Data<Real>                  d_angularStep;
     Data<Real>                  d_speed;
-    Data<Coord>                 d_startingPos;
-    Data<Real>                  d_threshold;
 
     BInterpolation*             m_adaptiveinterpolation {nullptr};
 
@@ -181,24 +179,6 @@ protected:
 
     bool                        FF {false} ;
     bool                        RW {false} ;
-
-    FixedConstraint<DataTypes>* m_fixedConstraint {nullptr} ;
-    vector<int>                 m_droppedInstruments ;
-
-    vector<Real>                m_nodeCurvAbs ;
-    vector<vector<int>>         m_id_instrument_curvAbs_table ;
-    unsigned int                m_numControlledNodes {0};  // excluding the nodes that are "dropped"
-
-    bool                        m_dropCall {false};
-
-    /////////// Interface for other Adaptive Control
-    BaseMeshTopology*                     m_topology {nullptr} ;
-    EdgeSetGeometryAlgorithms<DataTypes>* m_edgeGeo {nullptr} ;
-    EdgeSetTopologyModifier*              m_edgeMod {nullptr} ;
-    Coord                                 m_refPos;
-    vector<Real>                          m_vertexT; //=> replace by curvilinearAbs;
-    Real                                  m_edgeTLength {0} ;
-
 };
 
 } /// namespace _adaptivebeamcontroller_

@@ -75,15 +75,18 @@ AdaptiveBeamController<DataTypes>::AdaptiveBeamController()
     , d_step(initData(&d_step,(Real)0.1,"step","base step when changing beam length"))
     , d_angularStep(initData(&d_angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
     , d_speed(initData(&d_speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
-    , d_startingPos(initData(&d_startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-    , d_threshold(initData(&d_threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
 {
 }
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::init()
 {
+    //////////////////// Initialize internal data structure. ///////////////////////////////////////
+    m_xAbs_collisionPoints_buf.clear();
+
+    //////////////////// Handle the component's attributes /////////////////////////////////////////
     BaseContext* c = this->getContext();
+    this->f_listening.setValue(true);
 
     const vector<std::string>& interpolName = d_interpolationPath.getValue();
     if (interpolName.empty()) {
@@ -99,17 +102,12 @@ void AdaptiveBeamController<DataTypes>::init()
         msg_info() <<"This component operates on '"<<m_adaptiveinterpolation->getName()<<"'." ;
     }
 
-    //////// INIT:
-    m_xAbs_collisionPoints_buf.clear();
-
-    if(d_speed.getValue()>0)
+    if(d_speed.getValue())
     {
         FF=true;
         RW=false;
     }
 
-    m_topology = this->getContext()->getMeshTopology();
-    this->f_listening.setValue(true);
 
     Inherit::init();
 
@@ -155,25 +153,28 @@ bool AdaptiveBeamController<DataTypes>::activeLine(int index, core::CollisionMod
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent *mev)
 {
+    /// Retrieve the mouse position
     int PosX = mev->getPosX();
     int PosY = mev->getPosY();
 
-    //Translation input
+    /// Translation input
     Real PosYcorr = 0.0;
     int idy = d_controlledInstrument.getValue();
-    vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+    vector<Real> &x_instr_tip = (*d_xtip.beginEdit());
     if (idy >= (int)x_instr_tip.size()){
-        std::cerr<<"WARNING controlled Instument num "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
+        msg_warning() << "The instrument number "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") switching to instrument 0 instead.";
         idy=0;
     }
     PosYcorr = -PosY*0.2;
     x_instr_tip[idy] += PosYcorr;
     this->d_xtip.endEdit();
 
-    //Rotation input
+    /// Rotation input
     Real PosXcorr = 0.0;
+
+    //TODO(dmarchal@cduriez) why is this the same as idy but with a different name?
     int idx = d_controlledInstrument.getValue();
-    vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+    vector<Real> &rot_instrument = (*d_rotationInstrument.beginEdit());
     PosXcorr = PosX*0.015;
     rot_instrument[idx] += PosXcorr;
 }
@@ -187,10 +188,6 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
     ///////////////////////////////// Control keys for interventonal Radiology simulations:
     switch(kev->getKey())
     {
-    case 'D':
-        this->m_dropCall = true;
-        break;
-
     case '0':
         this->d_controlledInstrument.setValue(0);
         break;
@@ -201,7 +198,6 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
         vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
         rot_instrument[id] += d_angularStep.getValue();
         this->d_rotationInstrument.endEdit();
-
     }
         break;
     case 'E':
@@ -245,7 +241,6 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
         if(RW)
         {
             RW=false;
-
         }
         else
         {
