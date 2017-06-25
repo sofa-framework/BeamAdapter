@@ -1114,7 +1114,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     {
         x=m_mstate->read( core::ConstVecCoordId::freePosition() ) ;
     }
-    else // rest position
+    else /// rest position
     {
         x=m_mstate->read( core::ConstVecCoordId::restPosition() ) ;
         computeVel = false;

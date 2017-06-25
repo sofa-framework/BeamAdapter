@@ -56,6 +56,7 @@
 namespace sofa
 {
 
+//TODO(dmarchal 2017-05-25) Finish it or remove it in one month.
 #if 0
 namespace utils
 {
@@ -82,6 +83,20 @@ public:
     typedef StdRigidTypes<3,Real> VecCoord ;
     typedef Vec<3,Real> Vec3;
 
+    template<class DataTypes>
+    void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
+    {
+        if (d_dofsAndBeamsAligned.getValue())
+        {
+            DOF0_H_local0.clear();
+            DOF1_H_local1.clear();
+            return;
+        }
+
+        DOF0_H_local0 = d_DOF0TransformNode0.getValue()[edgeInList];
+        DOF1_H_local1 = d_DOF1TransformNode1.getValue()[edgeInList];
+    }
+
     int getNodeIndices(unsigned int edgeInList,
                        unsigned int &node0Idx,
                        unsigned int &node1Idx )
@@ -107,19 +122,21 @@ public:
 //        return -1;
 //    }
 
-    static int getFrameFromIndex(const unsigned int node0Idx,
-                                 const unsigned int node1Idx,
-                                 const VecCoord &x
-                                 Transform &global_H_local0,
-                                 Transform &global_H_local1)
+    static void getFrameFromIndex(const unsigned int node0Idx,
+                                  const unsigned int node1Idx,
+                                  const VecCoord &x
+                                  Transform localTransform0,
+                                  Transform localTransform1,
+                                  Transform &global_H_local0,
+                                  Transform &global_H_local1)
     {
         /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
         Transform DOF0_H_local0, DOF1_H_local1;
-        getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
+        //getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
 
         /// 3. Computes the transformation global To local for both nodes
-        Transform global_H_DOF0(x[node0Idx].getCenter(),x[node0Idx].getOrientation());
-        Transform global_H_DOF1(x[node1Idx].getCenter(),x[node1Idx].getOrientation());
+        Transform global_H_DOF0(x[node0Idx].getCenter(), x[node0Idx].getOrientation());
+        Transform global_H_DOF1(x[node1Idx].getCenter(), x[node1Idx].getOrientation());
         /// - add a optional transformation
         global_H_local0 = global_H_DOF0*DOF0_H_local0;
         global_H_local1 = global_H_DOF1*DOF1_H_local1;

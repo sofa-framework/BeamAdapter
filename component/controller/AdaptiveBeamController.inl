@@ -87,16 +87,17 @@ void AdaptiveBeamController<DataTypes>::init()
 
     const vector<std::string>& interpolName = d_interpolationPath.getValue();
     if (interpolName.empty()) {
-        m_adaptiveinterpolation= c->get<BInterpolation>(core::objectmodel::BaseContext::Local);
+        m_adaptiveinterpolation = c->get<BInterpolation>(BaseContext::Local);
     } else {
         m_adaptiveinterpolation = c->get<BInterpolation>(d_interpolationPath.getValue()[0]);
     }
 
-    if(m_adaptiveinterpolation==nullptr)
-        serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
-    else
-        sout<<" interpolation named"<<m_adaptiveinterpolation->getName()<<" found (for "<<this->getName()<<")"<<sendl;
-
+    if(m_adaptiveinterpolation==nullptr){
+        msg_error() <<"No Beam Interpolation component found. This component is thus de-actiated. "<<sendl;
+    }
+    else {
+        msg_info() <<"This component operates on '"<<m_adaptiveinterpolation->getName()<<"'." ;
+    }
 
     //////// INIT:
     m_xAbs_collisionPoints_buf.clear();
@@ -160,7 +161,7 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEve
     //Translation input
     Real PosYcorr = 0.0;
     int idy = d_controlledInstrument.getValue();
-    sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+    vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
     if (idy >= (int)x_instr_tip.size()){
         std::cerr<<"WARNING controlled Instument num "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
         idy=0;
@@ -172,7 +173,7 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEve
     //Rotation input
     Real PosXcorr = 0.0;
     int idx = d_controlledInstrument.getValue();
-    sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+    vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
     PosXcorr = PosX*0.015;
     rot_instrument[idx] += PosXcorr;
 }
@@ -197,7 +198,7 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
     case 'A':
     {
         int id = d_controlledInstrument.getValue();
-        sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
         rot_instrument[id] += d_angularStep.getValue();
         this->d_rotationInstrument.endEdit();
 
@@ -207,7 +208,7 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
     {
 
         int id = d_controlledInstrument.getValue();
-        sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
         rot_instrument[id] -= d_angularStep.getValue();
         this->d_rotationInstrument.endEdit();
 
@@ -216,9 +217,9 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
     case '+':
     {
         int id = d_controlledInstrument.getValue();
-        sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+        vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
         if (id >= (int)x_instr_tip.size()){
-            std::cerr<<"WARNING controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
+            msg_warning() << "Controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead" ;
             id=0;
         }
         x_instr_tip[id] += d_step.getValue();
@@ -229,9 +230,9 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::Key
     case '-':
     {
         int id = d_controlledInstrument.getValue();
-        sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+        vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
         if (id >= (int)x_instr_tip.size()){
-            std::cerr<<"WARNING controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<std::endl;
+            msg_warning() << "Controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead" ;
             id=0;
         }
         x_instr_tip[id] -= d_step.getValue();
@@ -285,7 +286,7 @@ void AdaptiveBeamController<DataTypes>::applyController()
 
     /////// analyse de la beam actuelle :: TODO => use nodeCurvAbs which store this info
     Real totalLength=0.0;
-    sofa::helper::vector<Real> oldCurvAbs, newCurvAbs;
+    vector<Real> oldCurvAbs, newCurvAbs;
     oldCurvAbs.push_back(0.0);
     unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
     for (unsigned int b=0; b<numBeams; b++)
@@ -295,7 +296,7 @@ void AdaptiveBeamController<DataTypes>::applyController()
     }
 
     Real totalSplineLength=0.0;
-    sofa::helper::vector<Real> splineAbs;
+    vector<Real> splineAbs;
     Vec3 P0,P1,P2,P3;
     splineAbs.push_back(0.0);
     for (unsigned int b=0; b<numBeams; b++)
@@ -309,7 +310,6 @@ void AdaptiveBeamController<DataTypes>::applyController()
         totalSplineLength += l;
         splineAbs.push_back(totalSplineLength);
     }
-
 
     Real samplingSpline = totalSplineLength/numBeams;
     Real x_spline=0;

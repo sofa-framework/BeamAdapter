@@ -291,7 +291,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::reinit()
 {
-    applyController();
 }
 
 

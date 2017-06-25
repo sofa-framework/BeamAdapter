@@ -96,7 +96,7 @@ using sofa::helper::vector ;
  * @brief AdaptiveBeamController Mouse & Keyboard controller for EdgeSetTopology
  *
  * This component provides an interaction technique based on Mouse & Keyboard that allow user to
- * control on an EdgeSet Topology.
+ * control an EdgeSet Topology.
  *
  * More informations about SOFA components:
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
@@ -150,17 +150,6 @@ public :
     virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *) override ;
     virtual void onBeginAnimationStep(const double dt) override ;
 
-    // TODO(dmarchal 2017-05-17) to eulalie & christian (remove 1 one year if not answered)
-    // there is a non-virtual function in MechanicalStateControlller but it is non virtual..
-    // so so should applyController really be a virtual metho ?
-    virtual void applyController(void) /* override */ ;
-
-    // TODO(dmarchal 2017-05-17) to eulalie & christian (remove 1 one year if not answered)
-    // there is a non-virtual function in MechanicalStateControlller with this name and it is not
-    // not used do we need this  function ?
-    virtual bool modifyTopology(void) /* override */ { return false;}
-
-
     //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
     virtual std::string getTemplateName() const
     {
@@ -172,8 +161,9 @@ public :
       return DataTypes::Name();
     }
 
-
 protected:
+    void applyController(void) ;
+
     Data<vector<std::string>>   d_interpolationPath;
     Data<int>                   d_controlledInstrument;
     Data<vector<Real>>          d_xtip;
@@ -208,6 +198,7 @@ protected:
     Coord                                 m_refPos;
     vector<Real>                          m_vertexT; //=> replace by curvilinearAbs;
     Real                                  m_edgeTLength {0} ;
+
 };
 
 } /// namespace _adaptivebeamcontroller_

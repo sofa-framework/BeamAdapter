@@ -71,8 +71,7 @@ using sofa::defaulttype::Vec3d ;
 using sofa::helper::vector;
 /*!
  * \class WireBeamInterpolation
- * AdaptiveBeam Interpolation provides the basis of the Beam computation
- * As the computation is adaptive, the interpolation can be modified at each time step.
+ * WireAdaptiveBeam Interpolation provides the implementation of a 1D parameteric beam model.
  *
  * Compute Finite Element elastic force and mass based on Adaptive 6D beam elements.
  * - Adaptive beam interpolation

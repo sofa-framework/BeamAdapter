@@ -48,29 +48,30 @@
 #include <SofaMeshCollision/LineModel.h>
 
 
+/////////////////////////// FORWARD DECLARATION ////////////////////////////////////////////////////
+namespace sofa {
+namespace component {
+namespace topology {
+    template <class T> class EdgeSetGeometryAlgorithms;
+    class EdgeSetTopologyModifier;
+    }
+  }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using namespace sofa::component::fem;
-using namespace sofa::helper;
 
+
+/////////////////////////////////// DECLARATION ////////////////////////////////////////////////////
 namespace sofa
 {
-
 namespace component
 {
-namespace topology
-{
-template <class T>
-class EdgeSetGeometryAlgorithms;
-
-class EdgeSetTopologyModifier;
-}
-
-
 namespace controller
 {
-
 using sofa::defaulttype::Vec;
 using sofa::defaulttype::Vec3d;
+using namespace sofa::component::fem;
+using namespace sofa::helper;
 
 
 /*!
@@ -80,7 +81,9 @@ using sofa::defaulttype::Vec3d;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class InterventionalRadiologyController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
+class InterventionalRadiologyController : public MechanicalStateController<DataTypes>,
+                                          public collision::PointActiver,
+                                          public collision::LineActiver
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
@@ -99,89 +102,18 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
 
-
     typedef typename std::vector<Real>::const_iterator RealConstIterator;
-
-protected:
-
-    //conditional elements for construction of InterventionalRadiologyController
-    Data< helper::vector< std::string > >  m_instrumentsPath;
-    sofa::helper::vector< WBeamInterpolation * > m_instrumentsList;
-
-public:
-    //void setPathToInstruments(const helper::vector<std::string>& v){m_instrumentsPath.setValue(v);}
-    /////////////// Point & Line Activer interface
-    bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
-    {
-
-        // std::cout<<"activePoint is called : "<<activated_Points_buf<<std::endl;
-
-
-
-        return activated_Points_buf[index];
-
-
-
-
-    }
-
-    bool activeLine(int index, core::CollisionModel * /*cm*/ = 0)
-    {
-        return activated_Points_buf[index+1];
-
-    }
-
-
-    /////////////////////
-
     typedef Vec<3, Real> Vec3;
 
-    /**
-     * @brief Default Constructor.
-     */
+public:
     InterventionalRadiologyController();
+    virtual ~InterventionalRadiologyController(){}
 
-    /**
-     * @brief Default Destructor.
-     */
-    virtual ~InterventionalRadiologyController(){};
-
-    /**
-     * @brief SceneGraph callback initialization method.
-     */
-    virtual void init();
-
-    virtual void bwdInit();
-
-    virtual void reinit();
-
-    /**
-     * @name Controller Interface
-     */
-    //@{
-
-    /**
-     * @brief Mouse event callback.
-     */
-    virtual void onMouseEvent(core::objectmodel::MouseEvent *);
-
-    /**
-     * @brief Keyboard key pressed event callback.
-     */
-    virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *);
-
-
-    /**
-     * @brief Begin Animation event callback.
-     */
-    virtual void onBeginAnimationStep(const double dt);
-
-    //@}
-
-    /**
-     * @name Accessors
-     */
-    //@{
+    ////////////////////// Inherited from BaseObject ///////////////////////////////////////////////
+    virtual void init() override ;
+    virtual void bwdInit() override ;
+    virtual void reinit() override;
+    virtual void draw(const core::visual::VisualParams*) override {}
 
     virtual std::string getTemplateName() const
     {
@@ -193,51 +125,60 @@ public:
         return DataTypes::Name();
     }
 
-    //@}
+
+    ////////////////////// Inherited from Controller ///////////////////////////////////////////////
+    virtual void onMouseEvent(core::objectmodel::MouseEvent *) override ;
+    virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *) override ;
+    virtual void onBeginAnimationStep(const double dt) override ;
 
 
-    /**
-     * @brief Apply the controller modifications to the controlled MechanicalState.
-     */
-    virtual void applyController(void){      }
+    ////////////////////// For Point & Line Activer interface //////////////////////////////////////
+    bool activePoint(int index, core::CollisionModel * /*cm*/ = 0)
+    {
+        return activated_Points_buf[index];
+    }
 
-    /**
-     * @brief
-     */
+    bool activeLine(int index, core::CollisionModel * /*cm*/ = 0)
+    {
+        return activated_Points_buf[index+1];
+    }
+
     virtual bool modifyTopology(void){ return false;}
 
-    /**
-     * @brief
-     */
-    virtual void draw(const core::visual::VisualParams*){}
-
     void interventionalRadiologyCollisionControls(sofa::helper::vector<Real> &x_point_list,
-                                                  sofa::helper::vector<int> &id_instrument_list, sofa::helper::vector<int> &removeEdge);
+                                                  sofa::helper::vector<int> &id_instrument_list,
+                                                  sofa::helper::vector<int> &removeEdge);
 
     void getInstrumentList(sofa::helper::vector< sofa::component::fem::WireBeamInterpolation<DataTypes>  *>& list){
         list = m_instrumentsList;
     }
 
     const vector< vector<int> >& get_id_instrument_curvAbs_table()const {return id_instrument_curvAbs_table;}
-    int getTotalNbEdges()const {return this->getContext()->getMeshTopology()->getNbEdges();}
-protected:
+    int getTotalNbEdges()const { return this->getContext()->getMeshTopology()->getNbEdges();}
 
-    ////// for point and line activer
+protected:
+    //conditional elements for construction of InterventionalRadiologyController
+    Data< helper::vector< std::string > >  m_instrumentsPath;
+    sofa::helper::vector< WBeamInterpolation * > m_instrumentsList;
+
+    ///////////////////////////////// for point and line activer
     sofa::helper::vector<bool> activated_Points_buf;
 
-    ////////// Interface for interventionalRadiology instruments:
+    /////////////////////////// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
-    void interventionalRadiologyComputeSampling(sofa::helper::vector<Real> &newCurvAbs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table,
+    void interventionalRadiologyComputeSampling(sofa::helper::vector<Real> &newCurvAbs,
+                                                sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table,
                                                 const sofa::helper::vector<Real> &xBegin, const Real& xEnd);
     void sortCurvAbs(sofa::helper::vector<Real> &CurvAbs,  sofa::helper::vector< sofa::helper::vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const sofa::helper::vector<Real>& newNodeCurvAbs, sofa::helper::vector<Real>& modifiedNodeCurvAbs,
                                const sofa::helper::vector< sofa::helper::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
 
-    void activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs, sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table);
-    void loadMotionData(std::string filename);
+    void activateBeamListForCollision( sofa::helper::vector<Real> &curv_abs,
+                                       sofa::helper::vector< sofa::helper::vector<int> > &id_instrument_table);
 
+    void loadMotionData(std::string filename);
 
     Data<int> controlledInstrument;
     Data< sofa::helper::vector<Real> > xtip;
@@ -252,8 +193,6 @@ protected:
     Data<unsigned int> indexFirstNode; // First Node simulated
     Data< sofa::helper::vector<Real> > d_CurvAbs; //
 
-
-
     bool FF, RW, sensored;
     sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *_fixedConstraint;
     sofa::helper::vector<int> droppedInstruments;
@@ -267,8 +206,7 @@ protected:
 
     bool dropCall;
 
-
-    /////////// Interface for other Adaptive Control
+    ///////////////////////// Interface for other Adaptive Control /////////////////////////////////
     sofa::core::topology::BaseMeshTopology* _topology;
     sofa::component::topology::EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo;
     sofa::component::topology::EdgeSetTopologyModifier* edgeMod;
@@ -279,7 +217,7 @@ protected:
 
     Real edgeTLength;
 
-    /////// for rigidity control
+    ///////////////////////////// for rigidity control /////////////////////////////////////////////
     sofa::helper::vector< std::pair<Real, Real> > rigidCurveSegments, prevRigidCurvSegments;
     sofa::helper::vector< bool > rigidBeamList;
     sofa::helper::vector<Transform> vec_global_H_gravityCenter;

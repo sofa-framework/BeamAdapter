@@ -82,7 +82,9 @@ using std::set ;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class SutureController : public MechanicalStateController<DataTypes>, public collision::PointActiver, public collision::LineActiver
+class SutureController : public MechanicalStateController<DataTypes>,
+                         public collision::PointActiver,
+                         public collision::LineActiver
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
