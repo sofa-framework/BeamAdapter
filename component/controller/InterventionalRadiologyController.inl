@@ -191,7 +191,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     if (this->f_printLog.getValue()) sout<<"  +++++++++++++++++ \n Init Interventional Radiology  : instruments found (should be sorted by decreasing radius)"<<sendl;
     for(unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
-        if (this->f_printLog.getValue())  sout<<" "<<i<<". "<<m_instrumentsList[i]->getName()<<"  radius ="<<m_instrumentsList[i]->radius.getValue()<<sendl;
+        if (this->f_printLog.getValue())  sout<<" "<<i<<". "<<m_instrumentsList[i]->getName()<<"  radius ="<<m_instrumentsList[i]->d_radius.getValue()<<sendl;
         m_instrumentsList[i]->setControlled(true);
         /// \todo : automatically sort by radius
     }

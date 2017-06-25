@@ -113,11 +113,11 @@ template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
-    VecElementID &edgeList = *this->m_edgeList.beginEdit();
-    vector< double > &lengthList = *this->m_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    VecElementID &edgeList = *this->d_edgeList.beginEdit();
+    vector< double > &lengthList = *this->d_lengthList.beginEdit();
+    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
+    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
+    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
@@ -125,15 +125,15 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
     curvAbsList.push_back(Vec2(x0, x1));
 
     // as an angle is set between DOFs and Beam, they are no more aligned
-    this->dofsAndBeamsAligned.setValue(false);
+    this->d_dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(DOF0_H_Node0);
     DOF1TransformNode1.push_back(DOF1_H_Node1);
 
-    this->m_edgeList.endEdit();
-    this->m_lengthList.endEdit();
-    this->m_DOF0TransformNode0.endEdit();
-    this->m_DOF1TransformNode1.endEdit();
-    this->m_curvAbsList.endEdit();
+    this->d_edgeList.endEdit();
+    this->d_lengthList.endEdit();
+    this->d_DOF0TransformNode0.endEdit();
+    this->d_DOF1TransformNode1.endEdit();
+    this->d_curvAbsList.endEdit();
 }
 
 
@@ -145,7 +145,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
     serr<<"WARNING : getRestTransform not implemented for not straightRestShape"<<sendl;
 
     // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
-    local0_H_local1_rest.set(Vec3(this->m_lengthList.getValue()[edgeInList], 0, 0), Quat());
+    local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat());
 }
 
 
@@ -154,7 +154,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 {
     if (this->isControlled() && this->m_restShape!=NULL)
     {
-        const Vec2 &curvAbs = this->m_curvAbsList.getValue()[edgeInList];
+        const Vec2 &curvAbs = this->d_curvAbsList.getValue()[edgeInList];
 
         Real x_middle = (curvAbs.x() + curvAbs.y()) / 2;
         Transform global_H_local_middle, global_H_local_0, global_H_local_1;
@@ -175,7 +175,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 
     // the beam is straight: local is in the middle of local0 and local1
     // the transformation between local0 and local1 is provided by the length of the beam
-    double edgeMidLength = this->m_lengthList.getValue()[edgeInList] / 2.0;
+    double edgeMidLength = this->d_lengthList.getValue()[edgeInList] / 2.0;
 
     local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat());
     local_H_local1_rest.set(Vec3(edgeMidLength,0,0), Quat());
@@ -186,7 +186,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start)
 {
-    if(this->brokenInTwo )
+    if(this->m_brokenInTwo )
     {
         Real x_abs_broken = this->m_restShape.get()->getReleaseCurvAbs();
 
@@ -198,7 +198,7 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
             Real x_i = x_input-x_abs_broken;
             Real x=0.0;
 
-            for (unsigned int e=0; e<this->_numBeamsNotUnderControl; e++)
+            for (unsigned int e=0; e<this->m_numBeamsNotUnderControl; e++)
             {
                 x += this->getLength(e);
                 if(x > x_i)
@@ -210,7 +210,7 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
                 }
             }
 
-            edgeInList_output = this->_numBeamsNotUnderControl-1;
+            edgeInList_output = this->m_numBeamsNotUnderControl-1;
             baryCoord_output = 1.0;
             return;
 
@@ -218,7 +218,7 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
         ////////// case 1.b : controlled part !!
         else
         {
-            start = this->_numBeamsNotUnderControl;
+            start = this->m_numBeamsNotUnderControl;
         }
     }
 
@@ -315,7 +315,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
 {
     const Real eps = 0.0000000001;
 
-    if (this->brokenInTwo)
+    if (this->m_brokenInTwo)
     {
         serr << " already broken" << sendl;
         return false;
@@ -333,18 +333,18 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
         return false;
 
     // put the info of the "released" part of the beam in the beginning of the beams;
-    this->_numBeamsNotUnderControl=0;
+    this->m_numBeamsNotUnderControl=0;
     unsigned int duplicatePoint=0;
 
     // browse the curvilinear abscissa to find the point that needs to be duplicate
     // put the info of the second part of the wire at the begining
     unsigned int i=0;
 
-    VecElementID &edgeList = *this->m_edgeList.beginEdit();
-    vector< double > &lengthList = *this->m_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->m_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->m_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->m_curvAbsList.beginEdit();
+    VecElementID &edgeList = *this->d_edgeList.beginEdit();
+    vector< double > &lengthList = *this->d_lengthList.beginEdit();
+    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
+    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
+    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
 
     const unsigned int curvAbsListSize = curvAbsList.size();
 
@@ -353,7 +353,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
         if (fabs(curvAbsList[e].x() - x_break) < eps)
         {
             duplicatePoint = e;
-            this->_numBeamsNotUnderControl = curvAbsListSize - e;
+            this->m_numBeamsNotUnderControl = curvAbsListSize - e;
         }
 
         if (curvAbsList[e].x() > (x_break - eps))
@@ -364,7 +364,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
 
             // When the instrument are rotated we apply a transformation between DOF and beam node
             // (should always be the case and dofsAndBeamsAligned should be false)
-            if (!this->dofsAndBeamsAligned.getValue())
+            if (!this->d_dofsAndBeamsAligned.getValue())
             {
                 DOF0TransformNode0[i] = DOF0TransformNode0[e];
                 DOF1TransformNode1[i] = DOF1TransformNode1[e];
@@ -374,19 +374,19 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
         }
     }
 
-    this->m_edgeList.endEdit();
-    this->m_lengthList.endEdit();
-    this->m_DOF0TransformNode0.endEdit();
-    this->m_DOF1TransformNode1.endEdit();
-    this->m_curvAbsList.endEdit();
+    this->d_edgeList.endEdit();
+    this->d_lengthList.endEdit();
+    this->d_DOF0TransformNode0.endEdit();
+    this->d_DOF1TransformNode1.endEdit();
+    this->d_curvAbsList.endEdit();
 
     if (duplicatePoint == 0)
         serr << " Problem no point were found at the x_break position ! getReleaseCurvAbs() should provide a <<notable>> point" << sendl;
 
     m_restShape.get()->releaseWirePart();
-    numBeamsNotUnderControlled = this->_numBeamsNotUnderControl;
+    numBeamsNotUnderControlled = this->m_numBeamsNotUnderControl;
 
-    this->brokenInTwo = true;
+    this->m_brokenInTwo = true;
 
     return true;
 }
