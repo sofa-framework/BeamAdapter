@@ -64,6 +64,7 @@ namespace _beaminterpolation_
 
 #define BEAMADAPTER_WITH_VERIFICATION false
 
+using sofa::core::objectmodel::ComponentState ;
 using sofa::core::behavior::MechanicalState;
 using sofa::core::ConstVecCoordId ;
 using sofa::core::objectmodel::BaseContext ;
@@ -111,9 +112,9 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_lengthY(initData(&d_lengthY, (Real)1.0f, "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
   , d_lengthZ(initData(&d_lengthZ, (Real)1.0f, "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
   , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
-                                 "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
+                                   "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, (Real) 100000, "defaultYoungModulus",
-                                 "value of the young modulus if not defined in an other component"))
+                                   "value of the young modulus if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
@@ -134,7 +135,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
 {
     this->m_brokenInTwo=false;
     m_isControlled=false;
-    this->m_numBeamsNotUnderControl = 0;
+    m_numBeamsNotUnderControl = 0;
     m_StateNodes->setName("bezierNodes");
     this->addSlave(m_StateNodes);
 }
@@ -162,13 +163,15 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
     }
     else
     {
-        std::cout << "CROSS SECTION SHAPE !!!! " << this->crossSectionShape.getValue().getSelectedItem() << std::endl;
+        msg_info() << "Cross section shape." << this->crossSectionShape.getValue().getSelectedItem() ;
         this->m_constantSection._r = this->d_radius.getValue();
         this->m_constantSection._rInner = this->d_innerRadius.getValue();
         double r = this->d_radius.getValue();
         if (r <= 0.0)
         {
             serr << "Radius must be positive" << sendl;
+
+            //TODO(dmarchal @ cduriez 2017-06-26) do we ever enter into this condition ?
             if (r>0)
             {
                 serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
@@ -195,28 +198,40 @@ void BeamInterpolation<DataTypes>::init()
     this->f_printLog.setValue(true);
 
     computeCrossSectionInertiaMatrix();
-
-    BaseContext * context = this->getContext();
-
-    /// Init Adaptive Topology:
-    this->m_topology = context->getMeshTopology();
 }
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::bwdInit()
 {
-    if(!this->verifyTopology())
-        serr<<"no topology found"<<sendl;
-
-    BaseContext * context = this->getContext();
+    BaseContext* context = this->getContext();
 
     m_mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
-
     if (m_mstate == nullptr)
     {
-        serr << "WARNING no MechanicalState found bwdInit failed" << sendl;
+        msg_error() << "No MechanicalState found. Component is de-activated." ;
+        m_componentstate = ComponentState::Invalid ;
         return;
     }
+
+    /// Get the topology from context and check if it is valid.
+    m_topology = context->getMeshTopology();
+    if(!m_topology)
+    {
+        msg_error() << "No Topology found. Component is de-activated." ;
+        m_componentstate = ComponentState::Invalid ;
+        return ;
+    }
+
+    /// Check the topology properties
+    if(m_topology->getNbEdges()==0)
+    {
+        msg_error() << "Found a topology but it is empty. Component is de-activated" ;
+        m_componentstate =ComponentState::Invalid ;
+        return ;
+    }
+
+    m_topologyEdges = &m_topology->getEdges();
+
 
     if (!interpolationIsAlreadyInitialized())
     {
@@ -224,7 +239,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
         edgeList.clear();
 
-        for (int i=0; i<this->m_topology->getNbEdges(); i++)
+        for (int i=0; i<m_topology->getNbEdges(); i++)
         {
             edgeList.push_back(i);
         }
@@ -260,20 +275,38 @@ void BeamInterpolation<DataTypes>::bwdInit()
         }
 
         d_lengthList.endEdit();
+    }
 
-        if (!this->verifyTopology())
-            serr << "WARNING bwdInit failed" << sendl;
+    if(!verifyTopology())
+    {
+        m_componentstate = ComponentState::Invalid ;
+        return ;
     }
 }
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::reinit(){ init(); bwdInit(); }
+void BeamInterpolation<DataTypes>::reinit()
+{
+    init(); bwdInit();
+}
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::storeResetState(){ updateInterpolation();}
+void BeamInterpolation<DataTypes>::storeResetState()
+{
+    if(m_componentstate==ComponentState::Invalid)
+        return ;
+
+    updateInterpolation();
+}
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::reset(){bwdInit(); this->m_numBeamsNotUnderControl=0;}
+void BeamInterpolation<DataTypes>::reset()
+{
+    if(m_componentstate==ComponentState::Invalid)
+        return ;
+
+    bwdInit(); m_numBeamsNotUnderControl=0;
+}
 
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
@@ -301,35 +334,20 @@ bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
-    if (this->m_topology==nullptr)
+    //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
+    dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
+
+    const VecElementID &edgeList = d_edgeList.getValue();
+    for (unsigned int j = 0; j < edgeList.size(); j++)
     {
-        msg_error() << "Object must have a BaseMeshTopology (i.e. EdgeSetTopology or MeshTopology)." ;
-        return false;
-    }
-    else
-    {
-        if(this->m_topology->getNbEdges()==0)
+        if(edgeList[j] > m_topologyEdges->size())
         {
-            msg_error() << "Topology is empty." ;
+            msg_error() << "The provided edge index '" << edgeList[j] << "'is larger than '"
+                        << m_topologyEdges->size() << "' the amount of edges in the topology. " ;
             return false;
         }
-
-        this->m_topologyEdges = &this->m_topology->getEdges();
-
-        //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
-        dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
-
-        const VecElementID &edgeList = d_edgeList.getValue();
-        for (unsigned int j = 0; j < edgeList.size(); j++)
-        {
-            if(edgeList[j] > this->m_topologyEdges->size())
-            {
-                dmsg_info() << "WARNING defined this->m_edgeList is not compatible with topology" ;
-                return false;
-            }
-        }
-
     }
+
 
     return true;
 }
@@ -730,7 +748,7 @@ int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
                                                  unsigned int &node0Idx,
                                                  unsigned int &node1Idx )
 {
-    if ( this->m_topologyEdges==nullptr)
+    if ( m_topologyEdges==nullptr)
     {
         msg_error() <<"This object does not have edge topology defined (computation halted). " ;
         return -1;
@@ -738,7 +756,7 @@ int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
 
     /// 1. Get the indices of element and nodes
     ElementID e = this->d_edgeList.getValue()[edgeInList] ;
-    core::topology::BaseMeshTopology::Edge edge=  (*this->m_topologyEdges)[e];
+    core::topology::BaseMeshTopology::Edge edge=  (*m_topologyEdges)[e];
     node0Idx = edge[0];
     node1Idx = edge[1];
 
@@ -1107,7 +1125,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
         dmsg_info() <<" position " << msgendl
-                    << "      ="<< m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
+                   << "      ="<< m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
         x=m_mstate->read( core::ConstVecCoordId::position() );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
