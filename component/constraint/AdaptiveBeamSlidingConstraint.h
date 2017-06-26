@@ -56,6 +56,7 @@ using sofa::defaulttype::BaseVector ;
 using sofa::core::objectmodel::Data ;
 using sofa::defaulttype::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;
+using std::vector;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
@@ -112,7 +113,7 @@ public:
                                         const DataVecCoord &x1, const DataVecCoord &x2,
                                         const DataVecDeriv &v1, const DataVecDeriv &v2) override;
 
-    virtual void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    virtual void getConstraintResolution(vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 protected:
@@ -126,15 +127,15 @@ private:
 
     unsigned int          m_cid;
     int                   m_nbConstraints; 		/*!< number of constraints created */
-    std::vector<Real>     m_violations;
-    std::vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
-    std::vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
-    std::vector<bool>     m_projected;
+    vector<Real>     m_violations;
+    vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
+    vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
+    vector<bool>     m_projected;
 
     /*! link to the interpolation component in the scene */
     SingleLink<AdaptiveBeamSlidingConstraint<DataTypes>,
-    WireBeamInterpolation<DataTypes>,
-    BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+               WireBeamInterpolation<DataTypes>,
+               BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 
     ////////////////////////// Inherited attributes ////////////////////////////

@@ -29,7 +29,16 @@
 
 #include "AdaptiveBeamSlidingConstraint.inl"
 
+
+using sofa::core::objectmodel::BaseObject ;
+using sofa::core::objectmodel::BaseContext ;
+using sofa::core::objectmodel::BaseObjectDescription ;
+#include "../../utils/deprecatedcomponent.h"
+using sofa::component::DeprecatedComponent;
+using sofa::defaulttype::Rigid3dTypes;
+using sofa::defaulttype::Rigid3fTypes;
 using sofa::core::RegisterObject;
+
 
 namespace sofa
 {
@@ -86,23 +95,25 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
 
 int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
         #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3fTypes> >()
+        .add< AdaptiveBeamSlidingConstraint<Rigid3fTypes> >()
         #endif
         #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3dTypes> >()
+        .add< AdaptiveBeamSlidingConstraint<Rigid3dTypes> >()
         #endif
         ;
 
 #ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3fTypes>;
+template class AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3dTypes>;
+template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
 #endif
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace _AdaptiveBeamSlidingConstraint_
@@ -114,14 +125,11 @@ template class AdaptiveBeamSlidingConstraint<sofa::defaulttype::Rigid3dTypes>;
 } // namespace sofa
 
 
+
+
+
 ///////////////////////////////// DEPRECATION MANAGEMENT FOR BACKWARD COMPATIBILITY ///////////////////
-#include "../../utils/deprecatedcomponent.h"
-
-using sofa::core::objectmodel::BaseObject ;
-using sofa::core::objectmodel::BaseContext ;
-using sofa::core::objectmodel::BaseObjectDescription ;
-
-class AdaptiveBeamConstraint : public sofa::component::DeprecatedComponent
+class AdaptiveBeamConstraint : public DeprecatedComponent
 {
 public:
     /// Pre-construction check method called by ObjectFactory.

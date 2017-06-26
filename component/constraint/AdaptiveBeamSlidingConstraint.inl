@@ -235,7 +235,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
 
 template<class DataTypes>
 void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintViolation(const ConstraintParams* cParams,
-                                                               defaulttype::BaseVector *v, const
+                                                               BaseVector *v, const
                                                                DataVecCoord &x1, const DataVecCoord &x2,
                                                                const DataVecDeriv &v1, const DataVecDeriv &v2)
 {
