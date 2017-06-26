@@ -1,3 +1,5 @@
+#include <regex>
+#include <vector>
 #include <string>
 using std::string ;
 
@@ -32,38 +34,82 @@ using sofa::component::container::MechanicalObject ;
 namespace sofa
 {
 
-struct BeamAdapterTest : public Sofa_test<>
+struct BeamAdapterTest : public Sofa_test<>,
+        public ::testing::WithParamInterface<std::vector<std::string>>
 {
-    void simpleSceneTest(){
+    void simpleScene(const std::vector<std::string>& lines)
+    {
+        assert(lines.size()==3);
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
                 "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
-                "               <Mesh name='meshSuture' edges='0 1' />"
-                "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
-                "               <BeamInterpolation name='Interpol' radius='0.1'/>"
-                "               <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
+                "               $line1"
+                "               <BeamInterpolation template='Rigid' name='Interpol' radius='0.1'/>"
+                "               $line2"
                 "</Node> " ;
-        Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
 
-        ASSERT_NE(root.get(), nullptr);
-        root->init(ExecParams::defaultInstance());
+        scene = std::regex_replace(scene, std::regex("\\$line1"), lines[0]) ;
+        scene = std::regex_replace(scene, std::regex("\\$line2"), lines[1]) ;
 
-        MechanicalObject<Rigid3>* MO = nullptr;
-        root->getTreeObject(MO);
+        if(lines[2]=="T")
+        {
+            EXPECT_MSG_NOEMIT(Error, Warning) ;
 
-        ASSERT_NE(MO, nullptr);
-        EXPECT_TRUE(MO->getName() == "DOFs") ;
+            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
+            ASSERT_NE(root.get(), nullptr);
 
-        component::forcefield::AdaptiveBeamForceFieldAndMass<Rigid3>* FF  = nullptr;
-        root->getTreeObject(FF);
-        ASSERT_NE(FF, nullptr);
+            root->init(ExecParams::defaultInstance());
+            root->reinit(ExecParams::defaultInstance()) ;
+        }else if(lines[2]=="W")
+        {
+            EXPECT_MSG_EMIT(Error) ;
+            EXPECT_MSG_NOEMIT(Warning) ;
+
+            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
+            ASSERT_NE(root.get(), nullptr);
+
+            root->init(ExecParams::defaultInstance());
+            root->reinit(ExecParams::defaultInstance()) ;
+        }
     }
 };
 
-TEST_F(BeamAdapterTest, checkMinimalScene) {
-    ASSERT_NO_THROW(this->simpleSceneTest()) ;
+std::vector<std::vector<std::string>> teststrings ={
+    {
+        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,""
+        , "T"
+    },
+    {
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,"<Mesh name='meshSuture' edges='0 1' />"
+        , "T"
+    },
+    {
+        "<Mesh name='meshSuture' edges='0 1' />"
+        ,"<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        , "W"
+    },
+    {
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
+        , "W"
+    },
+    {
+        "<Mesh name='meshSuture' edges='0 1' />"
+        ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
+        , "W"
+    }
+};
+
+TEST_P(BeamAdapterTest, checkMinimalScene) {
+    ASSERT_NO_THROW(this->simpleScene(GetParam())) ;
 }
+
+INSTANTIATE_TEST_CASE_P(checkMinimalScene,
+                        BeamAdapterTest, ::testing::ValuesIn(teststrings) ) ;
 
 }
