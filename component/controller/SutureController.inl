@@ -54,25 +54,28 @@ namespace component
 namespace controller
 {
 
-using std::set ;
+namespace _suturecontroller_
+{
+
+using sofa::core::objectmodel::BaseContext ;
 
 template <class DataTypes>
-SutureController<DataTypes>::SutureController(fem::WireBeamInterpolation<DataTypes>* _adaptiveinterpolation)
-: startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-, threshold(initData(&threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
-, maxBendingAngle(initData(&maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
-, useDummyController(initData(&useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
-, fixRigidTransforms(initData(&fixRigidTransforms, false, "fixRigidTransforms", "fix the sampling and transformations of rigid segments"))
-, m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
-, m_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _adaptiveinterpolation)
-, m_nodeCurvAbs(initData(&m_nodeCurvAbs, "nodeCurvAbs", ""))
-, m_curvatureList(initData(&m_curvatureList, "curvatureList", "List of the beams curvature (abscissa - curvature)"))
-, m_controlPoints(initData(&m_controlPoints, "controlPoints", "List of the spline control points positions"))
+SutureController<DataTypes>::SutureController(WireBeamInterpolation<DataTypes>* _adaptiveinterpolation)
+: d_startingPos(initData(&d_startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
+, d_threshold(initData(&d_threshold, (Real)0.000001, "threshold", "threshold for controller precision which is homogeneous to the unit of length"))
+, d_maxBendingAngle(initData(&d_maxBendingAngle, (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one beam"))
+, d_useDummyController(initData(&d_useDummyController, false, "useDummyController"," use a very simple controller of adaptativity (use for debug)" ))
+, d_fixRigidTransforms(initData(&d_fixRigidTransforms, false, "fixRigidTransforms", "fix the sampling and transformations of rigid segments"))
+, d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
+, l_adaptiveinterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), _adaptiveinterpolation)
+, d_nodeCurvAbs(initData(&d_nodeCurvAbs, "nodeCurvAbs", ""))
+, d_curvatureList(initData(&d_curvatureList, "curvatureList", "List of the beams curvature (abscissa - curvature)"))
+, d_controlPoints(initData(&d_controlPoints, "controlPoints", "List of the spline control points positions"))
 , m_topology(0)
-, m_updateOnBeginAnimationStep(initData(&m_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
-, m_applyOrientationFirstInCreateNeedle(initData(&m_applyOrientationFirstInCreateNeedle, false, "applyOrientationFirstInCreateNeedle", "if true, it sets first the orientation, then the rotation for a init node of the needle"))
-, m_reinitilizeWireOnInit(initData(&m_reinitilizeWireOnInit, false, "reinitilizeWireOnInit"," reinitialize the wire everytime init() is called (for planning purposes)" ))
-, m_actualStepNoticeablePoints(initData(&m_actualStepNoticeablePoints, "m_actualStepNoticeablePoints", "points (as curv. absc.) that are to be considered when computing a new sampling in the actual time step"))
+, d_updateOnBeginAnimationStep(initData(&d_updateOnBeginAnimationStep, false, "updateOnBeginAnimationStep", "If true update interpolation and subgraph on beginAnimationStep"))
+, d_applyOrientationFirstInCreateNeedle(initData(&d_applyOrientationFirstInCreateNeedle, false, "applyOrientationFirstInCreateNeedle", "if true, it sets first the orientation, then the rotation for a init node of the needle"))
+, d_reinitilizeWireOnInit(initData(&d_reinitilizeWireOnInit, false, "reinitilizeWireOnInit"," reinitialize the wire everytime init() is called (for planning purposes)" ))
+, d_actualStepNoticeablePoints(initData(&d_actualStepNoticeablePoints, "m_actualStepNoticeablePoints", "points (as curv. absc.) that are to be considered when computing a new sampling in the actual time step"))
 {
 }
 
@@ -82,24 +85,24 @@ void SutureController<DataTypes>::init()
     this->f_listening.setValue(true);
     Inherit::init();
 
-    if (!m_adaptiveinterpolation)
+    if (!l_adaptiveinterpolation)
     {
-        core::objectmodel::BaseContext *c=this->getContext();
-        m_adaptiveinterpolation.set(c->get<WInterpolation>(core::objectmodel::BaseContext::Local));
+        BaseContext *c=this->getContext();
+        l_adaptiveinterpolation.set(c->get<WInterpolation>(BaseContext::Local));
     }
 
-    if(!m_adaptiveinterpolation)
+    if(!l_adaptiveinterpolation)
         serr << "No Beam Interpolation found, the component can not work!" << sendl;
 
-    m_adaptiveinterpolation->setControlled(true);
+    l_adaptiveinterpolation->setControlled(true);
 
-    xAbs_collisionPoints_buf.clear();
+    m_XAbsCollisionPointsBuffer.clear();
 
     //TODO(dmarchal 2017-06-01) Please specify who/when this will be done
     /// @TODO : verifier que la topologie est celle d'un wire
     this->getContext()->get(m_topology);
 
-    if (m_reinitilizeWireOnInit.getValue() || !wireIsAlreadyInitialized())
+    if (d_reinitilizeWireOnInit.getValue() || !wireIsAlreadyInitialized())
         initWireModel();
 }
 
@@ -124,9 +127,9 @@ void SutureController<DataTypes>::initWireModel()
 
     // on initialise le "wire" en prenant la position de départ + la forme au repos + la discretisation proposée...
     Transform global_T_init;
-    const Coord startPos = startingPos.getValue();
+    const Coord startPos = d_startingPos.getValue();
 
-    if (m_applyOrientationFirstInCreateNeedle.getValue()) {
+    if (d_applyOrientationFirstInCreateNeedle.getValue()) {
         global_T_init.setOrientation(startPos.getOrientation());
         global_T_init.setOrigin(startPos.getCenter());
     } else {
@@ -135,9 +138,9 @@ void SutureController<DataTypes>::initWireModel()
     }
 
 
-    helper::vector< Real > xP_noticeable;
-    helper::vector< int > nbP_density;
-    m_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
+    vector< Real > xP_noticeable;
+    vector< int > nbP_density;
+    l_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
     // computation of the number of node on the structure:
     unsigned int numNodes = 1;
@@ -147,7 +150,7 @@ void SutureController<DataTypes>::initWireModel()
         numNodes += nbP_density[i]; // numBeams between each noticeable point
     }
 
-    sofa::helper::vector<Real> &nodeCurvAbs = *m_nodeCurvAbs.beginEdit();
+    vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
 
     // Initial position of the nodes:
     nodeCurvAbs.clear();
@@ -174,7 +177,7 @@ void SutureController<DataTypes>::initWireModel()
 #ifdef DEBUG
     std::cout<< "Init the positions of the beam "<<std::endl;
 #endif
-    m_adaptiveinterpolation->clear();
+    l_adaptiveinterpolation->clear();
 
     for (unsigned int i=0; i<nbP_density.size(); i++)
     {
@@ -190,7 +193,7 @@ void SutureController<DataTypes>::initWireModel()
             id_node++;
 
             Transform global_H_localP;
-            m_adaptiveinterpolation->getRestTransformOnX(global_H_localP, x_curv);
+            l_adaptiveinterpolation->getRestTransformOnX(global_H_localP, x_curv);
 #ifdef DEBUG
             std::cout<<" getRestTransformOnX ="<<global_H_localP<<" at "<< x_curv <<std::endl;
 #endif
@@ -212,7 +215,7 @@ void SutureController<DataTypes>::initWireModel()
 
 
             // add the beam to the m_adaptiveinterpolation
-            m_adaptiveinterpolation->addBeam(id_node-1,dx,x_curv-dx,x_curv,0.0  );
+            l_adaptiveinterpolation->addBeam(id_node-1,dx,x_curv-dx,x_curv,0.0  );
 
 #ifdef DEBUG
             std::cout<<" Pos at x_curv ="<<x_curv<<" : "<<x[id_node]<<std::endl;
@@ -223,7 +226,7 @@ void SutureController<DataTypes>::initWireModel()
 
     datax->endEdit();
     datav->endEdit();
-    m_nodeCurvAbs.endEdit();
+    d_nodeCurvAbs.endEdit();
 }
 
 
@@ -246,11 +249,11 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 
     /// When there are rigid segments, # of dofs is different than # of edges and beams
     unsigned int numRigidPts = 0;
-    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    helper::ReadAccessor< Data< std::set< Real > > > rigidCurvAbs = d_rigidCurvAbs;
     int nbRigidAbs = rigidCurvAbs->size();
     if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
     {
-        const helper::vector<Real>& curvAbs = m_nodeCurvAbs.getValue();
+        const vector<Real>& curvAbs = d_nodeCurvAbs.getValue();
         RealConstIterator it;
         unsigned int i = 0, nbCurvAbs = curvAbs.size();
         for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
@@ -288,9 +291,9 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
         return false;
     }
 
-    if (m_adaptiveinterpolation != NULL)
+    if (l_adaptiveinterpolation != NULL)
     {
-        if (m_adaptiveinterpolation->getNumBeams() != (numDofs + numRigidPts - 1))
+        if (l_adaptiveinterpolation->getNumBeams() != (numDofs + numRigidPts - 1))
             return false;
     }
     else
@@ -299,7 +302,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
         return false;
     }
 
-    if (m_nodeCurvAbs.getValue().size() != (numDofs + numRigidPts))
+    if (d_nodeCurvAbs.getValue().size() != (numDofs + numRigidPts))
         return false;
 
     return true;
@@ -323,7 +326,7 @@ void SutureController<DataTypes>::addNodesAndEdge(unsigned int num, Real &xend)
 {
     unsigned int numNodes = this->getMechanicalState()->getSize();
     this->getMechanicalState()->resize( numNodes + num);
-    unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
+    unsigned int numBeams = l_adaptiveinterpolation->getNumBeams();
 #ifdef DEBUG
     std::cout<<" ####  addNodesAndEdge -- Size Mstate ="<<this->getMechanicalState()->getSize()<<std::endl;
 #endif
@@ -331,7 +334,7 @@ void SutureController<DataTypes>::addNodesAndEdge(unsigned int num, Real &xend)
     {
         m_topology->addPoint( 0.0, 0.0, 0.0 );
         m_topology->addEdge( (int)(numNodes-1+i), (int)(numNodes+i) );
-        m_adaptiveinterpolation->addBeam(numBeams-1+i,xend,0.0,xend,0.0  ); // the parameters will be coerrected in applyNewSampling
+        l_adaptiveinterpolation->addBeam(numBeams-1+i,xend,0.0,xend,0.0  ); // the parameters will be coerrected in applyNewSampling
     }
 }
 
@@ -346,7 +349,7 @@ void SutureController<DataTypes>::removeNodesAndEdge(unsigned int num)
         return;
     }
 
-    unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
+    unsigned int numBeams = l_adaptiveinterpolation->getNumBeams();
 
 
     /* ON REMET A JOUR LA TOPO ENTIEREMENT */
@@ -368,7 +371,7 @@ void SutureController<DataTypes>::removeNodesAndEdge(unsigned int num)
 template <class DataTypes>
 void SutureController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
-    if (m_updateOnBeginAnimationStep.getValue())
+    if (d_updateOnBeginAnimationStep.getValue())
     {
         applyController();
     }
@@ -388,7 +391,7 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 template <class DataTypes>
 void SutureController<DataTypes>::onEndAnimationStep(const double /*dt*/)
 {
-    if (!m_updateOnBeginAnimationStep.getValue())
+    if (!d_updateOnBeginAnimationStep.getValue())
     {
         applyController();
     }
@@ -398,10 +401,10 @@ void SutureController<DataTypes>::onEndAnimationStep(const double /*dt*/)
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::dummyController(vector<Real> &newCurvAbs)
 {
     static int compteur = 0;
-    Real length = m_nodeCurvAbs.getValue()[m_nodeCurvAbs.getValue().size() - 1];
+    Real length = d_nodeCurvAbs.getValue()[d_nodeCurvAbs.getValue().size() - 1];
     newCurvAbs.clear();
 
     for (unsigned int i=0; i<=10; i++)
@@ -438,23 +441,23 @@ void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &ne
 
 
     ////////// rigidify a part of the beam //////
-    this->rigidCurveSegments.clear();
+    this->m_rigidCurveSegments.clear();
 
     std::pair<Real, Real> rigidSegment;
 
     rigidSegment.first=3.2*length/10.0;
     rigidSegment.second = 5.5*length/10.0;
-    this->rigidCurveSegments.push_back(rigidSegment);
+    this->m_rigidCurveSegments.push_back(rigidSegment);
 
     rigidSegment.first = 7.5*length/10.0;
     rigidSegment.second = 10*length/10.0;
-    this->rigidCurveSegments.push_back(rigidSegment);
+    this->m_rigidCurveSegments.push_back(rigidSegment);
 
     addRigidCurvAbs(newCurvAbs, 0.0001);
 
     Real totalLength = newCurvAbs[newCurvAbs.size()-1];
-    listOfImposedNodesOnXcurv.push_back(0.23*totalLength);
-    listOfImposedNodesOnXcurv.push_back(0.57*totalLength);
+    m_listOfImposedNodesOnXcurv.push_back(0.23*totalLength);
+    m_listOfImposedNodesOnXcurv.push_back(0.57*totalLength);
 
 #ifdef DEBUG
     std::cout<<"newCurvAbs  = "<<newCurvAbs<<std::endl;
@@ -463,21 +466,21 @@ void SutureController<DataTypes>::dummyController(sofa::helper::vector<Real> &ne
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &newCurvAbs, const Real &tol)
+void SutureController<DataTypes>::addRigidCurvAbs(vector<Real> &newCurvAbs, const Real &tol)
 {
 
 
-    sofa::helper::vector<Real> newCurvAbsBuf=newCurvAbs;
+    vector<Real> newCurvAbsBuf=newCurvAbs;
 
     newCurvAbs.clear();
 
     unsigned int iterator=1;
     newCurvAbs.push_back(newCurvAbsBuf[0]);
 
-    for (unsigned int i=0; i<rigidCurveSegments.size(); i++)
+    for (unsigned int i=0; i<m_rigidCurveSegments.size(); i++)
     {
 
-        while(rigidCurveSegments[i].first > newCurvAbsBuf[iterator])
+        while(m_rigidCurveSegments[i].first > newCurvAbsBuf[iterator])
         {
             newCurvAbs.push_back(newCurvAbsBuf[iterator]) ;
             iterator++;
@@ -486,14 +489,14 @@ void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &ne
         // newCurvAbsBuf[iterator-1]  <  rigidCurveSegments[i].first <  newCurvAbsBuf[iterator]
         //=>  if rigidCurveSegments[i].first ~ newCurvAbsBuf[iterator-1]
         // or if rigidCurveSegments[i].first ~ newCurvAbsBuf[iterator]  => do not add the point
-        if (rigidCurveSegments[i].first - newCurvAbsBuf[iterator-1] > tol && newCurvAbsBuf[iterator] - rigidCurveSegments[i].first > tol)
+        if (m_rigidCurveSegments[i].first - newCurvAbsBuf[iterator-1] > tol && newCurvAbsBuf[iterator] - m_rigidCurveSegments[i].first > tol)
         {
-            newCurvAbs.push_back(rigidCurveSegments[i].first);
+            newCurvAbs.push_back(m_rigidCurveSegments[i].first);
         }
 
 
 
-        while(rigidCurveSegments[i].second > newCurvAbsBuf[iterator])
+        while(m_rigidCurveSegments[i].second > newCurvAbsBuf[iterator])
         {
             newCurvAbs.push_back(newCurvAbsBuf[iterator]) ;
             iterator++;
@@ -502,9 +505,9 @@ void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &ne
         // newCurvAbsBuf[iterator-1]  <  rigidCurveSegments[i].second <  newCurvAbsBuf[iterator]
         //=>  if rigidCurveSegments[i].second ~ newCurvAbsBuf[iterator-1]
         // or if rigidCurveSegments[i].second ~ newCurvAbsBuf[iterator]  => do not add the point
-        if (rigidCurveSegments[i].second - newCurvAbsBuf[iterator-1] > tol && newCurvAbsBuf[iterator] - rigidCurveSegments[i].second > tol)
+        if (m_rigidCurveSegments[i].second - newCurvAbsBuf[iterator-1] > tol && newCurvAbsBuf[iterator] - m_rigidCurveSegments[i].second > tol)
         {
-            newCurvAbs.push_back(rigidCurveSegments[i].second);
+            newCurvAbs.push_back(m_rigidCurveSegments[i].second);
         }
 
     }
@@ -526,7 +529,7 @@ void SutureController<DataTypes>::addRigidCurvAbs(sofa::helper::vector<Real> &ne
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &newCurvAbs, const Real &tol)
+void SutureController<DataTypes>::addImposedCurvAbs(vector<Real> &newCurvAbs, const Real &tol)
 {
 
 #ifdef DEBUG
@@ -534,12 +537,12 @@ void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &
     std::cout<<" newCurvAbs = "<<newCurvAbs<<std::endl;
 #endif
 
-    listOfImposedNodesOnXcurv.sort();
-    listOfImposedNodesOnXcurv.unique();
+    m_listOfImposedNodesOnXcurv.sort();
+    m_listOfImposedNodesOnXcurv.unique();
 
     ListRealIterator it_xcurv_imposed;
 
-    sofa::helper::vector<Real> newCurvAbsBuf=newCurvAbs;
+    vector<Real> newCurvAbsBuf=newCurvAbs;
     newCurvAbs.clear();
     unsigned int iterator=1;
     newCurvAbs.push_back(newCurvAbsBuf[0]);
@@ -547,7 +550,7 @@ void SutureController<DataTypes>::addImposedCurvAbs(sofa::helper::vector<Real> &
 #ifdef DEBUG
     std::cout<<" listOfImposedNodesOnXcurv = ";
 #endif
-    for (it_xcurv_imposed=listOfImposedNodesOnXcurv.begin(); it_xcurv_imposed!=listOfImposedNodesOnXcurv.end(); it_xcurv_imposed++)
+    for (it_xcurv_imposed=m_listOfImposedNodesOnXcurv.begin(); it_xcurv_imposed!=m_listOfImposedNodesOnXcurv.end(); it_xcurv_imposed++)
     {
 
 #ifdef DEBUG
@@ -601,11 +604,11 @@ void SutureController<DataTypes>::applyController()
     VecCoord& x = *datax->beginEdit();
     VecDeriv& v = *datav->beginEdit();
 
-    sofa::helper::vector<Real> newCurvAbs;
+    vector<Real> newCurvAbs;
 
     this->storeRigidSegmentsTransformations();
 
-    if (useDummyController.getValue())
+    if (d_useDummyController.getValue())
         this->dummyController(newCurvAbs);
     else
         this->computeSampling(newCurvAbs, x);
@@ -629,7 +632,7 @@ void SutureController<DataTypes>::applyController()
 
 #endif
 
-    this->applyNewSampling(newCurvAbs, m_nodeCurvAbs.getValue(), x, v);
+    this->applyNewSampling(newCurvAbs, d_nodeCurvAbs.getValue(), x, v);
 
 #ifdef DEBUG
     std::cout<<"After.... Beam  lengths = ";
@@ -640,11 +643,11 @@ void SutureController<DataTypes>::applyController()
 #endif
 
     this->verifyRigidSegmentsTransformations();
-    prevRigidCurvSegments = rigidCurveSegments;
+    m_prevRigidCurvSegments = m_rigidCurveSegments;
 
-    sofa::helper::vector<Real> &nodeCurvAbs = *m_nodeCurvAbs.beginEdit();
+    vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
     nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
-    m_nodeCurvAbs.endEdit();
+    d_nodeCurvAbs.endEdit();
 
     datax->endEdit();
     datav->endEdit();
@@ -664,7 +667,7 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
         return 0.0;
     }
 
-    if (xmax > m_adaptiveinterpolation->getRestTotalLength()){
+    if (xmax > l_adaptiveinterpolation->getRestTotalLength()){
         serr<<" in computeBendingAngle : max > getRestTotalLength"<<sendl;
         return 0.0;
     }
@@ -674,14 +677,14 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
     Real baryCoordMin, baryCoordMax;
     Transform Tnode0, Tnode1;
 
-    m_adaptiveinterpolation->getBeamAtCurvAbs(xmin, idBeamMin, baryCoordMin);
-    m_adaptiveinterpolation->getBeamAtCurvAbs(xmax, idBeamMax, baryCoordMax);
-    m_adaptiveinterpolation->computeTransform2(idBeamMin,Tnode0,Tnode1, Pos);
+    l_adaptiveinterpolation->getBeamAtCurvAbs(xmin, idBeamMin, baryCoordMin);
+    l_adaptiveinterpolation->getBeamAtCurvAbs(xmax, idBeamMax, baryCoordMax);
+    l_adaptiveinterpolation->computeTransform2(idBeamMin,Tnode0,Tnode1, Pos);
 
     if (idBeamMin==idBeamMax)
     {
          //std::cout<<" idBeamMin==idBeamMax, angle ="<<angle<<std::endl;
-        return m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
+        return l_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
     }
 
     if (idBeamMin>idBeamMax)
@@ -695,18 +698,18 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
 
     // compute the angle for the first beam
 
-    Real angle = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, 1.0);
+    Real angle = l_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveinterpolation->getLength(idBeamMin), baryCoordMin, 1.0);
 
     unsigned int b=idBeamMin+1;
     while(b<idBeamMax)
     {
-        m_adaptiveinterpolation->computeTransform2(b,Tnode0,Tnode1,Pos);
-        angle += m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(b), 0.0, 1.0);
+        l_adaptiveinterpolation->computeTransform2(b,Tnode0,Tnode1,Pos);
+        angle += l_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveinterpolation->getLength(b), 0.0, 1.0);
         b++;
     }
 
-    m_adaptiveinterpolation->computeTransform2(idBeamMax,Tnode0,Tnode1,Pos);
-    angle += m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, m_adaptiveinterpolation->getLength(idBeamMax), 0.0, baryCoordMax);
+    l_adaptiveinterpolation->computeTransform2(idBeamMax,Tnode0,Tnode1,Pos);
+    angle += l_adaptiveinterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveinterpolation->getLength(idBeamMax), 0.0, baryCoordMax);
 
     return angle;
 }
@@ -714,7 +717,7 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
 
 /// this function computes the tangent value on a series of discrete points (store also the curv_abs of these discrete points)
 template <class DataTypes>
-void SutureController<DataTypes>::computeTangentOnDiscretePoints(sofa::helper::vector<Vec3> TangTable, sofa::helper::vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos)
+void SutureController<DataTypes>::computeTangentOnDiscretePoints(vector<Vec3> TangTable, vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos)
 {
 
     TangTable.clear();
@@ -722,21 +725,21 @@ void SutureController<DataTypes>::computeTangentOnDiscretePoints(sofa::helper::v
     Real baryCoord;
     unsigned int beam;
 
-    Real dx = m_adaptiveinterpolation->getRestTotalLength()/(numDiscretePoints-1);
+    Real dx = l_adaptiveinterpolation->getRestTotalLength()/(numDiscretePoints-1);
     Real x=dx;
 
 
     // compute intial tang for the beginning of the wire:
-    m_adaptiveinterpolation->computeTransform2(0,Tnode0,Tnode1, Pos);
+    l_adaptiveinterpolation->computeTransform2(0,Tnode0,Tnode1, Pos);
     Vec3 t = Tnode0.getOrientation().rotate(Vec3(1.0,0.0,0.0));
     TangTable.push_back(t);
     xTable.push_back(0.0);
 
     for (unsigned int p=0; p<(numDiscretePoints-1) ; p++)
     {
-        m_adaptiveinterpolation->getBeamAtCurvAbs(x, beam, baryCoord);
-        m_adaptiveinterpolation->computeTransform2(beam,Tnode0,Tnode1, Pos);
-        m_adaptiveinterpolation->getTangent(t, baryCoord, Tnode0,Tnode1,m_adaptiveinterpolation->getLength(beam) );
+        l_adaptiveinterpolation->getBeamAtCurvAbs(x, beam, baryCoord);
+        l_adaptiveinterpolation->computeTransform2(beam,Tnode0,Tnode1, Pos);
+        l_adaptiveinterpolation->getTangent(t, baryCoord, Tnode0,Tnode1,l_adaptiveinterpolation->getLength(beam) );
 
         TangTable.push_back(t);
         xTable.push_back(x);
@@ -749,33 +752,33 @@ void SutureController<DataTypes>::computeTangentOnDiscretePoints(sofa::helper::v
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::detectRigidBeams(const sofa::helper::vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::detectRigidBeams(const vector<Real> &newCurvAbs)
 {
 
     unsigned int seg=0;
 
-    rigidBeamList.clear();
+    m_rigidBeamList.clear();
 
     for (unsigned int i=1; i<newCurvAbs.size(); i++)
     {
         ////////////////////////// Rigidification ////////////////////////
         //(1) look if there is a rigidCurveSegment...
-        if(seg < rigidCurveSegments.size() )
+        if(seg < m_rigidCurveSegments.size() )
         {
             // (2) look if [newCurvAbs[i-1] newCurvAbs[i] are contained in the next rigidified segment....
-            if(newCurvAbs[i-1]+threshold.getValue() > rigidCurveSegments[seg].first && newCurvAbs[i]-threshold.getValue() < rigidCurveSegments[seg].second )
-                rigidBeamList.push_back(true);
+            if(newCurvAbs[i-1]+d_threshold.getValue() > m_rigidCurveSegments[seg].first && newCurvAbs[i]-d_threshold.getValue() < m_rigidCurveSegments[seg].second )
+                m_rigidBeamList.push_back(true);
 
             else
-                rigidBeamList.push_back(false);
+                m_rigidBeamList.push_back(false);
 
 
-            if( newCurvAbs[i]+threshold.getValue() > rigidCurveSegments[seg].second)
+            if( newCurvAbs[i]+d_threshold.getValue() > m_rigidCurveSegments[seg].second)
                 seg++;
 
         }
         else
-            rigidBeamList.push_back(false);
+            m_rigidBeamList.push_back(false);
 
     }
 #ifdef DEBUG
@@ -788,7 +791,7 @@ void SutureController<DataTypes>::detectRigidBeams(const sofa::helper::vector<Re
 // When a new sampling is defined in "newCurvAbs", the position and the velocity needs to be "re-interpolated"
 
 template <class DataTypes>
-void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Real> &newCurvAbs, const sofa::helper::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v)
+void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAbs, const vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v)
 {
 
     VecCoord x_buf=x;
@@ -813,12 +816,12 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
     unsigned int j=0;
     Vec3 null(0,0,0);
 
-    vec_global_H_node.clear();
-    vec_global_Vel_node.clear();
+    m_VecGlobalHNode.clear();
+    m_vecGlobalVelNode.clear();
 
-    m_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(0,0.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
-    vec_global_H_node.push_back(global_H_interpol);
-    vec_global_Vel_node.push_back(v_interpol);
+    l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(0,0.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
+    m_VecGlobalHNode.push_back(global_H_interpol);
+    m_vecGlobalVelNode.push_back(v_interpol);
 
 
     for (unsigned int i=1; i<newCurvAbs.size()-1; i++)
@@ -833,18 +836,18 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
                         return;
                 }
         }
-        Real L = m_adaptiveinterpolation->getLength(j-1);
+        Real L = l_adaptiveinterpolation->getLength(j-1);
         Real L0 = newCurvAbs[i] - oldCurvAbs[j-1];
         Real ratio=L0/L;
 
-        m_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(j-1,ratio,null,x_buf, v_buf, global_H_interpol, v_interpol);
-        vec_global_H_node.push_back(global_H_interpol);
-        vec_global_Vel_node.push_back(v_interpol);
+        l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(j-1,ratio,null,x_buf, v_buf, global_H_interpol, v_interpol);
+        m_VecGlobalHNode.push_back(global_H_interpol);
+        m_vecGlobalVelNode.push_back(v_interpol);
 
     }
-    m_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(oldCurvAbs.size()-2,1.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
-    vec_global_H_node.push_back(global_H_interpol);
-    vec_global_Vel_node.push_back(v_interpol);
+    l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(oldCurvAbs.size()-2,1.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
+    m_VecGlobalHNode.push_back(global_H_interpol);
+    m_vecGlobalVelNode.push_back(v_interpol);
 
 
 #ifdef DEBUG
@@ -854,8 +857,8 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
 
 
     ////////////////////// compute a gravity center for the rigid segments //////////
-    vec_global_H_gravityCenter.clear();
-    sofa::helper::vector<Deriv> vec_Vel_gravityCenter;
+    m_VecGlobalHGravityCenter.clear();
+    vector<Deriv> vec_Vel_gravityCenter;
 
 
     Transform global_H_gravityC;
@@ -866,14 +869,14 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
     Real length_of_rigidSegment=0;
 
 
-    for (unsigned int s=0; s<rigidBeamList.size();s++)
+    for (unsigned int s=0; s<m_rigidBeamList.size();s++)
     {
-        if(rigidBeamList[s]) // the beam is rigidified
+        if(m_rigidBeamList[s]) // the beam is rigidified
         {
             if (!rigidification) //begining of the rigidification
             {
 
-                length_of_rigidSegment = rigidCurveSegments[Rseg].second  - rigidCurveSegments[Rseg].first;
+                length_of_rigidSegment = m_rigidCurveSegments[Rseg].second  - m_rigidCurveSegments[Rseg].first;
                 Rseg++;
                 rigidification=true;
                 global_H_gravityC.clear();
@@ -883,13 +886,13 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
             Real length_of_beam = newCurvAbs[s+1]-newCurvAbs[s];
             Real weight = (length_of_beam/(length_of_rigidSegment*2));
 
-            global_H_gravityC.setOrigin( vec_global_H_node[s+1].getOrigin()*weight
-                                         + vec_global_H_node[s].getOrigin()*weight
+            global_H_gravityC.setOrigin( m_VecGlobalHNode[s+1].getOrigin()*weight
+                                         + m_VecGlobalHNode[s].getOrigin()*weight
                                          + global_H_gravityC.getOrigin() );
 
 
-            vel_gravityC.getVCenter() += vec_global_Vel_node[s+1].getVCenter()*weight+ vec_global_Vel_node[s].getVCenter()*weight;
-            vel_gravityC.getVOrientation() += vec_global_Vel_node[s+1].getVOrientation()*weight+ vec_global_Vel_node[s].getVOrientation()*weight;
+            vel_gravityC.getVCenter() += m_vecGlobalVelNode[s+1].getVCenter()*weight+ m_vecGlobalVelNode[s].getVCenter()*weight;
+            vel_gravityC.getVOrientation() += m_vecGlobalVelNode[s+1].getVOrientation()*weight+ m_vecGlobalVelNode[s].getVOrientation()*weight;
 
         }
         else
@@ -898,7 +901,7 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
             {
 
                 Vec3 pos_G = global_H_gravityC.getOrigin();
-                global_H_gravityC.setOrientation(vec_global_H_node[s].getOrientation() );
+                global_H_gravityC.setOrientation(m_VecGlobalHNode[s].getOrientation() );
                 global_H_gravityC.setOrigin(pos_G);
 
  #ifdef DEBUG
@@ -910,18 +913,18 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
                 std::cout<<"rigidification using vec_global_Vel_node["<<s+1<<"] = "<<vec_global_Vel_node[s+1]<<std::endl;
 #endif
                 SpatialVector VelNode_in_global, VelNode_in_Node, VelGravityC_inGravityC, VelGravity_inGlobal;
-                VelNode_in_global.setAngularVelocity( vec_global_Vel_node[s].getVOrientation());
-                VelNode_in_global.setLinearVelocity(  vec_global_Vel_node[s].getVCenter());
+                VelNode_in_global.setAngularVelocity( m_vecGlobalVelNode[s].getVOrientation());
+                VelNode_in_global.setLinearVelocity(  m_vecGlobalVelNode[s].getVCenter());
 
 
                 // projection of the velocity of the node in the frame of the node
-                VelNode_in_Node.setLinearVelocity( vec_global_H_node[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
-                VelNode_in_Node.setAngularVelocity( vec_global_H_node[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
+                VelNode_in_Node.setLinearVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
+                VelNode_in_Node.setAngularVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
 
 
 
                 // TRANSPORT of the velocity of the node to the gravity center (rigid link)
-                Transform gravityC_H_Node = global_H_gravityC.inversed()*vec_global_H_node[s];
+                Transform gravityC_H_Node = global_H_gravityC.inversed()*m_VecGlobalHNode[s];
                 VelGravityC_inGravityC = gravityC_H_Node*VelNode_in_Node;
 
 
@@ -937,7 +940,7 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
 
 
 
-                vec_global_H_gravityCenter.push_back(global_H_gravityC);
+                m_VecGlobalHGravityCenter.push_back(global_H_gravityC);
                 vec_Vel_gravityCenter.push_back(vel_gravityC);
                 rigidification=false; // end of the rigidification
 
@@ -950,12 +953,12 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
     if (rigidification) // rigidification at the end tip
     {
 
-        unsigned s=rigidBeamList.size()-1;
+        unsigned s=m_rigidBeamList.size()-1;
 #ifdef DEBUG
         std::cout<<"!!!! Rigidification at the end tip !!!! "<<std::endl;
 #endif
         Vec3 pos_G = global_H_gravityC.getOrigin();
-        global_H_gravityC.setOrientation(vec_global_H_node[s+1].getOrientation() );
+        global_H_gravityC.setOrientation(m_VecGlobalHNode[s+1].getOrientation() );
         global_H_gravityC.setOrigin(pos_G);
 
 
@@ -963,15 +966,15 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
 
 
         SpatialVector VelNode_in_global, VelNode_in_Node, VelGravityC_inGravityC, VelGravity_inGlobal;
-        VelNode_in_global.setAngularVelocity( vec_global_Vel_node[s].getVOrientation());
-        VelNode_in_global.setLinearVelocity(  vec_global_Vel_node[s].getVCenter());
+        VelNode_in_global.setAngularVelocity( m_vecGlobalVelNode[s].getVOrientation());
+        VelNode_in_global.setLinearVelocity(  m_vecGlobalVelNode[s].getVCenter());
 
         // projection of the velocity of the node in the frame of the node
-        VelNode_in_Node.setLinearVelocity( vec_global_H_node[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
-        VelNode_in_Node.setAngularVelocity( vec_global_H_node[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
+        VelNode_in_Node.setLinearVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
+        VelNode_in_Node.setAngularVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
 
         // TRANSPORT of the velocity of the node to the gravity center (rigid link)
-        Transform gravityC_H_Node = global_H_gravityC.inversed()*vec_global_H_node[s];
+        Transform gravityC_H_Node = global_H_gravityC.inversed()*m_VecGlobalHNode[s];
         VelGravityC_inGravityC = gravityC_H_Node*VelNode_in_Node;
 
         // projection of the velocity of the gravity center in the global frame
@@ -984,7 +987,7 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
 
         /////////////////////////////////////  ///////////////////////////////////  //////////////////////////////////
 
-        vec_global_H_gravityCenter.push_back(global_H_gravityC);
+        m_VecGlobalHGravityCenter.push_back(global_H_gravityC);
         vec_Vel_gravityCenter.push_back(vel_gravityC);
         rigidification=false; // end of the rigidification
     }
@@ -996,30 +999,30 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
 
     recreateTopology();
     unsigned int numNodes=0;
-    m_adaptiveinterpolation->clear();
+    l_adaptiveinterpolation->clear();
 
     numNodes++;
     Coord xDof;
-    xDof.getCenter()     = vec_global_H_node[0].getOrigin();
-    xDof.getOrientation()= vec_global_H_node[0].getOrientation();
+    xDof.getCenter()     = m_VecGlobalHNode[0].getOrigin();
+    xDof.getOrientation()= m_VecGlobalHNode[0].getOrientation();
     x.push_back(xDof);
-    v.push_back(vec_global_Vel_node[0]);
+    v.push_back(m_vecGlobalVelNode[0]);
     m_topology->addPoint( xDof[0], xDof[1], xDof[2] );
     Real L;
 
     Rseg=0;
     rigidification=false;
-    for (unsigned int s=0; s<rigidBeamList.size();s++)
+    for (unsigned int s=0; s<m_rigidBeamList.size();s++)
     {
-        if(rigidBeamList[s]) // the beam is rigidified
+        if(m_rigidBeamList[s]) // the beam is rigidified
         {
 
             if (!rigidification) //begining of the rigidification
             {
                 // the last element of vector x is replaced by the gravity center of the rigid zone
                 x.pop_back();
-                xDof.getCenter()     = vec_global_H_gravityCenter[Rseg].getOrigin();
-                xDof.getOrientation()= vec_global_H_gravityCenter[Rseg].getOrientation();
+                xDof.getCenter()     = m_VecGlobalHGravityCenter[Rseg].getOrigin();
+                xDof.getOrientation()= m_VecGlobalHGravityCenter[Rseg].getOrientation();
                 x.push_back(xDof);
                 v.pop_back();
                 v.push_back( vec_Vel_gravityCenter[Rseg] );
@@ -1029,14 +1032,14 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
                 // add a transformation between the node 1 and the gravity center on previous beam
                 if(s)
                 {
-                    Transform GravityCenter_H_node1 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
-                    m_adaptiveinterpolation->setTransformBetweenDofAndNode(s-1,GravityCenter_H_node1,1);
+                    Transform GravityCenter_H_node1 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
+                    l_adaptiveinterpolation->setTransformBetweenDofAndNode(s-1,GravityCenter_H_node1,1);
                 }
 
             }
 
-            Transform GravityCenter_H_interpol0 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
-            Transform GravityCenter_H_interpol1 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s+1];
+            Transform GravityCenter_H_interpol0 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
+            Transform GravityCenter_H_interpol1 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s+1];
 
 
 
@@ -1045,7 +1048,7 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
             m_topology->addEdge( (int)(numNodes-1), (int)(numNodes-1) );
 
             L =  newCurvAbs[s+1] - newCurvAbs[s];
-            m_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,GravityCenter_H_interpol0, GravityCenter_H_interpol1 );
+            l_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,GravityCenter_H_interpol0, GravityCenter_H_interpol1 );
 
 #ifdef DEBUG
             std::cout<<" add rigid segment on segment "<<s<<" that links the same dof: [ "<<m_topology->getEdge(s)[0]<<" "<<m_topology->getEdge(s)[1]
@@ -1063,18 +1066,18 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
             // ADD the beam in the topology and in the interpolation
 
             m_topology->addEdge( (int)(numNodes-1), (int)(numNodes) );
-            m_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,0.0 );
+            l_adaptiveinterpolation->addBeam(s, L, newCurvAbs[s], newCurvAbs[s+1] ,0.0 );
 #ifdef DEBUG
             std::cout<<" add deformable segment on segment "<<s<<" that links the same dof: [ "<<m_topology->getEdge(s)[0]<<" "<<m_topology->getEdge(s)[1]
                     <<"]   x curv = ["<< newCurvAbs[s]<<" " <<newCurvAbs[s+1]<<"]"<<std::endl;
 #endif
             // ADD a DOF for the second node of the beam
             numNodes++;
-            xDof.getCenter()     = vec_global_H_node[s+1].getOrigin();
-            xDof.getOrientation()= vec_global_H_node[s+1].getOrientation();
+            xDof.getCenter()     = m_VecGlobalHNode[s+1].getOrigin();
+            xDof.getOrientation()= m_VecGlobalHNode[s+1].getOrientation();
             x.push_back(xDof);
 
-            v.push_back(vec_global_Vel_node[s+1]);
+            v.push_back(m_vecGlobalVelNode[s+1]);
 
             m_topology->addPoint( xDof[0], xDof[1], xDof[2] );
 
@@ -1084,8 +1087,8 @@ void SutureController<DataTypes>::applyNewSampling(const sofa::helper::vector<Re
                 rigidification=false;
 
                 // add a transformation between the node 0 and the gravity center on current beam
-                Transform GravityCenter_H_node0 = vec_global_H_gravityCenter[Rseg-1].inversed()*vec_global_H_node[s];
-                m_adaptiveinterpolation->setTransformBetweenDofAndNode(s,GravityCenter_H_node0,0);
+                Transform GravityCenter_H_node0 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
+                l_adaptiveinterpolation->setTransformBetweenDofAndNode(s,GravityCenter_H_node0,0);
 #ifdef DEBUG
                 std::cout<<" Add transformation"<< GravityCenter_H_node0<<"  between the node 0 and the gravity center on beam "<<s<<std::endl;
 #endif
@@ -1111,12 +1114,12 @@ template <class DataTypes>
 bool SutureController<DataTypes>::verifyRigidCurveSegmentSort()
 {
 
-    if(this->rigidCurveSegments.size()==0)
+    if(this->m_rigidCurveSegments.size()==0)
         return true;
 
-    for (unsigned int seg=0; seg<this->rigidCurveSegments.size()-1; seg++)
+    for (unsigned int seg=0; seg<this->m_rigidCurveSegments.size()-1; seg++)
     {
-        if(rigidCurveSegments[seg].second > rigidCurveSegments[seg+1].first)
+        if(m_rigidCurveSegments[seg].second > m_rigidCurveSegments[seg+1].first)
             return false;
     }
     return true;
@@ -1125,21 +1128,21 @@ bool SutureController<DataTypes>::verifyRigidCurveSegmentSort()
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &newCurvAbs, VecCoord &x)
+void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecCoord &x)
 {
-    helper::vector<Real> xP_noticeable;
-    helper::vector<int> nbP_density;
+    vector<Real> xP_noticeable;
+    vector<int> nbP_density;
 
-    m_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
+    l_adaptiveinterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
-    helper::ReadAccessor< Data< helper::vector<Real> > > actualNoticeable = this->m_actualStepNoticeablePoints;
+    helper::ReadAccessor< Data< vector<Real> > > actualNoticeable = this->d_actualStepNoticeablePoints;
     if (!actualNoticeable.empty()) {
         xP_noticeable.insert(xP_noticeable.end(), actualNoticeable.begin(), actualNoticeable.end());
         std::sort(xP_noticeable.begin(), xP_noticeable.end());
 
         int density = nbP_density[0];
         nbP_density.clear();
-        Real beamLength = m_adaptiveinterpolation->getRestTotalLength();
+        Real beamLength = l_adaptiveinterpolation->getRestTotalLength();
         for (size_t i = 1; i < xP_noticeable.size(); i++) {
             Real diff = xP_noticeable[i] - xP_noticeable[i-1];
             nbP_density.push_back(int((diff/beamLength)*Real(density)+1));
@@ -1148,7 +1151,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
         std::cout << "Noticeable Points = " << xP_noticeable << std::endl;
         std::cout << "Density  = " << nbP_density << std::endl;
 
-        helper::WriteAccessor< Data< helper::vector<Real> > > wActualNoticeable = this->m_actualStepNoticeablePoints;
+        helper::WriteAccessor< Data< vector<Real> > > wActualNoticeable = this->d_actualStepNoticeablePoints;
         wActualNoticeable.clear();
     }
 
@@ -1158,32 +1161,32 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     }
 
     std::vector<Real> beamsCurvature;
-    unsigned int nbBeams = m_adaptiveinterpolation->getNumBeams();
+    unsigned int nbBeams = l_adaptiveinterpolation->getNumBeams();
     beamsCurvature.resize(nbBeams);
 
-    helper::WriteAccessor< Data< sofa::helper::vector<Vec2> > > curvatureList = m_curvatureList;
+    helper::WriteAccessor< Data< vector<Vec2> > > curvatureList = d_curvatureList;
     curvatureList.clear();
     curvatureList.resize(nbBeams);
     // Computing the curvature of each beam (from the previous timestep)
     for(unsigned int b=0; b<nbBeams; ++b)
     {
-        Real beamLength = m_adaptiveinterpolation->getLength(b);
-        m_adaptiveinterpolation->getAbsCurvXFromBeam(b, curvatureList[b][0]);
+        Real beamLength = l_adaptiveinterpolation->getLength(b);
+        l_adaptiveinterpolation->getAbsCurvXFromBeam(b, curvatureList[b][0]);
         Transform Tnode0, Tnode1;
-        m_adaptiveinterpolation->computeTransform2(b, Tnode0, Tnode1, x);
+        l_adaptiveinterpolation->computeTransform2(b, Tnode0, Tnode1, x);
 
-        curvatureList[b][1] = beamsCurvature[b] = m_adaptiveinterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
+        curvatureList[b][1] = beamsCurvature[b] = l_adaptiveinterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
     }
 
-    sofa::helper::vector<Real> newCurvAbs_notSecure;
+    vector<Real> newCurvAbs_notSecure;
     newCurvAbs_notSecure.clear();
-    Real currentCurvAbs = 0.0, currentAngle = 0.0, maxAngle = maxBendingAngle.getValue();
+    Real currentCurvAbs = 0.0, currentAngle = 0.0, maxAngle = d_maxBendingAngle.getValue();
     unsigned int currentBeam = 0;
     for(unsigned int part=0; part<nbP_density.size(); part++)
     {
         Real maxBeamLength = (xP_noticeable[part+1] - xP_noticeable[part]) / nbP_density[part];
 
-        while(currentCurvAbs < xP_noticeable[part+1]-threshold.getValue())
+        while(currentCurvAbs < xP_noticeable[part+1]-d_threshold.getValue())
         {
             newCurvAbs_notSecure.push_back(currentCurvAbs);
             Real maxCurvAbs = std::min(currentCurvAbs + maxBeamLength, xP_noticeable[part+1]);
@@ -1191,7 +1194,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
             while(currentBeam < nbBeams)
             {
                 Real beamStart, beamEnd, beamLength;
-                m_adaptiveinterpolation->getAbsCurvXFromBeam(currentBeam, beamStart, beamEnd);
+                l_adaptiveinterpolation->getAbsCurvXFromBeam(currentBeam, beamStart, beamEnd);
                 beamLength = beamEnd - beamStart;
 
                 Real beamAngle = beamsCurvature[currentBeam];				// Curvature of the whole beam
@@ -1227,8 +1230,8 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     if(!verifyRigidCurveSegmentSort())
         serr<<" WARNING : rigidCurveSegments are not correctly sorted !"<<sendl;
 
-    this->rigidCurveSegments.clear();
-    helper::ReadAccessor< Data< set< Real > > > rigidCurvAbs = m_rigidCurvAbs;
+    this->m_rigidCurveSegments.clear();
+    helper::ReadAccessor< Data< set< Real > > > rigidCurvAbs = d_rigidCurvAbs;
     int nb = rigidCurvAbs->size();
 
     if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
@@ -1239,7 +1242,7 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
             Real start, end;
             start = *it++;
             end = *it++;
-            this->rigidCurveSegments.push_back(std::make_pair(start, end));
+            this->m_rigidCurveSegments.push_back(std::make_pair(start, end));
         }
         addRigidCurvAbs(newCurvAbs_notSecure, 0.0001);
     }
@@ -1250,12 +1253,12 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
     newCurvAbs.push_back(newCurvAbs_notSecure[0]);
     for (unsigned int i=1; i<newCurvAbs_notSecure.size()-1; i++)
     {
-        if (newCurvAbs_notSecure[i] > newCurvAbs_notSecure[i-1]+threshold.getValue())
+        if (newCurvAbs_notSecure[i] > newCurvAbs_notSecure[i-1]+d_threshold.getValue())
             newCurvAbs.push_back(newCurvAbs_notSecure[i]);
     }
     size_t lastSec = newCurvAbs.size()-1;
     size_t lastNSec = newCurvAbs_notSecure.size()-1;
-    if (newCurvAbs_notSecure[lastNSec] < newCurvAbs[lastSec]+threshold.getValue()) {
+    if (newCurvAbs_notSecure[lastNSec] < newCurvAbs[lastSec]+d_threshold.getValue()) {
         newCurvAbs.pop_back();
     }
     newCurvAbs.push_back(newCurvAbs_notSecure[lastNSec]);
@@ -1268,22 +1271,22 @@ void SutureController<DataTypes>::computeSampling(sofa::helper::vector<Real> &ne
 }
 
 template <class DataTypes>
-void SutureController<DataTypes>::verifyRigidSegmentsSampling(sofa::helper::vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::verifyRigidSegmentsSampling(vector<Real> &newCurvAbs)
 {	// Making sure we keep the same sampling in the rigid segments from one timestep to the next
-    if(!fixRigidTransforms.getValue())
+    if(!d_fixRigidTransforms.getValue())
         return;
 
-    const sofa::helper::vector<Real> &oldCurvAbs = m_nodeCurvAbs.getValue();
-    typename sofa::helper::vector<Real>::iterator newIter, newIter2;
-    typename sofa::helper::vector<Real>::const_iterator oldIter, oldIter2;
+    const vector<Real> &oldCurvAbs = d_nodeCurvAbs.getValue();
+    typename vector<Real>::iterator newIter, newIter2;
+    typename vector<Real>::const_iterator oldIter, oldIter2;
     newIter = newCurvAbs.begin();
     oldIter = oldCurvAbs.begin();
 
-    typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each segment
-    for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
+    for(rigidIter = m_rigidCurveSegments.begin(); rigidIter != m_rigidCurveSegments.end(); ++rigidIter)
     {
-        if(std::find(prevRigidCurvSegments.begin(), prevRigidCurvSegments.end(), *rigidIter) == prevRigidCurvSegments.end())
+        if(std::find(m_prevRigidCurvSegments.begin(), m_prevRigidCurvSegments.end(), *rigidIter) == m_prevRigidCurvSegments.end())
             continue;	// If this is a new segment, don't modify it
 
         Real start = rigidIter->first, end = rigidIter->second;
@@ -1311,34 +1314,34 @@ void SutureController<DataTypes>::verifyRigidSegmentsSampling(sofa::helper::vect
 template <class DataTypes>
 void SutureController<DataTypes>::storeRigidSegmentsTransformations()
 {
-    if(!fixRigidTransforms.getValue())
+    if(!d_fixRigidTransforms.getValue())
         return;
 
-    prevRigidTransforms.clear();
+    m_prevRigidTransforms.clear();
 
-    typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each rigid segment
-    for(rigidIter = prevRigidCurvSegments.begin(); rigidIter != prevRigidCurvSegments.end(); ++rigidIter)
+    for(rigidIter = m_prevRigidCurvSegments.begin(); rigidIter != m_prevRigidCurvSegments.end(); ++rigidIter)
     {
         double rigidStart = rigidIter->first, rigidEnd = rigidIter->second;
 
         // For all curv abs in this segment
         unsigned int beamId, lastBeamId;
         Real bary;
-        m_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
-        m_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
+        l_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
+        l_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
 
         while(beamId < lastBeamId)
         {
             // Save the transformation
             //  (we consider that we don't cut rigid beams so transformations are the same for 2 beams in the same curv abs)
             Real curvAbs0, curvAbs1;
-            m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
+            l_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
 
             Transform t0, t1;
-            m_adaptiveinterpolation->getDOFtoLocalTransform(beamId, t0, t1);
-            prevRigidTransforms[curvAbs0] = t0;
-            prevRigidTransforms[curvAbs1] = t1;
+            l_adaptiveinterpolation->getDOFtoLocalTransform(beamId, t0, t1);
+            m_prevRigidTransforms[curvAbs0] = t0;
+            m_prevRigidTransforms[curvAbs1] = t1;
 
             ++beamId;
         }
@@ -1348,14 +1351,14 @@ void SutureController<DataTypes>::storeRigidSegmentsTransformations()
 template <class DataTypes>
 void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 {
-    if(!fixRigidTransforms.getValue())
+    if(!d_fixRigidTransforms.getValue())
         return;
 
-    typename sofa::helper::vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each rigid segment
-    for(rigidIter = rigidCurveSegments.begin(); rigidIter != rigidCurveSegments.end(); ++rigidIter)
+    for(rigidIter = m_rigidCurveSegments.begin(); rigidIter != m_rigidCurveSegments.end(); ++rigidIter)
     {
-        if(std::find(prevRigidCurvSegments.begin(), prevRigidCurvSegments.end(), *rigidIter) == prevRigidCurvSegments.end())
+        if(std::find(m_prevRigidCurvSegments.begin(), m_prevRigidCurvSegments.end(), *rigidIter) == m_prevRigidCurvSegments.end())
             continue;	// If this is a new segment, don't modify it
 
         Real rigidStart = rigidIter->first, rigidEnd = rigidIter->second;
@@ -1363,23 +1366,23 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
         // For all curv abs in this segment
         unsigned int beamId, lastBeamId;
         Real bary;
-        m_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
-        m_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
+        l_adaptiveinterpolation->getBeamAtCurvAbs(rigidStart, beamId, bary);
+        l_adaptiveinterpolation->getBeamAtCurvAbs(rigidEnd, lastBeamId, bary);
 
         while(beamId < lastBeamId)
         {
             // Load the transformations and replace what was computed this timestep
             Real curvAbs0, curvAbs1;
-            m_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
+            l_adaptiveinterpolation->getAbsCurvXFromBeam(beamId, curvAbs0, curvAbs1);
 
             typename std::map<Real, Transform>::const_iterator iter;
-            iter = prevRigidTransforms.find(curvAbs0);
-            if(iter != prevRigidTransforms.end())
-                m_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, false);
+            iter = m_prevRigidTransforms.find(curvAbs0);
+            if(iter != m_prevRigidTransforms.end())
+                l_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, false);
 
-            iter = prevRigidTransforms.find(curvAbs1);
-            if(iter != prevRigidTransforms.end())
-                m_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, true);
+            iter = m_prevRigidTransforms.find(curvAbs1);
+            if(iter != m_prevRigidTransforms.end())
+                l_adaptiveinterpolation->setTransformBetweenDofAndNode(beamId, iter->second, true);
 
             ++beamId;
         }
@@ -1389,15 +1392,15 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 template <class DataTypes>
 void SutureController<DataTypes>::updateControlPointsPositions()
 {
-    VecCoord& ctrlPts = *m_controlPoints.beginEdit();
+    VecCoord& ctrlPts = *d_controlPoints.beginEdit();
     ctrlPts.clear();
 
-    unsigned int numBeams = m_adaptiveinterpolation->getNumBeams();
+    unsigned int numBeams = l_adaptiveinterpolation->getNumBeams();
     Transform global_H0_local, global_H1_local;
     const VecCoord& x = this->getMechanicalState()->write(sofa::core::VecCoordId::position())->getValue();
     for (unsigned int b = 0; b < numBeams; b++)
     {
-        m_adaptiveinterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
+        l_adaptiveinterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
         Coord pt;
         pt.getCenter() = global_H0_local.getOrigin();
         pt.getOrientation() = global_H0_local.getOrientation();
@@ -1408,12 +1411,42 @@ void SutureController<DataTypes>::updateControlPointsPositions()
     pt.getOrientation() = global_H1_local.getOrientation();
     ctrlPts.push_back(pt);
 
-    m_controlPoints.endEdit();
+    d_controlPoints.endEdit();
 }
 
 template <class DataTypes>
+bool SutureController<DataTypes>::activePoint(int index, core::CollisionModel *cm)
+{
+    SOFA_UNUSED(cm) ;
+    if (index >= (int)m_XAbsCollisionPointsBuffer.size() || index < 0)
+        return false;
+
+    if (m_XAbsCollisionPointsBuffer[index] > 10.0)
+        return true;
+
+    return false;
+}
+
+template <class DataTypes>
+bool SutureController<DataTypes>::activeLine(int index, core::CollisionModel *cm)
+{
+    SOFA_UNUSED(cm) ;
+
+    const int next_index = index + 1;
+
+    if (next_index >= (int)m_XAbsCollisionPointsBuffer.size() || next_index < 0)
+        return false;
+
+    if (m_XAbsCollisionPointsBuffer[next_index] > 10.0)
+        return true;
+
+    return false;
+}
+
+
+template <class DataTypes>
 void SutureController<DataTypes>::insertActualNoticeablePoint(Real _absc) {
-    helper::WriteAccessor< Data< helper::vector<Real> > > actualNoticeable = this->m_actualStepNoticeablePoints;
+    helper::WriteAccessor< Data< vector<Real> > > actualNoticeable = this->d_actualStepNoticeablePoints;
     actualNoticeable.push_back(_absc);
 }
 
@@ -1422,26 +1455,28 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
 {
     if (!vparams->displayFlags().getShowBehaviorModels()) return;
 
-    if (rigidCurveSegments.size() != vec_global_H_gravityCenter.size())
+    if (m_rigidCurveSegments.size() != m_VecGlobalHGravityCenter.size())
     {
-        serr<<"in draw function rigidCurveSegments.size() ="<< rigidCurveSegments.size() <<" != vec_global_H_gravityCenter.size() = "<<vec_global_H_gravityCenter.size()<<sendl;
+        serr<<"in draw function rigidCurveSegments.size() ="<< m_rigidCurveSegments.size() <<" != vec_global_H_gravityCenter.size() = "<<m_VecGlobalHGravityCenter.size()<<sendl;
     }
 
-    for (unsigned int i=0; i<vec_global_H_gravityCenter.size(); i++)
+    for (unsigned int i=0; i<m_VecGlobalHGravityCenter.size(); i++)
     {
 
-        Real Length = rigidCurveSegments[i].second - rigidCurveSegments[i].first;
+        Real Length = m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first;
         Vec3 sizeArrows (Length/4, Length/8, Length/8);
 
-        vparams->drawTool()->drawFrame(vec_global_H_gravityCenter[i].getOrigin(), vec_global_H_gravityCenter[i].getOrientation(), sizeArrows );
+        vparams->drawTool()->drawFrame(m_VecGlobalHGravityCenter[i].getOrigin(), m_VecGlobalHGravityCenter[i].getOrientation(), sizeArrows );
 
     }
 }
 
-} // namespace controller
+} /// namespace _suturecontroller_
 
-} // namespace component
+} /// namespace controller
 
-} // namespace sofa
+} /// namespace component
+
+} /// namespace sofa
 
 #endif /* SOFA_COMPONENT_CONTROLLER_SutureController_INL */
