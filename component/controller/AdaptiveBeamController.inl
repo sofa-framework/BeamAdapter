@@ -82,7 +82,7 @@ template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::init()
 {
     //////////////////// Initialize internal data structure. ///////////////////////////////////////
-    m_xAbs_collisionPoints_buf.clear();
+    m_xAbsCollisionPointsBuffer.clear();
 
     //////////////////// Handle the component's attributes /////////////////////////////////////////
     BaseContext* c = this->getContext();
@@ -127,31 +127,31 @@ bool AdaptiveBeamController<DataTypes>::activePoint(int index, core::CollisionMo
 {
     SOFA_UNUSED(cm) ;
 
-    if (index >= (int)m_xAbs_collisionPoints_buf.size() || index<0)
+    if (index >= (int)m_xAbsCollisionPointsBuffer.size() || index<0)
         return false;
 
-    if (m_xAbs_collisionPoints_buf[index]>10.0)
+    if (m_xAbsCollisionPointsBuffer[index]>10.0)
         return true;
 
     return false;
 }
 
 template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activeLine(int index, core::CollisionModel *cm)
+bool AdaptiveBeamController<DataTypes>::activeLine(int index, CollisionModel *cm)
 {
     SOFA_UNUSED(cm) ;
 
-    if ((index+1) >= (int)m_xAbs_collisionPoints_buf.size() || (index+1)<0)
+    if ((index+1) >= (int)m_xAbsCollisionPointsBuffer.size() || (index+1)<0)
         return false;
 
-    if (m_xAbs_collisionPoints_buf[index+1]>10.0)
+    if (m_xAbsCollisionPointsBuffer[index+1]>10.0)
         return true;
 
     return false;
 }
 
 template <class DataTypes>
-void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent *mev)
+void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)
 {
     /// Retrieve the mouse position
     int PosX = mev->getPosX();
@@ -183,7 +183,7 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(core::objectmodel::MouseEve
 // can expect ? A kind a of getHelp function may be usefull for controllers ?
 // (remove in 1 year if not answered)
 template <class DataTypes>
-void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(core::objectmodel::KeypressedEvent *kev)
+void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(KeypressedEvent *kev)
 {
     ///////////////////////////////// Control keys for interventonal Radiology simulations:
     switch(kev->getKey())

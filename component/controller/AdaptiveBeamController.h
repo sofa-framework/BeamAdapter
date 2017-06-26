@@ -85,7 +85,10 @@ using sofa::component::topology::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
 using sofa::component::collision::PointActiver ;
 using sofa::component::collision::LineActiver ;
+using sofa::core::objectmodel::KeypressedEvent ;
+using sofa::core::objectmodel::MouseEvent ;
 using sofa::core::topology::BaseMeshTopology ;
+using sofa::core::CollisionModel ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::Vec ;
 using sofa::helper::vector ;
@@ -134,11 +137,10 @@ public :
 
 
     /////////////// Inherited from PointActiver ////////////////////////////////////////////////////
-    virtual bool activePoint(int index, core::CollisionModel *cm = nullptr) override ;
-
+    virtual bool activePoint(int index, CollisionModel *cm = nullptr) override ;
 
     /////////////// Inherited from LineActiver /////////////////////////////////////////////////////
-    virtual bool activeLine(int index, core::CollisionModel *cm = nullptr) override ;
+    virtual bool activeLine(int index, CollisionModel *cm = nullptr) override ;
 
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
@@ -146,8 +148,8 @@ public :
     virtual void reinit() override ;
 
     /////////////// Inherited from MechanicalStateController  //////////////////////////////////////
-    virtual void onMouseEvent(core::objectmodel::MouseEvent *) override ;
-    virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *) override ;
+    virtual void onMouseEvent(MouseEvent *) override ;
+    virtual void onKeyPressedEvent(KeypressedEvent *) override ;
     virtual void onBeginAnimationStep(const double dt) override ;
 
     //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
@@ -175,7 +177,7 @@ protected:
     BInterpolation*             m_adaptiveinterpolation {nullptr};
 
     ////// for point and line activer
-    vector<Real>                m_xAbs_collisionPoints_buf;
+    vector<Real>                m_xAbsCollisionPointsBuffer;
 
     bool                        FF {false} ;
     bool                        RW {false} ;
