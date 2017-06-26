@@ -320,7 +320,7 @@ void AdaptiveBeamController<DataTypes>::applyController()
         Real ratio = (x_spline - splineAbs[j-1]) / (splineAbs[j] - splineAbs[j-1]);
 
         if (ratio<0 || ratio >1 )
-            std::cerr<<"WARNING ratio = "<<ratio<<" while it should be between 0 and 1 "<<std::endl;
+            msg_warning() <<"Ratio = "<<ratio<<" while it should be between 0 and 1 " ;
 
         Real x_curv= oldCurvAbs[j-1] + ratio * (oldCurvAbs[j]  - oldCurvAbs[j-1]);
         newCurvAbs.push_back( x_curv );
@@ -338,7 +338,7 @@ void AdaptiveBeamController<DataTypes>::applyController()
             j++;
             if (j>=oldCurvAbs.size()) // DEBUG //
             {
-                std::cerr<<"**************** > WARNING j ="<<j<<">=oldCurvAbs.size()"<<std::endl;
+                dmsg_warning() <<"j ="<<j<<">=oldCurvAbs.size()" ;
                 return;
             }
         }

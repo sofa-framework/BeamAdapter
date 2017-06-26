@@ -40,7 +40,9 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 
-/// Forward declarations
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
+////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace sofa {
     namespace component {
         namespace topology {
@@ -119,12 +121,21 @@ public:
          return DataTypes::Name();
      }
 
+     /// Construction method called by ObjectFactory.
+     template<class T>
+     static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)
+     {
+         return core::objectmodel::BaseObject::create(obj, context, arg);
+     }
+
+
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      virtual void init() override ;
      virtual void reinit() override{ }
      virtual void update() override { }
      virtual void bwdInit() override ;
      void draw(const VisualParams * vparams) override ;
+
 
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
 
@@ -157,13 +168,6 @@ public:
      Real getLength() ;
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
-
-     /// Construction method called by ObjectFactory.
-     template<class T>
-     static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)
-     {
-         return core::objectmodel::BaseObject::create(obj, context, arg);
-     }
 
      //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
      //we can remove the todo.
