@@ -22,8 +22,8 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_H
-#define SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_H
+#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
+#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/PairInteractionConstraint.h>
@@ -44,7 +44,7 @@ namespace constraintset
 /// you should use a private namespace and "export" only this one in the public namespace.
 /// This is done at the end of this file, have a look if you are not used to this pattern.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _AdaptiveBeamSlidingConstraint_
+namespace _adaptiveBeamSlidingConstraint_
 {
 
 using sofa::core::behavior::PairInteractionConstraint ;
@@ -148,11 +148,11 @@ private:
     ////////////////////////////////////////////////////////////////////////////
 };
 
-} // namespace _AdaptiveBeamSlidingConstraint_
+} // namespace _adaptiveBeamSlidingConstraint_
 
 /// 'Export' the objects defined in the private namespace into the 'public' one so that
 /// we can use them instead as sofa::component::constraintset::AdaptiveBeamSlidingConstraint.
-using _AdaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint ;
+using _adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint ;
 
 } // namespace constraintset
 

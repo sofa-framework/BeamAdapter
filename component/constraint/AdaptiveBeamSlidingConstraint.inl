@@ -22,8 +22,8 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_INL
-#define SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_INL
+#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_INL
+#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_INL
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
@@ -40,7 +40,7 @@ namespace component
 namespace constraintset
 {
 
-namespace _AdaptiveBeamSlidingConstraint_
+namespace _adaptiveBeamSlidingConstraint_
 {
 
 using std::vector;
@@ -290,7 +290,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
 #endif // SOFA_NO_OPENGL
 }
 
-} // namespace _AdaptiveBeamSlidingConstraint_
+} // namespace _adaptiveBeamSlidingConstraint_
 
 } // namespace constraintset
 

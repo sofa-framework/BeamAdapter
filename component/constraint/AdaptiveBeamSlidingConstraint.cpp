@@ -49,7 +49,7 @@ namespace component
 namespace constraintset
 {
 
-namespace _AdaptiveBeamSlidingConstraint_
+namespace _adaptiveBeamSlidingConstraint_
 {
 
 AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
@@ -116,7 +116,7 @@ template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-} // namespace _AdaptiveBeamSlidingConstraint_
+} // namespace _adaptiveBeamSlidingConstraint_
 
 } // namespace constraintset
 
