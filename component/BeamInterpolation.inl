@@ -64,12 +64,14 @@ namespace _beaminterpolation_
 
 #define BEAMADAPTER_WITH_VERIFICATION false
 
+using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::ComponentState ;
 using sofa::core::behavior::MechanicalState;
 using sofa::core::ConstVecCoordId ;
 using sofa::core::objectmodel::BaseContext ;
+using sofa::helper::ReadAccessor ;
 
-///////////////////////////////////////////////////////////////////// useful tool
+/////////////////////////// TOOL /////////////////////////////////////////////////////////////////
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
 {
@@ -133,60 +135,51 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , m_topology(nullptr)
   , m_mstate(nullptr)
 {
-    this->m_brokenInTwo=false;
+    m_brokenInTwo=false;
     m_isControlled=false;
     m_numBeamsNotUnderControl = 0;
     m_StateNodes->setName("bezierNodes");
-    this->addSlave(m_StateNodes);
+    addSlave(m_StateNodes);
 }
 
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 {
-    if ( this->crossSectionShape.getValue().getSelectedItem() == "elliptic")
+    if ( crossSectionShape.getValue().getSelectedItem() == "elliptic")
     {
         /* code */
     }
-    else if ( this->crossSectionShape.getValue().getSelectedItem() == "rectangular" )
+    else if ( crossSectionShape.getValue().getSelectedItem() == "rectangular" )
     {
-        Real Ly = this->d_lengthY.getValue();
-        Real Lz = this->d_lengthZ.getValue();
+        Real Ly = d_lengthY.getValue();
+        Real Lz = d_lengthZ.getValue();
 
-        this->m_constantSection._Iy=Ly*Lz*Lz*Lz/12.0;
-        this->m_constantSection._Iz=Lz*Ly*Ly*Ly/12.0;
-        this->m_constantSection._J=this->m_constantSection._Iy + this->m_constantSection._Iz;
-        this->m_constantSection._A = Ly*Lz;
+        m_constantSection._Iy=Ly*Lz*Lz*Lz/12.0;
+        m_constantSection._Iz=Lz*Ly*Ly*Ly/12.0;
+        m_constantSection._J=m_constantSection._Iy + m_constantSection._Iz;
+        m_constantSection._A = Ly*Lz;
 
-        this->m_constantSection._Asy = 0.0;
-        this->m_constantSection._Asz = 0.0;
+        m_constantSection._Asy = 0.0;
+        m_constantSection._Asz = 0.0;
     }
     else
     {
-        msg_info() << "Cross section shape." << this->crossSectionShape.getValue().getSelectedItem() ;
-        this->m_constantSection._r = this->d_radius.getValue();
-        this->m_constantSection._rInner = this->d_innerRadius.getValue();
-        double r = this->d_radius.getValue();
-        if (r <= 0.0)
-        {
-            serr << "Radius must be positive" << sendl;
+        msg_info() << "Cross section shape." << crossSectionShape.getValue().getSelectedItem() ;
+        m_constantSection._r = d_radius.getValue();
+        m_constantSection._rInner = d_innerRadius.getValue();
 
-            //TODO(dmarchal @ cduriez 2017-06-26) do we ever enter into this condition ?
-            if (r>0)
-            {
-                serr << "Radius must be positive. Use absolute value instead. r = " << r << sendl;
-                r = -r;
-            }
-        }
-        double rInner = this->d_innerRadius.getValue();
-        this->m_constantSection._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-        //_Iz = M_PI*(r*r*r*r)/4.0;
-        this->m_constantSection._Iy = this->m_constantSection._Iz ;
-        this->m_constantSection._J = this->m_constantSection._Iz + this->m_constantSection._Iy;
-        this->m_constantSection._A = M_PI*(r*r - rInner*rInner);
+        double r = d_radius.getValue();
+        double rInner = d_innerRadius.getValue();
+        m_constantSection._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
 
-        this->m_constantSection._Asy = 0.0;
-        this->m_constantSection._Asz = 0.0;
+        ///_Iz = M_PI*(r*r*r*r)/4.0;
+        m_constantSection._Iy = m_constantSection._Iz ;
+        m_constantSection._J = m_constantSection._Iz + m_constantSection._Iy;
+        m_constantSection._A = M_PI*(r*r - rInner*rInner);
+
+        m_constantSection._Asy = 0.0;
+        m_constantSection._Asz = 0.0;
     }
 }
 
@@ -195,15 +188,13 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::init()
 {
-    this->f_printLog.setValue(true);
-
     computeCrossSectionInertiaMatrix();
 }
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::bwdInit()
 {
-    BaseContext* context = this->getContext();
+    BaseContext* context = getContext();
 
     m_mstate = dynamic_cast< sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
     if (m_mstate == nullptr)
@@ -257,7 +248,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
         d_DOF0TransformNode0.endEdit();
         d_DOF1TransformNode1.endEdit();
 
-        helper::ReadAccessor<Data<VecCoord> > statePos = m_mstate->read(ConstVecCoordId::position()) ;
+        ReadAccessor<Data<VecCoord> > statePos = m_mstate->read(ConstVecCoordId::position()) ;
 
         vector< double > &lengthList = *d_lengthList.beginEdit();
         lengthList.clear();
@@ -267,7 +258,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
         for (unsigned int i = 0; i < edgeListSize; i++)
         {
-            this->getNodeIndices(i, nd0Id, nd1Id);
+            getNodeIndices(i, nd0Id, nd1Id);
 
             Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
 
@@ -330,7 +321,7 @@ bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
 
 
 /// verify that we got a non-null pointer on the topology
-/// verify that the this->m_edgeList do not contain non existing edges
+/// verify that the m_edgeList do not contain non existing edges
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
@@ -348,7 +339,6 @@ bool BeamInterpolation<DataTypes>::verifyTopology()
         }
     }
 
-
     return true;
 }
 
@@ -362,7 +352,7 @@ void BeamInterpolation<DataTypes>::clear()
     vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
     vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
 
-    if(this->m_brokenInTwo)
+    if(m_brokenInTwo)
     {
         edgeList.resize(m_numBeamsNotUnderControl);
         lengthList.resize(m_numBeamsNotUnderControl);
@@ -406,7 +396,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     QuatX.normalize();
 
     // as an angle is set between DOFs and Beam, they are no more aligned
-    this->d_dofsAndBeamsAligned.setValue(false);
+    d_dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(Transform(Vec3(0, 0, 0), QuatX ));
     DOF1TransformNode1.push_back(Transform(Vec3(0, 0, 0), QuatX ));
 
@@ -422,7 +412,7 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start)
 {
     /// lTotalRest = total length of the
-    Real lTotalRest = this->getRestTotalLength();
+    Real lTotalRest = getRestTotalLength();
     /// LTotal =  length sum of the beams that are "out"
     Real LTotal=0.0;
 
@@ -431,7 +421,7 @@ void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigne
     /// we find the length of the beam that is "out"
     for (unsigned int e = start; e < edgeListSize; e++)
     {
-        LTotal += this->getLength(e);
+        LTotal += getLength(e);
     }
 
     /// x_i = abs_curv from the begining of the instrument
@@ -449,12 +439,12 @@ void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigne
 
     for (unsigned int e = start; e < edgeListSize; e++)
     {
-        x += this->getLength(e);
+        x += getLength(e);
         if(x > x_i)
         {
             edgeInList_output = e;
-            Real x0 = x - this->getLength(e);
-            baryCoord_output =(x_i-x0) / this->getLength(e);
+            Real x0 = x - getLength(e);
+            baryCoord_output =(x_i-x0) / getLength(e);
             return;
         }
     }
@@ -570,7 +560,7 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
     getDOFtoLocalTransform(edgeInList, DOF0_H_local0, DOF1_H_local1);
 
     unsigned int node0Idx, node1Idx;
-    this->getNodeIndices(edgeInList, node0Idx, node1Idx);
+    getNodeIndices(edgeInList, node0Idx, node1Idx);
 
     // Computes the Rotation to global from DOF0 and DOF1
     Transform global_R_DOF0(Vec3(0,0,0), x[node0Idx].getOrientation());
@@ -594,7 +584,7 @@ int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,
     unsigned int node0Idx, node1Idx;
     if (getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
     {
-        serr << "[computeTransform2] Error in getNodeIndices(). Aborting....." << sendl;
+        dmsg_error() << "[computeTransform2] Error in getNodeIndices(). (Aborting)" ;
         return -1;
     }
 
@@ -644,7 +634,7 @@ int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,
     unsigned int node0Idx, node1Idx;
     if ( getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
     {
-        serr << "[computeTransform2] Error in getNodeIndices(). Aborting....." << sendl;
+        dmsg_error() << "[computeTransform2] Error in getNodeIndices(). (Aborting)" ;
         return -1;
     }
 
@@ -666,7 +656,7 @@ int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,
 template<class DataTypes>
 typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getLength(unsigned int edgeInList)
 {
-    Real _L = this->d_lengthList.getValue()[edgeInList];
+    Real _L = d_lengthList.getValue()[edgeInList];
     return _L;
 }
 
@@ -703,8 +693,8 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
     {
         /// the beam is straight: local is in the middle of local0 and local1
         /// the transformation between local0 and local1 is provided by the length of the beam
-        local_H_local0_rest.set(-Vec3(this->d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
-        local_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local0_rest.set(-Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local1_rest.set(Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
     }
     else
     {
@@ -730,9 +720,9 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 
             Transform global_H_local_middle;
             Real baryX = 0.5;
-            Real L = this->getLength(edgeInList);
+            Real L = getLength(edgeInList);
 
-            this->InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
+            InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
 
             local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
             local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
@@ -755,8 +745,8 @@ int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
     }
 
     /// 1. Get the indices of element and nodes
-    ElementID e = this->d_edgeList.getValue()[edgeInList] ;
-    core::topology::BaseMeshTopology::Edge edge=  (*m_topologyEdges)[e];
+    ElementID e = d_edgeList.getValue()[edgeInList] ;
+    BaseMeshTopology::Edge edge=  (*m_topologyEdges)[e];
     node0Idx = edge[0];
     node1Idx = edge[1];
 
@@ -769,9 +759,9 @@ void BeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList
                                                          Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
 {
     /// get the length of the beam:
-    _L = this->d_lengthList.getValue()[edgeInList];
+    _L = d_lengthList.getValue()[edgeInList];
 
-    BeamSection bS = this->getBeamSection(edgeInList);
+    BeamSection bS = getBeamSection(edgeInList);
     _A=bS._A;
     _Iy=bS._Iy;
     _Iz=bS._Iz;
@@ -787,12 +777,12 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
     Transform global_H_local0, global_H_local1;
     if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
     {
-        serr << "[getSplinePoints] error with computeTransform2. Aborting...." << sendl;
+        dmsg_error() << "[getSplinePoints] error with computeTransform2. (Aborting)" ;
         return;
     }
 
     /// << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
-    const Real& _L = this->d_lengthList.getValue()[edgeInList];
+    const Real& _L = d_lengthList.getValue()[edgeInList];
 
     P0=global_H_local0.getOrigin();
     P3=global_H_local1.getOrigin();
@@ -853,12 +843,12 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
 
     /// spline:
     Vec3 P0, P1, P2, P3;
-    this->getSplinePoints(edgeInList, x, P0, P1, P2, P3);
+    getSplinePoints(edgeInList, x, P0, P1, P2, P3);
 
     ///////// TODO :
     unsigned int node0Idx, node1Idx;
-    sout << "in computeStrechAndTwist" << sendl;
-    this->getNodeIndices(edgeInList,node0Idx,node1Idx);
+    dmsg_info() << "in computeStrechAndTwist" << sendl;
+    getNodeIndices(edgeInList,node0Idx,node1Idx);
 
     Real length0, length1;
     length0=0.0;
@@ -944,14 +934,14 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     if(recompute)
     {
         /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
-        const Real& _L = this->d_lengthList.getValue()[edgeInList];
+        const Real& _L = d_lengthList.getValue()[edgeInList];
 
         if(localPos.norm() >_L*1e-10)
         {
             Vec3 x_local(0,0,0);
             Transform global_H_localInterpol;
 
-            this->InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
+            InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
 
             posResult = global_H_localInterpol.getOrigin() + global_H_localInterpol.getOrientation().rotate(localPos);
 
@@ -985,14 +975,14 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     else
     {
         /// no need to recompute the positions of the Spline  => we will read their value in the vector which id is vecXId
-        const Real& _L = this->d_lengthList.getValue()[edgeInList];
+        const Real& _L = d_lengthList.getValue()[edgeInList];
 
         if(localPos.norm() >_L*1e-10)
         {
             Vec3 x_local(0,0,0);
             Transform global_H_localInterpol;
 
-            this->InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
+            InterpolateTransformUsingSpline(edgeInList, baryCoord, x_local, x, global_H_localInterpol);
             posResult = global_H_localInterpol.getOrigin() + global_H_localInterpol.getOrientation().rotate(localPos);
         }
         else
@@ -1043,14 +1033,14 @@ void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edge
 template<class DataTypes>
 unsigned int BeamInterpolation<DataTypes>::getStateSize() const
 {
-    if (this->m_mstate==nullptr)
+    if (m_mstate==nullptr)
     {
-        serr << "WARNING no _mstate found" << sendl;
+        msg_error() << "No _mstate found (Aborting)" ;
         return 0 ;
     }
     else
     {
-        return this->m_mstate->getSize();
+        return m_mstate->getSize();
     }
 }
 
@@ -1058,12 +1048,12 @@ unsigned int BeamInterpolation<DataTypes>::getStateSize() const
 template<class DataTypes>
 void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out){
     ///Mechanical Object to stock Bezier points.
-    m_StateNodes->resize(this->d_edgeList.getValue().size()*4);
+    m_StateNodes->resize(d_edgeList.getValue().size()*4);
     Data<VectorVec3>* datax = m_StateNodes->write(vId_Out);
     VectorVec3& bezierPosVec = *datax->beginEdit();
-    bezierPosVec.resize(this->d_edgeList.getValue().size()*4);
+    bezierPosVec.resize(d_edgeList.getValue().size()*4);
 
-    for(unsigned int i=0; i< this->d_edgeList.getValue().size(); i++){
+    for(unsigned int i=0; i< d_edgeList.getValue().size(); i++){
         updateBezierPoints(x,i,bezierPosVec);
 
     }
@@ -1074,7 +1064,7 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigned int index,
                                                        VectorVec3& bezierPosVec){
     /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
-    const Real& _L = this->d_lengthList.getValue()[index];
+    const Real& _L = d_lengthList.getValue()[index];
 
     /// \todo remove call to
     /// nsform2 => make something faster !
@@ -1148,24 +1138,24 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
 
         /// convert position (RigidTypes) in Transform
         Transform global_H_local0, global_H_local1;
-        this->computeTransform2(numBeam, global_H_local0, global_H_local1, x->getValue() );
+        computeTransform2(numBeam, global_H_local0, global_H_local1, x->getValue() );
 
         /// compute the length of the spline
         Vec3 P0,P1,P2,P3;
-        this->getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
+        getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
         Real length;
-        this->computeActualLength(length,P0,P1,P2,P3);
+        computeActualLength(length,P0,P1,P2,P3);
 
         /// get the result of the transform:
         Transform global_H_localResult;
 
         if(computeVel)
         {
-            this->InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
         else
         {
-            this->InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
 
         /// assign the result in the output data
@@ -1226,15 +1216,15 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         Quat R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
-        this->RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
-        this->RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
+        RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
+        RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
 
         ///     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
         Rslerp.slerp(R0,R1, (float)bx,true);
         Rslerp.normalize();
 
         ///     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
-        this->RotateFrameForAlignX(Rslerp, n_x,quatResult);
+        RotateFrameForAlignX(Rslerp, n_x,quatResult);
     }
 
     global_H_localResult.set(posResult, quatResult);
@@ -1314,14 +1304,14 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int 
     Transform global_H_local0, global_H_local1;
     if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
     {
-        serr << "[InterpolateTransformUsingSpline] error with computeTransform2. Aborting...." << sendl;
+        msg_error() << "[InterpolateTransformUsingSpline] error with computeTransform2. (Aborting). " ;
         return;
     }
 
-    const Real& _L = this->d_lengthList.getValue()[edgeInList];
+    const Real& _L = d_lengthList.getValue()[edgeInList];
 
     if(localPos.norm() >1e-10*_L)
-        serr<<"WARNING in InterpolateTransformUsingSpline interpolate frame only on the central curve of the beam"<<sendl;
+        msg_warning() <<"Interpolate frame only on the central curve of the beam. ";
 
     InterpolateTransformUsingSpline(global_H_localInterpol, baryCoord, global_H_local0, global_H_local1, _L);
 }
@@ -1355,10 +1345,10 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
 
 
     /// 4. Computes the transformation
-    const Real& _L = this->d_lengthList.getValue()[edgeInList];
+    const Real& _L = d_lengthList.getValue()[edgeInList];
 
     if(localPos.norm() >1e-10*_L)
-        serr<<"WARNING in InterpolateTransformUsingSpline interpolate frame only on the central curve of the beam"<<sendl;
+        msg_warning() <<"Interpolate frame only on the central curve of the beam" ;
 
     InterpolateTransformUsingSpline(global_H_localInterpol, baryCoord, global_H_local0, global_H_local1, _L);
 
@@ -1421,7 +1411,7 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
 
     /// 3. influence of these forces on the nodes of the beam    => TODO : simplify the computations !!!
     Transform DOF0Global_H_local0, DOF1Global_H_local1;
-    this->getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
+    getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
 
     /// rotate back to local frame
     SpatialVector f0, f1,f2,f3;
@@ -1431,7 +1421,7 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
     f3.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F3) );
 
     /// computes the torque created on DOF0 and DOF1 by f1 and f2
-    Real L = this->getLength(edgeInList);
+    Real L = getLength(edgeInList);
 
     if(localPos.norm() > L*1e-10)
     {
@@ -1487,7 +1477,7 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
 
     /// 3. influence of these forces on the nodes of the beam    => TODO : simplify the computations !!!
     Transform DOF0Global_H_local0, DOF1Global_H_local1;
-    this->getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
+    getDOFtoLocalTransformInGlobalFrame(edgeInList, DOF0Global_H_local0, DOF1Global_H_local1, x);
 
     /// rotate back to local frame
     SpatialVector f0, f1,f2,f3;
@@ -1497,7 +1487,7 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
     f3.setForce( DOF1Global_H_local1.getOrientation().inverseRotate(F3) );
 
     /// computes the torque created on DOF0 and DOF1 by f1 and f2
-    Real L = this->getLength(edgeInList);
+    Real L = getLength(edgeInList);
 
     if(localPos.norm() > L*1e-10)
     {
