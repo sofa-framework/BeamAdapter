@@ -6,6 +6,7 @@ set(SOURCE_FILES )
 set(HEADER_FILES )
 
 include(component/forcefield/ForceFieldTest.cmake)
+include(component/constraint/ConstraintTest.cmake)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RC_FILES})
 
