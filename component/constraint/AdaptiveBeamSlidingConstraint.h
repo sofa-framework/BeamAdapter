@@ -22,8 +22,8 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
-#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
+#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
+#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/PairInteractionConstraint.h>
@@ -44,7 +44,7 @@ namespace constraintset
 /// you should use a private namespace and "export" only this one in the public namespace.
 /// This is done at the end of this file, have a look if you are not used to this pattern.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamconstraint_
+namespace _adaptiveBeamSlidingConstraint_
 {
 
 using sofa::core::behavior::PairInteractionConstraint ;
@@ -56,23 +56,24 @@ using sofa::defaulttype::BaseVector ;
 using sofa::core::objectmodel::Data ;
 using sofa::defaulttype::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;
+using std::vector;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
- * \class AdaptiveBeamConstraint
- * @brief AdaptiveBeamConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
+ * \class AdaptiveBeamSlidingConstraint
+ * @brief AdaptiveBeamSlidingConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
  *
  * More informations about SOFA components:
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamConstraint : public PairInteractionConstraint<DataTypes>
+class AdaptiveBeamSlidingConstraint : public PairInteractionConstraint<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamConstraint, DataTypes),
+    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamSlidingConstraint, DataTypes),
                SOFA_TEMPLATE(PairInteractionConstraint, DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
@@ -112,29 +113,29 @@ public:
                                         const DataVecCoord &x1, const DataVecCoord &x2,
                                         const DataVecDeriv &v1, const DataVecDeriv &v2) override;
 
-    virtual void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    virtual void getConstraintResolution(vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 protected:
-    AdaptiveBeamConstraint(TypedMechanicalState* object1, TypedMechanicalState* object2) ;
-    AdaptiveBeamConstraint(TypedMechanicalState* object) ;
-    AdaptiveBeamConstraint() ;
-    virtual ~AdaptiveBeamConstraint(){}
+    AdaptiveBeamSlidingConstraint(TypedMechanicalState* object1, TypedMechanicalState* object2) ;
+    AdaptiveBeamSlidingConstraint(TypedMechanicalState* object) ;
+    AdaptiveBeamSlidingConstraint() ;
+    virtual ~AdaptiveBeamSlidingConstraint(){}
 
 private:
     void internalInit();
 
     unsigned int          m_cid;
     int                   m_nbConstraints; 		/*!< number of constraints created */
-    std::vector<Real>     m_violations;
-    std::vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
-    std::vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
-    std::vector<bool>     m_projected;
+    vector<Real>     m_violations;
+    vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
+    vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
+    vector<bool>     m_projected;
 
     /*! link to the interpolation component in the scene */
-    SingleLink<AdaptiveBeamConstraint<DataTypes>,
-    WireBeamInterpolation<DataTypes>,
-    BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
+    SingleLink<AdaptiveBeamSlidingConstraint<DataTypes>,
+               WireBeamInterpolation<DataTypes>,
+               BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 
     ////////////////////////// Inherited attributes ////////////////////////////
@@ -147,11 +148,11 @@ private:
     ////////////////////////////////////////////////////////////////////////////
 };
 
-} // namespace _adaptivebeamconstraint_
+} // namespace _adaptiveBeamSlidingConstraint_
 
 /// 'Export' the objects defined in the private namespace into the 'public' one so that
-/// we can use them instead as sofa::component::constraintset::AdaptiveBeamConstraint.
-using _adaptivebeamconstraint_::AdaptiveBeamConstraint ;
+/// we can use them instead as sofa::component::constraintset::AdaptiveBeamSlidingConstraint.
+using _adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint ;
 
 } // namespace constraintset
 
@@ -159,4 +160,4 @@ using _adaptivebeamconstraint_::AdaptiveBeamConstraint ;
 
 } // namespace sofa
 
-#endif // SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMCONSTRAINT_H
+#endif // SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_H

@@ -27,7 +27,18 @@
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/Vec3Types.h>
 
-#include "AdaptiveBeamConstraint.inl"
+#include "AdaptiveBeamSlidingConstraint.inl"
+
+
+using sofa::core::objectmodel::BaseObject ;
+using sofa::core::objectmodel::BaseContext ;
+using sofa::core::objectmodel::BaseObjectDescription ;
+#include "../../utils/deprecatedcomponent.h"
+using sofa::component::DeprecatedComponent;
+using sofa::defaulttype::Rigid3dTypes;
+using sofa::defaulttype::Rigid3fTypes;
+using sofa::core::RegisterObject;
+
 
 namespace sofa
 {
@@ -38,25 +49,24 @@ namespace component
 namespace constraintset
 {
 
-namespace _adaptivebeamconstraint_
+namespace _adaptiveBeamSlidingConstraint_
 {
 
-AdaptiveBeamConstraintResolution::AdaptiveBeamConstraintResolution(double* sliding)
+AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
     : m_slidingDisp(sliding)
 {
     nbLines = 3;
 }
 
-void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
+void AdaptiveBeamSlidingConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
 {
     SOFA_UNUSED(dfree);
     resolution(line,w,d,force);
 }
 
-void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* d, double* force)
+void AdaptiveBeamSlidingConstraintResolution::resolution(int line, double** w, double* d, double* force)
 {
-    double f[2];
-    f[0] = force[line]; f[1] = force[line+1];
+    double f[2] = {force[line], force[line+1]};
 
     force[line] -= d[line] / w[line][line];
     d[line+1] += w[line+1][line] * (force[line]-f[0]);
@@ -64,13 +74,13 @@ void AdaptiveBeamConstraintResolution::resolution(int line, double** w, double* 
     d[line+2] += w[line+2][line] * (force[line]-f[0]) + w[line+2][line+1] * (force[line+1]-f[1]);
 }
 
-void AdaptiveBeamConstraintResolution::init(int line, double** w, double* force)
+void AdaptiveBeamSlidingConstraintResolution::init(int line, double** w, double* force)
 {
     SOFA_UNUSED(force);
     m_slidingW = w[line+2][line+2];
 }
 
-void AdaptiveBeamConstraintResolution::store(int line, double* force, bool convergence)
+void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, bool convergence)
 {
     SOFA_UNUSED(convergence);
     if(m_slidingDisp)
@@ -85,26 +95,28 @@ void AdaptiveBeamConstraintResolution::store(int line, double* force, bool conve
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveBeamConstraint)
 
-int AdaptiveBeamConstraintClass = core::RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
+SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
+
+int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
         #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes> >()
+        .add< AdaptiveBeamSlidingConstraint<Rigid3fTypes> >()
         #endif
         #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes> >()
+        .add< AdaptiveBeamSlidingConstraint<Rigid3dTypes> >()
         #endif
         ;
 
 #ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3fTypes>;
+template class AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes>;
+template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
 #endif
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-} // namespace _adaptivebeamconstraint_
+} // namespace _adaptiveBeamSlidingConstraint_
 
 } // namespace constraintset
 
@@ -112,3 +124,35 @@ template class AdaptiveBeamConstraint<sofa::defaulttype::Rigid3dTypes>;
 
 } // namespace sofa
 
+
+
+
+
+///////////////////////////////// DEPRECATION MANAGEMENT FOR BACKWARD COMPATIBILITY ///////////////////
+class AdaptiveBeamConstraint : public DeprecatedComponent
+{
+public:
+    /// Pre-construction check method called by ObjectFactory.
+    template<class T>
+    static bool canCreate(T* obj, BaseContext* context, BaseObjectDescription* arg)
+    {
+        SOFA_UNUSED(obj) ;
+        SOFA_UNUSED(context) ;
+        SOFA_UNUSED(arg) ;
+
+        msg_warning("AdaptiveBeamConstraint") << "AdaptiveBeamConstraint is a BeamAdapter v1.0 feature that has been replaced "
+                                                  "by AdaptiveBeamSlidingConstraint. \n "
+                                                  "To remove this error message you either need to: \n "
+                                                  "   - replace AdaptiveBeamConstraint with AdaptiveBeamSlidingConstraint\n "
+                                                  "   - or use the BeamAdapter plugin v1.0 \n ";
+        return false;
+    }
+} ;
+
+// Registering the component
+// see: http://wiki.sofa-framework.org/wiki/ObjectFactory
+SOFA_DECL_CLASS(AdaptiveBeamConstraint)
+
+int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
+.add< AdaptiveBeamConstraint >()
+;
