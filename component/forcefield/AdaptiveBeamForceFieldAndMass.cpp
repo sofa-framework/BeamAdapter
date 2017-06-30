@@ -54,6 +54,8 @@ namespace _adaptivebeamforcefieldandmass_
 {
 
 using sofa::core::RegisterObject ;
+using sofa::defaulttype::Rigid3fTypes;
+using sofa::defaulttype::Rigid3dTypes;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -67,18 +69,18 @@ SOFA_DECL_CLASS(AdaptiveBeamForceFieldAndMass)
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamForceFieldAndMassClass = RegisterObject("Adaptive Beam finite elements")
 #ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes> >()
+.add< AdaptiveBeamForceFieldAndMass<Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes> >()
+.add< AdaptiveBeamForceFieldAndMass<Rigid3dTypes> >()
 #endif
 ;
 
 #ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3dTypes>;
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
