@@ -61,6 +61,7 @@ namespace _adaptivebeamcontroller_
 {
 
 using sofa::core::objectmodel::BaseContext ;
+using std::string;
 
 //TODO(dmarchal 2017-05-17) to christian & euallie.
 //  This component seems specific to radiology instrument... but its name suggest a very generic behavior
@@ -88,7 +89,7 @@ void AdaptiveBeamController<DataTypes>::init()
     BaseContext* c = this->getContext();
     this->f_listening.setValue(true);
 
-    const vector<std::string>& interpolName = d_interpolationPath.getValue();
+    const vector<string>& interpolName = d_interpolationPath.getValue();
     if (interpolName.empty()) {
         m_adaptiveinterpolation = c->get<BInterpolation>(BaseContext::Local);
     } else {
@@ -102,7 +103,7 @@ void AdaptiveBeamController<DataTypes>::init()
         msg_info() <<"This component operates on '"<<m_adaptiveinterpolation->getName()<<"'." ;
     }
 
-    if(d_speed.getValue())
+    if(d_speed.getValue()>0)
     {
         FF=true;
         RW=false;
@@ -123,7 +124,7 @@ void AdaptiveBeamController<DataTypes>::reinit()
 }
 
 template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activePoint(int index, core::CollisionModel *cm)
+bool AdaptiveBeamController<DataTypes>::activePoint(int index, CollisionModel *cm)
 {
     SOFA_UNUSED(cm) ;
 
