@@ -27,15 +27,12 @@ using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
 #include "../../../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
+using sofa::component::forcefield::AdaptiveBeamForceFieldAndMass;
 
 namespace sofa
 {
 
-
-
-
-
-struct BeamAdapterFirstTest : public Sofa_test<>
+struct AdaptiveBeamForceFieldAndMassTest : public Sofa_test<>
 {
     void simpleSceneTest(){
         string scene =
@@ -58,7 +55,7 @@ struct BeamAdapterFirstTest : public Sofa_test<>
         ASSERT_NE(MO, nullptr);
         EXPECT_TRUE(MO->getName() == "DOFs") ;
 
-        component::forcefield::AdaptiveBeamForceFieldAndMass<Rigid3>* FF  = nullptr;
+        AdaptiveBeamForceFieldAndMass<Rigid3>* FF  = nullptr;
 
         root->getTreeObject(FF);
 
@@ -66,7 +63,7 @@ struct BeamAdapterFirstTest : public Sofa_test<>
     }
 };
 
-TEST_F(BeamAdapterFirstTest, SimpleScene) {
+TEST_F(AdaptiveBeamForceFieldAndMassTest, SimpleScene) {
     ASSERT_NO_THROW(this->simpleSceneTest()) ;
 }
 

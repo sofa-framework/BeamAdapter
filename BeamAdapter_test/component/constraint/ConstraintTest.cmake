@@ -1,4 +1,4 @@
 
 list(APPEND SOURCE_FILES
-    component/constraint/AdaptiveBeamSlidingConstraint.cpp
+    component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
 )
