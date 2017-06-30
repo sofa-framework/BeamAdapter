@@ -34,7 +34,7 @@ using sofa::component::container::MechanicalObject ;
 namespace sofa
 {
 
-struct BeamInterpolationTest : public Sofa_test<>,
+struct WireBeamInterpolationTest : public Sofa_test<>,
         public ::testing::WithParamInterface<std::vector<std::string>>
 {
     void simpleScene(const std::vector<std::string>& lines)
@@ -46,7 +46,7 @@ struct BeamInterpolationTest : public Sofa_test<>,
                 "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
-                "               <BeamInterpolation template='Rigid' name='Interpol' radius='0.1'/>"
+                "               <WireBeamInterpolation template='Rigid' name='Interpol' radius='0.1'/>"
                 "               $line2"
                 "</Node> " ;
 
@@ -105,11 +105,11 @@ static std::vector<std::vector<std::string>> teststrings ={
     }
 };
 
-TEST_P(BeamInterpolationTest, checkMinimalScene) {
+TEST_P(WireBeamInterpolationTest, checkMinimalScene) {
     ASSERT_NO_THROW(this->simpleScene(GetParam())) ;
 }
 
 INSTANTIATE_TEST_CASE_P(checkMinimalScene,
-                        BeamInterpolationTest, ::testing::ValuesIn(teststrings) ) ;
+                        WireBeamInterpolationTest, ::testing::ValuesIn(teststrings) ) ;
 
 }
