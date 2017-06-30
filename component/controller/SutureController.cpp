@@ -33,24 +33,22 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "SutureController.inl"
-
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
+#define SOFA_SUTURECONTROLLER_CPP
+#include "SutureController.inl"
 
 namespace sofa
 {
-
 namespace component
 {
-
-
 namespace controller
+{
+namespace _suturecontroller_
 {
 
 using namespace sofa::defaulttype;
-
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -79,9 +77,10 @@ template class SOFA_BEAMADAPTER_API SutureController<Rigid3fTypes>;
 template class SOFA_BEAMADAPTER_API SutureController<Rigid3dTypes>;
 #endif
 
+} /// _suturecontroller_
 
-} // namespace controller
+} /// namespace controller
 
-} // namespace component
+} /// namespace component
 
-} // namespace sofa
+} /// namespace sofa

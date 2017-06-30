@@ -37,27 +37,6 @@ namespace sofa
 
 struct BeamAdapterFirstTest : public Sofa_test<>
 {
-
-/*
-    void normalTests(){
-
-        Simulation* simu;
-        setSimulation(simu = new sofa::simulation::graph::DAGSimulation());
-
-        Node::SPtr node = simu->createNewGraph("root");
-        typename MechanicalObject<DataTypes>::SPtr mecaobject = New<MechanicalObject<DataTypes> >() ;
-        mecaobject->init() ;
-
-        node->addObject(mecaobject) ;
-
-        mecaobject->setName("myname") ;
-        EXPECT_TRUE(mecaobject->getName() == "myname") ;
-
-
-        return ;
-    }
-    */
-
     void simpleSceneTest(){
         string scene =
                 "<?xml version='1.0'?>"
@@ -70,59 +49,25 @@ struct BeamAdapterFirstTest : public Sofa_test<>
                 "               <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
                 "               <FixedConstraint indices='0' />"
                 "</Node> " ;
-
         Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
 
         ASSERT_NE(root.get(), nullptr);
-
         MechanicalObject<Rigid3>* MO = nullptr;
-
         root->getTreeObject(MO);
 
         ASSERT_NE(MO, nullptr);
-
-
         EXPECT_TRUE(MO->getName() == "DOFs") ;
-
-
-//        Rigid3::VecCoord x;
-//        Rigid3::VecDeriv v,f;
 
         component::forcefield::AdaptiveBeamForceFieldAndMass<Rigid3>* FF  = nullptr;
 
         root->getTreeObject(FF);
 
         ASSERT_NE(FF, nullptr);
-
-
-
-
-
-
-        /*
-
-
-        EXPECT_NO_THROW(SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size())) ;
-        */
-
     }
-
-    double ComputationTest()
-    {
-        double toto=3.0;
-        return toto;
-
-    }
-
 };
-
-
 
 TEST_F(BeamAdapterFirstTest, SimpleScene) {
     ASSERT_NO_THROW(this->simpleSceneTest()) ;
 }
 
-TEST_F(BeamAdapterFirstTest, ComputationTest) {
-    ASSERT_DOUBLE_EQ(3.0,this->ComputationTest());
-}
 }

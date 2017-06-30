@@ -95,6 +95,7 @@ using std::string;
 using core::MechanicalParams;
 using core::ConstraintParams;
 using core::visual::VisualParams;
+using sofa::core::topology::TopologyContainer ;
 
 /*!
  * \class AdaptiveBeamMapping

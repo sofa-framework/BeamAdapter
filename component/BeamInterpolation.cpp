@@ -33,12 +33,13 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-
-#include "BeamInterpolation.inl"
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
+/// This define is here to prevent the declaration of the template instances as "extern".
+/// Have a look a the end of BeamInterpolation.h
+#define SOFA_BEAMINTERPOLATION_CPP
+#include "BeamInterpolation.inl"
 
 namespace sofa
 {
@@ -47,6 +48,9 @@ namespace component
 {
 
 namespace fem
+{
+
+namespace _beaminterpolation_
 {
 
 using namespace sofa::defaulttype;
@@ -70,6 +74,11 @@ int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
 #endif
 ;
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Explicit template instanciation of extern template.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef SOFA_WITH_FLOAT
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
 #endif
@@ -77,9 +86,11 @@ template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
 #endif
 
-} // namespace fem
+} /// namespace _beaminterpolation_
 
-} // namespace component
+} /// namespace fem
 
-} // namespace sofa
+} /// namespace component
+
+} /// namespace sofa
 
