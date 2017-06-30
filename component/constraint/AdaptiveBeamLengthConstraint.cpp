@@ -69,6 +69,7 @@ void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool
 
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
+using core::RegisterObject;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -79,7 +80,7 @@ using namespace sofa::helper;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
 
-int AdaptiveBeamLengthConstraintClass = core::RegisterObject("Constrain the length of a beam.")
+int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
         #ifdef SOFA_WITH_FLOAT
         .add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
         #endif

@@ -92,6 +92,7 @@ using sofa::core::CollisionModel ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::Vec ;
 using sofa::helper::vector ;
+using std::string;
 
 // TODO(dmarchal 2017-05-17) to eulalie & christian is the following still valid ?
 /**
@@ -153,12 +154,12 @@ public :
     virtual void onBeginAnimationStep(const double dt) override ;
 
     //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
-    virtual std::string getTemplateName() const
+    virtual string getTemplateName() const
     {
       return templateName(this);
     }
 
-    static std::string templateName(const AdaptiveBeamController<DataTypes>* = NULL)
+    static string templateName(const AdaptiveBeamController<DataTypes>* = NULL)
     {
       return DataTypes::Name();
     }
@@ -166,7 +167,7 @@ public :
 protected:
     void applyController(void) ;
 
-    Data<vector<std::string>>   d_interpolationPath;
+    Data<vector<string>>   d_interpolationPath;
     Data<int>                   d_controlledInstrument;
     Data<vector<Real>>          d_xtip;
     Data<vector<Real>>          d_rotationInstrument;
