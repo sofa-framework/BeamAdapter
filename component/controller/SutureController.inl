@@ -817,11 +817,11 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
     unsigned int j=0;
     Vec3 null(0,0,0);
 
-    m_VecGlobalHNode.clear();
+    m_vecGlobalHNode.clear();
     m_vecGlobalVelNode.clear();
 
     l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(0,0.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
-    m_VecGlobalHNode.push_back(global_H_interpol);
+    m_vecGlobalHNode.push_back(global_H_interpol);
     m_vecGlobalVelNode.push_back(v_interpol);
 
 
@@ -842,12 +842,12 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
         Real ratio=L0/L;
 
         l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(j-1,ratio,null,x_buf, v_buf, global_H_interpol, v_interpol);
-        m_VecGlobalHNode.push_back(global_H_interpol);
+        m_vecGlobalHNode.push_back(global_H_interpol);
         m_vecGlobalVelNode.push_back(v_interpol);
 
     }
     l_adaptiveinterpolation->InterpolateTransformAndVelUsingSpline(oldCurvAbs.size()-2,1.0,null,x_buf, v_buf, global_H_interpol, v_interpol);
-    m_VecGlobalHNode.push_back(global_H_interpol);
+    m_vecGlobalHNode.push_back(global_H_interpol);
     m_vecGlobalVelNode.push_back(v_interpol);
 
 
@@ -858,7 +858,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
 
     ////////////////////// compute a gravity center for the rigid segments //////////
-    m_VecGlobalHGravityCenter.clear();
+    m_vecGlobalHGravityCenter.clear();
     vector<Deriv> vec_Vel_gravityCenter;
 
 
@@ -887,8 +887,8 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
             Real length_of_beam = newCurvAbs[s+1]-newCurvAbs[s];
             Real weight = (length_of_beam/(length_of_rigidSegment*2));
 
-            global_H_gravityC.setOrigin( m_VecGlobalHNode[s+1].getOrigin()*weight
-                                         + m_VecGlobalHNode[s].getOrigin()*weight
+            global_H_gravityC.setOrigin( m_vecGlobalHNode[s+1].getOrigin()*weight
+                                         + m_vecGlobalHNode[s].getOrigin()*weight
                                          + global_H_gravityC.getOrigin() );
 
 
@@ -902,7 +902,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
             {
 
                 Vec3 pos_G = global_H_gravityC.getOrigin();
-                global_H_gravityC.setOrientation(m_VecGlobalHNode[s].getOrientation() );
+                global_H_gravityC.setOrientation(m_vecGlobalHNode[s].getOrientation() );
                 global_H_gravityC.setOrigin(pos_G);
 
  #ifdef DEBUG
@@ -919,13 +919,13 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
 
                 // projection of the velocity of the node in the frame of the node
-                VelNode_in_Node.setLinearVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
-                VelNode_in_Node.setAngularVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
+                VelNode_in_Node.setLinearVelocity( m_vecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
+                VelNode_in_Node.setAngularVelocity( m_vecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
 
 
 
                 // TRANSPORT of the velocity of the node to the gravity center (rigid link)
-                Transform gravityC_H_Node = global_H_gravityC.inversed()*m_VecGlobalHNode[s];
+                Transform gravityC_H_Node = global_H_gravityC.inversed()*m_vecGlobalHNode[s];
                 VelGravityC_inGravityC = gravityC_H_Node*VelNode_in_Node;
 
 
@@ -941,7 +941,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
 
 
-                m_VecGlobalHGravityCenter.push_back(global_H_gravityC);
+                m_vecGlobalHGravityCenter.push_back(global_H_gravityC);
                 vec_Vel_gravityCenter.push_back(vel_gravityC);
                 rigidification=false; // end of the rigidification
 
@@ -959,7 +959,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
         std::cout<<"!!!! Rigidification at the end tip !!!! "<<std::endl;
 #endif
         Vec3 pos_G = global_H_gravityC.getOrigin();
-        global_H_gravityC.setOrientation(m_VecGlobalHNode[s+1].getOrientation() );
+        global_H_gravityC.setOrientation(m_vecGlobalHNode[s+1].getOrientation() );
         global_H_gravityC.setOrigin(pos_G);
 
 
@@ -971,11 +971,11 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
         VelNode_in_global.setLinearVelocity(  m_vecGlobalVelNode[s].getVCenter());
 
         // projection of the velocity of the node in the frame of the node
-        VelNode_in_Node.setLinearVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
-        VelNode_in_Node.setAngularVelocity( m_VecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
+        VelNode_in_Node.setLinearVelocity( m_vecGlobalHNode[s].backProjectVector(VelNode_in_global.getLinearVelocity()) );
+        VelNode_in_Node.setAngularVelocity( m_vecGlobalHNode[s].backProjectVector(VelNode_in_global.getAngularVelocity() ) );
 
         // TRANSPORT of the velocity of the node to the gravity center (rigid link)
-        Transform gravityC_H_Node = global_H_gravityC.inversed()*m_VecGlobalHNode[s];
+        Transform gravityC_H_Node = global_H_gravityC.inversed()*m_vecGlobalHNode[s];
         VelGravityC_inGravityC = gravityC_H_Node*VelNode_in_Node;
 
         // projection of the velocity of the gravity center in the global frame
@@ -988,7 +988,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
         /////////////////////////////////////  ///////////////////////////////////  //////////////////////////////////
 
-        m_VecGlobalHGravityCenter.push_back(global_H_gravityC);
+        m_vecGlobalHGravityCenter.push_back(global_H_gravityC);
         vec_Vel_gravityCenter.push_back(vel_gravityC);
         rigidification=false; // end of the rigidification
     }
@@ -1004,8 +1004,8 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
     numNodes++;
     Coord xDof;
-    xDof.getCenter()     = m_VecGlobalHNode[0].getOrigin();
-    xDof.getOrientation()= m_VecGlobalHNode[0].getOrientation();
+    xDof.getCenter()     = m_vecGlobalHNode[0].getOrigin();
+    xDof.getOrientation()= m_vecGlobalHNode[0].getOrientation();
     x.push_back(xDof);
     v.push_back(m_vecGlobalVelNode[0]);
     m_topology->addPoint( xDof[0], xDof[1], xDof[2] );
@@ -1022,8 +1022,8 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
             {
                 // the last element of vector x is replaced by the gravity center of the rigid zone
                 x.pop_back();
-                xDof.getCenter()     = m_VecGlobalHGravityCenter[Rseg].getOrigin();
-                xDof.getOrientation()= m_VecGlobalHGravityCenter[Rseg].getOrientation();
+                xDof.getCenter()     = m_vecGlobalHGravityCenter[Rseg].getOrigin();
+                xDof.getOrientation()= m_vecGlobalHGravityCenter[Rseg].getOrientation();
                 x.push_back(xDof);
                 v.pop_back();
                 v.push_back( vec_Vel_gravityCenter[Rseg] );
@@ -1033,14 +1033,14 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
                 // add a transformation between the node 1 and the gravity center on previous beam
                 if(s)
                 {
-                    Transform GravityCenter_H_node1 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
+                    Transform GravityCenter_H_node1 = m_vecGlobalHGravityCenter[Rseg-1].inversed()*m_vecGlobalHNode[s];
                     l_adaptiveinterpolation->setTransformBetweenDofAndNode(s-1,GravityCenter_H_node1,1);
                 }
 
             }
 
-            Transform GravityCenter_H_interpol0 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
-            Transform GravityCenter_H_interpol1 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s+1];
+            Transform GravityCenter_H_interpol0 = m_vecGlobalHGravityCenter[Rseg-1].inversed()*m_vecGlobalHNode[s];
+            Transform GravityCenter_H_interpol1 = m_vecGlobalHGravityCenter[Rseg-1].inversed()*m_vecGlobalHNode[s+1];
 
 
 
@@ -1074,8 +1074,8 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 #endif
             // ADD a DOF for the second node of the beam
             numNodes++;
-            xDof.getCenter()     = m_VecGlobalHNode[s+1].getOrigin();
-            xDof.getOrientation()= m_VecGlobalHNode[s+1].getOrientation();
+            xDof.getCenter()     = m_vecGlobalHNode[s+1].getOrigin();
+            xDof.getOrientation()= m_vecGlobalHNode[s+1].getOrientation();
             x.push_back(xDof);
 
             v.push_back(m_vecGlobalVelNode[s+1]);
@@ -1088,7 +1088,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
                 rigidification=false;
 
                 // add a transformation between the node 0 and the gravity center on current beam
-                Transform GravityCenter_H_node0 = m_VecGlobalHGravityCenter[Rseg-1].inversed()*m_VecGlobalHNode[s];
+                Transform GravityCenter_H_node0 = m_vecGlobalHGravityCenter[Rseg-1].inversed()*m_vecGlobalHNode[s];
                 l_adaptiveinterpolation->setTransformBetweenDofAndNode(s,GravityCenter_H_node0,0);
 #ifdef DEBUG
                 std::cout<<" Add transformation"<< GravityCenter_H_node0<<"  between the node 0 and the gravity center on beam "<<s<<std::endl;
@@ -1456,18 +1456,18 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
 {
     if (!vparams->displayFlags().getShowBehaviorModels()) return;
 
-    if (m_rigidCurveSegments.size() != m_VecGlobalHGravityCenter.size())
+    if (m_rigidCurveSegments.size() != m_vecGlobalHGravityCenter.size())
     {
-        serr<<"in draw function rigidCurveSegments.size() ="<< m_rigidCurveSegments.size() <<" != vec_global_H_gravityCenter.size() = "<<m_VecGlobalHGravityCenter.size()<<sendl;
+        serr<<"in draw function rigidCurveSegments.size() ="<< m_rigidCurveSegments.size() <<" != vec_global_H_gravityCenter.size() = "<<m_vecGlobalHGravityCenter.size()<<sendl;
     }
 
-    for (unsigned int i=0; i<m_VecGlobalHGravityCenter.size(); i++)
+    for (unsigned int i=0; i<m_vecGlobalHGravityCenter.size(); i++)
     {
 
         Real Length = m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first;
         Vec3 sizeArrows (Length/4, Length/8, Length/8);
 
-        vparams->drawTool()->drawFrame(m_VecGlobalHGravityCenter[i].getOrigin(), m_VecGlobalHGravityCenter[i].getOrientation(), sizeArrows );
+        vparams->drawTool()->drawFrame(m_vecGlobalHGravityCenter[i].getOrigin(), m_vecGlobalHGravityCenter[i].getOrientation(), sizeArrows );
 
     }
 }

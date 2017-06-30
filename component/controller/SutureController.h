@@ -236,11 +236,11 @@ private:
     vector< std::pair<Real, Real> > m_rigidCurveSegments;
     vector< std::pair<Real, Real> > m_prevRigidCurvSegments;
     vector< bool >            m_rigidBeamList;
-    vector<Transform>         m_VecGlobalHGravityCenter;
+    vector<Transform>         m_vecGlobalHGravityCenter;
     std::map<Real, Transform> m_prevRigidTransforms;
 
     /////// for re-interpolation
-    vector<Transform>    m_VecGlobalHNode;
+    vector<Transform>    m_vecGlobalHNode;
     vector<Deriv>        m_vecGlobalVelNode;
 
     /////// for imposing nodes along the spline
