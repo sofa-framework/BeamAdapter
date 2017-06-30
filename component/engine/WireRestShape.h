@@ -140,7 +140,7 @@ public:
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
 
      /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-     Real getReleaseCurvAbs(){return d_straightLength.getValue();}
+     Real getReleaseCurvAbs() const {return d_straightLength.getValue();}
 
      /// This function is called by the force field to evaluate the rest position of each beam
      void getRestTransformOnX(Transform &global_H_local, const Real &x);
@@ -155,7 +155,7 @@ public:
       * This function provides a vector with the curviliar abscissa of the noticeable point(s)
       * and the minimum density (number of points) between them
       */
-     void getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density);
+     void getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density) const ;
 
 
      /// Functions enabling to load and use a geometry given from OBJ external file

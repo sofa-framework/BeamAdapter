@@ -345,7 +345,8 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density)
+void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
+                                                     vector<int>& nbP_density) const
 {
 
     xP_noticeable.clear();
