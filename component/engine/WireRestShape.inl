@@ -356,12 +356,12 @@ void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable
         for (unsigned int i=0; i<d_keyPoints.getValue().size(); i++)
         {
             Real x=d_keyPoints.getValue()[i];
-            if( x + EPSILON > this->getReleaseCurvAbs() )
+            if( x + EPSILON > getReleaseCurvAbs() )
                 break;
             xP_noticeable.push_back(x);
             nbP_density.push_back(d_density.getValue()[i]);
         }
-        xP_noticeable.push_back( this->getReleaseCurvAbs());
+        xP_noticeable.push_back( getReleaseCurvAbs());
 
         dmsg_info() <<"getSamplingParameters brokenIn2 detected - return  xP_noticeable ="<<xP_noticeable<<" and nbP_density ="<<nbP_density ;
     }
