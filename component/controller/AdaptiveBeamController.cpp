@@ -54,6 +54,10 @@ namespace controller
 namespace _adaptivebeamcontroller_
 {
 
+using sofa::defaulttype::Rigid3dTypes;
+using sofa::defaulttype::Rigid3fTypes;
+using core::RegisterObject;
+
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
 /// Register the component into the sofa factory.
@@ -64,20 +68,20 @@ namespace _adaptivebeamcontroller_
 SOFA_DECL_CLASS(AdaptiveBeamController)
 
 //TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamControllerClass = core::RegisterObject("")
+int AdaptiveBeamControllerClass = RegisterObject("")
 #ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamController<sofa::defaulttype::Rigid3fTypes> >()
+.add< AdaptiveBeamController<Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamController<sofa::defaulttype::Rigid3dTypes> >()
+.add< AdaptiveBeamController<Rigid3dTypes> >()
 #endif
 ;
 
 #ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3dTypes>;
 #endif
 
 } // namespace _adaptivebeamcontroller_

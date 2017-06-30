@@ -62,6 +62,8 @@ namespace _adaptivebeamcontroller_
 
 using sofa::core::objectmodel::BaseContext ;
 using std::string;
+using sofa::core::VecCoordId;
+using sofa::core::VecDerivId;
 
 //TODO(dmarchal 2017-05-17) to christian & euallie.
 //  This component seems specific to radiology instrument... but its name suggest a very generic behavior
@@ -275,8 +277,8 @@ void AdaptiveBeamController<DataTypes>::onBeginAnimationStep(const double /*dt*/
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::applyController()
 {
-    Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
-    Data<VecDeriv>* datav = this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
+    Data<VecCoord>* datax = this->getMechanicalState()->write(VecCoordId::position());
+    Data<VecDeriv>* datav = this->getMechanicalState()->write(VecDerivId::velocity());
     VecCoord& x = *datax->beginEdit();
     VecDeriv& v = *datav->beginEdit();
 
