@@ -130,9 +130,10 @@ public:
 
 
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+     virtual void parse(BaseObjectDescription* arg) ;
      virtual void init() override ;
-     virtual void reinit() override{ }
-     virtual void update() override { }
+     virtual void reinit() override {}
+     virtual void update() override {}
      virtual void bwdInit() override ;
      void draw(const VisualParams * vparams) override ;
 
@@ -179,7 +180,7 @@ public:
 
 protected:
      /// Analitical creation of wire shape...
-     Data<bool> d_procedural;
+     Data<bool> d_isAProceduralShape;
      Data<Real> d_nonProceduralScale;
      Data<Real> d_length;
      Data<Real> d_straightLength;
@@ -231,7 +232,7 @@ protected:
      EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo ;
      EdgeSetTopologyModifier* edgeMod {nullptr} ;
      Edge2QuadTopologicalMapping* edge2QuadMap ;
-     MeshLoader* loader ;
+     MeshLoader* loader {nullptr};
      bool edgeSetInNode {false};
 };
 

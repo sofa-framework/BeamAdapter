@@ -81,7 +81,7 @@ template <class DataTypes>
 WireRestShape<DataTypes>::WireRestShape() :
     //TODO(dmarchal 2017-05-17) not sure that procedural & nonProceduralScale are very understandable name...are they exclusives ?
     //if so have look in my comment in the init section.
-    d_procedural( initData(&d_procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
+    d_isAProceduralShape( initData(&d_isAProceduralShape,(bool)true,"isAProceduralShape","is the guidewire shape mathemetically defined ?") )
   , d_nonProceduralScale( initData ( &d_nonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
   , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
   , d_straightLength(initData(&d_straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
@@ -136,20 +136,32 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat &input, Vec3 &x, 
 }
 
 template<class DataTypes>
+void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
+{
+    const char* arg = args->getAttribute("procedural") ;
+    if(arg)
+    {
+        msg_info() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
+                   << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
+
+        args->removeAttribute("procedural") ;
+        args->setAttribute("isAProceduralShape", arg) ;
+    }
+
+    Inherit1::parse(args) ;
+}
+
+template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
-
-    msg_info() <<"WireRestShape begin init" ;
-
     /// Have to add because was remove from the .h due to forward déclarations
     edgeGeo = nullptr;
     edge2QuadMap = nullptr;
     loader = nullptr;
-    ///
 
-    if(!d_procedural.getValue())
+    if(!d_isAProceduralShape.getValue())
     {
-        //get the mesh loader
+        /// get the mesh loader
         this->getContext()->get(loader);
 
         if (!loader)
@@ -424,7 +436,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         return;
     }
 
-    if(d_procedural.getValue())
+    if(d_isAProceduralShape.getValue())
     {
         Real projetedLength = d_spireDiameter.getValue()*M_PI;
         Real lengthSpire=sqrt(d_spireHeight.getValue()*d_spireHeight.getValue() + projetedLength*projetedLength );

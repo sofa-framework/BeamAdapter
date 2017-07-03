@@ -190,7 +190,8 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start)
+void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output,
+                                                        Real& baryCoord_output, unsigned int start)
 {
     if(this->m_brokenInTwo )
     {
