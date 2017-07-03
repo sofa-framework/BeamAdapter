@@ -90,6 +90,11 @@ using sofa::core::behavior::Mass ;
 using sofa::core::MechanicalParams ;
 using sofa::defaulttype::Vec ;
 using sofa::defaulttype::Mat ;
+using sofa::defaulttype::Rigid3dTypes ;
+using sofa::defaulttype::Rigid3fTypes ;
+using core::objectmodel::Data ;
+using core::topology::BaseMeshTopology;
+using sofa::defaulttype::SolidTypes;
 
 /*!
  * \class AdaptiveBeamForceFieldAndMass
@@ -114,27 +119,20 @@ public:
     typedef typename DataTypes::Coord Coord;
     typedef typename DataTypes::Deriv Deriv;
     typedef typename Coord::value_type Real;
-    typedef core::objectmodel::Data<VecCoord> DataVecCoord;
-    typedef core::objectmodel::Data<VecDeriv> DataVecDeriv;
+    typedef Data<VecCoord> DataVecCoord;
+    typedef Data<VecDeriv> DataVecDeriv;
     typedef BeamInterpolation<DataTypes> BInterpolation;
 
     typedef unsigned int Index;
-    typedef core::topology::BaseMeshTopology::Edge Element;
-    typedef sofa::helper::vector<core::topology::BaseMeshTopology::Edge> VecElement;
-    typedef helper::vector<unsigned int> VecIndex;
+    typedef BaseMeshTopology::Edge Element;
+    typedef vector<BaseMeshTopology::Edge> VecElement;
+    typedef vector<unsigned int> VecIndex;
 
-    typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-    typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
-
-    /// remove ?
-    typedef Vec<12, Real> Displacement;        ///< the displacement vector
-    typedef Mat<3, 3, Real> Transformation; ///< matrix for rigid transformations like rotations
-    typedef Mat<12, 12, Real> StiffnessMatrix;
-
-    /// replace by:
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
 
     typedef Vec<3, Real> Vec3;
-    typedef Vec<6, Real> Vec6;        ///< the displacement vector
+    typedef Vec<6, Real> Vec6;          ///< the displacement vector
     typedef Mat<6, 6, Real> Matrix6x6;
 
     /*!
@@ -142,102 +140,110 @@ public:
      * @brief BeamLocalMatrices Class
      */
 protected:
+
     class BeamLocalMatrices{
 
     public:
         BeamLocalMatrices(){}
         BeamLocalMatrices(const BeamLocalMatrices &v)
         {
-            this->k_loc00 = v.k_loc00;
-            this->k_loc10 = v.k_loc10;
-            this->k_loc11 = v.k_loc11;
-            this->k_loc01 = v.k_loc01;
+            m_K00 = v.m_K00;
+            m_K10 = v.m_K10;
+            m_K11 = v.m_K11;
+            m_K01 = v.m_K01;
 
-            this->m_loc00 = v.m_loc00;
-            this->m_loc11 = v.m_loc11;
-            this->m_loc01 = v.m_loc01;
-            this->m_loc10 = v.m_loc10;
+            m_M00 = v.m_M00;
+            m_M11 = v.m_M11;
+            m_M01 = v.m_M01;
+            m_M10 = v.m_M10;
 
-            this->loc0_Ad_ref = v.loc0_Ad_ref;
-            this->loc1_Ad_ref = v.loc1_Ad_ref;
+            m_A0Ref = v.m_A0Ref;
+            m_A1Ref = v.m_A1Ref;
         }
         ~BeamLocalMatrices(){}
-        // stiffness Matrices
-        Matrix6x6 k_loc00, k_loc01, k_loc10, k_loc11;
-        // mass Matrices
-        Matrix6x6 m_loc00, m_loc01, m_loc10, m_loc11;
-        // adjoint Matrices
-        Matrix6x6 loc0_Ad_ref, loc1_Ad_ref;
+
+        Matrix6x6 m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
+        Matrix6x6 m_M00, m_M01, m_M10, m_M11; /// mass Matrices
+        Matrix6x6 m_A0Ref, m_A1Ref;   /// adjoint Matrices
     };
 
 public:
+
     AdaptiveBeamForceFieldAndMass( ) ;
     virtual ~AdaptiveBeamForceFieldAndMass() ;
 
+
+    /////////////////////////////////////
     /// This is inhereted from BaseObject
+    /////////////////////////////////////
     virtual void init() override ;
     virtual void reinit() override ;
     virtual void draw(const VisualParams* vparams) override ;
 
+
+    /////////////////////////////////////
     /// Mass Interface
-    virtual  void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
+    /////////////////////////////////////
+    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
     virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix);
     virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& )
-    {serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
+    {SOFA_UNUSED(mparams);serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const ///< vMv/2 using dof->getV()
-    {serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
+    {SOFA_UNUSED(mparams);serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
-    {serr<<"addGravityToV not implemented yet"<<sendl;}
+    {SOFA_UNUSED(mparams);serr<<"addGravityToV not implemented yet"<<sendl;}
 
+
+    /////////////////////////////////////
     /// ForceField Interface
-    virtual void addForce (const MechanicalParams* mparams,
-                           DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v);
+    /////////////////////////////////////
+    virtual void addForce(const MechanicalParams* mparams,
+                          DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v);
 
-    virtual void  addDForce(const MechanicalParams* mparams,
-                            DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
+    virtual void addDForce(const MechanicalParams* mparams,
+                           DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )
-    const {serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
+    const {SOFA_UNUSED(mparams);serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
 
     void addKToMatrix(const MechanicalParams* mparams,
                       const MultiMatrixAccessor* matrix);
 
-    void computeStiffness(int beam, BeamLocalMatrices& beamMatrices);
+    void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
 
 
-    Data<bool> d_timoshenko; ///< use Timoshenko beam (non-null section shear area)
-    Data<bool> d_computeMass; ///< if false, only compute the stiff elastic model
-    Data<Real> d_massDensity; ///< Density of the mass (usually in kg/m^3)
-    Data<bool> d_shearStressComputation; ///< if false, suppress the shear stress in the computation
-    Data<bool> d_reinforceLength; ///<if true, perform a separate computation to evaluate the elongation
+    Data<bool> d_computeMass;               ///< if false, only compute the stiff elastic model
+    Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
+    Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
+    Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
     DataVecDeriv d_dataG;
 
 protected :
-    /// pointer to the interpolation
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
-    /// pointer to the WireRestShape
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_instrumentParameters;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
-
-    /// compute the gravity vector (if necessary)
     void computeGravityVector();
-    Vec3 m_gravity;
 
-    vector<BeamLocalMatrices> d_localBeamMatrices;
+    Vec3 m_gravity;
+    vector<BeamLocalMatrices> m_localBeamMatrices;
+
+    using Mass<DataTypes>::getContext;
+    using Mass<DataTypes>::mstate;
 
 private:
+
     void drawElement(const VisualParams* vparams, int beam,
                      Transform &global_H0_local, Transform &global_H1_local) ;
 };
@@ -245,15 +251,14 @@ private:
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
 #if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
 #ifdef SOFA_WITH_FLOAT
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3fTypes> ;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3fTypes> ;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3dTypes> ;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3dTypes> ;
 #endif
 #endif
 
 } /// namespace _adaptivebeamforcefieldandmass_
-
 
 
 ////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
