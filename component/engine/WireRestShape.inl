@@ -55,8 +55,6 @@
 #include <iostream>
 #include <fstream>
 
-//TODO(dmarchal 2017-05-17): I wonder if these two are not already defined in a std lib ?
-#define PI 3.14159265
 #define EPSILON 0.0000000001
 #define VERIF 1
 
@@ -428,7 +426,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
     if(d_procedural.getValue())
     {
-        Real projetedLength = d_spireDiameter.getValue()*PI;
+        Real projetedLength = d_spireDiameter.getValue()*M_PI;
         Real lengthSpire=sqrt(d_spireHeight.getValue()*d_spireHeight.getValue() + projetedLength*projetedLength );
         // angle in the z direction
         Real phi= atan(d_spireHeight.getValue()/projetedLength);
@@ -439,7 +437,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         // spire angle (if theta=2*PI, there is a complete spire between startx and x_used)
         Real lengthCurve= x_used-d_straightLength.getValue();
         Real numSpire=lengthCurve/lengthSpire;
-        Real theta= 2*PI*numSpire;
+        Real theta= 2*M_PI*numSpire;
 
         // computation of the Quat
         Quat Qtheta;
