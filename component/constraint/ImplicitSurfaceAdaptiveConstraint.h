@@ -33,27 +33,47 @@ namespace component
 
 namespace constraint
 {
+
+namespace _implicitsurfaceadaptiveconstraint_
+{
+
 using namespace sofa::defaulttype;
+using sofa::core::ConstVecCoordId;
+using core::behavior::ConstraintResolution;
+using sofa::component::fem::WireBeamInterpolation;
+using sofa::helper::vector;
+using sofa::core::behavior::MechanicalState;
+using defaulttype::Vec3d;
+using sofa::component::container::ImplicitSurface;
+using sofa::core::behavior::PairInteractionConstraint;
+using defaulttype::Vec3d;
+using core::behavior::BaseMechanicalState;
+using core::visual::VisualParams;
+using sofa::core::ConstraintParams;
 
 
-/////////////////////////////////////////////////////////
 /*!
  * \class ImplicitSurfaceAdaptiveConstraintResolution
  * \brief ImplicitSurfaceAdaptiveConstraintResolution Class
  */
 template<class DataTypes>
-class ImplicitSurfaceAdaptiveConstraintResolution : public core::behavior::ConstraintResolution
+class ImplicitSurfaceAdaptiveConstraintResolution : public ConstraintResolution
 {
 public:
-    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, sofa::component::fem::WireBeamInterpolation<DataTypes>* wireInterpol)
-    : _wireInterpolation(wireInterpol), _mu(frictionCoef), _line(line) { nbLines = 3; }
+    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, WireBeamInterpolation<DataTypes>* wireInterpol)
+        : m_wireInterpolation(wireInterpol)
+        , m_mu(frictionCoef)
+        , m_line(line)
+    {
+        nbLines = 3;
+    }
+
     virtual void resolution(int line, double** w, double* d, double* force);
 
-
 private:
-    sofa::component::fem::WireBeamInterpolation<DataTypes>* _wireInterpolation;
-    double _mu;  /*, _fConstraint*/
-    int _line;
+    WireBeamInterpolation<DataTypes>* m_wireInterpolation;
+    double m_mu;
+    int m_line;
 };
 
 
@@ -62,11 +82,10 @@ private:
  * \brief ImplicitSurfaceAdaptiveConstraint Class
  */
 template<class DataTypes>
-class ImplicitSurfaceAdaptiveConstraint : public core::behavior::PairInteractionConstraint<DataTypes>
+class ImplicitSurfaceAdaptiveConstraint : public PairInteractionConstraint<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(ImplicitSurfaceAdaptiveConstraint,DataTypes),SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
-
+    SOFA_CLASS(SOFA_TEMPLATE(ImplicitSurfaceAdaptiveConstraint,DataTypes),SOFA_TEMPLATE(PairInteractionConstraint,DataTypes));
 
     typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
 
@@ -79,155 +98,80 @@ public:
     typedef typename DataTypes::Deriv Deriv;
     typedef typename DataTypes::DPos DPos;
     typedef typename Coord::value_type Real;
-    typedef  Vec<3,Real> Vec3;
+    typedef Vec<3,Real> Vec3;
     typedef Vec<3,double> Vec3d;
     typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-    typedef  sofa::component::fem::WireBeamInterpolation<DataTypes> WBInterpolation;
+    typedef WireBeamInterpolation<DataTypes> WBInterpolation;
 
-    typedef core::objectmodel::Data<VecCoord>		DataVecCoord;
-    typedef core::objectmodel::Data<VecDeriv>		DataVecDeriv;
-    typedef core::objectmodel::Data<MatrixDeriv>    DataMatrixDeriv;
+    typedef Data<VecCoord>		 DataVecCoord;
+    typedef Data<VecDeriv>		 DataVecDeriv;
+    typedef Data<MatrixDeriv>    DataMatrixDeriv;
 
-    typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-    typedef typename sofa::defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
-
-    typedef typename sofa::helper::vector<int>::iterator vectorIntIterator;
+    typedef typename SolidTypes<Real>::Transform Transform;
+    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    typedef typename vector<int>::iterator VectorIntIterator;
 
 protected :
-    /// pointer to the interpolation
-    SingleLink<ImplicitSurfaceAdaptiveConstraint<DataTypes>, WBInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_wireBinterpolation;
+    SingleLink<ImplicitSurfaceAdaptiveConstraint<DataTypes>, WBInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_wireBinterpolation;
 
+    Data<bool>  d_visualization;
+    Data<Vec3d> d_posMin;
+    Data<Vec3d> d_posMax;
+    Data<int>   d_initDomain;
+    Data<Real>  d_alarmDistance;
+    Data<Real>  d_radius;
+    Data<Real>  d_frictionCoef;
+    Data<vector<int> > d_listBeams;
 
-
-    unsigned int cid;
-
-    // For visualization of the potential //
-    Data<bool> visualization;
-    Data<defaulttype::Vec3d> PosMin;
-    Data<defaulttype::Vec3d> PosMax;
 #ifdef SOFAEVE
     sofaeve::implicit::MarchingCube * mc;
 #endif
-    double mc_data[100000000];
-    Real _isoValue;
 
-    // domain
-    Data<int> init_domain;
+    unsigned int m_cid;
+    double m_cData[100000000];
+    Real m_isoValue;
+    vector<bool> m_activeList;
+    bool m_friction;
+    bool m_allActivated; /// list of beams to be considered for collision
+    ImplicitSurface* m_contactSurface;
+    int m_nbConstraints;
 
-    // all points are active or not
-    Data<Real> alarmDistance;
-    Data<Real> radius;
-    sofa::helper::vector<bool> active_list;
-
-    // friction coef
-    Data<Real> frictionCoef;
-    bool friction;
-
-    // list of beams to be considered for collision
-    Data< sofa::helper::vector<int> > listBeams;
-    bool all_activated;
-
-    // pointer to the implicit surface //
-    sofa::component::container::ImplicitSurface* _contact_surface;
-
-    //void getOrthogonalVectors(const Deriv& dir, Deriv& vec1, Deriv& vec2);
-
-    /// this constraint is NOT holonomic
-    bool isHolonomic() {return false;}
-    int _nbConstraints;
+    bool isHolonomic() {return false;} /// this constraint is NOT holonomic
 
 public:
 
-    ImplicitSurfaceAdaptiveConstraint(MechanicalState* /*object1*/, MechanicalState* /*object2*/)
-    : m_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-    , visualization(initData(&visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , PosMin(initData(&PosMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , PosMax(initData(&PosMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
-    , init_domain(initData(&init_domain, 0, "domainId", "optional1: give an initial id for the domain"))
-    , alarmDistance(initData(&alarmDistance, (Real) 1.0, "alarmDistance", "kind of alarm distance computed on implicit surface"))
-    , radius(initData(&radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
-    , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
-    , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
-    {
-        _isoValue=0.0;
-    }
+    ImplicitSurfaceAdaptiveConstraint(MechanicalState* object1, MechanicalState* object2);
+    ImplicitSurfaceAdaptiveConstraint(MechanicalState* object);
+    ImplicitSurfaceAdaptiveConstraint();
 
-    ImplicitSurfaceAdaptiveConstraint(MechanicalState* /*object*/)
-    :  m_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-    , visualization(initData(&visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , PosMin(initData(&PosMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , PosMax(initData(&PosMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
-    , init_domain(initData(&init_domain, 0, "domainId", "optional2: give an initial id for the domain"))
-    , alarmDistance(initData(&alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
-    , radius(initData(&radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
-    , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
-    , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
-    {
-        _isoValue=0.0;
-    }
+    ~ImplicitSurfaceAdaptiveConstraint(){}
 
-    ImplicitSurfaceAdaptiveConstraint()
-    :  m_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-    , visualization(initData(&visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , PosMin(initData(&PosMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , PosMax(initData(&PosMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
-    , init_domain(initData(&init_domain, 0, "domainId", "optional3: give an initial id for the domain"))
-    , alarmDistance(initData(&alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
-    , radius(initData(&radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
-    , frictionCoef(initData(&frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
-    , listBeams(initData(&listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
-    {
-        _isoValue=0.0;
-    }
-
-     ~ImplicitSurfaceAdaptiveConstraint()
-    {
-    }
-
-    /* deprecated */
-    MechanicalState* getObject1() { return this->mstate1; }
-    MechanicalState* getObject2() { return this->mstate2; }
-    core::behavior::BaseMechanicalState* getMechModel1() { return this->mstate1; }
-    core::behavior::BaseMechanicalState* getMechModel2() { return this->mstate2; }
-
-
-
+    BaseMechanicalState* getMechModel1() { return this->mstate1; }
+    BaseMechanicalState* getMechModel2() { return this->mstate2; }
 
     void init();
-
     void clear();
-
     void internalInit();
-
     void bwdInit();
-
     void reset();
-
     void reinit(){internalInit();}
 
+    void buildConstraintMatrix(const ConstraintParams* cParams,
+                               DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex,
+                               const DataVecCoord &, const DataVecCoord &x2) ;
 
+    void getConstraintViolation(const ConstraintParams* cParams, BaseVector *v,
+                                const DataVecCoord &x1, const DataVecCoord &x2,
+                                const DataVecDeriv &v1, const DataVecDeriv &v2) ;
 
+    void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset);
 
-
-
-    /////////////// standart interface of constraintset //////////////
-
-    void buildConstraintMatrix(const sofa::core::ConstraintParams* cParams, DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex
-            , const DataVecCoord &, const DataVecCoord &x2) ;
-
-    void getConstraintViolation(const sofa::core::ConstraintParams* cParams, defaulttype::BaseVector *v, const DataVecCoord &x1, const DataVecCoord &x2
-            , const DataVecDeriv &v1, const DataVecDeriv &v2) ;
-
-    void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
-
-
-
-    void draw(const core::visual::VisualParams* vparams);
+    void draw(const VisualParams* vparams);
 
 
 private:
-    sofa::helper::vector<Vec3> m_posSample;
-    sofa::helper::vector<int> m_domainSample;
+    vector<Vec3> m_posSample;
+    vector<int> m_domainSample;
 
     struct potentialContact{
         unsigned int beamId;
@@ -237,26 +181,23 @@ private:
         Real d;
     };
 
-    sofa::helper::vector<potentialContact> m_VecPotentialContact;
+    vector<potentialContact> m_vecPotentialContact;
 
-
-
-    // internal functions
-
-    // get vec1 and vec2 orthogonal vectors from a given dir value
     void getOrthogonalVectors(const Vec3& dir, Vec3& vec1, Vec3& vec2);
-
-    void detectPotentialContactOnImplicitSurface(const sofa::core::ConstVecCoordId &vecXId, sofa::helper::vector<int>& listBeam);
-
+    void detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam);
     void computeTangentialViolation(const Vec3 &Pos, const Vec3 &freePos, const Vec3 &t, const Vec3 &s,
                                     const Real& d, const Real& dfree, Real &dfree_t, Real &dfree_s );
 
 
+    using PairInteractionConstraint<DataTypes>::mstate1;
+    using PairInteractionConstraint<DataTypes>::mstate2;
+
 };
 
+}
 
-
-
+using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraint;
+using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraintResolution;
 
 } // namespace constraint
 

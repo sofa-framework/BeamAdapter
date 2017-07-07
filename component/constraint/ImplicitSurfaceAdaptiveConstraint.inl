@@ -44,64 +44,96 @@ namespace component
 namespace constraint
 {
 
+template<class DataTypes>
+ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object1, MechanicalState* object2)
+    : l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
+    , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
+    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional1: give an initial id for the domain"))
+    , d_alarmDistance(initData(&d_alarmDistance, (Real) 1.0, "alarmDistance", "kind of alarm distance computed on implicit surface"))
+    , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
+    , d_frictionCoef(initData(&d_frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
+    , d_listBeams(initData(&d_listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
+{
+    SOFA_UNUSED(object1);
+    SOFA_UNUSED(object2);
+    m_isoValue=0.0;
+}
 
+template<class DataTypes>
+ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object)
+    :  l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
+    , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
+    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional2: give an initial id for the domain"))
+    , d_alarmDistance(initData(&d_alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
+    , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
+    , d_frictionCoef(initData(&d_frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
+    , d_listBeams(initData(&d_listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
+{
+    SOFA_UNUSED(object);
+    m_isoValue=0.0;
+}
 
-//////////////////////////////
-// ImplicitSurfaceAdaptiveConstraint
-//////////////////////////////
-
+template<class DataTypes>
+ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint()
+    :  l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
+    , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
+    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional3: give an initial id for the domain"))
+    , d_alarmDistance(initData(&d_alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
+    , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
+    , d_frictionCoef(initData(&d_frictionCoef, (Real)0.0, "frictionCoef", "coefficient of friction (Coulomb's law)"))
+    , d_listBeams(initData(&d_listBeams, "listBeams", "list of beams used by Interpolation that are activated for contact (all by default)"))
+{
+    m_isoValue=0.0;
+}
 
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::init()
 {
-std::cout<<"ImplicitSurfaceAdaptiveConstraint<DataTypes>::init()"<<std::endl;
-    assert(this->mstate1);
-    assert(this->mstate2);
+    PairInteractionConstraint<DataTypes>::init();
 }
-
-
 
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::clear()
 {
-    std::cout<<"ImplicitSurfaceAdaptiveConstraint<DataTypes>::clear()"<<std::endl;
     internalInit();
 }
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::reset()
 {
-    std::cout<<"ImplicitSurfaceAdaptiveConstraint<DataTypes>::reset()"<<std::endl;
     internalInit();
 }
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::bwdInit()
 {
-    std::cout<<"ImplicitSurfaceAdaptiveConstraint<DataTypes>::bwdInit()"<<std::endl;
     internalInit();
 }
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 {
-    std::cout<<"ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()"<<std::endl;
-
     //  STEP 1 : get the implicit surface
-    if (this->mstate1)
-        this->mstate1->getContext()->get(_contact_surface);
+    if(mstate1)
+        mstate1->getContext()->get(m_contactSurface);
     else
-        serr<<" no mstate1 found: WARNING !!"<<sendl;
+        msg_error() <<"No mstate1 found.";
 
-    if (_contact_surface == NULL){
+    if (m_contactSurface == NULL){
         serr<<"oooooooooo\n oooERROR: no surface found for contact"<<sendl;
         return;
     }
     else
     {
-        std::cout<<"CONTACT with surface name:"<<_contact_surface->getName()<<std::endl;
+        std::cout<<"CONTACT with surface name:"<<m_contactSurface->getName()<<std::endl;
     }
 
 
@@ -111,18 +143,18 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
         serr<<" no mstate2 found: WARNING !!"<<sendl;
 
     // STEP 3: given the coef of Friction, set the bool friction [friction or frictionless contact]
-    if(frictionCoef.getValue()>0.0)
-        friction=true;
+    if(d_frictionCoef.getValue()>0.0)
+        m_friction=true;
     else
-        friction=false;
+        m_friction=false;
 
 
     // STEP 4: verify if listBeams is void => all beams are activated
-    const sofa::helper::vector<int> &list_B= listBeams.getValue();
+    const sofa::helper::vector<int> &list_B= d_listBeams.getValue();
     if( list_B.size() == 0)
-        all_activated=true;
+        m_allActivated=true;
     else
-        all_activated=false;
+        m_allActivated=false;
 
     // STEP 5: init domain
     m_domainSample.clear();
@@ -130,7 +162,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 
     // STEP 6: init marching cube
 #ifdef SOFAEVE
-        mc = new sofaeve::implicit::MarchingCube();
+    mc = new sofaeve::implicit::MarchingCube();
 #endif
 
 
@@ -156,49 +188,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Ve
 }
 
 
-
-
-/*
-
-template <class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::handleTopologyChange()
-{
-
-    #ifdef DEBUG_TOPO_DATA
-        std::cout<<"handleTopologyChange before : ";
-
-        int m2 = this->mstate2->getSize();
-        for (int i=0; i<m2-1; i++)
-        {
-            std::cout<<"listProbe["<<i<<"].pos :"<<listProbe[i].pos()<<std::endl;
-            std::cout<<"                          ";
-        }
-        std::cout<<""<<std::endl;
-    #endif
-
-    core::topology::BaseMeshTopology* topology = this->mstate2->getContext()->getMeshTopology();
-    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator itBegin=topology->beginChange();
-    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator itEnd=topology->endChange();
-    sofa::helper::list<const core::topology::TopologyChange *>::const_iterator it;
-    listProbe.handleTopologyEvents(itBegin,itEnd);
-
-    #ifdef DEBUG_TOPO_DATA
-         m2 = this->mstate2->getSize();
-        for (int i=0; i<m2; i++)
-        {
-            std::cout<<"                     after  : listProbe["<<i<<"].pos :"<<listProbe[i].pos()<<std::endl;
-        }
-        std::cout<<""<<std::endl;
-
-
-    #endif
-
-}
-
-*/
-
-
-
 /// function detectPotentialContactOnImplicitSurface()
 /// computation of the distance with the implicit surface  (and verify that it is < alarmDistance)
 /// "filters" contacts (the normal of contact is supposed to be perp to the tangent of the curve except on the tip point)
@@ -207,10 +196,10 @@ template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const sofa::core::ConstVecCoordId &vecXId, sofa::helper::vector<int>& listBeam)
 {
 
-    unsigned int numBeams= m_wireBinterpolation->getNumBeams();
+    unsigned int numBeams= l_wireBinterpolation->getNumBeams();
 
 
-    vectorIntIterator it;
+    VectorIntIterator it;
     while( m_domainSample.size() < m_posSample.size() )
     {
         it=m_domainSample.begin();
@@ -227,22 +216,22 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
     if(m_domainSample.size()!= m_posSample.size() )
     {
         serr<<" domain and pos samples do not have the same size : cancel detection"<<send:
-        return;
+              return;
     }
 #endif
     for (unsigned int p=0; p<m_posSample.size(); p++)
     {
         Vec3d pos=(Vec3d)m_posSample[p];
-        m_domainSample[p] = _contact_surface->getDomain(pos, m_domainSample[p]);
-        Real value = _contact_surface->getValue(pos, m_domainSample[p]);
-        Vec3 grad = (Vec3)_contact_surface->getGradient(pos, m_domainSample[p]);
+        m_domainSample[p] = m_contactSurface->getDomain(pos, m_domainSample[p]);
+        Real value = m_contactSurface->getValue(pos, m_domainSample[p]);
+        Vec3 grad = (Vec3)m_contactSurface->getGradient(pos, m_domainSample[p]);
 
         Real gradNorm= grad.norm();
         if (gradNorm > 1e-12 )
         {
             Real d=value/gradNorm;
 
-            if (d<this->alarmDistance.getValue())
+            if (d<this->d_alarmDistance.getValue())
             {
 
 
@@ -258,7 +247,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 
                 // get the tangent to the curve at this point...
                 Vec3 t;
-                m_wireBinterpolation->getTangentUsingSplinePoints( pt.beamId, bc, vecXId, t );
+                l_wireBinterpolation->getTangentUsingSplinePoints( pt.beamId, bc, vecXId, t );
                 t.normalize();
                 pt.t = t;
 
@@ -268,21 +257,21 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                 double dnt=dot(pt.n, pt.t);
                 if(pt.beamId ==(numBeams-1) && pt.baryCoord[0]>0.999)
                 {
-                     std::cout<<" ***********\n last contact point (no modif on the normal) id:"<<pt.beamId <<"  bc"<<  pt.baryCoord<<std::endl;
+                    std::cout<<" ***********\n last contact point (no modif on the normal) id:"<<pt.beamId <<"  bc"<<  pt.baryCoord<<std::endl;
 
 
-                     // build a "frame" for friction contact:
-                     Vec3 newT;
-                     if (fabs(dnt)<0.999)
-                     {
-                           newT = pt.t - pt.n*dnt;
-                           newT.normalize();
-                           pt.t=newT;
-                     }
-                     else
-                     {      // in case pt.t and pt.n are aligned:
-                          getOrthogonalVectors(pt.n, pt.t, pt.s);
-                     }
+                    // build a "frame" for friction contact:
+                    Vec3 newT;
+                    if (fabs(dnt)<0.999)
+                    {
+                        newT = pt.t - pt.n*dnt;
+                        newT.normalize();
+                        pt.t=newT;
+                    }
+                    else
+                    {      // in case pt.t and pt.n are aligned:
+                        getOrthogonalVectors(pt.n, pt.t, pt.s);
+                    }
 
                 }
                 else
@@ -297,14 +286,14 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                     }
                     else
                     {
-                       // std::cout<<" warning n and t are far from being perp => contact cancelled"<<std::endl;
+                        // std::cout<<" warning n and t are far from being perp => contact cancelled"<<std::endl;
                         continue;
                     }
 
                 }
                 pt.s = cross(pt.n, pt.t);
 
-                m_VecPotentialContact.push_back(pt);
+                m_vecPotentialContact.push_back(pt);
 
             }
         }
@@ -327,9 +316,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
 
     // if all activated => all beam considered otherwize, use listBeams...
     sofa::helper::vector<int> list_B;
-    unsigned int numBeams= m_wireBinterpolation->getNumBeams();
-    all_activated=false;
-    if (all_activated)
+    unsigned int numBeams= l_wireBinterpolation->getNumBeams();
+    m_allActivated=false;
+    if (m_allActivated)
     {
         list_B.clear();
         for ( unsigned int i=0; i<numBeams; i++)
@@ -338,11 +327,11 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     }
     else
     {
-        list_B= listBeams.getValue();
+        list_B= d_listBeams.getValue();
     }
     numBeams = list_B.size();
     m_posSample.clear();
-    m_VecPotentialContact.clear();
+    m_vecPotentialContact.clear();
 
     std::cout<<" list_B = "<<list_B<<std::endl;
 
@@ -369,7 +358,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     sofa::core::VecCoordId x_in = sofa::core::VecCoordId::position();
 
     const VecCoord &x2test=*this->mstate2->getX();
-    m_wireBinterpolation->updateBezierPoints(x2test, x_in );
+    l_wireBinterpolation->updateBezierPoints(x2test, x_in );
 
     // interpolates the position of the sample points
     for (unsigned int bi=0; bi<numBeams; bi++)
@@ -386,9 +375,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
             std::cout<<" ("<<baryCoord<<") ";
 #endif
 
-            m_wireBinterpolation->interpolatePointUsingSpline(b, baryCoord, localPos, x2buf, m_posSample[10*bi+p], false, x_in);
+            l_wireBinterpolation->interpolatePointUsingSpline(b, baryCoord, localPos, x2buf, m_posSample[10*bi+p], false, x_in);
         }
- #ifdef DEBUG
+#ifdef DEBUG
         std::cout<<" "<<std::endl;
 #endif
     }
@@ -407,55 +396,55 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     /////////////////
     // 3d step: setting the constraint direction
     MatrixDeriv& c2w = *c2.beginEdit();
-    _nbConstraints = 0;
-    cid = cIndex;
-    for (unsigned int i=0; i<m_VecPotentialContact.size(); i++)
+    m_nbConstraints = 0;
+    m_cid = cIndex;
+    for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
 
-        potentialContact &pt= m_VecPotentialContact[i];
+        potentialContact &pt= m_vecPotentialContact[i];
 
 
 
         // computes the mapping of the force on the DOFs' space => N_node0 and N_node1 (6dofs each)
         SpatialVector N_node0, N_node1;
-        m_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
-                                                        x2buf, pt.n, N_node0, N_node1);
+        l_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
+                x2buf, pt.n, N_node0, N_node1);
 
         unsigned int node0Idx, node1Idx;
-        m_wireBinterpolation->getNodeIndices( pt.beamId,  node0Idx, node1Idx );
+        l_wireBinterpolation->getNodeIndices( pt.beamId,  node0Idx, node1Idx );
 
 
         // put the normal direction of contact in the Matrix of constraint directions
 
-        MatrixDerivRowIterator c2_it = c2w.writeLine(cid + _nbConstraints);
+        MatrixDerivRowIterator c2_it = c2w.writeLine(m_cid + m_nbConstraints);
 
         c2_it.addCol(node0Idx, Deriv(N_node0.getForce(), N_node0.getTorque() ) );
         c2_it.addCol(node1Idx, Deriv(N_node1.getForce(), N_node1.getTorque() ) );
-        _nbConstraints++;
+        m_nbConstraints++;
 
-        if (friction)
+        if (m_friction)
         {
 
             SpatialVector T_node0, T_node1, S_node0, S_node1 ;
 
             // put the first tangential direction of contact in the Matrix of constraint directions
-            m_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
-                                                            x2buf, pt.t, T_node0, T_node1);
+            l_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
+                    x2buf, pt.t, T_node0, T_node1);
 
-            c2_it = c2w.writeLine(cid + _nbConstraints);
+            c2_it = c2w.writeLine(m_cid + m_nbConstraints);
             c2_it.addCol(node0Idx, Deriv(T_node0.getForce(), T_node0.getTorque() ) );
             c2_it.addCol(node1Idx, Deriv(T_node1.getForce(), T_node1.getTorque() ) );
-            _nbConstraints++;
+            m_nbConstraints++;
 
 
             // put the second tangential direction of contact in the Matrix of constraint directions
-            m_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
-                                                            x2buf, pt.s, S_node0, S_node1);
+            l_wireBinterpolation->MapForceOnNodeUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0.0, pt.baryCoord[1],pt.baryCoord[2]),
+                    x2buf, pt.s, S_node0, S_node1);
 
-            c2_it = c2w.writeLine(cid + _nbConstraints);
+            c2_it = c2w.writeLine(m_cid + m_nbConstraints);
             c2_it.addCol(node0Idx, Deriv(S_node0.getForce(), S_node0.getTorque() ) );
             c2_it.addCol(node1Idx, Deriv(S_node1.getForce(), S_node1.getTorque() ) );
-            _nbConstraints++;
+            m_nbConstraints++;
         }
 
     }
@@ -465,12 +454,10 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     std::cout<<" * 3d step ok: constraints are set...\n done *************"<<std::endl;
 #endif
 
-    cIndex+=_nbConstraints;
+    cIndex+=m_nbConstraints;
 
 
 }
-
-
 
 
 
@@ -481,11 +468,11 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
     //  Real dfree = pt.d + dot(pt.n, freePos - m_posSample[pt.posSampleId]) - radius.getValue();
 
-    Real dTest= d-radius.getValue();
+    Real dTest= d-d_radius.getValue();
 
-    if ( fabs(dTest) <=0.01*alarmDistance.getValue())  // actual position is already in contact
+    if ( fabs(dTest) <=0.01*d_alarmDistance.getValue())  // actual position is already in contact
     {
- #ifdef DEBUG_DFREE_COMPUTATION
+#ifdef DEBUG_DFREE_COMPUTATION
         std::cout<<" case 1"<<std::endl;
 #endif
         dfree_t = dot(t, freePos-Pos);
@@ -499,7 +486,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
             // not in contact yet...
             dfree_t =0.0;
             dfree_s =0.0;
- #ifdef DEBUG_DFREE_COMPUTATION
+#ifdef DEBUG_DFREE_COMPUTATION
             std::cout<<" case 2"<<std::endl;
 #endif
         }
@@ -508,9 +495,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
             // already in contact
             dfree_t = dot(t, freePos-Pos);
             dfree_s = dot(s, freePos-Pos);
- #ifdef DEBUG_DFREE_COMPUTATION
+#ifdef DEBUG_DFREE_COMPUTATION
             std::cout<<" case 3"<<std::endl;
- #endif
+#endif
         }
         else
         {
@@ -544,7 +531,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const sofa::core::ConstraintParams* /*cParams*/, defaulttype::BaseVector *v, const DataVecCoord &/*x1*/, const DataVecCoord &x2
-                                                                               , const DataVecDeriv &/*v1*/, const DataVecDeriv &/*v2*/)
+                                                                          , const DataVecDeriv &/*v1*/, const DataVecDeriv &/*v2*/)
 {
 #ifdef DEBUG
     std::cout<<" entering getConstraintViolation: cParams->x()="<<cParams->x()<<std::endl;
@@ -553,42 +540,42 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const 
     // update the position of the Bezier Points (if necessary)
     const VecCoord &x2buf = x2.getValue();
     sofa::core::VecCoordId x_in = sofa::core::VecCoordId::freePosition();
-    m_wireBinterpolation->updateBezierPoints(x2buf, x_in );
+    l_wireBinterpolation->updateBezierPoints(x2buf, x_in );
     std::cout<<" updateBezierPoints ok"<<std::endl;
 
-    std::cout<<" m_VecPotentialContact size = "<<m_VecPotentialContact.size()<<std::endl;
+    std::cout<<" m_VecPotentialContact size = "<<m_vecPotentialContact.size()<<std::endl;
     // computes the free position of the potential contact points
     unsigned int itConstraints=0;
-    for (unsigned int i=0; i<m_VecPotentialContact.size(); i++)
+    for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
-        potentialContact &pt= m_VecPotentialContact[i];
+        potentialContact &pt= m_vecPotentialContact[i];
         Vec3 freePos;
-        m_wireBinterpolation->interpolatePointUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0,0,0), x2buf, freePos, false, x_in);
+        l_wireBinterpolation->interpolatePointUsingSpline(pt.beamId, pt.baryCoord[0], Vec3(0,0,0), x2buf, freePos, false, x_in);
 
-        Real dfree = pt.d + dot(pt.n, freePos - m_posSample[pt.posSampleId]) - radius.getValue();
-         v->set(cid+itConstraints,dfree);
-         itConstraints++;
+        Real dfree = pt.d + dot(pt.n, freePos - m_posSample[pt.posSampleId]) - d_radius.getValue();
+        v->set(m_cid+itConstraints,dfree);
+        itConstraints++;
 
-         if(friction)
-         {
-             Real dfree_t=0.0;
-             Real dfree_s=0.0;
+        if(m_friction)
+        {
+            Real dfree_t=0.0;
+            Real dfree_s=0.0;
 
-             computeTangentialViolation(m_posSample[pt.posSampleId], freePos, pt.t, pt.s, pt.d, dfree, dfree_t, dfree_s);
+            computeTangentialViolation(m_posSample[pt.posSampleId], freePos, pt.t, pt.s, pt.d, dfree, dfree_t, dfree_s);
 
-             // along direction t
-             v->set(cid+itConstraints, dfree_t);
-             itConstraints++;
+            // along direction t
+            v->set(m_cid+itConstraints, dfree_t);
+            itConstraints++;
 
-             // along direction s
-             v->set(cid+itConstraints, dfree_s);
-             itConstraints++;
+            // along direction s
+            v->set(m_cid+itConstraints, dfree_s);
+            itConstraints++;
 
-         }
+        }
 
 
     }
- #ifdef DEBUG
+#ifdef DEBUG
     std::cout<<" leaving getConstraintViolation"<<std::endl;
 #endif
 }
@@ -602,12 +589,12 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::
     std::cout<<" entering getConstraintResolution"<<std::endl;
 #endif
 
-    for (unsigned int i=0; i<m_VecPotentialContact.size(); i++)
+    for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
-        if(friction)
+        if(m_friction)
         {
 
-            resTab[offset] = new sofa::component::constraintset::UnilateralConstraintResolutionWithFriction(frictionCoef.getValue());
+            resTab[offset] = new sofa::component::constraintset::UnilateralConstraintResolutionWithFriction(d_frictionCoef.getValue());
             offset+=3;
         }
         else
@@ -653,17 +640,17 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     glBegin(GL_POINTS);
 
 
-    typename sofa::helper::vector<potentialContact>::iterator it = m_VecPotentialContact.begin();
+    typename sofa::helper::vector<potentialContact>::iterator it = m_vecPotentialContact.begin();
     for (unsigned int p=0; p<m_posSample.size(); p++)
     {
 
 
-        if(m_VecPotentialContact.size()>0 && (*it).posSampleId==p) // in potiential contact
+        if(m_vecPotentialContact.size()>0 && (*it).posSampleId==p) // in potiential contact
         {
             glColor4f(1.0f,0.0f,0.0f,1.0f);
             helper::gl::glVertexT(m_posSample[p]);
 
-            if (it!=m_VecPotentialContact.end())
+            if (it!=m_vecPotentialContact.end())
                 it++;
         }
         else
@@ -677,15 +664,15 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     glPointSize(1);
 
     glBegin(GL_LINES);
-    for (unsigned int i=0; i<m_VecPotentialContact.size(); i++)
+    for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
         glColor4f(1.0f,0.0f,0.0f,1.0f);
-        potentialContact &pt= m_VecPotentialContact[i];
+        potentialContact &pt= m_vecPotentialContact[i];
         Vec3 Pos = m_posSample[pt.posSampleId];
         helper::gl::glVertexT(Pos);
         helper::gl::glVertexT(Pos + pt.n);
 
-        if(friction)
+        if(m_friction)
         {
             glColor4f(0.0f,1.0f,0.0f,1.0f);
             helper::gl::glVertexT(Pos);
@@ -704,16 +691,16 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     glEnable(GL_LIGHTING);
     // glDisable(GL_BLEND);
 
-    if (visualization.getValue() && m_posSample.size()>0)
+    if (d_visualization.getValue() && m_posSample.size()>0)
     {
 
         std::cout<<" Visualization "<<std::endl;
         std::cout<<" m_domainSample"<<m_domainSample<<std::endl;
 
-        double dx = (PosMax.getValue()[0] -PosMin.getValue()[0])/50;
-        double dy = (PosMax.getValue()[1] -PosMin.getValue()[1])/50;
-        double dz = (PosMax.getValue()[2] -PosMin.getValue()[2])/50;
-        double z = PosMin.getValue()[2];
+        double dx = (d_posMax.getValue()[0] -d_posMin.getValue()[0])/50;
+        double dy = (d_posMax.getValue()[1] -d_posMin.getValue()[1])/50;
+        double dz = (d_posMax.getValue()[2] -d_posMin.getValue()[2])/50;
+        double z = d_posMin.getValue()[2];
         int idx =0;
 
         double mmin = 150;
@@ -722,25 +709,25 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
         defaulttype::Vec3d PosLastPoint=m_posSample[m_posSample.size()-1];
 
         //std::cout<<" mc_data =";
-        while(z<=PosMax.getValue()[2])
+        while(z<=d_posMax.getValue()[2])
         {
-            double y = PosMin.getValue()[1];
-            while(y<=PosMax.getValue()[1])
+            double y = d_posMin.getValue()[1];
+            while(y<=d_posMax.getValue()[1])
             {
-                double x = PosMin.getValue()[0];
+                double x = d_posMin.getValue()[0];
 
 
-                while(x<=PosMax.getValue()[0])
+                while(x<=d_posMax.getValue()[0])
                 {
                     defaulttype::Vec3d Pos(x,y,z);
                     Pos += PosLastPoint;
                     //Pos += PP;
-                    double test = _contact_surface->getValue(Pos, m_domainSample[m_posSample.size()-1]);
+                    double test = m_contactSurface->getValue(Pos, m_domainSample[m_posSample.size()-1]);
                     if(test > mmax)
                         mmax = test;
                     if(test < mmin)
                         mmin = test;
-                    mc_data[idx] = test;
+                    m_cData[idx] = test;
                     //std::cout << test << " ";
                     idx++;
 
@@ -762,7 +749,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
-        defaulttype::Vec3d Pos(PosMin.getValue()[0],PosMin.getValue()[1],PosMin.getValue()[2]);
+        defaulttype::Vec3d Pos(d_posMin.getValue()[0],d_posMin.getValue()[1],d_posMin.getValue()[2]);
         Pos += PosLastPoint;
 #ifdef SOFAEVE
         mc->draw(Pos[0], Pos[1], Pos[2], 0.2, 0.2, 0.2);
@@ -782,104 +769,15 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
 }
 
 
-
-
-
-
-
-////////////////// FONCTORS RESOLUTION ///////////////////////////////////////////
-
+////////////////// IMPLICITSURFACEADAPTIVECONSTRAINTRESOLUTION //////////////////////
 
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraintResolution<DataTypes>::resolution(int line, double** w, double* d, double* force)
 {
-
     // dummy resolution
     d[line]=w[line][line]*force[line];
     force[line]=0.0;
-
-    /*
-    sofa::helper::system::thread::CTime *timer;
-    timer = new sofa::helper::system::thread::CTime();
-    double time = (double) timer->getTime();
-
-
-    // TODO : faire l'init en associant le probe
-
-    helper::vector<ImplSurfContact>& lp = *(_implSurfConstraint->listProbe.beginEdit());
-
-
-
-    ImplSurfContact* probe = &lp[_id_probe];
-    _implSurfConstraint->listProbe.endEdit();
-
-    // the point that is targeted by the resolution is set in _id_probe
-    if (_first)
-    {
-        // place the value of w in the local value of the probe
-        probe->setW(w[line][line], w[line][line+1], w[line][line+2], w[line+1][line+1], w[line+1][line+2], w[line+2][line+2]);
-        // provide the initial guess
-#ifdef DEBUG
-                std::cout<<"W = ["<<w[line][line]<<" "<<w[line][line+1]<<" "<<w[line][line+2]<<"\n "
-                        <<w[line+1][line]<<" "<<w[line+1][line+1]<<" "<<w[line+1][line+2]<<"\n "
-                        <<w[line+2][line]<<" "<<w[line+2][line+1]<<" "<<w[line+2][line+2]<<"]"<<std::endl;
-#endif
-        force[line  ] = probe->saveForce()[0];
-        force[line+1] = probe->saveForce()[1];
-        force[line+2] = probe->saveForce()[2];
-        _first=false;
-        probe->initStep();
-        probe->storeBeginInfo();
-
-    }
-    //else
-    //{
-
-        // computation of the current position of the probe //
-        defaulttype::Vec3d pos;
-        pos = probe->freePos();
-
-        pos[0] += d[line]; pos[1] += d[line+1]; pos[2] += d[line+2];
-                //defaulttype::Vec3d saveForce = probe->saveForce() ;
-                //pos += probe->computeDisp(saveForce);   //> NOT NECESSARY ANY MORE !!
-        probe->setPos(pos);
-
-
-#ifdef DEBUG
-                std::cout<<"ImplicitSurfaceAdaptiveConstraintResolution : pos = "<<pos<<std::endl;
-#endif
-
-        // resolution //
-    std::cout << "RESOLUTION\n";
-        probe->solveConstraint2(_mu);
-
-        probe->storeEndInfo();
-
-
-
-        // resulting force;
-        force[line  ] = probe->force()[0];
-        force[line+1] = probe->force()[1];
-        force[line+2] = probe->force()[2];
-
-        // keep the value of the force in memory
-        probe->updateForce();
-    //}
-
-
-
-    TimeResolution += (double) timer->getTime() - time;
-
-    */
-
 }
-
-
-
-
-
-
-
 
 } // namespace constraint
 
