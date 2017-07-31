@@ -449,7 +449,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             this->controlledInstrument.setValue(0);
             break;
 
-        case 18: // gauche = 18
+        case 20: // droite = 20
             {
 
                 int id = controlledInstrument.getValue();
@@ -459,7 +459,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
 
             }
             break;
-        case 20: // droite = 20
+        case 18: // gauche = 18
             {
 
                 int id = controlledInstrument.getValue();
