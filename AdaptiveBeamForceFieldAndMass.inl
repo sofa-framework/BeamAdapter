@@ -38,6 +38,7 @@
 
 #include <sofa/core/behavior/ForceField.inl>
 #include "AdaptiveBeamForceFieldAndMass.h"
+#include "GeometricalUtils.h"
 
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/helper/decompose.h>
@@ -293,7 +294,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
             Real length;
             Real rest_length = m_interpolation->getLength(b);
             m_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
-            m_interpolation->computeActualLength(length, P0,P1,P2,P3);
+            sofa::helper::computeSplineLength<Real>(length, P0,P1,P2,P3);
 
             U0local[0]=(-length+rest_length)/2;
             U1local[0]=( length-rest_length)/2;

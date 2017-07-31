@@ -228,8 +228,7 @@ public:
         m_lengthList.endEdit();
     }
 
-    // computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
-    void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
+
 
 
     void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);

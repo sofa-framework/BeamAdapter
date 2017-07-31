@@ -63,6 +63,8 @@
 #include <sofa/helper/gl/Axis.h>
 //#include <sofa/simulation/common/Node.h>
 
+#include "GeometricalUtils.cpp"
+
 
 
 
@@ -668,59 +670,6 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
 }
 
 
-template<class DataTypes>
-void BeamInterpolation<DataTypes>::computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3)
-{
-    // the computation of integral Int[0,1] ||dP(x)||  dx = length
-    // is done using Gauss Points
-
-    // definition of the Gauss points
-    Real x1, x2, x3, x4;
-    Real A = 2*sqrt(6.0/5.0);
-    x1 = -sqrt((3.0 - A)/7.0 )/2.0+ 0.5;
-    x2 = sqrt((3.0 - A) /7.0 )/2.0+ 0.5;
-    x3 = -sqrt((3.0 + A)/7.0 )/2.0+ 0.5;
-    x4 = sqrt((3.0 + A) /7.0 )/2.0+ 0.5;
-
-    Vec3 dP1, dP2, dP3, dP4;
-
-
-
-    dP1 = P0*(-3*(1-x1)*(1-x1)) + P1*(3-12*x1+9*x1*x1) + P2*(6*x1-9*x1*x1) + P3*(3*x1*x1);
-    dP2 = P0*(-3*(1-x2)*(1-x2)) + P1*(3-12*x2+9*x2*x2) + P2*(6*x2-9*x2*x2) + P3*(3*x2*x2);
-    dP3 = P0*(-3*(1-x3)*(1-x3)) + P1*(3-12*x3+9*x3*x3) + P2*(6*x3-9*x3*x3) + P3*(3*x3*x3);
-    dP4 = P0*(-3*(1-x4)*(1-x4)) + P1*(3-12*x4+9*x4*x4) + P2*(6*x4-9*x4*x4) + P3*(3*x4*x4);
-
-    // formula with 4 Gauss Points
-    Real B= sqrt(30.0);
-    length = ((18.0 + B) /72.0 )*dP1.norm() + ((18.0 + B) /72.0 )*dP2.norm() + ((18.0 - B) /72.0 )*dP3.norm() + ((18.0 - B) /72.0 )*dP4.norm();
-
-
-
-    // verification
-    /*
-
-    Real length_verif=0.0;
-    Vec3 seg, pos;
-    pos=P0;
-    for (Real bx=0.02; bx<1.00001; bx+=0.02)
-    {
-        // compute length
-        seg  = -pos;
-        pos = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
-        seg += pos;
-        length_verif += seg.norm();
-    }
-
-
-    std::cout<<"computeActualLength verif=  length="<<length<<"  length_verif"<<length_verif<<std::endl;
-    */
-
-
-
-
-}
-
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1)
@@ -1051,7 +1000,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         Vec3 P0,P1,P2,P3;
         this->getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
         Real length;
-        this->computeActualLength(length,P0,P1,P2,P3);
+        sofa::helper::computeSplineLength<Real>(length, P0,P1,P2,P3);
 
         // get the result of the transform:
         Transform global_H_localResult;
