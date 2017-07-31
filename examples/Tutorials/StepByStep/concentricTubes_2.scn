@@ -29,7 +29,7 @@
 	</Node>	
 	
     <Node name="startPos">
-        <MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0.76 0 0.76" />
+        <MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0 0 1.0" />
     </Node>
     
 	<Node name="instruments">
