@@ -22,6 +22,7 @@ set(HEADER_FILES
   #BaseRestShape.inl
   BeamInterpolation.h
   BeamInterpolation.inl
+  GeometricalUtils.h
   ImplicitSurfaceAdaptiveConstraint.h
   ImplicitSurfaceAdaptiveConstraint.inl
   initBeamAdapter.h
@@ -48,6 +49,7 @@ set(SOURCE_FILES
   AdaptiveBeamMapping.cpp
   #BaseRestShape.cpp
   BeamInterpolation.cpp
+  GeometricalUtils.cpp
   ImplicitSurfaceAdaptiveConstraint.cpp
   initBeamAdapter.cpp
   InterventionalRadiologyController.cpp
