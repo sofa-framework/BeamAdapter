@@ -554,7 +554,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
         if(numBeams==0)
         {
             if (this->f_printLog.getValue())
-                msg_error() <<"No beams found in adaptBeamInterpolation in BeamInterpolation named"<<l_adaptativebeamInterpolation->getName();
+                msg_info() <<"No beams found in adaptBeamInterpolation in BeamInterpolation named"<<l_adaptativebeamInterpolation->getName();
             return;
         }
 
