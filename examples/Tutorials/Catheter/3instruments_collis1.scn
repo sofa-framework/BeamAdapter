@@ -139,13 +139,13 @@
 	
 
 	<Node name='CollisionModel'> 
-		<MeshObjLoader name='meshLoader' filename='mesh/phantom.obj' triangulate='true' flipNormals='1'/>
+		<MeshObjLoader name='meshLoader' filename='../../mesh/phantom.obj' triangulate='true' flipNormals='1'/>
 		<Mesh position='@meshLoader.position'  triangles='@meshLoader.triangles'/>
 		<MechanicalObject name='DOFs1' position='0 0 400' scale='3' ry='90'/>	
 			<Triangle simulated='0' moving='0'/>	
 		<Line simulated='0' moving='0'/>
 		<Point simulated='0' moving='0'/>
-		<OglModel name='Visual' fileMesh='mesh/phantom.obj' color='1 0 0 0.3' scale='3' ry='90'/>
+		<OglModel name='Visual' fileMesh='../../mesh/phantom.obj' color='1 0 0 0.3' scale='3' ry='90'/>
 	</Node>
 	
 	
