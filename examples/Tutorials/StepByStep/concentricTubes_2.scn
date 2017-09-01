@@ -28,21 +28,28 @@
 		<MechanicalObject template="Rigid" name="dofTopo1" />
 	</Node>	
 	
+    <Node name="startPos">
+        <MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0 0 1.0" />
+    </Node>
+    
 	<Node name="instruments">
 		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
 		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
 		
 		<RegularGrid
 		nx="100" ny="1" nz="1"/>	
-		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/>
+		<MechanicalObject template="Rigid" name="DOFs" showIndices="0" />
 		
-		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.1 "  step="0.02" rotationInstrument="0" controlledInstrument="0" startingPos="0 0 0 0 0 0 1" speed="0." instruments="Interpol"/>
+		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.1 "  step="0.02" rotationInstrument="0" controlledInstrument="0" startingPos="@../startPos/startPosMO.position" speed="0." instruments="Interpol"/>
 		<WireBeamInterpolation name="Interpol" WireRestShape="@../tube_0/restShape" radius="1" printLog="1"/> 
 		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@Interpol" massDensity="0.00000155"/>
 		
 		<LinearSolverConstraintCorrection printLog="false" />
 		<FixedConstraint name="FixedConstraint" indices="0" />
+        <RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="../startPos/startPosMO" external_points="0" />
 		
+        
+        
 		<Node name="VisuTube_0">
 			<MechanicalObject name="Quads" />
 			
@@ -56,7 +63,7 @@
 			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol" input="@../DOFs" output="@Quads" isMechanical="false"  />
 
 			<Node name="VisuOgl">
-				<OglModel name="Visual" color="0.0 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<OglModel name="Visual" color="0.0 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerTube_0.quads"/>
 				<IdentityMapping input="@../Quads" output="@Visual"/>
 			</Node>	
 		</Node>
