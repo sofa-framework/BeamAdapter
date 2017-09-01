@@ -26,12 +26,12 @@ double TimeResolution = 0.0;
 double TimeCount = 0.0;
 double TimeProjection = 0.0;
 double TimeProjection2= 0.0;
+
+//eulalie: can I remove these?
 //#define DEBUG
 //#define DEBUG_TOPO_DATA
 //#define DEBUG_PROJECTION
 //#define DEBUG_LAST_CONSTRAINT_ONLY
-
-
 //#define DEBUG_DFREE_COMPUTATION
 
 
@@ -44,12 +44,22 @@ namespace component
 namespace constraint
 {
 
+using defaulttype::Vec3d;
+using sofa::helper::vector;
+using sofa::core::VecCoordId;
+using sofa::core::MultiVecCoordId;
+using sofa::core::ConstMultiVecCoordId;
+using sofa::core::ConstVecCoordId;
+
+using sofa::component::constraintset::UnilateralConstraintResolution;
+using sofa::component::constraintset::UnilateralConstraintResolutionWithFriction;
+
 template<class DataTypes>
 ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object1, MechanicalState* object2)
     : l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_posMin(initData(&d_posMin, Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
     , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional1: give an initial id for the domain"))
     , d_alarmDistance(initData(&d_alarmDistance, (Real) 1.0, "alarmDistance", "kind of alarm distance computed on implicit surface"))
     , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
@@ -65,8 +75,8 @@ template<class DataTypes>
 ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object)
     :  l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_posMin(initData(&d_posMin, Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
     , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional2: give an initial id for the domain"))
     , d_alarmDistance(initData(&d_alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
     , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
@@ -81,8 +91,8 @@ template<class DataTypes>
 ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint()
     :  l_wireBinterpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , d_visualization(initData(&d_visualization, false, "visualization", "visualization of the implicit surface potential"))
-    , d_posMin(initData(&d_posMin, defaulttype::Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
-    , d_posMax(initData(&d_posMax, defaulttype::Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
+    , d_posMin(initData(&d_posMin, Vec3d(-1.0,-1.0,-1.0), "PosMin", "position min for the visualization grid"))
+    , d_posMax(initData(&d_posMax, Vec3d( 1.0, 1.0, 1.0), "PosMax", "position max for the visualization grid"))
     , d_initDomain(initData(&d_initDomain, 0, "domainId", "optional3: give an initial id for the domain"))
     , d_alarmDistance(initData(&d_alarmDistance, (Real) 0.0, "alarmDistance", "the point for which the potential is more than the threshold are desactivated"))
     , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius: this value is used to include the thickness in the collision response"))
@@ -121,26 +131,25 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::bwdInit()
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 {
-    //  STEP 1 : get the implicit surface
+    // STEP 1 : get the implicit surface
     if(mstate1)
         mstate1->getContext()->get(m_contactSurface);
     else
         msg_error() <<"No mstate1 found.";
 
-    if (m_contactSurface == NULL){
-        serr<<"oooooooooo\n oooERROR: no surface found for contact"<<sendl;
+    if (m_contactSurface == NULL)
+    {
+        msg_error() <<"No surface found for contact.";
         return;
     }
     else
     {
-        std::cout<<"CONTACT with surface name:"<<m_contactSurface->getName()<<std::endl;
+        msg_info() <<"Contact with surface name:"<<m_contactSurface->getName();
     }
 
-
     // STEP 2: verify that we have the mechanical state of the Adaptive Beams
-
     if (!this->mstate2)
-        serr<<" no mstate2 found: WARNING !!"<<sendl;
+        msg_warning() <<"No mstate2 found";
 
     // STEP 3: given the coef of Friction, set the bool friction [friction or frictionless contact]
     if(d_frictionCoef.getValue()>0.0)
@@ -150,7 +159,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 
 
     // STEP 4: verify if listBeams is void => all beams are activated
-    const sofa::helper::vector<int> &list_B= d_listBeams.getValue();
+    const vector<int> &list_B= d_listBeams.getValue();
     if( list_B.size() == 0)
         m_allActivated=true;
     else
@@ -172,7 +181,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Vec3& dir, Vec3& vec1, Vec3& vec2)
 {
-    Vec3 temp;	// Any vector such as temp != dir
+    Vec3 temp; // Any vector such as temp != dir
     temp[0] = dir[1];
     temp[1] = dir[2];
     temp[2] = dir[0];
@@ -193,11 +202,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Ve
 /// "filters" contacts (the normal of contact is supposed to be perp to the tangent of the curve except on the tip point)
 /// set  normal and tangential directions
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const sofa::core::ConstVecCoordId &vecXId, sofa::helper::vector<int>& listBeam)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam)
 {
-
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
-
 
     VectorIntIterator it;
     while( m_domainSample.size() < m_posSample.size() )
@@ -215,8 +222,8 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 #ifdef DEBUG
     if(m_domainSample.size()!= m_posSample.size() )
     {
-        serr<<" domain and pos samples do not have the same size : cancel detection"<<send:
-              return;
+        msg_error()<<"Domain and pos samples do not have the same size : cancel detection";
+        return;
     }
 #endif
     for (unsigned int p=0; p<m_posSample.size(); p++)
@@ -233,8 +240,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 
             if (d<this->d_alarmDistance.getValue())
             {
-
-
                 potentialContact pt;
                 unsigned int bi = p / 10;
                 pt.beamId = listBeam[bi];
@@ -251,14 +256,11 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                 t.normalize();
                 pt.t = t;
 
-
-                ///////// force n perp t:
                 // for all contact (except the one on the tip of the last beam), the normal is modified to be perp to the tangent of the curve
                 double dnt=dot(pt.n, pt.t);
                 if(pt.beamId ==(numBeams-1) && pt.baryCoord[0]>0.999)
                 {
-                    std::cout<<" ***********\n last contact point (no modif on the normal) id:"<<pt.beamId <<"  bc"<<  pt.baryCoord<<std::endl;
-
+                    dmsg_info() <<" Last contact point (no modif on the normal) id:"<<pt.beamId <<"  bc"<<  pt.baryCoord;
 
                     // build a "frame" for friction contact:
                     Vec3 newT;
@@ -269,24 +271,20 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                         pt.t=newT;
                     }
                     else
-                    {      // in case pt.t and pt.n are aligned:
+                    {   // in case pt.t and pt.n are aligned:
                         getOrthogonalVectors(pt.n, pt.t, pt.s);
                     }
-
                 }
                 else
                 {
-
                     if(fabs(dnt) < 0.5)
                     {
                         Vec3 newN = pt.n - pt.t*dnt;
                         newN.normalize();
                         pt.n = newN;
-
                     }
                     else
                     {
-                        // std::cout<<" warning n and t are far from being perp => contact cancelled"<<std::endl;
                         continue;
                     }
 
@@ -294,28 +292,29 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
                 pt.s = cross(pt.n, pt.t);
 
                 m_vecPotentialContact.push_back(pt);
-
             }
         }
-
     }
-
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const sofa::core::ConstraintParams* cParams , DataMatrixDeriv &/*c1*/, DataMatrixDeriv &c2, unsigned int &cIndex
-                                                                         , const DataVecCoord &/*x1*/, const DataVecCoord &x2)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams* cParams,
+                                                                         DataMatrixDeriv &c1,
+                                                                         DataMatrixDeriv &c2,
+                                                                         unsigned int &cIndex,
+                                                                         const DataVecCoord &x1,
+                                                                         const DataVecCoord &x2)
 {
+    SOFA_UNUSED(c1);
+    SOFA_UNUSED(x1);
 
 #ifdef DEBUG
-    std::cout<<"Entering buildConstraintMatrix "<<std::endl;
+    dmsg_info() <<"Entering buildConstraintMatrix ";
 #endif
 
-    /////////////////
     //1st step: computation of sample point position (10 / beam)
-
     // if all activated => all beam considered otherwize, use listBeams...
-    sofa::helper::vector<int> list_B;
+    vector<int> list_B;
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
     m_allActivated=false;
     if (m_allActivated)
@@ -323,7 +322,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
         list_B.clear();
         for ( unsigned int i=0; i<numBeams; i++)
             list_B.push_back(i);
-
     }
     else
     {
@@ -333,7 +331,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     m_posSample.clear();
     m_vecPotentialContact.clear();
 
-    std::cout<<" list_B = "<<list_B<<std::endl;
+    dmsg_info() <<" list_B = "<<list_B;
 
     if (list_B.size()==0)
         return;
@@ -342,15 +340,15 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
 
     //PosSample corresponds to points that are placed along the spline which position is stored in sofa::core::VecCoordId::position()
     // the following code verify that the position is correct:
-    std::cout<<" in buildConstraintMatrix: cParams->x()="<<cParams->x()<<std::endl;
+    dmsg_info() <<" in buildConstraintMatrix: cParams->x()="<<cParams->x();
 
-    sofa::core::MultiVecCoordId x = sofa::core::VecCoordId::position();
-    const sofa::core::ConstMultiVecCoordId &xId = cParams->x();
-    sofa::core::ConstVecCoordId xtest = xId.getId(this->mstate2);
+    MultiVecCoordId x = VecCoordId::position();
+    const ConstMultiVecCoordId &xId = cParams->x();
+    ConstVecCoordId xtest = xId.getId(this->mstate2);
 
-    if(  xtest != x.getId(this->mstate2))
+    if(xtest != x.getId(this->mstate2))
     {
-        serr<<" WARNING in buildConstraintMatrix, cParams->x() != sofa::core::VecCoordId::position()"<<sendl;
+        msg_warning() <<"In buildConstraintMatrix, cParams->x() != sofa::core::VecCoordId::position()";
     }
 
     // update the position of the Bezier Points (if necessary)
@@ -365,31 +363,31 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     {
         unsigned int b= list_B[bi];
 #ifdef DEBUG
-        std::cout<<" interpolate point on beam b="<<b<<" bary Coord:";
+        dmsg_info() <<" interpolate point on beam b="<<b<<" bary Coord.";
 #endif
         for (unsigned int p=0;p<10; p++)
         {
             Vec3 localPos(0,0,0);
             Real baryCoord = (p+1)/10.0;
 #ifdef DEBUG
-            std::cout<<" ("<<baryCoord<<") ";
+        dmsg_info() <<" ("<<baryCoord<<") ";
 #endif
 
             l_wireBinterpolation->interpolatePointUsingSpline(b, baryCoord, localPos, x2buf, m_posSample[10*bi+p], false, x_in);
         }
 #ifdef DEBUG
-        std::cout<<" "<<std::endl;
+        dmsg_info() <<" ";
 #endif
     }
 #ifdef DEBUG
-    std::cout<<" * 1st step ok: m_posSample = "<<m_posSample<<std::endl;
+    dmsg_info() <<" * 1st step ok: m_posSample = "<<m_posSample;
 #endif
     /////////////////
     // 2d step: computation of the distance with the implicit surface  (and verify that it is < alarmDistance)
     this->detectPotentialContactOnImplicitSurface(x_in, list_B);
 
 #ifdef DEBUG
-    std::cout<<" * 2d step ok:  "<<m_VecPotentialContact.size()<<" potential(s) contact detected"<<std::endl;
+    dmsg_info() <<" * 2d step ok:  "<<m_VecPotentialContact.size()<<" potential(s) contact detected";
 #endif
 
 
@@ -451,7 +449,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const s
     c2.endEdit();
 
 #ifdef DEBUG
-    std::cout<<" * 3d step ok: constraints are set...\n done *************"<<std::endl;
+    dmsg_info() <<" * 3d step ok: constraints are set...\n done *************";
 #endif
 
     cIndex+=m_nbConstraints;
@@ -530,9 +528,18 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const sofa::core::ConstraintParams* /*cParams*/, defaulttype::BaseVector *v, const DataVecCoord &/*x1*/, const DataVecCoord &x2
-                                                                          , const DataVecDeriv &/*v1*/, const DataVecDeriv &/*v2*/)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const ConstraintParams* cParams,
+                                                                          BaseVector *v,
+                                                                          const DataVecCoord &x1,
+                                                                          const DataVecCoord &x2,
+                                                                          const DataVecDeriv &v1,
+                                                                          const DataVecDeriv &v2)
 {
+    SOFA_UNUSED(cParams);
+    SOFA_UNUSED(x1);
+    SOFA_UNUSED(v1);
+    SOFA_UNUSED(v2);
+
 #ifdef DEBUG
     std::cout<<" entering getConstraintViolation: cParams->x()="<<cParams->x()<<std::endl;
 #endif
@@ -541,9 +548,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const 
     const VecCoord &x2buf = x2.getValue();
     sofa::core::VecCoordId x_in = sofa::core::VecCoordId::freePosition();
     l_wireBinterpolation->updateBezierPoints(x2buf, x_in );
-    std::cout<<" updateBezierPoints ok"<<std::endl;
+    dmsg_info()<<" updateBezierPoints ok";
 
-    std::cout<<" m_VecPotentialContact size = "<<m_vecPotentialContact.size()<<std::endl;
+    dmsg_info()<<" m_VecPotentialContact size = "<<m_vecPotentialContact.size();
     // computes the free position of the potential contact points
     unsigned int itConstraints=0;
     for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
@@ -582,7 +589,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const 
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset)
 {
 
 #ifdef DEBUG
@@ -594,34 +601,28 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::
         if(m_friction)
         {
 
-            resTab[offset] = new sofa::component::constraintset::UnilateralConstraintResolutionWithFriction(d_frictionCoef.getValue());
+            resTab[offset] = new UnilateralConstraintResolutionWithFriction(d_frictionCoef.getValue());
             offset+=3;
         }
         else
         {
-            resTab[offset] = new sofa::component::constraintset::UnilateralConstraintResolution();
+            resTab[offset] = new UnilateralConstraintResolution();
             offset +=1;
         }
     }
 #ifdef DEBUG
-    std::cout<<" leaving getConstraintResolution"<<std::endl;
+    dmsg_info()<<" leaving getConstraintResolution";
 #endif
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
 #ifdef DEBUG
-    std::cout<<" entering draw"<<std::endl;
+    dmsg_info()<<" entering draw";
 #endif
 
     if (!vparams->displayFlags().getShowInteractionForceFields()) return;
-
-    //double timeScale = 1.0 / (double)sofa::helper::system::thread::CTime::getRefTicksPerSec();
-    //std::cout<<" time for TimeResolution : "<< TimeResolution *timeScale<<" s"<<std::endl;
-    //std::cout<<" time for TimeCount      : "<< TimeCount      *timeScale<<" s"<<std::endl;
-    //std::cout<<" time for TimeProjection : "<< TimeProjection *timeScale<<" s"<<std::endl;
-    //std::cout<<" time for TimeProjection2: "<< TimeProjection2*timeScale<<" s"<<std::endl;
     TimeCount =0;
     TimeResolution =0;
     TimeProjection =0;
@@ -631,7 +632,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
 #ifdef DEBUG_LAST_CONSTRAINT_ONLY
     const VecCoord& x		= (*this->mstate2->getX());
     unsigned int _nbNodes = x.size();
-    //std::cout << "Drawing centered on " << x << std::endl;
 #endif
 
     glDisable(GL_LIGHTING);
@@ -685,17 +685,13 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
 
     }
     glEnd();
-
-
-
     glEnable(GL_LIGHTING);
-    // glDisable(GL_BLEND);
 
     if (d_visualization.getValue() && m_posSample.size()>0)
     {
 
-        std::cout<<" Visualization "<<std::endl;
-        std::cout<<" m_domainSample"<<m_domainSample<<std::endl;
+        dmsg_info()<<" Visualization ";
+        dmsg_info()<<" m_domainSample"<<m_domainSample;
 
         double dx = (d_posMax.getValue()[0] -d_posMin.getValue()[0])/50;
         double dy = (d_posMax.getValue()[1] -d_posMin.getValue()[1])/50;
@@ -708,7 +704,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
 
         defaulttype::Vec3d PosLastPoint=m_posSample[m_posSample.size()-1];
 
-        //std::cout<<" mc_data =";
         while(z<=d_posMax.getValue()[2])
         {
             double y = d_posMin.getValue()[1];
@@ -716,10 +711,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
             {
                 double x = d_posMin.getValue()[0];
 
-
                 while(x<=d_posMax.getValue()[0])
                 {
-                    defaulttype::Vec3d Pos(x,y,z);
+                    Vec3d Pos(x,y,z);
                     Pos += PosLastPoint;
                     //Pos += PP;
                     double test = m_contactSurface->getValue(Pos, m_domainSample[m_posSample.size()-1]);
@@ -728,7 +722,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
                     if(test < mmin)
                         mmin = test;
                     m_cData[idx] = test;
-                    //std::cout << test << " ";
                     idx++;
 
                     x = x+dx;
@@ -748,23 +741,17 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
-        defaulttype::Vec3d Pos(d_posMin.getValue()[0],d_posMin.getValue()[1],d_posMin.getValue()[2]);
+        Vec3d Pos(d_posMin.getValue()[0],d_posMin.getValue()[1],d_posMin.getValue()[2]);
         Pos += PosLastPoint;
 #ifdef SOFAEVE
         mc->draw(Pos[0], Pos[1], Pos[2], 0.2, 0.2, 0.2);
 #endif
 
-
-
     }
 
-
-
 #ifdef DEBUG
-    std::cout<<" leaving draw"<<std::endl;
+    dmsg_info() <<" leaving draw";
 #endif
-
 
 }
 
