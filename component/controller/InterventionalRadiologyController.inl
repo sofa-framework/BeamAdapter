@@ -356,8 +356,64 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
         case 'D':
             this->dropCall = true;
             break;
+        case '9':
+            {
+                if (9 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 9 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(9);
+            }
+            break;
 
 
+        case '8':
+            {
+                if (8 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 8 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(8);
+            }
+            break;
+        case '7':
+            {
+                if (7 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 7 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(7);
+            }
+            break;
+        case '6':
+            {
+                if (6 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 6 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(6);
+            }
+            break;
+
+
+        case '5':
+            {
+                if (5 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 5 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(5);
+            }
+            break;
+        case '4':
+            {
+                if (4 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
+                    serr<<"WARNING controlled Instument num 4 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                }
+                else
+                    this->controlledInstrument.setValue(4);
+            }
+            break;
         case '3':
             {
                 if (3 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
@@ -393,7 +449,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             this->controlledInstrument.setValue(0);
             break;
 
-        case 18: // gauche = 18
+        case 20: // droite = 20
             {
 
                 int id = controlledInstrument.getValue();
@@ -403,7 +459,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
 
             }
             break;
-        case 20: // droite = 20
+        case 18: // gauche = 18
             {
 
                 int id = controlledInstrument.getValue();
