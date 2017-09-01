@@ -1,4 +1,3 @@
-//#include <sofa/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl>
 #include "ImplicitSurfaceAdaptiveConstraint.inl"
 
 #include <sofa/defaulttype/Vec3Types.h>
@@ -16,18 +15,18 @@ namespace constraint
 
 using namespace sofa::defaulttype;
 using namespace sofa::helper;
+using core::RegisterObject;
 
 #ifdef SOFAEVE
-
 SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int ImplicitSurfaceAdaptiveConstraintClass = core::RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
+int ImplicitSurfaceAdaptiveConstraintClass = RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
 #ifdef SOFA_WITH_FLOAT
 .add< ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >()
+.add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >(true)
 #endif
 ;
 
