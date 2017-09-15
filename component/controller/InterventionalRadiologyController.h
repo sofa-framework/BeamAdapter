@@ -157,7 +157,7 @@ public:
     int getTotalNbEdges()const { return this->getContext()->getMeshTopology()->getNbEdges();}
 
 protected:
-    //conditional elements for construction of InterventionalRadiologyController
+    ///conditional elements for construction of InterventionalRadiologyController
     Data< helper::vector< std::string > >  m_instrumentsPath;
     sofa::helper::vector< WBeamInterpolation * > m_instrumentsList;
 
