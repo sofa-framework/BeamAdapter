@@ -176,8 +176,17 @@ public:
         }
     }
 
-    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
+    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>,
+    BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
+
+    ////////////////////////// Inherited attributes ////////////////////////////
+    /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
+    /// Bring inherited attributes and function in the current lookup context.
+    /// otherwise any access to the base::attribute would require
+    /// the "this->" approach.
+    using  BeamInterpolation<DataTypes>::m_componentstate ;
+    ////////////////////////////////////////////////////////////////////////////
 
 public:
 

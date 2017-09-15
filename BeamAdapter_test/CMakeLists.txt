@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(BeamAdapter_test)
 
-set(SOURCE_FILES )
+set(SOURCE_FILES
+    BeamInterpolation_test.cpp
+    WireBeamInterpolation_test.cpp)
+
 set(HEADER_FILES )
 
 include(component/forcefield/ForceFieldTest.cmake)

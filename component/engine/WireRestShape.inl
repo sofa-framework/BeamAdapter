@@ -55,8 +55,6 @@
 #include <iostream>
 #include <fstream>
 
-//TODO(dmarchal 2017-05-17): I wonder if these two are not already defined in a std lib ?
-#define PI 3.14159265
 #define EPSILON 0.0000000001
 #define VERIF 1
 
@@ -83,7 +81,7 @@ template <class DataTypes>
 WireRestShape<DataTypes>::WireRestShape() :
     //TODO(dmarchal 2017-05-17) not sure that procedural & nonProceduralScale are very understandable name...are they exclusives ?
     //if so have look in my comment in the init section.
-    d_procedural( initData(&d_procedural,(bool)true,"procedural","is the guidewire shape mathemetically defined ?") )
+    d_isAProceduralShape( initData(&d_isAProceduralShape,(bool)true,"isAProceduralShape","is the guidewire shape mathemetically defined ?") )
   , d_nonProceduralScale( initData ( &d_nonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
   , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
   , d_straightLength(initData(&d_straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
@@ -138,20 +136,32 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat &input, Vec3 &x, 
 }
 
 template<class DataTypes>
+void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
+{
+    const char* arg = args->getAttribute("procedural") ;
+    if(arg)
+    {
+        msg_info() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
+                   << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
+
+        args->removeAttribute("procedural") ;
+        args->setAttribute("isAProceduralShape", arg) ;
+    }
+
+    Inherit1::parse(args) ;
+}
+
+template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
-
-    msg_info() <<"WireRestShape begin init" ;
-
     /// Have to add because was remove from the .h due to forward déclarations
     edgeGeo = nullptr;
     edge2QuadMap = nullptr;
     loader = nullptr;
-    ///
 
-    if(!d_procedural.getValue())
+    if(!d_isAProceduralShape.getValue())
     {
-        //get the mesh loader
+        /// get the mesh loader
         this->getContext()->get(loader);
 
         if (!loader)
@@ -345,7 +355,8 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density)
+void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
+                                                     vector<int>& nbP_density) const
 {
 
     xP_noticeable.clear();
@@ -356,12 +367,12 @@ void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable
         for (unsigned int i=0; i<d_keyPoints.getValue().size(); i++)
         {
             Real x=d_keyPoints.getValue()[i];
-            if( x + EPSILON > this->getReleaseCurvAbs() )
+            if( x + EPSILON > getReleaseCurvAbs() )
                 break;
             xP_noticeable.push_back(x);
             nbP_density.push_back(d_density.getValue()[i]);
         }
-        xP_noticeable.push_back( this->getReleaseCurvAbs());
+        xP_noticeable.push_back( getReleaseCurvAbs());
 
         dmsg_info() <<"getSamplingParameters brokenIn2 detected - return  xP_noticeable ="<<xP_noticeable<<" and nbP_density ="<<nbP_density ;
     }
@@ -425,9 +436,9 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         return;
     }
 
-    if(d_procedural.getValue())
+    if(d_isAProceduralShape.getValue())
     {
-        Real projetedLength = d_spireDiameter.getValue()*PI;
+        Real projetedLength = d_spireDiameter.getValue()*M_PI;
         Real lengthSpire=sqrt(d_spireHeight.getValue()*d_spireHeight.getValue() + projetedLength*projetedLength );
         // angle in the z direction
         Real phi= atan(d_spireHeight.getValue()/projetedLength);
@@ -438,7 +449,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         // spire angle (if theta=2*PI, there is a complete spire between startx and x_used)
         Real lengthCurve= x_used-d_straightLength.getValue();
         Real numSpire=lengthCurve/lengthSpire;
-        Real theta= 2*PI*numSpire;
+        Real theta= 2*M_PI*numSpire;
 
         // computation of the Quat
         Quat Qtheta;

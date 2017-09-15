@@ -90,6 +90,13 @@ void WireBeamInterpolation<DataTypes>::init()
 {
     Inherited::init();
 
+    if( m_restShape.get() == nullptr )
+    {
+        msg_error() << "Missing WireRestShape. The component is thus de-activated" ;
+        this->m_componentstate = sofa::core::objectmodel::ComponentState::Invalid ;
+        return;
+    }
+
     helper::vector<Real> xP_noticeable;
     helper::vector< int> nbP_density;
 
@@ -102,10 +109,11 @@ template <class DataTypes>
 {
     Inherited::bwdInit();
 
-    if (!this->isControlled())
-        serr << "not straightRestShape or this->Edge_List is assigned" << sendl;
-    else
-        sout << "external controller for this ForceField is detected" << sendl;
+    if (this->isControlled()){
+        msg_info() << "external controller for this ForceField is detected" ;
+    }else{
+        msg_error() << "not straightRestShape or this->Edge_List is assigned" ;
+    }
 }
 
 
@@ -141,8 +149,7 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest)
 {
-    this->f_printLog.setValue(true);
-    serr<<"WARNING : getRestTransform not implemented for not straightRestShape"<<sendl;
+    msg_warning() << "GetRestTransform not implemented for not straightRestShape" ;
 
     // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
     local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat());
@@ -169,12 +176,11 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
         return;
     }
 
-    this->f_printLog.setValue(true);
-    serr << "WARNING : getRestTransform not implemented for not straightRestShape" << sendl;
+    msg_warning() << "getRestTransform not implemented for not straightRestShape" ;
 
 
-    // the beam is straight: local is in the middle of local0 and local1
-    // the transformation between local0 and local1 is provided by the length of the beam
+    /// the beam is straight: local is in the middle of local0 and local1
+    /// the transformation between local0 and local1 is provided by the length of the beam
     double edgeMidLength = this->d_lengthList.getValue()[edgeInList] / 2.0;
 
     local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat());
@@ -184,7 +190,8 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start)
+void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output,
+                                                        Real& baryCoord_output, unsigned int start)
 {
     if(this->m_brokenInTwo )
     {
@@ -194,7 +201,7 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
         if (x_input > x_abs_broken)
         {
 
-            // x_i = curv_abs from the begining of the broken part
+            /// x_i = curv_abs from the begining of the broken part
             Real x_i = x_input-x_abs_broken;
             Real x=0.0;
 
@@ -228,7 +235,7 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output)
 {
-    //TODO(dmarchal 2017-05-17): Please tell who and when it will be done.
+    ///TODO(dmarchal 2017-05-17): Please tell who and when it will be done.
     // TODO : version plus complete prenant en compte les coupures et autres particularites de ce modele ?
     x_output = 0;
     for(unsigned int i=0; i<edgeInList_input; i++)
@@ -317,13 +324,13 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
 
     if (this->m_brokenInTwo)
     {
-        serr << " already broken" << sendl;
+        msg_error() << "Already broken" ;
         return false;
     }
 
     if (!this->isControlled() || this->m_restShape == NULL || x_min_out <= eps)
     {
-        serr<<" problem with function breaksInTwo "<<sendl;
+        msg_error() << "Problem with function breaksInTwo ";
         return false;
     }
 
@@ -381,7 +388,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
     this->d_curvAbsList.endEdit();
 
     if (duplicatePoint == 0)
-        serr << " Problem no point were found at the x_break position ! getReleaseCurvAbs() should provide a <<notable>> point" << sendl;
+        msg_error() << " Problem no point were found at the x_break position ! getReleaseCurvAbs() should provide a <<notable>> point" ;
 
     m_restShape.get()->releaseWirePart();
     numBeamsNotUnderControlled = this->m_numBeamsNotUnderControl;
@@ -407,12 +414,12 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
             context->findLinkDest(_restShape, _restShapePath, NULL);
 
             if(_restShape == NULL)
-              context->serr << "WARNING("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+              msg_warning(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;
         }
         else
-            context->serr << "WARNING("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape"<<context->sendl;
+            msg_error(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
 
 
         if (!pathOK)
