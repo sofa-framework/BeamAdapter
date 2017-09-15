@@ -50,6 +50,9 @@
 #include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
 
+#define BEAMADAPTER_WITH_VERIFICATION false
+
+
 namespace sofa
 {
 
@@ -61,8 +64,6 @@ namespace fem
 
 namespace _beaminterpolation_
 {
-
-#define BEAMADAPTER_WITH_VERIFICATION false
 
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::ComponentState ;
