@@ -59,7 +59,7 @@ namespace component
 	}
 	const char* getModuleLicense()
 	{
-		return "INRIA and Digital-Trainers";
+		return "Private licence, Copyright(c) INRIA";
 	}
 
 	const char* getModuleName()
@@ -69,7 +69,7 @@ namespace component
 
 	const char* getModuleVersion()
 	{
-		return "0.1";
+		return "1.0";
 	}
 
 	const char* getModuleDescription()
