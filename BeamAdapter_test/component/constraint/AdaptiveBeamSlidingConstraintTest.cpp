@@ -4,6 +4,7 @@ using std::string ;
 #include <SofaTest/Sofa_test.h>
 #include <sofa/helper/BackTrace.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
+using sofa::core::behavior::MechanicalState;
 
 #include <SofaBaseLinearSolver/FullVector.h>
 using sofa::core::topology::BaseMeshTopology ;
@@ -30,36 +31,54 @@ using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
 using sofa::component::fem::WireBeamInterpolation ;
 
 
+#include <sofa/core/behavior/PairInteractionConstraint.h>
+using sofa::core::behavior::PairInteractionConstraint ;
+
+
 namespace sofa
 {
 
 template <typename DataTypes>
 struct AdaptiveBeamSlidingConstraintTest : public Sofa_test<typename DataTypes::Real>, AdaptiveBeamSlidingConstraint<DataTypes>
 {
-    void normalBehavior(){
-        Simulation* simu;
-        setSimulation(simu = new DAGSimulation());
+    Simulation* m_simu;
+    typename AdaptiveBeamSlidingConstraint<DataTypes>::SPtr m_thisObject;
+    Node::SPtr m_node;
 
-        typename AdaptiveBeamSlidingConstraint<DataTypes>::SPtr thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();
-        thisObject->setName("myname");
-        EXPECT_TRUE(thisObject->getName() == "myname");
-        EXPECT_TRUE(thisObject->findLink("interpolation") != nullptr );
+    void SetUp()
+    {
+        setSimulation(m_simu = new DAGSimulation());
 
-        Node::SPtr node = simu->createNewGraph("root");
+        m_thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();
+        m_thisObject->setName("myname");
+        EXPECT_TRUE(m_thisObject->getName() == "myname");
+        EXPECT_TRUE(m_thisObject->findLink("interpolation") != nullptr );
+
+        m_node = m_simu->createNewGraph("root");
         typename MechanicalObject<DataTypes>::SPtr mecaobject = New<MechanicalObject<DataTypes> >();
         typename WireBeamInterpolation<DataTypes>::SPtr interpolation = New<WireBeamInterpolation<DataTypes> >();
 
         interpolation->findData("name")->read("wireInterpolation");
-        node->addObject(mecaobject);
-        node->addObject(interpolation);
-        node->addObject(thisObject);
-        thisObject->findLink("interpolation")->read("@./wireInterpolation");
+        m_node->addObject(mecaobject);
+        m_node->addObject(interpolation);
+        m_node->addObject(m_thisObject);
+        m_thisObject->findLink("interpolation")->read("@./wireInterpolation");
+    }
 
-        EXPECT_NO_THROW( thisObject->init() );
-        EXPECT_NO_THROW( thisObject->reset() );
+    void normalBehavior()
+    {
+        EXPECT_NO_THROW( m_thisObject->init() );
+        EXPECT_NO_THROW( m_thisObject->reset() );
+    }
+
+    void testInternalInit()
+    {
+
     }
 
 };
+
+
 
 using testing::Types;
 typedef Types<Rigid3dTypes> DataTypes;
@@ -68,6 +87,10 @@ TYPED_TEST_CASE(AdaptiveBeamSlidingConstraintTest, DataTypes);
 
 TYPED_TEST(AdaptiveBeamSlidingConstraintTest, NormalBehavior) {
     this->normalBehavior() ;
+}
+
+TYPED_TEST(AdaptiveBeamSlidingConstraintTest, testInternalInit) {
+    this->testInternalInit() ;
 }
 
 }
