@@ -15,7 +15,7 @@ To model the deformation of any solid body whose geometry and mechanical charact
 rod or beam, we use a representation based on three-dimensional beam theory *see Przemieniecki (1985)*, where the 
 elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end 
 of a beam element to the forces and torques applied to them:
-![Image of myMatrix](doc/docs/matrix.jpg)
+![Image of myMatrix](./doc/docs/matrix.jpg)
 
 
 
