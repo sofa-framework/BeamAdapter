@@ -16,13 +16,51 @@ rod or beam, we use a representation based on three-dimensional beam theory *see
 elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end 
 of a beam element to the forces and torques applied to them:
 
-![Image of myMatrix](../doc/docs/Matrix.jpg)
+<img src="../doc/docs/Matrix.jpg" align="left" width="700"/> 
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+parameters:
+
+<img src="../doc/docs/Matrix_param.jpg" align="left" width="700"/> <br/>
+<br/><br/><br/><br/><br/>
+
+The assumption of the corotational model is that the deformations remain ”small” at the level of each element. 
+Thus, a local frame is defined for each beam. Thus, the force  **f<sub>e</sub>** at the level of the element is equal to:
+
+**f<sub>e</sub> = K<sub>e</sub> (u - u<sub>0</sub>)** (1)
+
+where **u** and **u<sub>0</sub>** reflect respectively the actual and the initial configuration of the beam,
+in the local frame of the beam.
+Since the stiffness matrix **K<sub>e</sub>** is initially calculated in local coordinates, 
+it is necessary to introduce transformation matrices changing the reference frame from a local to a global coordinate system. 
+In order to determine the stiffness property of the complete structure, 
+a common reference frame must be established for all unassembled structural elements so that all the displacements 
+and their corresponding forces will be referred to a common (global) coordinate system. 
+We need a matrix relationship between the variation of the position δ **u** in the local coordinate system and the variation of the node position 
+δ **q** in the global coordinates.
+
+
+<img src="../doc/docs/BeamFrames.jpg" align="left" width="700"/> 
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+This relationship is expressed by the matrix equation:
+
+
+δ **u** = **Λ(q)**     δ **q** (2)
+
+where **Λ(q)** is a matrix obtained from the direction cosines of angles between the local and global coordinate systems.
+The linearization of the element force-displacement equation is obtained in global coordinates:
+
+δ **F(q)** = [**Λ<sup>T</sup>(q)** **Ke** **Λ(q)**] δ **q**   (3)
+
+The model can be combined with the computation of a mass matrix to obtain mechanical dynamic model. 
+We then use the equation 3 to compute the system. 
+One important feature of this model is that the interpolation is performed segment by segment between only two frames. 
+Additionally, these frames are the independent Degrees of Freedom (DoFs) of the system.
 
 
 
 
 
-
-
-
+## References
 *Przemieniecki (1985) J. Przemieniecki. Theory of matrix structural analysis. McGraw-Hill, 1985.*
