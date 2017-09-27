@@ -7,7 +7,6 @@
 #include <sofa/core/visual/VisualModel.h>
 #include <sofa/helper/gl/template.h>
 #include <iostream>
-#include <SofaVolumetricData/ImplicitSurfaceContainer.h>
 
 #include <sofa/defaulttype/Mat.h>
 #include <sofa/defaulttype/Vec.h>
@@ -15,6 +14,8 @@
 #include <sofa/core/objectmodel/Event.h>
 #include <sofa/helper/vector.h>
 #include <SofaBaseTopology/TopologyData.h>
+
+#include <SofaImplicitField/deprecated/ImplicitSurfaceContainer.h>
 
 #include "../WireBeamInterpolation.h"
 
@@ -44,7 +45,7 @@ using sofa::component::fem::WireBeamInterpolation;
 using sofa::helper::vector;
 using sofa::core::behavior::MechanicalState;
 using defaulttype::Vec3d;
-using sofa::component::container::ImplicitSurface;
+using sofa::component::container::ImplicitSurfaceContainer;
 using sofa::core::behavior::PairInteractionConstraint;
 using defaulttype::Vec3d;
 using core::behavior::BaseMechanicalState;
@@ -133,9 +134,8 @@ protected :
     vector<bool> m_activeList;
     bool m_friction;
     bool m_allActivated; /// list of beams to be considered for collision
-    ImplicitSurface* m_contactSurface;
+    ImplicitSurfaceContainer* m_contactSurface;
     int m_nbConstraints;
-
     bool isHolonomic() {return false;} /// this constraint is NOT holonomic
 
 public:

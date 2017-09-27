@@ -79,8 +79,8 @@ namespace component
 
 	const char* getModuleComponentList()
 	{
-        return	"AdaptiveBeamConstraint"
-                "AdaptiveBeamController"
+        return	"AdaptiveBeamConstraint \n"
+                "AdaptiveBeamController \n"
                 "AdaptiveBeamForceFieldAndMass"
                 "AdaptiveBeamLengthConstraint"
                 "AdaptiveBeamMapping"
