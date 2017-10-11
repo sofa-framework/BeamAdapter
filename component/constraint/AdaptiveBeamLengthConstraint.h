@@ -145,7 +145,7 @@ public:
     virtual void getConstraintViolation(const ConstraintParams* cParams, BaseVector *viol,
                                         const DataVecCoord &x,const DataVecDeriv &v) override ;
 
-    virtual void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    virtual void getConstraintResolution(const ConstraintParams* cParams, std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
 
 
 protected:

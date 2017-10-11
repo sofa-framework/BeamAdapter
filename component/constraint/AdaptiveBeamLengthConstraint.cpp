@@ -49,8 +49,10 @@ void AdaptiveBeamLengthConstraintResolution::init(int line, double** w, double* 
     if(m_initF)
         force[line] = *m_initF;
 }
-void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
+void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree) 
 {
+    SOFA_UNUSED(dfree);
+
     force[line] -= d[line] / w[line][line];
     if(force[line] < 0)
         force[line] = 0;

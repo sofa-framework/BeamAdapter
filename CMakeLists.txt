@@ -5,6 +5,15 @@ set(BEAMADAPTER_MAJOR_VERSION 1)
 set(BEAMADAPTER_MINOR_VERSION 0)
 set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION})
 
+find_package(SofaGeneral REQUIRED) 
+
+set(BEAMADAPTER_DEPENDENCY_LINK SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction)
+
+find_package(SofaImplicitField QUIET) #for ImplicitSurfaceAdaptiveConstraint
+if(SofaImplicitField_FOUND)
+    list(APPEND BEAMADAPTER_DEPENDENCY_LINK SofaImplicitField)
+endif()
+
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
@@ -35,20 +44,20 @@ include(component/solver/Solver.cmake)
 set(README_FILE "BeamAdapter.txt" )
 
 if(PLUGIN_SOFAADVANCEDCONSTRAINT)
-set(HEADER_FILES ${HEADER_FILES}
-  AdaptiveBeamContactMapper.h
-  AdaptiveBeamContactMapper.inl
-  AdaptiveBeamFrictionContact.h
-  AdaptiveBeamFrictionContact.inl
-  MultiAdaptiveBeamContactMapper.h
-  MultiAdaptiveBeamContactMapper.inl
-)
+    list(APPEND HEADER_FILES
+      AdaptiveBeamContactMapper.h
+      AdaptiveBeamContactMapper.inl
+      AdaptiveBeamFrictionContact.h
+      AdaptiveBeamFrictionContact.inl
+      MultiAdaptiveBeamContactMapper.h
+      MultiAdaptiveBeamContactMapper.inl
+    )
 
-set(SOURCE_FILES ${SOURCE_FILES}
-  AdaptiveBeamContactMapper.cpp
-  AdaptiveBeamFrictionContact.cpp
-  MultiAdaptiveBeamContactMapper.cpp
-)
+    list(APPEND SOURCE_FILES
+      AdaptiveBeamContactMapper.cpp
+      AdaptiveBeamFrictionContact.cpp
+      MultiAdaptiveBeamContactMapper.cpp
+    )
         #find_package(CUDA REQUIRED)
         #cuda_include_directories(${SOFA_CUDA_DIR})
         #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
@@ -57,7 +66,6 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
-
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_BEAMADAPTER")
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${HEADER_FILES}")
 
@@ -65,10 +73,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BIN
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
 
-find_package(SofaFramework REQUIRED)
-find_package(SofaImplicitField REQUIRED) #for ImplicitSurfaceAdaptiveConstraint
-
-target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField)
+target_link_libraries(${PROJECT_NAME} ${BEAMADAPTER_DEPENDENCY_LINK})
 
 ## Install rules for the library and headers; CMake package configurations files
 sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
@@ -91,4 +96,4 @@ endif()
 #
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "plugins")
+SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "DefrostPlugins")

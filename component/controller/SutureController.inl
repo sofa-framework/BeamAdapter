@@ -379,7 +379,7 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
     // Propagate modifications
 
     simulation::MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(), sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()); // apply projective constraints
-    simulation::MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()
+    simulation::MechanicalPropagatePositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), this->getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()
 #ifdef SOFA_SUPPORT_MAPPED_MASS
         ,sofa::core::VecDerivId::dx()
 #endif

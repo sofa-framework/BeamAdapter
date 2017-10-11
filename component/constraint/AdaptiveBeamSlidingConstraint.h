@@ -113,7 +113,7 @@ public:
                                         const DataVecCoord &x1, const DataVecCoord &x2,
                                         const DataVecDeriv &v1, const DataVecDeriv &v2) override;
 
-    virtual void getConstraintResolution(vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    virtual void getConstraintResolution(const ConstraintParams* cParams, vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 protected:

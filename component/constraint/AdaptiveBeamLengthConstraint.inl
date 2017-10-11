@@ -55,12 +55,11 @@ using core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1), m_initF(initF), m_active(active)
     {
-        nbLines = 1;
     }
     virtual void init(int line, double** w, double* force);
-    virtual void resolution(int line, double** w, double* d, double* force);
+    virtual void resolution(int line, double** w, double* d, double* force, double* dfree);
     virtual void store(int line, double* force, bool convergence);
 
 protected:
@@ -376,7 +375,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const Const
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab,
+void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const ConstraintParams*,std::vector<ConstraintResolution*>& resTab,
                                                                       unsigned int& offset)
 {
     unsigned int nb = m_violations.size();
