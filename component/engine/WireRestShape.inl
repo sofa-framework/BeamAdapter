@@ -209,7 +209,7 @@ void WireRestShape<DataTypes>::init()
     //TODO(dmarchal): replace with for each loop.
     for (TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
     {
-        dmsg_error() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
+        msg_info() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
         dynamic_cast<BaseContext *>(this->getContext())->get( edge2QuadMap , *it, BaseContext::SearchRoot );
     }
 

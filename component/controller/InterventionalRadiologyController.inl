@@ -1148,7 +1148,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
 
     this->totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, id_instrument_table);
-    std::cout<<"*******************\n totalLengthIsChanging \n  newCurvAbs = "<<newCurvAbs<<" \n modifiedCurvAbs = "<<modifiedCurvAbs<<" \n id_instrument_table ="<<id_instrument_table<<" \n***********"<<std::endl;
+    msg_info()<<"*******************\n totalLengthIsChanging \n  newCurvAbs = "<<newCurvAbs<<" \n modifiedCurvAbs = "<<modifiedCurvAbs<<" \n id_instrument_table ="<<id_instrument_table<<" \n***********";
 
 
     Real xmax_prev = nodeCurvAbs[nodeCurvAbs.size()-1];
@@ -1165,7 +1165,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             //2. this is not the case and the node position can be interpolated using previous step positions
         if(xabs > xmax_prev + threshold.getValue())
         {
-            std::cout<<"case1"<<std::endl;
+            msg_info()<<"case1";
 
             if (this->f_printLog.getValue()){
                 serr<<"case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
@@ -1178,7 +1178,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
         else
         {
-            std::cout<<"case2"<<std::endl;
+            msg_info()<<"case2";
             // case 2 (the node position can be interpolated straightfully using previous step positions)
             unsigned int p0=0;
             while(p0<this->nodeCurvAbs.size())
@@ -1194,12 +1194,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             {
 
                 x[idP] = xbuf[idP0];
-                std::cout<<"case2a x["<<idP<<"] = "<<x[idP]<<std::endl;
+                msg_info()<<"case2a x["<<idP<<"] = "<<x[idP];
 
             }
             else
             {
-                std::cout<<"case2b"<<std::endl;
+                msg_info()<<"case2b";
 
                 // the node must be interpolated using beam interpolation
                     //find the instrument
@@ -1209,18 +1209,18 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                     // test to avoid wrong indices
                 if (b<0)
                 {
-                    std::cout<<"case2bA"<<std::endl;
+                    msg_info()<<"case2bA";
                     x[p]=this->startingPos.getValue();
                 }
                 else
                 {
-                    std::cout<<"case2bB"<<std::endl;
+                    msg_info()<<"case2bB";
                     // the position is interpolated
                     Transform global_H_interpol;
                     Real ratio = (xabs - nodeCurvAbs[b])/ (nodeCurvAbs[p0]-nodeCurvAbs[b]);
                     unsigned int numBeamNotUnderControl = this->m_instrumentsList[id]->getNumBeamsNotUnderControl();
                     if (this->f_printLog.getValue())
-                        std::cout<<" b= "<<b<<" / numBeamNotUnderControl= "<<numBeamNotUnderControl<<std::endl;
+                        msg_info()<<" b= "<<b<<" / numBeamNotUnderControl= "<<numBeamNotUnderControl;
 
                     //unsigned int beamID = b + numBeamNotUnderControl;
 
@@ -1237,7 +1237,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                     // TODO: interpolate velocity !!
 
                     if (this->f_printLog.getValue())
-                        std::cout<<" le noeud ["<<idP<<"] est interpolé"<<"  x["<<idP<<"]="<<x[idP]<<std::endl;
+                        msg_info()<<" le noeud ["<<idP<<"] est interpolé"<<"  x["<<idP<<"]="<<x[idP];
 
                 }
             }
@@ -1523,7 +1523,7 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
     //VecCoord& xMstate = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     //VecDeriv& vMstate = (*this->getMechanicalState()->getV());
 
-    std::cout<<" ********** \n first_simulated_Node = "<<first_simulated_Node<<"\n ***********"<<std::endl;
+    msg_info()<<" ********** \n first_simulated_Node = "<<first_simulated_Node<<"\n ***********";
 
     helper::WriteAccessor<Data<VecCoord> > xMstate = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     helper::WriteAccessor<Data<VecDeriv> > vMstate = *this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
