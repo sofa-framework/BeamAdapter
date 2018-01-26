@@ -30,7 +30,7 @@ include(component/controller/Controller.cmake)
 include(component/engine/Engine.cmake)
 include(component/forcefield/Forcefield.cmake)
 include(component/mapping/Mapping.cmake)
-include(component/solver/Solver.cmake)
+#include(component/solver/Solver.cmake)
 
 set(README_FILE "BeamAdapter.txt" )
 
