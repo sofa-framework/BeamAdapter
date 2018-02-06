@@ -100,5 +100,5 @@ def createScene(rootNode):
         realVisuInstrumentCombined = visuInstrumentCombined.createChild('realVisuInstrumentCombined')
         realVisuInstrumentCombined.createObject('OglModel',name="VisualCathOGL", src="@../ContainerCath", color='white')
         realVisuInstrumentCombined.createObject('IdentityMapping', input="@../Quads", output="@VisualCathOGL")
-  
+        return rootNode
 
