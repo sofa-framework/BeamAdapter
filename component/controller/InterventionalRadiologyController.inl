@@ -353,7 +353,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
     ///////////////////////////////// Control keys for interventonal Radiology simulations:
     switch(kev->getKey())
     {
-        case 'D':
+        /*case 'D':
             this->dropCall = true;
             break;
         case '9':
@@ -433,7 +433,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
                 else
                     this->controlledInstrument.setValue(2);
             }
-            break;
+            break;*/
 
         case '1':
             {
@@ -508,6 +508,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             }
             break;
 
+        /*
         case '*':
             {
                 if(RW)
@@ -534,7 +535,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
                 }
             }
             break;
-
+        */
 
     }
     if (this->f_printLog.getValue())
