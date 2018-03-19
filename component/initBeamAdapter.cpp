@@ -106,8 +106,3 @@ SOFA_LINK_CLASS(MultiAdaptiveBeamMapping)
 SOFA_LINK_CLASS(SteerableCatheter)
 SOFA_LINK_CLASS(WireBeamInterpolation)
 SOFA_LINK_CLASS(WireRestShape)
-
-#ifdef SOFA_HAVE_SOFAEVE
-    SOFA_LINK_CLASS(ImplicitSurfaceAdaptiveConstraint)
-#endif
-
