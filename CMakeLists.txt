@@ -8,10 +8,7 @@ set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
-  #BaseRestShape.h
-  #BaseRestShape.inl
   component/initBeamAdapter.h
-
   component/BeamInterpolation.h
   component/BeamInterpolation.inl
   component/WireBeamInterpolation.h
@@ -19,41 +16,18 @@ set(HEADER_FILES
   )
 
 set(SOURCE_FILES
-  #BaseRestShape.cpp
   component/initBeamAdapter.cpp
   component/BeamInterpolation.cpp
   component/WireBeamInterpolation.cpp
   )
 
-include(component/constraint/Constraint.cmake)
 include(component/controller/Controller.cmake)
 include(component/engine/Engine.cmake)
 include(component/forcefield/Forcefield.cmake)
 include(component/mapping/Mapping.cmake)
-include(component/solver/Solver.cmake)
 
 set(README_FILE "BeamAdapter.txt" )
 
-if(PLUGIN_SOFAADVANCEDCONSTRAINT)
-set(HEADER_FILES ${HEADER_FILES}
-  AdaptiveBeamContactMapper.h
-  AdaptiveBeamContactMapper.inl
-  AdaptiveBeamFrictionContact.h
-  AdaptiveBeamFrictionContact.inl
-  MultiAdaptiveBeamContactMapper.h
-  MultiAdaptiveBeamContactMapper.inl
-)
-
-set(SOURCE_FILES ${SOURCE_FILES}
-  AdaptiveBeamContactMapper.cpp
-  AdaptiveBeamFrictionContact.cpp
-  MultiAdaptiveBeamContactMapper.cpp
-)
-        #find_package(CUDA REQUIRED)
-        #cuda_include_directories(${SOFA_CUDA_DIR})
-        #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
-        #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
-endif()
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
@@ -76,18 +50,6 @@ sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapt
 if(SOFA_BUILD_TESTS)
     add_subdirectory(BeamAdapter_test)
 endif()
-
-# this paragraph has not been ported to the new build system yet...
-#if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
-    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
-    #list(APPEND LINKER_DEPENDENCIES SofaCUDA)
-    #list(APPEND LINKER_DEPENDENCIES SofaCUDADev)
-    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
-#endif()
-
-#
-# Organize projects into folders
-#
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "plugins")

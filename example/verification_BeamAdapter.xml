@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<sceneList>
-<!--	<scene path="3instruments.scn" plugins="libBeamAdapter.so" /> -->
-	<scene path="AdaptiveBeamController.scn" plugins="libBeamAdapter.so" />
-	<scene path="AdaptiveBeamMapping.scn" plugins="libBeamAdapter.so" />
-	<scene path="AdaptiveBeamMappingRigidRigid.scn" plugins="libBeamAdapter.so" />
-	<scene path="AdaptiveCathAndGuide.scn" plugins="libBeamAdapter.so" />
-</sceneList>

@@ -1,0 +1,6 @@
+Plugin ProjectiveXRay
+---------------------
+
+Author(s): Christian Duriez, Jeremie Dequidt
+
+IDDN number: IDDN.FR.001.100019.000.S.P.2012.000.10000
