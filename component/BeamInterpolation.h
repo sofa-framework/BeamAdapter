@@ -1,27 +1,11 @@
-/******************************************************************************
- *       SOFA, Simulation Open-Framework Architecture, version 1.0 beta 4      *
- *                (c) 2006-2009 MGH, INRIA, USTL, UJF, CNRS                    *
- *                                                                             *
- * This library is free software; you can redistribute it and/or modify it     *
- * under the terms of the GNU Lesser General Public License as published by    *
- * the Free Software Foundation; either version 2.1 of the License, or (at     *
- * your option) any later version.                                             *
- *                                                                             *
- * This library is distributed in the hope that it will be useful, but WITHOUT *
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or       *
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License *
- * for more details.                                                           *
- *                                                                             *
- * You should have received a copy of the GNU Lesser General Public License    *
- * along with this library; if not, write to the Free Software Foundation,     *
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.          *
- *******************************************************************************
- *                               SOFA :: Modules                               *
- *                                                                             *
- * Authors: The SOFA Team and external contributors (see Authors.txt)          *
- *                                                                             *
- * Contact information: contact@sofa-framework.org                             *
- ******************************************************************************/
+/***************************
+* Initial software         *
+* Authors: see Authors.txt *
+* Copyright © Inria        *
+* All rights reserved      *
+* 2006-2018                *
+* v1.0                     *
+***************************/
 //
 // C++ Implementation : BeamInterpolation / AdaptiveBeamForceFieldAndMass
 //
@@ -55,118 +39,6 @@
 
 namespace sofa
 {
-
-//TODO(dmarchal 2017-05-25) Finish it or remove it in one month.
-#if 0
-namespace utils
-{
-using sofa::helper::vector;
-using sofa::helper::OptionsGroup;
-using sofa::core::topology::BaseMeshTopology;
-using sofa::core::objectmodel::BaseObjectDescription ;
-using sofa::core::objectmodel::BaseObject ;
-using sofa::core::ConstVecCoordId ;
-using sofa::defaulttype::SolidTypes ;
-using sofa::defaulttype::Vec ;
-using sofa::defaulttype::Quat ;
-using sofa::defaulttype::Rigid3dTypes ;
-using sofa::defaulttype::Rigid3fTypes ;
-using sofa::core::behavior::MechanicalState ;
-using sofa::component::container::MechanicalObject ;
-using sofa::defaulttype::StdRigidTypes ;
-
-template<class Real>
-class Spline
-{
-public:
-    typedef typename SolidTypes<Real>::Transform Transform ;
-    typedef StdRigidTypes<3,Real> VecCoord ;
-    typedef Vec<3,Real> Vec3;
-
-    template<class DataTypes>
-    void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
-    {
-        if (d_dofsAndBeamsAligned.getValue())
-        {
-            DOF0_H_local0.clear();
-            DOF1_H_local1.clear();
-            return;
-        }
-
-        DOF0_H_local0 = d_DOF0TransformNode0.getValue()[edgeInList];
-        DOF1_H_local1 = d_DOF1TransformNode1.getValue()[edgeInList];
-    }
-
-    int getNodeIndices(unsigned int edgeInList,
-                       unsigned int &node0Idx,
-                       unsigned int &node1Idx )
-    {
-        if ( this->m_topologyEdges==nullptr)
-        {
-            msg_error() <<"This object does not have edge topology defined (computation halted). " ;
-            return -1;
-        }
-
-        /// 1. Get the indices of element and nodes
-        ElementID e = this->d_edgeList.getValue()[edgeInList] ;
-        core::topology::BaseMeshTopology::Edge edge=  (*this->m_topologyEdges)[e];
-        node0Idx = edge[0];
-        node1Idx = edge[1];
-
-        return 1;
-    }
-
-//    if ( getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
-//    {
-//        dmsg_error() << "Unable to retrieve the node indices from edges. (computation halted)" ;
-//        return -1;
-//    }
-
-    static void getFrameFromIndex(const unsigned int node0Idx,
-                                  const unsigned int node1Idx,
-                                  const VecCoord &x
-                                  Transform localTransform0,
-                                  Transform localTransform1,
-                                  Transform &global_H_local0,
-                                  Transform &global_H_local1)
-    {
-        /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
-        Transform DOF0_H_local0, DOF1_H_local1;
-        //getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
-
-        /// 3. Computes the transformation global To local for both nodes
-        Transform global_H_DOF0(x[node0Idx].getCenter(), x[node0Idx].getOrientation());
-        Transform global_H_DOF1(x[node1Idx].getCenter(), x[node1Idx].getOrientation());
-        /// - add a optional transformation
-        global_H_local0 = global_H_DOF0*DOF0_H_local0;
-        global_H_local1 = global_H_DOF1*DOF1_H_local1;
-
-        return 1; /// no error
-    }
-
-//    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
-//    {
-//        msg_error("BeamAdapter") << "[getSplinePoints] error with computeTransform2. Aborting...." ;
-//        return;
-//    }
-
-//    const Real& L = this->d_lengthList.getValue()[edgeInList];
-
-    static void getControlPointsFromFrame(
-                                const Transform& global_H_local0, const Transform& global_H_local1,
-                                const Real& L,
-                                Vec3& P0, Vec3& P1,
-                                Vec3& P2, Vec3& P3)
-    {
-
-        P0=global_H_local0.getOrigin();
-        P3=global_H_local1.getOrigin();
-
-        P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-        P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
-    }
-};
-#endif
 
 namespace component
 {

@@ -1,3 +1,11 @@
+/***************************
+* Initial software         *
+* Authors: see Authors.txt *
+* Copyright © Inria        *
+* All rights reserved      *
+* 2006-2018                *
+* v1.0                     *
+***************************/
 #include <string>
 using std::string ;
 
