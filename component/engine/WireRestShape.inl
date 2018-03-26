@@ -48,7 +48,6 @@
 #include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/helper/gl/template.h>
-#include <sofa/helper/system/glut.h>
 
 #include "WireRestShape.h"
 
