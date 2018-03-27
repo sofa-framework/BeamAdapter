@@ -108,10 +108,10 @@ int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be
         ;
 
 #ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
 #endif
 #ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
