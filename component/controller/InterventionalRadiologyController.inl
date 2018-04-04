@@ -425,6 +425,8 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
             }
             break;
 
+            */
+
 
         case '2':
             {
@@ -448,7 +450,7 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
 
         case '0':
             this->controlledInstrument.setValue(0);
-            break; */
+            break;
 
         case 20: // droite = 20
             {
