@@ -92,7 +92,6 @@ void ForceFeedbackSpringsForceField<Rigid3dTypes>::addForce(const core::Mechanic
         getVOrientation(f1[index]) -= dir * angle * (i < k_a.size() ? k_a[i] : k_a[0]);
         getVOrientation(forceFeedback) -= dir * angle * (i < k_a.size() ? k_a[i] : k_a[0]);
     }
-    std::cout<<forceFeedback<<std::endl;
     d_forceFeedback.endEdit();
 }
 
