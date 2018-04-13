@@ -6,8 +6,8 @@
 * 2006-2018                *
 * v1.0                     *
 ***************************/
-#ifndef SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_H
-#define SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_H
+#ifndef SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_H
+#define SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_H
 
 
 #include <sofa/core/behavior/ForceField.h>
@@ -65,7 +65,7 @@ public:
 };
 
 
-#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_CPP)
+#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_CPP)
 #ifndef SOFA_FLOAT
 extern template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<sofa::defaulttype::Vec3dTypes>;
 extern template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<sofa::defaulttype::Vec1dTypes>;
@@ -85,4 +85,4 @@ extern template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<sofa::
 
 } // namespace sofa
 
-#endif // SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_H
+#endif // SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_H

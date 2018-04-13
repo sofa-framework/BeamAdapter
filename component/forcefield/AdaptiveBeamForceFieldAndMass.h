@@ -164,12 +164,12 @@ public:
     virtual void draw(const VisualParams* vparams) override ;
 
     /// Mass Interface
-    virtual  void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
-    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix);
-    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
+    virtual  void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& )
+    virtual  void accFromF(const MechanicalParams* /*mparams*/, DataVecDeriv& , const DataVecDeriv& ) override
     {serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
@@ -177,7 +177,7 @@ public:
     {serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
+    virtual void addGravityToV(const MechanicalParams* /*mparams*/, DataVecDeriv& ) override
     {serr<<"addGravityToV not implemented yet"<<sendl;}
 
     /// ForceField Interface
@@ -188,7 +188,7 @@ public:
                             DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )
+    virtual double getPotentialEnergy(const MechanicalParams* /*mparams*/, const DataVecCoord& )
     const override {serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
 
     void addKToMatrix(const MechanicalParams* mparams,

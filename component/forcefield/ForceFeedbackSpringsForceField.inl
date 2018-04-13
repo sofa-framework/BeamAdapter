@@ -6,8 +6,8 @@
 * 2006-2018                *
 * v1.0                     *
 ***************************/
-#ifndef SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_INL
-#define SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_INL
+#ifndef SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_INL
+#define SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_INL
 
 #include "ForceFeedbackSpringsForceField.h"
 #include <sofa/helper/system/config.h>
@@ -122,7 +122,7 @@ void ForceFeedbackSpringsForceField<DataTypes>::addForce(const core::MechanicalP
 
 } // namespace sofa
 
-#endif // SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_INL
+#endif // SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_INL
 
 
 

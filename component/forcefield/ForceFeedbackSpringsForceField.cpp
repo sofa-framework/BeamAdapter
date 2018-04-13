@@ -6,7 +6,7 @@
 * 2006-2018                *
 * v1.0                     *
 ***************************/
-#define SOFA_COMPONENT_FORCEFIELD_FORCEFEEDBACKSPRINGFORCEFIELD_CPP
+#define SOFA_PLUGIN_BEAMADAPTER_FORCEFEEDBACKSPRINGFORCEFIELD_CPP
 
 #include "ForceFeedbackSpringsForceField.inl"
 #include <sofa/core/ObjectFactory.h>
@@ -165,14 +165,14 @@ int ForceFeedbackSpringsForceFieldClass = core::RegisterObject("Simple elastic s
         ;
 
 #ifndef SOFA_FLOAT
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Vec3dTypes>;
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Vec1dTypes>;
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Rigid3dTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Vec3dTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Vec1dTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Rigid3dTypes>;
 #endif
 #ifndef SOFA_DOUBLE
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Vec3fTypes>;
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Vec1fTypes>;
-template class SOFA_DEFORMABLE_API ForceFeedbackSpringsForceField<Rigid3fTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Vec3fTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Vec1fTypes>;
+template class SOFA_BEAMADAPTER_API ForceFeedbackSpringsForceField<Rigid3fTypes>;
 #endif
 
 } // namespace forcefield
