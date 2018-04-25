@@ -66,7 +66,7 @@ public:
         , m_mu(frictionCoef)
         , m_line(line)
     {
-        nbLines = 3;
+        this->m_nbLines = 3;
     }
 
     virtual void resolution(int line, double** w, double* d, double* force);
