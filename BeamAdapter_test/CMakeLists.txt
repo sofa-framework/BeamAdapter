@@ -10,6 +10,7 @@ set(HEADER_FILES )
 
 include(component/forcefield/ForceFieldTest.cmake)
 include(component/constraint/ConstraintTest.cmake)
+include(component/mapping/MappingTest.cmake)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RC_FILES})
 

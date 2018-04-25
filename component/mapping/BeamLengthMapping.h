@@ -1,0 +1,222 @@
+/******************************************************************************
+*       SOFA, Simulation Open-Framework Architecture, version 1.0 beta 4      *
+*                (c) 2006-2009 MGH, INRIA, USTL, UJF, CNRS                    *
+*                                                                             *
+* This library is free software; you can redistribute it and/or modify it     *
+* under the terms of the GNU Lesser General Public License as published by    *
+* the Free Software Foundation; either version 2.1 of the License, or (at     *
+* your option) any later version.                                             *
+*                                                                             *
+* This library is distributed in the hope that it will be useful, but WITHOUT *
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or       *
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License *
+* for more details.                                                           *
+*                                                                             *
+* You should have received a copy of the GNU Lesser General Public License    *
+* along with this library; if not, write to the Free Software Foundation,     *
+* Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.          *
+*******************************************************************************
+*                               SOFA :: Modules                               *
+*                                                                             *
+* Authors: The SOFA Team and external contributors (see Authors.txt)          *
+*                                                                             *
+* Contact information: contact@sofa-framework.org                             *
+******************************************************************************/
+//
+// C++ Implementation : AdaptiveBeamMapping
+//
+// Description:
+//
+//
+// Author: Christian Duriez, INRIA
+//
+// Copyright: See COPYING file that comes with this distribution
+//
+//
+#ifndef SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H
+#define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H
+
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#include <sofa/helper/vector.h>
+#include <sofa/defaulttype/RigidTypes.h>
+#include <sofa/defaulttype/Vec.h>
+#include <sofa/defaulttype/Mat.h>
+#include <sofa/core/Mapping.h>
+#include <sofa/core/behavior/MechanicalState.h>
+#include <sofa/core/topology/BaseMeshTopology.h>
+#include <sofa/core/visual/VisualParams.h>
+#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+
+#include "../initBeamAdapter.h"
+#include "../BeamInterpolation.h"
+#include "../controller/AdaptiveBeamController.h"
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Declarations
+////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace sofa
+{
+
+namespace component
+{
+
+namespace mapping
+{
+
+/////////////////////////////////// private namespace pattern //////////////////////////////////////
+/// To avoid the lacking of names imported with with 'using' in the other's component namespace
+/// you should use a private namespace and "export" only this one in the public namespace.
+/// This is done at the end of this file, have a look if you are not used to this pattern.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace _beamlengthmapping_
+{
+
+using namespace sofa::component::fem;
+using namespace sofa::core::objectmodel;
+
+using sofa::core::State ;
+using core::Mapping;
+using sofa::defaulttype::Vec;
+using sofa::defaulttype::Mat;
+using sofa::core::topology::BaseMeshTopology;
+using defaulttype::SolidTypes;
+using std::pair;
+using sofa::component::fem::BeamInterpolation;
+using sofa::helper::vector;
+using std::string;
+using core::MechanicalParams;
+using core::ConstraintParams;
+using core::visual::VisualParams;
+using sofa::core::topology::TopologyContainer ;
+
+/*!
+ * \class BeamLengthMapping
+ * @brief Computes and map the length of the beams
+ *
+ * This is a component:
+ * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
+ */
+template <class TIn, class TOut>
+class BeamLengthMapping : public Mapping<TIn, TOut>
+{
+public:
+    SOFA_CLASS(SOFA_TEMPLATE2(BeamLengthMapping,TIn,TOut),
+               SOFA_TEMPLATE2(Mapping,TIn,TOut));
+
+    typedef Mapping<TIn, TOut> Inherit;
+    typedef TIn In;
+    typedef TOut Out;
+
+    typedef typename Out::Coord::value_type Real          ;
+    typedef typename Out::Coord             Coord         ;
+    typedef typename Out::Deriv             Deriv         ;
+    typedef typename Out::VecCoord          VecCoord      ;
+    typedef typename Out::VecDeriv          VecDeriv      ;
+    typedef typename Out::MatrixDeriv       OutMatrixDeriv;
+
+    typedef typename In::Coord::value_type  InReal       ;
+    typedef typename In::Deriv              InDeriv      ;
+    typedef typename In::VecCoord           InVecCoord   ;
+    typedef typename In::VecDeriv           InVecDeriv   ;
+    typedef typename In::MatrixDeriv        InMatrixDeriv;
+
+    typedef vector<unsigned int>             VecIndex;
+    typedef BaseMeshTopology::EdgeID         ElementID;
+    typedef vector<BaseMeshTopology::Edge>   VecEdges    ;
+    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
+
+    typedef typename SolidTypes<InReal>::Transform      Transform       ;
+    typedef pair<int, Transform>                        IndexedTransform;
+    typedef typename SolidTypes< InReal>::SpatialVector SpatialVector   ;
+
+    typedef Vec<3, Real>   Vec3;
+    typedef Vec<6, Real>   Vec6;
+    typedef Mat<3,12,Real> Mat3x12;
+    typedef Mat<12,3,Real> Mat12x3;
+    typedef Mat<6,12,Real> Mat6x12;
+    typedef Mat<12,6,Real> Mat12x6;
+    typedef BeamInterpolation<TIn> BInterpolation;
+
+
+
+public:
+
+
+    SingleLink<BeamLengthMapping<TIn, TOut>,
+               BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
+
+
+    BeamLengthMapping(State< In >* from=NULL,
+                        State< Out >* to=NULL,
+                        BeamInterpolation< TIn >* interpolation=NULL) ;
+
+
+    void setInterpolation(BeamInterpolation< TIn >* interpolation)
+    {
+        l_adaptativebeamInterpolation.set(interpolation);
+
+        std::cout<<"l_adaptativebeamInterpolation set "<<l_adaptativebeamInterpolation.getName()<<std::endl;
+        std::cout<<"l_adaptativebeamInterpolation num Beam "<<l_adaptativebeamInterpolation->getNumBeams()<<std::endl;
+
+
+    }
+
+    virtual ~BeamLengthMapping(){}
+
+
+    virtual void init() override;     // get the interpolation
+    virtual void bwdInit() override;  // get the points
+    virtual void reset() override;
+    virtual void reinit() override;
+    virtual void draw(const VisualParams*) override;
+
+
+    virtual void apply(const MechanicalParams *mparams, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
+    virtual void applyJ(const MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;
+    virtual void applyJT(const MechanicalParams *mparams, Data<InVecDeriv>& out, const Data<VecDeriv>& in) override;
+    virtual void applyJT(const ConstraintParams *cparams, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in) override;
+
+
+
+
+
+    ////////////////////////// Inherited attributes ////////////////////////////
+    /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
+    /// Bring inherited attributes and function in the current lookup context.
+    /// otherwise any access to the base::attribute would require
+    /// the "this->" approach.
+    using Mapping<TIn, TOut>::toModel ;
+    using Mapping<TIn, TOut>::fromModel ;
+    ////////////////////////////////////////////////////////////////////////////
+
+ protected:
+
+    // used for applyJ on one beam
+    void computeJSpline(Real &dlength, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
+                                       const Vec3& dP0, const Vec3& dP1, const Vec3& dP2, const Vec3& dP3);
+
+    // used for applyJt on one beam
+    void computeJtSpline(const Real &f_input, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
+                                                     Vec3& F0,  Vec3& F1,  Vec3& F2, Vec3& F3);
+
+};
+
+
+} /// _beamlengthmapping_
+
+using _beamlengthmapping_::BeamLengthMapping ;
+
+} /// namespace mapping
+
+} /// namespace component
+
+} /// namespace sofa
+
+#endif  /* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */

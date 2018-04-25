@@ -795,7 +795,7 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3)
 {
-    /// the computation of integral Int[0,1] ||dP(x)||  dx = length
+    /// the computation of integral Int[0,1]_||dP(x)||_ dx = length
     /// is done using Gauss Points
 
     /// definition of the Gauss points
