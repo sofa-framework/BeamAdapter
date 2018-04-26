@@ -30,7 +30,7 @@ namespace forcefield
 
 template<class DataTypes>
 ForceFeedbackSpringsForceField<DataTypes>::ForceFeedbackSpringsForceField()
-    : d_forceFeedback(initData(&d_forceFeedback, "forceFeedback", "force that can be used for forcefeedback"))
+    : d_forceFeedback(initData(&d_forceFeedback, "forceFeedback", "force that can be used for force feedback"))
 {
 }
 
@@ -39,38 +39,33 @@ void ForceFeedbackSpringsForceField<DataTypes>::init()
 {
     sofa::component::forcefield::RestShapeSpringsForceField<DataTypes>::init();
 
-    Deriv& forceFeedback = *d_forceFeedback.beginEdit();
+    Deriv & forceFeedback = *d_forceFeedback.beginEdit();
     forceFeedback.clear();
     d_forceFeedback.endEdit();
 }
-
 
 template<class DataTypes>
 void ForceFeedbackSpringsForceField<DataTypes>::bwdInit()
 {
     sofa::component::forcefield::RestShapeSpringsForceField<DataTypes>::bwdInit();
 
-//    if (this->restMState->get() == NULL)
-//    {
-//        local_useRestMState = false;
-
-//        if(!this->restMState.empty())
-//            msg_warning() << "external_rest_shape in node " << this->getContext()->getName() << " not found";
-//    }
-//    else
-//    {
-        local_useRestMState = true;
-    //}
+    local_useRestMState = true;
 }
 
+
+
 template<class DataTypes>
-void ForceFeedbackSpringsForceField<DataTypes>::addForce(const core::MechanicalParams* /* mparams */, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& /* v */)
+void ForceFeedbackSpringsForceField<DataTypes>::addForce(const core::MechanicalParams*  mparams , DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv&  v )
 {
-    sofa::helper::WriteAccessor< DataVecDeriv > f1 = f;
-    sofa::helper::ReadAccessor< DataVecCoord > p1 = x;
-    sofa::helper::ReadAccessor< DataVecCoord > p0 = *this->getExtPosition();
-    Deriv& forceFeedback = *d_forceFeedback.beginEdit();
+    Deriv & forceFeedback = *d_forceFeedback.beginEdit();
     forceFeedback.clear();
+
+    SOFA_UNUSED(mparams);
+    SOFA_UNUSED(v);
+
+    helper::WriteAccessor< DataVecDeriv > f1 = f;
+    helper::ReadAccessor< DataVecCoord > p1 = x;
+    helper::ReadAccessor< DataVecCoord > p0 = *this->getExtPosition();
 
     f1.resize(p1.size());
 
@@ -113,8 +108,6 @@ void ForceFeedbackSpringsForceField<DataTypes>::addForce(const core::MechanicalP
     }
     d_forceFeedback.endEdit();
 }
-
-
 
 
 } // namespace forcefield
