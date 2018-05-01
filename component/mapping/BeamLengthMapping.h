@@ -52,6 +52,8 @@
 #include "../controller/AdaptiveBeamController.h"
 
 
+#include <SofaEigen2Solver/EigenSparseMatrix.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +128,7 @@ public:
     typedef typename In::VecCoord           InVecCoord   ;
     typedef typename In::VecDeriv           InVecDeriv   ;
     typedef typename In::MatrixDeriv        InMatrixDeriv;
+    enum {Nin = In::deriv_total_size, Nout = Out::deriv_total_size };
 
     typedef vector<unsigned int>             VecIndex;
     typedef BaseMeshTopology::EdgeID         ElementID;
@@ -135,9 +138,13 @@ public:
     typedef typename SolidTypes<InReal>::Transform      Transform       ;
     typedef pair<int, Transform>                        IndexedTransform;
     typedef typename SolidTypes< InReal>::SpatialVector SpatialVector   ;
+    typedef linearsolver::EigenSparseMatrix<TIn,TOut>   SparseMatrixEigen;
+    typedef linearsolver::EigenSparseMatrix<TIn,TIn>    SparseKMatrixEigen;
 
     typedef Vec<3, Real>   Vec3;
     typedef Vec<6, Real>   Vec6;
+    typedef Mat<3,3,Real> Mat3;
+    typedef Mat<3,6,Real> Mat3x6;
     typedef Mat<3,12,Real> Mat3x12;
     typedef Mat<12,3,Real> Mat12x3;
     typedef Mat<6,12,Real> Mat6x12;
@@ -151,6 +158,8 @@ public:
 
     SingleLink<BeamLengthMapping<TIn, TOut>,
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
+
+    Data< unsigned >       d_geometricStiffness; ///< how to compute geometric stiffness (0->no GS, 1->exact GS, 2->stabilized GS)
 
 
     BeamLengthMapping(State< In >* from=NULL,
@@ -177,11 +186,16 @@ public:
     virtual void reinit() override;
     virtual void draw(const VisualParams*) override;
 
-
+    // interface of mapping.h
     virtual void apply(const MechanicalParams *mparams, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
     virtual void applyJ(const MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;
     virtual void applyJT(const MechanicalParams *mparams, Data<InVecDeriv>& out, const Data<VecDeriv>& in) override;
     virtual void applyJT(const ConstraintParams *cparams, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in) override;
+    virtual void applyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) override;
+
+    // interface of baseMapping.h
+    virtual void updateK( const MechanicalParams* /*mparams*/, core::ConstMultiVecDerivId /*outForce*/ ) override;
+    const defaulttype::BaseMatrix* getK() override;
 
 
 
@@ -197,6 +211,8 @@ public:
     ////////////////////////////////////////////////////////////////////////////
 
  protected:
+   /* Vec3 F0_buf, F1_buf, F2_buf, F3_buf; // Used for debug */
+    SparseKMatrixEigen K_geom;
 
     // used for applyJ on one beam
     void computeJSpline(Real &dlength, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
@@ -205,6 +221,19 @@ public:
     // used for applyJt on one beam
     void computeJtSpline(const Real &f_input, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
                                                      Vec3& F0,  Vec3& F1,  Vec3& F2, Vec3& F3);
+
+    // compute stiffness of forces for applyJt on one beam
+    void computeDJtSpline(const Real &f_input, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
+                                                        Mat<4,4,Mat3> &Mat);
+
+
+    // useful: create a cross matrix (to produce the cross product)
+    void createCrossMatrix(const Vec3& v, Mat3& result){ ; result.clear();
+                                     result[0][1]=-v[2]; result[0][2]=v[1];
+                                     result[1][0]=v[2]; result[1][2]=-v[0];
+                                     result[2][0]=-v[1]; result[2][1]=v[0];}
+
+
 
 };
 

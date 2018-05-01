@@ -807,6 +807,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
 
             double length = (double) l_interpolation->getLength(b);
 
+
             Vec3 localPos(0.0,0.0,0.0);
             Real baryX = 0.5;
             Transform globalHLocalInterpol;

@@ -72,10 +72,10 @@ struct BeamLengthMappingTest : public Mapping_test<_BeamLengthMapping>
         this->flags &= ~Inherit::TEST_getJs;
 
         // beamLengthMapping::getK is not yet implemented
-        this->flags &= ~Inherit::TEST_getK;
+        //this->flags &= ~Inherit::TEST_getK;
 
         // beamLengthMapping::applyDJT is not yet implemented
-        this->flags &= ~Inherit::TEST_applyDJT;
+        //this->flags &= ~Inherit::TEST_applyDJT;
 
     }
 
@@ -87,6 +87,74 @@ struct BeamLengthMappingTest : public Mapping_test<_BeamLengthMapping>
     */
 
     bool testCase1()
+    {
+        const int Nout=2; // WARNING this number has to be changed to test with more than one beam !!
+        const int Nin=3;
+
+        string scene =
+                "<?xml version='1.0'?>"
+                ""
+                "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
+                "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
+                "               <Mesh name='meshSuture' edges='0 1 1 2' />"
+                "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1   2 0 0 0 0 0 1' showObject='1'/>"
+                "                <BeamInterpolation name='Interpol' radius='0.3' defaultYoungModulus='1e7'  DOF0TransformNode0='0.2 0.3 0.1 0 0 0 1   0.12 0.3 0.1 0 0 0.3826834 0.9238795 '  DOF1TransformNode1='-0.3 0.3 0.1 0 0 0 1  -0.2 0.25 0 0 0 0 1' dofsAndBeamsAligned='0' straight='0'/>"
+                "               <Node name='Map' > "
+                "                      <MechanicalObject template='Vec1d' name='mappedDOFs' position='0.5  0.8'  />"
+                "                      <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
+                "               </Node>"
+                "</Node> " ;
+        this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str(), scene.size());
+
+
+
+        //std::cout<<"*******************  Get the mapping ";
+        BeamLengthMapping* lengthMapping;
+        this->root->getTreeObject(lengthMapping);
+        this->mapping = lengthMapping;
+        this->deltaRange.first= 1;
+        this->deltaRange.second= 1000;
+
+
+        MechanicalObject<Rigid3>* FromModel = nullptr;
+        this->root->getTreeObject(FromModel);
+        this->inDofs = FromModel;
+
+        MechanicalObject<Vec1Types>* ToModel = nullptr;
+        this->root->getTreeObject(ToModel);
+        this->outDofs= ToModel;
+
+        const Data<InVecCoord>& dataInX = *FromModel->read(VecCoordId::position());
+        const InVecCoord& xin = dataInX.getValue();
+
+        const Data<OutVecCoord>& dataOutX = *ToModel->read(VecCoordId::position());
+        const OutVecCoord& xout = dataOutX.getValue();
+
+        std::cout<<" x in  = "<<xin<<std::endl;
+
+        std::cout<<" x out  = "<<xout<<std::endl;
+
+
+
+        // new values of DOFs: exact same position
+        InVecCoord xin_new(Nin);
+        xin_new[1][0]=1.0;
+        xin_new[2][0]=2.0;
+
+
+        // expected mapped values
+        OutVecCoord expectedChildCoords(Nout);
+        expectedChildCoords[0][0] = 0.5;
+        expectedChildCoords[1][0] = 0.7416993975182119;
+
+
+
+        return this->runTest(xin,xout,xin_new,expectedChildCoords);
+
+
+    }
+    bool testCase2()
     {
         const int Nout=1; // WARNING this number has to be changed to test with more than one beam !!
         const int Nin=2;
@@ -102,7 +170,7 @@ struct BeamLengthMappingTest : public Mapping_test<_BeamLengthMapping>
                 "               <BeamInterpolation name='Interpol' radius='0.1'/>"
                 "               <Node name='Map' > "
                 "                      <MechanicalObject template='Vec1d' name='mappedDOFs' position='1.0'  />"
-                "                      <BeamLengthMapping name='beamLMap' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
+                "                      <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
                 "               </Node>"
                 "</Node> " ;
         this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str(), scene.size());
@@ -170,10 +238,14 @@ TYPED_TEST_CASE(BeamLengthMappingTest, DataTypes);
 // first test case
 TYPED_TEST( BeamLengthMappingTest , testCase1 )
 {
-    // child coordinates given directly in parent frame
     ASSERT_TRUE(this->testCase1());
 }
 
+// second test case
+TYPED_TEST( BeamLengthMappingTest , testCase2 )
+{
+    ASSERT_TRUE(this->testCase2());
+}
 
   }// anonymous namespace
   }//sofa

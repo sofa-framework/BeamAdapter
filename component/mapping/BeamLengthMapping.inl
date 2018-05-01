@@ -68,6 +68,7 @@ using sofa::core::ConstVecCoordId;
 using sofa::helper::AdvancedTimer;
 using sofa::core::MultiVecCoordId;
 using sofa::core::VecCoordId;
+using sofa::core::VecDerivId;
 using sofa::core::ConstMultiVecCoordId;
 using core::MechanicalParams;
 
@@ -76,6 +77,8 @@ BeamLengthMapping<TIn,TOut>::BeamLengthMapping(State< In >* from, State< Out >* 
                                                    BeamInterpolation< TIn >* interpolation)
     : Inherit(from, to)
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
+    , d_geometricStiffness(initData(&d_geometricStiffness, 2u, "geometricStiffness", "0 -> no GS, 1 -> exact GS, 2 -> stabilized GS (default)"))
+
 {
 
 
@@ -229,6 +232,11 @@ void BeamLengthMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparams, Data<InVecDeriv>& dOut, const Data<VecDeriv>& dIn)
 {
+
+    if(this->f_printLog.getValue() ){
+        std::cout<<" --------------------- applyJT --------------------"<<std::endl;
+    }
+
     SOFA_UNUSED(mparams);
 
     AdvancedTimer::stepBegin("AdaptiveBeamMappingMechanicalApplyJT");
@@ -257,10 +265,52 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
 
         computeJtSpline(mappedF, P0,P1,P2,P3, F0, F1, F2, F3);
 
+        /* debug
+        static int compteur=0;
+        if(compteur==2 || compteur==6)
+        {
+            std::cout<<" comntribution spline freeze"<<std::endl;
+            F0 = F0_buf;
+            F1 = F1_buf;
+            F2 = F2_buf;
+            F3 = F3_buf;
+        }
+        else
+        {
+            F0_buf = F0;
+            F1_buf = F1;
+            F2_buf = F2;
+            F3_buf = F3;
+        }
+        compteur++;
+
+
+
+
+        std::cout<<" _F0  = "<<F0<<std::endl;
+        std::cout<<" _F1  = "<<F1<<std::endl;
+        std::cout<<" _F2  = "<<F2<<std::endl;
+        std::cout<<" _F3  = "<<F3<<std::endl;
+
+        std::cout<<" _F0+ _F1 = "<<F0+F1<<std::endl;
+        std::cout<<" _F0+ _F1 = "<<F2+F3<<std::endl;
+
+        std::cout<<std::setprecision(20)<<"P0 = ["<<P0<<"];"<<std::endl;
+        std::cout<<"P1 = ["<<P1<<"];"<<std::endl;
+        std::cout<<"P2 = ["<<P2<<"];"<<std::endl;
+        std::cout<<"P3 = ["<<P3<<"];"<<std::endl;
+
+         */
         // 5. apply the forces to the nodes ot the beams (equivalent to applyJt on spline control point)
 
         Transform DOF0Global_H_local0, DOF1Global_H_local1;
         l_adaptativebeamInterpolation->getDOFtoLocalTransformInGlobalFrame(i, DOF0Global_H_local0, DOF1Global_H_local1, x_in);
+
+
+        if(this->f_printLog.getValue() ){
+            std::cout<<"DOF0Global_H_local0 = "<<DOF0Global_H_local0<<std::endl;
+            std::cout<<"DOF1Global_H_local1 = "<<DOF1Global_H_local1<<std::endl;
+        }
 
         // rotate back the force to the local frame
         SpatialVector f0, f1,f2,f3;
@@ -271,6 +321,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
 
         // computes the torque created on DOF0 and DOF1 by f1 and f2
         Real L = l_adaptativebeamInterpolation->getLength(i);
+
         Vec3 lever(L/3.0,0,0);
         f1.setTorque(lever.cross(f1.getForce()));
         f2.setTorque(-lever.cross(f2.getForce()));
@@ -279,6 +330,13 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
         SpatialVector FNode0output, FNode1output;
         FNode0output = DOF0Global_H_local0 * (f0+f1);
         FNode1output = DOF1Global_H_local1 * (f2+f3);
+
+        /* debug
+        std::cout<<" FNode0output = "<<FNode0output<<"  f0+f1 = "<<(f0+f1)<<std::endl;
+        std::cout<<" FNode1output = "<<FNode0output<<"  f2+f3 = "<<(f2+f3)<<std::endl;
+        */
+
+
 
 
 
@@ -297,11 +355,8 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
 }
 
 
-/// AdaptiveBeamMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in)
-/// this function propagate the constraint through the Adaptive Beam mapping :
-/// if one constraint along (vector n) with a value (v) is applied on the childModel (like collision model)
-/// then this constraint is transformed by (Jt.n) with value (v) for the rigid model
-/// note : the value v is not propagated through the mapping
+/// BeamLengthMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in)
+/// this function propagate the constraint through BeamLengthMapping :
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparams, Data<InMatrixDeriv>& dOut, const Data<OutMatrixDeriv>& dIn)
 {
@@ -392,7 +447,368 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparam
     AdvancedTimer::stepEnd("AdaptiveBeamMappingConstraintApplyJT");
 }
 
+/// BeamLengthMapping::applyDJT(MultiVecDerivId parentDfId, const ConstMultiVecDerivId childDfId)
+/// this function computes the additional stiffness force created on the parents by the force on the child (due to mapping non-linearity)
+template <class TIn, class TOut>
+void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId)
+{
+    if(this->f_printLog.getValue() ){
+        std::cout<<" --------------------- applyDJT --------------------"<<std::endl;
+    }
+    const unsigned& geometricStiffness = d_geometricStiffness.getValue();
+    if( !geometricStiffness ) return;
 
+    const SReal kfactor = mparams->kFactor();
+
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const InVecCoord& x_in = dataInX.getValue();
+
+    const Data<InVecDeriv>& dataIndX = *this->getFromModel()->read(VecDerivId::dx());
+    const InVecDeriv& parentDisplacement = dataIndX.getValue();
+
+    helper::WriteAccessor<Data<InVecDeriv> > parentForce (*parentDfId[this->fromModel.get(mparams)].write());
+
+    /*    const VecDeriv& childForce = this->getToModel()->readForces().ref();*/
+    helper::ReadAccessor<Data<VecDeriv> > childForce( *childDfId[this->toModel.get(mparams)].read() );
+    if(this->f_printLog.getValue() ){
+        std::cout<<"********applyDJT*********\n childForce="<<childForce<<"\n*************"<<std::endl;
+    }
+
+
+    unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
+    for (unsigned int i=0; i<s; i++)
+    {
+        // force in compression (>0) can lead to negative eigen values in geometric stiffness
+        // this results in a undefinite implicit matrix that causes instabilies
+        // if stabilized GS (geometricStiffness==2) -> keep only force in extension
+        if( childForce[i][0] < 0 || geometricStiffness==1 )
+        {
+
+            //1. get the indices of the Dofs of the beam a
+            unsigned int IdxNode0, IdxNode1;
+            l_adaptativebeamInterpolation->getNodeIndices(i,IdxNode0,IdxNode1);
+
+            //2. get the force on the mapped dof
+            Real childF = childForce[i][0];
+
+            //3. get the spline points
+            Vec<3, InReal> P0,P1,P2,P3;
+            l_adaptativebeamInterpolation->getSplinePoints(i, x_in , P0,  P1, P2, P3);
+
+            ////////////////////////////
+            //4. compute the equivalent stiffness on the spline control point (apply DJt on spline map)
+            Mat<4,4,Mat3> K;
+            computeDJtSpline(childF, P0,P1,P2,P3, K);
+
+            //- K must be transfered from the control points to the DOFs
+            //  - get the transformation of the DOFs
+            Transform DOF0Global_H_local0, DOF1Global_H_local1;
+            l_adaptativebeamInterpolation->getDOFtoLocalTransformInGlobalFrame(i, DOF0Global_H_local0, DOF1Global_H_local1, x_in);
+
+            // - create a matrix of the lever in the global frame
+            Real L = l_adaptativebeamInterpolation->getLength(i);
+            // - rotate the levers in the global frame
+            Vec3 lev(-L/3.0,0.0,0.0);
+            Vec3 Lev00_global = -DOF0Global_H_local0.getOrigin();
+            Vec3 Lev01_global = DOF0Global_H_local0.getOrientation().rotate(lev) - DOF0Global_H_local0.getOrigin();
+            lev[0]=L/3;
+            Vec3 Lev12_global = DOF1Global_H_local1.getOrientation().rotate(lev) - DOF1Global_H_local1.getOrigin();
+            Vec3 Lev13_global = -DOF1Global_H_local1.getOrigin();
+            // create matrices:
+            Mat3 Lev00_mat, Lev01_mat, Lev12_mat,Lev13_mat ;
+            createCrossMatrix(Lev01_global, Lev01_mat);
+            createCrossMatrix(Lev12_global, Lev12_mat);
+            createCrossMatrix(Lev00_global, Lev00_mat);
+            createCrossMatrix(Lev13_global, Lev13_mat);
+
+
+
+            // Compute the  parent foces due to input parent displacement
+
+            InDeriv Dx_DOF0 = parentDisplacement[IdxNode0];
+            InDeriv Dx_DOF1 = parentDisplacement[IdxNode1];
+
+            // displacement of the control points
+            Vec3 dP[4];
+            dP[0]= Dx_DOF0.getVCenter() + Lev00_mat*Dx_DOF0.getVOrientation();
+            dP[1]= Dx_DOF0.getVCenter() + Lev01_mat*Dx_DOF0.getVOrientation();
+            dP[2]= Dx_DOF1.getVCenter() + Lev12_mat*Dx_DOF1.getVOrientation();
+            dP[3]= Dx_DOF1.getVCenter() + Lev13_mat*Dx_DOF1.getVOrientation();;
+
+            /* debug
+            for (unsigned int k=0; k<4; k++)
+            {
+                std::cout<<"dP_"<<k<<"="<<dP[k]<<std::endl;
+            }
+            */
+
+            Vec3 dF[4];
+            for (unsigned int k=0; k<4; k++)
+            {
+                dF[k].clear();
+                for (unsigned int l=0; l<4; l++)
+                {
+                    dF[k] += K[k][l]*dP[l]*kfactor;
+                }
+
+                /* debug
+                std::cout<<"dF_"<<k<<"="<<dF[k]<<std::endl;
+                */
+            }
+
+
+
+            InDeriv F_dof0,F_dof1;
+            F_dof0.clear();
+            F_dof1.clear();
+
+            /* DEBUG : A COMMENTER quand on veut freezer la contribution de spline dans ApplyJt et comparer numeriquement*/
+            F_dof0.getVCenter()= dF[0]+dF[1];
+            F_dof0.getVOrientation()=Lev00_mat.transposed()*dF[0] + Lev01_mat.transposed()*dF[1];
+            F_dof1.getVCenter()=dF[2]+dF[3];
+            F_dof1.getVOrientation()=Lev12_mat.transposed()*dF[2] + Lev13_mat.transposed()*dF[3];
+
+
+
+
+
+
+             ////////////////////////////
+            // 5. compute the equivalent stiffness on the rigid rotation of control point (apply DJt on rigid at fixed forces on spline)
+            // -compute the equivalent forces on the spline control point (apply Jt on spline map)
+
+            Vec3 F0, F1, F2, F3;
+            computeJtSpline(childF, P0,P1,P2,P3, F0, F1, F2, F3);
+
+
+
+            Mat3 F0_mat, F1_mat, F2_mat, F3_mat;
+            createCrossMatrix(F0, F0_mat);
+            createCrossMatrix(F1, F1_mat);
+            createCrossMatrix(F2, F2_mat);
+            createCrossMatrix(F3, F3_mat);
+
+
+            Vec3 F0k = F0_mat*Lev00_mat*Dx_DOF0.getVOrientation()+ F1_mat*Lev01_mat*Dx_DOF0.getVOrientation();
+            Vec3 F1k = F2_mat*Lev12_mat*Dx_DOF1.getVOrientation()+ F3_mat*Lev13_mat*Dx_DOF1.getVOrientation();
+
+
+
+
+            /* debug
+            std::cout<< "F0k ="<<F0k<< " rotDOF0 = "<<Dx_DOF0.getVOrientation()<<std::endl;
+            std::cout<< "F1k ="<<F1k<< " rotDOF1 = "<<Dx_DOF1.getVOrientation()<<std::endl;
+            */
+
+
+            F_dof0.getVOrientation()-=F0k*kfactor;
+            F_dof1.getVOrientation()-=F1k*kfactor;
+
+            parentForce[IdxNode0]+=F_dof0;
+            parentForce[IdxNode1]+=F_dof1;
+
+        }
+    }
+
+
+}
+
+template <class TIn, class TOut>
+void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams, core::ConstMultiVecDerivId childForceId )
+{
+
+    if(this->f_printLog.getValue() ){
+        std::cout<<" entering updateK ..........."<<std::endl;
+    }
+    const unsigned& geometricStiffness = d_geometricStiffness.getValue();
+    if( !geometricStiffness ) { K_geom.resize(0,0); return; }
+    //helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[(const core::State<TOut>*)this->getToModels()[0]].read() );
+
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const InVecCoord& x_in = dataInX.getValue();
+
+    //const VecDeriv& childForce = this->getToModel()->readForces().ref();
+    helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[this->toModel.get(mparams)].read() );
+
+    unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
+
+    if(this->f_printLog.getValue() ){
+        std::cout<<"********updateK*********\n childForce="<<childForce<<"\n*************"<<std::endl;
+    }
+    K_geom.resize(Nin*x_in.size(), Nin*x_in.size());
+    for (unsigned int i=0; i<s; i++)
+    {
+        // force in compression (>0) can lead to negative eigen values in geometric stiffness
+        // this results in a undefinite implicit matrix that causes instabilies
+        // if stabilized GS (geometricStiffness==2) -> keep only force in extension
+        if( childForce[i][0] < 0 || geometricStiffness==1 )
+        {
+
+            if(this->f_printLog.getValue() ){
+                std::cout<<" step1 ...........  childForce[i][0] = "<<childForce[i][0]<<std::endl;
+            }
+
+            //1. get the indices of the Dofs of the beam a
+            unsigned int IdxNode[2];;
+            l_adaptativebeamInterpolation->getNodeIndices(i,IdxNode[0],IdxNode[1]);
+
+            //2. get the force on the mapped dof
+            Real childF = childForce[i][0];
+
+            //3. get the spline points
+            Vec<3, InReal> P0,P1,P2,P3;
+            l_adaptativebeamInterpolation->getSplinePoints(i, x_in , P0,  P1, P2, P3);
+
+            ////////////////////////////
+            //4. compute the equivalent stiffness on the spline control point (apply DJt on spline map)
+            Mat<4,4,Mat3> K;
+            computeDJtSpline(childF, P0,P1,P2,P3, K);
+
+            //- K must be transfered from the control points to the DOFs
+            //  - get the transformation of the DOFs
+            Transform DOF0Global_H_local0, DOF1Global_H_local1;
+            l_adaptativebeamInterpolation->getDOFtoLocalTransformInGlobalFrame(i, DOF0Global_H_local0, DOF1Global_H_local1, x_in);
+
+            // - create a matrix of the lever in the global frame
+            Real L = l_adaptativebeamInterpolation->getLength(i);
+            // - rotate the levers in the global frame
+            Vec3 lev(-L/3.0,0.0,0.0);
+            Vec3 Lev00_global = -DOF0Global_H_local0.getOrigin();
+            Vec3 Lev01_global = DOF0Global_H_local0.getOrientation().rotate(lev) - DOF0Global_H_local0.getOrigin();
+            lev[0]=L/3;
+            Vec3 Lev12_global = DOF1Global_H_local1.getOrientation().rotate(lev) - DOF1Global_H_local1.getOrigin();
+            Vec3 Lev13_global = -DOF1Global_H_local1.getOrigin();
+
+            // create matrices:
+            Mat3 Lev00_mat, Lev01_mat, Lev12_mat,Lev13_mat ;
+            createCrossMatrix(Lev01_global, Lev01_mat);
+            createCrossMatrix(Lev12_global, Lev12_mat);
+            createCrossMatrix(Lev00_global, Lev00_mat);
+            createCrossMatrix(Lev13_global, Lev13_mat);
+
+
+
+            //////////// => NEED TO CHANGE FOR MATRICES  ///////////////////
+            //  Matrix SplineP_J_DOFs:
+            //_        _   _  _         _                 _   _    _
+            //|  dP[0] |   |  |I   Lev00 |                 |  | DX0 |
+            //|        |   |  |          |                 |  |     |
+            //|  dP[1] |   |  |I   Lev01 |                 |  | DT0 |
+            //|        | = |  -          -   _         _   |  |     |
+            //|  dP[2] |   |                 |I   Lev12 |  |  | DX1 |
+            //|        |   |                 |          |  |  |     |
+            //|  dP[3] |   |                 |I   Lev13 |  |  | DT1 |
+            // -      -     -                             -    -   -
+
+            // dF[i] += K[i][j] dP[j] (* kfactor)
+
+            // F_DOF  = (SplinePoint_J_DOFs)^T * [dF[0]    dF[1]  dF[2]  dF[2] ]^T
+
+            Mat<4,4,Mat3> SplineP_J_DOFs;
+            SplineP_J_DOFs[0][0].identity(); SplineP_J_DOFs[0][1] = Lev00_mat; SplineP_J_DOFs[0][2].clear(); SplineP_J_DOFs[0][3].clear();
+            SplineP_J_DOFs[1][0].identity(); SplineP_J_DOFs[1][1] = Lev01_mat; SplineP_J_DOFs[1][2].clear(); SplineP_J_DOFs[1][3].clear();
+            SplineP_J_DOFs[2][0].clear(); SplineP_J_DOFs[2][1].clear(); SplineP_J_DOFs[2][2].identity(); SplineP_J_DOFs[2][3] = Lev12_mat;
+            SplineP_J_DOFs[3][0].clear(); SplineP_J_DOFs[3][1].clear(); SplineP_J_DOFs[3][2].identity(); SplineP_J_DOFs[3][3] = Lev13_mat;
+
+
+            Mat<4,4,Mat3> Result;
+            for (unsigned int l=0; l<4;l++)// block lines
+            {
+                for (unsigned int c=0; c<4;c++) // block columns
+                {
+                    Result[l][c].clear();
+                    for (unsigned int j=0; j<4;j++)
+                    {
+                        for (unsigned int k=0; k<4;k++)
+                        {
+                            Result[l][c] += SplineP_J_DOFs[j][l].transposed() * K[j][k] * SplineP_J_DOFs[k][c];
+                        }
+                    }
+
+                }
+            }
+
+
+
+
+
+            ////////////////////////////
+           // 5. compute the equivalent stiffness on the rigid rotation of control point (apply DJt on rigid at fixed forces on spline)
+           // -compute the equivalent forces on the spline control point (apply Jt on spline map)
+
+           Vec3 F0, F1, F2, F3;
+           computeJtSpline(childF, P0,P1,P2,P3, F0, F1, F2, F3);
+           Mat3 F0_mat, F1_mat, F2_mat, F3_mat;
+           createCrossMatrix(F0, F0_mat);
+           createCrossMatrix(F1, F1_mat);
+           createCrossMatrix(F2, F2_mat);
+           createCrossMatrix(F3, F3_mat);
+
+
+
+
+           // force the symmetry
+            /*
+          Mat3 test1, test3;
+           test1= (F0_mat*Lev00_mat+F1_mat*Lev01_mat);
+           std::cout<<"^^^^$$$$$$$$$$$$$$$$$^^^^\n test1 ="<<test1<< "  symetrized  = " <<(test1+test1.transposed())*0.5<<std::endl;
+           Result[1][1] -= (test1+test1.transposed())*0.5;
+           test3 = (F2_mat*Lev12_mat+F3_mat*Lev13_mat);
+           Result[3][3] -= (test3+test3.transposed())*0.5;
+
+
+
+       // real derivation
+           Result[1][1] -= (F0_mat*Lev00_mat+F1_mat*Lev01_mat);
+           Result[3][3] -= (F2_mat*Lev12_mat+F3_mat*Lev13_mat);
+
+*/
+           ////////////////////////////
+          // 6. put in matrix K_geom
+
+
+           for (unsigned j=0; j<2; j++)
+           {
+
+               for (unsigned int k=0; k<2;k++)
+               {
+                   for(unsigned int l=0; l<3;l++)
+                   {
+                       for(unsigned int c=0; c<3;c++)
+                       {
+
+                           // translation translation
+                           K_geom.add(Nin*IdxNode[j]+l  , Nin*IdxNode[k]+c  , Result[2*j  ][2*k  ][l][c]);
+                           // translation rotation
+                           K_geom.add(Nin*IdxNode[j]+l  , Nin*IdxNode[k]+c+3, Result[2*j  ][2*k+1][l][c]);
+                           // rotation translation
+                           K_geom.add(Nin*IdxNode[j]+l+3, Nin*IdxNode[k]+c  , Result[2*j+1][2*k  ][l][c]);
+                           // rotation rotation
+                           K_geom.add(Nin*IdxNode[j]+l+3, Nin*IdxNode[k]+c+3, Result[2*j+1][2*k+1][l][c]);
+                       }
+                   }
+
+               }
+
+           }
+
+
+
+
+
+
+       } // if WE Compute the stiffness on this beam
+   }//iterate on beams
+
+   K_geom.compress();
+}
+
+
+template <class TIn, class TOut>
+const defaulttype::BaseMatrix* BeamLengthMapping<TIn, TOut>::getK()
+{
+    return &K_geom;
+}
 
 
 template <class TIn, class TOut>
@@ -487,6 +903,95 @@ void BeamLengthMapping<TIn, TOut>::computeJtSpline(const Real &f_input, const Ve
     F3 = F_IP1 * a13  + F_IP2 * a23  + F_IP3 * a33  + F_IP4 * a43 ;
 
 }
+
+
+
+
+template <class TIn, class TOut>
+void BeamLengthMapping<TIn, TOut>::computeDJtSpline(const Real &f_input, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3, Mat<4,4,Mat3> &mat)
+{
+    /// In computeDLength, corresponds to a part of the applicaiton of the jacobian
+    /// Here, we compute the transposed of the jacobian
+    /// formula with 4 Gauss Points
+    /// definition of the Gauss points
+
+    static Real A = 2*sqrt(6.0/5.0);
+    static Real x1 = -sqrt((3.0 - A)/7.0 )/2.0+ 0.5;
+    static Real x2 = sqrt((3.0 - A) /7.0 )/2.0+ 0.5;
+    static Real x3 = -sqrt((3.0 + A)/7.0 )/2.0+ 0.5;
+    static Real x4 = sqrt((3.0 + A) /7.0 )/2.0+ 0.5;
+
+    static Real a[][4] ={ {(-3*(1-x1)*(1-x1)), (3-12*x1+9*x1*x1), (6*x1-9*x1*x1), (3*x1*x1)},
+                             {(-3*(1-x2)*(1-x2)), (3-12*x2+9*x2*x2), (6*x2-9*x2*x2), (3*x2*x2)},
+                             {(-3*(1-x3)*(1-x3)), (3-12*x3+9*x3*x3), (6*x3-9*x3*x3), (3*x3*x3)},
+                             {(-3*(1-x4)*(1-x4)), (3-12*x4+9*x4*x4), (6*x4-9*x4*x4), (3*x4*x4)} };
+
+
+
+    static Real B= sqrt(30.0);
+
+
+    Vec3 IP[4];
+
+    IP[0] = P0*a[0][0] + P1*a[0][1] + P2*a[0][2] + P3*a[0][3]; //IP1
+    IP[1] = P0*a[1][0] + P1*a[1][1] + P2*a[1][2] + P3*a[1][3]; //IP2
+    IP[2] = P0*a[2][0] + P1*a[2][1] + P2*a[2][2] + P3*a[2][3]; //IP3
+    IP[3] = P0*a[3][0] + P1*a[3][1] + P2*a[3][2] + P3*a[3][3]; //IP4
+
+
+    // 1 compute the derivatives of these relations:
+    //F_IP[0] = IP[0]*f_input*(18.0 + B)/(72.0*IP[0].norm());
+
+    if(this->f_printLog.getValue() ){
+        std::cout<<"computeDJtSpline :"<<std::endl;
+        for(unsigned int k=0; k<4; k++){
+            for(unsigned int l=0; l<4;l++){
+                std::cout<<" "<<a[k][l];
+            }
+            std::cout<<" "<<std::endl;
+        }
+    }
+
+
+    Mat3 K_IP[4];
+
+    for(unsigned int k=0; k<4; k++){
+        K_IP[k].clear();
+        Vec3 n = IP[k]/IP[k].norm();
+        for (unsigned int i =0; i<3; i++){
+            for (unsigned int j=0; j<3; j++){
+
+                if( i==j )
+                    K_IP[k][i][j] = 1.0 - n[i]*n[j];
+                else
+                    K_IP[k][i][j] =    - n[i]*n[j];
+            }
+        }
+
+        if(k<2)
+            K_IP[k] *= f_input*(18.0 + B)/(72.0*IP[k].norm());
+        else
+            K_IP[k] *= f_input*(18.0 - B)/(72.0*IP[k].norm());
+
+    }
+
+    for(unsigned int k=0; k<4; k++){
+
+        // 2 apply the same linear relationship:
+        //    F0 = F_IP0 * a00  + F_IP1 * a10  + F_IP2 * a20  + F_IP3 * a30 ;
+
+        for(unsigned int l=0; l<4;l++){
+            mat[k][l].clear();
+
+            for(unsigned int m=0; m<4;m++){
+                mat[k][l] +=  K_IP[m]* a[m][k] * a[m][l];  // A^T * K * A
+            }
+        }
+
+    }
+}
+
+
 
 
 template <class TIn, class TOut>
