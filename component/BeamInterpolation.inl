@@ -256,14 +256,38 @@ void BeamInterpolation<DataTypes>::bwdInit()
         const unsigned int edgeListSize = d_edgeList.getValue().size();
         unsigned int nd0Id=0, nd1Id=0;
 
+
         for (unsigned int i = 0; i < edgeListSize; i++)
         {
+
+
             getNodeIndices(i, nd0Id, nd1Id);
 
-            Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
+            if(this->d_dofsAndBeamsAligned.getValue())
+            {
+                Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
+                lengthList.push_back(beam_segment.norm());
+            }
+            else
+            {
+                Transform global_H_local0, global_H_local1;
+                computeTransform2(i,  global_H_local0,  global_H_local1, statePos.ref()) ;
+                Vec3 beam_segment = global_H_local1.getOrigin() -  global_H_local0.getOrigin();
+                lengthList.push_back(beam_segment.norm());
 
-            lengthList.push_back(beam_segment.norm());
+            }
+
+
+            Vec3 P0,P1,P2,P3;
+             getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
+
+
+            Real ActualLength;
+            computeActualLength(ActualLength,P0,P1,P2,P3);
+
+            lengthList[i]=ActualLength;
         }
+
 
         d_lengthList.endEdit();
     }
@@ -781,7 +805,7 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
         return;
     }
 
-    /// << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
+    //std::cout << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
     const Real& _L = d_lengthList.getValue()[edgeInList];
 
     P0=global_H_local0.getOrigin();
