@@ -56,9 +56,10 @@ class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
     AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) :
-        ConstraintResolution(1)
+        ConstraintResolution()
         ,m_initF(initF), m_active(active)
     {
+        nbLines=1;
     }
     virtual void init(int line, double** w, double* force);
     virtual void resolution(int line, double** w, double* d, double* force);

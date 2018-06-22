@@ -62,7 +62,7 @@ class ImplicitSurfaceAdaptiveConstraintResolution : public ConstraintResolution
 {
 public:
     ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, WireBeamInterpolation<DataTypes>* wireInterpol)
-        : ConstraintResolution(3)
+        : ConstraintResolution(nbLines=3)
         , m_wireInterpolation(wireInterpol)
         , m_mu(frictionCoef)
         , m_line(line)
