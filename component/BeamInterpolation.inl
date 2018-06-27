@@ -259,14 +259,48 @@ void BeamInterpolation<DataTypes>::bwdInit()
         for (unsigned int i = 0; i < edgeListSize; i++)
         {
             getNodeIndices(i, nd0Id, nd1Id);
+			//// Copute the distance between beam nodes to obtain a first value for the beam length
+			// Indeed the function "computeActualLength" needs a first approximation of this length
 
-            Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
+			getNodeIndices(i, nd0Id, nd1Id);
 
-            lengthList.push_back(beam_segment.norm());
-        }
+			if (this->d_dofsAndBeamsAligned.getValue())
+			{
+				//  when the dof and the beams are aligned it means that we can take the distance between nodes:
+				Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
+				lengthList.push_back(beam_segment.norm());
+			}
+			else
+			{
+				// if not aligned, we need to account for the transformation between node and dof:
+				// this transforamtion is given by global_H_local0 for node 0 (and dof0)
+				// and global_H_local1 for node 1 (and dof1)
+				Transform global_H_local0, global_H_local1;
+				computeTransform2(i, global_H_local0, global_H_local1, statePos.ref());
+				Vec3 beam_segment = global_H_local1.getOrigin() - global_H_local0.getOrigin();
+				lengthList.push_back(beam_segment.norm());
 
-        d_lengthList.endEdit();
-    }
+			}
+
+
+			// finding the real length can not be done in one step
+			// we do it in 3 iterations
+			for (unsigned it = 0; it<3; it++) {
+				// now that we have an approximation of the length, we can estimate the position of the spline control point;
+				Vec3 P0, P1, P2, P3;
+				getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
+
+				// and we can compute more precisely the length
+				Real ActualLength;
+				computeActualLength(ActualLength, P0, P1, P2, P3);
+				lengthList[i] = ActualLength;
+			}
+
+		}
+
+
+		d_lengthList.endEdit();
+	}
 
     if(!verifyTopology())
     {
