@@ -48,7 +48,7 @@
 #include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/helper/gl/template.h>
-#include <sofa/helper/system/glut.h>
+//#include <sofa/helper/system/glut.h>
 
 #include "WireRestShape.h"
 
@@ -498,7 +498,46 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
     //Depending on the position of the beam, determine the Young modulus
     if(x_curv <= this->d_straightLength.getValue())
     {
+        double varyingYoungModulus = _E1*(d_straightLength.getValue()-x_curv)/d_straightLength.getValue() + _E1/20.0;
+
         youngModulus = _E1;
+        msg_warning() << "youngModulus " <<  youngModulus;
+        msg_warning() << "varyingYoungModulus " <<  varyingYoungModulus;
+        // Electrode array parameters
+        double softTipLength = 0.3;
+        double lengthElectrode = 0.5;
+        double lengthSilicone = 0.7;
+        double arrayLength = 25;
+        double lengthSingleElectrodeAndSiliconeSection = lengthElectrode+lengthSilicone;
+        double lengthFromTip = d_straightLength.getValue()-x_curv;
+        msg_warning() << "x_curv is : " << x_curv;
+        msg_warning() << "lengthFromTip is : " << lengthFromTip;
+        if (lengthFromTip > arrayLength) // longer than array itself so make it quasi-rigid to mimic surgeon pushing
+        {
+            youngModulus = _E1*1000;
+        }
+        else if (lengthFromTip > softTipLength) // main body of the array
+        {
+            double caracLength = (lengthFromTip - softTipLength) - floor((lengthFromTip - softTipLength)/lengthSingleElectrodeAndSiliconeSection)*lengthSingleElectrodeAndSiliconeSection;
+            if (caracLength<0.5) // we are at an electrode
+            {
+                youngModulus = _E1*100;
+                msg_warning() << "RIGID: " << x_curv;
+                msg_warning() << "youngModulus: " << youngModulus;
+
+            }
+            else // we are at a silicone section
+            {
+                youngModulus = varyingYoungModulus;
+                msg_warning() << "SOFT: " << x_curv;
+                msg_warning() << "youngModulus: " << youngModulus;
+
+            }
+        }     
+        else  // this is the very tip of the array
+        {
+           youngModulus = varyingYoungModulus;
+        }
     }
     else
     {

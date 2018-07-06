@@ -146,7 +146,10 @@ public:
 
     virtual void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson)
     {
+        msg_warning() << "beamId : " << beamId;
+        msg_warning() << "x_curv before call to gatAbsCurv : " << x_curv;
         this->getAbsCurvXFromBeam(beamId, x_curv);
+        msg_warning() << "x_curv after call to gatAbsCurv : " << x_curv;
         this->m_restShape->getYoungModulusAtX(x_curv, youngModulus, cPoisson);
     }
 

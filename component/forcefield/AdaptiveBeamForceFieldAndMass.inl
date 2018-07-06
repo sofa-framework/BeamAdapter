@@ -155,7 +155,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
 
     ///Get the curvilinear abscissa of the extremity of the beam
     l_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
-
+    msg_warning() << "---------------  Beam number " << beam;
+    msg_warning() << "YoungModulus : " << _E;
     /// material parameters
     Real _G;
     _G=_E/(2.0*(1.0+_nu));
@@ -546,12 +547,14 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ///* Calculer la matrice "locale"
     ///* Calculer la force exercée par chaque beam
     ///* Calculer la force exercée par la gravitée
+    msg_warning() << "---------------  numBeams: " << numBeams;
     for (unsigned int b=0; b<numBeams; b++)
     {
         ///find the indices of the nodes
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
-
+        msg_warning() << "getNodeIndices " << node0Idx;
+        msg_warning() << "getNodeIndices " << node1Idx;
         ///find the beamMatrices:
         BeamLocalMatrices  *beamMatrices = &m_localBeamMatrices[b]  ;//new BeamLocalMatrices();
 
