@@ -224,8 +224,8 @@ void WireRestShape<DataTypes>::init()
 
 
     //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    if(!edge2QuadMap)
-        msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
+    //if(!edge2QuadMap)
+    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
 
 
     ////////////////////////////////////////////////////////
