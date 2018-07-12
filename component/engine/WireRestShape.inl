@@ -56,6 +56,9 @@
 
 #define EPSILON 0.0000000001
 #define VERIF 1
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace sofa
 {
