@@ -54,9 +54,8 @@ namespace _adaptiveBeamSlidingConstraint_
 
 AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
     : ConstraintResolution(3)
-    , m_slidingDisp(sliding)
+     ,m_slidingDisp(sliding)
 {
-
 }
 
 void AdaptiveBeamSlidingConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
