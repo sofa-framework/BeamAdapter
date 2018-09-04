@@ -49,13 +49,13 @@ struct AdaptiveBeamForceFieldAndMassTest : public Sofa_test<>
         Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
 
         ASSERT_NE(root.get(), nullptr);
-        MechanicalObject<Rigid3>* mechanicalObject = nullptr;
+        MechanicalObject<defaulttype::Rigid3dTypes>* mechanicalObject = nullptr;
         root->getTreeObject(mechanicalObject);
 
         ASSERT_NE(mechanicalObject, nullptr);
         EXPECT_TRUE(mechanicalObject->getName() == "DOFs") ;
 
-        AdaptiveBeamForceFieldAndMass<Rigid3>* beamForceFieldMass  = nullptr;
+        AdaptiveBeamForceFieldAndMass<defaulttype::Rigid3dTypes>* beamForceFieldMass  = nullptr;
 
         root->getTreeObject(beamForceFieldMass);
 
