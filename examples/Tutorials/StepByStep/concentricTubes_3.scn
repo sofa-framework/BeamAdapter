@@ -5,7 +5,7 @@
   
  	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
 	
-	<GenericConstraintSolver tolerance="1e-6"/>
+	<GenericConstraintSolver maxIterations='1000' tolerance="1e-6"/>
 	<FreeMotionAnimationLoop/>
 	
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
@@ -18,7 +18,7 @@
 <!-- 		<MeshObjLoader filename="tube.obj"/> -->
 		
 		<Node name="tube_0">
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="1.54" straightLength="0" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -31,7 +31,7 @@
 		</Node>	
 		
 		<Node name="tube_1">
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="3.08" straightLength="1.54" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -66,7 +66,7 @@
 		
 		<LinearSolverConstraintCorrection printLog="false" />
 		<FixedConstraint name="FixedConstraint" indices="0" />
-        <RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="../startPos/startPosMO" external_points="0" />
+        <RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="@../startPos/startPosMO" external_points="0" />
         
 		
 		<Node name="VisuTube_0">

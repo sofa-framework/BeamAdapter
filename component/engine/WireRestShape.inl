@@ -140,11 +140,15 @@ void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
     const char* arg = args->getAttribute("procedural") ;
     if(arg)
     {
-        msg_info() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
+        msg_warning() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
                    << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
 
-        args->removeAttribute("procedural") ;
+        /// As arg is owned by the "procedural" attribute it cannot be removed before
+        /// being copied in the "isAProceduralShape". So please keep the ordering of the
+        /// two following functions.
         args->setAttribute("isAProceduralShape", arg) ;
+        args->removeAttribute("procedural") ;
+
     }
 
     Inherit1::parse(args) ;
