@@ -217,6 +217,7 @@ public:
     void addKToMatrix(const MechanicalParams* mparams,
                       const MultiMatrixAccessor* matrix);
 
+    void computeForce(const VecCoord& x, unsigned int b, Vec6& F0_world, Vec6& F1_world);
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
 
@@ -225,6 +226,7 @@ public:
     Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
+    Data<bool> d_numericStiffness;           ///< if true, compute the stiffness numerically
     DataVecDeriv d_dataG;
 
 protected :

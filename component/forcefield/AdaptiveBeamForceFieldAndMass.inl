@@ -83,6 +83,7 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
+    , d_numericStiffness(initData(&d_numericStiffness, false, "numericStiffness", "compute the stiffness by numerical differentiation"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
@@ -453,6 +454,13 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalParams* mparams,
                                                               const MultiMatrixAccessor* matrix)
 {
+
+    if(d_numericStiffness.getValue()){
+        this->addKToMatrix(mparams, matrix);
+        return;
+    }
+
+
     MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
     Real kFact = (Real)mparams->kFactor();
     Real mFact = (Real)mparams->mFactor();
@@ -517,9 +525,152 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
 }
 
 
+template<class DataTypes>
+void AdaptiveBeamForceFieldAndMass<DataTypes>::computeForce(const VecCoord& x, unsigned int b, Vec6& F0_world, Vec6& F1_world)
+{
+    ///// input:
+    /// x = position
+    /// b = beam number
+
+    ///// output:
+    /// F0_world, F1_world forces on nodes 0 and nodes 1 in world coordinates
+
+    ///find the indices of the nodes
+    unsigned int node0Idx, node1Idx;
+    l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+    /// IF RIGIDIFICATION: no stiffness forces:
+    if(node0Idx==node1Idx)
+    {
+        F0_world.clear();
+        F1_world.clear();
+        return;
+    }
+
+    ///find the beamMatrices:
+    BeamLocalMatrices  *beamMatrices = &m_localBeamMatrices[b]  ;//new BeamLocalMatrices();
+
+    ///////////// new : Calcul du repère local de la beam & des transformations adequates///////////////
+    Transform global_H_local0, global_H_local1;
+
+    /// 1. get the current transform of the beam:
+    l_interpolation->computeTransform2(b, global_H_local0, global_H_local1, x);
+
+    /// 2. Computes the frame of the beam based on the spline interpolation:
+    Transform global_H_local;
+    Real baryX = 0.5;
+    Real L = l_interpolation->getLength(b);
+
+    l_interpolation->InterpolateTransformUsingSpline(global_H_local, baryX, global_H_local0, global_H_local1, L);
+
+    Transform local_H_local0 = global_H_local.inversed()*global_H_local0;
+    Transform local_H_local1 = global_H_local.inversed()*global_H_local1;
+
+    /// 3. Computes the transformation from the DOF (in global frame) to the node's local frame DOF0global_H_Node0local and DOF1global_H_Node1local
+    Transform DOF0_H_local0, DOF1_H_local1;
+    l_interpolation->getDOFtoLocalTransform(b, DOF0_H_local0, DOF1_H_local1);
+
+    /// 4. Computes the adequate transformation
+    Transform global_R_DOF0(Vec3(0,0,0), x[node0Idx].getOrientation());
+    Transform global_R_DOF1(Vec3(0,0,0), x[node1Idx].getOrientation());
+    /// - rotation due to the optional transformation
+    global_H_local0 = global_R_DOF0*DOF0_H_local0;
+    global_H_local1 = global_R_DOF1*DOF1_H_local1;
+
+    Transform DOF0global_H_Node0local, DOF1global_H_Node1local;
+
+    DOF0global_H_Node0local.set(global_H_local0.getOrigin(), global_H_local.getOrientation() );
+    DOF1global_H_Node1local.set(global_H_local1.getOrigin(), global_H_local.getOrientation() );
+
+    //TODO(dmarchal 2017-05-17) Please specify who/when this will be done
+    //TODO A verifier : global_H_local0.getOrigin() == x[node0Idx].getOrientation().rotate(DOF0_H_local0.getOrigin())
+
+    /// compute Adjoint Matrices:
+    beamMatrices->m_A0Ref = DOF0global_H_Node0local.inversed().getAdjointMatrix();
+    beamMatrices->m_A1Ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
+
+    /////////////////////////////////////// COMPUTATION OF THE MASS AND STIFFNESS  MATRIX (LOCAL)
+    /// compute the local mass matrices
+    if(d_computeMass.getValue())
+    {
+        computeMass(b, (*beamMatrices));
+
+    }
+
+
+    /// compute the local stiffness matrices
+    computeStiffness(b, (*beamMatrices));
+
+    /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
+    /// compute the current local displacement of the beam (6dofs)
+    /// 1. get the rest transformation from local to 0 and local to 1
+    Transform local_H_local0_rest,local_H_local1_rest;
+    l_interpolation->getSplineRestTransform(b,local_H_local0_rest, local_H_local1_rest);
+
+    ///2. computes the local displacement of 0 and 1 in frame local:
+    SpatialVector u0 = local_H_local0.CreateSpatialVector() - local_H_local0_rest.CreateSpatialVector();
+    SpatialVector u1 = local_H_local1.CreateSpatialVector() - local_H_local1_rest.CreateSpatialVector();
+
+    /// 3. put the result in a Vec6
+    Vec6 U0local, U1local;
+
+    for (unsigned int i=0; i<3; i++)
+    {
+        U0local[i] = u0.getLinearVelocity()[i];
+        U0local[i+3] = u0.getAngularVelocity()[i];
+        U1local[i] = u1.getLinearVelocity()[i];
+        U1local[i+3] = u1.getAngularVelocity()[i];
+    }
+
+    if(d_reinforceLength.getValue())
+    {
+        Vec3 P0,P1,P2,P3;
+        Real length;
+        Real rest_length = l_interpolation->getLength(b);
+        l_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
+        l_interpolation->computeActualLength(length, P0,P1,P2,P3);
+
+        U0local[0]=(-length+rest_length)/2;
+        U1local[0]=( length-rest_length)/2;
+    }
+
+    if (!d_useShearStressComputation.getValue())
+    {
+        /////////////////// TEST //////////////////////
+        /// test: correction due to spline computation;
+        Vec3 ResultNode0, ResultNode1;
+        l_interpolation->computeStrechAndTwist(b, x, ResultNode0, ResultNode1);
+
+        Real ux0 =-ResultNode0[0] + l_interpolation->getLength(b)/2;
+        Real ux1 = ResultNode1[0] - l_interpolation->getLength(b)/2;
+
+        U0local[0] = ux0;
+        U1local[0] = ux1;
+
+        U0local[3] =-ResultNode0[2];
+        U1local[3] = ResultNode1[2];
+
+        //////////////////////////////////////////////////
+    }
+
+    /// compute the force in the local frame:
+    Vec6 f0 = beamMatrices->m_K00 * U0local + beamMatrices->m_K01 * U1local;
+    Vec6 f1 = beamMatrices->m_K10 * U0local + beamMatrices->m_K11 * U1local;
+
+    /// compute the force in the global frame
+    F0_world = beamMatrices->m_A0Ref.multTranspose(f0);
+    F1_world = beamMatrices->m_A1Ref.multTranspose(f1);
+
+
+
+
+}
+
 /////////////////////////////////////
 /// ForceField Interface
 /////////////////////////////////////
+
+
 
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams* mparams ,
@@ -548,133 +699,25 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ///* Calculer la force exercée par la gravitée
     for (unsigned int b=0; b<numBeams; b++)
     {
-        ///find the indices of the nodes
+
+
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        ///find the beamMatrices:
-        BeamLocalMatrices  *beamMatrices = &m_localBeamMatrices[b]  ;//new BeamLocalMatrices();
-
-        ///////////// new : Calcul du repère local de la beam & des transformations adequates///////////////
-        Transform global_H_local0, global_H_local1;
-
-        /// 1. get the current transform of the beam:
-        dmsg_info() << "in addForce";
-        l_interpolation->computeTransform2(b, global_H_local0, global_H_local1, x);
-
-        /// 2. Computes the frame of the beam based on the spline interpolation:
-        Transform global_H_local;
-        Real baryX = 0.5;
-        Real L = l_interpolation->getLength(b);
-
-        l_interpolation->InterpolateTransformUsingSpline(global_H_local, baryX, global_H_local0, global_H_local1, L);
-
-        Transform local_H_local0 = global_H_local.inversed()*global_H_local0;
-        Transform local_H_local1 = global_H_local.inversed()*global_H_local1;
-
-        /// 3. Computes the transformation from the DOF (in global frame) to the node's local frame DOF0global_H_Node0local and DOF1global_H_Node1local
-        Transform DOF0_H_local0, DOF1_H_local1;
-        l_interpolation->getDOFtoLocalTransform(b, DOF0_H_local0, DOF1_H_local1);
-
-        /// 4. Computes the adequate transformation
-        Transform global_R_DOF0(Vec3(0,0,0), x[node0Idx].getOrientation());
-        Transform global_R_DOF1(Vec3(0,0,0), x[node1Idx].getOrientation());
-        /// - rotation due to the optional transformation
-        global_H_local0 = global_R_DOF0*DOF0_H_local0;
-        global_H_local1 = global_R_DOF1*DOF1_H_local1;
-
-        Transform DOF0global_H_Node0local, DOF1global_H_Node1local;
-
-        DOF0global_H_Node0local.set(global_H_local0.getOrigin(), global_H_local.getOrientation() );
-        DOF1global_H_Node1local.set(global_H_local1.getOrigin(), global_H_local.getOrientation() );
-
-        //TODO(dmarchal 2017-05-17) Please specify who/when this will be done
-        //TODO A verifier : global_H_local0.getOrigin() == x[node0Idx].getOrientation().rotate(DOF0_H_local0.getOrigin())
-
-        /// compute Adjoint Matrices:
-        beamMatrices->m_A0Ref = DOF0global_H_Node0local.inversed().getAdjointMatrix();
-        beamMatrices->m_A1Ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
-
-        /////////////////////////////////////// COMPUTATION OF THE MASS AND STIFFNESS  MATRIX (LOCAL)
-        /// compute the local mass matrices
-        if(d_computeMass.getValue())
-        {
-            computeMass(b, (*beamMatrices));
-
-        }
-
-        /// IF RIGIDIFICATION: no stiffness forces:
         if(node0Idx==node1Idx)
             continue;
 
-        /// compute the local stiffness matrices
-        computeStiffness(b, (*beamMatrices));
+        Vec6 F0_world, F1_world;
+        computeForce(x, b, F0_world, F1_world);
 
-        /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
-        /// compute the current local displacement of the beam (6dofs)
-        /// 1. get the rest transformation from local to 0 and local to 1
-        Transform local_H_local0_rest,local_H_local1_rest;
-        l_interpolation->getSplineRestTransform(b,local_H_local0_rest, local_H_local1_rest);
 
-        ///2. computes the local displacement of 0 and 1 in frame local:
-        SpatialVector u0 = local_H_local0.CreateSpatialVector() - local_H_local0_rest.CreateSpatialVector();
-        SpatialVector u1 = local_H_local1.CreateSpatialVector() - local_H_local1_rest.CreateSpatialVector();
 
-        /// 3. put the result in a Vec6
-        Vec6 U0local, U1local;
-
-        for (unsigned int i=0; i<3; i++)
-        {
-            U0local[i] = u0.getLinearVelocity()[i];
-            U0local[i+3] = u0.getAngularVelocity()[i];
-            U1local[i] = u1.getLinearVelocity()[i];
-            U1local[i+3] = u1.getAngularVelocity()[i];
-        }
-
-        if(d_reinforceLength.getValue())
-        {
-            Vec3 P0,P1,P2,P3;
-            Real length;
-            Real rest_length = l_interpolation->getLength(b);
-            l_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
-            l_interpolation->computeActualLength(length, P0,P1,P2,P3);
-
-            U0local[0]=(-length+rest_length)/2;
-            U1local[0]=( length-rest_length)/2;
-        }
-
-        if (!d_useShearStressComputation.getValue())
-        {
-            /////////////////// TEST //////////////////////
-            /// test: correction due to spline computation;
-            Vec3 ResultNode0, ResultNode1;
-            l_interpolation->computeStrechAndTwist(b, x, ResultNode0, ResultNode1);
-
-            Real ux0 =-ResultNode0[0] + l_interpolation->getLength(b)/2;
-            Real ux1 = ResultNode1[0] - l_interpolation->getLength(b)/2;
-
-            U0local[0] = ux0;
-            U1local[0] = ux1;
-
-            U0local[3] =-ResultNode0[2];
-            U1local[3] = ResultNode1[2];
-
-            //////////////////////////////////////////////////
-        }
-
-        /// compute the force in the local frame:
-        Vec6 f0 = beamMatrices->m_K00 * U0local + beamMatrices->m_K01 * U1local;
-        Vec6 f1 = beamMatrices->m_K10 * U0local + beamMatrices->m_K11 * U1local;
-
-        /// compute the force in the global frame
-        Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
-        Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
         /// Add this force to vector f
         for (unsigned int i=0; i<6; i++)
         {
-            f[node0Idx][i]-=F0_ref[i];
-            f[node1Idx][i]-=F1_ref[i];
+            f[node0Idx][i]-=F0_world[i];
+            f[node1Idx][i]-=F1_world[i];
         }
     }
 
@@ -716,41 +759,145 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalParams* mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
+
     MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(mstate);
     Real k = (Real)mparams->kFactor();
 
+
     unsigned int numBeams = l_interpolation->getNumBeams();
 
-    for (unsigned int b=0; b<numBeams; b++)
+    if (d_numericStiffness.getValue())
     {
-        unsigned int node0Idx, node1Idx;
-        BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[b];
-        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        if(node0Idx==node1Idx)
-            continue;
+        double epsilon=0.001;
 
-        // matrices in global frame
-        Matrix6x6 K00, K01, K10, K11;
-        K00=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref  )  );
-        K01=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref  )  );
-        K10=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref  )  );
-        K11=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref  )  );
+        ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
 
-        int index0[6], index1[6];
-        for (int i=0;i<6;i++)
-            index0[i] = matrixRef.offset+node0Idx*6+i;
-        for (int i=0;i<6;i++)
-            index1[i] = matrixRef.offset+node1Idx*6+i;
+        const VecCoord &xref = x.ref();
 
-        for (int i=0;i<6;i++)
+        VecCoord x_plus_eps ;
+        x_plus_eps = xref;
+
+
+
+
+        VecDeriv eps;
+        eps.clear();
+        eps.resize(6);
+
+
+        for (unsigned int i=0; i<3; i++)
         {
-            for (int j=0;j<6;j++)
+            eps[i].getVCenter()[i]= epsilon;
+            eps[i+3].getVOrientation()[i]=epsilon;
+        }
+
+        for (unsigned int b=0; b<numBeams; b++)
+        {
+            unsigned int node0Idx, node1Idx;
+            l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+            Vec6 F0_world_ref, F1_world_ref;
+
+            computeForce(x.ref(), b, F0_world_ref, F1_world_ref);
+
+            Mat<12, 12, Real> K_numerics;
+
+
+            for (unsigned int i=0; i<12; i++)
             {
-                matrixRef.matrix->add(index0[i], index0[j], - K00(i,j)*k);
-                matrixRef.matrix->add(index0[i], index1[j], - K01(i,j)*k);
-                matrixRef.matrix->add(index1[i], index0[j], - K10(i,j)*k);
-                matrixRef.matrix->add(index1[i], index1[j], - K11(i,j)*k);
+                x_plus_eps[node0Idx] = xref[node0Idx];
+                x_plus_eps[node1Idx] = xref[node1Idx];
+
+                if (i<6){
+                    x_plus_eps[node0Idx]+=eps[i];
+                }
+                else
+                {
+                    x_plus_eps[node1Idx]+=eps[i-6];
+                }
+
+
+
+                Vec6 F0_world_eps, F1_world_eps;
+                computeForce(x_plus_eps, b, F0_world_eps, F1_world_eps);
+
+                for (unsigned int j=0; j<6; j++)
+                {
+                    K_numerics[j][i]=  (F0_world_eps[j] - F0_world_ref[j])/epsilon;
+                    K_numerics[j+6][i]=  (F1_world_eps[j] - F1_world_ref[j])/epsilon;
+                }
+
+
+            }
+
+            int index0[6], index1[6];
+            for (int i=0;i<6;i++)
+                index0[i] = matrixRef.offset+node0Idx*6+i;
+            for (int i=0;i<6;i++)
+                index1[i] = matrixRef.offset+node1Idx*6+i;
+
+
+
+
+            for (int i=0;i<6;i++)
+            {
+                for (int j=0;j<6;j++)
+                {
+                    matrixRef.matrix->add(index0[i], index0[j], (-K_numerics[i  ][j  ] -K_numerics[j  ][i  ])*k/2);
+                    matrixRef.matrix->add(index0[i], index1[j], (-K_numerics[i  ][j+6] -K_numerics[j+6][i  ])*k/2);
+                    matrixRef.matrix->add(index1[i], index0[j], (-K_numerics[i+6][j  ] -K_numerics[j  ][i+6])*k/2);
+                    matrixRef.matrix->add(index1[i], index1[j], (-K_numerics[i+6][j+6] -K_numerics[j+6][i+6])*k/2);
+                }
+            }
+
+
+
+
+
+
+        }
+
+
+    }
+    else
+    {
+
+
+
+
+
+        for (unsigned int b=0; b<numBeams; b++)
+        {
+            unsigned int node0Idx, node1Idx;
+            BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[b];
+            l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+            if(node0Idx==node1Idx)
+                continue;
+
+            // matrices in global frame
+            Matrix6x6 K00, K01, K10, K11;
+            K00=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref  )  );
+            K01=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref  )  );
+            K10=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref  )  );
+            K11=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref  )  );
+
+            int index0[6], index1[6];
+            for (int i=0;i<6;i++)
+                index0[i] = matrixRef.offset+node0Idx*6+i;
+            for (int i=0;i<6;i++)
+                index1[i] = matrixRef.offset+node1Idx*6+i;
+
+            for (int i=0;i<6;i++)
+            {
+                for (int j=0;j<6;j++)
+                {
+                    matrixRef.matrix->add(index0[i], index0[j], - K00(i,j)*k);
+                    matrixRef.matrix->add(index0[i], index1[j], - K01(i,j)*k);
+                    matrixRef.matrix->add(index1[i], index0[j], - K10(i,j)*k);
+                    matrixRef.matrix->add(index1[i], index1[j], - K11(i,j)*k);
+                }
             }
         }
     }
