@@ -57,61 +57,24 @@ namespace controller
 
 template <class DataTypes>
 InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController()
-: m_instrumentsPath(initData(&m_instrumentsPath,"instruments", "List of paths to WireInterpolation components on the scene"))
-, controlledInstrument(initData(&controlledInstrument, 0, "controlledInstrument", "provide the id of the interventional radiology instrument which is under control: press contr + number to change it"))
-, xtip(initData(&xtip,"xtip", "curvilinear abscissa of the tip of each interventional radiology instrument"))
-, rotationInstrument(initData(&rotationInstrument,"rotationInstrument", "angle of rotation for each interventional radiology instrument"))
-, step(initData(&step,(Real)0.1,"step","base step when changing beam length"))
-, angularStep(initData(&angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
-, speed(initData(&speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
-, startingPos(initData(&startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
-, threshold(initData(&threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
-, m_rigidCurvAbs(initData(&m_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
-, motionFilename(initData(&motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
-, indexFirstNode(initData(&indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
+: d_instrumentsPath(initData(&d_instrumentsPath,"instruments", "List of paths to WireInterpolation components on the scene"))
+, d_controlledInstrument(initData(&d_controlledInstrument, 0, "controlledInstrument", "provide the id of the interventional radiology instrument which is under control: press contr + number to change it"))
+, d_xtip(initData(&d_xtip,"xtip", "curvilinear abscissa of the tip of each interventional radiology instrument"))
+, d_rotationInstrument(initData(&d_rotationInstrument,"rotationInstrument", "angle of rotation for each interventional radiology instrument"))
+, d_step(initData(&d_step,(Real)0.1,"step","base step when changing beam length"))
+, d_angularStep(initData(&d_angularStep,(Real)(3.1416/20.0),"angularStep","base step when changing beam angle"))
+, d_speed(initData(&d_speed,(Real)0.0,"speed","continuous beam length increase/decrease"))
+, d_startingPos(initData(&d_startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
+, d_threshold(initData(&d_threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
+, d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
+, d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
+, d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 , d_CurvAbs(initData(&d_CurvAbs,"CurvAbs", "curvi-linear abscissa of the DOFs" ))
 {
-    //edgeSetInNode=true;
-    _fixedConstraint = NULL;
+    m_fixedConstraint = NULL;
     this->dropCall = false;
-    sensored =false;
-
-    /*
-    if (!_instrumentlist.empty())
-    {
-        //m_instrumentsList.resize( _instrumentlist.size() );
-        for(unsigned int id=0;id<_instrumentlist.size();id++)
-        {
-            m_instrumentsList.push_back(_instrumentlist[id]);
-                         sout<<"====================================== "<<id<<". "<<m_instrumentsList[id]->getName()<<"  radius ="<<m_instrumentsList[id]->radius.getValue()<<sendl;
-        }
-    }
-    */
-
-
+    m_sensored =false;
 }
-
-
-/*
-    const helper::vector<std::string>& precondNames = f_preconditioners.getValue();
-    if (precondNames.empty() || !use_precond.getValue()) {
-        c->get<sofa::core::behavior::LinearSolver>(&solvers,BaseContext::SearchDown);
-    } else {
-        for (unsigned int i=0;i<precondNames.size();++i) {
-            sofa::core::behavior::LinearSolver* s = NULL;
-            c->get(s, precondNames[i]);
-            if (s) solvers.push_back(s);
-            else serr << "Solver \"" << precondNames[i] << "\" not found." << sendl;
-        }
-    }
-
-    for (unsigned int i=0;i<solvers.size();++i) {
-            if (solvers[i] && solvers[i] != this) {
-                    this->preconditioners.push_back(solvers[i]);
-            }
-    }
-*/
-
 
 
 template <class DataTypes>
@@ -119,13 +82,11 @@ void InterventionalRadiologyController<DataTypes>::init()
 {
     sofa::core::objectmodel::BaseContext* context = this->getContext();
 
-    //// get the pointers of the WireBeamInterpolations ///////
-
-    const helper::vector<std::string>& instrumentPathList = m_instrumentsPath.getValue();
+    //get the pointers of the WireBeamInterpolations
+    const helper::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
     if (instrumentPathList.empty()) {
         WBeamInterpolation * wbinterpol= context->get< WBeamInterpolation >(core::objectmodel::BaseContext::Local);
         m_instrumentsList.push_back(wbinterpol);
-        // TODO: edit m_instrumentsPath with the name of wbinterpol
     } else {
 
         for (unsigned int i=0;i<instrumentPathList.size();++i)
@@ -135,75 +96,61 @@ void InterventionalRadiologyController<DataTypes>::init()
             if( wbinterpol)
                 m_instrumentsList.push_back(wbinterpol)  ;
             else
-                serr << "Interpolation of instrument "<<instrumentPathList[i]<< "  not found"<<sendl;
+                msg_error() << "Interpolation of instrument "<<instrumentPathList[i]<< "  not found.";
 
         }
     }
 
     if(m_instrumentsList.empty())
-        serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
-
-    /////////////////
+        msg_error()<<"No Beam Interpolation found !!! the component can not work.";
 
 
      activated_Points_buf.clear();
 
-     if(speed.getValue()>0)
+     if(d_speed.getValue()>0)
      {
          FF=true;
          RW=false;
-         sensored = false;
+         m_sensored = false;
      }
-    if (!motionFilename.getValue().empty())
+    if (!d_motionFilename.getValue().empty())
     {
-        FF = true; sensored = true; currentSensorData = 0;
-        loadMotionData(motionFilename.getValue());
+        FF = true; m_sensored = true; currentSensorData = 0;
+        loadMotionData(d_motionFilename.getValue());
     }
-
 
     // get the topology & tools for topology changes
     _topology = context->getMeshTopology();
 
-
-    //context->get< sofa::component::fem::WireBeamInterpolation<DataTypes> > ( &m_instrumentsList, core::objectmodel::BaseContext::SearchDown );
     if (m_instrumentsList.size() == 0)
     {
         if (this->f_printLog.getValue())
         {
-            serr<<" No instrument found ( no WireBeamInterpolation) !"<<sendl;
+            msg_error()<<"No instrument found ( no WireBeamInterpolation).";
         }
         return;
     }
-    sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+    sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
     x_instr_tip.resize(m_instrumentsList.size());
-    /*if (this->f_printLog.getValue())
-    {
-        //sout << "Size of xtip (curvilinear abscissa of the tip of each interventional radiology instrument) is now " << x_instr_tip.size() << sendl;
-        for (unsigned int i =0; i< x_instr_tip.size(); i++)
-            sout << "xtip[" << i << "] = " << x_instr_tip[i] << sendl;
+    this->d_xtip.endEdit();
 
-    }*/
-    this->xtip.endEdit();
-
-    sofa::helper::vector<Real> &angle_Instrument = (*this->rotationInstrument.beginEdit());
+    sofa::helper::vector<Real> &angle_Instrument = (*this->d_rotationInstrument.beginEdit());
     angle_Instrument.resize(m_instrumentsList.size());
-    this->rotationInstrument.endEdit();
+    this->d_rotationInstrument.endEdit();
 
-    if (this->f_printLog.getValue()) sout<<"  +++++++++++++++++ \n Init Interventional Radiology  : instruments found (should be sorted by decreasing radius)"<<sendl;
     for(unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
         if (this->f_printLog.getValue())  sout<<" "<<i<<". "<<m_instrumentsList[i]->getName()<<"  radius ="<<m_instrumentsList[i]->d_radius.getValue()<<sendl;
         m_instrumentsList[i]->setControlled(true);
         /// \todo : automatically sort by radius
     }
-    //sout<<"  +++++++++++++++++ "<<sendl;
 
-    context->get(_fixedConstraint);
-    if(_fixedConstraint==NULL)
+    context->get(m_fixedConstraint);
+    if(m_fixedConstraint==NULL)
     {
         if (this->f_printLog.getValue())
         {
-            serr<<" No _fixedConstraint found !"<<sendl;
+            msg_error()<<"No fixedConstraint found.";
         }
         /// \todo: dynamically add a fixedConstraint in the node :
     }
@@ -211,7 +158,6 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     ////////// List of the instrument for which a "DROPPED" was proceeed TODO
     this->droppedInstruments.clear();
-
 
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
@@ -231,12 +177,7 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     Inherit::init();
 
-
-    /// \todo : VERIFIER QUE LA TOPOLOGIE EST CELLE D'UN WIRE
-
-
     reinit();
-
 }
 
 template<class DataTypes>
@@ -244,7 +185,7 @@ void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string fi
 {
     if (!sofa::helper::system::DataRepository.findFile(filename))
     {
-        std::cerr << "File " << filename << " not found " << std::endl;
+        msg_error() << "File " << filename << " not found.";
         return;
     }
     std::ifstream file(filename.c_str());
@@ -262,8 +203,6 @@ void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string fi
     }
 
     file.close();
-
-    std::cout << "Motion sensor: " << sensorMotionData.size() << " events recorded" << std::endl;
 }
 
 
@@ -271,22 +210,19 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::bwdInit()
 {
     // assign the starting pos to each point of the Mechanical State //
-    Coord stPos =startingPos.getValue();
+    Coord stPos =d_startingPos.getValue();
     stPos.getOrientation().normalize();
-    startingPos.setValue(stPos);
+    d_startingPos.setValue(stPos);
 
-    //VecCoord& x = *(this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     helper::WriteAccessor<Data<VecCoord> > x = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     for(unsigned int i=0; i<x.size(); i++)
     {
-        x[i] = startingPos.getValue();
+        x[i] = d_startingPos.getValue();
     }
     numControlledNodes = x.size();
 
     applyInterventionalRadiologyController();
     reinit();
-
-
 }
 
 template <class DataTypes>
@@ -298,8 +234,6 @@ void InterventionalRadiologyController<DataTypes>::reinit()
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::computeVertexT()
 {
-    // voir definition dans edgeSetController
-
 }
 
 
@@ -307,43 +241,9 @@ void InterventionalRadiologyController<DataTypes>::computeVertexT()
  * \todo fix the mouse event with better controls
  */
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent * /*mev*/)
+void InterventionalRadiologyController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent * mev)
 {
-//    int PosX = mev->getPosX();
-//    int PosY = mev->getPosY();
-
-
-//    //Translation input
-//    Real PosYcorr = 0.0;
-//    int idy = controlledInstrument.getValue();
-//    sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
-//    if (idy >= (int)x_instr_tip.size()){
-//		if (this->f_printLog.getValue())
-//			serr<<"WARNING controlled Instument num "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<sendl;
-//        idy=0;
-//    }
-////    PosYcorr = -PosY*0.2;
-////    x_instr_tip[idy] += PosYcorr;
-//
-//    if (this->f_printLog.getValue())
-//    {
-//    	sout << "[onMouseEvent] Size of xtip is now " << x_instr_tip.size() << sendl;
-//    	for (unsigned int i =0; i< x_instr_tip.size(); i++)
-//    		sout << "xtip[" << i << "] = " << x_instr_tip[i] << sendl;
-//
-//    }
-//
-//    this->xtip.endEdit();
-
-
-
-    //Rotation input
-//    Real PosXcorr = 0.0;
-//    int idx = controlledInstrument.getValue();
-//    sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
-//    PosXcorr = PosX*0.015;
-//    rot_instrument[idx] += PosXcorr;
-
+    SOFA_UNUSED(mev);
 }
 
 
@@ -357,157 +257,77 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
         case 'D':
             this->dropCall = true;
             break;
-       /* case '9':
-            {
-                if (9 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 9 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(9);
-            }
-            break;
-
-
-        case '8':
-            {
-                if (8 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 8 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(8);
-            }
-            break;
-        case '7':
-            {
-                if (7 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 7 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(7);
-            }
-            break;
-        case '6':
-            {
-                if (6 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 6 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(6);
-            }
-            break;
-
-
-        case '5':
-            {
-                if (5 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 5 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(5);
-            }
-            break;
-        case '4':
-            {
-                if (4 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 4 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(4);
-            }
-            break;
-        case '3':
-            {
-                if (3 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 3 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
-                }
-                else
-                    this->controlledInstrument.setValue(3);
-            }
-            break;
-
-            */
-
 
         case '2':
             {
                 if (2 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 2 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                    msg_warning()<<"Controlled Instument num 2 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id";
                 }
                 else
-                    this->controlledInstrument.setValue(2);
+                    this->d_controlledInstrument.setValue(2);
             }
             break;
 
         case '1':
             {
                 if (1 >= (int)m_instrumentsList.size() && this->f_printLog.getValue() ){
-                    serr<<"WARNING controlled Instument num 1 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id"<<sendl;
+                    msg_warning()<<"Controlled Instument num 1 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id";
                 }
                 else
-                    this->controlledInstrument.setValue(1);
+                    this->d_controlledInstrument.setValue(1);
             }
             break;
 
         case '0':
-            this->controlledInstrument.setValue(0);
+            this->d_controlledInstrument.setValue(0);
             break;
 
         case 20: // droite = 20
             {
 
-                int id = controlledInstrument.getValue();
-                sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
-                rot_instrument[id] += angularStep.getValue();
-                this->rotationInstrument.endEdit();
+                int id = d_controlledInstrument.getValue();
+                sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+                rot_instrument[id] += d_angularStep.getValue();
+                this->d_rotationInstrument.endEdit();
 
             }
             break;
         case 18: // gauche = 18
             {
 
-                int id = controlledInstrument.getValue();
-                sofa::helper::vector<Real> &rot_instrument = (*this->rotationInstrument.beginEdit());
-                rot_instrument[id] -= angularStep.getValue();
-                this->rotationInstrument.endEdit();
+                int id = d_controlledInstrument.getValue();
+                sofa::helper::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+                rot_instrument[id] -= d_angularStep.getValue();
+                this->d_rotationInstrument.endEdit();
 
             }
             break;
 
         case 19: // fleche haut = 19
             {
-                int id = controlledInstrument.getValue();
-                sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+                int id = d_controlledInstrument.getValue();
+                sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
                 if (id >= (int)x_instr_tip.size()){
-                    serr<<"WARNING controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<sendl;
+                    msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead";
                     id=0;
                 }
-                x_instr_tip[id] += step.getValue();
-                /*for (unsigned int i =0; i<= id; i++)
-                {
-                    x_instr_tip[i] += step.getValue();
-                }
+                x_instr_tip[id] += d_step.getValue();
 
-                for (unsigned int i =0; i< 10; i++)
-                {
-                    serr<<"The id is "<<id<<" ##############################################################"<<sendl;
-                }*/
-
-
-                this->xtip.endEdit();
+                this->d_xtip.endEdit();
             }
             break;
 
         case 21: // bas = 21
             {
-                int id = controlledInstrument.getValue();
-                sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+                int id = d_controlledInstrument.getValue();
+                sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
                 if (id >= (int)x_instr_tip.size()){
-                    serr<<"WARNING controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<sendl;
+                    msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead.";
                     id=0;
                 }
-                x_instr_tip[id] -= step.getValue();
+                x_instr_tip[id] -= d_step.getValue();
 
-                this->xtip.endEdit();
+                this->d_xtip.endEdit();
             }
             break;
 
@@ -540,11 +360,6 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(core::objec
 
 
     }
-    /*if (this->f_printLog.getValue())
-    {
-        std::cout<<" key :"<<kev->getKey()<<" controlledInstrument is "<< this->controlledInstrument.getValue()<<std::endl;
-    }*/
-
 }
 
 
@@ -552,32 +367,22 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
     sofa::core::objectmodel::BaseContext* context = this->getContext();
-    sofa::helper::vector<Real> &x_instr_tip = (*this->xtip.beginEdit());
+    sofa::helper::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
     if(FF || RW)
     {
-        int id = controlledInstrument.getValue();
+        int id = d_controlledInstrument.getValue();
         if (id >= (int)x_instr_tip.size()){
-            serr<<"WARNING controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead"<<sendl;
+            msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead";
             id=0;
         }
         if (FF)
         {
-            if (!sensored)
-                x_instr_tip[id] += speed.getValue() * context->getDt();
-            /*{for (unsigned int i=0;i<=id;i++)
-                {
-                    x_instr_tip[i] += speed.getValue() * context->getDt();
-                }
-                for (unsigned int i=0;i<=id;i++)
-                {
-                    serr<<"Je passe ici ####################################################################"<<sendl;
-                }}*/
+            if (!m_sensored)
+                x_instr_tip[id] += d_speed.getValue() * context->getDt();
         else
             {
-                // x_instr_tip[id] += sensorMotionData[1000 * context->getTime()][1];
                 unsigned int newSensorData = currentSensorData + 1;
 
-                // std::cout << "Current time is " << context->getTime() << std::endl;
                 while( sensorMotionData[newSensorData][0] < context->getTime() )
                 {
                     currentSensorData = newSensorData;
@@ -589,15 +394,13 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
                 }
                 else
                 {
-                    std::cout << "Current data is " << currentSensorData << " // " << sensorMotionData[currentSensorData][1] << std::endl;
                     x_instr_tip[id] += sensorMotionData[currentSensorData][1];
-                    std::cout << "motion is --- " << x_instr_tip[id] << std::endl;
                 }
             }
         }
         if (RW)
         {
-            x_instr_tip[id] -= speed.getValue()* context->getDt();
+            x_instr_tip[id] -= d_speed.getValue()* context->getDt();
             // verif min x :
             if ( x_instr_tip[id] < 0.0)
             {
@@ -609,29 +412,20 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
 
 
     ///////// The tip of the instrument can not be further than its total length
-    ////// \todo => dropp !!
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         if (x_instr_tip[i] > this->m_instrumentsList[i]->getRestTotalLength() )
             x_instr_tip[i] = this->m_instrumentsList[i]->getRestTotalLength();
-    /*if (this->f_printLog.getValue())
-    {
-        sout << "[onBeginAnimationStep] Size of xtip is now " << x_instr_tip.size() << sendl;
-        for (unsigned int i =0; i< x_instr_tip.size(); i++)
-            sout << "xtip[" << i << "] = " << x_instr_tip[i] << sendl;
 
-    }*/
-
-    this->xtip.endEdit();
+    this->d_xtip.endEdit();
 
     applyInterventionalRadiologyController();
-    //VecElementID
 }
 
 
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &previousNumControlledNodes, unsigned int &seg_remove)
 {
-    int ci = (int) controlledInstrument.getValue();
+    int ci = (int) d_controlledInstrument.getValue();
     if ( this->f_printLog.getValue())
         std::cout<<" \n +++++ Drop called on instrument "<<ci<<" \n +++++"<<std::endl;
     Real x_min_out_local= 0.0;
@@ -650,13 +444,13 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
             // on vérifie qu'il s'agit de celui qui est controle
             if( ci ==id_instrument_curvAbs_table[i][0])
             {
-                 xbegin = this->xtip.getValue()[ci] - this->m_instrumentsList[ci]->getRestTotalLength();
+                 xbegin = this->d_xtip.getValue()[ci] - this->m_instrumentsList[ci]->getRestTotalLength();
                  x_min_out_local = nodeCurvAbs[i] - xbegin;
                  break;
             }
             else
             {
-                sout<<" The control instrument is not out, drop is impossible"<<sendl;
+                msg_error()<<" The control instrument is not out, drop is impossible.";
                 return;
             }
         }
@@ -664,7 +458,7 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
 
     if(x_min_out_local<=0.0)
     {
-         sout<<" x_min_out_local <=0.0 The control instrument is not out, drop is impossible"<<sendl;
+         msg_error()<<" x_min_out_local <= 0.0 The control instrument is not out, drop is impossible.";
          return;
     }
 
@@ -674,7 +468,7 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
     Real x_break;
     if( m_instrumentsList[ci]->breaksInTwo(x_min_out_local, x_break, numBeamsNotUnderControlled) )
     {
-        sout<<" BREAKS IN TWO PROCESS ACTIVATED !!!"<<sendl;
+        msg_error()<<"Breaks in two process activated.";
 
         // TODO => ADD POINT  ( coord : DUPLICATE POINT [numNodes - 1 - numBeamsNotUnderControlled] )
         //                    ( renumbering so that it follows the point used for duplication )
@@ -684,20 +478,16 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
         // for now, we simply suppress one more beam !
         numControlledNodes -= (numBeamsNotUnderControlled + 1);
 
-        sofa::helper::vector<Real> &xends = (*this->xtip.beginEdit());
+        sofa::helper::vector<Real> &xends = (*this->d_xtip.beginEdit());
         xends[ci] =  xbegin +  x_break;
-        this->xtip.endEdit();
+        this->d_xtip.endEdit();
     }
     else
         return;
 
-
-
-
-
     // Step3 : on remet à jour les abscisse curviligne des noeuds en virant toutes celles qui correspondent à la partie
     // cassée
-    Real eps=threshold.getValue();
+    Real eps=d_threshold.getValue();
     for (unsigned int i=0; i<nodeCurvAbs.size(); i++)
     {
         if( nodeCurvAbs[i] > (xbegin +  x_break + eps) )
@@ -717,7 +507,6 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                                                                                const sofa::helper::vector<Real> &xbegin, const Real& xend)
 
 {
-
     // Step 1 = put the noticeable Nodes
     double maxAbsLength=0.0;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
@@ -741,14 +530,9 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         }
     }
 
-
-
-
-
-
     // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    const std::vector< Real > *rigidCurvAbs = &m_rigidCurvAbs.getValue();
+    const std::vector< Real > *rigidCurvAbs = &d_rigidCurvAbs.getValue();
     int nb = rigidCurvAbs->size();
 
     bool begin=true;
@@ -763,12 +547,12 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
             {
                 if(begin)
                 {
-                    newCurvAbs.push_back(abs-this->step.getValue());
+                    newCurvAbs.push_back(abs-this->d_step.getValue());
                 }
                 else
                 {
-                    if (abs+this->step.getValue()<maxAbsLength)
-                        newCurvAbs.push_back(abs+this->step.getValue());
+                    if (abs+this->d_step.getValue()<maxAbsLength)
+                        newCurvAbs.push_back(abs+this->d_step.getValue());
                 }
                 begin = !begin;
                 newCurvAbs.push_back(abs);
@@ -778,11 +562,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         }
     }
 
-
-
-
     // Step 2 => add the beams given the sampling parameters
-
     Real x_sampling = 0.0;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
@@ -809,20 +589,12 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                     newCurvAbs.push_back( xP_noticeable_I[j+1] + xbegin[i]  - (k+1) * (1/ratio) );
 
                 }
-
-
                 x_sampling = curvAbs_xP;
-
             }
         }
     }
 
-
     sortCurvAbs(newCurvAbs, id_instrument_table);
-
-    //if (this->f_printLog.getValue())
-            //std::cout<<" noticeable points :["<<newCurvAbs<<"] -   id_instrument_table."
-            //<<id_instrument_table.size() <<"  : "<<id_instrument_table<<std::endl;
 }
 
 
@@ -830,19 +602,13 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollisionControls(sofa::helper::vector<Real> &x_point_list,
                                         sofa::helper::vector<int> &id_instrument_list, sofa::helper::vector<int> &removeEdge)
 {
-
-
     if(id_instrument_list.size() != x_point_list.size())
     {
-                if ( this->f_printLog.getValue() )
-                        serr<<" pb: interventionalRadiologyCollisionControls : the list do not have the same size !!"<<sendl;
+        msg_error()<<"The list do not have the same size";
         return;
     }
 
-
-
-      // we enter the point from the tip to the end of the combined instrument
-
+    // we enter the point from the tip to the end of the combined instrument
     // x_abs_curv provides the value of the curv abs along the combined instrument
     unsigned int node= nodeCurvAbs.size()-1;
     Real x_abs_curv = nodeCurvAbs[node];
@@ -870,10 +636,8 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
             continue;
         }
 
-
-
         // 2. we assign the value of the curv abs for the point and the corresponding instrument
-        Real xtip_first_instru_on_x = this->xtip.getValue()[first_instru_on_x];
+        Real xtip_first_instru_on_x = this->d_xtip.getValue()[first_instru_on_x];
         Real x_begin = xtip_first_instru_on_x - m_instrumentsList[first_instru_on_x]->getRestTotalLength();
         x_point_list[i] = x_abs_curv - x_begin; // provides the "local" curv absc of the point (on the instrument reference)
         id_instrument_list[i] = first_instru_on_x;
@@ -906,22 +670,14 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     }
 
-
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
     {
         if(SegRemove[it]!=0)
-        {
-            if (this->f_printLog.getValue())
-                std::cout<<" ADD point " <<SegRemove[it]<<" in removeEdge list"<<std::endl;
             removeEdge.push_back(SegRemove[it]);
-        }
     }
 
-
-
-
-          // A  way to detect if a collision point is "activated" or not=> look at its curv_abs  and if > 0, it is active
-          // first, we need to compute abs_curv_point
+    // A  way to detect if a collision point is "activated" or not=> look at its curv_abs  and if > 0, it is active
+    // first, we need to compute abs_curv_point
     sofa::helper::vector<Real> abs_curv_point;
     abs_curv_point.clear();
 
@@ -933,7 +689,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
         // x_max for the instrument that is controlled (not dropped part)
         Real x_max_instrument = this->m_instrumentsList[instrument_id]->getRestTotalLength();
 
-        Real x_tip_instrument = xtip.getValue()[instrument_id];
+        Real x_tip_instrument = d_xtip.getValue()[instrument_id];
 
 
         Real x_point= x_point_list[i] - x_max_instrument + x_tip_instrument;
@@ -942,9 +698,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     }
 
-
     // x point < epsilon... it is not activated`
-
     activated_Points_buf.clear();
     activated_Points_buf.push_back(false);
     for (unsigned int i=1; i<abs_curv_point.size(); i++)
@@ -956,12 +710,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
             activated_Points_buf.push_back(false);
         else
             activated_Points_buf.push_back(true);
-
-        //std::cout<<" point "<<i<<" x_point = "<< x_point<< " instrument_id = "<<instrument_id<<" x_max_instrument ="<<x_max_instrument<<"  x_tip_instrument = "<<x_tip_instrument<<std::endl;
-
     }
-
-
 }
 
 
@@ -973,7 +722,7 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
     std::cout<<"  +++++++++++ \n id_instrument_table :"<<std::endl;
 #endif
 // 0. useful for rigidification
-     const std::vector< Real >  *rigidCurvAbs = &m_rigidCurvAbs.getValue();
+     const std::vector< Real >  *rigidCurvAbs = &d_rigidCurvAbs.getValue();
 
     //WARNING REMOVAL : UNUSED variable. Will need to be erased or used by the author of this code
     //unsigned int nbRigidAbs = rigidCurvAbs->size();
@@ -1039,22 +788,13 @@ void InterventionalRadiologyController<DataTypes>::activateBeamListForCollision(
                 m_instrumentsList[ instr0 ]->addCollisionOnBeam(p);
             }
         }
-
     }
-
-
-
-
-
 }
 
 
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyController()
 {
-
-
-
     /////////////// Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
     sofa::helper::vector<Real> newCurvAbs;
 
@@ -1062,32 +802,26 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     unsigned int previousNumControlledNodes = numControlledNodes;
     unsigned int seg_remove = 0;
 
-
     if (this->dropCall)
     {
         processDrop(previousNumControlledNodes, seg_remove);
     }
-
-
-
 
     //// STEP 1
     ////find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
     Real xend;
     sofa::helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
-//    int last_instrument=0; //commented to remove compilation warning
     sofa::helper::vector<Real> xbegin;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
-         xend= this->xtip.getValue()[i];
+         xend= this->d_xtip.getValue()[i];
         Real xb = xend - this->m_instrumentsList[i]->getRestTotalLength();
         xbegin.push_back(xb);
 
         if (xend> totalLengthCombined)
         {
             totalLengthCombined=xend;
-//            last_instrument=i; //commented to remove compilation warning
         }
 
         // clear the present interpolation of the beams
@@ -1105,9 +839,9 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     // if the totalLength is 0, move the first instrument
     if(totalLengthCombined<0.0001)
     {
-        sofa::helper::vector<Real> &x = (*this->xtip.beginEdit());
+        sofa::helper::vector<Real> &x = (*this->d_xtip.beginEdit());
         x[0]=0.0001;
-        this->xtip.endEdit();
+        this->d_xtip.endEdit();
         applyInterventionalRadiologyController();
         return;
     }
@@ -1126,8 +860,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     sofa::helper::AdvancedTimer::stepEnd("step2");
 
 
-
-
     ////STEP 3
        // Re-interpolate the positions and the velocities
     /////////////////////////
@@ -1135,24 +867,15 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     unsigned int nbeam=newCurvAbs.size()-1; // number of simulated beams
     unsigned int nnode=newCurvAbs.size(); // number of simulated nodes
 
-
-
     unsigned int nnode_old= nodeCurvAbs.size(); // previous number of simulated nodes;
-
-    //VecCoord& x = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     VecCoord& x = *datax->beginEdit();
 
     VecCoord xbuf =x;
 
-
-
     sofa::helper::vector<Real> modifiedCurvAbs;
 
-
     this->totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, id_instrument_table);
-    //std::cout<<"*******************\n totalLengthIsChanging \n  newCurvAbs = "<<newCurvAbs<<" \n modifiedCurvAbs = "<<modifiedCurvAbs<<" \n id_instrument_table ="<<id_instrument_table<<" \n***********"<<std::endl;
-
 
     Real xmax_prev = nodeCurvAbs[nodeCurvAbs.size()-1];
 
@@ -1160,16 +883,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     {
         int idP = numControlledNodes-nnode + p;
         Real xabs = modifiedCurvAbs[p];
-        //if (this->f_printLog.getValue())
-            //sout <<" interpolate point at abs "<<xabs<< sendl;
 
         // 2 cases:  TODO : remove first case
             //1. the abs curv is further than the previous state of the instrument
             //2. this is not the case and the node position can be interpolated using previous step positions
-        if(xabs > xmax_prev + threshold.getValue())
+        if(xabs > xmax_prev + d_threshold.getValue())
         {
-            //std::cout<<"case1"<<std::endl;
-
             if (this->f_printLog.getValue()){
                 serr<<"case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
                 serr<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<nodeCurvAbs<<sendl;
@@ -1181,80 +900,56 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         }
         else
         {
-            //std::cout<<"case2"<<std::endl;
             // case 2 (the node position can be interpolated straightfully using previous step positions)
             unsigned int p0=0;
             while(p0<this->nodeCurvAbs.size())
             {
-                if((nodeCurvAbs[p0]+threshold.getValue())>xabs)
+                if((nodeCurvAbs[p0]+d_threshold.getValue())>xabs)
                     break;
                 p0++;
             }
 
             int idP0 =  previousNumControlledNodes + seg_remove - nnode_old + p0 ;
 
-            if(fabs(nodeCurvAbs[p0]-xabs)<threshold.getValue())
+            if(fabs(nodeCurvAbs[p0]-xabs)<d_threshold.getValue())
             {
-
                 x[idP] = xbuf[idP0];
-                //std::cout<<"case2a x["<<idP<<"] = "<<x[idP]<<std::endl;
-
             }
             else
             {
-                //std::cout<<"case2b"<<std::endl;
-
                 // the node must be interpolated using beam interpolation
                     //find the instrument
                 int id = id_instrument_curvAbs_table[p0][0];
                 //find the good beam (TODO: do not work if xbegin of one instrument >0)
                 int b = p0-1;
-                    // test to avoid wrong indices
+                // test to avoid wrong indices
                 if (b<0)
                 {
-                    //std::cout<<"case2bA"<<std::endl;
-                    x[p]=this->startingPos.getValue();
+                    x[p]=this->d_startingPos.getValue();
                 }
                 else
                 {
-                    //std::cout<<"case2bB"<<std::endl;
-                    // the position is interpolated
                     Transform global_H_interpol;
                     Real ratio = (xabs - nodeCurvAbs[b])/ (nodeCurvAbs[p0]-nodeCurvAbs[b]);
-                    unsigned int numBeamNotUnderControl = this->m_instrumentsList[id]->getNumBeamsNotUnderControl();
-                    //if (this->f_printLog.getValue())
-                        //std::cout<<" b= "<<b<<" / numBeamNotUnderControl= "<<numBeamNotUnderControl<<std::endl;
-
-                    //unsigned int beamID = b + numBeamNotUnderControl;
-
                     Transform Global_H_local0(xbuf[idP0-1].getCenter(),xbuf[idP0-1].getOrientation() ), Global_H_local1(xbuf[idP0].getCenter(),xbuf[idP0].getOrientation() );
 
                     Real L = nodeCurvAbs[p0] - nodeCurvAbs[b];
-
 
                     this->m_instrumentsList[id]->InterpolateTransformUsingSpline(global_H_interpol, ratio, Global_H_local0, Global_H_local1 ,L);
 
                     x[idP].getCenter() = global_H_interpol.getOrigin();
                     x[idP].getOrientation() = global_H_interpol.getOrientation();
 
-                    // TODO: interpolate velocity !!
-
-                    //if (this->f_printLog.getValue())
-                        //std::cout<<" le noeud ["<<idP<<"] est interpolé"<<"  x["<<idP<<"]="<<x[idP]<<std::endl;
-
                 }
             }
-
         }
-
     }
     sofa::helper::AdvancedTimer::stepEnd("step3");
 
 
- ////STEP 4
- // Assign the beams
- /////////////////////////
-    //const sofa::helper::vector<sofa::core::topology::BaseMeshTopology::Edge>* edgeTopo = this->_topology->getEdges();
+    ////STEP 4
+    // Assign the beams
+    /////////////////////////
     // TODO: verifier que les edges sont bien "ordonnés"
     sofa::helper::AdvancedTimer::stepBegin("step4");
     unsigned int numEdges= numControlledNodes-1;
@@ -1264,7 +959,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     {
         if (this->f_printLog.getValue())
         {
-            serr<<" not enough edges in the topology !!"<<sendl;
+            msg_error()<<"Not enough edges in the topology.";
         }
         nbeam=numEdges;
     }
@@ -1276,10 +971,10 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         Real x1 = newCurvAbs[b+1];
         for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         {
-            Real xmax = this->xtip.getValue()[i];
+            Real xmax = this->d_xtip.getValue()[i];
             Real xmin = xbegin[i];
 
-            Real eps= threshold.getValue();
+            Real eps= d_threshold.getValue();
 
             if (x0>(xmin-eps) && x0<(xmax+eps) && x1>(xmin-eps) && x1<(xmax+eps))
             {
@@ -1289,7 +984,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 Real x0_local = x0-xmin;
                 Real x1_local = x1-xmin;
 
-                Real theta = this->rotationInstrument.getValue()[i];
+                Real theta = this->d_rotationInstrument.getValue()[i];
 
                 this->m_instrumentsList[i]->addBeam(eID, length, x0_local, x1_local,theta );
 
@@ -1309,7 +1004,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //2. Fix the node that are "fixed"
     // When there are rigid segments, # of dofs is different than # of edges and beams
-    const std::vector< Real > *rigidCurvAbs = &m_rigidCurvAbs.getValue();
+    const std::vector< Real > *rigidCurvAbs = &d_rigidCurvAbs.getValue();
 
     bool rigid=false;
     unsigned int nbRigidAbs = rigidCurvAbs->size();
@@ -1319,36 +1014,28 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
         for (unsigned int i=0; i<newCurvAbs.size(); i++)
         {
-            //std::cout<<"it "<<(*it)<<std::endl;
             if (newCurvAbs[i] < ((*it)+0.001) && newCurvAbs[i] > ((*it)-0.001)) // node= border of the rigid segment
             {
-                std::cout<<" border dtected"<<std::endl;
-
-                std::cout<<"  -  abs_curv ="<<  newCurvAbs[i]<<" i="<<i<<" rigid="<<rigid<<std::endl;
-
                 if (!rigid)
                 {
                     rigid=true;
-                    _fixedConstraint->addConstraint(first_simulated_node+i);
+                    m_fixedConstraint->addConstraint(first_simulated_node+i);
                 }
                 else
                 {
-                    _fixedConstraint->addConstraint(first_simulated_node+i);
+                    m_fixedConstraint->addConstraint(first_simulated_node+i);
                     rigid=false;
                 }
                 it++;
 
-                std::cout<<" rigidCurvAbs->end() ="<<(*rigidCurvAbs->end())<<" it="<<(*it)<<std::endl;
                 if(it==rigidCurvAbs->end())
                     break;
-
 
             }
             else
             {
-                std::cout<<"abs_curv ="<<  newCurvAbs[i]<<" i="<<i<<" rigid="<<rigid<<std::endl;
                 if(rigid)
-                    _fixedConstraint->addConstraint(first_simulated_node+i);
+                    m_fixedConstraint->addConstraint(first_simulated_node+i);
             }
 
         }
@@ -1362,29 +1049,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     activateBeamListForCollision(newCurvAbs,id_instrument_table);
 
 
-
-
-
-
-
     ///////////// BUF id_instrument_curvAbs_table and nodeCurvAbs
 
     nodeCurvAbs = newCurvAbs;
     id_instrument_curvAbs_table = id_instrument_table;
     sofa::helper::AdvancedTimer::stepEnd("step5");
-
-   /* if (this->f_printLog.getValue()){
-        std::cout<<"id_instrument_curvAbs_table = \n";
-        for (unsigned int i=0; i<id_instrument_curvAbs_table.size();i++)
-            std::cout<<id_instrument_curvAbs_table[i]<<" end control"<<std::endl;
-    }*/
-
-
-
-
-
-
-
 
     datax->endEdit();
 }
@@ -1398,20 +1067,17 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const s
     // we initialize some points at a x_curv ref pos without the motion (computed by DLength)
     // due to the elasticity of the beam, the point will then naturally go the position that reespects the newNodeCurvAbs
 
-    int id = controlledInstrument.getValue();
+    int id = d_controlledInstrument.getValue();
     Real DLength = newNodeCurvAbs[ newNodeCurvAbs.size()-1] - nodeCurvAbs[nodeCurvAbs.size() - 1];
     modifiedNodeCurvAbs = newNodeCurvAbs;
 
-
-
     // we look for the last value in the CurvAbs
-    if(fabs(DLength) > threshold.getValue())
+    if(fabs(DLength) > d_threshold.getValue())
     {
 
         if(newTable[newNodeCurvAbs.size()-1][0] != id)
         {
             //this->f_printLog.setValue(true);
-
         }
 
         unsigned int i=newTable.size()-1;
@@ -1422,7 +1088,7 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const s
             // force modifiedNode to be "locally" sorted
             if(modifiedNodeCurvAbs[i]<modifiedNodeCurvAbs[i-1])
             {
-               modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i-1]+ threshold.getValue();
+               modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i-1]+ d_threshold.getValue();
             }
 
             i--;
@@ -1440,7 +1106,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 {
     sofa::helper::vector<Real> &newCurvAbs =(*this->d_CurvAbs.beginEdit());
 
-    Real eps = threshold.getValue();
+    Real eps = d_threshold.getValue();
 
 
    // here we sort CurvAbs
@@ -1490,7 +1156,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
         sofa::helper::vector<int> listNewNode;
         for (unsigned int id=0; id<m_instrumentsList.size(); id++)
         {
-            Real xend= this->xtip.getValue()[id];
+            Real xend= this->d_xtip.getValue()[id];
             Real xbegin = xend - this->m_instrumentsList[id]->getRestTotalLength();
 
             if ( xbegin<(newCurvAbs[i]+eps) && xend >(newCurvAbs[i]-eps) )
@@ -1502,16 +1168,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 
 
         if(listNewNode.size() ==0)
-        {
-            std::cerr<<" \n \n ERROR: no instrument find for curvAbs"<<newCurvAbs[i]<<std::endl;
-            Real xend= this->xtip.getValue()[0];
-            Real xbegin = xend - this->m_instrumentsList[0]->getRestTotalLength();
-
-            std::cerr<<"Test for instrument [0] xend="<<xend<<"   xbegin"<<xbegin<<std::endl;
-        }
-
-
-
+            msg_error()<<"No instrument find for curvAbs"<<newCurvAbs[i];
 
         id_instrument_table.push_back(listNewNode);
 
@@ -1523,26 +1180,19 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(sofa::helper::vec
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int first_simulated_Node)
 {
-    //VecCoord& xMstate = (*this->getMechanicalState()->read(sofa::core::ConstVecCoordId::position())->getValue());
-    //VecDeriv& vMstate = (*this->getMechanicalState()->getV());
-
-    //std::cout<<" ********** \n first_simulated_Node = "<<first_simulated_Node<<"\n ***********"<<std::endl;
-
     helper::WriteAccessor<Data<VecCoord> > xMstate = *this->getMechanicalState()->write(sofa::core::VecCoordId::position());
     helper::WriteAccessor<Data<VecDeriv> > vMstate = *this->getMechanicalState()->write(sofa::core::VecDerivId::velocity());
 
-
     // set the position to startingPos for all the nodes that are not simulated
     // and add a fixedConstraint
-    _fixedConstraint->clearConstraints();
+    m_fixedConstraint->clearConstraints();
     for(unsigned int i=0; i<first_simulated_Node-1 ; i++)
     {
-        xMstate[i]=startingPos.getValue();
+        xMstate[i]=d_startingPos.getValue();
         vMstate[i].clear();
-        _fixedConstraint->addConstraint(i);
+        m_fixedConstraint->addConstraint(i);
     }
-    indexFirstNode = first_simulated_Node-1 ;
-
+    d_indexFirstNode = first_simulated_Node-1 ;
 }
 
 

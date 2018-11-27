@@ -158,7 +158,7 @@ public:
 
 protected:
     //conditional elements for construction of InterventionalRadiologyController
-    Data< helper::vector< std::string > >  m_instrumentsPath;
+    Data< helper::vector< std::string > >  d_instrumentsPath;
     sofa::helper::vector< WBeamInterpolation * > m_instrumentsList;
 
     ///////////////////////////////// for point and line activer
@@ -180,21 +180,21 @@ protected:
 
     void loadMotionData(std::string filename);
 
-    Data<int> controlledInstrument;
-    Data< sofa::helper::vector<Real> > xtip;
-    Data< sofa::helper::vector<Real> > rotationInstrument;
-    Data<Real> step;
-    Data<Real> angularStep;
-    Data<Real> speed;
-    Data<Coord> startingPos;
-    Data<Real> threshold;
-    Data< helper::vector<Real> > m_rigidCurvAbs;	// Pairs (start - end)
-    Data <std::string> motionFilename;
-    Data<unsigned int> indexFirstNode; // First Node simulated
+    Data<int> d_controlledInstrument;
+    Data< sofa::helper::vector<Real> > d_xtip;
+    Data< sofa::helper::vector<Real> > d_rotationInstrument;
+    Data<Real> d_step;
+    Data<Real> d_angularStep;
+    Data<Real> d_speed;
+    Data<Coord> d_startingPos;
+    Data<Real> d_threshold;
+    Data< helper::vector<Real> > d_rigidCurvAbs;	// Pairs (start - end)
+    Data <std::string> d_motionFilename;
+    Data<unsigned int> d_indexFirstNode; // First Node simulated
     Data< sofa::helper::vector<Real> > d_CurvAbs; //
 
-    bool FF, RW, sensored;
-    sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *_fixedConstraint;
+    bool FF, RW, m_sensored;
+    sofa::component::projectiveconstraintset::FixedConstraint<DataTypes> *m_fixedConstraint;
     sofa::helper::vector<int> droppedInstruments;
 
     sofa::helper::vector<Vec3d> sensorMotionData;

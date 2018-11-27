@@ -126,8 +126,6 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
     // Update bending at benginEvent
     if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
     {
-        Real _spireDiameter = this->d_spireDiameter.getValue();
-
         //Bending activated
         if(m_activeBending.getValue())
         {
