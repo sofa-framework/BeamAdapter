@@ -59,13 +59,12 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SOFA_DECL_CLASS(SutureController)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int SutureControllerClass = core::RegisterObject("")
+int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
 #ifdef SOFA_WITH_FLOAT
 .add< SutureController<Rigid3fTypes> >()
 #endif
 #ifdef SOFA_WITH_DOUBLE
-.add< SutureController<Rigid3dTypes> >()
+.add< SutureController<Rigid3dTypes> >(true)
 #endif
 ;
 
