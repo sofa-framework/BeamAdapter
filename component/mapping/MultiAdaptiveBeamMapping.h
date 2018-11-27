@@ -167,7 +167,7 @@ public:
          * */
 
         assert(m_ircontroller !=NULL && isBarycentricMapping);
-        const vector<vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
+        const helper::vector<helper::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
         int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
         int totalNbEdges = m_ircontroller->getTotalNbEdges();
         int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
