@@ -48,9 +48,6 @@
 #include <sofa/core/objectmodel/KeyreleasedEvent.h>
 #include <sofa/simulation/AnimateBeginEvent.h>
 
-//For angle computation
-#define PI 3.14159265359
-
 namespace sofa
 {
 
@@ -73,7 +70,6 @@ class SteerableCatheter : public WireRestShape<DataTypes>
 public:
     SOFA_CLASS(SOFA_TEMPLATE(SteerableCatheter,DataTypes),SOFA_TEMPLATE(WireRestShape,DataTypes));
 
-    typedef WireRestShape<DataTypes> Inherited;
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
     typedef typename DataTypes::Coord    Coord   ;
@@ -83,15 +79,7 @@ public:
     /*!
      * @brief Default Constructor.
     */
-    SteerableCatheter():
-        m_activeBending( initData(&m_activeBending,(bool)false, "activeBending","Boolean activating the bending of the steerable catheter") ),
-        m_deactiveBending( initData(&m_deactiveBending,(bool)false, "deactiveBending","Boolean deactivating the bending of the steerable catheter") ),
-        m_angleMax( initData(&m_angleMax,(Real) 180.0, "angleMax","Maximum angle that the catheter can reach \n (in degree [0-360])") ),
-        m_flatAngle( initData(&m_flatAngle,(Real) 1.0, "flatAngle","Angle below which we consider the catheter as flat/n (Can't be zero)") ),
-        m_bendingRate( initData(&m_bendingRate,(unsigned int) 10, "bendingRate","Nb of step needed to reach the maximum bending angle /n (the lower, the faster)") )
-    {
-     this->f_listening.setValue(true);
-    }
+    SteerableCatheter();
 
     /*!
     * @brief Default Destructor.
@@ -124,25 +112,35 @@ public:
 
 
     /// Boolean for bending
-    Data<bool> m_activeBending;
+    Data<bool> d_activeBending;
     /// Boolean for unbending
-    Data<bool> m_deactiveBending;
+    Data<bool> d_deactiveBending;
     /// Maximum angle that the catheter can reach
-    Data<Real> m_angleMax;
+    Data<Real> d_angleMax;
     /// Minimum angle considering the catheter as flat
-    Data<Real> m_flatAngle;
+    Data<Real> d_flatAngle;
     /// Rate of bending
-    Data<unsigned int> m_bendingRate;
+    Data<unsigned int> d_bendingRate;
+
+    using Inherit1::f_listening;
 
 protected:
-    Real tipLength;
-    unsigned int bendingRate;
+    Real m_tipLength;
+    Real m_currentAngleRadian;
+    Real m_maxAngleRadian;
+    Real m_maxUnbendingDiameter;
+    Real m_incrementalAngleRadian;
 
-    Real currentAngleRadian;
-    Real maxAngleRadian;
-    Real maxBendingDiameter;
-    Real maxUnbendingDiameter;
-    Real incrementalAngleRadian;
+    ////////////////////////// Inherited attributes ////////////////////////////
+    /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
+    /// Bring inherited attributes and function in the current lookup context.
+    /// otherwise any access to the base::attribute would require
+    /// the "this->" approach.
+    using Inherit1::d_spireDiameter;
+    using Inherit1::d_length;
+    using Inherit1::d_straightLength;
+    ///////////////////////////////////////////////////////////////////////////
+
 };
 
 
