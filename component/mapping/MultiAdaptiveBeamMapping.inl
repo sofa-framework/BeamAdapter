@@ -37,11 +37,6 @@
 #define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
 
 #include "MultiAdaptiveBeamMapping.h"
-#include <sofa/core/behavior/MechanicalState.h>
-#include <string>
-#include <sofa/core/Mapping.inl>
-#include <sofa/core/visual/VisualParams.h>
-
 #include <sofa/simulation/AnimateBeginEvent.h>
 
 
@@ -94,7 +89,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            std::cout<<"apply ";
+            msg_info()<<"apply ";
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->apply(mparams /* PARAMS FIRST */, dOut, dIn);
@@ -108,7 +103,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* 
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            std::cout<<"applyJ ";
+            msg_info() << "applyJ ";
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->applyJ(mparams /* PARAMS FIRST */, dOut, dIn);
@@ -121,7 +116,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            std::cout<<"applyJT ";
+            msg_info() << "applyJT ";
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->applyJT(mparams /* PARAMS FIRST */, dOut, dIn);
@@ -140,8 +135,8 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams*
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            std::cout<<"applyJTT ";
-            m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
+            msg_info() << "applyJTT ";
+            m_subMappingList[subMap]->printIstrumentInfo();
         }
         m_subMappingList[subMap]->applyJT(cparams /* PARAMS FIRST */, dOut, dIn);
     }
@@ -223,9 +218,9 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
                 }
             }
             else if (baseEdge.size() == 1)
-                std::cout<<" ok, the edge is already suppressed"<<std::endl;
+                msg_info()<<" ok, the edge is already suppressed";
             else
-                serr<<" WARNING !! baseEdge = "<<baseEdge<<sendl;
+                msg_error() << " WARNING !! baseEdge = "<<baseEdge;
 
             if (edgeToRemove.size()>0)
             {
@@ -265,7 +260,6 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 {
         if (m_ircontroller==NULL) {
                 ///////// get the Adaptive Interpolation component ///////
-                //std::vector<sofa::core::behavior::LinearSolver*> solvers;
                 core::objectmodel::BaseContext * c = this->getContext();
 
                 const helper::vector<std::string>& interpolName = m_controlerPath.getValue();
@@ -276,9 +270,9 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
                 }
 
                 if(m_ircontroller==NULL)
-                    serr<<" no Beam Interpolation found !!! the component can not work"<<sendl;
+                    msg_error() << " no Beam Interpolation found !!! the component can not work";
                 else
-                    sout<<" interpolation named"<<m_ircontroller->getName()<<" found (for "<<this->getName()<<")"<<sendl;
+                    msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName()<<")";
         }
 
         m_ircontroller->getInstrumentList(m_instrumentList);
@@ -298,12 +292,12 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     this->getContext()->get(_topology);
 
     if(_topology != NULL && this->f_printLog.getValue() )
-        sout<<" FIND topology named "<< _topology->getName()<<sendl;
+        msg_info() << " FIND topology named " << _topology->getName();
 
     this->getContext()->get(_edgeMod);
 
     if (_edgeMod == NULL)
-        serr << "EdgeSetController has no binding EdgeSetTopologyModifier." << sendl;
+        msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier.";
 
     // fill topology :
     _topology->clear();
@@ -323,7 +317,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
         }
     }
 
-    sout<<" aaaaaaaaaaa numSeg found in MultiAdaptiveBeamMapping="<<numSeg<<sendl;
+    msg_info() << "numSeg found in MultiAdaptiveBeamMapping="<< numSeg;
 
 
     // add points
@@ -369,8 +363,62 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::draw(const core::visual::VisualParams
     if (!vparams->displayFlags().getShowMappings()) return;
 }
 
+template <class TIn, class TOut>
+void MultiAdaptiveBeamMapping< TIn, TOut>::setBarycentricMapping()
+{
+    isBarycentricMapping=true;
+    for(unsigned int i=0;i<m_subMappingList.size();i++)
+    {
+        m_subMappingList[i]->setBarycentricMapping();
+    }
+}
 
+template <class TIn, class TOut>
+int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const Vec3& _baryCoord,bool isStraight)
+{
+    int returnId=this->getMechTo()[0]->getSize();
+    this->getMechTo()[0]->resize(returnId+1);
 
+    assert(m_ircontroller !=NULL && isBarycentricMapping);
+    const helper::vector<helper::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
+    int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
+    int totalNbEdges = m_ircontroller->getTotalNbEdges();
+    int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
+    assert(nbUnControlledEdges>=0);
+
+    if (edgeId < (totalNbEdges-nbControlledEdge) )
+    {
+        //if the edge in question is not under control, dont need to compute for collision
+    }
+    else
+    {
+        int controledEdgeId = edgeId-nbUnControlledEdges;
+        const sofa::helper::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
+        sofa::helper::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
+        m_ircontroller->getInstrumentList(m_instrumentsList);
+        Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
+        int idInstrument  = id_instrument_table_on_node[0];
+        for(unsigned int i=1;i<id_instrument_table_on_node.size();i++)
+        {
+            if(radius < m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(controledEdgeId)._r)
+            {
+                radius = m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(controledEdgeId)._r;
+                idInstrument = id_instrument_table_on_node[i];
+            }
+        }
+        m_subMappingList[idInstrument]->addBaryPoint(controledEdgeId,_baryCoord,isStraight);
+        m_subMappingList[idInstrument]->addIdPointSubMap(returnId);
+    }
+    return returnId;
+}
+
+template <class TIn, class TOut>
+void MultiAdaptiveBeamMapping< TIn, TOut>::clear(int size)
+{
+    for(unsigned int i=0;i<m_subMappingList.size();i++)
+        m_subMappingList[i]->clear(size);
+    this->getMechTo()[0]->resize(0);
+}
 
 
 } // namespace mapping
