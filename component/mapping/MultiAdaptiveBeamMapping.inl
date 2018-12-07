@@ -218,9 +218,13 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
                 }
             }
             else if (baseEdge.size() == 1)
+            {
                 msg_info()<<" ok, the edge is already suppressed";
+            }
             else
+            {
                 msg_error() << " WARNING !! baseEdge = "<<baseEdge;
+            }
 
             if (edgeToRemove.size()>0)
             {
