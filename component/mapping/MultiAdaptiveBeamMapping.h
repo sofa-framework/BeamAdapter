@@ -37,17 +37,8 @@
 #define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
 
 #include "../initBeamAdapter.h"
-#include "../WireBeamInterpolation.h"
 #include "../controller/InterventionalRadiologyController.h"
 #include "AdaptiveBeamMapping.h"
-#include <sofa/core/Mapping.h>
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/helper/vector.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
-#include <sofa/core/objectmodel/Event.h>
 
 using namespace sofa::component::controller;
 using namespace sofa::component::fem;
@@ -134,78 +125,27 @@ public:
 
     virtual void draw(const core::visual::VisualParams*);
 
-    void setBarycentricMapping()
-    {
-        isBarycentricMapping=true;
-        for(unsigned int i=0;i<m_subMappingList.size();i++)
-        {
-            m_subMappingList[i]->setBarycentricMapping();
-        }
-    }
+    void setBarycentricMapping();
 
-    int addBaryPoint(const int& edgeId,const Vec3& _baryCoord,bool isStraight)
-    //TODO add parameter label for different cases : unactive, linear, spline
-    {
-        int returnId=this->getMechTo()[0]->getSize();
-        this->getMechTo()[0]->resize(returnId+1);
+    /*
+     * The idea is given an edgeId, how to find out what instrument is on this edge
+     * in order to evaluate the addBaryPoint of the coresponding SubMapping
+     *
+     * --- --- --- --- --- --- --- B === id === === === A
+     *                                |
+     *                              edgeId
+     *
+     * The entire mesh denote the line above,
+     * --- --- denote the edges which are not under control
+     * --- --- denote the edges which are under control
+     *
+     * id_instrument_curvAbs_table contain informations about instruments id on nodes from A to B
+     *
+     * TODO add parameter label for different cases : unactive, linear, spline
+     * */
+    int addBaryPoint(const int& edgeId,const Vec3& _baryCoord,bool isStraight);
 
-        /*
-         * The idea is given an edgeId, how to find out what instrument is on this edge
-         * in order to evaluate the addBaryPoint of the coresponding SubMapping
-         *
-         * --- --- --- --- --- --- --- B === id === === === A
-         *                                |
-         *                              edgeId
-         *
-         * The entire mesh denote the line above,
-         * --- --- denote the edges which are not under control
-         * --- --- denote the edges which are under control
-         *
-         * id_instrument_curvAbs_table contain informations about instruments id on nodes from A to B
-         *
-         *
-         * */
-
-        assert(m_ircontroller !=NULL && isBarycentricMapping);
-        const vector<vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
-        int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
-        int totalNbEdges = m_ircontroller->getTotalNbEdges();
-        int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
-        assert(nbUnControlledEdges>=0);
-
-        if (edgeId < (totalNbEdges-nbControlledEdge) )
-        {
-            //if the edge in question is not under control, dont need to compute for collision
-        }
-        else
-        {
-            int controledEdgeId = edgeId-nbUnControlledEdges;
-            const sofa::helper::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
-            sofa::helper::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
-            m_ircontroller->getInstrumentList(m_instrumentsList);
-            Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
-            int idInstrument  = id_instrument_table_on_node[0];
-            for(unsigned int i=1;i<id_instrument_table_on_node.size();i++)
-            {
-                if(radius < m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(controledEdgeId)._r)
-                {
-                    radius = m_instrumentsList[id_instrument_table_on_node[i]]->getBeamSection(controledEdgeId)._r;
-                    idInstrument = id_instrument_table_on_node[i];
-                }
-            }
-            //idPointMapp=m_subMappingList[idInstrument]->addBaryPoint(edgeId,_baryCoord,isStraight);
-            m_subMappingList[idInstrument]->addBaryPoint(controledEdgeId,_baryCoord,isStraight);
-            m_subMappingList[idInstrument]->addIdPointSubMap(returnId);
-        }
-        return returnId;
-    }
-
-    void clear(int size)
-    {
-        for(unsigned int i=0;i<m_subMappingList.size();i++)
-            m_subMappingList[i]->clear(size);
-        this->getMechTo()[0]->resize(0);
-    }
+    void clear(int size);
 
 
 protected:
