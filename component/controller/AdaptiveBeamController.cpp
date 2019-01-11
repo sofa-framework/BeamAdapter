@@ -54,8 +54,8 @@ namespace controller
 namespace _adaptivebeamcontroller_
 {
 
-using sofa::defaulttype::Rigid3dTypes;
-using sofa::defaulttype::Rigid3fTypes;
+using sofa::defaulttype::Rigid3Types;
+using sofa::defaulttype::Rigid3Types;
 using core::RegisterObject;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////

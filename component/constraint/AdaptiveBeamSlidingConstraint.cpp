@@ -35,8 +35,8 @@ using sofa::core::objectmodel::BaseContext ;
 using sofa::core::objectmodel::BaseObjectDescription ;
 #include "../../utils/deprecatedcomponent.h"
 using sofa::component::DeprecatedComponent;
-using sofa::defaulttype::Rigid3dTypes;
-using sofa::defaulttype::Rigid3fTypes;
+using sofa::defaulttype::Rigid3Types;
+using sofa::defaulttype::Rigid3Types;
 using sofa::core::RegisterObject;
 
 
