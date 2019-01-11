@@ -78,9 +78,7 @@ using core::RegisterObject;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
-
-int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
+static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
                 .add< AdaptiveBeamLengthConstraint<Rigid3Types> >(true) // default template
         
         ;

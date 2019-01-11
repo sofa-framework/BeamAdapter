@@ -143,8 +143,6 @@ public:
 
 // Registering the component
 // see: http://wiki.sofa-framework.org/wiki/ObjectFactory
-SOFA_DECL_CLASS(AdaptiveBeamConstraint)
-
-int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
+static int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
 .add< AdaptiveBeamConstraint >()
 ;

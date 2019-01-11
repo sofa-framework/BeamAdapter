@@ -58,7 +58,7 @@ using namespace sofa::defaulttype;
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+static int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
 .add< SutureController<Rigid3Types> >(true)
 
 ;

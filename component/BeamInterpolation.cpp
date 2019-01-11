@@ -64,7 +64,7 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
+static int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
 .add< BeamInterpolation<Rigid3Types> >()
 ;
 

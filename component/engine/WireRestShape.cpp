@@ -60,7 +60,7 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int WireRestShapeClass = core::RegisterObject("")
+static int WireRestShapeClass = core::RegisterObject("")
 .add< WireRestShape<Rigid3Types> >()
 
 ;

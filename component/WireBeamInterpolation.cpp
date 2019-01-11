@@ -64,7 +64,7 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
+static int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
 .add< WireBeamInterpolation<Rigid3Types> >();
 
 template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;

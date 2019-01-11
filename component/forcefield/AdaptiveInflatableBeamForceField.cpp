@@ -66,7 +66,7 @@ using sofa::defaulttype::Rigid3dTypes;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
+static int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
 .add< AdaptiveInflatableBeamForceField<Rigid3Types> >()
 
 ;

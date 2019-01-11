@@ -59,7 +59,7 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int SteerableCatheterClass = core::RegisterObject("")
+static int SteerableCatheterClass = core::RegisterObject("")
 .add< SteerableCatheter<Rigid3Types> >()
 
 ;

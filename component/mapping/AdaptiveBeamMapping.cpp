@@ -63,7 +63,7 @@ using namespace core::behavior;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Register in the Factory
-int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
 .add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
 .add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >()
 

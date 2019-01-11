@@ -67,7 +67,7 @@ using core::RegisterObject;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamControllerClass = RegisterObject("")
+static int AdaptiveBeamControllerClass = RegisterObject("")
 .add< AdaptiveBeamController<Rigid3Types> >()
 
 ;

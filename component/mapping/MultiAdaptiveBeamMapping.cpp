@@ -58,7 +58,7 @@ using namespace core::behavior;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Register in the Factory
-int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+static int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
 .add< MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types > >()
 
 ;
