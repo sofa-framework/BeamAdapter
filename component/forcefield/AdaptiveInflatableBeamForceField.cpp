@@ -64,24 +64,15 @@ using sofa::defaulttype::Rigid3dTypes;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveInflatableBeamForceField)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveInflatableBeamForceField<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveInflatableBeamForceField<Rigid3dTypes> >()
-#endif
+.add< AdaptiveInflatableBeamForceField<Rigid3Types> >()
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types>;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 } /// _adaptivebeamforcefiedlandmass_

@@ -67,20 +67,12 @@ using namespace sofa::defaulttype;
 SOFA_DECL_CLASS(InterventionalRadiologyController)
 
 int InterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-#ifdef SOFA_WITH_FLOAT
-.add< InterventionalRadiologyController<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< InterventionalRadiologyController<Rigid3dTypes> >(true)
-#endif
+.add< InterventionalRadiologyController<Rigid3Types> >(true)
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
+
 
 } // namespace _interventionalradiologycontroller_
 

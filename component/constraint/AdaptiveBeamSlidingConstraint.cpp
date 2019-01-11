@@ -99,20 +99,12 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
 SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
 
 int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
-        #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamSlidingConstraint<Rigid3fTypes> >()
-        #endif
-        #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamSlidingConstraint<Rigid3dTypes> >()
-        #endif
+                .add< AdaptiveBeamSlidingConstraint<Rigid3Types> >()
+        
         ;
 
-#ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
-#endif
+template class AdaptiveBeamSlidingConstraint<Rigid3Types>;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

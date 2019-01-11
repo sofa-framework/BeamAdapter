@@ -62,24 +62,12 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(WireBeamInterpolation)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
-#ifdef SOFA_WITH_FLOAT
-.add< WireBeamInterpolation<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< WireBeamInterpolation<Rigid3dTypes> >()
-#endif
-;
+.add< WireBeamInterpolation<Rigid3Types> >();
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;
 
 } // namespace _wirebeaminterpolation_
 

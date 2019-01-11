@@ -90,8 +90,7 @@ using sofa::core::behavior::Mass ;
 using sofa::core::MechanicalParams ;
 using sofa::defaulttype::Vec ;
 using sofa::defaulttype::Mat ;
-using sofa::defaulttype::Rigid3dTypes ;
-using sofa::defaulttype::Rigid3fTypes ;
+using sofa::defaulttype::Rigid3Types ;
 using core::objectmodel::Data ;
 using core::topology::BaseMeshTopology;
 using sofa::defaulttype::SolidTypes;
@@ -249,13 +248,9 @@ private:
 };
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
-#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
-#ifdef SOFA_WITH_FLOAT
-extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3fTypes> ;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3dTypes> ;
-#endif
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types> ;
+
 #endif
 
 } /// namespace _AdaptiveInflatableBeamForceField_

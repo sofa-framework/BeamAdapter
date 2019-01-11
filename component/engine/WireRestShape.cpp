@@ -58,24 +58,15 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(WireRestShape)
 
 //TODO(damien 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int WireRestShapeClass = core::RegisterObject("")
-#ifdef SOFA_WITH_FLOAT
-.add< WireRestShape<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< WireRestShape<Rigid3dTypes> >()
-#endif
+.add< WireRestShape<Rigid3Types> >()
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3Types>;
+
 
 } // namespace _wirerestshape_
 

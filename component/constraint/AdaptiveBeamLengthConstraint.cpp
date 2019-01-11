@@ -81,20 +81,12 @@ using core::RegisterObject;
 SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
 
 int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
-        #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
-        #endif
-        #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >(true) // default template
-        #endif
+                .add< AdaptiveBeamLengthConstraint<Rigid3Types> >(true) // default template
+        
         ;
 
-#ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamLengthConstraint<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamLengthConstraint<Rigid3dTypes>;
-#endif
+template class AdaptiveBeamLengthConstraint<Rigid3Types>;
+
 
 } /// namespace _adaptivebeamlengthconstraint_
 

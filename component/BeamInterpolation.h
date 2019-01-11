@@ -41,6 +41,7 @@
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/defaulttype/SolidTypes.h>
+#include <sofa/defaulttype/RigidTypes.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
@@ -67,8 +68,7 @@ using sofa::core::ConstVecCoordId ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::Vec ;
 using sofa::defaulttype::Quat ;
-using sofa::defaulttype::Rigid3dTypes ;
-using sofa::defaulttype::Rigid3fTypes ;
+using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::component::container::MechanicalObject ;
 
@@ -114,12 +114,7 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    /// These vector is related to Bézier nodes
-#ifdef SOFA_WITH_DOUBLE
-    typedef vector<Vec<3, double> > VectorVec3;
-#else
-    typedef vector<Vec<3, float> > VectorVec3;
-#endif
+    typedef vector<Vec<3, Real> > VectorVec3;
 
 public:
     BeamInterpolation() ;
@@ -352,13 +347,8 @@ protected :
     unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_BEAMINTERPOLATION_CPP)
-#ifdef SOFA_WITH_DOUBLE
-extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
-#endif
-#ifdef SOFA_WITH_FLOAT
-extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
-#endif
+#if !defined(SOFA_BEAMINTERPOLATION_CPP)
+extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 #endif
 
 } /// namespace _beaminterpolation_

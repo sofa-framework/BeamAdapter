@@ -948,21 +948,11 @@ int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point
     return nbPoints;
 }
 
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   >;
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes >;
-#endif
-#ifndef SOFA_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping< Rigid3fTypes, Vec3fTypes >;
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3fTypes, Rigid3fTypes >;
-#endif
+template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types   >;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types >;
 
-#ifndef SOFA_FLOAT
-#ifndef SOFA_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping< Rigid3dTypes, Vec3fTypes >;
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes >;
-#endif
-#endif
+
+
 
 
 } /// namespace _adaptivebeammapping_

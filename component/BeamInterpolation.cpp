@@ -62,16 +62,10 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(BeamInterpolation)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
-#ifdef SOFA_WITH_FLOAT
-.add< BeamInterpolation<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< BeamInterpolation<Rigid3dTypes> >()
-#endif
+.add< BeamInterpolation<Rigid3Types> >()
 ;
 
 
@@ -79,12 +73,7 @@ int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Explicit template instanciation of extern template.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 
 } /// namespace _beaminterpolation_
 

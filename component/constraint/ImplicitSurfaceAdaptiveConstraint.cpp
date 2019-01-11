@@ -22,20 +22,12 @@ SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int ImplicitSurfaceAdaptiveConstraintClass = RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
-#ifdef SOFA_WITH_FLOAT
-.add< ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes> >(true)
-#endif
+.add< ImplicitSurfaceAdaptiveConstraint<Rigid3Types> >(true)
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class ImplicitSurfaceAdaptiveConstraint<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class ImplicitSurfaceAdaptiveConstraint<Rigid3dTypes>;
-#endif
+template class ImplicitSurfaceAdaptiveConstraint<Rigid3Types>;
+
 
 #endif  // SOFAEVE
 

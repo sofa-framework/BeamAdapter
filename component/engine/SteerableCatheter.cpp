@@ -57,24 +57,15 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(SteerableCatheter)
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int SteerableCatheterClass = core::RegisterObject("")
-#ifdef SOFA_WITH_FLOAT
-.add< SteerableCatheter<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< SteerableCatheter<Rigid3dTypes> >()
-#endif
+.add< SteerableCatheter<Rigid3Types> >()
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API SteerableCatheter<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API SteerableCatheter<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API SteerableCatheter<Rigid3Types>;
+
 
 
 }// namespace engine

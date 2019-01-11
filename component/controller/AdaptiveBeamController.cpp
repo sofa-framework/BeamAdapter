@@ -65,24 +65,15 @@ using core::RegisterObject;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveBeamController)
 
 //TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 int AdaptiveBeamControllerClass = RegisterObject("")
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamController<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamController<Rigid3dTypes> >()
-#endif
+.add< AdaptiveBeamController<Rigid3Types> >()
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
+
 
 } // namespace _adaptivebeamcontroller_
 
