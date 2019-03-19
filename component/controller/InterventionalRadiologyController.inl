@@ -155,7 +155,10 @@ void InterventionalRadiologyController<DataTypes>::init()
 
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
-    f_listening.setValue(true);
+    if (!f_listening.isSet())
+    {
+        f_listening.setValue(true);
+    }
 
     m_nodeCurvAbs.clear();
     m_idInstrumentCurvAbsTable.clear();
