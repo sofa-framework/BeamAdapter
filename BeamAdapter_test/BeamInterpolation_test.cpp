@@ -79,18 +79,18 @@ struct BeamInterpolationTest : public Sofa_test<>,
 static std::vector<std::vector<std::string>> teststrings ={
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,""
         , "T"
     },
     {
-        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,"<Mesh name='meshSuture' edges='0 1' />"
         , "T"
     },
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        ,"<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,"<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         , "W"
     },
     {
