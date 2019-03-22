@@ -40,40 +40,84 @@ static BeamInterpolation<Rigid3Types>* get_beaminterpolation(PyObject* self)
     return sofa::py::unwrap<BeamInterpolationRigid3>(self);
 }
 
-static PyObject* BeamInterpolation_getInterpolationAt(PyObject * self, PyObject *args)
+
+static PyObject* BeamInterpolation_getValuesAt(PyObject *self, PyObject *args)
 {
+    /// Extract the Sofa type from the self argument.
     BeamInterpolationRigid3* beam = get_beaminterpolation(self);
 
-    PyObject* arg;
-    if (!PyArg_ParseTuple(args, "O", &arg))
-    {
+    /// Extracts the argument from python (type is a string while the other is an array)
+    PyObject* arg {nullptr};
+    PyObject* stype {nullptr};
+    const char* ctype {"current"};
+
+    /// Parse two arguments, the second one is optional.
+    if (!PyArg_ParseTuple(args, "O|O", &arg, &stype))
         return nullptr;
-    }
 
     PyObject *iter = PyObject_GetIter(arg);
     if (!iter)
     {
-        PyErr_SetString(PyExc_RuntimeError, "Expecting an iterable object");
+        PyErr_SetString(PyExc_TypeError, "Expecting an iterable object");
         return nullptr;
     }
 
-    std::vector<size_t> indices;
+    if ( stype != nullptr )
+    {
+        if (PyString_Check(stype))
+        {
+            PyErr_SetString(PyExc_TypeError, "Expecting a string as second parameter");
+            return nullptr;
+        }
+        ctype = PyString_AsString(stype);
+    }
+
+    sofa::component::fem::_beaminterpolation_::CoordType type;
+    if(!strcmp(ctype, "current"))
+        type = sofa::component::fem::_beaminterpolation_::CoordType::CurrentPosition;
+    else if(!strcmp(ctype, "free"))
+        type = sofa::component::fem::_beaminterpolation_::CoordType::FreePosition;
+    else if(!strcmp(ctype, "rest"))
+        type = sofa::component::fem::_beaminterpolation_::CoordType::RestPosition;
+    else
+    {
+        PyErr_SetString(PyExc_RuntimeError, "Invalid 'field' value. Expecting 'current, free or rest'");
+        return nullptr;
+    }
+
+    BeamInterpolationRigid3::LocalCoordinates coords;
     while(PyObject* item = PyIter_Next(iter))
     {
-        indices.push_back(PyLong_AsUnsignedLong(item));
+        BeamInterpolationRigid3::LocalCoordinate coord {PyLong_AsUnsignedLong(PyTuple_GetItem(item, 0)),
+                                                        PyFloat_AsDouble(PyTuple_GetItem(item, 1))} ;
+        if(coord.indice>=beam->getNumBeams())
+        {
+            std::stringstream s;
+            s << "Out of bound indice. '" << coord.indice << "' should be < " << beam->getNumBeams();
+            PyErr_SetString(PyExc_RuntimeError, s.str().c_str());
+            Py_DECREF(item);
+            Py_DECREF(iter);
+            return nullptr;
+        }
+
+        coords.push_back(coord);
         Py_DECREF(item);
     }
     Py_DECREF(iter);
 
-    PyObject *list = PyList_New(indices.size());
+    BeamInterpolationRigid3::InterpolatedValues values;
+    beam->getValuesAt(type, coords, values);
+
+    PyObject *list = PyList_New(coords.size());
     unsigned int idest=0;
-    for(auto i : indices)
+    for(const auto& coord : coords)
     {
-        std::cout << "Processing... " << i << std::endl ;
-        PyObject *v = PyList_New(indices.size());
-        PyList_SetItem(v, 0, PyFloat_FromDouble(0.0));
-        PyList_SetItem(v, 1, PyFloat_FromDouble(1.0));
-        PyList_SetItem(v, 2, PyFloat_FromDouble(2.0));
+        auto& pos = values[idest].position;
+        auto& vel = values[idest].velocity;
+
+        PyObject *v = PyList_New(coords.size());
+        for(size_t j=0;j<pos.size();++j)
+            PyList_SetItem(v, j, PyFloat_FromDouble(pos[j]));
 
         PyList_SetItem(list, idest, v);
         idest++;
@@ -130,7 +174,7 @@ static PyObject* BeamInterpolation_getNumBeams(PyObject * self, PyObject *args)
 
 
 SP_CLASS_METHODS_BEGIN(BeamInterpolation)
-SP_CLASS_METHOD(BeamInterpolation, getInterpolationAt)
+SP_CLASS_METHOD(BeamInterpolation, getValuesAt)
 SP_CLASS_METHOD_DOC(BeamInterpolation, getLength,
                     "Returns the length of a beam element at a given index.\n"
                     "\n"

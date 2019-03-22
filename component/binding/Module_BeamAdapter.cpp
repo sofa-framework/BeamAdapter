@@ -4,26 +4,18 @@
 namespace sofa
 {
 
-static PyObject * BeamAdapter_toto(PyObject* /*self*/, PyObject *args)
+static PyObject * BeamAdapter_getVersion(PyObject* /*self*/, PyObject *args)
 {
-    std::cout << "Hello world" << std::endl;
-    Py_RETURN_NONE;
+    PyObject* tuple=PyTuple_New(2);
+    PyTuple_SetItem(tuple, 0, PyLong_FromLong(1));
+    PyTuple_SetItem(tuple, 1, PyLong_FromLong(0));
+    return tuple;
 }
 
 /// Methods of the module
 SP_MODULE_METHODS_BEGIN(BeamAdapter)
-SP_MODULE_METHOD(BeamAdapter, toto)
+SP_MODULE_METHOD(BeamAdapter, getVersion)
 SP_MODULE_METHODS_END
-
-/// shortcut for SP_ADD_CLASS with fixed sofa module
-/// #define SP_ADD_CLASS_IN_SOFAMODULE(C) SP_ADD_CLASS( PythonFactory::s_sofaPythonModule, C )
-
-/// This is the macro to call to bind a new type inherited from sofa::core::objectmodel::Base
-/// #define SP_ADD_CLASS_IN_FACTORY( PYTHONNAME, CPPCLASSNAME ) {\
-///    SP_ADD_CLASS_IN_SOFAMODULE( PYTHONNAME )  \
-///    PythonFactory::add<CPPCLASSNAME>( &SP_SOFAPYTYPEOBJECT(PYTHONNAME) ); \
-///    }
-
 
 void initBinding()
 {
