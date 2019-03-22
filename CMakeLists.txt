@@ -5,13 +5,14 @@ set(BEAMADAPTER_MAJOR_VERSION 1)
 set(BEAMADAPTER_MINOR_VERSION 0)
 set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION})
 
+find_package(SofaFramework REQUIRED)
+find_package(SofaPython QUIET)
+find_package(SofaImplicitField REQUIRED) #for ImplicitSurfaceAdaptiveConstraint
+
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(HEADER_FILES
-  #BaseRestShape.h
-  #BaseRestShape.inl
   component/initBeamAdapter.h
-
   component/BeamInterpolation.h
   component/BeamInterpolation.inl
   component/WireBeamInterpolation.h
@@ -19,7 +20,6 @@ set(HEADER_FILES
   )
 
 set(SOURCE_FILES
-  #BaseRestShape.cpp
   component/initBeamAdapter.cpp
   component/BeamInterpolation.cpp
   component/WireBeamInterpolation.cpp
@@ -49,10 +49,17 @@ set(SOURCE_FILES ${SOURCE_FILES}
   AdaptiveBeamFrictionContact.cpp
   MultiAdaptiveBeamContactMapper.cpp
 )
-        #find_package(CUDA REQUIRED)
-        #cuda_include_directories(${SOFA_CUDA_DIR})
-        #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
-        #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
+endif()
+
+if(SofaPython_FOUND)
+    set(HEADER_FILES ${HEADER_FILES}
+        component/binding/Binding_BeamInterpolation.h
+        component/binding/Module_BeamAdapter.h
+        )
+    set(SOURCE_FILES ${SOURCE_FILES}
+        component/binding/Binding_BeamInterpolation.cpp
+        component/binding/Module_BeamAdapter.cpp
+        )
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
@@ -65,10 +72,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BIN
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
 
-find_package(SofaFramework REQUIRED)
-find_package(SofaImplicitField REQUIRED) #for ImplicitSurfaceAdaptiveConstraint
-
 target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField)
+
+if(SofaPython_FOUND)
+    message("BeamAdapter: compiling with SofaPython")
+    target_link_libraries(${PROJECT_NAME} SofaPython)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE "SOFA_HAVE_SOFAPYTHON")
+else()
+    message("BeamAdapter: compiling without SofaPython")
+endif()
 
 ## Install rules for the library and headers; CMake package configurations files
 sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
