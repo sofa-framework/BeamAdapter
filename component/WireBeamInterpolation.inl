@@ -51,7 +51,6 @@
 
 #include "engine/WireRestShape.h"
 #include "WireBeamInterpolation.h"
-#include "BeamInterpolation.inl"
 
 namespace sofa
 {

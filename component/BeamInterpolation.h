@@ -72,6 +72,14 @@ using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::component::container::MechanicalObject ;
 
+enum class CoordType
+{
+    CurrentPosition,
+    FreePosition,
+    RestPosition
+};
+
+
 /*!
  * \class BeamInterpolation
  *
@@ -148,6 +156,25 @@ public:
     virtual void storeResetState() override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    class LocalCoordinate
+    {
+    public:
+        size_t indice;
+        double absciss;
+    };
+    typedef std::vector<LocalCoordinate> LocalCoordinates;
+    class InterpolatedValue
+    {
+    public:
+        Coord position;
+        Deriv velocity;
+    };
+    typedef std::vector<InterpolatedValue> InterpolatedValues;
+
+    void getValuesAt(const CoordType type,
+                     const LocalCoordinates& points,
+                     InterpolatedValues& values);
+
 
     void updateInterpolation();
     /**
@@ -164,10 +191,10 @@ public:
     void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
 
     static void getControlPointsFromFrame(
-                                const Transform& global_H_local0, const Transform& global_H_local1,
-                                const Real& L,
-                                Vec3& P0, Vec3& P1,
-                                Vec3& P2, Vec3& P3);
+            const Transform& global_H_local0, const Transform& global_H_local1,
+            const Real& L,
+            Vec3& P0, Vec3& P1,
+            Vec3& P2, Vec3& P3);
 
 
     void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
