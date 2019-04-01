@@ -219,7 +219,11 @@ public:
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
 
+    const int get_const_int_numBeams(unsigned int numBeams);
 
+    Data<int>  d_numBeams;
+    Data<bool> d_printBeamsGraph;           ///< if  true, store mass and stiffness matrices
+    Data<bool> d_storeSystemMatrices;       ///< if  true, store mass and stiffness matrices
     Data<bool> d_computeMass;               ///< if false, only compute the stiff elastic model
     Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation

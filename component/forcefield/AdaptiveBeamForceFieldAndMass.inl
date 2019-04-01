@@ -79,7 +79,10 @@ using std::set ;
 
 template <class DataTypes>
 AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
-    : d_computeMass(initData(&d_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
+    : d_numBeams(initData(&d_numBeams,"numBeams","number of beams of topology"))
+    , d_printBeamsGraph(initData(&d_printBeamsGraph,false,"printBeamsGraph","print beams graph"))
+    , d_storeSystemMatrices(initData(&d_storeSystemMatrices,false,"storeSystemMatrices","store stiffness and mass matrices"))
+    , d_computeMass(initData(&d_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
@@ -460,6 +463,25 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
     Real totalMass = 0;
     unsigned int numBeams = l_interpolation->getNumBeams();
 
+    /* Create globalK matrix = K matrix in global frame for each beams
+     K00, K01, K10 and K11 = 4 matrices of size 6x6 for one beam
+     matrixKbeam_i = [K00 K01 K10 K11] : matrix of size 6x24
+     globalK = [matrixKbeam_1 matrixKbeam_2 matrixKbeam_3 ...] : matrix of size 6*24*numBeams*/
+    d_numBeams.setValue(numBeams);
+
+    Mat<3000,6, Real> globalK;     // should be Mat<numBeams*24,6>, but unable to use numBeams in static expression
+    Mat<3000,6, Real> globalM;     // idem
+
+    Mat<3000,2, Real> indexK;     // list of indices to reconstruct globalK
+    Mat<3000,2, Real> indexM;     // list of indices to reconstruct globalM
+    int idxIndexK=0;
+    int idxIndexM=0;
+
+    if(d_printBeamsGraph.getValue())
+    {
+        std::cout << "Beams graph:\n";
+    }
+
     for (unsigned int b=0; b<numBeams; b++)
     {
         unsigned int node0Idx, node1Idx;
@@ -474,6 +496,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
 
         if(node0Idx!=node1Idx) // no rigidification
         {
+            /* Print beams graph*/
+            if(d_printBeamsGraph.getValue())
+            {
+                std::cout << node0Idx << " to " << node1Idx << "\n";
+            }
+
             // matrices in global frame
             Matrix6x6 K00, K01, K10, K11;
 
@@ -481,6 +509,51 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
             K01=bLM.m_A0Ref.multTranspose( ( bLM.m_K01 * bLM.m_A1Ref  )  );
             K10=bLM.m_A1Ref.multTranspose( ( bLM.m_K10 * bLM.m_A0Ref  )  );
             K11=bLM.m_A1Ref.multTranspose( ( bLM.m_K11 * bLM.m_A1Ref  )  );
+
+            if (d_storeSystemMatrices.getValue())
+            {
+                /* Creation of matrixKbeam_i*/
+                Mat<24,6,Real> matrixKbeam_i;
+                for (int j=0;j<6;j++)
+                {
+                    for (int i=0;i<6;i++)
+                    {
+                        matrixKbeam_i(i,j)=K00(i,j);
+                    }
+                    for (int i=6;i<12;i++)
+                    {
+                        //std::cout << b << "\n" << K01 << "\n" << "i=" << i << "\n" << "j=" << j << "i,j=" << K01(i,j-6) << "\n";
+                        matrixKbeam_i(i,j)=K01(i-6,j);
+                    }
+                    for (int i=12;i<18;i++)
+                    {
+                        matrixKbeam_i(i,j)=K10(i-12,j);
+                    }
+                    for (int i=18;i<24;i++)
+                    {
+                        matrixKbeam_i(i,j)=K11(i-18,j);
+                    }
+                }
+
+                //std::cout << this->getName() << "\n" << b << "\n" << K00 << "\n" << K01 << "\n" << K10 << "\n" << K11 << "\n";
+                //std::cout << this->getName() << "\n" << b << "\n" << "matrixKbeam" << matrixKbeam_i << "\n";
+                //std::cout << this->getName() << "\n" << b << "\n" << "matrixM" << K00 << "\n" << K01 << "\n" << K10 << "\n" << K11 << "\n";
+
+                /* Insert matrixKbeam_i at the end of globalK*/
+                for (int i=0;i<24;i++)
+                {
+                    for (int j=0;j<6;j++)
+                    {
+                        globalK(i+(24*b),j)=matrixKbeam_i(i,j);
+                    }
+                }
+
+                // store matrix K indices
+                indexK(idxIndexK,0)=node0Idx;
+                indexK(idxIndexK,1)=node1Idx;
+                idxIndexK++;
+
+            }
 
             for (int i=0;i<6;i++)
             {
@@ -502,6 +575,47 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         M10=bLM.m_A1Ref.multTranspose( ( bLM.m_M10 * bLM.m_A0Ref  )  );
         M11=bLM.m_A1Ref.multTranspose( ( bLM.m_M11 * bLM.m_A1Ref  )  );
 
+        if (d_storeSystemMatrices.getValue())
+        {
+            /* Creation of matrixMbeam_i*/
+            Mat<24,6,Real> matrixMbeam_i;
+            for (int j=0;j<6;j++)
+            {
+                for (int i=0;i<6;i++)
+                {
+                    matrixMbeam_i(i,j)=M00(i,j);
+                }
+                for (int i=6;i<12;i++)
+                {
+                    matrixMbeam_i(i,j)=M01(i-6,j);
+                }
+                for (int i=12;i<18;i++)
+                {
+                    matrixMbeam_i(i,j)=M10(i-12,j);
+                }
+                for (int i=18;i<24;i++)
+                {
+                    matrixMbeam_i(i,j)=M11(i-18,j);
+                }
+            }
+
+            /* Insert matrixMbeam_i at the end of globalM*/
+            for (int i=0;i<24;i++)
+            {
+                for (int j=0;j<6;j++)
+                {
+                    globalM(i+(24*b),j)=matrixMbeam_i(i,j);
+                }
+            }
+
+            std::cout << this->getName() << "\n" << b << "\n" << "matrixM" << M00 << "\n" << M01 << "\n" << M10 << "\n" << M11 << "\n";
+
+            // store matrix M indices
+            indexM(idxIndexM,0)=node0Idx;
+            indexM(idxIndexM,1)=node1Idx;
+            idxIndexM++;
+        }
+
         for (int i=0;i<6;i++)
         {
             for (int j=0;j<6;j++)
@@ -514,6 +628,33 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
             }
         }
     }
+    if (d_storeSystemMatrices.getValue()) {
+        std::ofstream f_stiffness;
+        char name_stiffness[100];
+        sprintf(name_stiffness, "matrixK_%s.txt", this->getName().data());
+        f_stiffness.open(name_stiffness);
+        f_stiffness << globalK;
+        f_stiffness.close();
+        std::ofstream f_mass;
+        char name_mass[100];
+        sprintf(name_mass, "matrixM_%s.txt", this->getName().data());
+        f_mass.open(name_mass);
+        f_mass << globalM;
+        f_mass.close();
+        std::ofstream f_indxmass;
+        char name_IndxMass[100];
+        sprintf(name_IndxMass, "indexM_%s.txt", this->getName().data());
+        f_indxmass.open(name_IndxMass);
+        f_indxmass << indexM;
+        f_indxmass.close();
+        std::ofstream f_indxstiffness;
+        char name_IndxStiffness[100];
+        sprintf(name_IndxStiffness, "indexK_%s.txt", this->getName().data());
+        f_indxstiffness.open(name_IndxStiffness);
+        f_indxstiffness << indexK;
+        f_indxstiffness.close();
+    }
+
 }
 
 
