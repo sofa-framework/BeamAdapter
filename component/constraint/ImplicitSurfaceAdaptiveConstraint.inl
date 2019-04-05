@@ -8,7 +8,6 @@
 #include <sofa/helper/gl/template.h>
 #include <sofa/helper/vector.h>
 
-#include <sofa/helper/io/MassSpringLoader.h>
 #include <sofa/helper/gl/template.h>
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
