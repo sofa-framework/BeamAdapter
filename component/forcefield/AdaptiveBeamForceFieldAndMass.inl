@@ -464,20 +464,17 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
      * Create globalK matrix = K matrix in global frame for each beams
      * K00, K01, K10 and K11 = 4 matrices of size 6x6 for one beam
      * matrixKbeam_i = [K00 K01 K10 K11] : matrix of size 6x24
-     * globalK = [matrixKbeam_1 matrixKbeam_2 matrixKbeam_3 ...] : matrix of size 6*24*numBeams
+     * globalK = [matrixKbeam_1 matrixKbeam_2 matrixKbeam_3 ...] : matrix of size 6 times 24*numBeams
     */
     d_numBeams.setValue(numBeams);
 
-    std::vector<std::vector<double> > globalMBis(numBeams*24, std::vector<double>(6));
-    std::vector<std::vector<double> > indexMBis(numBeams*24, std::vector<double>(2));
+    std::vector<std::vector<double> > globalM(numBeams*24, std::vector<double>(6));
+    std::vector<std::vector<double> > indexM(numBeams, std::vector<double>(2));
+    std::vector<std::vector<double> > globalK(numBeams*24, std::vector<double>(6));
+    std::vector<std::vector<double> > indexK(numBeams, std::vector<double>(2));
 
-    Mat<3000,6, Real> globalK;     // should be Mat<numBeams*24,6>, but unable to use numBeams in static expression
-    Mat<3000,6, Real> globalM;     // idem
-
-    Mat<3000,2, Real> indexK;     // list of indices to reconstruct globalK
-    Mat<3000,2, Real> indexM;     // list of indices to reconstruct globalM
-    int idxIndexK=0;
-    int idxIndexM=0;
+    unsigned long idxIndexK=0;
+    unsigned long idxIndexM=0;
 
     for (unsigned int b=0; b<numBeams; b++)
     {
@@ -530,13 +527,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
                 {
                     for (int j=0;j<6;j++)
                     {
-                        globalK(i+(24*b),j)=matrixKbeam_i(i,j);
+                        globalK[i+(24*b)][j]=matrixKbeam_i(i,j);
                     }
                 }
 
                 // store matrix K indices
-                indexK(idxIndexK,0)=node0Idx;
-                indexK(idxIndexK,1)=node1Idx;
+                indexK[idxIndexK][0]=node0Idx;
+                indexK[idxIndexK][1]=node1Idx;
                 idxIndexK++;
 
             }
@@ -590,20 +587,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
             {
                 for (int j=0;j<6;j++)
                 {
-                    globalM(i+(24*b),j)=matrixMbeam_i(i,j);
+                    globalM[i+(24*b)][j]=matrixMbeam_i(i,j);
                 }
-            }
-            // Insert matrixMbeam_i at the end of globalM
-            for (int i=0;i<24;i++)
-            {
-                for (int j=0;j<6;j++)
-                {
-                    globalMBis[i+(24*b)][j]=matrixMbeam_i(i,j);
             }
 
             // store matrix M indices
-            indexM(idxIndexM,0)=node0Idx;
-            indexM(idxIndexM,1)=node1Idx;
+            indexM[idxIndexM][0]=node0Idx;
+            indexM[idxIndexM][1]=node1Idx;
             idxIndexM++;
         }
 
@@ -621,38 +611,58 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
     }
 
 
-    if (d_storeSystemMatrices.getValue()) {
+    if (d_storeSystemMatrices.getValue())
+    {
         std::ofstream f_stiffness;
         char name_stiffness[100];
         sprintf(name_stiffness, "matrixK_%s.txt", this->getName().data());
         f_stiffness.open(name_stiffness);
-        f_stiffness << globalK;
+        f_stiffness << "[";
+        for(unsigned long i=0; i < globalK.size() ; i++)
+        {
+            for(unsigned long j=0; j < globalK[0].size() ; j++)
+                f_stiffness << " " << std::scientific << std::setprecision(9) << globalK[i][j];
+             f_stiffness << ",";
+        }
+        f_stiffness << "]";
         f_stiffness.close();
+
         std::ofstream f_mass;
         char name_mass[100];
         sprintf(name_mass, "matrixM_%s.txt", this->getName().data());
         f_mass.open(name_mass);
-        f_mass << globalM;
+        f_mass << "[";
+        for(unsigned long i=0; i < globalM.size() ; i++)
+        {
+            for(unsigned long j=0; j < globalM[0].size() ; j++)
+                f_mass << " " << std::scientific << std::setprecision(9) << globalM[i][j];
+            f_mass << "," ;
+        }
+        f_mass << "]";
         f_mass.close();
-        std::ofstream f_massBis;
-        char name_massBis[100];
-        sprintf(name_massBis, "matrixMBis_%s.txt", this->getName().data());
-        f_massBis.open(name_massBis);
-        for(unsigned long i=0; i < globalMBis.size() ; i++)
-            for(unsigned long j=0; j < globalMBis[0].size() ; j++)
-                f_massBis << " " << std::scientific << std::setprecision(9) << globalMBis[i][j];
-        f_massBis.close();
+
         std::ofstream f_indxmass;
         char name_IndxMass[100];
         sprintf(name_IndxMass, "indexM_%s.txt", this->getName().data());
         f_indxmass.open(name_IndxMass);
-        f_indxmass << indexM;
+        for(unsigned long i=0; i < indexM.size() ; i++)
+        {
+            for(unsigned long j=0; j < indexM[0].size() ; j++)
+                f_indxmass << indexM[i][j]  << " ";
+            f_indxmass << "\n" ;
+        }
         f_indxmass.close();
+
         std::ofstream f_indxstiffness;
         char name_IndxStiffness[100];
         sprintf(name_IndxStiffness, "indexK_%s.txt", this->getName().data());
         f_indxstiffness.open(name_IndxStiffness);
-        f_indxstiffness << indexK;
+        for(unsigned long i=0; i < indexK.size() ; i++)
+        {
+            for(unsigned long j=0; j < indexK[0].size() ; j++)
+                f_indxstiffness << indexK[i][j] << " ";
+            f_indxstiffness << "\n";
+        }
         f_indxstiffness.close();
     }
 
