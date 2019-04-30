@@ -39,15 +39,10 @@ namespace collision
 
 using namespace defaulttype;
 
-SOFA_DECL_CLASS(BeamMultiAdaptiveBeamContactMapper)
 
 
-#ifndef SOFA_DOUBLE
-template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamContactMapper<BSplineModel<2>,Vec3fTypes>;
-#endif
-#ifndef SOFA_FLOAT
-template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamContactMapper<BSplineModel<2>,Vec3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamContactMapper<BSplineModel<2>,Vec3Types>;
+
 
 ContactMapperCreator< ContactMapper<BSplineModel<2> > > BSplineMultiContactMapperClass("MultiAdaptiveBeamContactMapper",true);
 template class  ContactMapper<BSplineModel<2> >;

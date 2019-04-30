@@ -165,15 +165,8 @@ public:
 
 
 
-#if defined(WIN32) && !defined(SOFA_BUILD_BEAMADAPTER)
-
-	#ifndef SOFA_DOUBLE
-	extern template class SOFA_BEAMADAPTER_API AdaptiveBeamContactMapper<BSplineModel<1>,Vec3fTypes>;
-	#endif
-	#ifndef SOFA_FLOAT
-	extern template class SOFA_BEAMADAPTER_API AdaptiveBeamContactMapper<BSplineModel<1>,Vec3dTypes>;
-	#endif
-
+#if !defined(SOFA_COMPONENT_COLLISION_ADAPTIVEBEAMCONTACTMAPPER_CPP)
+        extern template class SOFA_BEAMADAPTER_API AdaptiveBeamContactMapper<BSplineModel<1>,Vec3Types>;
 	extern template class SOFA_BEAMADAPTER_API ContactMapper<BSplineModel<1>>;
 #endif
 

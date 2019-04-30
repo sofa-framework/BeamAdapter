@@ -133,7 +133,7 @@ public:
      virtual void parse(BaseObjectDescription* arg) ;
      virtual void init() override ;
      virtual void reinit() override {}
-     virtual void update() override {}
+     virtual void doUpdate() override {}
      virtual void bwdInit() override ;
      void draw(const VisualParams * vparams) override ;
 

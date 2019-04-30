@@ -36,8 +36,6 @@
 
 #include "MultiAdaptiveBeamMapping.inl"
 #include <sofa/core/ObjectFactory.h>
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/core/Mapping.inl>
 
 namespace sofa
 {
@@ -58,38 +56,16 @@ using namespace core::behavior;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(MultiAdaptiveBeamMapping)
 
 // Register in the Factory
-int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-#ifdef SOFA_WITH_FLOAT
-.add< MultiAdaptiveBeamMapping<Rigid3fTypes, Vec3fTypes   > >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< MultiAdaptiveBeamMapping< Rigid3dTypes, Vec3dTypes > >()
-#endif
-#ifdef SOFA_WITH_FLOAT
-#ifdef SOFA_WITH_DOUBLE
-.add< MultiAdaptiveBeamMapping< Rigid3dTypes, Vec3fTypes > >()
-.add< MultiAdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes > >()
-#endif
-#endif
+static int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+.add< MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types > >()
+
 ;
 
 
-#ifdef SOFA_WITH_FLOAT
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<Rigid3fTypes, Vec3fTypes   >;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3dTypes, Vec3dTypes >;
-#endif
+    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types >;
 
-#ifdef SOFA_WITH_FLOAT
-#ifdef SOFA_WITH_DOUBLE
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3dTypes, Vec3fTypes >;
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes >;
-#endif
-#endif
 
 
 } // namespace mapping

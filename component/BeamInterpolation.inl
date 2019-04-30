@@ -106,16 +106,16 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
                                OptionsGroup(3,"circular","elliptic (not available)","rectangular"),
                                "crossSectionShape",
                                "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
-  , d_radius(initData(&d_radius, (Real)1.0f, "radius", "radius of the beam (if circular cross-section is considered)"))
-  , d_innerRadius(initData(&d_innerRadius, (Real)0.0f, "innerRadius", "inner radius of the beam if it applies"))
-  , d_sideLength(initData(&d_sideLength, (Real)1.0f, "sideLength", "side length of the beam (if square cross-section is considered)"))
-  , d_smallRadius(initData(&d_smallRadius, (Real)1.0f, "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
-  , d_largeRadius(initData(&d_largeRadius, (Real)1.0f, "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
-  , d_lengthY(initData(&d_lengthY, (Real)1.0f, "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
-  , d_lengthZ(initData(&d_lengthZ, (Real)1.0f, "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
+  , d_radius(initData(&d_radius, Real(1.0), "radius", "radius of the beam (if circular cross-section is considered)"))
+  , d_innerRadius(initData(&d_innerRadius, Real(0.0), "innerRadius", "inner radius of the beam if it applies"))
+  , d_sideLength(initData(&d_sideLength, Real(1.0), "sideLength", "side length of the beam (if square cross-section is considered)"))
+  , d_smallRadius(initData(&d_smallRadius, Real(1.0), "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
+  , d_largeRadius(initData(&d_largeRadius, Real(1.0), "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
+  , d_lengthY(initData(&d_lengthY, Real(1.0), "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
+  , d_lengthZ(initData(&d_lengthZ, Real(1.0), "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
   , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
                                    "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, (Real) 100000, "defaultYoungModulus",
+  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
@@ -140,6 +140,18 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
     m_numBeamsNotUnderControl = 0;
     m_StateNodes->setName("bezierNodes");
     addSlave(m_StateNodes);
+}
+template <class DataTypes>
+ void BeamInterpolation<DataTypes>::getControlPointsFromFrame(const Transform& global_H_local0, const Transform& global_H_local1,
+                                                              const Real& L,
+                                                              Vec3& P0, Vec3& P1,
+                                                              Vec3& P2, Vec3& P3)
+{
+    P0=global_H_local0.getOrigin();
+    P3=global_H_local1.getOrigin();
+
+    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
+    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
 }
 
 
@@ -230,7 +242,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
         edgeList.clear();
 
-        for (int i=0; i<m_topology->getNbEdges(); i++)
+        for (unsigned int i=0; i<m_topology->getNbEdges(); i++)
         {
             edgeList.push_back(i);
         }
@@ -260,16 +272,22 @@ void BeamInterpolation<DataTypes>::bwdInit()
         for (unsigned int i = 0; i < edgeListSize; i++)
         {
 
+            //// Copute the distance between beam nodes to obtain a first value for the beam length
+            // Indeed the function "computeActualLength" needs a first approximation of this length
 
             getNodeIndices(i, nd0Id, nd1Id);
 
             if(this->d_dofsAndBeamsAligned.getValue())
             {
+                //  when the dof and the beams are aligned it means that we can take the distance between nodes:
                 Vec3 beam_segment = statePos[nd1Id].getCenter() - statePos[nd0Id].getCenter();
                 lengthList.push_back(beam_segment.norm());
             }
             else
             {
+                // if not aligned, we need to account for the transformation between node and dof:
+                // this transforamtion is given by global_H_local0 for node 0 (and dof0)
+                // and global_H_local1 for node 1 (and dof1)
                 Transform global_H_local0, global_H_local1;
                 computeTransform2(i,  global_H_local0,  global_H_local1, statePos.ref()) ;
                 Vec3 beam_segment = global_H_local1.getOrigin() -  global_H_local0.getOrigin();
@@ -278,14 +296,20 @@ void BeamInterpolation<DataTypes>::bwdInit()
             }
 
 
-            Vec3 P0,P1,P2,P3;
-             getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
+            // finding the real length can not be done in one step
+            // we do it in 3 iterations
+            for (unsigned it=0; it<3; it++){
+                 // now that we have an approximation of the length, we can estimate the position of the spline control point;
+                 Vec3 P0,P1,P2,P3;
+                getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
+
+                // and we can compute more precisely the length
+                Real ActualLength;
+                computeActualLength(ActualLength,P0,P1,P2,P3);
+                lengthList[i]=ActualLength;
+            }
 
 
-            Real ActualLength;
-            computeActualLength(ActualLength,P0,P1,P2,P3);
-
-            lengthList[i]=ActualLength;
         }
 
 
@@ -481,7 +505,7 @@ void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigne
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getSamplingParameters(helper::vector<Real>& /*xP_noticeable*/, helper::vector< int>& /*nbP_density*/)
 {
-    serr<<"getSamplingParameters is not implemented when _restShape== nullptr : TODO !! "<<sendl;
+    msg_error()<<"getSamplingParameters is not implemented when _restShape== nullptr : TODO !! ";
 }
 
 template <class DataTypes>
@@ -513,17 +537,17 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
-    youngModulus = (Real) d_defaultYoungModulus.getValue();
-    cPoisson     = (Real) 0.4;
+    youngModulus = Real(d_defaultYoungModulus.getValue());
+    cPoisson     = Real(0.4);
 }
 
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
 {
-    if (beam > (int) (d_DOF0TransformNode0.getValue().size()-1) || beam > (int) (d_DOF1TransformNode1.getValue().size()-1))
+    if (beam > int(d_DOF0TransformNode0.getValue().size()-1) || beam > int(d_DOF1TransformNode1.getValue().size()-1))
     {
-        serr<<"WARNING setTransformBetweenDofAndNode on non existing beam"<<sendl;
+        msg_error()<<"WARNING setTransformBetweenDofAndNode on non existing beam";
         return;
     }
 
@@ -807,12 +831,8 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
 
     //std::cout << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
     const Real& _L = d_lengthList.getValue()[edgeInList];
+    this->getControlPointsFromFrame(global_H_local0, global_H_local1,_L,P0, P1,P2, P3);
 
-    P0=global_H_local0.getOrigin();
-    P3=global_H_local1.getOrigin();
-
-    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0);
-    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0);
 }
 
 
@@ -985,11 +1005,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
 
             Vec3 P0,P1,P2,P3;
 
-            P0=global_H_local0.getOrigin();
-            P3=global_H_local1.getOrigin();
-
-            P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(_L/3.0);
-            P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0);
+            this->getControlPointsFromFrame(global_H_local0, global_H_local1,_L,P0, P1,P2, P3);
 
             Real bx=baryCoord;
 
@@ -1203,10 +1219,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
 
     /// find the spline points
-    P0=global_H_local0.getOrigin();
-    P3=global_H_local1.getOrigin();
-    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
+     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     Real bx=baryCoord;
     Vec3 posResult;
@@ -1262,10 +1275,7 @@ void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord,
 {
     Vec3 P0,P1,P2,P3 ;
 
-    P0=global_H_local0.getOrigin();
-    P3=global_H_local1.getOrigin();
-    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
+     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     t =       P0*(-3*(1-baryCoord)*(1-baryCoord))
             + P1*(3-12*baryCoord+9*baryCoord*baryCoord)
@@ -1286,10 +1296,7 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::Comput
 {
     Vec3 P0,P1,P2,P3, t0, t1;
 
-    P0=global_H_local0.getOrigin();
-    P3=global_H_local1.getOrigin();
-    P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-    P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
+    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     t0= P0*(-3*(1-baryCoordMin)*(1-baryCoordMin)) +
             P1*(3-12*baryCoordMin+9*baryCoordMin*baryCoordMin) +

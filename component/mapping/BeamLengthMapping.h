@@ -51,7 +51,6 @@
 #include "../BeamInterpolation.h"
 #include "../controller/AdaptiveBeamController.h"
 
-
 #include <SofaEigen2Solver/EigenSparseMatrix.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,8 +142,8 @@ public:
 
     typedef Vec<3, Real>   Vec3;
     typedef Vec<6, Real>   Vec6;
-    typedef Mat<3,3,Real> Mat3;
-    typedef Mat<3,6,Real> Mat3x6;
+    typedef Mat<3,3,Real>  Mat3;
+    typedef Mat<3,6,Real>  Mat3x6;
     typedef Mat<3,12,Real> Mat3x12;
     typedef Mat<12,3,Real> Mat12x3;
     typedef Mat<6,12,Real> Mat6x12;

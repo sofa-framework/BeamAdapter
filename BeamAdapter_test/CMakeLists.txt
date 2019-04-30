@@ -26,4 +26,3 @@ target_link_libraries(${PROJECT_NAME} SofaTest SofaGTestMain BeamAdapter SofaCor
 add_definitions("-DBEAMADAPTER_TEST_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\"")
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-

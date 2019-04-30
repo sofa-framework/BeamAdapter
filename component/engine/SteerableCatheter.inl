@@ -49,70 +49,79 @@ namespace engine
 {
 
 template <class DataTypes>
+SteerableCatheter<DataTypes>::SteerableCatheter():
+    d_activeBending( initData(&d_activeBending,(bool)false, "activeBending","Boolean activating the bending of the steerable catheter") ),
+    d_deactiveBending( initData(&d_deactiveBending,(bool)false, "deactiveBending","Boolean deactivating the bending of the steerable catheter") ),
+    d_angleMax( initData(&d_angleMax,(Real) 180.0, "angleMax","Maximum angle that the catheter can reach \n (in degree [0-360])") ),
+    d_flatAngle( initData(&d_flatAngle,(Real) 1.0, "flatAngle","Angle below which we consider the catheter as flat/n (Can't be zero)") ),
+    d_bendingRate( initData(&d_bendingRate,(unsigned int) 10, "bendingRate","Nb of step needed to reach the maximum bending angle /n (the lower, the faster)") )
+{
+    f_listening.setValue(true);
+}
+
+template <class DataTypes>
 void SteerableCatheter<DataTypes>::init()
 {
-    Inherited::init();
+    Inherit1::init();
 
-    bendingRate = m_bendingRate.getValue();
-    Real angleMax = m_angleMax.getValue();
-    Real flatAngle = m_flatAngle.getValue();
+    Real flatAngle = d_flatAngle.getValue();
+    Real angleMax = d_angleMax.getValue();
 
     if(angleMax<=0.0 || angleMax>360.0)
     {
-        std::cout<<"(SteerableCatheter) Wrong angleMax given: should be [0-360]. Bending deactivated."<<std::endl;
+        msg_info()<<"(SteerableCatheter) Wrong angleMax given: should be [0-360]. Bending deactivated.";
         return;
     }
-    else if(bendingRate <=0)
+    else if(d_bendingRate.getValue() <=0)
     {
-        std::cout<<"(SteerableCatheter) Wrong bendingRate given: should be non zero."<<std::endl;
+        msg_info()<<"(SteerableCatheter) Wrong bendingRate given: should be non zero.";
         return;
     }
     else
     {
-        if( flatAngle <= 0.0)
+        if(flatAngle <= 0.0)
         {
-            std::cout<<"(SteerableCatheter) Wrong flatAngle given: must be higher than 0°."<<std::endl;
+            msg_info()<<"(SteerableCatheter) Wrong flatAngle given: must be higher than 0°.";
             flatAngle = 1.0;
-            m_flatAngle.setValue(1.0);
+            d_flatAngle.setValue(1.0);
         }
 
         // Initialize the increment for bending/unbending
-        tipLength = this->d_length.getValue() - this->d_straightLength.getValue();
-        maxAngleRadian = (angleMax*PI) / 360; // all angle are actually angle/2
-        incrementalAngleRadian = maxAngleRadian / bendingRate;
+        m_tipLength = d_length.getValue() - d_straightLength.getValue();
+        m_maxAngleRadian = (angleMax*M_PI) / 360; // all angle are actually angle/2
+        m_incrementalAngleRadian = m_maxAngleRadian / d_bendingRate.getValue();
 
         //Limiting the straight position avoiding going to infinity
-        maxUnbendingDiameter = 360.0 * tipLength / (PI*flatAngle);
+        m_maxUnbendingDiameter = 360.0 * m_tipLength / (M_PI*flatAngle);
 
         // Reajust the initial spireDiameter (associated angle) to be multiple of incrementalAngleRadian
-        Real _spireDiameter = this->d_spireDiameter.getValue();
+        Real spireDiameter = d_spireDiameter.getValue();
 
-        if(_spireDiameter>maxUnbendingDiameter || _spireDiameter == 0.0)
+        if(spireDiameter>m_maxUnbendingDiameter || spireDiameter == 0.0)
         {
-                if(_spireDiameter>maxUnbendingDiameter)
-                    std::cout<<"(SteerableCatheter) Wrong spireDiameter: must be below "<<maxUnbendingDiameter<<std::endl;
+                if(spireDiameter>m_maxUnbendingDiameter)
+                    msg_info()<<"(SteerableCatheter) Wrong spireDiameter: must be below "<<m_maxUnbendingDiameter;
                 else
-                    std::cout<<"(SteerableCatheter) Wrong spireDiameter: must be non-zero (==infinite curvature) "<<std::endl;
-                _spireDiameter = maxUnbendingDiameter;
-                currentAngleRadian = flatAngle * PI / 360;
-                this->d_spireDiameter.setValue( maxUnbendingDiameter );
+                    msg_info()<<"(SteerableCatheter) Wrong spireDiameter: must be non-zero (==infinite curvature) ";
+                m_currentAngleRadian = flatAngle * M_PI / 360;
+                d_spireDiameter.setValue( m_maxUnbendingDiameter );
         }
         else
         {
-            if(tipLength != 0.0)
+            if(m_tipLength != 0.0)
             {
-                Real initialAngleRadian  = tipLength/_spireDiameter;
-                unsigned int initialAngleIncrement = (unsigned int)(initialAngleRadian/incrementalAngleRadian);
+                Real initialAngleRadian  = m_tipLength/spireDiameter;
+                unsigned int initialAngleIncrement = (unsigned int)(initialAngleRadian/m_incrementalAngleRadian);
                 if(initialAngleIncrement==0)
                     initialAngleIncrement = 1;
-                currentAngleRadian = (Real)(initialAngleIncrement)*incrementalAngleRadian;
-                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
+                m_currentAngleRadian = (Real)(initialAngleIncrement)*m_incrementalAngleRadian;
+                d_spireDiameter.setValue( m_tipLength / m_currentAngleRadian );
             }
             else
             {
-                this->d_spireDiameter.setValue( 0.0 );
-                currentAngleRadian = 0.0;
-                this->f_listening.setValue(false);
+                d_spireDiameter.setValue( 0.0 );
+                m_currentAngleRadian = 0.0;
+                f_listening.setValue(false);
             }
         }
     }
@@ -126,24 +135,22 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
     // Update bending at benginEvent
     if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
     {
-        Real _spireDiameter = this->d_spireDiameter.getValue();
-
         //Bending activated
-        if(m_activeBending.getValue())
+        if(d_activeBending.getValue())
         {
-            if(currentAngleRadian < maxAngleRadian)
+            if(m_currentAngleRadian < m_maxAngleRadian)
             {
-                currentAngleRadian += incrementalAngleRadian;
-                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
+                m_currentAngleRadian += m_incrementalAngleRadian;
+                d_spireDiameter.setValue( m_tipLength / m_currentAngleRadian );
             }
         }
         //Bending activated
-        if(m_deactiveBending.getValue())
+        if(d_deactiveBending.getValue())
         {
-            if(currentAngleRadian > incrementalAngleRadian )
+            if(m_currentAngleRadian > m_incrementalAngleRadian )
             {
-                currentAngleRadian -= incrementalAngleRadian;
-                this->d_spireDiameter.setValue( tipLength / currentAngleRadian );
+                m_currentAngleRadian -= m_incrementalAngleRadian;
+                d_spireDiameter.setValue( m_tipLength / m_currentAngleRadian );
             }
         }
     }
@@ -161,7 +168,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             {
                 //********
                 // Bending
-                m_activeBending.setValue(true);
+                d_activeBending.setValue(true);
                 break;
             }
 
@@ -169,7 +176,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             {
                 //**********
                 // Unbending
-                m_deactiveBending.setValue(true);
+                d_deactiveBending.setValue(true);
                 break;
             }
         }
@@ -184,7 +191,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             {
                 //********
                 // Bending
-                m_activeBending.setValue(false);
+                d_activeBending.setValue(false);
                 break;
             }
 
@@ -192,7 +199,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
             {
                 //**********
                 // Unbending
-                m_deactiveBending.setValue(false);
+                d_deactiveBending.setValue(false);
                 break;
             }
         }

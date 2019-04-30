@@ -35,8 +35,8 @@ using sofa::core::objectmodel::BaseContext ;
 using sofa::core::objectmodel::BaseObjectDescription ;
 #include "../../utils/deprecatedcomponent.h"
 using sofa::component::DeprecatedComponent;
-using sofa::defaulttype::Rigid3dTypes;
-using sofa::defaulttype::Rigid3fTypes;
+using sofa::defaulttype::Rigid3Types;
+using sofa::defaulttype::Rigid3Types;
 using sofa::core::RegisterObject;
 
 
@@ -54,9 +54,8 @@ namespace _adaptiveBeamSlidingConstraint_
 
 AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
     : ConstraintResolution(3)
-    , m_slidingDisp(sliding)
+     ,m_slidingDisp(sliding)
 {
-
 }
 
 void AdaptiveBeamSlidingConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree)
@@ -100,20 +99,12 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
 SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
 
 int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
-        #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamSlidingConstraint<Rigid3fTypes> >()
-        #endif
-        #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamSlidingConstraint<Rigid3dTypes> >()
-        #endif
+                .add< AdaptiveBeamSlidingConstraint<Rigid3Types> >()
+        
         ;
 
-#ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamSlidingConstraint<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamSlidingConstraint<Rigid3dTypes>;
-#endif
+template class AdaptiveBeamSlidingConstraint<Rigid3Types>;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -152,8 +143,6 @@ public:
 
 // Registering the component
 // see: http://wiki.sofa-framework.org/wiki/ObjectFactory
-SOFA_DECL_CLASS(AdaptiveBeamConstraint)
-
-int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
+static int AdaptiveBeamConstraintClass = RegisterObject("AdaptiveBeamConstraint is now a deprecated and should be replaced with AdaptiveBeamSlidingConstraint")
 .add< AdaptiveBeamConstraint >()
 ;

@@ -6,7 +6,7 @@
   
  	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
 	
-	<GenericConstraintSolver tolerance="1e-6"/>
+	<GenericConstraintSolver maxIterations='1000' tolerance="1e-6"/>
 	<FreeMotionAnimationLoop/>
 	
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
@@ -18,7 +18,7 @@
 	<Node name="restShapes">
 				<Node name="tube_0">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="1.54" straightLength="0" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -31,7 +31,7 @@
 		</Node>	
 				<Node name="tube_1">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="3.08" straightLength="1.54" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -44,7 +44,7 @@
 		</Node>	
 				<Node name="tube_2">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="4.62" straightLength="3.08" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -57,7 +57,7 @@
 		</Node>	
 				<Node name="tube_3">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="6.16" straightLength="4.62" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -70,7 +70,7 @@
 		</Node>	
 				<Node name="tube_4">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="7.7" straightLength="6.16" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -83,7 +83,7 @@
 		</Node>	
 				<Node name="tube_5">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="9.24" straightLength="7.7" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -96,7 +96,7 @@
 		</Node>	
 				<Node name="tube_6">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="10.78" straightLength="9.24" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -109,7 +109,7 @@
 		</Node>	
 				<Node name="tube_7">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="12.32" straightLength="10.78" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -122,7 +122,7 @@
 		</Node>	
 				<Node name="tube_8">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="13.86" straightLength="12.32" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>
@@ -135,7 +135,7 @@
 		</Node>	
 				<Node name="tube_9">
 			
-			<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="true"
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
 				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 				length="15.4" straightLength="13.86" spireDiameter="2" spireHeight="0.0"
 				draw="false"/>

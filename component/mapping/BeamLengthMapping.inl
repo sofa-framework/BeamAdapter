@@ -88,10 +88,7 @@ BeamLengthMapping<TIn,TOut>::BeamLengthMapping(State< In >* from, State< Out >* 
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::init()
 {
-
     BaseContext *context= dynamic_cast<BaseContext *>(this->getContext());
-
-   // BInterpolation* i_test = context->get<BInterpolation>();
 
     if (!l_adaptativebeamInterpolation)
         l_adaptativebeamInterpolation.set(context->get<BInterpolation>());
@@ -283,8 +280,6 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
             F3_buf = F3;
         }
         compteur++;
-
-
 
 
         std::cout<<" _F0  = "<<F0<<std::endl;
@@ -1001,20 +996,24 @@ void BeamLengthMapping< TIn, TOut>::draw(const VisualParams* vparams)
         return;
 }
 
-
-#ifndef SOFA_FLOAT
 template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
-#endif
-#ifndef SOFA_DOUBLE
-template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1fTypes >;
-#endif
+//template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3fTypes, Vec1fTypes >;
 
-#ifndef SOFA_FLOAT
-#ifndef SOFA_DOUBLE
-template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3dTypes, Vec1fTypes >;
-template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1dTypes >;
-#endif
-#endif
+
+
+// #ifndef SOFA_FLOAT
+// template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
+// #endif
+// #ifndef SOFA_DOUBLE
+// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1fTypes >;
+// #endif
+//
+// #ifndef SOFA_FLOAT
+// #ifndef SOFA_DOUBLE
+// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3dTypes, Vec1fTypes >;
+// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1dTypes >;
+// #endif
+// #endif
 
 
 } /// namespace _beamlengthmapping_

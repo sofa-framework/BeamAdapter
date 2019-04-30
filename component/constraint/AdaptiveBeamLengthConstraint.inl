@@ -55,11 +55,11 @@ using core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1), m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
     virtual void init(int line, double** w, double* force);
-    virtual void resolution(int line, double** w, double* d, double* force, double* dfree);
+    virtual void resolution(int line, double** w, double* d, double* force);
     virtual void store(int line, double* force, bool convergence);
 
 protected:

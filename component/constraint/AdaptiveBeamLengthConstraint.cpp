@@ -49,10 +49,8 @@ void AdaptiveBeamLengthConstraintResolution::init(int line, double** w, double* 
     if(m_initF)
         force[line] = *m_initF;
 }
-void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force, double* dfree) 
+void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
 {
-    SOFA_UNUSED(dfree);
-
     force[line] -= d[line] / w[line][line];
     if(force[line] < 0)
         force[line] = 0;
@@ -80,23 +78,13 @@ using core::RegisterObject;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveBeamLengthConstraint)
+static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
+                .add< AdaptiveBeamLengthConstraint<Rigid3Types> >(true) // default template
 
-int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
-        #ifdef SOFA_WITH_FLOAT
-        .add< AdaptiveBeamLengthConstraint<Rigid3fTypes> >()
-        #endif
-        #ifdef SOFA_WITH_DOUBLE
-        .add< AdaptiveBeamLengthConstraint<Rigid3dTypes> >(true) // default template
-        #endif
         ;
 
-#ifdef SOFA_WITH_FLOAT
-template class AdaptiveBeamLengthConstraint<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class AdaptiveBeamLengthConstraint<Rigid3dTypes>;
-#endif
+template class AdaptiveBeamLengthConstraint<Rigid3Types>;
+
 
 } /// namespace _adaptivebeamlengthconstraint_
 

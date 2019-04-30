@@ -61,24 +61,13 @@ using namespace core::behavior;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(AdaptiveBeamMapping)
 
 // Register in the Factory
-int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamMapping<Rigid3dTypes, Vec3dTypes   > >(true) //default template
-.add< AdaptiveBeamMapping<Rigid3dTypes, Rigid3dTypes > >()
-#endif
-#ifdef SOFA_WITH_FLOAT
-.add< AdaptiveBeamMapping< Rigid3fTypes, Vec3fTypes > >()
-#endif
+static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+.add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
+.add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >()
 
-#ifdef SOFA_WITH_FLOAT
-#ifdef SOFA_WITH_DOUBLE
-.add< AdaptiveBeamMapping< Rigid3dTypes, Vec3fTypes > >()
-.add< AdaptiveBeamMapping< Rigid3fTypes, Vec3dTypes > >()
-#endif
-#endif
+
 ;
 
 } // namespace mapping

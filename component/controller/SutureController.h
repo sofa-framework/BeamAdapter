@@ -114,26 +114,28 @@ public:
 
     typedef typename std::list< Real >::iterator ListRealIterator;
 
-    typedef MechanicalStateController<DataTypes> Inherit;
-
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
     typedef WireBeamInterpolation<DataTypes> WInterpolation;
 
     typedef typename set<Real>::const_iterator RealConstIterator;
 
+    using Inherit1::getContext;
+    using Inherit1::f_listening;
+    using Inherit1::getMechanicalState;
+
 public:
     SutureController(WInterpolation* _adaptiveinterpolation = NULL) ;
-    virtual ~SutureController(){}
+    virtual ~SutureController() override {}
 
     /////////////////// Inherited from Base //////////////////////////////////////////////////
-    virtual void init();
-    virtual void bwdInit(){applyController();}
-    virtual void reinit();
-    virtual void reset(){ init(); applyController();}
-    virtual void draw(const core::visual::VisualParams*);
+    virtual void init() override;
+    virtual void bwdInit() override {applyController();}
+    virtual void reinit() override;
+    virtual void reset() override { init(); applyController();}
+    virtual void draw(const core::visual::VisualParams*) override;
 
-    virtual std::string getTemplateName() const
+    virtual std::string getTemplateName() const override
     {
         return templateName(this);
     }
@@ -150,14 +152,15 @@ public:
     virtual void onEndAnimationStep(const double dt) override ;
 
     /////////////////// Inherited from PointActiver //////////////////////////////////////////////////
-    virtual bool activePoint(int index, CollisionModel * /*cm*/ = 0) override ;
+    virtual bool activePoint(int index, CollisionModel * cm = nullptr) override ;
 
     /////////////////// Inherited from LineActiver //////////////////////////////////////////////////
-    virtual bool activeLine(int index, CollisionModel * /*cm*/ = 0) override ;
+    virtual bool activeLine(int index, CollisionModel * cm = nullptr) override ;
 
 private:
     void applyController() ;
     void insertActualNoticeablePoint(Real _absc);
+
 
     /// addNodeOnXcurv (const Real& x_curv) will add a node at abs curv "x_curv" in the list of the imposed node
     /// this list is the used in the controller for the sampling of nodes of the suture model
@@ -168,8 +171,10 @@ private:
     /// Checks if the controlled MechanicalState and Topology have already been initialized.
     bool wireIsAlreadyInitialized();
 
+
     /// "Wire" initialization from the starting position, rest shape, propozed discretization...
     void initWireModel();
+
 
     void recreateTopology();
     void addNodesAndEdge(unsigned int num, Real &xend);
@@ -177,6 +182,7 @@ private:
 
 
     /// Computes the bending angle between curv abs xmin and xmax
+    /// this function calls ComputeTotalBendingRotationAngle on the beams between xmin and xmax
     Real computeBendingAngle(const Real& xmin, const Real& xmax, const Real& dx_comput, const VecCoord& Pos);
 
 
@@ -189,7 +195,6 @@ private:
 
 
     /// when the sampling is computed, this function allows for reinterpolate the position and the velocity
-    // TODO !! ADD 1/ RIGIDIFICATIONS + 2/ TOPOLOGY CHANGES + 3/ADD_BEAM (on the adaptive interpolation)
     void applyNewSampling(const vector<Real> &newCurvAbs, const vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
 
 
@@ -218,10 +223,10 @@ private:
     void updateControlPointsPositions();
 
 private:
-    ////// for point and line activer
+    /// for point and line activer
     vector<Real> m_XAbsCollisionPointsBuffer;
 
-    ///// Data:
+    /// Data:
     Data< Coord >     d_startingPos;
     Data< Real >      d_threshold;
     Data< Real >      d_maxBendingAngle;
@@ -230,32 +235,32 @@ private:
 
     /// Values in the set are interpreted as pairs (start - end) curve absciss.
     Data< set<Real> > d_rigidCurvAbs;
-    SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptiveinterpolation;
+    SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptiveInterpolation;
 
-    /////// for rigidity control
+    /// for rigidity control
     vector< std::pair<Real, Real> > m_rigidCurveSegments;
     vector< std::pair<Real, Real> > m_prevRigidCurvSegments;
     vector< bool >            m_rigidBeamList;
     vector<Transform>         m_vecGlobalHGravityCenter;
     std::map<Real, Transform> m_prevRigidTransforms;
 
-    /////// for re-interpolation
+    /// for re-interpolation
     vector<Transform>    m_vecGlobalHNode;
     vector<Deriv>        m_vecGlobalVelNode;
 
-    /////// for imposing nodes along the spline
+    /// for imposing nodes along the spline
     std::list< Real >    m_listOfImposedNodesOnXcurv;
 
     Data< vector<Real> > d_nodeCurvAbs;
     Data< vector<Vec2> > d_curvatureList;
     Data< VecCoord >     d_controlPoints;
 
-    /////////// Interface for topology changes
+    /// Interface for topology changes
     TopologyContainer*  m_topology {nullptr} ;
 
     void dummyController(vector<Real> &newCurvAbs);
 
-    //// If true update interpolation and subgraph on beginAnimationStep
+    /// If true update interpolation and subgraph on beginAnimationStep
     Data< bool >        d_updateOnBeginAnimationStep;
     Data< bool>         d_applyOrientationFirstInCreateNeedle;
     Data< bool >        d_reinitilizeWireOnInit;
@@ -263,7 +268,7 @@ private:
 
     /// internal data necessary for computeSampling
     /// bool addingBeams is true when we are currently "adding" new Beams (for more precise computation)
-    bool addingBeams;
+    bool m_addingBeams;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,13 +276,8 @@ private:
 /// overall compilation time of SOFA. In the .h these instances are declared as 'extern' meaning
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_SUTURECONTROLLER_CPP)
-#ifdef SOFA_WITH_DOUBLE
-extern template class SOFA_BEAMADAPTER_API SutureController<Rigid3dTypes>;
-#endif
-#ifdef SOFA_WITH_FLOAT
-extern template class SOFA_BEAMADAPTER_API SutureController<Rigid3fTypes>;
-#endif
+#if !defined(SOFA_SUTURECONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_
 

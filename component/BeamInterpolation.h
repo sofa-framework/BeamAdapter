@@ -40,133 +40,14 @@
 #include "initBeamAdapter.h"
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
-#include <sofa/core/objectmodel/Data.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/topology/BaseMeshTopology.h>
+#include <sofa/defaulttype/RigidTypes.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
-
-#include <sofa/helper/vector.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
-
-#include <sofa/core/objectmodel/BaseObject.h>
-
+#include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
 
 namespace sofa
 {
-
-//TODO(dmarchal 2017-05-25) Finish it or remove it in one month.
-#if 0
-namespace utils
-{
-using sofa::helper::vector;
-using sofa::helper::OptionsGroup;
-using sofa::core::topology::BaseMeshTopology;
-using sofa::core::objectmodel::BaseObjectDescription ;
-using sofa::core::objectmodel::BaseObject ;
-using sofa::core::ConstVecCoordId ;
-using sofa::defaulttype::SolidTypes ;
-using sofa::defaulttype::Vec ;
-using sofa::defaulttype::Quat ;
-using sofa::defaulttype::Rigid3dTypes ;
-using sofa::defaulttype::Rigid3fTypes ;
-using sofa::core::behavior::MechanicalState ;
-using sofa::component::container::MechanicalObject ;
-using sofa::defaulttype::StdRigidTypes ;
-
-template<class Real>
-class Spline
-{
-public:
-    typedef typename SolidTypes<Real>::Transform Transform ;
-    typedef StdRigidTypes<3,Real> VecCoord ;
-    typedef Vec<3,Real> Vec3;
-
-    template<class DataTypes>
-    void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
-    {
-        if (d_dofsAndBeamsAligned.getValue())
-        {
-            DOF0_H_local0.clear();
-            DOF1_H_local1.clear();
-            return;
-        }
-
-        DOF0_H_local0 = d_DOF0TransformNode0.getValue()[edgeInList];
-        DOF1_H_local1 = d_DOF1TransformNode1.getValue()[edgeInList];
-    }
-
-    int getNodeIndices(unsigned int edgeInList,
-                       unsigned int &node0Idx,
-                       unsigned int &node1Idx )
-    {
-        if ( this->m_topologyEdges==nullptr)
-        {
-            msg_error() <<"This object does not have edge topology defined (computation halted). " ;
-            return -1;
-        }
-
-        /// 1. Get the indices of element and nodes
-        ElementID e = this->d_edgeList.getValue()[edgeInList] ;
-        core::topology::BaseMeshTopology::Edge edge=  (*this->m_topologyEdges)[e];
-        node0Idx = edge[0];
-        node1Idx = edge[1];
-
-        return 1;
-    }
-
-//    if ( getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
-//    {
-//        dmsg_error() << "Unable to retrieve the node indices from edges. (computation halted)" ;
-//        return -1;
-//    }
-
-    static void getFrameFromIndex(const unsigned int node0Idx,
-                                  const unsigned int node1Idx,
-                                  const VecCoord &x
-                                  Transform localTransform0,
-                                  Transform localTransform1,
-                                  Transform &global_H_local0,
-                                  Transform &global_H_local1)
-    {
-        /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
-        Transform DOF0_H_local0, DOF1_H_local1;
-        //getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
-
-        /// 3. Computes the transformation global To local for both nodes
-        Transform global_H_DOF0(x[node0Idx].getCenter(), x[node0Idx].getOrientation());
-        Transform global_H_DOF1(x[node1Idx].getCenter(), x[node1Idx].getOrientation());
-        /// - add a optional transformation
-        global_H_local0 = global_H_DOF0*DOF0_H_local0;
-        global_H_local1 = global_H_DOF1*DOF1_H_local1;
-
-        return 1; /// no error
-    }
-
-//    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
-//    {
-//        msg_error("BeamAdapter") << "[getSplinePoints] error with computeTransform2. Aborting...." ;
-//        return;
-//    }
-
-//    const Real& L = this->d_lengthList.getValue()[edgeInList];
-
-    static void getControlPointsFromFrame(
-                                const Transform& global_H_local0, const Transform& global_H_local1,
-                                const Real& L,
-                                Vec3& P0, Vec3& P1,
-                                Vec3& P2, Vec3& P3)
-    {
-
-        P0=global_H_local0.getOrigin();
-        P3=global_H_local1.getOrigin();
-
-        P1= P0 + global_H_local0.getOrientation().rotate(Vec3(1.0,0,0))*(L/3.0);
-        P2= P3 + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(L/3.0);
-    }
-};
-#endif
 
 namespace component
 {
@@ -177,6 +58,7 @@ namespace fem
 namespace _beaminterpolation_
 {
 
+
 using sofa::helper::vector;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
@@ -186,12 +68,9 @@ using sofa::core::ConstVecCoordId ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::Vec ;
 using sofa::defaulttype::Quat ;
-using sofa::defaulttype::Rigid3dTypes ;
-using sofa::defaulttype::Rigid3fTypes ;
+using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::component::container::MechanicalObject ;
-
-
 
 /*!
  * \class BeamInterpolation
@@ -235,16 +114,11 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    /// These vector is related to Bézier nodes
-#ifdef SOFA_WITH_DOUBLE
-    typedef vector<Vec<3, double> > VectorVec3;
-#else
-    typedef vector<Vec<3, float> > VectorVec3;
-#endif
+    typedef vector<Vec<3, Real> > VectorVec3;
 
 public:
     BeamInterpolation() ;
-    virtual ~BeamInterpolation() {}
+    virtual ~BeamInterpolation() override {}
 
     //////////////////////////////////// Exposing this object in the factory ///////////////////////
     /// Pre-construction check method called by ObjectFactory.
@@ -259,15 +133,6 @@ public:
         return BaseObject::canCreate(obj, context, arg);
     }
 
-    virtual std::string getTemplateName() const override
-    {
-        return templateName(this);
-    }
-
-    static std::string templateName(const BeamInterpolation<DataTypes>* = nullptr)
-    {
-        return DataTypes::Name();
-    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -297,6 +162,13 @@ public:
 
     void getAbsCurvXFromBeam(int beam, Real& x_curv);
     void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
+
+    static void getControlPointsFromFrame(
+                                const Transform& global_H_local0, const Transform& global_H_local1,
+                                const Real& L,
+                                Vec3& P0, Vec3& P1,
+                                Vec3& P2, Vec3& P3);
+
 
     void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
     void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
@@ -475,13 +347,8 @@ protected :
     unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if defined(SOFA_EXTERN_TEMPLATE) && !defined(SOFA_BEAMINTERPOLATION_CPP)
-#ifdef SOFA_WITH_DOUBLE
-extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3dTypes>;
-#endif
-#ifdef SOFA_WITH_FLOAT
-extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3fTypes>;
-#endif
+#if !defined(SOFA_BEAMINTERPOLATION_CPP)
+extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 #endif
 
 } /// namespace _beaminterpolation_

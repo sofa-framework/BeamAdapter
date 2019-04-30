@@ -160,7 +160,7 @@ public:
 
     bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
 
-    void setPathToRestShape(const std::string &o){m_restShape.setPath(o);};
+    void setPathToRestShape(const std::string &o){m_restShape.setPath(o);}
 
     void getRestTransformOnX(Transform &global_H_local, const Real &x)
     {

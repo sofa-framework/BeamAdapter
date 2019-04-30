@@ -57,25 +57,15 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(SutureController)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int SutureControllerClass = core::RegisterObject("")
-#ifdef SOFA_WITH_FLOAT
-.add< SutureController<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< SutureController<Rigid3dTypes> >()
-#endif
+static int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+.add< SutureController<Rigid3Types> >(true)
+
 ;
 
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API SutureController<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API SutureController<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
+
 
 } /// _suturecontroller_
 

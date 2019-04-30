@@ -48,7 +48,6 @@
 #include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/helper/gl/template.h>
-#include <sofa/helper/system/glut.h>
 
 #include "WireRestShape.h"
 
@@ -141,11 +140,15 @@ void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
     const char* arg = args->getAttribute("procedural") ;
     if(arg)
     {
-        msg_info() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
+        msg_warning() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
                    << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
 
-        args->removeAttribute("procedural") ;
+        /// As arg is owned by the "procedural" attribute it cannot be removed before
+        /// being copied in the "isAProceduralShape". So please keep the ordering of the
+        /// two following functions.
         args->setAttribute("isAProceduralShape", arg) ;
+        args->removeAttribute("procedural") ;
+
     }
 
     Inherit1::parse(args) ;
@@ -225,8 +228,8 @@ void WireRestShape<DataTypes>::init()
 
 
     //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    if(!edge2QuadMap)
-        msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
+    //if(!edge2QuadMap)
+    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
 
 
     ////////////////////////////////////////////////////////

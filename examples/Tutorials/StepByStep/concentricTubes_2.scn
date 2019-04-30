@@ -5,7 +5,7 @@
   
  	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
 	
-	<GenericConstraintSolver tolerance="1e-6"/>
+	<GenericConstraintSolver maxIterations='1000' tolerance="1e-6"/>
 	<FreeMotionAnimationLoop/>
 	
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
@@ -17,7 +17,7 @@
 	
 	<Node name="tube_0">
 		<MeshObjLoader filename="tube.obj"/>
-		<WireRestShape template="Rigid" printLog="1" name="restShape" procedural="false"
+		<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="false"
 			densityOfBeams="10" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 			draw="true"/>
 
@@ -28,10 +28,12 @@
 		<MechanicalObject template="Rigid" name="dofTopo1" />
 	</Node>	
 	
-    <Node name="startPos">
-        <MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0 0 1.0" />
-    </Node>
+    	
+    	<Node name="startPos">
+        	<MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0 0 1.0" />
+    	</Node>
     
+	
 	<Node name="instruments">
 		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
 		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
@@ -46,9 +48,8 @@
 		
 		<LinearSolverConstraintCorrection printLog="false" />
 		<FixedConstraint name="FixedConstraint" indices="0" />
-        <RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="../startPos/startPosMO" external_points="0" />
+        	<RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="@../startPos/startPosMO" external_points="0" />
 		
-        
         
 		<Node name="VisuTube_0">
 			<MechanicalObject name="Quads" />
@@ -70,7 +71,6 @@
 	</Node>
 	
 	
-
 
 	
 </Node>

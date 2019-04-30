@@ -23,7 +23,7 @@
  * Contact information: contact@sofa-framework.org                             *
  ******************************************************************************/
 //
-// C++ Implementation : WireBeamInterpolation / AdaptiveBeamForceFieldAndMass
+// C++ Implementation : WireBeamInterpolation / AdaptiveInflatableBeamForceField
 //
 // Description:
 //
@@ -34,13 +34,12 @@
 //
 //
 
-
-#include "initBeamAdapter.h"
-#include "WireBeamInterpolation.inl"
-#include <sofa/defaulttype/VecTypes.h>
+//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP
+#include "AdaptiveInflatableBeamForceField.inl"
 
 namespace sofa
 {
@@ -48,12 +47,15 @@ namespace sofa
 namespace component
 {
 
-namespace fem
+namespace forcefield
 {
 
-namespace _wirebeaminterpolation_
+namespace _AdaptiveInflatableBeamForceField_
 {
-using namespace sofa::defaulttype;
+
+using sofa::core::RegisterObject ;
+using sofa::defaulttype::Rigid3fTypes;
+using sofa::defaulttype::Rigid3dTypes;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -64,16 +66,20 @@ using namespace sofa::defaulttype;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
-.add< WireBeamInterpolation<Rigid3Types> >();
+static int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
+.add< AdaptiveInflatableBeamForceField<Rigid3Types> >()
 
-template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;
+;
 
-} // namespace _wirebeaminterpolation_
+template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types>;
 
-} // namespace fem
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-} // namespace component
+} /// _adaptivebeamforcefiedlandmass_
 
-} // namespace sofa
+} /// namespace forcefield
+
+} /// namespace component
+
+} /// namespace sofa
 

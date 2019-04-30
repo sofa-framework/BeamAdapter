@@ -33,12 +33,13 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "../initBeamAdapter.h"
-#include "InterventionalRadiologyController.inl"
 
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
+
+#include "../initBeamAdapter.h"
+#include "InterventionalRadiologyController.inl"
 
 
 namespace sofa
@@ -47,8 +48,10 @@ namespace sofa
 namespace component
 {
 
-
 namespace controller
+{
+
+namespace _interventionalradiologycontroller_
 {
 
 using namespace sofa::defaulttype;
@@ -61,26 +64,16 @@ using namespace sofa::defaulttype;
 /// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SOFA_DECL_CLASS(InterventionalRadiologyController)
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int InterventionalRadiologyControllerClass = core::RegisterObject("")
-#ifdef SOFA_WITH_FLOAT
-.add< InterventionalRadiologyController<Rigid3fTypes> >()
-#endif
-#ifdef SOFA_WITH_DOUBLE
-.add< InterventionalRadiologyController<Rigid3dTypes> >()
-#endif
+static int InterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+.add< InterventionalRadiologyController<Rigid3Types> >(true)
+
 ;
 
-#ifdef SOFA_WITH_FLOAT
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3fTypes>;
-#endif
-#ifdef SOFA_WITH_DOUBLE
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3dTypes>;
-#endif
+template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
 
 
+} // namespace _interventionalradiologycontroller_
 
 } // namespace controller
 

@@ -116,8 +116,7 @@ struct BeamLengthMappingTest : public Mapping_test<_BeamLengthMapping>
         this->deltaRange.first= 1;
         this->deltaRange.second= 1000;
 
-
-        MechanicalObject<Rigid3>* FromModel = nullptr;
+        MechanicalObject<defaulttype::Rigid3dTypes>* FromModel = nullptr;
         this->root->getTreeObject(FromModel);
         this->inDofs = FromModel;
 
@@ -185,7 +184,7 @@ struct BeamLengthMappingTest : public Mapping_test<_BeamLengthMapping>
         this->deltaRange.second= 100000;
 
 
-        MechanicalObject<Rigid3>* FromModel = nullptr;
+        MechanicalObject<defaulttype::Rigid3dTypes>* FromModel = nullptr;
         this->root->getTreeObject(FromModel);
         this->inDofs = FromModel;
 

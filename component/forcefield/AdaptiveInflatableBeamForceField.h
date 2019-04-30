@@ -23,7 +23,7 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 //
-// C++ Implementation : BeamInterpolation / AdaptiveBeamForceFieldAndMass
+// C++ Implementation : BeamInterpolation / AdaptiveInflatableBeamForceField
 //
 // Description:
 //
@@ -33,8 +33,8 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
-#define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
+#ifndef SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H
+#define SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
@@ -78,7 +78,7 @@ namespace forcefield
 /// you should use a private namespace and "export" only this one in the public namespace.
 /// This is done at the end of this file, have a look if you are not used to this pattern.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamforcefieldandmass_
+namespace _AdaptiveInflatableBeamForceField_
 {
 
 using sofa::helper::vector;
@@ -96,19 +96,19 @@ using core::topology::BaseMeshTopology;
 using sofa::defaulttype::SolidTypes;
 
 /*!
- * \class AdaptiveBeamForceFieldAndMass
- * @brief AdaptiveBeamForceFieldAndMass Class
+ * \class AdaptiveInflatableBeamForceField
+ * @brief AdaptiveInflatableBeamForceField Class
  *
  * More informations about SOFA components:
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamForceFieldAndMass : public Mass<DataTypes>
+class AdaptiveInflatableBeamForceField : public Mass<DataTypes>
 {
 public:
 
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
+    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveInflatableBeamForceField,DataTypes),
                SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
@@ -168,8 +168,8 @@ protected:
 
 public:
 
-    AdaptiveBeamForceFieldAndMass( ) ;
-    virtual ~AdaptiveBeamForceFieldAndMass() ;
+    AdaptiveInflatableBeamForceField( ) ;
+    virtual ~AdaptiveInflatableBeamForceField() ;
 
 
     /////////////////////////////////////
@@ -222,14 +222,14 @@ public:
 
     Data<bool> d_computeMass;               ///< if false, only compute the stiff elastic model
     Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
-    Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
+    Data<Real> d_pressure;                  ///< Pressure applied inside the inflatable beams
     DataVecDeriv d_dataG;
 
 protected :
 
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
+    SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
+    SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
@@ -249,17 +249,17 @@ private:
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types> ;
+extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types> ;
 
 #endif
 
-} /// namespace _adaptivebeamforcefieldandmass_
+} /// namespace _AdaptiveInflatableBeamForceField_
 
 
 ////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
+using _AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField ;
 
 
 } /// namespace forcefield
@@ -270,4 +270,4 @@ using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
 
 
 
-#endif  /* SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H */
+#endif  /* SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H */
