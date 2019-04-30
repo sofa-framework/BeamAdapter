@@ -52,9 +52,7 @@
 #include <sofa/simulation/Simulation.h>
 #include <sofa/helper/gl/Axis.h>
 #include <sofa/core/visual/VisualParams.h>
-
-
-
+#include <iomanip>      // std::setprecision
 
 namespace sofa
 {
@@ -470,6 +468,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
     */
     d_numBeams.setValue(numBeams);
 
+    std::vector<std::vector<double> > globalMBis(numBeams*24, std::vector<double>(6));
+    std::vector<std::vector<double> > indexMBis(numBeams*24, std::vector<double>(2));
+
     Mat<3000,6, Real> globalK;     // should be Mat<numBeams*24,6>, but unable to use numBeams in static expression
     Mat<3000,6, Real> globalM;     // idem
 
@@ -592,6 +593,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
                     globalM(i+(24*b),j)=matrixMbeam_i(i,j);
                 }
             }
+            // Insert matrixMbeam_i at the end of globalM
+            for (int i=0;i<24;i++)
+            {
+                for (int j=0;j<6;j++)
+                {
+                    globalMBis[i+(24*b)][j]=matrixMbeam_i(i,j);
+            }
 
             // store matrix M indices
             indexM(idxIndexM,0)=node0Idx;
@@ -612,6 +620,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         }
     }
 
+
     if (d_storeSystemMatrices.getValue()) {
         std::ofstream f_stiffness;
         char name_stiffness[100];
@@ -625,6 +634,14 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         f_mass.open(name_mass);
         f_mass << globalM;
         f_mass.close();
+        std::ofstream f_massBis;
+        char name_massBis[100];
+        sprintf(name_massBis, "matrixMBis_%s.txt", this->getName().data());
+        f_massBis.open(name_massBis);
+        for(unsigned long i=0; i < globalMBis.size() ; i++)
+            for(unsigned long j=0; j < globalMBis[0].size() ; j++)
+                f_massBis << " " << std::scientific << std::setprecision(9) << globalMBis[i][j];
+        f_massBis.close();
         std::ofstream f_indxmass;
         char name_IndxMass[100];
         sprintf(name_IndxMass, "indexM_%s.txt", this->getName().data());
