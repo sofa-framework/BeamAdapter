@@ -375,7 +375,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintViolation(const Const
 }
 
 template<class DataTypes>
-void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab,
+void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const ConstraintParams*,std::vector<ConstraintResolution*>& resTab,
                                                                       unsigned int& offset)
 {
     unsigned int nb = m_violations.size();

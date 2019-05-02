@@ -73,8 +73,8 @@ bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *c
 	// calling buildConstraintMatrix
     //simulation::MechanicalAccumulateConstraint(&cparams /* PARAMS FIRST */, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
 
-    MechanicalSetConstraint(cParams, core::MatrixDerivId::constraintJacobian(), numConstraints).execute(context);
-    MechanicalAccumulateConstraint2(cParams, core::MatrixDerivId::constraintJacobian()).execute(context);
+    simulation::MechanicalBuildConstraintMatrix(cParams, cParams->j(), numConstraints).execute(context);
+    simulation::MechanicalAccumulateMatrixDeriv(cParams, cParams->j()).execute(context);
 
     // suppress the constraints that are on DOFS currently concerned by projective constraint
     core::MechanicalParams mparams = core::MechanicalParams(*cParams);
@@ -111,7 +111,7 @@ bool UnbuiltGenericConstraintSolver::buildSystem(const core::ConstraintParams *c
     for(unsigned int i=0; i<numConstraints;)
     {
         nbObjects++;
-        unsigned int l = unbuit_current_cp->constraintsResolutions[i]->nbLines;
+        unsigned int l = unbuit_current_cp->constraintsResolutions[i]->getNbLines();
 
         bool elem1 = false, elem2 = false;
         for (unsigned int j=0;j<constraintCorrections.size();j++)
@@ -239,7 +239,7 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
     for(i=0; i<dimension; )
     {
         constraintsResolutions[i]->init(i, w, force);
-        int nb = constraintsResolutions[i]->nbLines;
+        int nb = constraintsResolutions[i]->getNbLines();
         // TODO : previous forces don't work with multiple constraints
 //		if(cclist_elem1[i]) cclist_elem1[i]->setConstraintDForce(force, i, i+nb-1, true);
 //		if(cclist_elem2[i]) cclist_elem2[i]->setConstraintDForce(force, i, i+nb-1, true);
@@ -282,7 +282,7 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 
 
             //1. nbLines provide the dimension of the constraint  (max=6)
-            nb = constraintsResolutions[j]->nbLines;
+            nb = constraintsResolutions[j]->getNbLines();
 
             //1bis => if the compliance is null=> do not consider this contact...
             if(w[j][j]<1e-20)
@@ -336,11 +336,11 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
                     constraintsAreVerified = false;
             }
 
-            if(constraintsResolutions[j]->tolerance)
+            if(constraintsResolutions[j]->getTolerance())
             {
-                if(contraintError > constraintsResolutions[j]->tolerance)
+                if(contraintError > constraintsResolutions[j]->getTolerance())
                     constraintsAreVerified = false;
-                contraintError *= tol / constraintsResolutions[j]->tolerance;
+                contraintError *= tol / constraintsResolutions[j]->getTolerance();
             }
 
             error += contraintError;
@@ -421,7 +421,7 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 
     sofa::helper::AdvancedTimer::valSet("GS iterations", i+1);
 
-    for(i=0; i<dimension; i += constraintsResolutions[i]->nbLines)
+    for(i=0; i<dimension; i += constraintsResolutions[i]->getNbLines())
         constraintsResolutions[i]->store(i, force, convergence);
 
     if(solver)
@@ -433,12 +433,12 @@ void UnbuiltGenericConstraintProblem::unbuiltGaussSeidel(double timeout, Unbuilt
 
         for(j=0; j<dimension; )
         {
-            nb = constraintsResolutions[j]->nbLines;
+            nb = constraintsResolutions[j]->getNbLines();
 
             if(tabErrors[j])
                 graph_constraints.push_back(tabErrors[j]);
-            else if(constraintsResolutions[j]->tolerance)
-                graph_constraints.push_back(constraintsResolutions[j]->tolerance);
+            else if(constraintsResolutions[j]->getTolerance())
+                graph_constraints.push_back(constraintsResolutions[j]->getTolerance());
             else
                 graph_constraints.push_back(tol);
 

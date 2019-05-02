@@ -117,6 +117,8 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
                                    "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
+  , d_poissonRatio(initData(&d_poissonRatio, Real(0.4), "defaultPoissonRatio",
+                                   "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
@@ -267,6 +269,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
         const unsigned int edgeListSize = d_edgeList.getValue().size();
         unsigned int nd0Id=0, nd1Id=0;
+
 
         for (unsigned int i = 0; i < edgeListSize; i++)
         {
@@ -537,7 +540,7 @@ template <class DataTypes>
 void BeamInterpolation<DataTypes>::getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
     youngModulus = Real(d_defaultYoungModulus.getValue());
-    cPoisson     = Real(0.4);
+    cPoisson     = Real(d_poissonRatio.getValue());
 }
 
 
@@ -828,7 +831,7 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
         return;
     }
 
-    /// << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
+    //std::cout << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
     const Real& _L = d_lengthList.getValue()[edgeInList];
     this->getControlPointsFromFrame(global_H_local0, global_H_local1,_L,P0, P1,P2, P3);
 
@@ -838,7 +841,7 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3)
 {
-    /// the computation of integral Int[0,1] ||dP(x)||  dx = length
+    /// the computation of integral Int[0,1]_||dP(x)||_ dx = length
     /// is done using Gauss Points
 
     /// definition of the Gauss points
