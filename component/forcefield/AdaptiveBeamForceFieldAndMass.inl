@@ -617,28 +617,24 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         char name_stiffness[100];
         sprintf(name_stiffness, "matrixK_%s.txt", this->getName().data());
         f_stiffness.open(name_stiffness);
-        f_stiffness << "[";
         for(unsigned long i=0; i < globalK.size() ; i++)
         {
             for(unsigned long j=0; j < globalK[0].size() ; j++)
                 f_stiffness << " " << std::scientific << std::setprecision(9) << globalK[i][j];
              f_stiffness << ",";
         }
-        f_stiffness << "]";
         f_stiffness.close();
 
         std::ofstream f_mass;
         char name_mass[100];
         sprintf(name_mass, "matrixM_%s.txt", this->getName().data());
         f_mass.open(name_mass);
-        f_mass << "[";
         for(unsigned long i=0; i < globalM.size() ; i++)
         {
             for(unsigned long j=0; j < globalM[0].size() ; j++)
                 f_mass << " " << std::scientific << std::setprecision(9) << globalM[i][j];
             f_mass << "," ;
         }
-        f_mass << "]";
         f_mass.close();
 
         std::ofstream f_indxmass;
