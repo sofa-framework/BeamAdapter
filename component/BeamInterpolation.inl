@@ -117,6 +117,8 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
                                    "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
+  , d_poissonRatio(initData(&d_poissonRatio, Real(0.4), "defaultPoissonRatio",
+                                   "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
@@ -538,7 +540,7 @@ template <class DataTypes>
 void BeamInterpolation<DataTypes>::getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
     youngModulus = Real(d_defaultYoungModulus.getValue());
-    cPoisson     = Real(0.4);
+    cPoisson     = Real(d_poissonRatio.getValue());
 }
 
 
