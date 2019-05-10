@@ -92,3 +92,8 @@ endif()
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "plugins")
+
+# Config files and install rules for pythons scripts
+sofa_set_python_directory(${PROJECT_NAME} "python")
+
+
