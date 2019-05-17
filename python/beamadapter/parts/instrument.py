@@ -5,11 +5,11 @@ Created on Tue Mar 19 14:28:17 2019
 @author: PSC
 """
 
-def createGuide(node, listening=False, straightLength=980.0, length=1000.0, 
+def createGuide(node, name, listening=False, straightLength=980.0, length=1000.0, 
                 numEdges=200, youngModulus=20000, spireDiameter=25, 
                 numEdgesCollis=[50,10], spireHeight=0.0, densityOfBeams=[30,5], youngModulusExtremity=10000):
-    topoLines_guide = node.createChild('topoLines_guide')
-    topoLines_guide.createObject('WireRestShape', name='GuideRestShape', 
+    topoLines_guide = node.createChild('topoLines_'+name)
+    topoLines_guide.createObject('WireRestShape', name=name+'RestShape', 
                                  straightLength=straightLength, length=length, 
                                  numEdges=numEdges, youngModulus=youngModulus, 
                                  spireDiameter=spireDiameter, numEdgesCollis=numEdgesCollis, 
@@ -23,7 +23,7 @@ def createGuide(node, listening=False, straightLength=980.0, length=1000.0,
     
     return(topoLines_guide)
     
-def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments='InterpolGuide', 
+def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments=['guide'], 
                               step=0.5, listening=True, startingPos=[0, 0, 0, 1, 0, 0, 0], 
                               rotationInstrument=[0, 0, 0], speed=0, controlledInstrument=0):
     InstrumentCombined = node.createChild('InstrumentCombined')
@@ -35,12 +35,18 @@ def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments='InterpolGuide',
                                     zmax=1, zmin=1, nx=60, ny=1, nz=1, 
                                     xmax=1.0, xmin=0.0, ymin=0, ymax=0)
     InstrumentCombined.createObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d', ry=-90)
-    InstrumentCombined.createObject('WireBeamInterpolation', WireRestShape='@../topoLines_guide/GuideRestShape', 
-                                    radius=0.15, printLog=True, name='InterpolGuide')
-    InstrumentCombined.createObject('AdaptiveBeamForceFieldAndMass', massDensity=0.00000155, 
-                                    name='GuideForceField', interpolation='@InterpolGuide')
+    for i in range(len(instruments)):
+        InstrumentCombined.createObject('WireBeamInterpolation', WireRestShape='@../topoLines_'+instruments[i]+'/'+instruments[i]+'RestShape', 
+                                    radius=0.15, printLog=True, name='Interpol'+instruments[i])
+        InstrumentCombined.createObject('AdaptiveBeamForceFieldAndMass', massDensity=0.00000155, 
+                                    name=instruments[i]+'ForceField', interpolation='@Interpol'+instruments[i])
+    # InstrumentCombined.createObject('WireBeamInterpolation', WireRestShape='@../topoLines_guide/guideRestShape', 
+    #                                 radius=0.15, printLog=True, name='InterpolGuide')
+    # InstrumentCombined.createObject('AdaptiveBeamForceFieldAndMass', massDensity=0.00000155, 
+    #                                 name='GuideForceField', interpolation='@InterpolGuide')
     InstrumentCombined.createObject('InterventionalRadiologyController', xtip=xtip, name='m_ircontroller', 
-                                    instruments=instruments, step=step, printLog=True, 
+                                    instruments=['Interpol'+instruments[i] for i in range(len(instruments))], 
+                                    step=step, printLog=True, 
                                     listening=listening, template='Rigid3d', startingPos=startingPos, 
                                     rotationInstrument=rotationInstrument, speed=speed, 
                                     controlledInstrument=controlledInstrument)

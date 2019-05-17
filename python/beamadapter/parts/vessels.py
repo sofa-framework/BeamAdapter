@@ -14,8 +14,9 @@ def createGeometry(node, stl, scale=1, rotation=[0.0, 0.0, 0.0], VISUAL = True):
     Geometry.createObject('Line', moving=False, simulated=False)
     Geometry.createObject('Point', moving=False, simulated=False)
 
-    if VISUAL :
-    	Geometry.createObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader', name='Visual')
+    ### This feature is broken
+    # if VISUAL :
+    # 	Geometry.createObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader', name='Visual')
 
     
     return(Geometry)

@@ -35,5 +35,5 @@ def createScene(rootNode):
     vessels = createGeometry(rootNode, 'mesh/FlatLCA1_5.stl', scale=3, rotation=[0.0, 5.0, 0.0] , VISUAL = False)
 
     CollisionMonitor(rootNode, instrumentsCombined.DOFs, 60, 6, verbose= True )
-    CollisionMonitor(rootNode, vessels.DOFs1, len(vessels.meshLoader.position), 3)
+    CollisionMonitor(rootNode, vessels.DOFs1, len(vessels.meshLoader.position), 3, verbose = True)
     

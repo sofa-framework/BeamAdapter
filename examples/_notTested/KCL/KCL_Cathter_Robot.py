@@ -1,6 +1,9 @@
 import Sofa
 
 import os
+
+from beamadapter.parts import createGuide, createInstrumentsCombined, createGeometry
+
 path = 'mesh/'
 
 def createScene(rootNode):
