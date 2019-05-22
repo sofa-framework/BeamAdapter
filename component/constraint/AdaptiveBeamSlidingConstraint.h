@@ -70,7 +70,7 @@ using std::vector;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamSlidingConstraint : public PairInteractionConstraint<DataTypes>
+class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint : public PairInteractionConstraint<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamSlidingConstraint, DataTypes),
@@ -147,6 +147,10 @@ private:
     using PairInteractionConstraint<DataTypes>::mstate2;
     ////////////////////////////////////////////////////////////////////////////
 };
+
+#if !defined(SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<defaulttype::Rigid3Types>;
+#endif
 
 } // namespace _adaptiveBeamSlidingConstraint_
 

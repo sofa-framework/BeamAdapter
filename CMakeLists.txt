@@ -1,80 +1,121 @@
-cmake_minimum_required(VERSION 2.8)
-project("BeamAdapter")
+cmake_minimum_required(VERSION 3.1)
+project(BeamAdapter VERSION 1.0)
 
-set(BEAMADAPTER_MAJOR_VERSION 1)
-set(BEAMADAPTER_MINOR_VERSION 0)
-set(BEAMADAPTER_VERSION ${BEAMADAPTER_MAJOR_VERSION}.${BEAMADAPTER_MINOR_VERSION})
+include(cmake/environment.cmake)
 
-#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+find_package(SofaFramework REQUIRED)
+find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
 
 set(HEADER_FILES
-  #BaseRestShape.h
-  #BaseRestShape.inl
-  component/initBeamAdapter.h
+    component/initBeamAdapter.h
 
-  component/BeamInterpolation.h
-  component/BeamInterpolation.inl
-  component/WireBeamInterpolation.h
-  component/WireBeamInterpolation.inl
-  )
+    component/BeamInterpolation.h
+    component/BeamInterpolation.inl
+    component/WireBeamInterpolation.h
+    component/WireBeamInterpolation.inl
+
+    component/constraint/AdaptiveBeamSlidingConstraint.h
+    component/constraint/AdaptiveBeamSlidingConstraint.inl
+    component/constraint/AdaptiveBeamLengthConstraint.h
+    component/constraint/AdaptiveBeamLengthConstraint.inl
+#    component/constraint/ImplicitSurfaceAdaptiveConstraint.h
+#    component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
+
+    component/controller/AdaptiveBeamController.h
+    component/controller/AdaptiveBeamController.inl
+    component/controller/InterventionalRadiologyController.h
+    component/controller/InterventionalRadiologyController.inl
+    component/controller/SutureController.h
+    component/controller/SutureController.inl
+
+    component/engine/WireRestShape.h
+    component/engine/WireRestShape.inl
+    component/engine/SteerableCatheter.h
+    component/engine/SteerableCatheter.inl
+
+    component/forcefield/AdaptiveBeamForceFieldAndMass.h
+    component/forcefield/AdaptiveBeamForceFieldAndMass.inl
+    component/forcefield/AdaptiveInflatableBeamForceField.h
+    component/forcefield/AdaptiveInflatableBeamForceField.inl
+
+    component/mapping/AdaptiveBeamMapping.h
+    component/mapping/AdaptiveBeamMapping.inl
+    component/mapping/MultiAdaptiveBeamMapping.h
+    component/mapping/MultiAdaptiveBeamMapping.inl
+    )
 
 set(SOURCE_FILES
-  #BaseRestShape.cpp
-  component/initBeamAdapter.cpp
-  component/BeamInterpolation.cpp
-  component/WireBeamInterpolation.cpp
-  )
+    component/initBeamAdapter.cpp
 
-include(component/constraint/Constraint.cmake)
-include(component/controller/Controller.cmake)
-include(component/engine/Engine.cmake)
-include(component/forcefield/Forcefield.cmake)
-include(component/mapping/Mapping.cmake)
-#include(component/solver/Solver.cmake)
+    component/BeamInterpolation.cpp
+    component/WireBeamInterpolation.cpp
+
+    component/constraint/AdaptiveBeamSlidingConstraint.cpp
+    component/constraint/AdaptiveBeamLengthConstraint.cpp
+#    component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
+
+    component/controller/AdaptiveBeamController.cpp
+    component/controller/InterventionalRadiologyController.cpp
+    component/controller/SutureController.cpp
+
+    component/engine/WireRestShape.cpp
+    component/engine/SteerableCatheter.cpp
+
+    component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
+    component/forcefield/AdaptiveInflatableBeamForceField.cpp
+
+    component/mapping/AdaptiveBeamMapping.cpp
+    component/mapping/MultiAdaptiveBeamMapping.cpp
+    )
 
 set(README_FILE "BeamAdapter.txt" )
 
-if(PLUGIN_SOFAADVANCEDCONSTRAINT)
-set(HEADER_FILES ${HEADER_FILES}
-  AdaptiveBeamContactMapper.h
-  AdaptiveBeamContactMapper.inl
-  AdaptiveBeamFrictionContact.h
-  AdaptiveBeamFrictionContact.inl
-  MultiAdaptiveBeamContactMapper.h
-  MultiAdaptiveBeamContactMapper.inl
-)
+find_package(SofaAdvancedConstraint QUIET)
+if(SofaAdvancedConstraint_FOUND)
+    set(HEADER_FILES ${HEADER_FILES}
+        component/AdaptiveBeamContactMapper.h
+        component/AdaptiveBeamContactMapper.inl
+#        component/AdaptiveBeamFrictionContact.h
+#        component/AdaptiveBeamFrictionContact.inl
+        component/MultiAdaptiveBeamContactMapper.h
+        component/MultiAdaptiveBeamContactMapper.inl
+        )
 
-set(SOURCE_FILES ${SOURCE_FILES}
-  AdaptiveBeamContactMapper.cpp
-  AdaptiveBeamFrictionContact.cpp
-  MultiAdaptiveBeamContactMapper.cpp
-)
-        #find_package(CUDA REQUIRED)
-        #cuda_include_directories(${SOFA_CUDA_DIR})
-        #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
-        #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
+    set(SOURCE_FILES ${SOURCE_FILES}
+        component/AdaptiveBeamContactMapper.cpp
+        component/AdaptiveBeamFrictionContact.cpp
+        component/MultiAdaptiveBeamContactMapper.cpp
+        )
+
+    #find_package(CUDA REQUIRED)
+    #cuda_include_directories(${SOFA_CUDA_DIR})
+    #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
+    #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
 endif()
+
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
-
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_BEAMADAPTER")
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${HEADER_FILES}")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>")
-target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
+#target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
-
-find_package(SofaFramework REQUIRED)
-find_package(SofaImplicitField REQUIRED) #for ImplicitSurfaceAdaptiveConstraint
 
 target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField)
 
 ## Install rules for the library and headers; CMake package configurations files
-sofa_create_package(BeamAdapter ${BEAMADAPTER_VERSION} ${PROJECT_NAME} BeamAdapter)
+sofa_generate_package(
+    NAME BeamAdapter VERSION ${PROJECT_VERSION}
+    TARGETS ${PROJECT_NAME}
+    INCLUDE_INSTALL_DIR BeamAdapter
+    EXAMPLE_INSTALL_DIR examples
+    RELOCATABLE "plugins"
+    )
 
-# if only this was possible...
-if(SOFA_BUILD_TESTS)
+
+option(BEAMADAPTER_BUILD_TESTS "Build unit tests" ON)
+if(BEAMADAPTER_BUILD_TESTS)
     add_subdirectory(BeamAdapter_test)
 endif()
 
@@ -91,4 +132,6 @@ endif()
 #
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET_PROPERTY(TARGET ${PROJECT_NAME}	PROPERTY FOLDER "plugins")
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")
+
+include(cmake/packaging.cmake)
