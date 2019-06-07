@@ -9,7 +9,7 @@ def createGeometry(node, stl, scale=1, rotation=[0.0, 0.0, 0.0], VISUAL = True):
     Geometry = node.createChild('Vessels')
     Geometry.createObject('MeshSTLLoader', filename=stl, flipNormals=True, triangulate=True, name='meshLoader', scale=scale, rotation=rotation)
     Geometry.createObject('Mesh', position='@meshLoader.position', triangles='@meshLoader.triangles')
-    Geometry.createObject('MechanicalObject', name='DOFs1', scale=scale, rotation=rotation)
+    Geometry.createObject('MechanicalObject', name='DOFs1', scale=1, rotation=rotation)
     Geometry.createObject('Triangle', moving=False, simulated=False)
     Geometry.createObject('Line', moving=False, simulated=False)
     Geometry.createObject('Point', moving=False, simulated=False)
