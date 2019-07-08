@@ -144,10 +144,10 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
     addSlave(m_StateNodes);
 }
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getControlPointsFromFrame(const Transform& global_H_local0, const Transform& global_H_local1,
-                                                             const Real& L,
-                                                             Vec3& P0, Vec3& P1,
-                                                             Vec3& P2, Vec3& P3)
+ void BeamInterpolation<DataTypes>::getControlPointsFromFrame(const Transform& global_H_local0, const Transform& global_H_local1,
+                                                              const Real& L,
+                                                              Vec3& P0, Vec3& P1,
+                                                              Vec3& P2, Vec3& P3)
 {
     P0=global_H_local0.getOrigin();
     P3=global_H_local1.getOrigin();
@@ -301,8 +301,8 @@ void BeamInterpolation<DataTypes>::bwdInit()
             // finding the real length can not be done in one step
             // we do it in 3 iterations
             for (unsigned it=0; it<3; it++){
-                // now that we have an approximation of the length, we can estimate the position of the spline control point;
-                Vec3 P0,P1,P2,P3;
+                 // now that we have an approximation of the length, we can estimate the position of the spline control point;
+                 Vec3 P0,P1,P2,P3;
                 getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
 
                 // and we can compute more precisely the length
@@ -1120,56 +1120,6 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
     bezierPosVec[index*4+2]= bezierPosVec[index*4+3] + global_H_local1.getOrientation().rotate(Vec3(-1,0,0))*(_L/3.0); //P2
 }
 
-sofa::core::ConstVecCoordId::MyVecId getVecCoordIdFor(const CoordType type)
-{
-    switch(type)
-    {
-    case CoordType::CurrentPosition:
-        return sofa::core::ConstVecCoordId::position();
-    case CoordType::RestPosition:
-        return sofa::core::ConstVecCoordId::restPosition();
-    case CoordType::FreePosition:
-        return sofa::core::ConstVecCoordId::freePosition();
-    }
-    return sofa::core::ConstVecCoordId::freePosition();
-}
-
-template<class DataTypes>
-void BeamInterpolation<DataTypes>::getValuesAt(const CoordType type,
-                                               const LocalCoordinates& points,
-                                               InterpolatedValues& values)
-{
-    ReadAccessor<Data< VecCoord >> x = m_mstate->read( getVecCoordIdFor(type) );
-    bool computeVel = type != CoordType::RestPosition;
-
-    values.resize(points.size());
-    for (unsigned int i=0; i<points.size(); i++)
-    {
-        size_t beamId = points[i].indice;
-        Real baryCoord= points[i].absciss;
-
-        /// convert position (RigidTypes) in Transform
-        Transform global_H_local0, global_H_local1;
-        computeTransform2(beamId, global_H_local0, global_H_local1, x.ref() );
-
-        /// compute the length of the spline
-        Vec3 P0,P1,P2,P3;
-        getSplinePoints(beamId, x.ref() , P0,  P1, P2, P3);
-
-        Real length;
-        computeActualLength(length,P0,P1,P2,P3);
-
-        /// get the result of the transform:
-        Transform global_H_localResult;
-
-        InterpolateTransformUsingSpline(global_H_localResult,
-                                        baryCoord,global_H_local0,global_H_local1,length);
-
-        /// assign the result in the output data
-        values[i].position.getCenter() = global_H_localResult.getOrigin();
-        values[i].position.getOrientation() = global_H_localResult.getOrientation();
-    }
-}
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::updateInterpolation(){
@@ -1271,7 +1221,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
 
     /// find the spline points
-    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
+     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     Real bx=baryCoord;
     Vec3 posResult;
@@ -1327,7 +1277,7 @@ void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord,
 {
     Vec3 P0,P1,P2,P3 ;
 
-    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
+     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     t =       P0*(-3*(1-baryCoord)*(1-baryCoord))
             + P1*(3-12*baryCoord+9*baryCoord*baryCoord)

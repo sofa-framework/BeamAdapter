@@ -41,7 +41,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public Sofa_test<>
                 "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               <Mesh name='meshSuture' edges='0 1' />"
-                "               <MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+                "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
                 "               <BeamInterpolation name='Interpol' radius='0.1'/>"
                 "               <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
                 "               <FixedConstraint indices='0' />"
