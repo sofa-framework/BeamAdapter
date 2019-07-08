@@ -300,6 +300,7 @@ public:
     Data<Real>          d_lengthZ;
     Data<bool>          d_dofsAndBeamsAligned;
     Data<Real>          d_defaultYoungModulus;
+    Data<Real>          d_poissonRatio;
     Data<bool>          d_straight;
 
     virtual void clear();

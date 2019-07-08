@@ -80,7 +80,7 @@ using core::RegisterObject;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
                 .add< AdaptiveBeamLengthConstraint<Rigid3Types> >(true) // default template
-        
+
         ;
 
 template class AdaptiveBeamLengthConstraint<Rigid3Types>;

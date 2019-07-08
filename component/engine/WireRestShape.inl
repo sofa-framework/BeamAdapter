@@ -36,6 +36,9 @@
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
 
+#include "WireRestShape.h"
+#include <cmath>
+
 #include <sofa/core/behavior/MechanicalState.h>
 #include <SofaBaseTopology/QuadSetTopologyModifier.h>
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
@@ -48,8 +51,6 @@
 #include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/helper/gl/template.h>
-
-#include "WireRestShape.h"
 
 #include <iostream>
 #include <fstream>

@@ -252,7 +252,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintViolation(const Cons
 
 
 template<class DataTypes>
-void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(vector<ConstraintResolution*>& resTab,
+void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(const ConstraintParams* cParams,
+                                                                vector<ConstraintResolution*>& resTab,
                                                                 unsigned int& offset)
 {
     unsigned int nb = mstate2->getSize();

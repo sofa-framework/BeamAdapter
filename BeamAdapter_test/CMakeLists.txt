@@ -1,28 +1,24 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1)
 
-project(BeamAdapter_test)
+project(BeamAdapter_test VERSION 1.0)
+
+find_package(BeamAdapter REQUIRED)
+find_package(SofaTest REQUIRED)
+find_package(SofaGTestMain REQUIRED)
 
 set(SOURCE_FILES
     BeamInterpolation_test.cpp
-    WireBeamInterpolation_test.cpp)
+    WireBeamInterpolation_test.cpp
+    component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
+    component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp
+    )
 
-set(HEADER_FILES )
-
-include(component/forcefield/ForceFieldTest.cmake)
-include(component/constraint/ConstraintTest.cmake)
-
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RC_FILES})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 
-find_package(SofaFramework REQUIRED)
-find_package(SofaCommon REQUIRED)
-find_package(SofaTest REQUIRED)
-find_package(BeamAdapter REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} SofaTest SofaGTestMain BeamAdapter SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaComponentCommon)
+target_link_libraries(${PROJECT_NAME} BeamAdapter SofaTest SofaGTestMain SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaComponentCommon)
 
 add_definitions("-DBEAMADAPTER_TEST_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\"")
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-

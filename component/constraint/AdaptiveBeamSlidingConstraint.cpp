@@ -103,7 +103,7 @@ int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be
         
         ;
 
-template class AdaptiveBeamSlidingConstraint<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3Types>;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

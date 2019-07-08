@@ -30,7 +30,7 @@
 
 #ifdef SOFA_HAVE_SOFAPYTHON
 #define SOFA_BUILD_PYTHONCODE true
-#include <BeamAdapter/component/binding/Module_BeamAdapter.h>
+#include "binding/Module_BeamAdapter.h"
 #else
 #define SOFA_BUILD_PYTHONCODE false
 #endif

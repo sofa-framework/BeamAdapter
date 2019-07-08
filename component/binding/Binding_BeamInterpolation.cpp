@@ -25,7 +25,7 @@ using sofa::defaulttype::Rigid3Types;
 
 #include <SofaPython/PythonToSofa.inl>
 #include <SofaPython/PythonFactory.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include "../../component/BeamInterpolation.h"
 using sofa::component::fem::BeamInterpolation;
 
 #include "Binding_BeamInterpolation.h"

@@ -1,0 +1,100 @@
+import Sofa
+import SofaPython
+from math import sin,cos, sqrt
+import os
+
+path = os.path.dirname(os.path.abspath(__file__))+'/'
+
+
+
+
+def createScene(rootNode):
+    rootNode.createObject('RequiredPlugin', name='BeamAdapter')
+    rootNode.createObject('RequiredPlugin', name='SofaPython')
+    rootNode.createObject('VisualStyle', displayFlags='showVisualModels showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields showInteractionForceFields showWireframe')
+
+
+    rootNode.createObject('FreeMotionAnimationLoop', solveVelocityConstraintFirst='0')
+    rootNode.createObject('GenericConstraintSolver', maxIterations='1000', tolerance='1e-10', printLog='1')
+    rootNode.createObject('CollisionPipeline', verbose='0')
+    rootNode.createObject('CollisionResponse', response='FrictionContact', responseParams='mu=0.0')
+    rootNode.createObject('BruteForceDetection', name='N2')
+    rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="3", contactDistance="0.1", angleCone='0.1')
+
+    #rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
+    #rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
+
+
+    rootNode.findData('dt').value= 0.01;
+    rootNode.findData('gravity').value= '0 -9.81 0';
+
+    #length:
+    beamLengthMap=0
+
+    # parameters
+    length = 0.4; # 40 cm
+    radius = 0.001; # 1mm
+    YoungModulus = 3e6 # Nylon
+    PoissonRatio = 0.4 # Steel
+    VolumeMass = 1.24e3 #  1.24 g/cm^3 Nylon (Wikipedia)  soit 1.24e3 kg/m^3
+
+    #numerical parameters
+    numFrames = 4;
+
+
+
+    wire = rootNode.createChild('wire')
+    wire .createObject('EulerImplicitSolver', firstOrder="0", rayleighStiffness="1.0", rayleighMass='1.0')
+    #wire.createObject('PCGLinearSolver', name='linearSolver', iterations='200', tolerance='1.0e-18', preconditioners="preconditioner")
+    wire.createObject('SparseLDLSolver', name='preconditioner')
+    wire.createObject('GenericConstraintCorrection', solverName="preconditioner")
+    #wire.createObject('RegularGrid', name='grid', n=str(numFrames)+' 1 1', min='0 0 0', max=str(length)+' 0 0')
+    topo = wire.createObject('EdgeSetTopologyContainer', edges='0 1 1 2 2 3 3 4', position='0 0 0   0.1 0 0   0.2 0 0   0.3 0 0   0.5 0 0')
+    topo.init()
+    #mechanics:
+    frames = wire.createObject('MechanicalObject', template='Rigid3d', name='frames', showObject='1', showObjectScale='0.02', showIndices="1")
+
+    wire.createObject('BeamInterpolation', name='BeamInterpolation', printLog = '1', defaultYoungModulus=str(YoungModulus), defaultPoissonRatio=str(PoissonRatio),  dofsAndBeamsAligned='false', straight='1', crossSectionShape='circular', radius=radius, DOF0TransformNode0='0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1 ', DOF1TransformNode1=' 0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1   -0.1 0 0 0 0 0 1 ')
+    wire.createObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', computeMass='1', massDensity=str(VolumeMass))
+    wire.createObject('RestShapeSpringsForceField', name='anchor', points='0', stiffness='1e6', angularStiffness='1e-2')
+
+    wire.createObject('UniformMass', indices='4', totalMass='0.2', showAxisSizeFactor='0.2', vertexMass='0.2 0.008 0.0133 0.005 0.005 0.005 0.0133 0.005 0.005 0.005 0.0133')
+
+    #visual:
+    visual = wire.createChild('visual')
+    visual.createObject('CylinderGridTopology', name='topo', center='0 0 0', axis='1 0 0', radius=str(radius), length=str(length) ,  n='3 3  '+str(numFrames*4), computeHexaList='0', computeQuadList='0', drawHexahedra='0')
+    visual.createObject('MechanicalObject', template='Vec3', name='visual')
+
+    visual.createObject('AdaptiveBeamMapping', interpolation='@../BeamInterpolation', input='@../frames', output='@./visual' , useCurvAbs='1')
+
+    visualM = visual.createChild('visualM')
+    visualM.createObject('OglModel',  color='0 0 1 0.2' )
+    visualM.createObject('IdentityMapping')
+
+    #cube:
+    cube = wire.createChild('cube')
+    cube.createObject('MeshObjLoader', filename='mesh/cube.obj', scale='0.1', name='loader', translation="0 0 0")
+    cube.createObject('OglModel', src='@loader')
+    cube.createObject('RigidMapping', index='4')
+
+
+
+    #length:
+    #beamLengthMap=1
+    if(beamLengthMap):
+
+        lengthVector = [0.1, 0.1, 0.1, 0.1]
+        lengthNode= wire.createChild('lengthConstraint')
+        lengthNode.createObject('MechanicalObject', template='Vec1d', name='mappedDOFs', position=lengthVector)
+        lengthNode.createObject('BeamLengthMapping', name='beamLMap', interpolation='@../BeamInterpolation', geometricStiffness='1')
+        lengthNode.createObject('UniformConstraint', template="Vec1d", iterative="false")
+
+    else:
+        lengthVector = [0.1, 0.1, 0.1, 0.2]
+        lengthNode= wire.createChild('lengthConstraint')
+        lengthNode.createObject('MechanicalObjeBeamLengthMappingct', template='Vec1d', name='mappedDOFs', position=lengthVector)
+        lengthNode.createObject('DistanceMapping', name='beamLMap')
+        lengthNode.createObject('UniformConstraint', template="Vec1d", iterative="false")
+
+    wire.createObject('MappingGeometricStiffnessForceField', mapping="@./lengthConstraint/beamLMap")
+    return rootNode

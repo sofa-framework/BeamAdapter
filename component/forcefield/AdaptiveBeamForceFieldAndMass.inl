@@ -83,6 +83,7 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
+    , d_dataG(initData(&d_dataG,"dataG","Gravity vector"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
@@ -805,6 +806,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
                 vparams->drawTool()->drawLines(points,2, Vec<4,float>(1,0,0,1));
 
             double length = (double) l_interpolation->getLength(b);
+
 
             Vec3 localPos(0.0,0.0,0.0);
             Real baryX = 0.5;
