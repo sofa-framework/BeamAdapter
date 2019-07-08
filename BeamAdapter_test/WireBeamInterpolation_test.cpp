@@ -47,10 +47,10 @@ struct WireBeamInterpolationTest : public Sofa_test<>,
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               <EdgeSetTopologyContainer/> "
                 "               <EdgeSetTopologyModifier /> "
-                "               <EdgeSetTopologyAlgorithms template='Rigid3' /> "
-                "               <EdgeSetGeometryAlgorithms template='Rigid3' /> "
+                "               <EdgeSetTopologyAlgorithms template='Rigid' /> "
+                "               <EdgeSetGeometryAlgorithms template='Rigid' /> "
                 "               $line1"
-                "               <WireBeamInterpolation template='Rigid3' name='Interpol' WireRestShape='@restShape' radius='0.1'/>"
+                "               <WireBeamInterpolation template='Rigid' name='Interpol' WireRestShape='@restShape' radius='0.1'/>"
                 "               $line2"
                 "</Node> " ;
 
@@ -83,24 +83,24 @@ struct WireBeamInterpolationTest : public Sofa_test<>,
 static std::vector<std::vector<std::string>> teststrings ={
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        "<WireRestShape template='Rigid3' name='restShape' length='600.0'  straightLength='400' spireDiameter='4000.0' spireHeight='0.0' densityOfBeams='15 0' numEdges='200' numEdgesCollis='40 40'  youngModulus='1000' youngModulusExtremity='1000'/>"
-        "<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<WireRestShape template='Rigid' name='restShape' length='600.0'  straightLength='400' spireDiameter='4000.0' spireHeight='0.0' densityOfBeams='15 0' numEdges='200' numEdgesCollis='40 40'  youngModulus='1000' youngModulusExtremity='1000'/>"
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ""
         ,""
         , "T"
     },
     {
-        "<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,"<Mesh name='meshSuture' edges='0 1' />"
         , "T"
     },
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        ,"<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,"<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         , "W"
     },
     {
-        "<MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
         , "W"
     },
