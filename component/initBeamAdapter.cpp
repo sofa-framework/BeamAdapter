@@ -28,76 +28,83 @@
 #include <cstring>
 #include <string>
 
-#ifdef SOFA_DEV
-#include "AdaptiveBeamContactMapper.h"
-#include "MultiAdaptiveBeamContactMapper.h"
-#endif // SOFA_DEV
+#ifdef SOFA_HAVE_SOFAPYTHON
+#define SOFA_BUILD_PYTHONCODE true
+#include "binding/Module_BeamAdapter.h"
+#else
+#define SOFA_BUILD_PYTHONCODE false
+#endif
 
 namespace sofa
 {
 
 namespace component
 {
-	extern "C" {
-		SOFA_BEAMADAPTER_API void initExternalModule();
-		SOFA_BEAMADAPTER_API const char* getModuleLicense();
-		SOFA_BEAMADAPTER_API const char* getModuleName();
-		SOFA_BEAMADAPTER_API const char* getModuleVersion();
-		SOFA_BEAMADAPTER_API const char* getModuleDescription();
-		SOFA_BEAMADAPTER_API const char* getModuleComponentList();
-	}
+extern "C" {
+SOFA_BEAMADAPTER_API void initExternalModule();
+SOFA_BEAMADAPTER_API const char* getModuleLicense();
+SOFA_BEAMADAPTER_API const char* getModuleName();
+SOFA_BEAMADAPTER_API const char* getModuleVersion();
+SOFA_BEAMADAPTER_API const char* getModuleDescription();
+SOFA_BEAMADAPTER_API const char* getModuleComponentList();
+}
 
-	//Here are just several convenient functions to help user to know what contains the plugin
-	
-	void initExternalModule()
-	{
-		static bool first = true;
-		if (first)
-		{
-			first = false;
-		}
-	}
-	const char* getModuleLicense()
-	{
-		return "INRIA and Digital-Trainers";
-	}
+//Here are just several convenient functions to help user to know what contains the plugin
 
-	const char* getModuleName()
-	{
-		return "BeamAdapter";
-	}
+void initExternalModule()
+{
+    static bool first = true;
+    if (first)
+    {
+        first = false;
 
-	const char* getModuleVersion()
-	{
-		return "0.1";
-	}
+        if(SOFA_BUILD_PYTHONCODE)
+        {
+           initBinding();
+        }
+    }
+}
+const char* getModuleLicense()
+{
+    return "INRIA and Digital-Trainers";
+}
 
-	const char* getModuleDescription()
-	{
-		return "A dynamic adapter that modulates the DOF repartition of a beam model according to its radius of curvature.";
-	}
+const char* getModuleName()
+{
+    return "BeamAdapter";
+}
 
-	const char* getModuleComponentList()
-	{
-        return	"AdaptiveBeamConstraint \n"
-                "AdaptiveBeamController \n"
-                "AdaptiveBeamForceFieldAndMass"
-                "AdaptiveBeamLengthConstraint"
-                "AdaptiveBeamMapping"
-                "BeamInterpolation"
-                "InterventionalRadiologyController"
-                "MultiAdaptiveBeamMapping"
-                "SteerableCatheter"
-                "SutureController"
-                "UnbuiltGenericConstraintSolver"
-                "WireBeamInterpolation"
-                "WireRestShape";
-	}
+const char* getModuleVersion()
+{
+    return "0.1";
+}
+
+const char* getModuleDescription()
+{
+    return "A dynamic adapter that modulates the DOF repartition of a beam model according to its radius of curvature.";
+}
+
+const char* getModuleComponentList()
+{
+    return	"AdaptiveBeamConstraint \n"
+            "AdaptiveBeamController \n"
+            "AdaptiveBeamForceFieldAndMass"
+            "AdaptiveBeamLengthConstraint"
+            "AdaptiveBeamMapping"
+            "BeamInterpolation"
+            "InterventionalRadiologyController"
+            "MultiAdaptiveBeamMapping"
+            "SteerableCatheter"
+            "SutureController"
+            "UnbuiltGenericConstraintSolver"
+            "WireBeamInterpolation"
+            "WireRestShape";
+}
 } 
 } 
 
 
 
 #ifdef SOFA_HAVE_SOFAEVE
-    #endif
+#endif
 
