@@ -118,7 +118,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
   , d_poissonRatio(initData(&d_poissonRatio, Real(0.4), "defaultPoissonRatio",
-                                   "value of the poisson ratio if not defined in an other component"))
+                            "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
@@ -1191,12 +1191,14 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         /// get the result of the transform:
         Transform global_H_localResult;
 
+
         if(computeVel)
         {
             InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
         else
         {
+            msg_warning("BeamInterpolation")<<"Becareful, This part run the same code as computeVel==True , need to be fixed !";
             InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
 
