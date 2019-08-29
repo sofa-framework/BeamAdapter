@@ -138,7 +138,7 @@ def createInstrumentsCombinedXRay(node, xtip=[1, 0, 0], instruments=['guide'],
 
     # Collision model
     Collis = InstrumentCombined.createChild('Collis')
-    Collis.activated = 'true'
+    #Collis.activated = 'true'
     Collis.createObject('EdgeSetTopologyContainer', name='collisEdgeSet')
     Collis.createObject('EdgeSetTopologyModifier', name='colliseEdgeModifier')
     Collis.createObject('MechanicalObject', name='CollisionDOFs')
@@ -149,7 +149,7 @@ def createInstrumentsCombinedXRay(node, xtip=[1, 0, 0], instruments=['guide'],
 
     # Visualization Guide
     VisuGuide = InstrumentCombined.createChild('VisuGuide')
-    VisuGuide.activated = 'true'
+    #VisuGuide.activated = 'true'
     VisuGuide.createObject('MechanicalObject', name='Quads')
     VisuGuide.createObject('QuadSetTopologyContainer', name='ContainerGuide')
     VisuGuide.createObject('QuadSetTopologyModifier', name='Modifier')
