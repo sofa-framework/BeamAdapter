@@ -1195,10 +1195,10 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         {
             InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
-        else
-        {
-            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
-        }
+//        else
+//        {
+//            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+//        }
 
         /// assign the result in the output data
         interpolatedPos[i].getCenter() = global_H_localResult.getOrigin();
