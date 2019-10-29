@@ -112,7 +112,7 @@ template <class DataTypes>
     if (this->isControlled()){
         msg_info() << "external controller for this ForceField is detected" ;
     }else{
-        msg_error() << "not straightRestShape or this->Edge_List is assigned" ;
+        msg_error() << "no external controller for this ForceField !" ;
     }
 }
 

@@ -118,7 +118,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
   , d_poissonRatio(initData(&d_poissonRatio, Real(0.4), "defaultPoissonRatio",
-                                   "value of the poisson ratio if not defined in an other component"))
+                            "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::container::MechanicalObject<sofa::defaulttype::Vec3Types> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
@@ -144,10 +144,10 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
     addSlave(m_StateNodes);
 }
 template <class DataTypes>
- void BeamInterpolation<DataTypes>::getControlPointsFromFrame(const Transform& global_H_local0, const Transform& global_H_local1,
-                                                              const Real& L,
-                                                              Vec3& P0, Vec3& P1,
-                                                              Vec3& P2, Vec3& P3)
+void BeamInterpolation<DataTypes>::getControlPointsFromFrame(const Transform& global_H_local0, const Transform& global_H_local1,
+                                                             const Real& L,
+                                                             Vec3& P0, Vec3& P1,
+                                                             Vec3& P2, Vec3& P3)
 {
     P0=global_H_local0.getOrigin();
     P3=global_H_local1.getOrigin();
@@ -237,9 +237,13 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
     m_topologyEdges = &m_topology->getEdges();
 
+    msg_info()<< "=====> m_topologyEdges : "<< m_topology->getEdges() ;
+
 
     if (!interpolationIsAlreadyInitialized())
     {
+        msg_info()<< "=====> interpolationIsAlreadyInitialized : " ;
+
         VecElementID &edgeList = *d_edgeList.beginEdit();
 
         edgeList.clear();
@@ -301,8 +305,8 @@ void BeamInterpolation<DataTypes>::bwdInit()
             // finding the real length can not be done in one step
             // we do it in 3 iterations
             for (unsigned it=0; it<3; it++){
-                 // now that we have an approximation of the length, we can estimate the position of the spline control point;
-                 Vec3 P0,P1,P2,P3;
+                // now that we have an approximation of the length, we can estimate the position of the spline control point;
+                Vec3 P0,P1,P2,P3;
                 getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
 
                 // and we can compute more precisely the length
@@ -311,10 +315,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
                 lengthList[i]=ActualLength;
             }
 
-
         }
-
-
         d_lengthList.endEdit();
     }
 
@@ -588,10 +589,11 @@ void BeamInterpolation<DataTypes>::getAbsCurvXFromBeam(int beam, Real& x_curv_st
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
+void BeamInterpolation<DataTypes>::getDOFtoLocalTransform(const unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1)
 {
     if (d_dofsAndBeamsAligned.getValue())
     {
+        //set to identity
         DOF0_H_local0.clear();
         DOF1_H_local1.clear();
         return;
@@ -1221,7 +1223,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
 
     /// find the spline points
-     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
+    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     Real bx=baryCoord;
     Vec3 posResult;
@@ -1277,7 +1279,7 @@ void BeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real& baryCoord,
 {
     Vec3 P0,P1,P2,P3 ;
 
-     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
+    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
     t =       P0*(-3*(1-baryCoord)*(1-baryCoord))
             + P1*(3-12*baryCoord+9*baryCoord*baryCoord)

@@ -23,6 +23,8 @@ set(HEADER_FILES
 
     component/controller/AdaptiveBeamController.h
     component/controller/AdaptiveBeamController.inl
+    component/controller/InterventionalRadiology.h
+    component/controller/InterventionalRadiology.inl
     component/controller/InterventionalRadiologyController.h
     component/controller/InterventionalRadiologyController.inl
     component/controller/SutureController.h
@@ -55,6 +57,7 @@ set(SOURCE_FILES
 #    component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
 
     component/controller/AdaptiveBeamController.cpp
+    component/controller/InterventionalRadiology.cpp
     component/controller/InterventionalRadiologyController.cpp
     component/controller/SutureController.cpp
 
@@ -130,6 +133,12 @@ endif()
 #
 # Organize projects into folders
 #
+
+### Python binding
+
+if (WITH_SOFAPYTHON3)
+    add_subdirectory(bindings)
+endif()
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")

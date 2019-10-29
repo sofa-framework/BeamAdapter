@@ -170,7 +170,7 @@ public:
                                 Vec3& P2, Vec3& P3);
 
 
-    void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
+    void getDOFtoLocalTransform(const unsigned int edgeInList, Transform &DOF0_H_local0, Transform &DOF1_H_local1);
     void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
 
 

@@ -8,24 +8,24 @@
 	<GenericConstraintSolver maxIterations="1000" tolerance="1e-6"/>
 	<FreeMotionAnimationLoop/>
 	
-	<CollisionPipeline depth="6" verbose="1" draw="0"/>
+	<!-- <CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceDetection name="N2" />
 	<LocalMinDistance name="localmindistance" alarmDistance="5" contactDistance="2" />
 	<CollisionResponse name="Response" response="FrictionContact" />
-	<CollisionGroup name="Group" />
+	<CollisionGroup name="Group" /> -->
 	
 	
 	<Node name="tube_0">
-		<MeshObjLoader filename="tube.obj"/>
-		<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="false"
+		<MeshObjLoader filename="tube.obj" name="tubeLoader" />
+		<WireRestShape template="Rigid3d" printLog="1" name="restShape" isAProceduralShape="false"
 			densityOfBeams="100" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
 			draw="true"/>
 
 		<EdgeSetTopologyContainer name="meshLines" />
 		<EdgeSetTopologyModifier   name="Modifier" />
-		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
-		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
-		<MechanicalObject template="Rigid" name="dofTopo1" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid3d" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid3d"/>
+		<MechanicalObject template="Rigid3d" name="dofTopo1" />
 	</Node>	
 	
 </Node>

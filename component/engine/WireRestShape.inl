@@ -73,6 +73,8 @@ namespace _wirerestshape_
 using sofa::helper::vector ;
 using sofa::core::objectmodel::TagSet ;
 using sofa::core::objectmodel::BaseContext ;
+using sofa::helper::ReadAccessor ;
+using sofa::core::topology::Topology;
 
 /*!
  * @brief Default Constructor.
@@ -81,27 +83,27 @@ template <class DataTypes>
 WireRestShape<DataTypes>::WireRestShape() :
     //TODO(dmarchal 2017-05-17) not sure that procedural & nonProceduralScale are very understandable name...are they exclusives ?
     //if so have look in my comment in the init section.
-    d_isAProceduralShape( initData(&d_isAProceduralShape,(bool)true,"isAProceduralShape","is the guidewire shape mathemetically defined ?") )
-  , d_nonProceduralScale( initData ( &d_nonProceduralScale, (Real)1.0, "nonProceduralScale", "scale of the model defined by file" ) )
-  , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
-  , d_straightLength(initData(&d_straightLength, (Real)0.0, "straightLength", "length of the initial straight shape"))
-  , d_spireDiameter(initData(&d_spireDiameter, (Real)0.1, "spireDiameter", "diameter of the spire"))
-  , d_spireHeight(initData(&d_spireHeight, (Real)0.01, "spireHeight", "height between each spire"))
+    d_isAProceduralShape( initData(&d_isAProceduralShape,static_cast<bool>(true),"isAProceduralShape","is the guidewire shape mathemetically defined ?") )
+  , d_nonProceduralScale( initData ( &d_nonProceduralScale, static_cast<Real>(1.0), "nonProceduralScale", "scale of the model defined by file" ) )
+  , d_length(initData(&d_length, static_cast<Real>(1.0), "length", "total length of the wire instrument"))
+  , d_straightLength(initData(&d_straightLength, static_cast<Real>(0.0), "straightLength", "length of the initial straight shape"))
+  , d_spireDiameter(initData(&d_spireDiameter, static_cast<Real>(1.0), "spireDiameter", "diameter of the spire"))
+  , d_spireHeight(initData(&d_spireHeight, static_cast<Real>(0.01), "spireHeight", "height between each spire"))
   , d_density(initData(&d_density, "densityOfBeams", "density of beams between key points"))
   , d_keyPoints(initData(&d_keyPoints,"keyPoints","key points of the shape (curv absc)"))
   , d_numEdges(initData(&d_numEdges, 10, "numEdges","number of Edges for the visual model"))
   , d_numEdgesCollis(initData(&d_numEdgesCollis,"numEdgesCollis", "number of Edges for the collision model" ))
-  , d_poissonRatio(initData(&d_poissonRatio,(Real)0.49,"poissonRatio","Poisson Ratio"))
-  , d_youngModulus1(initData(&d_youngModulus1,(Real)5000,"youngModulus","Young Modulus"))
-  , d_youngModulus2(initData(&d_youngModulus2,(Real)3000,"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
-  , d_radius1(initData(&d_radius1,(Real)1.0f,"radius","radius"))
-  , d_radius2(initData(&d_radius2,(Real)1.0f,"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
-  , d_innerRadius1(initData(&d_innerRadius1,(Real)0.0f,"innerRadius","inner radius if it applies"))
-  , d_innerRadius2(initData(&d_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
-  , d_massDensity1(initData(&d_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
-  , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
-  , d_brokenIn2(initData(&d_brokenIn2, (bool)false, "brokenIn2", ""))
-  , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
+  , d_poissonRatio(initData(&d_poissonRatio,static_cast<Real>(0.49),"poissonRatio","Poisson Ratio"))
+  , d_youngModulus1(initData(&d_youngModulus1,static_cast<Real>(5000),"youngModulus","Young Modulus"))
+  , d_youngModulus2(initData(&d_youngModulus2,static_cast<Real>(3000),"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
+  , d_radius1(initData(&d_radius1,static_cast<Real>(1.0f),"radius","radius"))
+  , d_radius2(initData(&d_radius2,static_cast<Real>(1.0f),"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
+  , d_innerRadius1(initData(&d_innerRadius1,static_cast<Real>(0.0f),"innerRadius","inner radius if it applies"))
+  , d_innerRadius2(initData(&d_innerRadius2,static_cast<Real>(0.0f),"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
+  , d_massDensity1(initData(&d_massDensity1,static_cast<Real>(1.0),"massDensity", "Density of the mass (usually in kg/m^3)" ))
+  , d_massDensity2(initData(&d_massDensity2,static_cast<Real>(1.0),"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
+  , d_brokenIn2(initData(&d_brokenIn2, static_cast<bool>(false), "brokenIn2", ""))
+  , d_drawRestShape(initData(&d_drawRestShape,  static_cast<bool>(false), "draw", "draw rest shape"))
   , edge2QuadMap(nullptr)
 {
     d_spireDiameter.setGroup("Procedural");
@@ -142,7 +144,7 @@ void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
     if(arg)
     {
         msg_warning() << "The attribute 'procedural' has been renamed into 'isAProceduralShape'. " << msgendl
-                   << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
+                      << "To remove this warning you need to update your scene and replace 'procedural' with 'isAProceduralShape'" ;
 
         /// As arg is owned by the "procedural" attribute it cannot be removed before
         /// being copied in the "isAProceduralShape". So please keep the ordering of the
@@ -172,7 +174,7 @@ void WireRestShape<DataTypes>::init()
             msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" ;
         else
         {
-            msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges" ;
+            msg_info() << "Found a mesh named "<< loader->getName() << " with "<< loader->d_edges.getValue().size() << " edges" ;
             initFromLoader();
             initRestConfig();
         }
@@ -209,6 +211,8 @@ void WireRestShape<DataTypes>::init()
     _topology->cleanup();
     Real dx = this->d_length.getValue() / d_numEdges.getValue();
 
+    std::cout << "====> this->d_length : "<< this->d_length.getValue() << " d_numEdges : "<< d_numEdges.getValue() << std::endl;
+
     /// add points
     for ( int i=0; i<d_numEdges.getValue()+1; i++)
         _topology->addPoint( i*dx, 0, 0);
@@ -244,9 +248,7 @@ void WireRestShape<DataTypes>::init()
             keyPointList.push_back(d_straightLength.getValue());
         keyPointList.push_back(d_length.getValue());
     }
-
     d_keyPoints.endEdit();
-
 
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
@@ -260,12 +262,14 @@ void WireRestShape<DataTypes>::init()
 
             if(d_straightLength.getValue()>= 0.001*this->d_length.getValue() )
             {
-                int numNodes = (int) floor(5.0*d_straightLength.getValue() / d_length.getValue() );
+                ///@todo why 5.0 ? Younes
+                int numNodes = static_cast<int>(floor(5.0*d_straightLength.getValue() / d_length.getValue()) );
                 densityList.push_back(numNodes);
             }
             if( d_straightLength.getValue() <=  0.999*d_length.getValue())
             {
-                int numNodes = (int) floor(20.0*(1.0 - d_straightLength.getValue() / d_length.getValue()) );
+                ///@todo why 20 ? Younes
+                int numNodes = static_cast<int>(floor(20.0*(1.0 - d_straightLength.getValue() / d_length.getValue())) );
                 densityList.push_back(numNodes);
             }
         }
@@ -317,6 +321,8 @@ void WireRestShape<DataTypes>::bwdInit()
 template <class DataTypes>
 void WireRestShape<DataTypes>::releaseWirePart(){
 
+    msg_info() << "=================> Called ! getSamplingParameters ";
+
     d_brokenIn2.setValue(true);
 
     if ( edgeMod == NULL )
@@ -325,7 +331,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
         return;
     }
     ///////// remove the edge that is cut //////
-    for ( int i=0; i<_topology->getNbPoints(); i++)
+    for ( unsigned int i=0; i<_topology->getNbPoints(); i++)
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
@@ -362,7 +368,7 @@ template <class DataTypes>
 void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
                                                      vector<int>& nbP_density) const
 {
-
+    msg_info() << "=================> Called ! getSamplingParameters ";
     xP_noticeable.clear();
     nbP_density.clear();
 
@@ -390,6 +396,7 @@ void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable
 template <class DataTypes>
 void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv)
 {
+    msg_info() << "=================> Called ! getCollisionSampling ";
     unsigned int numLines;
     Real x_used = x_curv - EPSILON;
     if(x_used>d_length.getValue())
@@ -402,7 +409,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
     if( d_numEdgesCollis.getValue().size() != d_keyPoints.getValue().size()-1)
     {
         msg_error() << "Problem size of numEdgesCollis ()" << d_numEdgesCollis.getValue().size() << " !=  size of keyPoints-1 " << d_keyPoints.getValue().size()-1 ;
-        numLines = (unsigned int)d_numEdgesCollis.getValue()[0];
+        numLines = static_cast<unsigned int>(d_numEdgesCollis.getValue()[0]);
         dx=d_length.getValue()/numLines;
         return;
     }
@@ -412,7 +419,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
     {
         if( x_used < this->d_keyPoints.getValue()[i] )
         {
-            numLines = (unsigned int)d_numEdgesCollis.getValue()[i-1];
+            numLines = static_cast<unsigned int>(d_numEdgesCollis.getValue()[i-1]);
             dx=(this->d_keyPoints.getValue()[i] - this->d_keyPoints.getValue()[i-1])/numLines;
             return;
         }
@@ -426,6 +433,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
 template <class DataTypes>
 void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, const Real &x)
 {
+    msg_info() << "=================> Called ! getRestTransformOnX ";
     Real x_used = x - EPSILON;
 
     if(x_used>d_length.getValue())
@@ -487,6 +495,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 template <class DataTypes>
 void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson)
 {
+    msg_info() << "=================> Called ! getYoungModulusAtX ";
     //Initialization
     Real _E1, _E2;
     youngModulus = 0.0;
@@ -518,6 +527,7 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
 template <class DataTypes>
 void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
 {
+    msg_info() << "=================> Called ! getInterpolationParam ";
     if(x_curv <= this->d_straightLength.getValue())
     {
         if(d_massDensity1.isSet())
@@ -588,11 +598,12 @@ bool WireRestShape<DataTypes>::checkTopology()
         return false;
     }
 
-    //TODO(dmarchal 2017-05-17) when writing a TODO please specify:
+
+    /// \todo check if the topology is like a wire
+    ///
+    /// //TODO(dmarchal 2017-05-17) when writing a TODO please specify:
     // who will do that
     // when it will be done
-    /// \todo check if the topology is like a wire
-
 
     return true;
 }
@@ -605,25 +616,27 @@ void WireRestShape<DataTypes>::initFromLoader()
     if (!checkTopology())
         return;
 
-    vector<Vec3> vertices;
-    vector<Vec2> edges;
-
-    //get the topology position
-    typedef  vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
-    topoPosition &topoVertices = (*loader->d_positions.beginEdit());
+    vector<Vec3> vertices; vertices.clear();
+    vector<Vec2> edges; edges.clear();
 
     //copy the topology edges in a local vector
+    ///@todo TODO Use a readAccessor intead of this .beginEdit()
     typedef  vector<sofa::core::topology::Topology::Edge > topoEdge;
     topoEdge &topoEdges = (*loader->d_edges.beginEdit());
     for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
         edges.push_back(Vec2((*it)[0], (*it)[1]));
     loader->d_edges.endEdit();
 
+    //get the topology position
+    //typedef  vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
+    //topoPosition &topoVertices = (*loader->d_positions.beginEdit());
+    ReadAccessor<Data<vector<Vec3>>> topoVertices = loader->d_positions;
     /** renumber the vertices  **/
     vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
     for(unsigned int i =0; i < topoVertices.size(); i++)
         verticesConnexion.push_back(2);
 
+    //Find the extremities
     for(unsigned int i = 0; i < edges.size(); i++)
     {
         Vec2 ed = edges[i];
@@ -632,7 +645,6 @@ void WireRestShape<DataTypes>::initFromLoader()
         verticesConnexion[e1]--;
         verticesConnexion[e2]--;
     }
-
     msg_info() << "Successfully compute the vertex connexion" ;
 
     // check for the first corner of the edge
@@ -689,8 +701,7 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     for(unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
         m_localRestPositions[i] *= d_nonProceduralScale.getValue();
-
-    loader->d_positions.endEdit();
+    //loader->d_positions.endEdit();
 }
 
 
@@ -713,7 +724,6 @@ void WireRestShape<DataTypes>::initRestConfig()
         tot += norm;
 
         this->rotateFrameForAlignX(input, vec, output);
-
         input = output;
 
         m_localRestTransforms[i+1].setOrientation(output);
@@ -722,20 +732,21 @@ void WireRestShape<DataTypes>::initRestConfig()
 
         m_localRestTransforms[i+1].setOrigin(localPos);
 
+
         m_curvAbs.push_back(tot);
     }
+
     m_absOfGeometry = tot;
 
     Real newLength = d_straightLength.getValue() + m_absOfGeometry;
     d_length.setValue(newLength);
-
-    msg_info() <<"Length of the loaded shape = "<< m_absOfGeometry << ", total length with straight length = " << newLength ;
 }
 
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
 {
+    msg_info() << "=================> Called ! getRestPosNonProcedural ";
     /*** find the range which includes the "requested" abs ***/
     double startingAbs = 0; unsigned int index = 0;
 
@@ -794,6 +805,7 @@ void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned in
 template <class DataTypes>
 void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q, Quat &result)
 {
+    msg_info() << "=================> Called ! computeOrientation ";
     Vec3 PQ = AB;
     Quat quat = Q;
 

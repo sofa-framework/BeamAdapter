@@ -23,7 +23,7 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 //
-// C++ Implementation : InterventionalRadiologyController
+// C++ Implementation : InterventionalRadiology
 //
 // Description:
 //
@@ -35,8 +35,8 @@
 //
 //
 
-#ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
+#ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGY_H
+#define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGY_H
 
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
@@ -45,7 +45,7 @@
 #include <sofa/core/DataEngine.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
-
+#include <sofa/helper/AdvancedTimer.h>
 #include "../WireBeamInterpolation.h"
 
 
@@ -66,7 +66,7 @@ namespace component
 {
 namespace controller
 {
-namespace _interventionalradiologycontroller_
+namespace _interventionalradiology_
 {
 
 using sofa::defaulttype::Vec;
@@ -79,18 +79,18 @@ using sofa::component::projectiveconstraintset::FixedConstraint;
 
 
 /*!
- * \class InterventionalRadiologyController
- * @brief InterventionalRadiologyController Class
+ * \class InterventionalRadiology
+ * @brief InterventionalRadiology Class
  *
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class InterventionalRadiologyController : public MechanicalStateController<DataTypes>,
+class InterventionalRadiology : public MechanicalStateController<DataTypes>,
                                           public collision::PointActiver,
                                           public collision::LineActiver
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiology,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
     typedef typename DataTypes::VecCoord                            VecCoord;
     typedef typename DataTypes::VecDeriv                            VecDeriv;
     typedef typename DataTypes::Coord                               Coord   ;
@@ -107,8 +107,8 @@ public:
     typedef fem::WireBeamInterpolation<DataTypes>   WBeamInterpolation;
 
 public:
-    InterventionalRadiologyController();
-    virtual ~InterventionalRadiologyController(){}
+    InterventionalRadiology();
+    virtual ~InterventionalRadiology(){}
 
     ////////////////////// Inherited from BaseObject ///////////////////////////////////////////////
     virtual void init() override ;
@@ -116,13 +116,11 @@ public:
     virtual void reinit() override;
     virtual void draw(const core::visual::VisualParams*) override {}
     virtual std::string getTemplateName() const override;
-    static std::string templateName(const InterventionalRadiologyController<DataTypes>* = NULL);
+    static std::string templateName(const InterventionalRadiology<DataTypes>* = NULL);
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     ////////////////////// Inherited from Controller ///////////////////////////////////////////////
-    virtual void onMouseEvent(core::objectmodel::MouseEvent *) override ;
-    virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *) override ;
     virtual void onBeginAnimationStep(const double dt) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -147,7 +145,7 @@ public:
     using Inherit1::getContext;
     using Inherit1::getMechanicalState;
 
-    /// Conditional elements for construction of InterventionalRadiologyController
+    /// Conditional elements for construction of InterventionalRadiology
     Data< vector< std::string > >  d_instrumentsPath;
     vector< WBeamInterpolation * > m_instrumentsList;
 
@@ -155,17 +153,18 @@ public:
     vector<bool> m_activatedPointsBuf;
 
     /// Interface for interventionalRadiology instruments:
-    virtual void applyInterventionalRadiologyController(void);
-    virtual void computeVertexT();
+    virtual void applyInterventionalRadiology(void);
 
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
-    void interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs, vector< vector<int> > &id_instrument_table, const vector<Real> &xBegin, const Real& xEnd);
+    void interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs, vector< vector<int> > &id_instrument_table, const vector<Real> &xBegin, const Real& totalLengthCombined);
     /// Sort the curv Abs in the ascending order and avoid doubloon
     void sortCurvAbs(vector<Real> &CurvAbs,  vector< vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const vector<Real>& newNodeCurvAbs, vector<Real>& modifiedNodeCurvAbs, const vector< vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( vector<Real> &curv_abs, vector< vector<int> > &id_instrument_table);
     void loadMotionData(std::string filename);
+
+//    void findTotalLengthCombined (vector<Real>& newCurvAbs, vector<Real> & xbegin, Real totalLengthCombined);
 
     Data<int>            d_controlledInstrument;
     Data<vector<Real>>   d_xTip;
@@ -176,24 +175,19 @@ public:
     Data<Coord>          d_startingPos;
     Data<Real>           d_threshold;
     Data<vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
-    Data<std::string>    d_motionFilename;
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
     Data<vector<Real>>   d_curvAbs;
+    Data<vector<Real>>   d_totalLengths;
 
-    bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;
-    vector<int>                     m_droppedInstruments;
-    vector<Vec3d>                   m_sensorMotionData;
-    unsigned int                    m_currentSensorData;
     vector<Real>                    m_nodeCurvAbs;
     vector< vector<int> >           m_idInstrumentCurvAbsTable;
     unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
-    bool                            m_dropCall;
 };
 
 } // namespace _interventionalradiologycontroller_
 
-using _interventionalradiologycontroller_::InterventionalRadiologyController;
+using _interventionalradiology_::InterventionalRadiology;
 
 } // namespace controller
 
@@ -201,4 +195,4 @@ using _interventionalradiologycontroller_::InterventionalRadiologyController;
 
 } // namespace sofa
 
-#endif /* SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H */
+#endif /* SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGY_H */
