@@ -53,10 +53,10 @@
 namespace sofa {
 namespace component {
 namespace topology {
-    template <class T> class EdgeSetGeometryAlgorithms;
-    class EdgeSetTopologyModifier;
-    }
-  }
+template <class T> class EdgeSetGeometryAlgorithms;
+class EdgeSetTopologyModifier;
+}
+}
 }
 
 
@@ -86,8 +86,8 @@ using sofa::component::projectiveconstraintset::FixedConstraint;
  */
 template<class DataTypes>
 class InterventionalRadiology : public MechanicalStateController<DataTypes>,
-                                          public collision::PointActiver,
-                                          public collision::LineActiver
+        public collision::PointActiver,
+        public collision::LineActiver
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiology,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
@@ -163,8 +163,28 @@ public:
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( vector<Real> &curv_abs, vector< vector<int> > &id_instrument_table);
     void loadMotionData(std::string filename);
+    void getTotalLengthCombined(vector<Real> &newCurvAbs, vector<Real>& xbegin, Real &totalLengthCombined){
+        Real xend;
+        for (unsigned int i=0; i<m_instrumentsList.size(); i++)
+        {
+            xend= d_xTip.getValue()[i];
+            msg_info() << "======> xend :"<< xend << "  m_instrumentsList[i]->getRestTotalLength() :"<< m_instrumentsList[i]->getRestTotalLength();
+            Real xb = xend - m_instrumentsList[i]->getRestTotalLength();
+            xbegin.push_back(xb);
 
-//    void findTotalLengthCombined (vector<Real>& newCurvAbs, vector<Real> & xbegin, Real totalLengthCombined);
+            if (xend> totalLengthCombined)
+                totalLengthCombined=xend;
+
+            // clear the present interpolation of the beams
+            m_instrumentsList[i]->clear();
+
+            // create the first node (on x=0)
+            if( xend > 0.0)
+                newCurvAbs.push_back(0.0);
+        }
+    }
+
+    //    void findTotalLengthCombined (vector<Real>& newCurvAbs, vector<Real> & xbegin, Real totalLengthCombined);
 
     Data<int>            d_controlledInstrument;
     Data<vector<Real>>   d_xTip;

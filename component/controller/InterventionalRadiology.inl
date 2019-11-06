@@ -178,6 +178,18 @@ void InterventionalRadiology<DataTypes>::bwdInit()
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
 
+
+    //verify  if the totalLength is 0, move the first instrument
+    Real totalLengthCombined = 0.0;
+    vector<Real> &xTip = (*d_xTip.beginEdit());
+    for (int m = 0; m < xTip.size(); ++m) {
+        if (xTip[m] > totalLengthCombined)
+            totalLengthCombined = xTip[m];
+    }
+    if(totalLengthCombined<0.0001)
+        xTip[0]=0.0001;
+    d_xTip.endEdit();
+
     applyInterventionalRadiology();
 
 
@@ -447,7 +459,6 @@ template <class DataTypes>
 void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 {
     /// Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
-    vector<Real> newCurvAbs;
 
     /// In case of drop:
     unsigned int previousNumControlledNodes = m_numControlledNodes;
@@ -455,43 +466,14 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 
     /// STEP 1
     /// Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
-    Real xend;
+    ///
+
     helper::AdvancedTimer::stepBegin("step1");
+    vector<Real> newCurvAbs;
     Real totalLengthCombined=0.0;
     vector<Real> xbegin;
-    for (unsigned int i=0; i<m_instrumentsList.size(); i++)
-    {
-        xend= d_xTip.getValue()[i];
-        msg_info() << "======> xend :"<< xend << "  m_instrumentsList[i]->getRestTotalLength() :"<< m_instrumentsList[i]->getRestTotalLength();
-        Real xb = xend - m_instrumentsList[i]->getRestTotalLength();
-        xbegin.push_back(xb);
-
-        if (xend> totalLengthCombined)
-        {
-            totalLengthCombined=xend;
-        }
-
-        // clear the present interpolation of the beams
-        m_instrumentsList[i]->clear();
-
-        if( xend > 0.0)
-        {// create the first node (on x=0)
-            newCurvAbs.push_back(0.0);
-        }
-    }
-
-    /// Some verif of step 1
-    // if the totalLength is 0, move the first instrument
-    if(totalLengthCombined<0.0001)
-    {
-        vector<Real> &x = (*d_xTip.beginEdit());
-        x[0]=0.0001;
-        d_xTip.endEdit();
-        applyInterventionalRadiology();
-        return;
-    }
+    getTotalLengthCombined(newCurvAbs, xbegin, totalLengthCombined);
     helper::AdvancedTimer::stepEnd("step1");
-
 
     /// STEP 2:
     /// get the noticeable points that need to be simulated
@@ -531,14 +513,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
         //2. this is not the case and the node position can be interpolated using previous step positions
         if(xabs > xmax_prev + d_threshold.getValue())
         {
-            if (f_printLog.getValue()){
-                serr<<"case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
-                serr<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<m_nodeCurvAbs<<sendl;
-                serr<<"modifiedCurvAbs ="<<modifiedCurvAbs<<sendl;
-            }
-            // case 1 (the abs curv is further than the previous state of the instrument)
-            // verifier qu'il s'agit bien d'un instrument qu'on est en train de controller
-            // interpoler toutes les positions "sorties" de l'instrument en supprimant l'ajout de dx qu'on vient de faire
+            std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<< std::endl;
         }
         else
         {
