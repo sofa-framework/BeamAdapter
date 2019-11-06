@@ -182,26 +182,26 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
     if (_Asy == 0)
         phiy = 0.0;
     else
-        phiy = (Real)(24.0*(1.0+_nu)*_Iz/(_Asy*L2));
+        phiy =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)*_Iz/(_Asy*L2));
 
     if (_Asz == 0)
         phiz = 0.0;
     else
-        phiz = (Real)(24.0*(1.0+_nu)*_Iy/(_Asz*L2));
+        phiz =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)*_Iy/(_Asz*L2));
 
     beamLocalMatrices.m_K00.clear(); beamLocalMatrices.m_K01.clear(); beamLocalMatrices.m_K10.clear(); beamLocalMatrices.m_K11.clear();
 
     /// diagonal values
-    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = _E*_A/_L;
-    beamLocalMatrices.m_K00[1][1] = beamLocalMatrices.m_K11[1][1] = (Real)(12.0*EIz/(L3*(1.0+phiy)));
-    beamLocalMatrices.m_K00[2][2] = beamLocalMatrices.m_K11[2][2]   = (Real)(12.0*EIy/(L3*(1.0+phiz)));
-    beamLocalMatrices.m_K00[3][3] = beamLocalMatrices.m_K11[3][3]   = _G*_J/_L;
-    beamLocalMatrices.m_K00[4][4] = beamLocalMatrices.m_K11[4][4]   = (Real)((4.0+phiz)*EIy/(_L*(1.0+phiz)));
-    beamLocalMatrices.m_K00[5][5] = beamLocalMatrices.m_K11[5][5]   = (Real)((4.0+phiy)*EIz/(_L*(1.0+phiy)));
+    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = (_L == 0.0)? 0.0 :_E*_A/_L;
+    beamLocalMatrices.m_K00[1][1] = beamLocalMatrices.m_K11[1][1] = (L3 == 0.0)? 0.0 :(Real)(12.0*EIz/(L3*(1.0+phiy)));
+    beamLocalMatrices.m_K00[2][2] = beamLocalMatrices.m_K11[2][2] = (L3 == 0.0)? 0.0 : (Real)(12.0*EIy/(L3*(1.0+phiz)));
+    beamLocalMatrices.m_K00[3][3] = beamLocalMatrices.m_K11[3][3] = (_L == 0.0)? 0.0 : _G*_J/_L;
+    beamLocalMatrices.m_K00[4][4] = beamLocalMatrices.m_K11[4][4] = (_L == 0.0)? 0.0 : (Real)((4.0+phiz)*EIy/(_L*(1.0+phiz)));
+    beamLocalMatrices.m_K00[5][5] = beamLocalMatrices.m_K11[5][5] = (_L == 0.0)? 0.0 : (Real)((4.0+phiy)*EIz/(_L*(1.0+phiy)));
 
     /// diagonal blocks
-    beamLocalMatrices.m_K00[4][2]   = (Real)(-6.0*EIy/(L2*(1.0+phiz)));
-    beamLocalMatrices.m_K00[5][1]   = (Real)( 6.0*EIz/(L2*(1.0+phiy)));
+    beamLocalMatrices.m_K00[4][2]  =(L2 == 0.0)? 0.0 : (Real)(-6.0*EIy/(L2*(1.0+phiz)));
+    beamLocalMatrices.m_K00[5][1]  =(L2 == 0.0)? 0.0 : (Real)( 6.0*EIz/(L2*(1.0+phiy)));
     beamLocalMatrices.m_K11[5][1]  = -beamLocalMatrices.m_K00[5][1];
     beamLocalMatrices.m_K11[4][2]  = -beamLocalMatrices.m_K00[4][2];
 
@@ -213,9 +213,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
     beamLocalMatrices.m_K10[2][4]   = -beamLocalMatrices.m_K00[4][2];
     beamLocalMatrices.m_K10[3][3]   = -beamLocalMatrices.m_K00[3][3];
     beamLocalMatrices.m_K10[4][2]  = beamLocalMatrices.m_K00[4][2];
-    beamLocalMatrices.m_K10[4][4]  = (Real)((2.0-phiz)*EIy/(_L*(1.0+phiz)));
+    beamLocalMatrices.m_K10[4][4]  =(_L == 0.0)? 0.0 : (Real)((2.0-phiz)*EIy/(_L*(1.0+phiz)));
     beamLocalMatrices.m_K10[5][1]  = beamLocalMatrices.m_K00[5][1];
-    beamLocalMatrices.m_K10[5][5]  = (Real)((2.0-phiy)*EIz/(_L*(1.0+phiy)));
+    beamLocalMatrices.m_K10[5][5]  =(_L == 0.0)? 0.0 : (Real)((2.0-phiy)*EIz/(_L*(1.0+phiy)));
 
     /// Make a symetric matrix with diagonal blocks
     for (int i=0; i<=5; i++)
@@ -258,15 +258,15 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam, BeamLocalMa
 
     /// diagonal values
     beamLocalMatrix.m_M00[0][0] = beamLocalMatrix.m_M11[0][0] = (Real)(1.0/3.0);
-    beamLocalMatrix.m_M00[1][1] = beamLocalMatrix.m_M11[1][1] = (Real)(13.0/35.0 + 6.0*_Iz/(5.0*_A*L2));
-    beamLocalMatrix.m_M00[2][2] = beamLocalMatrix.m_M11[2][2] = (Real)(13.0/35.0 + 6.0*_Iy/(5.0*_A*L2));
-    beamLocalMatrix.m_M00[3][3] = beamLocalMatrix.m_M11[3][3] = (Real)(_J/(3.0*_A));
-    beamLocalMatrix.m_M00[4][4] = beamLocalMatrix.m_M11[4][4] = (Real)(L2/105.0 + 2*_Iy/(15.0*_A));
-    beamLocalMatrix.m_M00[5][5] = beamLocalMatrix.m_M11[5][5] = (Real)(L2/105.0 + 2*_Iz/(15.0*_A));
+    beamLocalMatrix.m_M00[1][1] = beamLocalMatrix.m_M11[1][1] =(L2 == 0.0) || (_A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0*_Iz/(5.0*_A*L2));
+    beamLocalMatrix.m_M00[2][2] = beamLocalMatrix.m_M11[2][2] =(L2 == 0.0) || (_A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0*_Iy/(5.0*_A*L2));
+    beamLocalMatrix.m_M00[3][3] = beamLocalMatrix.m_M11[3][3] =(_A == 0.0) ? 0.0: (Real)(_J/(3.0*_A));
+    beamLocalMatrix.m_M00[4][4] = beamLocalMatrix.m_M11[4][4] =(_A == 0.0) ? 0.0: (Real)(L2/105.0 + 2*_Iy/(15.0*_A));
+    beamLocalMatrix.m_M00[5][5] = beamLocalMatrix.m_M11[5][5] =(_A == 0.0) ? 0.0: (Real)(L2/105.0 + 2*_Iz/(15.0*_A));
 
     /// diagonal blocks
-    beamLocalMatrix.m_M00[4][2]  = (Real)(-11.0*_L/210.0 - _Iy/(10*_A*_L)  );
-    beamLocalMatrix.m_M00[5][1]  = (Real)( 11.0*_L/210.0 + _Iz/(10*_A*_L)  );
+    beamLocalMatrix.m_M00[4][2]  =(_L == 0.0) || (_A ==0.0) ? 0.0 : (Real)(-11.0*_L/210.0 - _Iy/(10*_A*_L)  );
+    beamLocalMatrix.m_M00[5][1]  =(_L == 0.0) || (_A ==0.0) ? 0.0 : (Real)( 11.0*_L/210.0 + _Iz/(10*_A*_L)  );
     beamLocalMatrix.m_M11[5][1]  = -beamLocalMatrix.m_M00[5][1];
     beamLocalMatrix.m_M11[4][2]  = -beamLocalMatrix.m_M00[4][2];
 
@@ -275,14 +275,14 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam, BeamLocalMa
 
     /// lower non-diagonal blocks
     beamLocalMatrix.m_M10[0][0]  = (Real)(1.0/6.0);
-    beamLocalMatrix.m_M10[1][1]  = (Real)(9.0/70.0 - 6.0*_Iz/(5.0*_A*L2));
-    beamLocalMatrix.m_M10[2][2]  = (Real)(9.0/70.0 - 6.0*_Iy/(5.0*_A*L2));
-    beamLocalMatrix.m_M10[3][3]  = (Real)(_J/(6.0*_A));
-    beamLocalMatrix.m_M10[4][4]  = (Real)(-L2/140.0 - _Iy/(30.0*_A));
-    beamLocalMatrix.m_M10[5][5]  = (Real)(-L2/140.0 - _Iz/(30.0*_A));
+    beamLocalMatrix.m_M10[1][1]  = (L2 == 0.0) || (_A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0*_Iz/(5.0*_A*L2));
+    beamLocalMatrix.m_M10[2][2]  = (L2 == 0.0) || (_A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0*_Iy/(5.0*_A*L2));
+    beamLocalMatrix.m_M10[3][3]  = (_A == 0.0) ? 0.0: (Real)(_J/(6.0*_A));
+    beamLocalMatrix.m_M10[4][4]  = (_A == 0.0) ? 0.0: (Real)(-L2/140.0 - _Iy/(30.0*_A));
+    beamLocalMatrix.m_M10[5][5]  = (_A == 0.0) ? 0.0: (Real)(-L2/140.0 - _Iz/(30.0*_A));
 
-    beamLocalMatrix.m_M10[1][5]  = (Real)( 13*_L/420.0 - _Iz/(10.0*_A*_L));
-    beamLocalMatrix.m_M10[2][4]  = (Real)(-13*_L/420.0 + _Iy/(10.0*_A*_L));
+    beamLocalMatrix.m_M10[1][5]  = (_L == 0.0) || (_A ==0.0) ? 0.0 :(Real)( 13*_L/420.0 - _Iz/(10.0*_A*_L));
+    beamLocalMatrix.m_M10[2][4]  = (_L == 0.0) || (_A ==0.0) ? 0.0 :(Real)(-13*_L/420.0 + _Iy/(10.0*_A*_L));
     beamLocalMatrix.m_M10[4][2]  = -beamLocalMatrix.m_M10[2][4];
     beamLocalMatrix.m_M10[5][1]  = -beamLocalMatrix.m_M10[1][5];
 
