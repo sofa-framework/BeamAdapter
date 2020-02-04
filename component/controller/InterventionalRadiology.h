@@ -194,7 +194,7 @@ public:
     Data<Real>           d_speed;
     Data<Coord>          d_startingPos;
     Data<Real>           d_threshold;
-    Data<vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
+    //    Data<vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
     Data<vector<Real>>   d_curvAbs;
     Data<vector<Real>>   d_totalLengths;
