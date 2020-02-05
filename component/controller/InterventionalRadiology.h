@@ -156,12 +156,12 @@ public:
     virtual void applyInterventionalRadiology(void);
 
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
-    void interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs, vector< vector<int> > &id_instrument_table, const vector<Real> &xBegin, const Real& totalLengthCombined);
+    void interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs, vector< vector<int> > &id_instrument_table, const vector<Real> &xBegin);
     /// Sort the curv Abs in the ascending order and avoid doubloon
     void sortCurvAbs(vector<Real> &CurvAbs,  vector< vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const vector<Real>& newNodeCurvAbs, vector<Real>& modifiedNodeCurvAbs, const vector< vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
-    void activateBeamListForCollision( vector<Real> &curv_abs, vector< vector<int> > &id_instrument_table);
+    void activateBeamListForCollision( vector< vector<int> > &id_instrument_table);
     void loadMotionData(std::string filename);
     void getTotalLengthCombined(vector<Real> &newCurvAbs, vector<Real>& xbegin, Real &totalLengthCombined){
         Real xend;

@@ -182,7 +182,7 @@ void InterventionalRadiology<DataTypes>::bwdInit()
     //verify  if the totalLength is 0, move the first instrument
     Real totalLengthCombined = 0.0;
     vector<Real> &xTip = (*d_xTip.beginEdit());
-    for (int m = 0; m < xTip.size(); ++m) {
+    for (unsigned int m = 0; m < xTip.size(); ++m) {
         if (xTip[m] > totalLengthCombined)
             totalLengthCombined = xTip[m];
     }
@@ -219,8 +219,7 @@ void InterventionalRadiology<DataTypes>::onBeginAnimationStep(const double dt)
 template <class DataTypes>
 void InterventionalRadiology<DataTypes>::interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs,
                                                                                 vector< vector<int> > &idInstrumentTable,
-                                                                                const vector<Real> &xBegin,
-                                                                                const Real& xend)
+                                                                                const vector<Real> &xBegin)
 {
     // Step 1 = put the noticeable Nodes (keyPoints from wireRestShape)
     double maxAbsLength=0.0;
@@ -278,8 +277,7 @@ void InterventionalRadiology<DataTypes>::interventionalRadiologyComputeSampling(
 
 
 template <class DataTypes>
-void InterventionalRadiology<DataTypes>::activateBeamListForCollision( vector<Real> &curv_abs,
-                                                                       vector< vector<int> > &idInstrumentTable)
+void InterventionalRadiology<DataTypes>::activateBeamListForCollision( vector< vector<int> > &idInstrumentTable)
 {
     // 0. useful for rigidification
     //    const vector<Real>  *rigidCurvAbs = &d_rigidCurvAbs.getValue();
@@ -314,8 +312,8 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 
     helper::AdvancedTimer::stepBegin("step1");
     vector<Real> newCurvAbs;
-    Real totalLengthCombined=0.0;
     vector<Real> xbegin;
+    Real totalLengthCombined=0.0;
     getTotalLengthCombined(newCurvAbs, xbegin, totalLengthCombined);
     helper::AdvancedTimer::stepEnd("step1");
 
@@ -326,7 +324,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
     //     => xbegin (theoritical curv abs of the beginning point of the instrument (could be negative) xbegin= xtip - intrumentLength)
     helper::AdvancedTimer::stepBegin("step2");
     vector<vector<int>> idInstrumentTable;
-    interventionalRadiologyComputeSampling(newCurvAbs,idInstrumentTable, xbegin, totalLengthCombined);
+    interventionalRadiologyComputeSampling(newCurvAbs,idInstrumentTable, xbegin);
     helper::AdvancedTimer::stepEnd("step2");
 
 
@@ -414,9 +412,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
     helper::AdvancedTimer::stepBegin("step4");
     unsigned int numEdges= m_numControlledNodes-1;
 
-    // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
-    ///@todo move to python controller
-    ///
+    // verify that there is a sufficient number of Edges in the topology
     if(numEdges<nbeam)
     {
         if (f_printLog.getValue())
@@ -446,7 +442,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 
                 Real theta = d_rotationInstrument.getValue()[i];
 
-                m_instrumentsList[i]->addBeam(eID, length, x0_local, x1_local,theta );
+                m_instrumentsList[i]->addBeam(eID, length, x0_local, x1_local, theta);
 
             }
         }
@@ -463,7 +459,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 
     /// STEP 6
     /// Activate Beam List for collision of each instrument
-    activateBeamListForCollision(newCurvAbs,idInstrumentTable);
+    activateBeamListForCollision(idInstrumentTable);
 
     m_nodeCurvAbs = newCurvAbs;
     m_idInstrumentCurvAbsTable = idInstrumentTable;
