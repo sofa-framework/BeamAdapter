@@ -167,6 +167,7 @@ public:
         Real xend;
         for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         {
+
             xend= d_xTip.getValue()[i];
             msg_info() << "======> xend :"<< xend << "  m_instrumentsList[i]->getRestTotalLength() :"<< m_instrumentsList[i]->getRestTotalLength();
             Real xb = xend - m_instrumentsList[i]->getRestTotalLength();
@@ -182,13 +183,16 @@ public:
             if( xend > 0.0)
                 newCurvAbs.push_back(0.0);
         }
+
     }
 
     //    void findTotalLengthCombined (vector<Real>& newCurvAbs, vector<Real> & xbegin, Real totalLengthCombined);
 
     Data<int>            d_controlledInstrument;
     Data<vector<Real>>   d_xTip;
+    vector<Real>         d_old_xTip;
     Data<vector<Real>>   d_rotationInstrument;
+    vector<Real>         d_old_rotationInstrument;
     Data<Real>           d_step;
     Data<Real>           d_angularStep;
     Data<Real>           d_speed;

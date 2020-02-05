@@ -204,8 +204,15 @@ void InterventionalRadiology<DataTypes>::reinit()
 template <class DataTypes>
 void InterventionalRadiology<DataTypes>::onBeginAnimationStep(const double dt)
 {
-    ///@todo check if update is necessaary
+    //Check if update is necessary
+    if (d_old_xTip == d_xTip.getValue() && d_old_rotationInstrument == d_rotationInstrument.getValue()) return;
+
+    //Perform Update
     applyInterventionalRadiology();
+
+    //Store new values
+    d_old_xTip = d_xTip.getValue();
+    d_old_rotationInstrument = d_rotationInstrument.getValue();
 }
 
 
@@ -270,113 +277,6 @@ void InterventionalRadiology<DataTypes>::interventionalRadiologyComputeSampling(
 }
 
 
-//template <class DataTypes>
-//void InterventionalRadiology<DataTypes>::interventionalRadiologyCollisionControls(vector<Real> &xPointList,
-//                                                                                  vector<int> &idInstrumentList,
-//                                                                                  vector<int> &removeEdge)
-//{
-//    if(idInstrumentList.size() != xPointList.size())
-//    {
-//        msg_error()<<"The list do not have the same size";
-//        return;
-//    }
-
-//    // we enter the point from the tip to the end of the combined instrument
-//    // x_abs_curv provides the value of the curv abs along the combined instrument
-//    unsigned int node= m_nodeCurvAbs.size()-1;
-//    Real xAbsCurv = m_nodeCurvAbs[node];
-//    int firstInstruOnx = m_idInstrumentCurvAbsTable[node][0];
-
-//    vector<unsigned int> segRemove;
-
-//    for (unsigned int it=0; it<m_instrumentsList.size(); it++)
-//        segRemove.push_back(0);
-
-//    for (int i=xPointList.size()-1; i>=0; i--)
-//    {
-//        //1.  we determin if the poin ument
-//        int instrumentId = idInstrumentList[i];
-
-//        // x_max for the instrument that is controlled (not dropped part)
-//        Real xMaxControlled = m_instrumentsList[instrumentId]->getRestTotalLength();
-
-//        if (xPointList[i]>xMaxControlled)
-//        {
-//            unsigned int idInstr = idInstrumentList[i];
-//            segRemove[idInstr] = i;
-//            continue;
-//        }
-
-//        // 2. we assign the value of the curv abs for the point and the corresponding instrument
-//        Real xTipFirstInstruOnx = d_xTip.getValue()[firstInstruOnx];
-//        Real xBegin = xTipFirstInstruOnx - m_instrumentsList[firstInstruOnx]->getRestTotalLength();
-//        xPointList[i] = xAbsCurv - xBegin; // provides the "local" curv absc of the point (on the instrument reference)
-//        idInstrumentList[i] = firstInstruOnx;
-
-//        // 3. we look for the collision sampling of the current instrument in order to "place" the following point
-//        Real xIncr;
-//        m_instrumentsList[firstInstruOnx]->getCollisionSampling(xIncr, xPointList[i]);
-//        xAbsCurv -= xIncr;
-
-//        // the following point could not have x_abs_curv<0;
-//        if (xAbsCurv<0.0)
-//        {
-//            xAbsCurv=0.0;
-//            continue;
-//        }
-
-//        // the following point can be place on an other instrument
-//        while (node > 0 && xAbsCurv < m_nodeCurvAbs[node-1])
-//        {
-//            node--; // we change the beam support...
-//            if( m_idInstrumentCurvAbsTable[node][0] != firstInstruOnx)
-//            {
-//                // instrument has changed !!
-//                firstInstruOnx = m_idInstrumentCurvAbsTable[node][0];
-//                xAbsCurv = m_nodeCurvAbs[node];
-//                break;
-//            }
-//        }
-//    }
-
-//    for (unsigned int it=0; it<m_instrumentsList.size(); it++)
-//    {
-//        if(segRemove[it]!=0)
-//            removeEdge.push_back(segRemove[it]);
-//    }
-
-//    // A  way to detect if a collision point is "activated" or not=> look at its curv_abs  and if > 0, it is active
-//    // first, we need to compute abs_curv_point
-//    vector<Real> absCurvPoint;
-//    absCurvPoint.clear();
-
-//    for (unsigned int i=0; i<xPointList.size(); i++)
-//    {
-//        int instrumentId = idInstrumentList[i];
-
-//        // x_max for the instrument that is controlled (not dropped part)
-//        Real xMaxInstrument = m_instrumentsList[instrumentId]->getRestTotalLength();
-//        Real xTipInstrument = d_xTip.getValue()[instrumentId];
-//        Real xPoint= xPointList[i] - xMaxInstrument + xTipInstrument;
-
-//        absCurvPoint.push_back( xPoint );
-//    }
-
-//    // x point < epsilon... it is not activated`
-//    m_activatedPointsBuf.clear();
-//    m_activatedPointsBuf.push_back(false);
-//    for (unsigned int i=1; i<absCurvPoint.size(); i++)
-//    {
-//        Real xMaxInstrument = m_instrumentsList[idInstrumentList[i]]->getRestTotalLength();
-
-//        if (absCurvPoint[i] < 0.00000001*xMaxInstrument || fabs(absCurvPoint[i] - absCurvPoint[i-1])<0.00000001*xMaxInstrument)
-//            m_activatedPointsBuf.push_back(false);
-//        else
-//            m_activatedPointsBuf.push_back(true);
-//    }
-//}
-
-
 template <class DataTypes>
 void InterventionalRadiology<DataTypes>::activateBeamListForCollision( vector<Real> &curv_abs,
                                                                        vector< vector<int> > &idInstrumentTable)
@@ -407,8 +307,6 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
 {
     /// Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
 
-    /// In case of drop:
-    unsigned int previousNumControlledNodes = m_numControlledNodes;
 
     /// STEP 1
     /// Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
@@ -472,7 +370,7 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
                 p0++;
             }
 
-            unsigned int idP0 =  previousNumControlledNodes - nnode_old + p0 ;
+            unsigned int idP0 =  m_numControlledNodes - nnode_old + p0 ;
 
             msg_info() << "idP : "<< idP << " idP0 :"<< idP0;
 
