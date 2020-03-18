@@ -43,6 +43,7 @@
 #include <SofaBoundaryCondition/FixedConstraint.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
+#include <sofa/core/CollisionModel.h>
 
 #include "../BeamInterpolation.h"
 
@@ -83,14 +84,13 @@ using sofa::component::projectiveconstraintset::FixedConstraint ;
 using sofa::component::topology::EdgeSetTopologyModifier ;
 using sofa::component::topology::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
-using sofa::component::collision::PointActiver ;
-using sofa::component::collision::LineActiver ;
 using sofa::core::objectmodel::KeypressedEvent ;
 using sofa::core::objectmodel::MouseEvent ;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::CollisionModel ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::Vec ;
+using sofa::core::CollisionElementActiver;
 using sofa::helper::vector ;
 using std::string;
 
@@ -108,8 +108,7 @@ using std::string;
  */
 template<class DataTypes>
 class AdaptiveBeamController : public MechanicalStateController<DataTypes>,
-                               public PointActiver,
-                               public LineActiver
+                               CollisionElementActiver
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),
@@ -138,10 +137,10 @@ public :
 
 
     /////////////// Inherited from PointActiver ////////////////////////////////////////////////////
-    virtual bool activePoint(int index, CollisionModel *cm = nullptr) override ;
+    //    virtual bool activePoint(int index, CollisionModel *cm = nullptr) override ;
 
     /////////////// Inherited from LineActiver /////////////////////////////////////////////////////
-    virtual bool activeLine(int index, CollisionModel *cm = nullptr) override ;
+    virtual bool isCollElemActive(int index, CollisionModel *cm = nullptr) override ;
 
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////

@@ -1115,19 +1115,27 @@ std::string InterventionalRadiologyController<DataTypes>::templateName(const Int
     return DataTypes::Name();
 }
 
-template <class DataTypes>
-bool InterventionalRadiologyController<DataTypes>::activePoint(int index, core::CollisionModel * cm)
-{
-    SOFA_UNUSED(cm);
-    return m_activatedPointsBuf[index];
-}
+//template <class DataTypes>
+//bool InterventionalRadiologyController<DataTypes>::activePoint(int index, core::CollisionModel * cm)
+//{
+//    SOFA_UNUSED(cm);
+//    return m_activatedPointsBuf[index];
+//}
+
+//template <class DataTypes>
+//bool InterventionalRadiologyController<DataTypes>::activeLine(int index, core::CollisionModel * cm)
+//{
+//    SOFA_UNUSED(cm);
+//    return m_activatedPointsBuf[index+1];
+//}
 
 template <class DataTypes>
-bool InterventionalRadiologyController<DataTypes>::activeLine(int index, core::CollisionModel * cm)
+bool InterventionalRadiologyController<DataTypes>::isCollElemActive(int index, core::CollisionModel * cm)
 {
     SOFA_UNUSED(cm);
     return m_activatedPointsBuf[index+1];
 }
+
 
 template <class DataTypes>
 bool InterventionalRadiologyController<DataTypes>::modifyTopology(void)

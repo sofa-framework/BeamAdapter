@@ -125,22 +125,22 @@ void AdaptiveBeamController<DataTypes>::reinit()
     AdaptiveBeamController<DataTypes>::applyController();
 }
 
+//template <class DataTypes>
+//bool AdaptiveBeamController<DataTypes>::isCollElemActive(int index, CollisionModel *cm)
+//{
+//    SOFA_UNUSED(cm) ;
+
+//    if (index >= (int)m_xAbsCollisionPointsBuffer.size() || index<0)
+//        return false;
+
+//    if (m_xAbsCollisionPointsBuffer[index]>10.0)
+//        return true;
+
+//    return false;
+//}
+
 template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activePoint(int index, CollisionModel *cm)
-{
-    SOFA_UNUSED(cm) ;
-
-    if (index >= (int)m_xAbsCollisionPointsBuffer.size() || index<0)
-        return false;
-
-    if (m_xAbsCollisionPointsBuffer[index]>10.0)
-        return true;
-
-    return false;
-}
-
-template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activeLine(int index, CollisionModel *cm)
+bool AdaptiveBeamController<DataTypes>::isCollElemActive(int index, CollisionModel *cm)
 {
     SOFA_UNUSED(cm) ;
 
@@ -163,21 +163,23 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)
     /// Translation input
     Real PosYcorr = 0.0;
     int idy = d_controlledInstrument.getValue();
-    vector<Real> &x_instr_tip = (*d_xtip.beginEdit());
+    //    vector<Real> &x_instr_tip = (*d_xtip.beginEdit());
+    auto x_instr_tip = getWriteAccessor(d_xtip);
     if (idy >= (int)x_instr_tip.size()){
         msg_warning() << "The instrument number "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") switching to instrument 0 instead.";
         idy=0;
     }
     PosYcorr = -PosY*0.2;
     x_instr_tip[idy] += PosYcorr;
-    this->d_xtip.endEdit();
+    //    this->d_xtip.endEdit();
 
     /// Rotation input
     Real PosXcorr = 0.0;
 
     //TODO(dmarchal@cduriez) why is this the same as idy but with a different name?
     int idx = d_controlledInstrument.getValue();
-    vector<Real> &rot_instrument = (*d_rotationInstrument.beginEdit());
+    //vector<Real> &rot_instrument = (*d_rotationInstrument.beginEdit());
+    auto rot_instrument = getWriteAccessor(d_rotationInstrument);
     PosXcorr = PosX*0.015;
     rot_instrument[idx] += PosXcorr;
 }

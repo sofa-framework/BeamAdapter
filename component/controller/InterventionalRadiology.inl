@@ -109,11 +109,10 @@ void InterventionalRadiology<DataTypes>::init()
         }
     }
     if(m_instrumentsList.empty() || m_instrumentsList.size() == 0)
-    {
-        ///@todo perform the case
+    {        
         msg_error() << "The list of interpolationBeam is not found.";
-        //        WBeamInterpolation * wbinterpol= context->get< WBeamInterpolation >(BaseContext::Local);
-        //        m_instrumentsList.push_back(wbinterpol);
+        //WBeamInterpolation * wbinterpol= context->get< WBeamInterpolation >(BaseContext::Local);
+        //m_instrumentsList.push_back(wbinterpol);
         msg_error()<<"No instrument found ( no WireBeamInterpolation) or ";
         msg_error()<<"No Beam Interpolation found !!! the component can not work.";
         return;
@@ -121,14 +120,10 @@ void InterventionalRadiology<DataTypes>::init()
 
     m_activatedPointsBuf.clear();
 
-    ///@todo verifier et xTip et rotationInstrument ont la bonne taille, sinon afficher erreur
-    //    vector<Real> &x_instr_tip = (*d_xTip.beginEdit());
-    //    x_instr_tip.resize(m_instrumentsList.size());
-    //    d_xTip.endEdit();
-
-    //    vector<Real> &angle_Instrument = (*d_rotationInstrument.beginEdit());
-    //    angle_Instrument.resize(m_instrumentsList.size());
-    //    d_rotationInstrument.endEdit();
+    if((d_xTip.getValue().size()!= m_instrumentsList.size()) || (d_rotationInstrument.getValue().size()!= m_instrumentsList.size())){
+        msg_error()<<"Please, check the dimention of rotationInstrument, x_ti and m_instrumentsList ";
+        return;
+    }
 
     for(unsigned int i=0; i<m_instrumentsList.size(); i++)
         m_instrumentsList[i]->setControlled(true);
@@ -136,9 +131,6 @@ void InterventionalRadiology<DataTypes>::init()
     context->get(m_fixedConstraint);
     if(m_fixedConstraint==NULL)
         msg_error()<<"No fixedConstraint found.";
-
-    /// List of the instrument for which a "DROPPED" was proceeed TODO
-    //m_droppedInstruments.clear();
 
     m_nodeCurvAbs.clear();
     m_nodeCurvAbs.push_back(0.0);
@@ -151,14 +143,16 @@ void InterventionalRadiology<DataTypes>::init()
 
     m_idInstrumentCurvAbsTable.push_back(listInit);
 
-    vector<Real>& totalLengths =  *d_totalLengths.beginEdit();
+//    vector<Real>& totalLengths =  *d_totalLengths.beginEdit();
+    auto totalLengths = getWriteOnlyAccessor(d_totalLengths);
     totalLengths.clear();
+
     for (unsigned int i = 0; i < m_instrumentsList.size();i++) {
         Real lengh = m_instrumentsList[i]->getRestTotalLength();
         totalLengths.push_back(lengh);
     }
-    d_totalLengths.endEdit();
-    std::cout<< "IIIIIIIIIIIIIIIIII=========================> "<< d_totalLengths.getValue()<< std::endl;
+    //    d_totalLengths.endEdit();
+    //std::cout<< "IIIIIIIIIIIIIIIIII=========================> "<< d_totalLengths.getValue()<< std::endl;
 
     Inherit::init();
 }
@@ -181,15 +175,13 @@ void InterventionalRadiology<DataTypes>::bwdInit()
 
     //verify  if the totalLength is 0, move the first instrument
     Real totalLengthCombined = 0.0;
-    vector<Real> &xTip = (*d_xTip.beginEdit());
+    auto xTip = getWriteAccessor(d_xTip);
     for (unsigned int m = 0; m < xTip.size(); ++m) {
         if (xTip[m] > totalLengthCombined)
             totalLengthCombined = xTip[m];
     }
     if(totalLengthCombined<0.0001)
         xTip[0]=0.0001;
-    d_xTip.endEdit();
-
     applyInterventionalRadiology();
 
 
@@ -335,10 +327,12 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
     unsigned int nbeam=nnode - 1; // number of simulated beams
 
     unsigned int nnode_old= m_nodeCurvAbs.size(); // previous number of simulated nodes;
-    Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());
-    VecCoord& x = *datax->beginEdit();
+    auto datax = this->getMechanicalState()->write(core::VecCoordId::position());
+    //    VecCoord& x = *datax->beginEdit();
+    auto x = sofa::helper::write(*datax);    /// WriteAccessor
 
-    VecCoord xbuf =x;
+    VecCoord xbuf ;
+    xbuf = x.ref();    ///
 
     vector<Real> modifiedCurvAbs;
     totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
@@ -464,8 +458,6 @@ void InterventionalRadiology<DataTypes>::applyInterventionalRadiology()
     m_nodeCurvAbs = newCurvAbs;
     m_idInstrumentCurvAbsTable = idInstrumentTable;
     helper::AdvancedTimer::stepEnd("step5");
-
-    datax->endEdit();
 }
 
 template <class DataTypes>
@@ -505,7 +497,8 @@ template <class DataTypes>
 void InterventionalRadiology<DataTypes>::sortCurvAbs(vector<Real> &curvAbs,
                                                      vector<vector<int> >& idInstrumentTable)
 {
-    vector<Real> &newCurvAbs =(*d_curvAbs.beginEdit());
+    //    vector<Real> &newCurvAbs =(*d_curvAbs.beginEdit());
+    auto newCurvAbs  = getWriteOnlyAccessor(d_curvAbs);
     Real eps = d_threshold.getValue();
 
     // here we sort CurvAbs
@@ -542,7 +535,7 @@ void InterventionalRadiology<DataTypes>::sortCurvAbs(vector<Real> &curvAbs,
         }
     }
 
-    curvAbs = newCurvAbs;
+    curvAbs = newCurvAbs.ref();
 
     // here we build a table that provides the list of each instrument for each dof in the list of newCurvAbs
     // dofs can be shared by several instruments
@@ -566,7 +559,6 @@ void InterventionalRadiology<DataTypes>::sortCurvAbs(vector<Real> &curvAbs,
         idInstrumentTable.push_back(listNewNode);
 
     }
-    d_curvAbs.endEdit();
 }
 
 

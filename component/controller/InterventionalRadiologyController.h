@@ -45,6 +45,7 @@
 #include <sofa/core/DataEngine.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
+#include <sofa/core/CollisionModel.h>
 
 #include "../WireBeamInterpolation.h"
 
@@ -76,7 +77,7 @@ using namespace sofa::helper;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::helper::vector;
 using sofa::component::projectiveconstraintset::FixedConstraint;
-
+using sofa::core::CollisionElementActiver ;
 
 /*!
  * \class InterventionalRadiologyController
@@ -86,8 +87,7 @@ using sofa::component::projectiveconstraintset::FixedConstraint;
  */
 template<class DataTypes>
 class InterventionalRadiologyController : public MechanicalStateController<DataTypes>,
-                                          public collision::PointActiver,
-                                          public collision::LineActiver
+                                          public CollisionElementActiver
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
@@ -128,8 +128,9 @@ public:
 
 
     ////////////////////// For Point & Line Activer interface //////////////////////////////////////
-    virtual bool activePoint(int index, core::CollisionModel * cm = nullptr) override;
-    virtual bool activeLine(int index, core::CollisionModel * cm = nullptr) override;
+    //    virtual bool activePoint(int index, core::CollisionModel * cm = nullptr) override;
+    //    virtual bool activeLine(int index, core::CollisionModel * cm = nullptr) override;
+    virtual bool isCollElemActive(int index, core::CollisionModel * cm = nullptr) override;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     virtual bool modifyTopology(void);
