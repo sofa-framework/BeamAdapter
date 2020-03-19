@@ -125,33 +125,6 @@ void AdaptiveBeamController<DataTypes>::reinit()
     AdaptiveBeamController<DataTypes>::applyController();
 }
 
-template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activePoint(int index, CollisionModel *cm)
-{
-    SOFA_UNUSED(cm) ;
-
-    if (index >= (int)m_xAbsCollisionPointsBuffer.size() || index<0)
-        return false;
-
-    if (m_xAbsCollisionPointsBuffer[index]>10.0)
-        return true;
-
-    return false;
-}
-
-template <class DataTypes>
-bool AdaptiveBeamController<DataTypes>::activeLine(int index, CollisionModel *cm)
-{
-    SOFA_UNUSED(cm) ;
-
-    if ((index+1) >= (int)m_xAbsCollisionPointsBuffer.size() || (index+1)<0)
-        return false;
-
-    if (m_xAbsCollisionPointsBuffer[index+1]>10.0)
-        return true;
-
-    return false;
-}
 
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)

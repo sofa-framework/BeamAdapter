@@ -81,8 +81,6 @@ using sofa::defaulttype::Rigid3fTypes ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::core::topology::TopologyContainer ;
 using sofa::core::CollisionModel ;
-using sofa::component::collision::LineActiver;
-using sofa::component::collision::PointActiver;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::component::fem::WireBeamInterpolation;
 
@@ -93,9 +91,7 @@ using sofa::component::fem::WireBeamInterpolation;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class SutureController : public MechanicalStateController<DataTypes>,
-                         public PointActiver,
-                         public LineActiver
+class SutureController : public MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes),
@@ -150,12 +146,6 @@ public:
     virtual void onKeyPressedEvent(core::objectmodel::KeypressedEvent *) override {}
     virtual void onBeginAnimationStep(const double dt) override ;
     virtual void onEndAnimationStep(const double dt) override ;
-
-    /////////////////// Inherited from PointActiver //////////////////////////////////////////////////
-    virtual bool activePoint(int index, CollisionModel * cm = nullptr) override ;
-
-    /////////////////// Inherited from LineActiver //////////////////////////////////////////////////
-    virtual bool activeLine(int index, CollisionModel * cm = nullptr) override ;
 
 private:
     void applyController() ;

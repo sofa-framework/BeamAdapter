@@ -83,8 +83,6 @@ using sofa::component::projectiveconstraintset::FixedConstraint ;
 using sofa::component::topology::EdgeSetTopologyModifier ;
 using sofa::component::topology::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
-using sofa::component::collision::PointActiver ;
-using sofa::component::collision::LineActiver ;
 using sofa::core::objectmodel::KeypressedEvent ;
 using sofa::core::objectmodel::MouseEvent ;
 using sofa::core::topology::BaseMeshTopology ;
@@ -107,9 +105,7 @@ using std::string;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamController : public MechanicalStateController<DataTypes>,
-                               public PointActiver,
-                               public LineActiver
+class AdaptiveBeamController : public MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),
@@ -135,14 +131,6 @@ public:
 public :
     AdaptiveBeamController();
     virtual ~AdaptiveBeamController(){}
-
-
-    /////////////// Inherited from PointActiver ////////////////////////////////////////////////////
-    virtual bool activePoint(int index, CollisionModel *cm = nullptr) override ;
-
-    /////////////// Inherited from LineActiver /////////////////////////////////////////////////////
-    virtual bool activeLine(int index, CollisionModel *cm = nullptr) override ;
-
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
     virtual void init() override ;
