@@ -1212,37 +1212,6 @@ void SutureController<DataTypes>::updateControlPointsPositions()
 }
 
 template <class DataTypes>
-bool SutureController<DataTypes>::activePoint(int index, core::CollisionModel *cm)
-{
-    SOFA_UNUSED(cm) ;
-
-    if (index >= (int)m_XAbsCollisionPointsBuffer.size() || index < 0)
-        return false;
-
-    if (m_XAbsCollisionPointsBuffer[index] > 10.0)
-        return true;
-
-    return false;
-}
-
-template <class DataTypes>
-bool SutureController<DataTypes>::activeLine(int index, core::CollisionModel *cm)
-{
-    SOFA_UNUSED(cm) ;
-
-    const int next_index = index + 1;
-
-    if (next_index >= (int)m_XAbsCollisionPointsBuffer.size() || next_index < 0)
-        return false;
-
-    if (m_XAbsCollisionPointsBuffer[next_index] > 10.0)
-        return true;
-
-    return false;
-}
-
-
-template <class DataTypes>
 void SutureController<DataTypes>::insertActualNoticeablePoint(Real _absc)
 {
     helper::WriteAccessor< Data< vector<Real> > > actualNoticeable = d_actualStepNoticeablePoints;
