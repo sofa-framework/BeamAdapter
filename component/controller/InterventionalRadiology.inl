@@ -594,19 +594,19 @@ std::string InterventionalRadiology<DataTypes>::templateName(const Interventiona
     return DataTypes::Name();
 }
 
-template <class DataTypes>
-bool InterventionalRadiology<DataTypes>::activePoint(int index, core::CollisionModel * cm)
-{
-    SOFA_UNUSED(cm);
-    return m_activatedPointsBuf[index];
-}
+//template <class DataTypes>
+//bool InterventionalRadiology<DataTypes>::activePoint(int index, core::CollisionModel * cm)
+//{
+//    SOFA_UNUSED(cm);
+//    return m_activatedPointsBuf[index];
+//}
 
-template <class DataTypes>
-bool InterventionalRadiology<DataTypes>::activeLine(int index, core::CollisionModel * cm)
-{
-    SOFA_UNUSED(cm);
-    return m_activatedPointsBuf[index+1];
-}
+//template <class DataTypes>
+//bool InterventionalRadiology<DataTypes>::activeLine(int index, core::CollisionModel * cm)
+//{
+//    SOFA_UNUSED(cm);
+//    return m_activatedPointsBuf[index+1];
+//}
 
 template <class DataTypes>
 bool InterventionalRadiology<DataTypes>::modifyTopology(void)

@@ -85,9 +85,7 @@ using sofa::component::projectiveconstraintset::FixedConstraint;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class InterventionalRadiology : public MechanicalStateController<DataTypes>,
-        public collision::PointActiver,
-        public collision::LineActiver
+class InterventionalRadiology : public MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiology,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
@@ -122,12 +120,6 @@ public:
 
     ////////////////////// Inherited from Controller ///////////////////////////////////////////////
     virtual void onBeginAnimationStep(const double dt) override ;
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    ////////////////////// For Point & Line Activer interface //////////////////////////////////////
-    virtual bool activePoint(int index, core::CollisionModel * cm = nullptr) override;
-    virtual bool activeLine(int index, core::CollisionModel * cm = nullptr) override;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     virtual bool modifyTopology(void);

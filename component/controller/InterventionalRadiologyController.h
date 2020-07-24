@@ -86,8 +86,7 @@ using sofa::core::CollisionElementActiver ;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class InterventionalRadiologyController : public MechanicalStateController<DataTypes>,
-                                          public CollisionElementActiver
+class InterventionalRadiologyController : public MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
@@ -126,11 +125,9 @@ public:
     virtual void onBeginAnimationStep(const double dt) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     ////////////////////// For Point & Line Activer interface //////////////////////////////////////
     //    virtual bool activePoint(int index, core::CollisionModel * cm = nullptr) override;
     //    virtual bool activeLine(int index, core::CollisionModel * cm = nullptr) override;
-    virtual bool isCollElemActive(int index, core::CollisionModel * cm = nullptr) override;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     virtual bool modifyTopology(void);

@@ -107,8 +107,8 @@ using std::string;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamController : public MechanicalStateController<DataTypes>,
-                               CollisionElementActiver
+
+class AdaptiveBeamController : public MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),
@@ -140,8 +140,7 @@ public :
     //    virtual bool activePoint(int index, CollisionModel *cm = nullptr) override ;
 
     /////////////// Inherited from LineActiver /////////////////////////////////////////////////////
-    virtual bool isCollElemActive(int index, CollisionModel *cm = nullptr) override ;
-
+    //    virtual bool isCollElemActive(int index, CollisionModel *cm = nullptr) override ;
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
     virtual void init() override ;
