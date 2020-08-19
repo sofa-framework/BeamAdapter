@@ -93,7 +93,7 @@ void WireBeamInterpolation<DataTypes>::init()
     if( m_restShape.get() == nullptr )
     {
         msg_error() << "Missing WireRestShape. The component is thus de-activated" ;
-        this->m_componentstate = sofa::core::objectmodel::ComponentState::Invalid ;
+        this->d_componentState = sofa::core::objectmodel::ComponentState::Invalid ;
         return;
     }
 
