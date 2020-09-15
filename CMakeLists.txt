@@ -105,14 +105,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>"
 target_link_libraries(${PROJECT_NAME} SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField)
 
 ## Install rules for the library and headers; CMake package configurations files
-sofa_generate_package(
-    NAME BeamAdapter VERSION ${PROJECT_VERSION}
+#sofa_generate_package(
+#    NAME BeamAdapter VERSION ${PROJECT_VERSION}
+#    TARGETS ${PROJECT_NAME}
+#    INCLUDE_INSTALL_DIR BeamAdapter
+#    EXAMPLE_INSTALL_DIR examples
+#    RELOCATABLE "plugins"
+#    )
+sofa_create_package_with_targets(
+    PACKAGE_NAME BeamAdapter
+    PACKAGE_VERSION ${PROJECT_VERSION}
     TARGETS ${PROJECT_NAME}
-    INCLUDE_INSTALL_DIR BeamAdapter
-    EXAMPLE_INSTALL_DIR examples
-    RELOCATABLE "plugins"
+    INCLUDE_INSTALL_DIR "BeamAdapter"
+    EXAMPLE_INSTALL_DIR "examples"
+    RELOCATABLE "$plugins"
     )
-
 
 option(BEAMADAPTER_BUILD_TESTS "Build unit tests" ON)
 if(BEAMADAPTER_BUILD_TESTS)
