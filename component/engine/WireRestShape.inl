@@ -329,7 +329,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            vector<unsigned int> edge_remove;
+            vector<long unsigned int> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
