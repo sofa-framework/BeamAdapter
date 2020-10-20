@@ -329,7 +329,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            vector<long unsigned int> edge_remove;
+            vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
