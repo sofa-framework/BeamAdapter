@@ -193,13 +193,13 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
         // handle the possible topological change
 
-        sofa::helper::vector<long unsigned int> edgeToRemove;
+        sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edgeToRemove;
         edgeToRemove.clear();
 
         for (unsigned int i=0; i<removeEdgeAtPoint.size(); i++)
         {
             /// look if the edge is already suppressed (only one edge around the targetted point)
-            sofa::helper::vector<long unsigned int > baseEdge(0);
+            sofa::helper::vector<sofa::core::topology::BaseMeshTopology::PointID> baseEdge(0);
             baseEdge = _topology->getEdgesAroundVertex((sofa::core::topology::BaseMeshTopology::PointID) removeEdgeAtPoint[i]);
 
             /// need to be removed
