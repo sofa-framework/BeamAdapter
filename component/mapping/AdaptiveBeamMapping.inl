@@ -450,14 +450,14 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 
         if( xTo.size()==0)
         {
-            serr<<" Warning no point defined in the AdaptiveBeamMapping "<<sendl;
+            msg_error() <<" Warning no point defined in the AdaptiveBeamMapping ";
             // _problem = true;
         }
         else
         {
             sofa::helper::vector<Vec3>& pts2 = *(d_points.beginEdit());
 
-            sout<<"no point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State"<<sendl;
+            msg_warning() <<"no point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State";
             for(unsigned int i=0; i<xTo.size();i++)
             {
                 Vec3 p(xTo[i][0], xTo[i][1], xTo[i][2]);
@@ -498,9 +498,9 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     {
         this->fromModel->getContext()->get(m_inputMapping, sofa::core::objectmodel::BaseContext::SearchRoot);
         if(m_inputMapping==NULL)
-            serr<<"WARNING : can not found the input  Mapping"<<sendl;
+            msg_error() <<"WARNING : can not found the input  Mapping";
         else
-            sout<<"input Mapping named "<<m_inputMapping->getName()<<" is found"<<sendl;
+            msg_warning()<<"input Mapping named "<<m_inputMapping->getName()<<" is found";
     }
 }
 

@@ -297,7 +297,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
             }
 
-
+            
             // finding the real length can not be done in one step
             // we do it in 3 iterations
             for (unsigned it=0; it<3; it++){
