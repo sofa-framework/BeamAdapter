@@ -380,7 +380,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
         proximity_lever = true;
 
     if (proximity_lever && this->f_printLog.getValue() )
-        msg_warning() <<" the constraints are contact at the surface of the beam (not at their center)";
+        msg_warning() <<"The constraints are contact at the surface of the beam (not at their center)";
     /////////////////////////////////////
 
     typename Out::MatrixDeriv::RowConstIterator rowItEnd = in.end();
@@ -448,16 +448,15 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     {
         helper::ReadAccessor<Data<VecCoord> > xTo = this->toModel->read(sofa::core::ConstVecCoordId::position()) ;
 
-        if( xTo.size()==0)
+        if(xTo.size()==0)
         {
-            msg_error() <<" Warning no point defined in the AdaptiveBeamMapping ";
+            msg_warning() <<"No point defined in the AdaptiveBeamMapping ";
             // _problem = true;
         }
         else
         {
             sofa::helper::vector<Vec3>& pts2 = *(d_points.beginEdit());
-
-            msg_warning() <<"no point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State";
+            msg_info() <<"No point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State";
             for(unsigned int i=0; i<xTo.size();i++)
             {
                 Vec3 p(xTo[i][0], xTo[i][1], xTo[i][2]);
@@ -483,7 +482,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
         }
         if(cpt>=10)
         {
-            msg_warning() <<" when using useCurvAbs==true, points must be sorted according to their curvAbs: " << msgendl
+            msg_warning() <<"When using useCurvAbs==true, points must be sorted according to their curvAbs: " << msgendl
                           << tmp.str() ;
         }
     }
@@ -498,9 +497,9 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     {
         this->fromModel->getContext()->get(m_inputMapping, sofa::core::objectmodel::BaseContext::SearchRoot);
         if(m_inputMapping==NULL)
-            msg_error() <<"WARNING : can not found the input  Mapping";
+            msg_warning() <<"Can not found the input  Mapping";
         else
-            msg_warning()<<"input Mapping named "<<m_inputMapping->getName()<<" is found";
+            msg_info()<<"Input Mapping named "<<m_inputMapping->getName()<<" is found";
     }
 }
 

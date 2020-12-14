@@ -89,7 +89,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            //msg_info()<<"apply ";
+            msg_info()<<"apply ";
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->apply(mparams /* PARAMS FIRST */, dOut, dIn);

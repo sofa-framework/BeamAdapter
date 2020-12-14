@@ -1156,8 +1156,8 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     bool computeVel = true;
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
-        //        dmsg_info() <<" position " << msgendl
-        //                   << "      ="<< m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
+        dmsg_info() <<" position " << msgendl
+                   << "      ="<< m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
         x=m_mstate->read( core::ConstVecCoordId::position() );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
