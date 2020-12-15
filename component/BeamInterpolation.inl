@@ -297,7 +297,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
             }
 
-
+            
             // finding the real length can not be done in one step
             // we do it in 3 iterations
             for (unsigned it=0; it<3; it++){
@@ -1195,10 +1195,10 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         {
             InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
-        else
-        {
-            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
-        }
+//        else
+//        {
+//            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+//        }
 
         /// assign the result in the output data
         interpolatedPos[i].getCenter() = global_H_localResult.getOrigin();

@@ -103,7 +103,6 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* 
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            msg_info() << "applyJ ";
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->applyJ(mparams /* PARAMS FIRST */, dOut, dIn);
@@ -116,7 +115,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            msg_info() << "applyJT ";
+
             m_subMappingList[subMap]->printIstrumentInfo();//ctn_DEV
         }
         m_subMappingList[subMap]->applyJT(mparams /* PARAMS FIRST */, dOut, dIn);
@@ -135,7 +134,6 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams*
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
-            msg_info() << "applyJTT ";
             m_subMappingList[subMap]->printIstrumentInfo();
         }
         m_subMappingList[subMap]->applyJT(cparams /* PARAMS FIRST */, dOut, dIn);
