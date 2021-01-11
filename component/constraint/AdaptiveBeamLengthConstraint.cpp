@@ -24,7 +24,7 @@
 ******************************************************************************/
 #include "AdaptiveBeamLengthConstraint.inl"
 
-#include <sofa/defaulttype/Vec3Types.h>
+#include <sofa/defaulttype/VecTypes.h>
 //#include <BaseMechanics/MechanicalObject.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
