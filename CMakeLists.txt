@@ -4,7 +4,6 @@ project(BeamAdapter VERSION 1.0)
 include(cmake/environment.cmake)
 
 find_package(SofaFramework REQUIRED)
-find_package(Sofa.GL REQUIRED)
 find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
 
 set(HEADER_FILES
