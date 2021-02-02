@@ -29,6 +29,7 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/helper/gl/template.h>
+#include <sofa/gl/template.h>
 #include <sofa/core/visual/DrawTool.h>
 
 #include "AdaptiveBeamLengthConstraint.h"
