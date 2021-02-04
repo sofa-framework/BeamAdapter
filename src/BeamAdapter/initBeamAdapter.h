@@ -27,7 +27,7 @@
 #ifndef SOFA_PLUGIN_BEAM_ADAPTER_H
 #define SOFA_PLUGIN_BEAM_ADAPTER_H
 
-#include <sofa/helper/system/config.h>
+#include <sofa/config.h>
 
 
 #ifdef SOFA_BUILD_BEAMADAPTER

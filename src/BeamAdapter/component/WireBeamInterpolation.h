@@ -36,7 +36,7 @@
 #define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
 
 
-#include "initBeamAdapter.h"
+#include <BeamAdapter/initBeamAdapter.h>
 #include "engine/WireRestShape.h"
 #include "BeamInterpolation.h"
 #include <sofa/core/behavior/ForceField.h>
