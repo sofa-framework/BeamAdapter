@@ -214,7 +214,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
     if (m_mstate == nullptr)
     {
         msg_error() << "No MechanicalState found. Component is de-activated." ;
-        d_componentState = ComponentState::Invalid ;
+        d_componentState.setValue(ComponentState::Invalid);
         return;
     }
 
@@ -223,7 +223,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
     if(!m_topology)
     {
         msg_error() << "No Topology found. Component is de-activated." ;
-        d_componentState = ComponentState::Invalid ;
+        d_componentState.setValue(ComponentState::Invalid);
         return ;
     }
 
@@ -231,7 +231,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
     if(m_topology->getNbEdges()==0)
     {
         msg_error() << "Found a topology but it is empty. Component is de-activated" ;
-        d_componentState =ComponentState::Invalid ;
+        d_componentState.setValue(ComponentState::Invalid);
         return ;
     }
 
@@ -320,7 +320,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
     if(!verifyTopology())
     {
-        d_componentState = ComponentState::Invalid ;
+        d_componentState.setValue(ComponentState::Invalid);
         return ;
     }
 }
@@ -334,7 +334,7 @@ void BeamInterpolation<DataTypes>::reinit()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::storeResetState()
 {
-    if(d_componentState==ComponentState::Invalid)
+    if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
     updateInterpolation();
@@ -343,7 +343,7 @@ void BeamInterpolation<DataTypes>::storeResetState()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::reset()
 {
-    if(d_componentState==ComponentState::Invalid)
+    if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
     bwdInit(); m_numBeamsNotUnderControl=0;
