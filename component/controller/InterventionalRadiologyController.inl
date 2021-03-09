@@ -44,6 +44,8 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/helper/AdvancedTimer.h>
 #include <sofa/helper/system/FileRepository.h>
+#include <sofa/helper/vector_algorithm.h>
+
 
 #include "InterventionalRadiologyController.h"
 

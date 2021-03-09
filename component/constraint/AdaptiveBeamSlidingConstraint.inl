@@ -30,6 +30,7 @@
 #include <sofa/helper/gl/template.h>
 
 #include "AdaptiveBeamSlidingConstraint.h"
+#include <sofa/core/behavior/ConstraintResolution.h>
 
 namespace sofa
 {

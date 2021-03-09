@@ -30,7 +30,7 @@
 #include <sofa/defaulttype/Vec.h>
 #include <sofa/helper/gl/template.h>
 #include <sofa/core/visual/DrawTool.h>
-
+#include <sofa/core/behavior/ConstraintResolution.h>
 #include "AdaptiveBeamLengthConstraint.h"
 
 namespace sofa
