@@ -38,6 +38,7 @@
 
 #include "MultiAdaptiveBeamMapping.h"
 #include <sofa/simulation/AnimateBeginEvent.h>
+#include <sofa/core/MechanicalParams.h>
 
 
 namespace sofa

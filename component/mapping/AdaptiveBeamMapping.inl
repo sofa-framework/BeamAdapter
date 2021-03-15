@@ -45,7 +45,8 @@
 
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/helper/AdvancedTimer.h>
-
+#include <sofa/core/ConstraintParams.h>
+#include <sofa/core/MechanicalParams.h>
 
 namespace sofa
 {
