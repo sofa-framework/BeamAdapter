@@ -45,7 +45,8 @@
 
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/helper/AdvancedTimer.h>
-
+#include <sofa/core/ConstraintParams.h>
+#include <sofa/core/MechanicalParams.h>
 
 namespace sofa
 {
@@ -69,6 +70,7 @@ using sofa::core::MultiVecCoordId;
 using sofa::core::VecCoordId;
 using sofa::core::ConstMultiVecCoordId;
 using core::MechanicalParams;
+
 
 template <class TIn, class TOut>
 AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out >* to,

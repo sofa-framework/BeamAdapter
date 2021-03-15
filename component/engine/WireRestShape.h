@@ -39,6 +39,8 @@
 #include "../initBeamAdapter.h"
 #include <sofa/defaulttype/SolidTypes.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/core/DataEngine.h>
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
