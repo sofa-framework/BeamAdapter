@@ -71,7 +71,6 @@ using sofa::core::VecCoordId;
 using sofa::core::ConstMultiVecCoordId;
 using core::MechanicalParams;
 
-
 template <class TIn, class TOut>
 AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out >* to,
                                                    BeamInterpolation< TIn >* interpolation, bool isSubMapping)
