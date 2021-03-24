@@ -334,7 +334,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
 
-            edgeMod->removeEdges(edge_remove,false, false); // remove the single edge and do not remove any point...
+            edgeMod->removeEdges(edge_remove,false); // remove the single edge and do not remove any point...
 
             msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
 
@@ -344,7 +344,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
                 edge2QuadMap->updateTopologicalMappingTopDown();
                 sofa::component::topology::QuadSetTopologyModifier *quadMod;
                 edge2QuadMap->getContext()->get(quadMod);
-                quadMod->propagateTopologicalChanges();
+                quadMod->notifyEndingEvent();
             }
 
 
