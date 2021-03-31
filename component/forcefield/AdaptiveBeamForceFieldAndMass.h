@@ -198,7 +198,8 @@ public:
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
     {SOFA_UNUSED(mparams);serr<<"addGravityToV not implemented yet"<<sendl;}
-
+    
+    bool isDiagonal() const override { return false; }
 
     /////////////////////////////////////
     /// ForceField Interface

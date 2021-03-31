@@ -200,6 +200,8 @@ public:
     {SOFA_UNUSED(mparams);serr<<"addGravityToV not implemented yet"<<sendl;}
 
 
+    bool isDiagonal() const override { return false; }
+
     /////////////////////////////////////
     /// ForceField Interface
     /////////////////////////////////////
