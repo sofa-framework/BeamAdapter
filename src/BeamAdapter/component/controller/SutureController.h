@@ -46,7 +46,7 @@
 #include <SofaMeshCollision/LineModel.h>
 
 #include "../WireBeamInterpolation.h"
-#include "../initBeamAdapter.h"
+#include <BeamAdapter/initBeamAdapter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration

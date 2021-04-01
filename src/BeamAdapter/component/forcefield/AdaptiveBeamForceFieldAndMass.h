@@ -50,7 +50,7 @@
 #include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/core/visual/VisualParams.h>
 
-#include "../initBeamAdapter.h"
+#include <BeamAdapter/initBeamAdapter.h>
 #include "../BeamInterpolation.h"
 #include "../engine/WireRestShape.h"
 

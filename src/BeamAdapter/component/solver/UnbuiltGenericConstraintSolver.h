@@ -40,7 +40,7 @@
 #include <sofa/helper/set.h>
 #include <sofa/helper/map.h>
 
-#include "../initBeamAdapter.h"
+#include <BeamAdapter/initBeamAdapter.h>
 
 namespace sofa
 {

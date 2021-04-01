@@ -24,7 +24,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include "initBeamAdapter.h"
+#include <BeamAdapter/initBeamAdapter.h>
 #include <cstring>
 #include <string>
 
