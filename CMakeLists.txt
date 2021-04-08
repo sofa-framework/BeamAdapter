@@ -5,6 +5,7 @@ include(cmake/environment.cmake)
 
 find_package(SofaFramework REQUIRED)
 find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
+find_package(SofaAdvancedConstraint QUIET)
 
 set(HEADER_FILES
     component/initBeamAdapter.h
@@ -70,7 +71,6 @@ set(SOURCE_FILES
 
 set(README_FILE "BeamAdapter.txt" )
 
-find_package(SofaAdvancedConstraint QUIET)
 if(SofaAdvancedConstraint_FOUND)
     set(HEADER_FILES ${HEADER_FILES}
         component/AdaptiveBeamContactMapper.h
@@ -99,19 +99,9 @@ add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILE
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_BEAMADAPTER")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>")
-#target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
 
 target_link_libraries(${PROJECT_NAME} SofaHelper SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField SofaLoader Sofa.GL)
-
-## Install rules for the library and headers; CMake package configurations files
-#sofa_generate_package(
-#    NAME BeamAdapter VERSION ${PROJECT_VERSION}
-#    TARGETS ${PROJECT_NAME}
-#    INCLUDE_INSTALL_DIR BeamAdapter
-#    EXAMPLE_INSTALL_DIR examples
-#    RELOCATABLE "plugins"
-#    )
 sofa_create_package_with_targets(
     PACKAGE_NAME BeamAdapter
     PACKAGE_VERSION ${PROJECT_VERSION}
