@@ -52,8 +52,11 @@ namespace sofa::plugin::beamadapter::component::forcefield
 namespace _adaptiveplasticbeamforcefield_
 {
 
+using sofa::helper::vector;
 using sofa::core::visual::VisualParams;
 using sofa::core::MechanicalParams;
+using sofa::defaulttype::Vec;
+using sofa::defaulttype::Mat;
 using sofa::core::behavior::MultiMatrixAccessor;
 using sofa::defaulttype::Rigid3Types;
 
