@@ -38,6 +38,8 @@ set(HEADER_FILES
     component/forcefield/AdaptiveBeamForceFieldAndMass.inl
     component/forcefield/AdaptiveInflatableBeamForceField.h
     component/forcefield/AdaptiveInflatableBeamForceField.inl
+    component/forcefield/AdaptivePlasticBeamForceField.h
+    component/forcefield/AdaptivePlasticBeamForceField.inl
 
     component/mapping/AdaptiveBeamMapping.h
     component/mapping/AdaptiveBeamMapping.inl
@@ -64,6 +66,7 @@ set(SOURCE_FILES
 
     component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
     component/forcefield/AdaptiveInflatableBeamForceField.cpp
+    component/forcefield/AdaptivePlasticBeamForceField.cpp
 
     component/mapping/AdaptiveBeamMapping.cpp
     component/mapping/MultiAdaptiveBeamMapping.cpp
