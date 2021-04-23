@@ -129,6 +129,46 @@ protected:
         Matrix6x6 m_Kt00, m_Kt01, m_Kt10, m_Kt11; /// Local tangent stiffness matrix
     };
 
+    ///<3-dimensional Gauss point for reduced integration
+    class GaussPoint3
+    {
+    public:
+        GaussPoint3() {}
+        GaussPoint3(Real x, Real y, Real z, Real w1, Real w2, Real w3)
+        {
+            m_coordinates = { x, y, z };
+            m_weights = { w1, w2, w3 };
+        }
+        ~GaussPoint3() {}
+
+        Vec3 m_coordinates;
+        Vec3 m_weights;
+    };
+
+    ///<3 Real intervals [a1,b1], [a2,b2] and [a3,b3], for 3D reduced integration
+    class Interval3
+    {
+    public:
+        //By default, integration is considered over [-1,1]*[-1,1]*[-1,1].
+        Interval3()
+        {
+            m_a1 = m_a2 = m_a3 = -1;
+            m_b1 = m_b2 = m_b3 = 1;
+        }
+        Interval3(Real a1, Real b1, Real a2, Real b2, Real a3, Real b3)
+        {
+            m_a1 = a1;
+            m_b1 = b1;
+            m_a2 = a2;
+            m_b2 = b2;
+            m_a3 = a3;
+            m_b3 = b3;
+        }
+        ~Interval3() {}
+
+        Real m_a1, m_b1, m_a2, m_b2, m_a3, m_b3;
+    };
+
 public:
 
     AdaptivePlasticBeamForceField();
@@ -161,6 +201,35 @@ protected:
 
     vector<BeamPlasticVariables> m_plasticVariables;
 
+    /// Position at the last time step, to handle increments for the plasticity resolution
+    VecCoord m_lastPos;
+
+    /////////////////////////////////////
+    /// Gaussian integration
+    /////////////////////////////////////
+
+    typedef Vec<27, GaussPoint3> beamGaussPoints;
+    vector<beamGaussPoints> m_gaussPoints;
+    vector<Interval3> m_integrationIntervals;
+
+    void initialiseGaussPoints(int beam, vector<beamGaussPoints> &gaussPoints, const Interval3& integrationInterval);
+    void initialiseInterval(int beam, vector<Interval3> &integrationIntervals, const BeamGeometry& beamGeometryParams);
+
+    inline double changeCoordinate(double x, double a, double b)
+    {
+        return 0.5 * ((b - a) * x + a + b);
+    }
+    inline double changeWeight(double w, double a, double b)
+    {
+        return 0.5 * (b - a) * w;
+    }
+
+    template <typename LambdaType>
+    void integrate(const beamGaussPoints& gaussPoints, LambdaType integrationFun);
+
+    /////////////////////////////////////
+    /// Methods for plasticity
+    /////////////////////////////////////
     void applyStiffnessLarge(VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double& factor);
 
 };
