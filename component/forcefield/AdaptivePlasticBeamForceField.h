@@ -232,6 +232,11 @@ protected:
     /////////////////////////////////////
     void applyStiffnessLarge(VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double& factor);
 
+    /// Computes local displacement of a beam element using the corotational model
+    void computeLocalDisplacement(const VecCoord& x, Vec6& U0Local, Vec6& U1Local,
+                                  unsigned int beamIndex, unsigned int node0Idx, unsigned int node1Idx,
+                                  bool updateBeamMatrices=false);
+
 };
 
 

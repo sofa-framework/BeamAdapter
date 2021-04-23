@@ -191,10 +191,125 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const VisualParams* vparams)
 
 template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* mparams,
-                                                        DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v)
+                                                        DataVecDeriv& dataf, const DataVecCoord& datax, const DataVecDeriv& v)
 {
+}
+
+/// Computes current displacement, expressed in the beam central frame (local), with respect to
+/// the beam rest position.
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::computeLocalDisplacement(const VecCoord& x, Vec6& U0Local, Vec6& U1Local,
+                                                                        unsigned int beamIndex,
+                                                                        unsigned int node0Idx, unsigned int node1Idx,
+                                                                        bool updateBeamMatrices)
+{
+    ///////////// new : Calcul du repère local de la beam & des transformations adequates///////////////
+    Transform global_H_local0, global_H_local1;
+
+    /// 1. get the current transform of the beam:
+    dmsg_info() << "in addForce";
+    l_interpolation->computeTransform2(beamIndex, global_H_local0, global_H_local1, x);
+
+    /// 2. Computes the frame of the beam based on the spline interpolation:
+    Transform global_H_local;
+    Real baryX = 0.5;
+    Real L = l_interpolation->getLength(beamIndex);
+
+    l_interpolation->InterpolateTransformUsingSpline(global_H_local, baryX, global_H_local0, global_H_local1, L);
+
+    Transform local_H_local0 = global_H_local.inversed() * global_H_local0;
+    Transform local_H_local1 = global_H_local.inversed() * global_H_local1;
+
+    /// 3. Computes the transformation from the DOF (in global frame) to the node's local frame DOF0global_H_Node0local and DOF1global_H_Node1local
+    Transform DOF0_H_local0, DOF1_H_local1;
+    l_interpolation->getDOFtoLocalTransform(beamIndex, DOF0_H_local0, DOF1_H_local1);
+
+    /// 4. Computes the adequate transformation
+    Transform global_R_DOF0(Vec3(0, 0, 0), x[node0Idx].getOrientation());
+    Transform global_R_DOF1(Vec3(0, 0, 0), x[node1Idx].getOrientation());
+    /// - rotation due to the optional transformation
+    global_H_local0 = global_R_DOF0 * DOF0_H_local0;
+    global_H_local1 = global_R_DOF1 * DOF1_H_local1;
+
+    Transform DOF0global_H_Node0local, DOF1global_H_Node1local;
+
+    DOF0global_H_Node0local.set(global_H_local0.getOrigin(), global_H_local.getOrientation());
+    DOF1global_H_Node1local.set(global_H_local1.getOrigin(), global_H_local.getOrientation());
+
+    //TODO(dmarchal 2017-05-17) Please specify who/when this will be done
+    //TODO A verifier : global_H_local0.getOrigin() == x[node0Idx].getOrientation().rotate(DOF0_H_local0.getOrigin())
+
+    /// compute the current local displacement of the beam (6dofs)
+    /// 1. get the rest transformation from local to 0 and local to 1
+    Transform local_H_local0_rest, local_H_local1_rest;
+    l_interpolation->getSplineRestTransform(beamIndex, local_H_local0_rest, local_H_local1_rest);
+
+    ///2. computes the local displacement of 0 and 1 in frame local:
+    SpatialVector u0 = local_H_local0.CreateSpatialVector() - local_H_local0_rest.CreateSpatialVector();
+    SpatialVector u1 = local_H_local1.CreateSpatialVector() - local_H_local1_rest.CreateSpatialVector();
+
+    /// 3. put the result in a Vec6
+    for (unsigned int i = 0; i < 3; i++)
+    {
+        U0Local[i] = u0.getLinearVelocity()[i];
+        U0Local[i + 3] = u0.getAngularVelocity()[i];
+        U1Local[i] = u1.getLinearVelocity()[i];
+        U1Local[i + 3] = u1.getAngularVelocity()[i];
+    }
+
+    if (d_reinforceLength.getValue())
+    {
+        Vec3 P0, P1, P2, P3;
+        Real length;
+        Real rest_length = l_interpolation->getLength(beamIndex);
+        l_interpolation->getSplinePoints(beamIndex, x, P0, P1, P2, P3);
+        l_interpolation->computeActualLength(length, P0, P1, P2, P3);
+
+        U0Local[0] = (-length + rest_length) / 2;
+        U1Local[0] = (length - rest_length) / 2;
+    }
+
+    if (!d_useShearStressComputation.getValue())
+    {
+        /////////////////// TEST //////////////////////
+        /// test: correction due to spline computation;
+        Vec3 ResultNode0, ResultNode1;
+        l_interpolation->computeStrechAndTwist(beamIndex, x, ResultNode0, ResultNode1);
+
+        Real ux0 = -ResultNode0[0] + l_interpolation->getLength(beamIndex) / 2;
+        Real ux1 = ResultNode1[0] - l_interpolation->getLength(beamIndex) / 2;
+
+        U0Local[0] = ux0;
+        U1Local[0] = ux1;
+
+        U0Local[3] = -ResultNode0[2];
+        U1Local[3] = ResultNode1[2];
+
+        //////////////////////////////////////////////////
+    }
+
+    if (updateBeamMatrices)
+    {
+        ///find the beamMatrices:
+        BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[beamIndex];//new BeamLocalMatrices();
+
+        /// compute Adjoint Matrices:
+        beamMatrices->m_A0Ref = DOF0global_H_Node0local.inversed().getAdjointMatrix();
+        beamMatrices->m_A1Ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
+
+        /// compute the local mass matrices
+        if (d_computeMass.getValue())
+        {
+            computeMass(beamIndex, (*beamMatrices));
+
+        }
+
+        /// compute the local stiffness matrices
+        computeStiffness(beamIndex, (*beamMatrices));
+    }
 
 }
+
 
 template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::addDForce(const MechanicalParams* mparams,
