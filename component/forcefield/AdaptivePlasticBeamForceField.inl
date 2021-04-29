@@ -337,6 +337,118 @@ template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* mparams,
                                                         DataVecDeriv& dataf, const DataVecCoord& datax, const DataVecDeriv& v)
 {
+    SOFA_UNUSED(v);
+
+    VecDeriv& f = *dataf.beginEdit();
+    const VecCoord& x = datax.getValue();
+
+    f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+
+    unsigned int numBeams = l_interpolation->getNumBeams();
+    m_localBeamMatrices.resize(numBeams);
+
+    if (d_computeMass.getValue())
+        computeGravityVector();
+
+    const vector<beamGaussPoints>& gaussPoints = m_gaussPoints;
+
+    /// Computes internal forces.
+    for (unsigned int b = 0; b < numBeams; b++)
+    {
+        ///find the indices of the nodes
+        unsigned int node0Idx, node1Idx;
+        l_interpolation->getNodeIndices(b, node0Idx, node1Idx);
+
+        /// IF RIGIDIFICATION: no stiffness forces:
+        if (node0Idx == node1Idx)
+            continue;
+
+        /// Computes local displacement increment
+        Vec6 U0Local, U1Local, U0LocalLast, U1LocalLast, DeltaU0Local, DeltaU1Local;
+        computeLocalDisplacement(x, U0Local, U1Local, b, node0Idx, node1Idx, true);
+        computeLocalDisplacement(m_lastPos, U0LocalLast, U1LocalLast, b, node0Idx, node1Idx);
+        DeltaU0Local = U0Local - U0LocalLast;
+        DeltaU1Local = U1Local - U1LocalLast;
+
+        /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
+
+        // Computation of the new stress point, through material point iterations
+        // As in "Numerical Implementation of Constitutive models: Rate-independent Deviatoric Plasticity", T.J.R. Hugues, 1984
+
+        bool isPlasticBeam = false;
+        Vec12 localForces = Vec12();
+
+        typedef std::function<void(GaussPoint3&)> IntegrationLambda;
+        IntegrationLambda computeStress = [&](GaussPoint3& gp)
+        {
+            MechanicalState mechanicalState = gp.getMechanicalState();
+
+            //Strain
+            Vec12 displacementIncrement = Vec12();
+            for (int i=0; i < 6; i++)
+            {
+                displacementIncrement[i] = DeltaU0Local[i];
+                displacementIncrement[i+6] = DeltaU1Local[i];
+            }
+            Vec9 strainIncrement = gp.getGradN() * displacementIncrement;
+
+            //Stress
+            Vec9 initialStressPoint = gp.getPrevStress();
+            Vec9 newStressPoint = Vec9();
+            computeStressIncrement(initialStressPoint, newStressPoint,
+                                   strainIncrement, mechanicalState);
+
+            isPlasticBeam = isPlasticBeam || (mechanicalState == MechanicalState::PLASTIC);
+
+            gp.setPrevStress(newStressPoint);
+
+            Vec3 gpWeights = gp.getWeights();
+            localForces += (gpWeights[1] * gpWeights[2] * gpWeights[3]) * gp.getGradN().transposed() * newStressPoint;
+        };
+
+        //Actually runs gaussian integration on the beams Gauss points
+        integrateBeam(m_gaussPoints[b], computeStress);
+
+        // Updates the beam mechanical state information
+        if (!isPlasticBeam)
+            m_beamMechanicalStates[b] = MechanicalState::POSTPLASTIC;
+
+        //Update the tangent stiffness matrix with the new computed stresses
+        //This matrix will then be used in addDForce and addKToMatrix methods
+        if (isPlasticBeam)
+            updateTangentStiffness(b);
+
+        //Retrieves local forces from the gaussian integration
+        //TO DO : better way to do this ? std::copy ?
+        Vec6 f0 = { localForces[0], localForces[1], localForces[2], localForces[3], localForces[4], localForces[5] };
+        Vec6 f1 = { localForces[6], localForces[7], localForces[8], localForces[9], localForces[10], localForces[11] };
+
+        /// find the beamMatrices:
+        const BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[b];//new BeamLocalMatrices();
+
+        /// compute the force in the global frame
+        Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
+        Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
+
+        /// Add this force to vector f
+        for (unsigned int i = 0; i < 6; i++)
+        {
+            f[node0Idx][i] -= F0_ref[i];
+            f[node1Idx][i] -= F1_ref[i];
+        }
+    } // end for (unsigned int b = 0; b < numBeams; b++)
+
+    if (d_computeMass.getValue())
+    {
+        /// add gravity:
+        addMDx(mparams, dataf, d_dataG, 1.0);
+    }
+
+    // Save the current positions as a record for the next time step.
+    //TO DO: check if this is copy operator
+    m_lastPos = x;
+
+    dataf.endEdit();
 }
 
 /// Computes current displacement, expressed in the beam central frame (local), with respect to
@@ -451,6 +563,23 @@ void AdaptivePlasticBeamForceField<DataTypes>::computeLocalDisplacement(const Ve
         /// compute the local stiffness matrices
         computeStiffness(beamIndex, (*beamMatrices));
     }
+
+}
+
+
+template< class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::computeStressIncrement(const Vec9& lastStress,
+                                                                      Vec9& newStressPoint,
+                                                                      const Vec9& strainIncrement,
+                                                                      MechanicalState& pointMechanicalState)
+{
+
+}
+
+
+template< class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned int beamIndex)
+{
 
 }
 
