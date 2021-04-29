@@ -191,12 +191,12 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseInterval(int beam, vect
 
 template <class DataTypes>
 template <typename LambdaType>
-void AdaptivePlasticBeamForceField<DataTypes>::integrate(const beamGaussPoints& gaussPoints, LambdaType integrationFun)
+void AdaptivePlasticBeamForceField<DataTypes>::integrateBeam(beamGaussPoints& gaussPoints, LambdaType integrationFun)
 {
     //Apply a generic (lambda) integration function to each Gauss point of a beam element
     for (unsigned int gp = 0; gp < gaussPoints.size(); gp++)
     {
-        integrationFun(gaussPoints[gp].m_coordinates, gaussPoints[gp].m_weights);
+        integrationFun(gaussPoints[gp]);
     }
 }
 

@@ -247,7 +247,7 @@ protected:
     }
 
     template <typename LambdaType>
-    void integrate(const beamGaussPoints& gaussPoints, LambdaType integrationFun);
+    void integrateBeam(beamGaussPoints& gaussPoints, LambdaType integrationFun);
 
     /////////////////////////////////////
     /// Methods for plasticity
