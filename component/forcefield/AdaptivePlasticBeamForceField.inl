@@ -99,8 +99,8 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
         double x = canonical3NodesCoordinates[i];
         double w1 = canonical3NodesWeights[i];
         // Changing first coordinate and weight to adapt to the integration interval
-        double a1 = integrationInterval.m_a1;
-        double b1 = integrationInterval.m_b1;
+        double a1 = integrationInterval.geta1();
+        double b1 = integrationInterval.getb1();
         double xChanged = changeCoordinate(x, a1, b1);
         double w1Changed = changeWeight(w1, a1, b1);
 
@@ -109,8 +109,8 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
             double y = canonical3NodesCoordinates[j];
             double w2 = canonical3NodesWeights[j];
             // Changing second coordinate and weight to adapt to the integration interval
-            double a2 = integrationInterval.m_a2;
-            double b2 = integrationInterval.m_b2;
+            double a2 = integrationInterval.geta2();
+            double b2 = integrationInterval.getb2();
             double yChanged = changeCoordinate(y, a2, b2);
             double w2Changed = changeWeight(w2, a2, b2);
 
@@ -119,8 +119,8 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
                 double z = canonical3NodesCoordinates[k];
                 double w3 = canonical3NodesWeights[k];
                 // Changing third coordinate and weight to adapt to the integration interval
-                double a3 = integrationInterval.m_a3;
-                double b3 = integrationInterval.m_b3;
+                double a3 = integrationInterval.geta3();
+                double b3 = integrationInterval.getb3();
                 double zChanged = changeCoordinate(z, a3, b3);
                 double w3Changed = changeWeight(w3, a3, b3);
 
@@ -335,6 +335,129 @@ template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::applyStiffnessLarge(VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double& factor)
 {
 
+}
+
+
+
+/////////////////////////////////////
+/// GaussPoint3
+/////////////////////////////////////
+
+template <class DataTypes>
+AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::GaussPoint3(Real x, Real y, Real z, Real w1, Real w2, Real w3)
+{
+    m_coordinates = { x, y, z };
+    m_weights = { w1, w2, w3 };
+    m_mechanicalState = MechanicalState::ELASTIC; //By default, before any deformation occurs
+    m_prevStress = Vec9(); //By default, no deformation => 0 stress tensor
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getGradN() const -> const Matrix9x12&
+{
+    return m_gradN;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setGradN(Matrix9x12 gradN)
+{
+    m_gradN = gradN;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getMechanicalState() const -> const MechanicalState
+{
+    return m_mechanicalState;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setMechanicalState(MechanicalState newState)
+{
+    m_mechanicalState = newState;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getPrevStress() const -> const Vec9&
+{
+    return m_prevStress;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setPrevStress(Vec9 newStress)
+{
+    m_prevStress = newStress;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getWeights() const -> const Vec3&
+{
+    return m_weights;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setWeights(Vec3 weights)
+{
+    m_weights = weights;
+}
+
+
+/////////////////////////////////////
+/// Interval3
+/////////////////////////////////////
+
+template <class DataTypes>
+AdaptivePlasticBeamForceField<DataTypes>::Interval3::Interval3()
+{
+    //By default, integration is considered over [-1,1]*[-1,1]*[-1,1].
+    m_a1 = m_a2 = m_a3 = -1;
+    m_b1 = m_b2 = m_b3 = 1;
+}
+
+template <class DataTypes>
+AdaptivePlasticBeamForceField<DataTypes>::Interval3::Interval3(Real a1, Real b1, Real a2, Real b2, Real a3, Real b3)
+{
+    m_a1 = a1;
+    m_b1 = b1;
+    m_a2 = a2;
+    m_b2 = b2;
+    m_a3 = a3;
+    m_b3 = b3;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::geta1() const -> Real
+{
+    return m_a1;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::getb1() const -> Real
+{
+    return m_b1;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::geta2() const -> Real
+{
+    return m_a2;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::getb2() const -> Real
+{
+    return m_b2;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::geta3() const -> Real
+{
+    return m_a3;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::Interval3::getb3() const -> Real
+{
+    return m_b3;
 }
 
 } // namespace _adaptiveplasticbeamforcefield_

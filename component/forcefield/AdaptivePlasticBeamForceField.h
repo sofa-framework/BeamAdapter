@@ -93,15 +93,17 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
     typedef Vec<9, Real> Vec9;          ///< Second-order tensor in vector notation
+    typedef Vec<12, Real> Vec12;
     typedef Mat<9, 9, Real> Matrix9x9;  ///< Fourth-order tensor in vector notation
+    typedef Mat<9, 12, Real> Matrix9x12;
 
-    /** \enum MechanicalState
+    /** \enum class MechanicalState
      *  \brief Types of mechanical state associated with the (Gauss) integration
      *  points. The POSTPLASTIC state corresponds to points which underwent plastic
      *  deformation, but on which constraints were released so that the plasticity
      *  process stopped.
      */
-    enum MechanicalState {
+    enum class MechanicalState {
         ELASTIC = 0,
         PLASTIC = 1,
         POSTPLASTIC = 2,
@@ -129,20 +131,37 @@ protected:
         Matrix6x6 m_Kt00, m_Kt01, m_Kt10, m_Kt11; /// Local tangent stiffness matrix
     };
 
+public:
+
     ///<3-dimensional Gauss point for reduced integration
     class GaussPoint3
     {
     public:
         GaussPoint3() {}
-        GaussPoint3(Real x, Real y, Real z, Real w1, Real w2, Real w3)
-        {
-            m_coordinates = { x, y, z };
-            m_weights = { w1, w2, w3 };
-        }
+        GaussPoint3(Real x, Real y, Real z, Real w1, Real w2, Real w3);
         ~GaussPoint3() {}
 
+        auto getGradN() const -> const Matrix9x12&;
+        void setGradN(Matrix9x12 gradN);
+
+        auto getMechanicalState() const -> const MechanicalState;
+        void setMechanicalState(MechanicalState newState);
+
+        auto getPrevStress() const -> const Vec9&;
+        void setPrevStress(Vec9 newStress);
+
+        auto getWeights() const -> const Vec3&;
+        void setWeights(Vec3 weights);
+
+    protected:
         Vec3 m_coordinates;
         Vec3 m_weights;
+
+        /// Small strain hypothesis deformation gradient, applied to the beam shape functions (in matrix form)
+        /// Computed locally for each Gauss point
+        Matrix9x12 m_gradN;
+        MechanicalState m_mechanicalState; ///State of the Gauss point deformation (elastic, plastic, or postplastic)
+        Vec9 m_prevStress; ///Value of the stress tensor at previous time step
     };
 
     ///<3 Real intervals [a1,b1], [a2,b2] and [a3,b3], for 3D reduced integration
@@ -150,22 +169,18 @@ protected:
     {
     public:
         //By default, integration is considered over [-1,1]*[-1,1]*[-1,1].
-        Interval3()
-        {
-            m_a1 = m_a2 = m_a3 = -1;
-            m_b1 = m_b2 = m_b3 = 1;
-        }
-        Interval3(Real a1, Real b1, Real a2, Real b2, Real a3, Real b3)
-        {
-            m_a1 = a1;
-            m_b1 = b1;
-            m_a2 = a2;
-            m_b2 = b2;
-            m_a3 = a3;
-            m_b3 = b3;
-        }
+        Interval3();
+        Interval3(Real a1, Real b1, Real a2, Real b2, Real a3, Real b3);
         ~Interval3() {}
 
+        auto geta1() const -> Real;
+        auto getb1() const -> Real;
+        auto geta2() const -> Real;
+        auto getb2() const -> Real;
+        auto geta3() const -> Real;
+        auto getb3() const -> Real;
+
+    protected:
         Real m_a1, m_b1, m_a2, m_b2, m_a3, m_b3;
     };
 
