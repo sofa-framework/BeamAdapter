@@ -186,6 +186,8 @@ public:
 
 public:
 
+    typedef Vec<27, GaussPoint3> beamGaussPoints;
+
     AdaptivePlasticBeamForceField();
     virtual ~AdaptivePlasticBeamForceField();
 
@@ -219,11 +221,16 @@ protected:
     /// Position at the last time step, to handle increments for the plasticity resolution
     VecCoord m_lastPos;
 
+    vector<MechanicalState> m_beamMechanicalStates;
+
+    Data<Real> d_youngModulus;
+    Data<Real> d_poissonRatio;
+    Matrix9x9 m_genHookesLaw;
+
     /////////////////////////////////////
     /// Gaussian integration
     /////////////////////////////////////
 
-    typedef Vec<27, GaussPoint3> beamGaussPoints;
     vector<beamGaussPoints> m_gaussPoints;
     vector<Interval3> m_integrationIntervals;
 

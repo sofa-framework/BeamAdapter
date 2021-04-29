@@ -44,14 +44,18 @@ namespace _adaptiveplasticbeamforcefield_
 using sofa::core::objectmodel::BaseContext;
 
 template <class DataTypes>
-AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField()
+AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField() :
+    d_poissonRatio(initData(&d_poissonRatio, Real(0.3), "poissonRatio",
+        "Value of the poisson ratio for the considered material")),
+    d_youngModulus(initData(&d_youngModulus, "youngModulus",
+        "Value of the young modulus for the considered material"))
 {
 }
 
 template <class DataTypes>
 AdaptivePlasticBeamForceField<DataTypes>::~AdaptivePlasticBeamForceField()
 {
-    //TO DO : should m_gaussPoints and m_integrationIntervals be deallocated explicitly ?
+    //TO DO : should m_gaussPoints, m_integrationIntervals, m_beamMechanicalStates be deallocated explicitly ?
 }
 
 template <class DataTypes>
@@ -68,6 +72,22 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     const vector<BeamGeometry> beamGeometryParams = l_interpolation->getBeamGeometryParameters();
     unsigned int numBeams = l_interpolation->getNumBeams();
 
+    //Initialisation of generalised Hooke's law
+    const Real E = d_youngModulus.getValue();
+    const Real nu = d_poissonRatio.getValue();
+    m_genHookesLaw[0][0] = m_genHookesLaw[4][4] = m_genHookesLaw[8][8] = 1 - nu;
+    m_genHookesLaw[0][4] = m_genHookesLaw[0][8] = m_genHookesLaw[4][0] = m_genHookesLaw[8][0] = nu;
+    m_genHookesLaw[4][8] = m_genHookesLaw[8][4] = nu;
+
+    m_genHookesLaw[1][1] = m_genHookesLaw[2][2] = m_genHookesLaw[3][3] = (1 - 2*nu) / 2;
+    m_genHookesLaw[5][5] = m_genHookesLaw[6][6] = m_genHookesLaw[7][7] = (1 - 2*nu) / 2;
+
+    m_genHookesLaw[1][3] = m_genHookesLaw[2][6] = m_genHookesLaw[5][7] = (1 - 2*nu) / 2;
+    m_genHookesLaw[3][1] = m_genHookesLaw[6][2] = m_genHookesLaw[7][5] = (1 - 2*nu) / 2;
+
+    m_genHookesLaw *= E / ((1 + nu)*(1 - 2*nu));
+
+    //Initialisation of Gauss points and integration intervals
     m_gaussPoints.clear();
     m_gaussPoints.resize(numBeams);
     m_integrationIntervals.clear();
@@ -79,6 +99,10 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
         initialiseGaussPoints(b, m_gaussPoints, m_integrationIntervals[b]);
     }
 
+    //Initialisaiton of beam mechanical states to ELASTIC
+    m_beamMechanicalStates.clear();
+    m_beamMechanicalStates.resize(numBeams);
+    std::fill(m_beamMechanicalStates.begin(), m_beamMechanicalStates.end(), MechanicalState::ELASTIC);
 }
 
 
