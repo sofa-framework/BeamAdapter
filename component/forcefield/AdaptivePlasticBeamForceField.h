@@ -237,6 +237,9 @@ protected:
     void initialiseGaussPoints(int beam, vector<beamGaussPoints> &gaussPoints, const Interval3& integrationInterval);
     void initialiseInterval(int beam, vector<Interval3> &integrationIntervals, const BeamGeometry& beamGeometryParams);
 
+    auto computeGradN(Real x, Real y, Real z, Real L, Real A, Real Iy, Real Iz,
+                      Real E, Real nu, Real kappaY = 1.0, Real kappaZ = 1.0) -> Matrix9x12;
+
     inline double changeCoordinate(double x, double a, double b)
     {
         return 0.5 * ((b - a) * x + a + b);

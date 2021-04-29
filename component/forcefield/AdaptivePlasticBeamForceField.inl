@@ -111,9 +111,18 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
                                                                      const Interval3& integrationInterval)
 {
     //Gaussian nodes coordinates and weights for a 1D integration on [-1,1]
-    const double sqrt3_5 = helper::rsqrt( 3/5 );
-    Vec3 canonical3NodesCoordinates = {-sqrt3_5, 0, sqrt3_5};
-    Vec3 canonical3NodesWeights = {5/9, 8/9, 5/9};
+    const double sqrt3_5 = helper::rsqrt(3.0 / 5);
+    Vec3 canonical3NodesCoordinates = { -sqrt3_5, 0, sqrt3_5 };
+    Vec3 canonical3NodesWeights = { 5.0 / 9, 8.0 / 9, 5.0 / 9 };
+
+    const BeamPlasticInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(beam);
+    double Iy = beamSection._Iy;
+    double Iz = beamSection._Iz;
+    double A = beamSection._A;
+    const double L = l_interpolation->getLength(beam);
+
+    Real E = d_youngModulus.getValue();
+    Real nu = d_poissonRatio.getValue();
 
     //Compute actual Gauss points coordinates and weights, with a 3D integration
     //NB: 3 loops because integration is in 3D, 3 iterations per loop because it's a 3 point integration
@@ -149,6 +158,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
                 double w3Changed = changeWeight(w3, a3, b3);
 
                 GaussPoint3 newGaussPoint = GaussPoint3(xChanged, yChanged, zChanged, w1Changed, w2Changed, w3Changed);
+                newGaussPoint.setGradN(computeGradN(xChanged, yChanged, zChanged, L, A, Iy, Iz, E, nu));
                 gaussPoints[beam][gaussPointIt] = newGaussPoint;
                 gaussPointIt++;
             }
@@ -198,6 +208,116 @@ void AdaptivePlasticBeamForceField<DataTypes>::integrateBeam(beamGaussPoints& ga
     {
         integrationFun(gaussPoints[gp]);
     }
+}
+
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real z, Real L,
+                                                            Real A, Real Iy, Real Iz, Real E, Real nu,
+                                                            Real kappaY, Real kappaZ) -> Matrix9x12
+{
+    Matrix9x12 gradN = Matrix9x12();
+    Real xi = x / L;
+    Real eta = y / L;
+    Real zeta = z / L;
+
+    Real L2 = L * L;
+    Real G = E / (2.0 * (1.0 + nu));
+
+    Real phiY, phiZ;
+    if (A == 0)
+    {
+        phiY = 0.0;
+        phiZ = 0.0;
+    }
+    else
+    {
+        phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
+        phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
+    }
+    Real phiYInv = (1 / (1 + phiY));
+    Real phiZInv = (1 / (1 + phiZ));
+
+    //Row 0
+    gradN[0][0] = -1 / L;
+    gradN[0][1] = (phiZInv * 6 * eta * (1 - 2 * xi)) / L;
+    gradN[0][2] = (phiYInv * 6 * zeta * (1 - 2 * xi)) / L;
+    gradN[0][3] = 0;
+    gradN[0][4] = phiYInv * zeta * (6 * xi - 4 - phiY);
+    gradN[0][5] = phiZInv * eta * (4 - 6 * xi + phiZ);
+    gradN[0][6] = 1 / L;
+    gradN[0][7] = (phiZInv * 6 * eta * (2 * xi - 1)) / L;
+    gradN[0][8] = (phiYInv * 6 * zeta * (2 * xi - 1)) / L;
+    gradN[0][9] = 0;
+    gradN[0][10] = phiYInv * zeta * (6 * xi - 2 + phiY);
+    gradN[0][11] = phiZInv * eta * (2 - 6 * xi - phiZ);
+
+    //Rows 1 and 3
+    gradN[1][0] = 0.0;
+    gradN[1][1] = -(phiZInv * phiZ) / (2 * L);
+    gradN[1][2] = 0.0;
+    gradN[1][3] = zeta / 2;
+    gradN[1][4] = 0.0;
+    gradN[1][5] = -(phiZInv * phiZ) / 4;
+    gradN[1][6] = 0.0;
+    gradN[1][7] = (phiZInv * phiZ) / (2 * L);
+    gradN[1][8] = 0.0;
+    gradN[1][9] = -zeta / 2;
+    gradN[1][10] = 0.0;
+    gradN[1][11] = -(phiZInv * phiZ) / 4;
+
+    gradN[3][0] = 0.0;
+    gradN[3][1] = -(phiZInv * phiZ) / (2 * L);
+    gradN[3][2] = 0.0;
+    gradN[3][3] = zeta / 2;
+    gradN[3][4] = 0.0;
+    gradN[3][5] = -(phiZInv * phiZ) / 4;
+    gradN[3][6] = 0.0;
+    gradN[3][7] = (phiZInv * phiZ) / (2 * L);
+    gradN[3][8] = 0.0;
+    gradN[3][9] = -zeta / 2;
+    gradN[3][10] = 0.0;
+    gradN[3][11] = -(phiZInv * phiZ) / 4;
+
+    //Rows 2 and 6
+    gradN[2][0] = gradN[2][1] = 0.0;
+    gradN[2][2] = -(phiYInv * phiY) / (2 * L);
+    gradN[2][3] = -eta / 2;
+    gradN[2][4] = (phiYInv * phiY) / 4;
+    gradN[2][5] = gradN[2][6] = gradN[2][7] = 0.0;
+    gradN[2][8] = (phiYInv * phiY) / (2 * L);
+    gradN[2][9] = eta / 2;
+    gradN[2][10] = (phiYInv * phiY) / 4;
+    gradN[2][11] = 0.0;
+
+    gradN[6][0] = gradN[6][1] = 0.0;
+    gradN[6][2] = -(phiYInv * phiY) / (2 * L);
+    gradN[6][3] = -eta / 2;
+    gradN[6][4] = (phiYInv * phiY) / 4;
+    gradN[6][5] = gradN[6][6] = gradN[6][7] = 0.0;
+    gradN[6][8] = (phiYInv * phiY) / (2 * L);
+    gradN[6][9] = eta / 2;
+    gradN[6][10] = (phiYInv * phiY) / 4;
+    gradN[6][11] = 0.0;
+
+    //Rows 4, 5, 7, 8
+    gradN[4][0] = gradN[4][1] = gradN[4][2] = gradN[4][3] = 0.0;
+    gradN[4][4] = gradN[4][5] = gradN[4][6] = gradN[4][7] = 0.0;
+    gradN[4][8] = gradN[4][9] = gradN[4][10] = gradN[4][11] = 0.0;
+
+    gradN[5][0] = gradN[5][1] = gradN[5][2] = gradN[5][3] = 0.0;
+    gradN[5][4] = gradN[5][5] = gradN[5][6] = gradN[5][7] = 0.0;
+    gradN[5][8] = gradN[5][9] = gradN[5][10] = gradN[5][11] = 0.0;
+
+    gradN[7][0] = gradN[7][1] = gradN[7][2] = gradN[7][3] = 0.0;
+    gradN[7][4] = gradN[7][5] = gradN[7][6] = gradN[7][7] = 0.0;
+    gradN[7][8] = gradN[7][9] = gradN[7][10] = gradN[7][11] = 0.0;
+
+    gradN[8][0] = gradN[8][1] = gradN[8][2] = gradN[8][3] = 0.0;
+    gradN[8][4] = gradN[8][5] = gradN[8][6] = gradN[8][7] = 0.0;
+    gradN[8][8] = gradN[8][9] = gradN[8][10] = gradN[8][11] = 0.0;
+
+    return gradN;
 }
 
 
