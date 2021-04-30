@@ -289,7 +289,7 @@ protected:
                                   bool updateBeamMatrices=false);
 
     /// Computes stress increment on a single point of space, from previous stress and current strain
-    void computeStressIncrement(const Vec9& lastStress, Vec9& newStressPoint,
+    void computeStressIncrement(GaussPoint3& gp, Vec9& newStressPoint,
                                 const Vec9& strainIncrement, MechanicalState& pointMechanicalState);
 
     void updateTangentStiffness(unsigned int beamIndex);

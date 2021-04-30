@@ -594,12 +594,85 @@ void AdaptivePlasticBeamForceField<DataTypes>::computeLocalDisplacement(const Ve
 
 
 template< class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::computeStressIncrement(const Vec9& lastStress,
+void AdaptivePlasticBeamForceField<DataTypes>::computeStressIncrement(GaussPoint3& gp,
                                                                       Vec9& newStressPoint,
                                                                       const Vec9& strainIncrement,
                                                                       MechanicalState& pointMechanicalState)
 {
+    /// This method implements the radial return algorithm, as in "Numerical Implementation of
+    /// Constitutive models: Rate-independent Deviatoric Plasticity", T.J.R. Hugues, 1984.
+    /// The idea is to compute the stress increment in two steps : a purely elastic step, in
+    /// which all deformation is considered elastic, and a plastic correction step, is
+    /// deformation was actually important enough to generate plasticity.
+    /// The plasticity model used in the computation is a Von Mises-Hill plasticity with
+    /// linear mixed hardening.
+    /// NB: we consider that the yield function and the plastic flow are equal (f=g). This
+    /// corresponds to an associative flow rule (for plasticity).
 
+    const Matrix9x9& C = m_genHookesLaw;
+
+    // First step = computation of the elastic predictor, as if deformation was entirely elastic
+    const MechanicalState mechanicalState = gp.getMechanicalState();
+
+    Vec9 elasticIncrement = C*strainIncrement;
+    Vec9 elasticPredictorStress = gp.getPrevStress() + elasticIncrement;
+
+    const Vec9& backStress = gp.getBackStress();
+    const Real yieldStress = gp.getYieldStress();
+
+    if (vonMisesYield(elasticPredictorStress, backStress, yieldStress) < m_stressComparisonThreshold)
+    {
+        // The Gauss point is in elastic state: the back stress and yield stress
+        // remain constant, and the new stress is equal to the trial stress.
+        newStressPoint = elasticPredictorStress;
+
+        // If the Gauss point was initially plastic, we update its mechanical state
+        if (mechanicalState == MechanicalState::PLASTIC)
+            gp.setMechanicalState(MechanicalState::POSTPLASTIC);
+    }
+    else
+    {
+        // If the Gauss point was initially elastic, we update its mechanical state
+        if (mechanicalState == MechanicalState::POSTPLASTIC || mechanicalState == MechanicalState::ELASTIC)
+            gp.setMechanicalState(MechanicalState::POSTPLASTIC);
+
+        Vec9 shiftedDeviatoricElasticPredictor = deviatoricStress(elasticPredictorStress - backStress);
+
+        // Gradient of the Von Mises yield function is colinear to the deviatoric stress tensor.
+        // Thus we can compute the yield surface normal using the deviatoric stress.
+        // For the Von Mises yield function, the normal direction to the yield surface doesn't
+        // change between the elastic predictor and it's projection on the yield surface
+        Real shiftDevElasticPredictorNorm = shiftedDeviatoricElasticPredictor.norm();
+        Vec9 N = shiftedDeviatoricElasticPredictor / shiftDevElasticPredictorNorm;
+
+        // Indicates the proportion of Kinematic vs isotropic hardening. beta=0 <=> kinematic, beta=1 <=> isotropic
+        const Real beta = 0.5;
+
+        const Real E = d_youngModulus.getValue();
+        const Real nu = d_poissonRatio.getValue();
+        const Real mu = E / ( 2*(1 + nu) ); // Lame coefficient
+
+        // Plastic modulus
+        const Real H = d_plasticModulus.getValue();
+
+        // Computation of the plastic multiplier
+        const double sqrt2 = helper::rsqrt(2.0);
+        const double sqrt3 = helper::rsqrt(3.0);
+        const double sqrt6 = sqrt2 * sqrt3;
+        Real plasticMultiplier = (shiftDevElasticPredictorNorm - (sqrt2 / sqrt3) * yieldStress) / ( mu*sqrt6 *( 1 + H/(3*mu) ) );
+
+        // Updating plastic variables
+        newStressPoint = elasticPredictorStress - sqrt6*mu*plasticMultiplier * N;
+
+        Real newYieldStress = yieldStress + beta * H * plasticMultiplier;
+        gp.setYieldStress(newYieldStress);
+        Vec9 newBackStress = backStress + (sqrt2 / sqrt3) * (1-beta) * H * plasticMultiplier * N;
+        gp.setBackStress(newBackStress);
+
+        Vec9 newPlasticStrain = gp.getPlasticStrain() + (sqrt3/sqrt2) * plasticMultiplier * N;
+        gp.setPlasticStrain(newPlasticStrain);
+        gp.setEffectivePlasticStrain(gp.getEffectivePlasticStrain() + plasticMultiplier);
+    }
 }
 
 
