@@ -48,8 +48,18 @@ AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField() :
     d_poissonRatio(initData(&d_poissonRatio, Real(0.3), "poissonRatio",
         "Value of the poisson ratio for the considered material")),
     d_youngModulus(initData(&d_youngModulus, "youngModulus",
-        "Value of the young modulus for the considered material"))
+        "Value of the young modulus for the considered material")),
+    d_initialYieldStress(initData(&d_initialYieldStress, "initialYieldStress",
+        "Yield stress of the considered material, prior to any elastic deformation")),
+    d_plasticModulus(initData(&d_plasticModulus, "plasticModulus",
+        "Approximation of the plastic modulus as a constant. Can be deduced from a generic law such as Ramberg-Osgood's"))
 {
+    if (d_initialYieldStress.getValue() < 0)
+    {
+        msg_error() << "yield Stress should be positive. Please provide a positive yield"
+                    << "stress value for the considered material";
+    }
+
 }
 
 template <class DataTypes>
@@ -103,6 +113,18 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     m_beamMechanicalStates.clear();
     m_beamMechanicalStates.resize(numBeams);
     std::fill(m_beamMechanicalStates.begin(), m_beamMechanicalStates.end(), MechanicalState::ELASTIC);
+
+    //Initialisation of the comparison threshold for stress tensor norms to 0.
+    // Plasticity computation requires to basically compare stress tensor norms to 0.
+    // As stress norm values can vary of several orders of magnitude, depending on the
+    // considered materials and/or applied forces, this comparison has to be carried out
+    // carefully.
+    // The idea here is to use the initialYieldStress of the material, and the
+    // available precision limit (e.g. std::numeric_limits<double>::epsilon()).
+    // We rely on the value of the initial Yield stress, as we can expect plastic
+    // deformation to occur inside a relatively small intervl of stresses around this value.
+    const int orderOfMagnitude = d_initialYieldStress.getValue(); //Should use std::abs, but d_initialYieldStress > 0
+    m_stressComparisonThreshold = std::numeric_limits<double>::epsilon()*orderOfMagnitude;
 }
 
 
@@ -158,7 +180,8 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
                 double w3Changed = changeWeight(w3, a3, b3);
 
                 GaussPoint3 newGaussPoint = GaussPoint3(xChanged, yChanged, zChanged, w1Changed, w2Changed, w3Changed);
-                newGaussPoint.setGradN(computeGradN(xChanged, yChanged, zChanged, L, A, Iy, Iz, E, nu));
+                newGaussPoint.setGradN( computeGradN(xChanged, yChanged, zChanged, L, A, Iy, Iz, E, nu) );
+                newGaussPoint.setYieldStress( d_initialYieldStress.getValue() );
                 gaussPoints[beam][gaussPointIt] = newGaussPoint;
                 gaussPointIt++;
             }
@@ -373,7 +396,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
         /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
 
         // Computation of the new stress point, through material point iterations
-        // As in "Numerical Implementation of Constitutive models: Rate-independent Deviatoric Plasticity", T.J.R. Hugues, 1984
+        // Cf detail comment of the algorithm in computeStressIncrement
 
         bool isPlasticBeam = false;
         Vec12 localForces = Vec12();
@@ -393,10 +416,12 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
             Vec9 strainIncrement = gp.getGradN() * displacementIncrement;
 
             //Stress
-            Vec9 initialStressPoint = gp.getPrevStress();
             Vec9 newStressPoint = Vec9();
-            computeStressIncrement(initialStressPoint, newStressPoint,
+            computeStressIncrement(gp, newStressPoint,
                                    strainIncrement, mechanicalState);
+
+            // Update the mechanical state information
+            mechanicalState = gp.getMechanicalState();
 
             isPlasticBeam = isPlasticBeam || (mechanicalState == MechanicalState::PLASTIC);
 
@@ -411,6 +436,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
 
         // Updates the beam mechanical state information
         if (!isPlasticBeam)
+            // TO DO: prior to any plastic deformation, this should be ELASTIC. But it makes no difference in the beam implementation
             m_beamMechanicalStates[b] = MechanicalState::POSTPLASTIC;
 
         //Update the tangent stiffness matrix with the new computed stresses
@@ -623,6 +649,10 @@ AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::GaussPoint3(Real x, Real 
     m_weights = { w1, w2, w3 };
     m_mechanicalState = MechanicalState::ELASTIC; //By default, before any deformation occurs
     m_prevStress = Vec9(); //By default, no deformation => 0 stress tensor
+    m_backStress = Vec9(); //By default, no plastic deformation => back stress is 0
+    m_yieldStress = 0; //Changed by initialiseGaussPoints, depends on the material
+    m_plasticStrain = Vec9(); //By default, no plastic deformation => no history
+    m_effectivePlasticStrain = 0; //By default, no plastic deformation => no history
 }
 
 template <class DataTypes>
@@ -671,6 +701,54 @@ template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setWeights(Vec3 weights)
 {
     m_weights = weights;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getBackStress() const -> const Vec9&
+{
+    return m_backStress;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setBackStress(Vec9 backStress)
+{
+    m_backStress = backStress;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getYieldStress() const ->const Real
+{
+    return m_yieldStress;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setYieldStress(Real yieldStress)
+{
+    m_yieldStress = yieldStress;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getPlasticStrain() const -> const Vec9&
+{
+    return m_plasticStrain;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setPlasticStrain(Vec9 plasticStrain)
+{
+    m_plasticStrain = plasticStrain;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getEffectivePlasticStrain() const ->const Real
+{
+    return m_effectivePlasticStrain;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setEffectivePlasticStrain(Real effectivePlasticStrain)
+{
+    m_effectivePlasticStrain = effectivePlasticStrain;
 }
 
 

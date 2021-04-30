@@ -96,6 +96,7 @@ public:
     typedef Vec<12, Real> Vec12;
     typedef Mat<9, 9, Real> Matrix9x9;  ///< Fourth-order tensor in vector notation
     typedef Mat<9, 12, Real> Matrix9x12;
+    typedef Mat<12, 12, Real> Matrix12x12; ///< Tangent stiffness matrix
 
     /** \enum class MechanicalState
      *  \brief Types of mechanical state associated with the (Gauss) integration
@@ -110,23 +111,23 @@ public:
     };
 
     /*!
-     * \class BeamPlasticVariables
-     * @brief BeamPlasticVariables Class
+     * \class beamTangentStifness
+     * @brief beamTangentStifness Class
      */
 protected:
 
-    class BeamPlasticVariables
+    class beamTangentStifness
     {
     public:
-        BeamPlasticVariables() {}
-        BeamPlasticVariables(const BeamPlasticVariables& v)
+        beamTangentStifness() {}
+        beamTangentStifness(const beamTangentStifness& v)
         {
             m_Kt00 = v.m_Kt00;
             m_Kt10 = v.m_Kt10;
             m_Kt11 = v.m_Kt11;
             m_Kt01 = v.m_Kt01;
         }
-        ~BeamPlasticVariables() {}
+        ~beamTangentStifness() {}
 
         Matrix6x6 m_Kt00, m_Kt01, m_Kt10, m_Kt11; /// Local tangent stiffness matrix
     };
@@ -153,15 +154,31 @@ public:
         auto getWeights() const -> const Vec3&;
         void setWeights(Vec3 weights);
 
+        auto getBackStress() const -> const Vec9&;
+        void setBackStress(Vec9 backStress);
+
+        auto getYieldStress() const ->const Real;
+        void setYieldStress(Real yieldStress);
+
+        auto getPlasticStrain() const -> const Vec9&;
+        void setPlasticStrain(Vec9 plasticStrain);
+
+        auto getEffectivePlasticStrain() const ->const Real;
+        void setEffectivePlasticStrain(Real effectivePlasticStrain);
+
     protected:
         Vec3 m_coordinates;
         Vec3 m_weights;
 
-        /// Small strain hypothesis deformation gradient, applied to the beam shape functions (in matrix form)
-        /// Computed locally for each Gauss point
-        Matrix9x12 m_gradN;
-        MechanicalState m_mechanicalState; ///State of the Gauss point deformation (elastic, plastic, or postplastic)
-        Vec9 m_prevStress; ///Value of the stress tensor at previous time step
+        Matrix9x12 m_gradN; /// Small strain hypothesis deformation gradient, applied to the beam shape functions (matrix form)
+        MechanicalState m_mechanicalState; /// State of the Gauss point deformation (elastic, plastic, or postplastic)
+        Vec9 m_prevStress; /// Value of the stress tensor at previous time step
+        Vec9 m_backStress; /// Centre of the yield surface, in stress space
+        Real m_yieldStress; /// Elastic limit, varying if plastic deformation occurs
+
+        //Plasticity history variables
+        Vec9 m_plasticStrain;
+        Real m_effectivePlasticStrain;
     };
 
     ///<3 Real intervals [a1,b1], [a2,b2] and [a3,b3], for 3D reduced integration
@@ -216,7 +233,7 @@ protected:
 
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BPInterpolation, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interpolation;
 
-    vector<BeamPlasticVariables> m_plasticVariables;
+    vector<beamTangentStifness> m_tangentStifnesses;
 
     /// Position at the last time step, to handle increments for the plasticity resolution
     VecCoord m_lastPos;
@@ -225,7 +242,16 @@ protected:
 
     Data<Real> d_youngModulus;
     Data<Real> d_poissonRatio;
+    Data<Real> d_initialYieldStress;
     Matrix9x9 m_genHookesLaw;
+
+    // TO DO: Plastic modulus should not be a constant. Is this approximation relevant ?
+    // Otherwise a generic law such as Ramberg-Osgood should be use. (Cf Plugin BeamPlastic)
+    Data<Real> d_plasticModulus; ///Linearisation coefficient for the plastic behaviour law
+
+    // Threshold used to compare stress tensor norms to 0. See detailed explanation
+    // at the computation of the threshold in the init() method.
+    Real m_stressComparisonThreshold;
 
     /////////////////////////////////////
     /// Gaussian integration
