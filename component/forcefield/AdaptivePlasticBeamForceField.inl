@@ -107,6 +107,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     {
         initialiseInterval(b, m_integrationIntervals, beamGeometryParams[b]);
         initialiseGaussPoints(b, m_gaussPoints, m_integrationIntervals[b]);
+        updateTangentStiffness(b); //Prior to plastic deformation, computes an elastic stiffness with Cep = C
     }
 
     //Initialisaiton of beam mechanical states to ELASTIC
@@ -680,6 +681,53 @@ template< class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned int beamIndex)
 {
 
+    // Switching to the 12x12 format for gaussian quadrature
+    Matrix12x12 Kt = Matrix12x12();
+
+    const Matrix9x9& C = m_genHookesLaw;
+    const Real E = d_youngModulus.getValue();
+    const Real nu = d_poissonRatio.getValue();
+
+    typedef std::function<void(GaussPoint3&)> IntegrationLambda;
+    IntegrationLambda computeTangentStiffness = [&](GaussPoint3& gp)
+    {
+        Vec9 currentStressPoint = gp.getPrevStress(); //Updated in computeStressIncrement
+
+        Real H = d_plasticModulus.getValue();
+
+        Matrix9x12 gradN = gp.getGradN();
+        Matrix9x9 Cep = Matrix9x9();
+        // Cep
+        Vec9 gradient = vonMisesGradient(currentStressPoint);
+
+        if ( gradient.norm() < m_stressComparisonThreshold
+             || gp.getMechanicalState() != MechanicalState::PLASTIC )
+            Cep = C; //TO DO: is that correct ?
+        else
+        {
+            Vec9 N = helper::rsqrt(2.0 / 3.0) * gradient;
+            Vec9 CN = C * N;
+            //Conversion to matrix, TO DO: better way ? Eigen ? Use only matrices ?
+            Mat<9, 1, Real> matCN = Mat<9, 1, Real>();
+            for (int i = 0; i < CN.size(); i++)
+                matCN[i][0] = CN[i];
+            // NtC = (NC)t because of C symmetry
+            Cep = C - ( matCN * matCN.transposed() ) / (N * CN + (2.0 / 3.0) * H); //TO DO: check that * operator is actually dot product
+        }
+
+        Vec3 gpWeights = gp.getWeights();
+        Kt += gpWeights[1]*gpWeights[2]*gpWeights[3] * gradN.transposed()*Cep*gradN;
+    }; //end computeTangentStiffness
+
+    //Actually runs gaussian integration on the beams Gauss points
+    integrateBeam(m_gaussPoints[beamIndex], computeTangentStiffness);
+
+    //Update beam tangent stiffness
+    beamTangentStifness* tangentStiffness = &m_tangentStifnesses[beamIndex];
+    Kt.getsub(0, 0, tangentStiffness->m_Kt00);
+    Kt.getsub(0, 6, tangentStiffness->m_Kt01);
+    Kt.getsub(6, 0, tangentStiffness->m_Kt10);
+    Kt.getsub(6, 6, tangentStiffness->m_Kt11);
 }
 
 //----- Implementation of the Von Mises yield function -----//
