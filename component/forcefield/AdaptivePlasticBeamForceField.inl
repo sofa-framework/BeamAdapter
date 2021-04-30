@@ -609,6 +609,93 @@ void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned i
 
 }
 
+//----- Implementation of the Von Mises yield function -----//
+
+template< class DataTypes>
+typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForceField<DataTypes>::deviatoricStress(const Vec9& stressTensor)
+{
+    // Returns the deviatoric stress from a given stress tensor in Voigt notation
+
+    Vec9 deviatoricStress = stressTensor;
+    double mean = (stressTensor[0] + stressTensor[4] + stressTensor[8]) / 3.0;
+
+    deviatoricStress[0] -= mean;
+    deviatoricStress[4] -= mean;
+    deviatoricStress[8] -= mean;
+
+    return deviatoricStress;
+}
+
+template< class DataTypes>
+typename AdaptivePlasticBeamForceField<DataTypes>::Real AdaptivePlasticBeamForceField<DataTypes>::equivalentStress(const Vec9& stressTensor)
+{
+    // Direct computation of the equivalent stress. We use the fact that the tensor is symmetric
+    Real sigmaXX = stressTensor[0];
+    Real sigmaXY = stressTensor[1];
+    //Real sigmaXZ = stressTensor[2];
+    //Real sigmaYX = stressTensor[3];
+    Real sigmaYY = stressTensor[4];
+    Real sigmaYZ = stressTensor[5];
+    Real sigmaZX = stressTensor[6];
+    //Real sigmaZY = stressTensor[7];
+    Real sigmaZZ = stressTensor[8];
+
+    double aux1 = 0.5 * ((sigmaXX - sigmaYY) * (sigmaXX - sigmaYY) + (sigmaYY - sigmaZZ) * (sigmaYY - sigmaZZ) + (sigmaZZ - sigmaXX) * (sigmaZZ - sigmaXX));
+    double aux2 = 3.0 * (sigmaYZ * sigmaYZ + sigmaZX * sigmaZX + sigmaXY * sigmaXY);
+
+    return helper::rsqrt(aux1 + aux2);
+}
+
+template< class DataTypes>
+typename AdaptivePlasticBeamForceField<DataTypes>::Real AdaptivePlasticBeamForceField<DataTypes>::vonMisesYield(const Vec9& stressTensor,
+                                                                                                                const Vec9& backStress,
+                                                                                                                const Real yieldStress)
+{
+    return equivalentStress(stressTensor-backStress) - yieldStress;
+}
+
+
+template< class DataTypes>
+typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForceField<DataTypes>::vonMisesGradient(const Vec9& stressTensor)
+{
+    // NB: this gradient represent the normal to the yield surface
+    // in case the Von Mises yield criterion is used. The norm of the
+    // gradient is sqrt(3/2): it has to be multiplied by sqrt(2/3)
+    // to give the unit normal to the yield surface
+
+    //Direct computation: TO DO: compare with deviatoric computation
+    //Vec9 gradient = Vec9();
+
+    //if (stressTensor.norm() < m_stressComparisonThreshold.getValue())
+    //    return gradient; //TO DO: is that correct ?
+
+    //Real sigmaXX = stressTensor[0];
+    //Real sigmaXY = stressTensor[1];
+    ////Real sigmaXZ = stressTensor[2];
+    ////Real sigmaYX = stressTensor[3];
+    //Real sigmaYY = stressTensor[4];
+    //Real sigmaYZ = stressTensor[5];
+    //Real sigmaZX = stressTensor[6];
+    ////Real sigmaZY = stressTensor[7];
+    //Real sigmaZZ = stressTensor[8];
+
+    //gradient[0] = 2*sigmaXX - sigmaYY - sigmaZZ;
+    //gradient[4] = 2*sigmaYY - sigmaZZ - sigmaXX;
+    //gradient[8] = 2 * sigmaZZ - sigmaXX - sigmaYY;
+    //gradient[1] = gradient[3] = 3 * sigmaXY;
+    //gradient[2] = gradient[6] = 3 * sigmaZX;
+    //gradient[5] = gradient[7] = 3 * sigmaYZ;
+
+    //Real sigmaEq = equivalentStress(stressTensor);
+    //gradient *= 1 / (2*sigmaEq);
+    //return gradient;
+
+    //Deviatoric-based computation: TO DO: compare with direct computation
+    Real sigmaEq = equivalentStress(stressTensor);
+    return (3 / (2 * sigmaEq)) * deviatoricStress(stressTensor);
+}
+
+//----------------------------------------------------------//
 
 template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::addDForce(const MechanicalParams* mparams,

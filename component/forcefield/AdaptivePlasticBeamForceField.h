@@ -294,6 +294,17 @@ protected:
 
     void updateTangentStiffness(unsigned int beamIndex);
 
+    //----- Implementation of the Von Mises yield function -----//
+
+    /// Computes the deviatoric stress from a tensor
+    Vec9 deviatoricStress(const Vec9& stressTensor);
+    /// Computes the equivalent stress from a tensor
+    Real equivalentStress(const Vec9& stressTensor);
+    /// Evaluates the Von Mises yield function for given stress tensor and yield stress
+    Real vonMisesYield(const Vec9& stressTensor, const Vec9& backStress, const Real yieldStress);
+    /// Computes the Von Mises yield function gradient, for a given stress tensor
+    Vec9 vonMisesGradient(const Vec9& stressTensor);
+
 };
 
 
