@@ -47,6 +47,8 @@
 
 #include "../WireBeamInterpolation.h"
 #include "../initBeamAdapter.h"
+#include <sofa/simulation/mechanicalvisitor/MechanicalPropagateOnlyPositionAndVelocityVisitor.h>
+#include <sofa/simulation/mechanicalvisitor/MechanicalProjectPositionAndVelocityVisitor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
@@ -83,6 +85,8 @@ using sofa::core::topology::TopologyContainer ;
 using sofa::core::CollisionModel ;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::component::fem::WireBeamInterpolation;
+using sofa::simulation::mechanicalvisitor::MechanicalProjectPositionAndVelocityVisitor;
+using sofa::simulation::mechanicalvisitor::MechanicalPropagateOnlyPositionAndVelocityVisitor;
 
 /**
  * \class SutureController

@@ -341,8 +341,8 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double dt)
         applyController();
 
     // Propagate modifications
-    simulation::MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()); // apply projective constraints
-    simulation::MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()).execute( getContext() );
+    MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()); // apply projective constraints
+    MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()).execute( getContext() );
     simulation::UpdateMappingVisitor(core::ExecParams::defaultInstance()).execute(getContext());
 }
 
