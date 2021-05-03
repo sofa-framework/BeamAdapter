@@ -82,6 +82,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     const vector<BeamGeometry> beamGeometryParams = l_interpolation->getBeamGeometryParameters();
     unsigned int numBeams = l_interpolation->getNumBeams();
 
+    //Initialisation of the lastPos field with the rest position
+    m_lastPos = mstate->read(core::ConstVecCoordId::restPosition())->getValue();
+
     //Initialisation of generalised Hooke's law
     const Real E = d_youngModulus.getValue();
     const Real nu = d_poissonRatio.getValue();
