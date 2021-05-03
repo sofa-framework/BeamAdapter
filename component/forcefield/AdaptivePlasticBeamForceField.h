@@ -110,30 +110,6 @@ public:
         POSTPLASTIC = 2,
     };
 
-    /*!
-     * \class beamTangentStifness
-     * @brief beamTangentStifness Class
-     */
-protected:
-
-    class beamTangentStifness
-    {
-    public:
-        beamTangentStifness() {}
-        beamTangentStifness(const beamTangentStifness& v)
-        {
-            m_Kt00 = v.m_Kt00;
-            m_Kt10 = v.m_Kt10;
-            m_Kt11 = v.m_Kt11;
-            m_Kt01 = v.m_Kt01;
-        }
-        ~beamTangentStifness() {}
-
-        Matrix6x6 m_Kt00, m_Kt01, m_Kt10, m_Kt11; /// Local tangent stiffness matrix
-    };
-
-public:
-
     ///<3-dimensional Gauss point for reduced integration
     class GaussPoint3
     {
@@ -222,18 +198,11 @@ public:
     virtual void addForce(const MechanicalParams* mparams, DataVecDeriv& dataf,
                           const DataVecCoord& datax, const DataVecDeriv& v);
 
-    virtual void addDForce(const MechanicalParams* mparams, DataVecDeriv& datadF,
-                           const DataVecDeriv& datadX);
-
-    void addKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
-
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
 
 protected:
 
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BPInterpolation, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interpolation;
-
-    vector<beamTangentStifness> m_tangentStifnesses;
 
     /// Position at the last time step, to handle increments for the plasticity resolution
     VecCoord m_lastPos;
@@ -281,7 +250,6 @@ protected:
     /////////////////////////////////////
     /// Methods for plasticity
     /////////////////////////////////////
-    void applyStiffnessLarge(VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double& factor);
 
     /// Computes local displacement of a beam element using the corotational model
     void computeLocalDisplacement(const VecCoord& x, Vec6& U0Local, Vec6& U1Local,
@@ -292,7 +260,7 @@ protected:
     void computeStressIncrement(GaussPoint3& gp, Vec9& newStressPoint,
                                 const Vec9& strainIncrement, MechanicalState& pointMechanicalState);
 
-    void updateTangentStiffness(unsigned int beamIndex);
+    void updateTangentStiffness(unsigned int beamIndex, BeamLocalMatrices& beamLocalMatrices);
 
     //----- Implementation of the Von Mises yield function -----//
 

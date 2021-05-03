@@ -105,9 +105,11 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
 
     for (unsigned int b = 0; b < numBeams; b++)
     {
+        BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[b];
+
         initialiseInterval(b, m_integrationIntervals, beamGeometryParams[b]);
         initialiseGaussPoints(b, m_gaussPoints, m_integrationIntervals[b]);
-        updateTangentStiffness(b); //Prior to plastic deformation, computes an elastic stiffness with Cep = C
+        updateTangentStiffness(b, *beamMatrices); //Prior to plastic deformation, computes an elastic stiffness with Cep = C
     }
 
     //Initialisaiton of beam mechanical states to ELASTIC
@@ -383,6 +385,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices(b, node0Idx, node1Idx);
 
+        /// find the beamMatrices:
+        BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[b];
+
         /// IF RIGIDIFICATION: no stiffness forces:
         if (node0Idx == node1Idx)
             continue;
@@ -432,7 +437,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
             localForces += (gpWeights[1] * gpWeights[2] * gpWeights[3]) * gp.getGradN().transposed() * newStressPoint;
         };
 
-        //Actually runs gaussian integration on the beams Gauss points
+        //Actually run gaussian integration on the beams Gauss points
         integrateBeam(m_gaussPoints[b], computeStress);
 
         // Updates the beam mechanical state information
@@ -443,17 +448,14 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
         //Update the tangent stiffness matrix with the new computed stresses
         //This matrix will then be used in addDForce and addKToMatrix methods
         if (isPlasticBeam)
-            updateTangentStiffness(b);
+            updateTangentStiffness(b, *beamMatrices);
 
-        //Retrieves local forces from the gaussian integration
+        //Retrieve local forces from the gaussian integration
         //TO DO : better way to do this ? std::copy ?
         Vec6 f0 = { localForces[0], localForces[1], localForces[2], localForces[3], localForces[4], localForces[5] };
         Vec6 f1 = { localForces[6], localForces[7], localForces[8], localForces[9], localForces[10], localForces[11] };
 
-        /// find the beamMatrices:
-        const BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[b];//new BeamLocalMatrices();
-
-        /// compute the force in the global frame
+        /// Compute the force in the global frame
         Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
         Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
@@ -463,13 +465,16 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
             f[node0Idx][i] -= F0_ref[i];
             f[node1Idx][i] -= F1_ref[i];
         }
+
+        /// Compute local mass matrix (as in AdaptiveBeamForceFieldAndMass)
+        if (d_computeMass.getValue())
+            computeMass(b, (*beamMatrices));
+
     } // end for (unsigned int b = 0; b < numBeams; b++)
 
+    /// Add gravity (as in AdaptiveBeamForceFieldAndMass)
     if (d_computeMass.getValue())
-    {
-        /// add gravity:
         addMDx(mparams, dataf, d_dataG, 1.0);
-    }
 
     // Save the current positions as a record for the next time step.
     //TO DO: check if this is copy operator
@@ -678,7 +683,8 @@ void AdaptivePlasticBeamForceField<DataTypes>::computeStressIncrement(GaussPoint
 
 
 template< class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned int beamIndex)
+void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned int beamIndex,
+                                                                      BeamLocalMatrices& beamLocalMatrices)
 {
 
     // Switching to the 12x12 format for gaussian quadrature
@@ -723,11 +729,10 @@ void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned i
     integrateBeam(m_gaussPoints[beamIndex], computeTangentStiffness);
 
     //Update beam tangent stiffness
-    beamTangentStifness* tangentStiffness = &m_tangentStifnesses[beamIndex];
-    Kt.getsub(0, 0, tangentStiffness->m_Kt00);
-    Kt.getsub(0, 6, tangentStiffness->m_Kt01);
-    Kt.getsub(6, 0, tangentStiffness->m_Kt10);
-    Kt.getsub(6, 6, tangentStiffness->m_Kt11);
+    Kt.getsub(0, 0, beamLocalMatrices.m_K00);
+    Kt.getsub(0, 6, beamLocalMatrices.m_K01);
+    Kt.getsub(6, 0, beamLocalMatrices.m_K10);
+    Kt.getsub(6, 6, beamLocalMatrices.m_K11);
 }
 
 //----- Implementation of the Von Mises yield function -----//
@@ -775,7 +780,6 @@ typename AdaptivePlasticBeamForceField<DataTypes>::Real AdaptivePlasticBeamForce
     return equivalentStress(stressTensor-backStress) - yieldStress;
 }
 
-
 template< class DataTypes>
 typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForceField<DataTypes>::vonMisesGradient(const Vec9& stressTensor)
 {
@@ -819,31 +823,10 @@ typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForce
 //----------------------------------------------------------//
 
 template <class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::addDForce(const MechanicalParams* mparams,
-                                                         DataVecDeriv& datadF, const DataVecDeriv& datadX)
-{
-
-}
-
-template <class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::addKToMatrix(const MechanicalParams* mparams,
-                                                            const MultiMatrixAccessor* matrix)
-{
-
-}
-
-template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
 {
 
 }
-
-template <class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::applyStiffnessLarge(VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double& factor)
-{
-
-}
-
 
 
 /////////////////////////////////////
