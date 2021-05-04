@@ -106,7 +106,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
 
     m_genHookesLaw *= E / ((1 + nu)*(1 - 2*nu));
 
-    //Initialisation of Gauss points and integration intervals
+    //Initialisation of Gauss points, integration intervals, and local matrices
+    m_localBeamMatrices.clear();
+    m_localBeamMatrices.resize(numBeams);
     m_gaussPoints.clear();
     m_gaussPoints.resize(numBeams);
     m_integrationIntervals.clear();
