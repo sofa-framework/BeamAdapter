@@ -79,6 +79,12 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
 
     ForceField<DataTypes>::init();
 
+    // The interpolation component has to be initiated before, in order to get
+    // the information required for Gauss points initialisation. But with this method,
+    // bwdInit() will be called twice on the interpolation component.
+    // TO DO : is there a better way to guarantee the order of initialisation ?
+    l_interpolation->bwdInit();
+
     const vector<BeamGeometry> beamGeometryParams = l_interpolation->getBeamGeometryParameters();
     unsigned int numBeams = l_interpolation->getNumBeams();
 
