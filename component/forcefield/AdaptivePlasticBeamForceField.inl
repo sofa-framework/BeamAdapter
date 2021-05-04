@@ -72,7 +72,7 @@ template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::init()
 {
     if (!l_interpolation)
-        l_interpolation.set(dynamic_cast<BaseContext*>(this->getContext())->get<BPInterpolation>(BaseContext::Local));
+        l_interpolation.set(dynamic_cast<BaseContext*>(this->getContext())->get<BInterpolation>(BaseContext::Local));
 
     if (!l_interpolation)
         msg_error() << "No Beam Interpolation found, the component can not work.";
@@ -143,7 +143,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
     Vec3 canonical3NodesCoordinates = { -sqrt3_5, 0, sqrt3_5 };
     Vec3 canonical3NodesWeights = { 5.0 / 9, 8.0 / 9, 5.0 / 9 };
 
-    const BeamPlasticInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(beam);
+    const BeamInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(beam);
     double Iy = beamSection._Iy;
     double Iz = beamSection._Iz;
     double A = beamSection._A;

@@ -38,7 +38,6 @@
 
 #include <sofa/helper/fixed_array.h>
 
-#include "../BeamPlasticInterpolation.h"
 #include "AdaptiveBeamForceFieldAndMass.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +58,8 @@ using sofa::core::behavior::MultiMatrixAccessor;
 using sofa::defaulttype::Rigid3Types;
 using sofa::defaulttype::SolidTypes;
 
-using sofa::plugin::beamadapter::component::forcefield::_beamplasticinterpolation_::BeamPlasticInterpolation;
-using sofa::plugin::beamadapter::component::forcefield::_beamplasticinterpolation_::BeamGeometry;
+using sofa::component::fem::_beaminterpolation_::BeamInterpolation;
+using sofa::component::fem::_beaminterpolation_::BeamGeometry;
 using sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass;
 
 /*!
@@ -84,8 +83,9 @@ public:
     typedef typename Coord::value_type Real;
     typedef Data<VecCoord> DataVecCoord;
     typedef Data<VecDeriv> DataVecDeriv;
+    typedef sofa::helper::types::RGBAColor RGBAColor;
     typedef AdaptiveBeamForceFieldAndMass<DataTypes>::BeamLocalMatrices BeamLocalMatrices;
-    typedef BeamPlasticInterpolation<DataTypes> BPInterpolation;
+    typedef BeamInterpolation<DataTypes> BInterpolation;
 
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
@@ -201,8 +201,6 @@ public:
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
 
 protected:
-
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BPInterpolation, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interpolation;
 
     /// Position at the last time step, to handle increments for the plasticity resolution
     VecCoord m_lastPos;

@@ -14,8 +14,6 @@ set(HEADER_FILES
     component/BeamInterpolation.inl
     component/WireBeamInterpolation.h
     component/WireBeamInterpolation.inl
-    component/BeamPlasticInterpolation.h
-    component/BeamPlasticInterpolation.inl
 
     component/constraint/AdaptiveBeamSlidingConstraint.h
     component/constraint/AdaptiveBeamSlidingConstraint.inl
@@ -54,7 +52,6 @@ set(SOURCE_FILES
 
     component/BeamInterpolation.cpp
     component/WireBeamInterpolation.cpp
-    component/BeamPlasticInterpolation.cpp
 
     component/constraint/AdaptiveBeamSlidingConstraint.cpp
     component/constraint/AdaptiveBeamLengthConstraint.cpp

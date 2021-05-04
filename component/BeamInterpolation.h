@@ -58,6 +58,20 @@ namespace fem
 namespace _beaminterpolation_
 {
 
+// Contains geometry information on the beam elements. Meant to be used externally, for
+// instance by ForceFields.
+// TO DO: Fusion with BeamSection?
+struct BeamGeometry
+{
+    std::string sectionShape;   ///<cross-section shape (rectangular, square, elliptic, circular)
+    double _L;                  ///<length of the beam
+    double _Ly;                 ///<length of the beam section along Y (if rectangular)
+    double _Lz;                 ///<length of the beam section along Z (if rectangular)
+    double _r; 			        ///<radius of the section (if circular)
+    double _rInner;		        ///<inner radius of the section if beam is hollow
+    double _rSmall;             ///<small radius of the section (if elliptic)
+    double _rLarge;             ///<large radius of the section (if elliptic)
+};
 
 using sofa::helper::vector;
 using sofa::helper::OptionsGroup;
@@ -71,6 +85,7 @@ using sofa::defaulttype::Quat ;
 using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::component::container::MechanicalObject ;
+using sofa::component::fem::_beaminterpolation_::BeamGeometry;
 
 /*!
  * \class BeamInterpolation
@@ -297,6 +312,8 @@ public:
     /// Collision information
     void addCollisionOnBeam(unsigned int b) ;
     void clearCollisionOnBeam() ;
+
+    const vector<BeamGeometry> getBeamGeometryParameters();
 
 protected :
     /// DATA INPUT (that could change in real-time)
