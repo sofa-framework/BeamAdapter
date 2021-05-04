@@ -95,6 +95,7 @@ public:
     typedef Vec<9, Real> Vec9;          ///< Second-order tensor in vector notation
     typedef Vec<12, Real> Vec12;
     typedef Mat<9, 9, Real> Matrix9x9;  ///< Fourth-order tensor in vector notation
+    typedef Mat<3, 12, Real> Matrix3x12;
     typedef Mat<9, 12, Real> Matrix9x12;
     typedef Mat<12, 12, Real> Matrix12x12; ///< Tangent stiffness matrix
 
@@ -118,6 +119,9 @@ public:
         GaussPoint3(Real x, Real y, Real z, Real w1, Real w2, Real w3);
         ~GaussPoint3() {}
 
+        auto getNx() const -> const Matrix3x12&;
+        void setNx(Matrix3x12 Nx);
+
         auto getGradN() const -> const Matrix9x12&;
         void setGradN(Matrix9x12 gradN);
 
@@ -129,6 +133,9 @@ public:
 
         auto getWeights() const -> const Vec3&;
         void setWeights(Vec3 weights);
+
+        auto getCoord() const -> const Vec3&;
+        void setCoord(Vec3 coord);
 
         auto getBackStress() const -> const Vec9&;
         void setBackStress(Vec9 backStress);
@@ -146,6 +153,7 @@ public:
         Vec3 m_coordinates;
         Vec3 m_weights;
 
+        Matrix3x12 m_Nx; /// Shape functions value for the Gauss point (matrix form)
         Matrix9x12 m_gradN; /// Small strain hypothesis deformation gradient, applied to the beam shape functions (matrix form)
         MechanicalState m_mechanicalState; /// State of the Gauss point deformation (elastic, plastic, or postplastic)
         Vec9 m_prevStress; /// Value of the stress tensor at previous time step
@@ -189,8 +197,6 @@ public:
     /////////////////////////////////////
     virtual void init() override;
     virtual void reinit() override;
-    virtual void draw(const VisualParams* vparams) override;
-
 
     /////////////////////////////////////
     /// ForceField Interface
@@ -228,6 +234,9 @@ protected:
 
     void initialiseGaussPoints(int beam, vector<beamGaussPoints> &gaussPoints, const Interval3& integrationInterval);
     void initialiseInterval(int beam, vector<Interval3> &integrationIntervals, const BeamGeometry& beamGeometryParams);
+
+    auto computeNx(Real x, Real y, Real z, Real L, Real A, Real Iy, Real Iz,
+                   Real E, Real nu, Real kappaY = 1.0, Real kappaZ = 1.0)-> Matrix3x12;
 
     auto computeGradN(Real x, Real y, Real z, Real L, Real A, Real Iy, Real Iz,
                       Real E, Real nu, Real kappaY = 1.0, Real kappaZ = 1.0) -> Matrix9x12;
@@ -270,6 +279,12 @@ protected:
     /// Computes the Von Mises yield function gradient, for a given stress tensor
     Vec9 vonMisesGradient(const Vec9& stressTensor);
 
+    //----- Visualisation -----//
+
+    void draw(const core::visual::VisualParams* vparams) override;
+    void drawElement(unsigned int beamIndex, std::vector<defaulttype::Vector3>& visualGaussPoints,
+                     std::vector< defaulttype::Vector3 >& centrelinePoints,
+                     std::vector<RGBAColor>& colours, const VecCoord& x);
 };
 
 

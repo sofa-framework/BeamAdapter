@@ -42,6 +42,7 @@ namespace _adaptiveplasticbeamforcefield_
 {
 
 using sofa::core::objectmodel::BaseContext;
+using sofa::defaulttype::Quat;
 
 template <class DataTypes>
 AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField() :
@@ -195,6 +196,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
 
                 GaussPoint3 newGaussPoint = GaussPoint3(xChanged, yChanged, zChanged, w1Changed, w2Changed, w3Changed);
                 newGaussPoint.setGradN( computeGradN(xChanged, yChanged, zChanged, L, A, Iy, Iz, E, nu) );
+                newGaussPoint.setNx( computeNx(xChanged, yChanged, zChanged, L, A, Iy, Iz, E, nu) );
                 newGaussPoint.setYieldStress( d_initialYieldStress.getValue() );
                 gaussPoints[beam][gaussPointIt] = newGaussPoint;
                 gaussPointIt++;
@@ -245,6 +247,79 @@ void AdaptivePlasticBeamForceField<DataTypes>::integrateBeam(beamGaussPoints& ga
     {
         integrationFun(gaussPoints[gp]);
     }
+}
+
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::computeNx(Real x, Real y, Real z, Real L,
+                                                         Real A, Real Iy, Real Iz, Real E, Real nu,
+                                                         Real kappaY, Real kappaZ) -> Matrix3x12
+{
+    Matrix3x12 Nx = Matrix3x12();
+    Real xi = x / L;
+    Real eta = y / L;
+    Real zeta = z / L;
+
+    Real xi2 = xi * xi;
+    Real xi3 = xi * xi * xi;
+
+    Real L2 = L * L;
+    Real G = E / (2.0 * (1.0 + nu));
+
+    Real phiY, phiZ;
+    if (A == 0)
+    {
+        phiY = 0.0;
+        phiZ = 0.0;
+    }
+    else
+    {
+        phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
+        phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
+    }
+    Real phiYInv = (1 / (1 + phiY));
+    Real phiZInv = (1 / (1 + phiZ));
+
+    Nx[0][0] = 1 - xi;
+    Nx[0][1] = 6*phiZInv * (xi - xi2) * eta;
+    Nx[0][2] = 6*phiYInv * (xi - xi2) * zeta;
+    Nx[0][3] = 0;
+    Nx[0][4] = L * phiYInv * ( 1 - 4*xi + 3*xi2 + phiY*(1 - xi) ) * zeta;
+    Nx[0][5] = -L * phiZInv * ( 1 - 4*xi + 3*xi2 + phiZ*(1 - xi) ) * eta;
+    Nx[0][6] = xi;
+    Nx[0][7] = 6*phiZInv * (-xi + xi2) * eta;
+    Nx[0][8] = 6*phiYInv * (-xi + xi2) * zeta;
+    Nx[0][9] = 0;
+    Nx[0][10] = L * phiYInv * ( -2*xi + 3*xi2 + phiY*xi ) * zeta;
+    Nx[0][11] = -L * phiZInv * ( -2*xi + 3*xi2 + phiZ*xi ) * eta;
+
+    Nx[1][0] = 0;
+    Nx[1][1] = phiZInv * ( 1 - 3*xi2 + 2*xi3 + phiZ*(1 - xi) );
+    Nx[1][2] = 0;
+    Nx[1][3] = (xi - 1) * L * zeta;
+    Nx[1][4] = 0;
+    Nx[1][5] = L * phiZInv * ( xi - 2*xi2 + xi3 + (phiZ/2) * (xi - xi2) );
+    Nx[1][6] = 0;
+    Nx[1][7] = phiZInv * ( 3*xi2 - 2*xi3 + phiZ*xi);
+    Nx[1][8] = 0;
+    Nx[1][9] = -L * xi * zeta;
+    Nx[1][10] = 0;
+    Nx[1][11] = L * phiZInv * ( -xi2 + xi3 - (phiZ/2) * (xi - xi2) );
+
+    Nx[2][0] = 0;
+    Nx[2][1] = 0;
+    Nx[2][2] = phiYInv * ( 1 - 3*xi2 + 2*xi3 + phiY*(1 - xi) );
+    Nx[2][3] = (1 - xi) * L * eta;
+    Nx[2][4] = -L * phiYInv * ( xi - 2*xi2 + xi3 + (phiY/2) * (xi-xi2) );
+    Nx[2][5] = 0;
+    Nx[2][6] = 0;
+    Nx[2][7] = 0;
+    Nx[2][8] = phiYInv * ( 3*xi2 - 2*xi3 + phiY*xi);
+    Nx[2][9] = L * xi * eta;
+    Nx[2][10] = -L * phiYInv * ( -xi2 + xi3 - (phiY/2) * (xi - xi2) );
+    Nx[2][11] = 0;
+
+    return Nx;
 }
 
 
@@ -364,11 +439,6 @@ void AdaptivePlasticBeamForceField<DataTypes>::reinit()
 
 }
 
-template <class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::draw(const VisualParams* vparams)
-{
-
-}
 
 template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* mparams,
@@ -834,6 +904,119 @@ typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForce
 //----------------------------------------------------------//
 
 
+template<class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualParams* vparams)
+{
+    if (!vparams->displayFlags().getShowForceFields()) return;
+    if (!this->mstate) return;
+
+    const VecCoord& x = this->mstate->read(core::ConstVecCoordId::position())->getValue();
+    unsigned int numBeams = l_interpolation->getNumBeams();
+
+    std::vector<defaulttype::Vector3> centrelinePoints;
+    std::vector<defaulttype::Vector3> visualGaussPoints;
+    std::vector<RGBAColor> colours;
+
+    for (unsigned int i = 0; i < numBeams; ++i)
+        drawElement(i, visualGaussPoints, centrelinePoints, colours, x);
+
+    vparams->drawTool()->setPolygonMode(2, true);
+    vparams->drawTool()->setLightingEnabled(true);
+    vparams->drawTool()->drawPoints(visualGaussPoints, 3, colours);
+    vparams->drawTool()->drawLines(centrelinePoints, 1.0, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
+    vparams->drawTool()->setLightingEnabled(false);
+    vparams->drawTool()->setPolygonMode(0, false);
+}
+
+template<class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamIndex, std::vector< defaulttype::Vector3 >& visualGaussPoints,
+    std::vector< defaulttype::Vector3 >& centrelinePoints,
+    std::vector<RGBAColor>& colours,
+    const VecCoord& x)
+{
+    unsigned int node0Idx, node1Idx;
+    l_interpolation->getNodeIndices(beamIndex, node0Idx, node1Idx);
+
+    Vec6 U0Local, U1Local;
+    computeLocalDisplacement(x, U0Local, U1Local, beamIndex, node0Idx, node1Idx);
+
+    //Displacement in Vec12 form
+    Mat<12, 1, Real> discreteU = Mat<12, 1, Real>();
+    for (int i = 0; i < 6; i++)
+    {
+        discreteU[i][0] = U0Local[i];
+        discreteU[i + 6][0] = U1Local[i];
+    }
+
+    // Getting central point
+    Vec3 localPos(0.0, 0.0, 0.0);
+    Real baryX = 0.5;
+    Transform globalHLocalInterpol;
+    l_interpolation->InterpolateTransformUsingSpline(beamIndex, baryX, localPos, x, globalHLocalInterpol);
+
+    Quat q = globalHLocalInterpol.getOrientation();
+    q.normalize();
+    Vec3 centreNode = globalHLocalInterpol.getOrigin();
+
+    typedef std::function<void(GaussPoint3&)> IntegrationLambda;
+    IntegrationLambda computeVisualGP = [&](GaussPoint3& gp)
+    {
+        Mat<3, 1, Real> continuousU = gp.getNx() * discreteU;
+        Vec3 gpCoord = gp.getCoord();
+
+        Vec3 beamVec = { continuousU[0][0] + gpCoord[0],
+                         continuousU[1][0] + gpCoord[1],
+                         continuousU[2][0] + gpCoord[2] };
+
+        Vec3 visualGP = centreNode + q.rotate(beamVec);
+        visualGaussPoints.push_back(visualGP);
+
+        MechanicalState mechanicalState = gp.getMechanicalState();
+        if (mechanicalState == MechanicalState::ELASTIC)
+            colours.push_back({ 1.0f,0.015f,0.015f,1.0f }); //RED
+        else if (mechanicalState == MechanicalState::PLASTIC)
+            colours.push_back({ 0.051f,0.15f,0.64f,1.0f }); //BLUE
+        else
+            colours.push_back({ 0.078f,0.41f,0.078f,1.0f }); //GREEN
+    };
+
+    integrateBeam(m_gaussPoints[beamIndex], computeVisualGP);
+
+    ////****** Centreline ******//
+    const unsigned int NBSEG = 10; //number of segments descretising the centreline
+
+    Vec3 node0 = x[node0Idx].getCenter();
+    centrelinePoints.push_back(node0);
+
+    const BeamInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(beamIndex);
+    double Iy = beamSection._Iy;
+    double Iz = beamSection._Iz;
+    double A = beamSection._A;
+    const double L = l_interpolation->getLength(beamIndex);
+
+    Real E = d_youngModulus.getValue();
+    Real nu = d_poissonRatio.getValue();
+
+    for (int drawPointIt = 0; drawPointIt < NBSEG - 1; drawPointIt++)
+    {
+        //Shape function of the centreline point
+        Real x = drawPointIt * (L / NBSEG);
+        Matrix3x12 drawN = computeNx(x, 0, 0, L, A, Iy, Iz, E, nu);
+        Mat<3, 1, Real> continuousU = drawN * discreteU;
+
+        Vec3 beamVec = { continuousU[0][0] + (drawPointIt + 1) * (L / NBSEG),
+                         continuousU[1][0],
+                         continuousU[2][0] };
+        Vec3 clp = centreNode + q.rotate(beamVec);
+        centrelinePoints.push_back(clp); //First time as the end of the former segment
+        centrelinePoints.push_back(clp); //Second time as the beginning of the next segment
+    }
+
+    Vec3 node1 = x[node1Idx].getCenter();
+    centrelinePoints.push_back(node1);
+}
+
+
 /////////////////////////////////////
 /// GaussPoint3
 /////////////////////////////////////
@@ -849,6 +1032,18 @@ AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::GaussPoint3(Real x, Real 
     m_yieldStress = 0; //Changed by initialiseGaussPoints, depends on the material
     m_plasticStrain = Vec9(); //By default, no plastic deformation => no history
     m_effectivePlasticStrain = 0; //By default, no plastic deformation => no history
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getNx() const -> const Matrix3x12&
+{
+    return m_Nx;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setNx(Matrix3x12 Nx)
+{
+    m_Nx = Nx;
 }
 
 template <class DataTypes>
@@ -885,6 +1080,18 @@ template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setPrevStress(Vec9 newStress)
 {
     m_prevStress = newStress;
+}
+
+template <class DataTypes>
+auto AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::getCoord() const -> const Vec3&
+{
+    return m_coordinates;
+}
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::GaussPoint3::setCoord(Vec3 coord)
+{
+    m_coordinates = coord;
 }
 
 template <class DataTypes>
