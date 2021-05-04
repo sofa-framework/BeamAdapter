@@ -825,12 +825,6 @@ typename AdaptivePlasticBeamForceField<DataTypes>::Vec9 AdaptivePlasticBeamForce
 
 //----------------------------------------------------------//
 
-template <class DataTypes>
-void AdaptivePlasticBeamForceField<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
-{
-
-}
-
 
 /////////////////////////////////////
 /// GaussPoint3

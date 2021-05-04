@@ -198,7 +198,6 @@ public:
     virtual void addForce(const MechanicalParams* mparams, DataVecDeriv& dataf,
                           const DataVecCoord& datax, const DataVecDeriv& v);
 
-    void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
 
 protected:
 
