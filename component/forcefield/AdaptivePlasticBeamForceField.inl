@@ -445,7 +445,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
             gp.setPrevStress(newStressPoint);
 
             Vec3 gpWeights = gp.getWeights();
-            localForces += (gpWeights[1] * gpWeights[2] * gpWeights[3]) * gp.getGradN().transposed() * newStressPoint;
+            localForces += (gpWeights[0] * gpWeights[1] * gpWeights[2]) * gp.getGradN().transposed() * newStressPoint;
         };
 
         //Actually run gaussian integration on the beams Gauss points
@@ -733,7 +733,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned i
         }
 
         Vec3 gpWeights = gp.getWeights();
-        Kt += gpWeights[1]*gpWeights[2]*gpWeights[3] * gradN.transposed()*Cep*gradN;
+        Kt += gpWeights[0]*gpWeights[1]*gpWeights[2] * gradN.transposed()*Cep*gradN;
     }; //end computeTangentStiffness
 
     //Actually runs gaussian integration on the beams Gauss points
