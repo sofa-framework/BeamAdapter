@@ -283,7 +283,8 @@ protected:
 
     void draw(const core::visual::VisualParams* vparams) override;
     void drawElement(unsigned int beamIndex, std::vector<defaulttype::Vector3>& visualGaussPoints,
-                     std::vector< defaulttype::Vector3 >& centrelinePoints,
+                     std::vector< defaulttype::Vector3 >& centrelinePointsSF,
+                     std::vector< defaulttype::Vector3 >& centrelinePointsSpline,
                      std::vector<RGBAColor>& colours, const VecCoord& x);
 };
 

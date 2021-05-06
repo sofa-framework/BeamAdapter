@@ -914,27 +914,40 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualPa
     const VecCoord& x = this->mstate->read(core::ConstVecCoordId::position())->getValue();
     unsigned int numBeams = l_interpolation->getNumBeams();
 
-    std::vector<defaulttype::Vector3> centrelinePoints;
+    std::vector<defaulttype::Vector3> centrelinePointsSF;
+    std::vector<defaulttype::Vector3> centrelinePointsSpline;
     std::vector<defaulttype::Vector3> visualGaussPoints;
     std::vector<RGBAColor> colours;
 
     for (unsigned int i = 0; i < numBeams; ++i)
-        drawElement(i, visualGaussPoints, centrelinePoints, colours, x);
+        drawElement(i, visualGaussPoints, centrelinePointsSF, centrelinePointsSpline, colours, x);
 
     vparams->drawTool()->setPolygonMode(2, true);
     vparams->drawTool()->setLightingEnabled(true);
     vparams->drawTool()->drawPoints(visualGaussPoints, 3, colours);
-    vparams->drawTool()->drawLines(centrelinePoints, 1.0, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
+    vparams->drawTool()->drawLines(centrelinePointsSF, 1.0, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
+    vparams->drawTool()->drawLines(centrelinePointsSpline, 1.0, RGBAColor(0.16f, 0.61f, 0.07f, 1.0f));
     vparams->drawTool()->setLightingEnabled(false);
     vparams->drawTool()->setPolygonMode(0, false);
+
+    //if (node0Idx == node1Idx) /// rigidification case
+    //{
+    //    vparams->drawTool()->drawLines(points, 2, Vec<4, float>(0, 0, 1, 1));
+    //    continue;
+    //}
+    //else
+    //    vparams->drawTool()->drawLines(points, 2, Vec<4, float>(1, 0, 0, 1));
 }
 
 template<class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamIndex, std::vector< defaulttype::Vector3 >& visualGaussPoints,
-    std::vector< defaulttype::Vector3 >& centrelinePoints,
-    std::vector<RGBAColor>& colours,
-    const VecCoord& x)
+                                                           std::vector< defaulttype::Vector3 >& centrelinePointsSF,
+                                                           std::vector< defaulttype::Vector3 >& centrelinePointsSpline,
+                                                           std::vector<RGBAColor>& colours,
+                                                           const VecCoord& x)
 {
+    Transform globalH0Local, globalH1Local;
+    l_interpolation->computeTransform2(beamIndex, globalH0Local, globalH1Local, x);
     unsigned int node0Idx, node1Idx;
     l_interpolation->getNodeIndices(beamIndex, node0Idx, node1Idx);
 
@@ -984,10 +997,10 @@ void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamInde
     integrateBeam(m_gaussPoints[beamIndex], computeVisualGP);
 
     ////****** Centreline ******//
-    const unsigned int NBSEG = 10; //number of segments descretising the centreline
 
-    Vec3 node0 = x[node0Idx].getCenter();
-    centrelinePoints.push_back(node0);
+    const unsigned int NBSEG = 40; //number of segments descretising the centreline
+
+    //---------- Version with "mechanical" shape functions ----------//
 
     const BeamInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(beamIndex);
     double Iy = beamSection._Iy;
@@ -995,26 +1008,46 @@ void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamInde
     double A = beamSection._A;
     const double L = l_interpolation->getLength(beamIndex);
 
+    Vec3 node0 = globalH0Local.getOrigin();
+    Vec3 node1 = globalH1Local.getOrigin();
+
     Real E = d_youngModulus.getValue();
     Real nu = d_poissonRatio.getValue();
 
-    for (int drawPointIt = 0; drawPointIt < NBSEG - 1; drawPointIt++)
+    centrelinePointsSF.push_back(node0);
+
+    Real l0 = m_integrationIntervals[beamIndex].geta1();
+    Real l1 = m_integrationIntervals[beamIndex].getb1();
+    Real segLength = (l1 - l0) / NBSEG;
+
+    for (unsigned int seg = 1; seg < NBSEG-1; seg++)
     {
         //Shape function of the centreline point
-        Real x = drawPointIt * (L / NBSEG);
+        Real x = l0 + seg*segLength;
         Matrix3x12 drawN = computeNx(x, 0, 0, L, A, Iy, Iz, E, nu);
         Mat<3, 1, Real> continuousU = drawN * discreteU;
 
-        Vec3 beamVec = { continuousU[0][0] + (drawPointIt + 1) * (L / NBSEG),
+        Vec3 beamVec = { continuousU[0][0] + x,
                          continuousU[1][0],
                          continuousU[2][0] };
         Vec3 clp = centreNode + q.rotate(beamVec);
-        centrelinePoints.push_back(clp); //First time as the end of the former segment
-        centrelinePoints.push_back(clp); //Second time as the beginning of the next segment
+        centrelinePointsSF.push_back(clp); //First time as the end of the former segment
+        centrelinePointsSF.push_back(clp); //Second time as the beginning of the next segment
     }
 
-    Vec3 node1 = x[node1Idx].getCenter();
-    centrelinePoints.push_back(node1);
+    centrelinePointsSF.push_back(node1);
+
+    //---------- Version with spline interpolation functions ----------//
+
+    Vec3 pos = globalH0Local.getOrigin();
+
+    for (double baryCoord = 0.0; baryCoord < 1.0; baryCoord+= 1.0/NBSEG)
+    {
+        centrelinePointsSpline.push_back(pos);
+        Vec3 localPos(0.0, 0.0, 0.0);
+        this->l_interpolation->interpolatePointUsingSpline(beamIndex, baryCoord, localPos, x, pos);
+        centrelinePointsSpline.push_back(pos);
+    }
 }
 
 
