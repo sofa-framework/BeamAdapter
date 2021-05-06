@@ -113,8 +113,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     m_localBeamMatrices.resize(numBeams);
     m_gaussPoints.clear();
     m_gaussPoints.resize(numBeams);
-    m_integrationIntervals.clear();
-    m_integrationIntervals.resize(numBeams);
+    m_integrationIntervals.clear(); // No need to resize as Intervals will be pushed_back
 
     for (unsigned int b = 0; b < numBeams; b++)
     {
@@ -217,7 +216,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseInterval(int beam, vect
         Real Lz = beamGeometry._Lz;
 
         // Integration interval definition for a local frame at the centre of the beam
-        integrationIntervals.push_back(Interval3(-L/2, L/2, -Ly/2, Ly/2, -Lz/2, -Lz/2));
+        integrationIntervals.push_back(Interval3(-L/2, L/2, -Ly/2, Ly/2, -Lz/2, Lz/2));
     }
     else if (beamGeometry.sectionShape == "elliptic")
     {
