@@ -33,6 +33,7 @@
  //
 #pragma once
 
+#include <sofa/defaulttype/VecTypes.h> //For Vector3
 #include "AdaptivePlasticBeamForceField.h"
 
 namespace sofa::plugin::beamadapter::component::forcefield
