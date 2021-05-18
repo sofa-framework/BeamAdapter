@@ -43,12 +43,12 @@
 #include <SofaBaseTopology/QuadSetTopologyModifier.h>
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
-#include <SofaLoader/MeshObjLoader.h>
 
 #include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/topology/Topology.h>
 #include <sofa/core/visual/VisualParams.h>
+#include <sofa/core/loader/MeshLoader.h>
 
 #include <sofa/helper/gl/template.h>
 
