@@ -871,11 +871,37 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualPa
     std::vector<RGBAColor> colours;
 
     for (unsigned int i = 0; i < numBeams; ++i)
+    {
         drawElement(i, visualGaussPoints, centrelinePointsSF, centrelinePointsSpline, colours, x);
+
+        ////****** Local frame ******//
+        const BeamInterpolation<DataTypes>::BeamSection beamSection = l_interpolation->getBeamSection(i);
+        const double L = l_interpolation->getLength(i);
+
+        Vec3 localPos(0.0, 0.0, 0.0);
+        Real baryX = 0.5;
+        Transform globalHLocalInterpol;
+        l_interpolation->InterpolateTransformUsingSpline(i, baryX, localPos, x, globalHLocalInterpol);
+
+        Quat q = globalHLocalInterpol.getOrientation();
+        q.normalize();
+
+        Vec3 P1, x, y, z;
+        P1 = globalHLocalInterpol.getOrigin();
+        x = q.rotate(Vec3(L / 6.0, 0, 0));
+        y = q.rotate(Vec3(0, L / 8.0, 0));
+        z = q.rotate(Vec3(0, 0, L / 8.0));
+        float radius_arrow = (float)L / 60.0f;
+
+        vparams->drawTool()->drawArrow(P1, P1 + x, radius_arrow, Vec<4, float>(1, 0, 0, 1));
+        vparams->drawTool()->drawArrow(P1, P1 + y, radius_arrow, Vec<4, float>(1, 0, 0, 1));
+        vparams->drawTool()->drawArrow(P1, P1 + z, radius_arrow, Vec<4, float>(1, 0, 0, 1));
+    }
 
     vparams->drawTool()->setPolygonMode(2, true);
     vparams->drawTool()->setLightingEnabled(true);
     vparams->drawTool()->drawPoints(visualGaussPoints, 3, colours);
+    vparams->drawTool()->drawPoints(centrelinePointsSF, 6, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
     vparams->drawTool()->drawLines(centrelinePointsSF, 1.0, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
     vparams->drawTool()->drawLines(centrelinePointsSpline, 1.0, RGBAColor(0.16f, 0.61f, 0.07f, 1.0f));
     vparams->drawTool()->setLightingEnabled(false);
