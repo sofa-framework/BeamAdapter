@@ -4,6 +4,7 @@ project(BeamAdapter_test VERSION 1.0)
 
 find_package(BeamAdapter REQUIRED)
 find_package(SofaTest REQUIRED)
+find_package(Sofa.Testing REQUIRED)
 find_package(SofaGTestMain REQUIRED)
 
 set(SOURCE_FILES
@@ -11,13 +12,14 @@ set(SOURCE_FILES
     WireBeamInterpolation_test.cpp
     component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
     component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp
+    component/forcefield/gaussPointsInitialisation_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 
-target_link_libraries(${PROJECT_NAME} BeamAdapter SofaTest SofaGTestMain SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaCommon)
+target_link_libraries(${PROJECT_NAME} BeamAdapter SofaTest Sofa.Testing SofaGTestMain SofaCore SofaConstraint SofaBaseMechanics SofaUserInteraction SofaCommon)
 
 add_definitions("-DBEAMADAPTER_TEST_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\"")
 
