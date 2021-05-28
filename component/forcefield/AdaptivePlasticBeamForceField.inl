@@ -33,7 +33,6 @@
  //
 #pragma once
 
-#include <sofa/defaulttype/VecTypes.h> //For Vector3
 #include "AdaptivePlasticBeamForceField.h"
 
 namespace sofa::plugin::beamadapter::component::forcefield
@@ -277,46 +276,47 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeNx(Real x, Real y, Real z,
         phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
         phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
     }
-    Real phiYInv = (1 / (1 + phiY));
-    Real phiZInv = (1 / (1 + phiZ));
+    Real phiYInv = ( 1 / (2*phiY - 1) );
+    Real phiZInv = ( 1 / (1 + phiZ) );
 
     Nx[0][0] = 1 - xi;
-    Nx[0][1] = 6*phiZInv * (xi - xi2) * eta;
-    Nx[0][2] = 6*phiYInv * (xi - xi2) * zeta;
+    Nx[0][1] = ( ( (1 + phiZInv) / 2 ) - 6*phiZInv* xi2 ) * eta;
+    Nx[0][2] = ( 1 - phiYInv + 12*phiYInv*xi2 ) * zeta;
     Nx[0][3] = 0;
-    Nx[0][4] = L * phiYInv * ( 1 - 4*xi + 3*xi2 + phiY*(1 - xi) ) * zeta;
-    Nx[0][5] = -L * phiZInv * ( 1 - 4*xi + 3*xi2 + phiZ*(1 - xi) ) * eta;
+    Nx[0][4] = ( (phiYInv / 2) - xi - 6*phiYInv*xi2 ) * z;
+    Nx[0][5] = ( (phiZInv / 2) + xi - 3*phiZInv*xi2 ) * y;
     Nx[0][6] = xi;
-    Nx[0][7] = 6*phiZInv * (-xi + xi2) * eta;
-    Nx[0][8] = 6*phiYInv * (-xi + xi2) * zeta;
+    //Nx[0][7] = ( -( (3+phiZInv) / 2 ) + 6*phiZInv*xi2 ) * eta;
+    Nx[0][7] = -Nx[0][1] - eta;
+    Nx[0][8] = -Nx[0][2];
     Nx[0][9] = 0;
-    Nx[0][10] = L * phiYInv * ( -2*xi + 3*xi2 + phiY*xi ) * zeta;
-    Nx[0][11] = -L * phiZInv * ( -2*xi + 3*xi2 + phiZ*xi ) * eta;
+    Nx[0][10] = Nx[0][4] + 2*xi*z;
+    Nx[0][11] = Nx[0][5] - 2*xi*y;
 
     Nx[1][0] = 0;
-    Nx[1][1] = phiZInv * ( 1 - 3*xi2 + 2*xi3 + phiZ*(1 - xi) );
+    Nx[1][1] = -( (1+phiZInv) / 2 )*xi + 2*phiZInv*xi3 ;
     Nx[1][2] = 0;
-    Nx[1][3] = (xi - 1) * L * zeta;
+    Nx[1][3] = z * (xi - 1);
     Nx[1][4] = 0;
-    Nx[1][5] = L * phiZInv * ( xi - 2*xi2 + xi3 + (phiZ/2) * (xi - xi2) );
+    Nx[1][5] = (L / 8) * ( 1 - 2*phiZInv*xi - 4*xi2 + 8*phiZInv*xi3 );
     Nx[1][6] = 0;
-    Nx[1][7] = phiZInv * ( 3*xi2 - 2*xi3 + phiZ*xi);
+    Nx[1][7] = -Nx[1][1] + xi;
     Nx[1][8] = 0;
-    Nx[1][9] = -L * xi * zeta;
+    Nx[1][9] = - z * xi;
     Nx[1][10] = 0;
-    Nx[1][11] = L * phiZInv * ( -xi2 + xi3 - (phiZ/2) * (xi - xi2) );
+    Nx[1][11] = (L / 8) * ( -1 - 2*phiZInv*xi + 4*xi2 + 8*phiZInv*xi3 );
 
     Nx[2][0] = 0;
     Nx[2][1] = 0;
-    Nx[2][2] = phiYInv * ( 1 - 3*xi2 + 2*xi3 + phiY*(1 - xi) );
-    Nx[2][3] = (1 - xi) * L * eta;
-    Nx[2][4] = -L * phiYInv * ( xi - 2*xi2 + xi3 + (phiY/2) * (xi-xi2) );
+    Nx[2][2] = 0.5 + (phiYInv - 1)*xi - 4*phiYInv*xi3;
+    Nx[2][3] = y * (1 - xi);
+    Nx[2][4] = (L / 8) * ( -1 - 4*phiYInv*xi + 4*xi2 + 16*phiYInv*xi3 );
     Nx[2][5] = 0;
     Nx[2][6] = 0;
     Nx[2][7] = 0;
-    Nx[2][8] = phiYInv * ( 3*xi2 - 2*xi3 + phiY*xi);
-    Nx[2][9] = L * xi * eta;
-    Nx[2][10] = -L * phiYInv * ( -xi2 + xi3 - (phiY/2) * (xi - xi2) );
+    Nx[2][8] = -Nx[2][2] + 1;
+    Nx[2][9] = y * xi;
+    Nx[2][10] = (L / 8) * ( 1 - 4*phiYInv*xi - 4*xi2 + 16*phiYInv*xi3);
     Nx[2][11] = 0;
 
     return Nx;
@@ -328,7 +328,7 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real
                                                             Real A, Real Iy, Real Iz, Real E, Real nu,
                                                             Real kappaY, Real kappaZ) -> Matrix9x12
 {
-    Matrix9x12 gradN = Matrix9x12();
+    Matrix9x12 gradN = Matrix9x12(); // sets each element to 0
     Real xi = x / L;
     Real eta = y / L;
     Real zeta = z / L;
@@ -347,90 +347,42 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real
         phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
         phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
     }
-    Real phiYInv = (1 / (1 + phiY));
-    Real phiZInv = (1 / (1 + phiZ));
+    Real phiYInv = ( 1 / (2*phiY - 1) );
+    Real phiZInv = ( 1 / (1 + phiZ) );
 
     //Row 0
     gradN[0][0] = -1 / L;
-    gradN[0][1] = (phiZInv * 6 * eta * (1 - 2 * xi)) / L;
-    gradN[0][2] = (phiYInv * 6 * zeta * (1 - 2 * xi)) / L;
-    gradN[0][3] = 0;
-    gradN[0][4] = phiYInv * zeta * (6 * xi - 4 - phiY);
-    gradN[0][5] = phiZInv * eta * (4 - 6 * xi + phiZ);
+    gradN[0][1] = - ( 12 * phiZInv * xi * eta ) / L;
+    gradN[0][2] = ( 24 * phiYInv * xi * zeta) / L;
+    // gradN[0][3] = 0;
+    gradN[0][4] = - ( 1 + 12 * phiYInv * xi ) * zeta;
+    gradN[0][5] = ( 1 - 6 * phiZInv * xi) * eta;
     gradN[0][6] = 1 / L;
-    gradN[0][7] = (phiZInv * 6 * eta * (2 * xi - 1)) / L;
-    gradN[0][8] = (phiYInv * 6 * zeta * (2 * xi - 1)) / L;
-    gradN[0][9] = 0;
-    gradN[0][10] = phiYInv * zeta * (6 * xi - 2 + phiY);
-    gradN[0][11] = phiZInv * eta * (2 - 6 * xi - phiZ);
+    gradN[0][7] = - gradN[0][1];
+    gradN[0][8] = - gradN[0][2];
+    // gradN[0][9] = 0;
+    gradN[0][10] = gradN[0][4] + 2*zeta;
+    gradN[0][11] = gradN[0][5] - 2*eta;
 
     //Rows 1 and 3
-    gradN[1][0] = 0.0;
-    gradN[1][1] = -(phiZInv * phiZ) / (2 * L);
-    gradN[1][2] = 0.0;
     gradN[1][3] = zeta / 2;
-    gradN[1][4] = 0.0;
-    gradN[1][5] = -(phiZInv * phiZ) / 4;
-    gradN[1][6] = 0.0;
-    gradN[1][7] = (phiZInv * phiZ) / (2 * L);
-    gradN[1][8] = 0.0;
     gradN[1][9] = -zeta / 2;
-    gradN[1][10] = 0.0;
-    gradN[1][11] = -(phiZInv * phiZ) / 4;
 
-    gradN[3][0] = 0.0;
-    gradN[3][1] = -(phiZInv * phiZ) / (2 * L);
-    gradN[3][2] = 0.0;
     gradN[3][3] = zeta / 2;
-    gradN[3][4] = 0.0;
-    gradN[3][5] = -(phiZInv * phiZ) / 4;
-    gradN[3][6] = 0.0;
-    gradN[3][7] = (phiZInv * phiZ) / (2 * L);
-    gradN[3][8] = 0.0;
     gradN[3][9] = -zeta / 2;
-    gradN[3][10] = 0.0;
-    gradN[3][11] = -(phiZInv * phiZ) / 4;
 
     //Rows 2 and 6
-    gradN[2][0] = gradN[2][1] = 0.0;
-    gradN[2][2] = -(phiYInv * phiY) / (2 * L);
     gradN[2][3] = -eta / 2;
-    gradN[2][4] = (phiYInv * phiY) / 4;
-    gradN[2][5] = gradN[2][6] = gradN[2][7] = 0.0;
-    gradN[2][8] = (phiYInv * phiY) / (2 * L);
     gradN[2][9] = eta / 2;
-    gradN[2][10] = (phiYInv * phiY) / 4;
-    gradN[2][11] = 0.0;
 
-    gradN[6][0] = gradN[6][1] = 0.0;
-    gradN[6][2] = -(phiYInv * phiY) / (2 * L);
     gradN[6][3] = -eta / 2;
-    gradN[6][4] = (phiYInv * phiY) / 4;
-    gradN[6][5] = gradN[6][6] = gradN[6][7] = 0.0;
-    gradN[6][8] = (phiYInv * phiY) / (2 * L);
     gradN[6][9] = eta / 2;
-    gradN[6][10] = (phiYInv * phiY) / 4;
-    gradN[6][11] = 0.0;
 
-    //Rows 4, 5, 7, 8
-    gradN[4][0] = gradN[4][1] = gradN[4][2] = gradN[4][3] = 0.0;
-    gradN[4][4] = gradN[4][5] = gradN[4][6] = gradN[4][7] = 0.0;
-    gradN[4][8] = gradN[4][9] = gradN[4][10] = gradN[4][11] = 0.0;
-
-    gradN[5][0] = gradN[5][1] = gradN[5][2] = gradN[5][3] = 0.0;
-    gradN[5][4] = gradN[5][5] = gradN[5][6] = gradN[5][7] = 0.0;
-    gradN[5][8] = gradN[5][9] = gradN[5][10] = gradN[5][11] = 0.0;
-
-    gradN[7][0] = gradN[7][1] = gradN[7][2] = gradN[7][3] = 0.0;
-    gradN[7][4] = gradN[7][5] = gradN[7][6] = gradN[7][7] = 0.0;
-    gradN[7][8] = gradN[7][9] = gradN[7][10] = gradN[7][11] = 0.0;
-
-    gradN[8][0] = gradN[8][1] = gradN[8][2] = gradN[8][3] = 0.0;
-    gradN[8][4] = gradN[8][5] = gradN[8][6] = gradN[8][7] = 0.0;
-    gradN[8][8] = gradN[8][9] = gradN[8][10] = gradN[8][11] = 0.0;
+    //Rows 4, 5, 7, 8 are null
 
     return gradN;
 }
+
 
 
 template <class DataTypes>
@@ -1013,13 +965,13 @@ void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamInde
     Real E = d_youngModulus.getValue();
     Real nu = d_poissonRatio.getValue();
 
-    centrelinePointsSF.push_back(node0);
-
     Real l0 = m_integrationIntervals[beamIndex].geta1();
     Real l1 = m_integrationIntervals[beamIndex].getb1();
     Real segLength = (l1 - l0) / NBSEG;
 
-    for (unsigned int seg = 1; seg < NBSEG-1; seg++)
+    centrelinePointsSF.push_back(node0);
+
+    for (unsigned int seg = 1; seg < NBSEG; seg++)
     {
         //Shape function of the centreline point
         Real x = l0 + seg*segLength;
@@ -1040,7 +992,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::drawElement(unsigned int beamInde
 
     Vec3 pos = globalH0Local.getOrigin();
 
-    for (double baryCoord = 0.0; baryCoord < 1.0; baryCoord+= 1.0/NBSEG)
+    for (double baryCoord = 0.0; baryCoord < 1.0 + 1.0 / NBSEG; baryCoord+= 1.0/NBSEG)
     {
         centrelinePointsSpline.push_back(pos);
         Vec3 localPos(0.0, 0.0, 0.0);
