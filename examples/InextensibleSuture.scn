@@ -5,7 +5,8 @@
  	<FreeMotionAnimationLoop />
 	<GenericConstraintSolver tolerance="1e-10"  maxIterations="1000" unbuilt="false" printLog="0"/>
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>
-	<BruteForceDetection name="N2" />
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
 	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />

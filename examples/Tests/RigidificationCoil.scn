@@ -7,7 +7,8 @@
 	<GenericConstraintSolver tolerance="1e-10"  maxIterations="50" unbuilt="false" printLog="1"/>
 	
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
-	<BruteForceDetection name="N2" />
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
 	<LocalMinDistance name="localmindistance" alarmDistance="0" contactDistance="0" angleCone="0.0"/>
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />

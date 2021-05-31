@@ -6,7 +6,8 @@
 	<MasterContactSolver />
 	<LCPConstraintSolver tolerance="0.0000000001"  mu="0.8" />
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>
-	<BruteForceDetection name="N2" />
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
 	<LocalMinDistance name="Proximity"  alarmDistance="0.001" contactDistance="0.0" coneFactor="0.02" angleCone="0.01" filterIntersection="true"/>
 	<CollisionResponse name="Response" response="ContinuousFrictionContact"/>
 	

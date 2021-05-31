@@ -13,7 +13,8 @@
   
   
   <Object type="CollisionPipeline" name="CollisionPipeline" depth="6" verbose="0" draw="0"/>
-  <Object type="BruteForceDetection" name="N2" />
+  <Object type="BruteForceBroadPhase" name="N2" />
+  <Object type="BVHNarrowPhase"/>
   <Object type="LocalMinDistance" name="Proximity" alarmDistance="0.3" contactDistance="0.15" angleCone="0.0" coneFactor="0.3"/>
   <!--  <Object type="LocalMinDistance" name="Proximity" alarmDistance="2" contactDistance="0.2" angleCone="0.2"/> -->
   <Object type="CollisionResponse" name="Response" response="FrictionContact" />
