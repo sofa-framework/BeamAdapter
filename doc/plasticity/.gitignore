@@ -1,0 +1,19 @@
+########## GITIGNORE ##############
+
+### LateX log files
+
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.dvi
+*.spl
+
+### PDF output
+
+shape_functions.pdf
+
+### Others
