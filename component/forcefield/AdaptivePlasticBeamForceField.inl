@@ -276,7 +276,7 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeNx(Real x, Real y, Real z,
         phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
         phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
     }
-    Real phiYInv = ( 1 / (2*phiY - 1) );
+    Real phiYInv = ( 1 / (phiY - 1) );
     Real phiZInv = ( 1 / (1 + phiZ) );
 
     Nx[0][0] = 1 - xi;
@@ -346,7 +346,7 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real
         phiY = (12.0 * E * Iy / (kappaZ * G * A * L2));
         phiZ = (12.0 * E * Iz / (kappaY * G * A * L2));
     }
-    Real phiYInv = ( 1 / (2*phiY - 1) );
+    Real phiYInv = ( 1 / (phiY - 1) );
     Real phiZInv = ( 1 / (1 + phiZ) );
 
     //Row 0
