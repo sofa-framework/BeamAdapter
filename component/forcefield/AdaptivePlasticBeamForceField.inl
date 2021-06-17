@@ -254,7 +254,7 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeNx(Real x, Real y, Real z,
                                                          Real A, Real Iy, Real Iz, Real E, Real nu,
                                                          Real kappaY, Real kappaZ) -> Matrix3x12
 {
-    Matrix3x12 Nx = Matrix3x12();
+    Matrix3x12 Nx = Matrix3x12(); // Sets each element to 0
     Real xi = x / L;
     Real eta = y / L;
     Real zeta = z / L;
@@ -280,44 +280,43 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeNx(Real x, Real y, Real z,
     Real phiZInv = ( 1 / (1 + phiZ) );
 
     Nx[0][0] = 1 - xi;
-    Nx[0][1] = ( ( (1 + phiZInv) / 2 ) - 6*phiZInv* xi2 ) * eta;
-    Nx[0][2] = ( 1 - phiYInv + 12*phiYInv*xi2 ) * zeta;
-    Nx[0][3] = 0;
-    Nx[0][4] = ( (phiYInv / 2) - xi - 6*phiYInv*xi2 ) * z;
-    Nx[0][5] = ( (phiZInv / 2) + xi - 3*phiZInv*xi2 ) * y;
+    Nx[0][1] = ( 1 + 0.5*phiZInv - 6*phiZInv * xi2 ) * eta;
+    Nx[0][2] = ( 1 - 0.5*phiYInv + 6*phiYInv * xi2 ) * zeta;
+    //Nx[0][3] = 0;
+    Nx[0][4] = ( (phiYInv / 4) - xi - 3*phiYInv * xi2 ) * z;
+    Nx[0][5] = ( (phiZInv / 4) + xi - 3*phiZInv * xi2 ) * y;
     Nx[0][6] = xi;
-    //Nx[0][7] = ( -( (3+phiZInv) / 2 ) + 6*phiZInv*xi2 ) * eta;
-    Nx[0][7] = -Nx[0][1] - eta;
+    Nx[0][7] = -Nx[0][1];
     Nx[0][8] = -Nx[0][2];
-    Nx[0][9] = 0;
+    //Nx[0][9] = 0;
     Nx[0][10] = Nx[0][4] + 2*xi*z;
     Nx[0][11] = Nx[0][5] - 2*xi*y;
 
-    Nx[1][0] = 0;
-    Nx[1][1] = -( (1+phiZInv) / 2 )*xi + 2*phiZInv*xi3 ;
-    Nx[1][2] = 0;
+    //Nx[1][0] = 0;
+    Nx[1][1] = 0.5 * ( 1 - (2 + phiZInv)*xi + 4*phiZInv*xi3 ) ;
+    //Nx[1][2] = 0;
     Nx[1][3] = z * (xi - 1);
-    Nx[1][4] = 0;
+    //Nx[1][4] = 0;
     Nx[1][5] = (L / 8) * ( 1 - 2*phiZInv*xi - 4*xi2 + 8*phiZInv*xi3 );
-    Nx[1][6] = 0;
-    Nx[1][7] = -Nx[1][1] + xi;
-    Nx[1][8] = 0;
+    //Nx[1][6] = 0;
+    Nx[1][7] = -Nx[1][1] + 1;
+    //Nx[1][8] = 0;
     Nx[1][9] = - z * xi;
-    Nx[1][10] = 0;
+    //Nx[1][10] = 0;
     Nx[1][11] = (L / 8) * ( -1 - 2*phiZInv*xi + 4*xi2 + 8*phiZInv*xi3 );
 
-    Nx[2][0] = 0;
-    Nx[2][1] = 0;
-    Nx[2][2] = 0.5 + (phiYInv - 1)*xi - 4*phiYInv*xi3;
+    //Nx[2][0] = 0;
+    //Nx[2][1] = 0;
+    Nx[2][2] = 0.5 * ( 1 + (phiYInv - 2)*xi - 4*phiYInv*xi3 );
     Nx[2][3] = y * (1 - xi);
-    Nx[2][4] = (L / 8) * ( -1 - 4*phiYInv*xi + 4*xi2 + 16*phiYInv*xi3 );
-    Nx[2][5] = 0;
-    Nx[2][6] = 0;
-    Nx[2][7] = 0;
+    Nx[2][4] = (L / 8) * ( -1 - 2*phiYInv*xi + 4*xi2 + 8*phiYInv*xi3 );
+    //Nx[2][5] = 0;
+    //Nx[2][6] = 0;
+    //Nx[2][7] = 0;
     Nx[2][8] = -Nx[2][2] + 1;
     Nx[2][9] = y * xi;
-    Nx[2][10] = (L / 8) * ( 1 - 4*phiYInv*xi - 4*xi2 + 16*phiYInv*xi3);
-    Nx[2][11] = 0;
+    Nx[2][10] = (L / 8) * ( 1 - 2*phiYInv*xi - 4*xi2 + 8*phiYInv*xi3);
+    //Nx[2][11] = 0;
 
     return Nx;
 }
@@ -328,7 +327,7 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real
                                                             Real A, Real Iy, Real Iz, Real E, Real nu,
                                                             Real kappaY, Real kappaZ) -> Matrix9x12
 {
-    Matrix9x12 gradN = Matrix9x12(); // sets each element to 0
+    Matrix9x12 gradN = Matrix9x12(); // Sets each element to 0
     Real xi = x / L;
     Real eta = y / L;
     Real zeta = z / L;
@@ -353,9 +352,9 @@ auto AdaptivePlasticBeamForceField<DataTypes>::computeGradN(Real x, Real y, Real
     //Row 0
     gradN[0][0] = -1 / L;
     gradN[0][1] = - ( 12 * phiZInv * xi * eta ) / L;
-    gradN[0][2] = ( 24 * phiYInv * xi * zeta) / L;
+    gradN[0][2] = ( 12 * phiYInv * xi * zeta) / L;
     // gradN[0][3] = 0;
-    gradN[0][4] = - ( 1 + 12 * phiYInv * xi ) * zeta;
+    gradN[0][4] = - ( 1 + 6 * phiYInv * xi ) * zeta;
     gradN[0][5] = ( 1 - 6 * phiZInv * xi) * eta;
     gradN[0][6] = 1 / L;
     gradN[0][7] = - gradN[0][1];
@@ -901,7 +900,6 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualPa
     vparams->drawTool()->setPolygonMode(2, true);
     vparams->drawTool()->setLightingEnabled(true);
     vparams->drawTool()->drawPoints(visualGaussPoints, 3, colours);
-    vparams->drawTool()->drawPoints(centrelinePointsSF, 6, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
     vparams->drawTool()->drawLines(centrelinePointsSF, 1.0, RGBAColor(0.24f, 0.72f, 0.96f, 1.0f));
     vparams->drawTool()->drawLines(centrelinePointsSpline, 1.0, RGBAColor(0.16f, 0.61f, 0.07f, 1.0f));
     vparams->drawTool()->setLightingEnabled(false);
