@@ -774,7 +774,7 @@ const vector<BeamGeometry> BeamInterpolation<DataTypes>::getBeamGeometryParamete
             };
             beamGeometryParams.push_back(newBeamGeometry);
         }
-        else if (crossSectionShape.getValue().getSelectedItem() == "elliptic")
+        else if (crossSectionShape.getValue().getSelectedItem() == "circular")
         {
             BeamGeometry newBeamGeometry = {
                 "circular",                 //cross-section shape
