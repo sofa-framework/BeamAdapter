@@ -762,6 +762,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned i
         }
 
         Vec3 gpWeights = gp.getWeights();
+        // NB: the change of variables to account for the right integration intervals
+        // is done beforehand in the computation of gpWeights and gradN.
+        // This include the multiplication of the result by the section dimensions.
         Kt += gpWeights[0]*gpWeights[1]*gpWeights[2] * gradN.transposed()*Cep*gradN;
     }; //end computeTangentStiffness
 
