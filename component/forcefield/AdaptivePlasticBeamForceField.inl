@@ -680,7 +680,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::computeStressIncrement(GaussPoint
     {
         // If the Gauss point was initially elastic, we update its mechanical state
         if (mechanicalState == MechanicalState::POSTPLASTIC || mechanicalState == MechanicalState::ELASTIC)
-            gp.setMechanicalState(MechanicalState::POSTPLASTIC);
+            gp.setMechanicalState(MechanicalState::PLASTIC);
 
         Vec9 shiftedDeviatoricElasticPredictor = deviatoricStress(elasticPredictorStress - backStress);
 
