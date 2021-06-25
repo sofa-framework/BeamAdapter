@@ -206,32 +206,40 @@ void AdaptivePlasticBeamForceField<DataTypes>::initialiseGaussPoints(int beam, v
 
 template <class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::initialiseInterval(int beam, vector<Interval3>& integrationIntervals,
-                                                                  const BeamGeometry& beamGeometry)
+                                                                  const BeamGeometry& beamGeometryParams)
 {
-    if (beamGeometry.sectionShape == "rectangular")
+    if (beamGeometryParams.sectionShape == "rectangular")
     {
-        Real L = beamGeometry._L;
-        Real Ly = beamGeometry._Ly;
-        Real Lz = beamGeometry._Lz;
+        Real L = beamGeometryParams._L;
+        Real Ly = beamGeometryParams._Ly;
+        Real Lz = beamGeometryParams._Lz;
 
         // Integration interval definition for a local frame at the centre of the beam
         integrationIntervals.push_back(Interval3(-L/2, L/2, -Ly/2, Ly/2, -Lz/2, Lz/2));
     }
-    else if (beamGeometry.sectionShape == "elliptic")
+    else if (beamGeometryParams.sectionShape == "elliptic")
     {
         // TO DO: implement quadrature method for elliptic cross section
-        msg_error() << "Quadrature method for " << beamGeometry.sectionShape
+        msg_error() << "Quadrature method for " << beamGeometryParams.sectionShape
             << " shape cross section has not been implemented yet. Methods for rectangular cross sections are available";
     }
-    else if (beamGeometry.sectionShape == "circular")
+    else if (beamGeometryParams.sectionShape == "circular")
     {
-        //TO DO: implement quadrature method for a disc and a hollow-disc cross section
-        msg_error() << "Quadrature method for " << beamGeometry.sectionShape
-            << " shape cross section has not been implemented yet. Methods for rectangular cross sections are available";
+        Real L = beamGeometryParams._L;
+        Real r = beamGeometryParams._r;
+        if (beamGeometryParams._rInner != 0) // NB: this test should work, as _rInner is set to 0 for every other case
+        {
+            //TO DO: implement quadrature method for a disc and a hollow-disc cross section
+            msg_error() << "Quadrature method for " << beamGeometryParams.sectionShape
+                << " shape cross section has not been implemented yet. Methods for rectangular and circular cross sections are available";
+        }
+
+        // Integration interval definition for a local frame at the centre of the beam
+        integrationIntervals.push_back(Interval3(-L / 2, L / 2, -r / 2, r / 2, -r / 2, r / 2));
     }
     else
     {
-        msg_error() << "Quadrature method for " << beamGeometry.sectionShape
+        msg_error() << "Quadrature method for " << beamGeometryParams.sectionShape
             << " shape cross section has not been implemented yet. Methods for rectangular cross sections are available";
     }
 }
