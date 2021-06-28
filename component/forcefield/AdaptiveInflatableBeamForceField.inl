@@ -48,9 +48,9 @@
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/helper/OptionsGroup.h>
 
-#include <sofa/helper/gl/Cylinder.h>
+#include <sofa/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
-#include <sofa/helper/gl/Axis.h>
+#include <sofa/gl/Axis.h>
 #include <sofa/core/visual/VisualParams.h>
 
 
