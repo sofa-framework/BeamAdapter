@@ -27,7 +27,7 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/helper/gl/template.h>
+#include <sofa/gl/template.h>
 
 #include "AdaptiveBeamSlidingConstraint.h"
 #include <sofa/core/behavior/ConstraintResolution.h>
@@ -284,7 +284,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
     for(unsigned int i=0; i<m; i++)
     {
         glColor4f(0.0f,1.0f,m_projected[i]?1:0.0f,1.0f);
-        helper::gl::glVertexT(x[i]);
+        gl::glVertexT(x[i]);
     }
 
     glEnd();

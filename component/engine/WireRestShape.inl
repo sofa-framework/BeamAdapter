@@ -50,7 +50,7 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-#include <sofa/helper/gl/template.h>
+#include <sofa/gl/template.h>
 
 #include <iostream>
 #include <fstream>

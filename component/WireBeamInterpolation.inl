@@ -44,9 +44,9 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <sofa/helper/gl/Cylinder.h>
+#include <sofa/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
-#include <sofa/helper/gl/Axis.h>
+#include <sofa/gl/Axis.h>
 #include <algorithm>
 
 #include "engine/WireRestShape.h"
@@ -414,12 +414,12 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
             context->findLinkDest(_restShape, _restShapePath, NULL);
 
             if(_restShape == NULL)
-              msg_warning(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+              msg_warning(context) << " ("<< tObj->getClassName() <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;
         }
         else
-            msg_error(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+            msg_error(context) << " (" << tObj->getClassName() <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
 
 
         if (!pathOK)
