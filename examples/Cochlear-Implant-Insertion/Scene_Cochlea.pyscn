@@ -16,7 +16,8 @@ def createScene(rootNode):
         rootNode.createObject('FreeMotionAnimationLoop')
         rootNode.createObject('GenericConstraintSolver', tolerance="1e-3", maxIterations="5000", unbuilt="false")
         rootNode.createObject('CollisionPipeline', depth="6", verbose="0", draw="1")
-        rootNode.createObject('BruteForceDetection', name="N2")
+        rootNode.createObject('BruteForceBroadPhase', name='N2')
+        rootNode.createObject('BVHNarrowPhase')
         rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.65")
         rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="0.6", contactDistance="0.44", angleCone="0.01")
 

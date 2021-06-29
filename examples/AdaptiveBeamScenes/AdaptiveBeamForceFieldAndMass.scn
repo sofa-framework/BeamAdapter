@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <Node name="root" gravity="0 -9.81 0" dt="0.01" >
    <!-- <CollisionPipeline depth="6" verbose="0" draw="0"/>
-    <BruteForceDetection name="N2" />
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
     <MinProximityIntersection name="Proximity" alarmDistance="0.03" contactDistance="0.02" />
     <CollisionResponse name="Response" response="default" />
     <CollisionGroup name="Group" />-->

@@ -18,7 +18,8 @@ def createScene(rootNode):
     rootNode.createObject('GenericConstraintSolver', maxIterations='1000', tolerance='1e-10', printLog='1')
     rootNode.createObject('CollisionPipeline', verbose='0')
     rootNode.createObject('CollisionResponse', response='FrictionContact', responseParams='mu=0.0')
-    rootNode.createObject('BruteForceDetection', name='N2')
+    rootNode.createObject('BruteForceBroadPhase', name='N2')
+    rootNode.createObject('BVHNarrowPhase')
     rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="3", contactDistance="0.1", angleCone='0.1')
 
     #rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
