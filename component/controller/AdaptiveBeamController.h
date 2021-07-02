@@ -88,8 +88,8 @@ using sofa::core::objectmodel::MouseEvent ;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::CollisionModel ;
 using sofa::defaulttype::SolidTypes ;
-using sofa::defaulttype::Vec ;
-using sofa::helper::vector ;
+using sofa::type::Vec ;
+using sofa::type::vector ;
 using std::string;
 
 // TODO(dmarchal 2017-05-17) to eulalie & christian is the following still valid ?

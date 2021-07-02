@@ -65,7 +65,7 @@ namespace _wirebeaminterpolation_
 {
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::topology::BaseMeshTopology ;
-using sofa::defaulttype::Quat ;
+using sofa::type::Quat ;
 using sofa::defaulttype::Vec ;
 using sofa::defaulttype::Vec3d ;
 using sofa::helper::vector;
@@ -171,7 +171,7 @@ public:
         }
         else
         {
-            global_H_local.set(Vec3(x,0,0), Quat());
+            global_H_local.set(Vec3(x,0,0), Quat<Real>());
 
         }
     }
