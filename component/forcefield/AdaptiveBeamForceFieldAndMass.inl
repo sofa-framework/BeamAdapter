@@ -72,7 +72,7 @@ namespace _adaptivebeamforcefieldandmass_
 using sofa::core::behavior::ForceField ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::defaulttype::Vector3 ;
-using sofa::defaulttype::Quat ;
+using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;
 using std::set ;

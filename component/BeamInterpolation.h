@@ -59,15 +59,15 @@ namespace _beaminterpolation_
 {
 
 
-using sofa::helper::vector;
+using sofa::type::vector;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::core::objectmodel::BaseObjectDescription ;
 using sofa::core::objectmodel::BaseObject ;
 using sofa::core::ConstVecCoordId ;
 using sofa::defaulttype::SolidTypes ;
-using sofa::defaulttype::Vec ;
-using sofa::defaulttype::Quat ;
+using sofa::type::Vec ;
+using sofa::type::Quat ;
 using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::component::container::MechanicalObject ;
@@ -175,7 +175,7 @@ public:
 
 
     int computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
-                         Transform &local0_H_local1,  Quat& local_R_local0, const VecCoord &x);
+                         Transform &local0_H_local1,  Quat<Real>& local_R_local0, const VecCoord &x);
 
     int computeTransform2(unsigned int edgeInList,
                           Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
@@ -239,7 +239,7 @@ public:
                                           const Transform &global_H_local1,const Real &L,
                                           const Real& baryCoordMin, const Real& baryCoordMax);
 
-    void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
+    void RotateFrameForAlignX(const Quat<Real> &input,  Vec3 &x, Quat<Real> &output);
 
     unsigned int getStateSize() const ;
 
@@ -278,8 +278,8 @@ public:
 
     virtual void clear();
     virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
-    virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable,
-                                       helper::vector<int>& nbP_density) ;
+    virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
+                                       type::vector<int>& nbP_density) ;
     virtual Real getRestTotalLength() ;
     virtual void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) ;
     virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
@@ -319,7 +319,7 @@ protected :
     Data< vector< Vec2 > >      d_curvAbsList;
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
-    Data< sofa::helper::vector<int> > d_beamCollision;
+    Data< sofa::type::vector<int> > d_beamCollision;
 
     /// INPUT / OUTPUT FOR DOING EXTERNAL COMPUTATION OF Beam Interpolation (use it as a kind of data engine)
     ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0

@@ -73,7 +73,7 @@ using sofa::helper::ReadAccessor ;
 
 /////////////////////////// TOOL /////////////////////////////////////////////////////////////////
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
+void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output)
 {
     x.normalize();
     Vec3 x0=input.inverseRotate(x);
@@ -92,7 +92,7 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 
         dw.normalize();
 
         // computation of the rotation
-        Quat inputRoutput;
+        Quat<Real> inputRoutput;
         inputRoutput.axisToQuat(dw, theta);
 
         output=input*inputRoutput;
@@ -441,7 +441,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     edgeList.push_back(eID);
     lengthList.push_back(length);
 
-    Quat QuatX ;
+    Quat<Real> QuatX ;
     QuatX.axisToQuat(Vec3(1,0,0), angle);
     QuatX.normalize();
 
@@ -505,7 +505,7 @@ void BeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigne
 
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getSamplingParameters(helper::vector<Real>& /*xP_noticeable*/, helper::vector< int>& /*nbP_density*/)
+void BeamInterpolation<DataTypes>::getSamplingParameters(type::vector<Real>& /*xP_noticeable*/, type::vector< int>& /*nbP_density*/)
 {
     msg_error()<<"getSamplingParameters is not implemented when _restShape== nullptr : TODO !! ";
 }
@@ -627,7 +627,7 @@ int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,
                                                    Transform &global_H0_local,
                                                    Transform &global_H1_local,
                                                    Transform &local0_H_local1,
-                                                   Quat &local_R_local0,
+                                                   Quat<Real> &local_R_local0,
                                                    const VecCoord &x)
 {
     /// 1. Get the indices of element and nodes
@@ -723,7 +723,7 @@ void BeamInterpolation<DataTypes>::setLength(unsigned int edgeInList, Real &leng
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::addCollisionOnBeam(unsigned int b)
 {
-    sofa::helper::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
+    sofa::type::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
     beamCollisList.push_back(b);
     d_beamCollision.endEdit();
 }
@@ -731,7 +731,7 @@ void BeamInterpolation<DataTypes>::addCollisionOnBeam(unsigned int b)
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::clearCollisionOnBeam()
 {
-    sofa::helper::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
+    sofa::type::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
     beamCollisList.clear();
     d_beamCollision.endEdit();
 }
@@ -743,8 +743,8 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
     {
         /// the beam is straight: local is in the middle of local0 and local1
         /// the transformation between local0 and local1 is provided by the length of the beam
-        local_H_local0_rest.set(-Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
-        local_H_local1_rest.set(Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local0_rest.set(-Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat<Real>());
+        local_H_local1_rest.set(Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat<Real>());
     }
     else
     {
@@ -938,7 +938,7 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
     }
 
     /// computation of twist angle:
-    Quat globalRgeom1;
+    Quat<Real> globalRgeom1;
     globalRgeom1 = globalRgeom1.createQuaterFromFrame(n_x,n_y,n_z);
     Vec3 y_geom1 = globalRgeom1.rotate(Vec3(0.0,1.0,0.0));
     Vec3 z_geom1 = globalRgeom1.rotate(Vec3(0.0,0.0,1.0));
@@ -1225,7 +1225,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
     Real bx=baryCoord;
     Vec3 posResult;
-    Quat quatResult;
+    Quat<Real> quatResult;
 
     dP01 = P1-P0;
     dP12 = P2-P1;
@@ -1252,7 +1252,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
         /// try to interpolate the "orientation" (especially the torsion) the best possible way...
         /// (but other ways should exit...)
-        Quat R0, R1, Rslerp;
+        Quat<Real> R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
         RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
