@@ -903,9 +903,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualPa
         z = q.rotate(Vec3(0, 0, L / 8.0));
         float radius_arrow = (float)L / 60.0f;
 
-        vparams->drawTool()->drawArrow(P1, P1 + x, radius_arrow, Vec<4, float>(1, 0, 0, 1));
-        vparams->drawTool()->drawArrow(P1, P1 + y, radius_arrow, Vec<4, float>(1, 0, 0, 1));
-        vparams->drawTool()->drawArrow(P1, P1 + z, radius_arrow, Vec<4, float>(1, 0, 0, 1));
+        vparams->drawTool()->drawArrow(P1, P1 + x, radius_arrow, sofa::type::RGBAColor(1, 0, 0, 1));
+        vparams->drawTool()->drawArrow(P1, P1 + y, radius_arrow, sofa::type::RGBAColor(1, 0, 0, 1));
+        vparams->drawTool()->drawArrow(P1, P1 + z, radius_arrow, sofa::type::RGBAColor(1, 0, 0, 1));
     }
 
     vparams->drawTool()->setPolygonMode(2, true);
@@ -918,11 +918,11 @@ void AdaptivePlasticBeamForceField<DataTypes>::draw(const core::visual::VisualPa
 
     //if (node0Idx == node1Idx) /// rigidification case
     //{
-    //    vparams->drawTool()->drawLines(points, 2, Vec<4, float>(0, 0, 1, 1));
+    //    vparams->drawTool()->drawLines(points, 2, sofa::type::RGBAColor(0, 0, 1, 1));
     //    continue;
     //}
     //else
-    //    vparams->drawTool()->drawLines(points, 2, Vec<4, float>(1, 0, 0, 1));
+    //    vparams->drawTool()->drawLines(points, 2, sofa::type::RGBAColor(1, 0, 0, 1));
 }
 
 template<class DataTypes>
