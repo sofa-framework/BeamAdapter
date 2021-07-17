@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+# units: mm, kg, s
+import Sofa
+
+import os
+path = os.path.dirname(os.path.abspath(__file__))+'/meshes/'
+
+def createScene(rootNode):
+
+        rootNode.createObject('RequiredPlugin',name='BeamAdapter', pluginName='BeamAdapter')
+        #rootNode.createObject('RequiredPlugin',name='SofaShells', pluginName='SofaShells')
+        rootNode.createObject('RequiredPlugin',name='SoftRobots', pluginName='SoftRobots')
+        rootNode.createObject('RequiredPlugin',name='SofaPython', pluginName='SofaPython')
+        rootNode.createObject('RequiredPlugin',name='SofaConstraint', pluginName='SofaConstraint')
+        rootNode.createObject('RequiredPlugin',name='SofaLoader', pluginName='SofaLoader')
+        rootNode.createObject('RequiredPlugin',name='SofaMeshCollision', pluginName='SofaMeshCollision')
+        rootNode.createObject('RequiredPlugin',name='SofaOpenglVisual', pluginName='SofaOpenglVisual')
+        rootNode.createObject('RequiredPlugin',name='SofaBoundaryCondition', pluginName='SofaBoundaryCondition')
+        rootNode.createObject('RequiredPlugin',name='SofaDeformable', pluginName='SofaDeformable')
+        rootNode.createObject('RequiredPlugin',name='SofaGeneralLinearSolver', pluginName='SofaGeneralLinearSolver')
+        rootNode.createObject('RequiredPlugin',name='SofaImplicitOdeSolver', pluginName='SofaImplicitOdeSolver')
+        rootNode.createObject('RequiredPlugin',name='SofaTopologyMapping', pluginName='SofaTopologyMapping')
+
+        rootNode.findData('dt').value=0.01
+        rootNode.findData('gravity').value='0 0 0'
+        rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields showInteractionForceFields hideWireframe')
+        
+        rootNode.createObject('FreeMotionAnimationLoop')
+        rootNode.createObject('GenericConstraintSolver', tolerance="1e-3", maxIterations="5000", unbuilt="false")
+        rootNode.createObject('DefaultPipeline', depth="6", verbose="0", draw="1")
+        rootNode.createObject('BruteForceDetection', name="N2")
+        rootNode.createObject('DefaultContactManager', response="FrictionContact", responseParams="mu=0.65")
+        rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="0.6", contactDistance="0.44", angleCone="0.01")
+
+        vesselNode = rootNode.createChild('vesselNode')
+        vesselNode.createObject('MeshObjLoader', name='loader', filename='meshes/Phantom_stent2.obj', flipNormals="false")
+        vesselNode.createObject('MeshTopology', src='@loader')
+        vesselNode.createObject('MechanicalObject', name='dofs', template='Vec3d', showIndices='false', showIndicesScale='4e-5', rx='0', printLog="0",
+                                translation="1e1 -5.0 8.5e1", rotation2="0 85 -3")
+        vesselNode.createObject('TriangleCollisionModel', group='1')
+        vesselNode.createObject('LineCollisionModel', group='1')
+        vesselNode.createObject('PointCollisionModel', group='1')
+        # vesselVisualNode = vesselNode.createChild('vesselVisualNode')
+        # vesselVisualNode.createObject('OglModel', name="VisualModel", color="0.961 0.635 0.906",
+                                      # translation="8.515e1 -9.47 -2.55", rotation="0 85 -3")
+
+        topoLines_cath = rootNode.createChild('topoLines_cath')
+        topoLines_cath.createObject('WireRestShape', template="Rigid3d", printLog=False, name="catheterRestShape", length="35", straightLength="35",
+                                    spireDiameter="0", spireHeight="0.0", densityOfBeams="35", numEdges="35", numEdgesCollis="35", youngModulus="2.5e5",
+                                    youngModulusExtremity="2.5e5", radius="@../Proximity.contactDistance")
+        topoLines_cath.createObject('EdgeSetTopologyContainer', name="meshLinesCath")
+        topoLines_cath.createObject('EdgeSetTopologyModifier', name="Modifier")
+        # topoLines_cath.createObject('EdgeSetTopologyAlgorithms', name="TopoAlgo", template="Rigid3d")
+        topoLines_cath.createObject('EdgeSetGeometryAlgorithms', name="GeomAlgo", template="Rigid3d")
+        topoLines_cath.createObject('MechanicalObject', template="Rigid3d", name="dofTopo1")
+
+        RefStartingPos = rootNode.createChild('RefStartingPos')
+        RefStartingPos.createObject('MechanicalObject', name="ReferencePos", template="Rigid3d", position="-3 1.5 0.3  1 0 0 0")
+
+        InstrumentCombined = rootNode.createChild('InstrumentCombined')
+        InstrumentCombined.createObject('EulerImplicitSolver', rayleighStiffness="0.01", rayleighMass="0.03", printLog=False )
+        InstrumentCombined.createObject('BTDLinearSolver')
+        InstrumentCombined.createObject('RegularGridTopology', name="meshLinesCombined", nx="100", ny="1", nz="1")
+
+        InstrumentCombined.createObject('MechanicalObject', template="Rigid3d", name="DOFs" )
+        InstrumentCombined.createObject('InterventionalRadiologyController', template="Rigid3d", name="m_ircontroller", printLog=False, xtip="0.1",
+                                        speed ='4', step="0.1", rotationInstrument="0", controlledInstrument="0",
+                                        startingPos="@../RefStartingPos/ReferencePos.position", instruments="InterpolCatheter")
+        InstrumentCombined.createObject('WireBeamInterpolation', name="InterpolCatheter", WireRestShape="@../topoLines_cath/catheterRestShape", radius="3.0", printLog=False)
+        InstrumentCombined.createObject('AdaptiveBeamForceFieldAndMass', name="CatheterForceField", massDensity="0.000005", interpolation="@InterpolCatheter", printLog=False)
+        # InstrumentCombined.createObject('AdaptivePlasticBeamForceField', name="CatheterForceField", massDensity="0.000005", interpolation="@InterpolCatheter", printLog=False)
+        InstrumentCombined.createObject('LinearSolverConstraintCorrection', printLog=False, wire_optimization="true")
+        InstrumentCombined.createObject("FixedConstraint", indices="0")
+        InstrumentCombined.createObject('RestShapeSpringsForceField', name="MeasurementFF", points="@m_ircontroller.indexFirstNode",  stiffness="1e10", recompute_indices="1", angularStiffness="1e10", external_rest_shape="@../RefStartingPos/ReferencePos", external_points="0", drawSpring="1", springColor="1 0 0 1")
+
+        CollisInstrumentCombined = InstrumentCombined.createChild('CollisInstrumentCombined')
+        CollisInstrumentCombined.createObject('EdgeSetTopologyContainer', name="collisEdgeSet")
+        CollisInstrumentCombined.createObject('EdgeSetTopologyModifier', name="colliseEdgeModifier")
+        CollisInstrumentCombined.createObject('MechanicalObject', name="CollisionDOFs")
+        CollisInstrumentCombined.createObject('MultiAdaptiveBeamMapping', name="multimapp", ircontroller="../m_ircontroller", useCurvAbs="1", printLog="false")
+        CollisInstrumentCombined.createObject('LineCollisionModel' )
+        CollisInstrumentCombined.createObject('PointCollisionModel')
+
+        visuInstrumentCombined = InstrumentCombined.createChild('visuInstrumentCombined')
+        visuInstrumentCombined.createObject('MechanicalObject', name="Quads")
+        visuInstrumentCombined.createObject('QuadSetTopologyContainer', name="ContainerCath")
+        visuInstrumentCombined.createObject('QuadSetTopologyModifier', name="Modifier" )
+        # visuInstrumentCombined.createObject('QuadSetTopologyAlgorithms', name="TopoAlgo", template="Vec3d")
+        visuInstrumentCombined.createObject('QuadSetGeometryAlgorithms', name="GeomAlgo", template="Vec3d")
+        visuInstrumentCombined.createObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle="10", radius="@../../Proximity.contactDistance", input="@../../topoLines_cath/meshLinesCath", output="@ContainerCath", flipNormals="true",printLog=False)
+        visuInstrumentCombined.createObject('AdaptiveBeamMapping', name="VisuMapCath", useCurvAbs="1", printLog=False, isMechanical="false",  interpolation="@../InterpolCatheter")
+
+
+        realVisuInstrumentCombined = visuInstrumentCombined.createChild('realVisuInstrumentCombined')
+        realVisuInstrumentCombined.createObject('OglModel',name="VisualCathOGL", src="@../ContainerCath", color='white')
+        realVisuInstrumentCombined.createObject('IdentityMapping', input="@../Quads", output="@VisualCathOGL")
+        return rootNode
+

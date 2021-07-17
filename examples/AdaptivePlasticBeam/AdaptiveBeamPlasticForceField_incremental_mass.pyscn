@@ -1,0 +1,67 @@
+import Sofa
+
+def createScene(rootNode):
+
+        rootNode.createObject('RequiredPlugin',name='SofaBoundaryCondition', pluginName='SofaBoundaryCondition')
+        rootNode.createObject('RequiredPlugin',name='SofaDenseSolver', pluginName='SofaDenseSolver')
+        rootNode.createObject('RequiredPlugin',name='SofaImplicitOdeSolver', pluginName='SofaImplicitOdeSolver')
+        rootNode.createObject('RequiredPlugin',name='BeamAdapter', pluginName='BeamAdapter')
+        rootNode.createObject('RequiredPlugin',name='BeamPlastic', pluginName='BeamPlastic')
+
+        rootNode.findData('dt').value=1e-3
+        rootNode.findData('gravity').value='0 -9.81 0'
+        rootNode.createObject('VisualStyle', displayFlags='showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields')
+
+        adaptiveBeamNode = rootNode.createChild('AdaptivePlasticBeam')
+        adaptiveBeamNode.createObject('EulerImplicitSolver', rayleighStiffness="0",  rayleighMass="0", printLog="false")
+        adaptiveBeamNode.createObject('LULinearSolver')
+        adaptiveBeamNode.createObject('MechanicalObject', template="Rigid3d", name="DOFs",
+                                      position="0 0 -1 0 0 0 1  1 0 -1 0 0 0 1  2 0 -1 0 0 0 1  3 0 -1 0 0 0 1")
+        adaptiveBeamNode.createObject('MeshTopology', name="lines", lines="0 1 1 2 2 3")
+        adaptiveBeamNode.createObject('FixedConstraint', name="FixedConstraint", indices="0")
+        adaptiveBeamNode.createObject('DiagonalMass', name="DiagonalMass", vertexMass="0.1 0.1 0.1 1", printLog="false")
+        adaptiveBeamNode.createObject('BeamInterpolation', name="BeamInterpolation", crossSectionShape="rectangular", lengthY="0.2", lengthZ="0.2")
+        adaptiveBeamNode.createObject('AdaptivePlasticBeamForceField', name="PlasticBeamForceField", youngModulus="1e6", computeMass="0",
+                                      massDensity="10", poissonRatio="0.3", initialYieldStress="1e4", plasticModulus="34628588874.0")
+
+        plasticBeamNode = rootNode.createChild('PlasticBeam')
+        plasticBeamNode.createObject('EulerImplicitSolver', rayleighStiffness="0",  rayleighMass="0", printLog="false")
+        plasticBeamNode.createObject('LULinearSolver')
+        plasticBeamNode.createObject('MechanicalObject', template="Rigid3d", name="DOFs",
+                                      position="0 0 1 0 0 0 1  1 0 1 0 0 0 1  2 0 1 0 0 0 1  3 0 1 0 0 0 1")
+        plasticBeamNode.createObject('MeshTopology', name="lines", lines="0 1 1 2 2 3")
+        plasticBeamNode.createObject('FixedConstraint', name="FixedConstraint", indices="0")
+        plasticBeamNode.createObject('UniformMass', vertexMass="1 1 0.01 0 0 0 0.1 0 0 0 0.1", printLog="false")
+        plasticBeamNode.createObject('BeamPlasticFEMForceField', name="PlasticBeam", youngModulus="1e6", poissonRatio="0.3", initialYieldStress="1e4",
+                                     zSection="0.2", ySection="0.2", isTimoshenko="true", isPerfectlyPlastic="false")
+
+        return rootNode
+
+class Controller(Sofa.PythonScriptController):
+
+    totalTime = 0
+    nbSteps = 0
+    increaseMass = False
+    massIncrement=0.1 #in kg
+    
+    def onKeyPressed(self,k):
+
+        if (k == 'M'):
+            if (self.increaseMass):
+                print "Mass increasing has stopped."
+                self.increaseMass = False
+            else:
+                print "Starting to increase the mass of the last node."
+                self.increaseMass = True
+
+        return 0
+
+    def onBeginAnimationStep(self,dt):
+
+        self.totalTime += dt
+
+        # if (self.increaseMass):
+            
+
+        self.nbSteps += 1
+        return 0

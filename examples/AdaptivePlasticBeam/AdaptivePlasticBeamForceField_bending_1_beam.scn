@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 0 0" dt="1e-2" bbox="-1 -1 -1 1 1 1" >
+
+    <RequiredPlugin pluginName="SofaBoundaryCondition"/>
+    <RequiredPlugin pluginName="SofaDenseSolver"/>
+    <RequiredPlugin pluginName="SofaGeneralSimpleFem"/>
+    <RequiredPlugin pluginName="SofaGeneralTopology"/>
+    <RequiredPlugin pluginName="SofaImplicitOdeSolver"/>
+    <RequiredPlugin pluginName="SofaMeshCollision"/>
+    <RequiredPlugin pluginName="SofaMiscMapping"/>
+    <RequiredPlugin pluginName="BeamAdapter"/>
+    <RequiredPlugin pluginName="BeamPlastic"/>
+    <RequiredPlugin name="SofaSparseSolver"/> <!-- Needed to use components [SparseLDLSolver] -->
+
+    <VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
+
+    <Node name="AdaptivePlasticBeam">
+        <EulerImplicitSolver rayleighStiffness="0" rayleighMass="0" printLog="false" />
+        <SparseLDLSolver />
+        <MechanicalObject template="Rigid3d" name="DOFs" position="0 0 -1 0 0 0 1  1 0 -1 0 0 0 1"/>
+        <MeshTopology name="lines" lines="0 1" />
+        <FixedConstraint name="FixedConstraint" indices="0" />
+        <UniformMass vertexMass="1 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+
+        <BeamInterpolation name="BeamInterpolation" crossSectionShape="rectangular" lengthY="0.2" lengthZ="0.2"
+                           defaultYoungModulus="1e6" defaultPoissonRatio="0.3"/>
+        <AdaptivePlasticBeamForceField name="PlasticBeamForceField" youngModulus="1e6" computeMass="0" massDensity="10"
+                                       poissonRatio="0.3" initialYieldStress="1e4" plasticModulus="34628588874.0"/>
+                                       <!-- poissonRatio="0.3" initialYieldStress="1e4" plasticModulus="1e5"/> -->
+        <ConstantForceField name="BendingMoment" indices="1" forces="0 0 0 0 0 100" />                                       
+    </Node>
+
+    <Node name="PlasticBeam">
+        <EulerImplicitSolver rayleighStiffness="0" rayleighMass="0" printLog="false" />
+        <SparseLDLSolver />
+        <MechanicalObject template="Rigid3d" name="DOFs" position="0 0 1 0 0 0 1  1 0 1 0 0 0 1"/>
+        <MeshTopology name="lines" lines="0 1" />
+        <FixedConstraint name="FixedConstraint" indices="0" />
+        <UniformMass vertexMass="1 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+        <BeamPlasticFEMForceField name="PlasticBeam" youngModulus="1e6" poissonRatio="0.3"
+                                  initialYieldStress="1e4" usePrecomputedStiffness="false" zSection="0.2" ySection="0.2" isTimoshenko="true"
+                                  isPerfectlyPlastic="false"/>
+        <ConstantForceField name="BendingMoment" indices="1" forces="0 0 0 0 0 100" />
+    </Node>
+
+</Node>
