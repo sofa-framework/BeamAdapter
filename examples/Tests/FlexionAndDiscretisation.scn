@@ -6,7 +6,8 @@
 	<FreeMotionAnimationLoop />
 	<GenericConstraintSolver tolerance="1e-2"  />
 	<CollisionPipeline depth="6" verbose="0" draw="0"/>
-	<BruteForceDetection name="N2" />
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
 	<LocalMinDistance name="Proximity" alarmDistance="10" contactDistance="1.7" coneFactor="0.3" angleCone="0.01" filterIntersection="true" />
 	<RuleBasedContactManager name="Response" response="FrictionContact" rules="10 * NeedleContact" />
 	<!--

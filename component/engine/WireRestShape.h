@@ -68,8 +68,8 @@ namespace engine
 namespace _wirerestshape_
 {
 
-using sofa::defaulttype::Quat;
-using sofa::helper::vector;
+using sofa::type::Quat;
+using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
 using sofa::component::topology::EdgeSetGeometryAlgorithms;
 using sofa::component::topology::EdgeSetTopologyModifier;
@@ -93,8 +93,8 @@ public:
     typedef typename DataTypes::Deriv    Deriv   ;
     typedef typename Coord::value_type   Real    ;
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-    typedef sofa::defaulttype::Vec<3, Real> Vec3;
-    typedef sofa::defaulttype::Vec<2, Real> Vec2;
+    typedef sofa::type::Vec<3, Real> Vec3;
+    typedef sofa::type::Vec<2, Real> Vec2;
     typedef typename vector<Vec2>::iterator vecIt;
 
     typedef typename core::visual::VisualParams VisualParams;
@@ -163,7 +163,7 @@ public:
      /// Functions enabling to load and use a geometry given from OBJ external file
      void initRestConfig();
      void getRestPosNonProcedural(Real& abs, Coord &p);
-     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);
+     void computeOrientation(const Vec3& AB, const Quat<Real>& Q, Quat<Real> &result);
      void initFromLoader();
      bool checkTopology();
 
@@ -176,7 +176,7 @@ public:
      // todo => topological change !
      void releaseWirePart();
 
-     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
+     void rotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output);
 
 
 protected:

@@ -44,9 +44,9 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <sofa/helper/gl/Cylinder.h>
+#include <sofa/gl/Cylinder.h>
 #include <sofa/simulation/Simulation.h>
-#include <sofa/helper/gl/Axis.h>
+#include <sofa/gl/Axis.h>
 #include <algorithm>
 
 #include "engine/WireRestShape.h"
@@ -152,7 +152,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
     msg_warning() << "GetRestTransform not implemented for not straightRestShape" ;
 
     // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
-    local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat());
+    local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat<Real>());
 }
 
 
@@ -183,8 +183,8 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
     /// the transformation between local0 and local1 is provided by the length of the beam
     double edgeMidLength = this->d_lengthList.getValue()[edgeInList] / 2.0;
 
-    local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat());
-    local_H_local1_rest.set(Vec3(edgeMidLength,0,0), Quat());
+    local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat<Real>());
+    local_H_local1_rest.set(Vec3(edgeMidLength,0,0), Quat<Real>());
 }
 
 
@@ -414,12 +414,12 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
             context->findLinkDest(_restShape, _restShapePath, NULL);
 
             if(_restShape == NULL)
-              msg_warning(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+              msg_warning(context) << " ("<< tObj->getClassName() <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;
         }
         else
-            msg_error(context) << " ("<<WireBeamInterpolation::className ( tObj ) <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+            msg_error(context) << " (" << tObj->getClassName() <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
 
 
         if (!pathOK)

@@ -12,7 +12,8 @@ def createScene(rootNode):
     rootNode.createObject('VisualStyle', displayFlags='showVisualModels showBehaviorModels showCollisionModels hideMappings showForceFields')
     rootNode.createObject('FreeMotionAnimationLoop')
     rootNode.createObject('LCPConstraintSolver', mu='0.1', tolerance='1e-10', maxIt='1000', build_lcp='false')
-    rootNode.createObject('BruteForceDetection', name='N2')
+    rootNode.createObject('BruteForceBroadPhase', name='N2')
+    rootNode.createObject('BVHNarrowPhase')
     rootNode.createObject('LocalMinDistance', contactDistance='1', alarmDistance='3', name='localmindistance', angleCone='0.02')
 
     topoLines_guide = rootNode.createChild('topoLines_guide')

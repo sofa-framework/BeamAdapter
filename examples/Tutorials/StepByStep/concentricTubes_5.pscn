@@ -10,7 +10,8 @@
 	<FreeMotionAnimationLoop/>
 	
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
-	<BruteForceDetection name="N2" />
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
 	<LocalMinDistance name="localmindistance" alarmDistance="5" contactDistance="2" />
 	<CollisionResponse name="Response" response="FrictionContact" />
 	<CollisionGroup name="Group" />

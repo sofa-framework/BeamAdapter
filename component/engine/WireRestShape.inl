@@ -50,7 +50,7 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-#include <sofa/helper/gl/template.h>
+#include <sofa/gl/template.h>
 
 #include <iostream>
 #include <fstream>
@@ -70,7 +70,7 @@ namespace engine
 namespace _wirerestshape_
 {
 
-using sofa::helper::vector ;
+using sofa::type::vector ;
 using sofa::core::objectmodel::TagSet ;
 using sofa::core::objectmodel::BaseContext ;
 
@@ -109,7 +109,7 @@ WireRestShape<DataTypes>::WireRestShape() :
 }
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
+void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output)
 {
     x.normalize();
     Vec3 x0=input.inverseRotate(x);
@@ -128,7 +128,7 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat &input, Vec3 &x, 
         dw.normalize();
 
         // computation of the rotation
-        Quat inputRoutput;
+        Quat<Real> inputRoutput;
         inputRoutput.axisToQuat(dw, theta);
 
         output=input*inputRoutput;
@@ -436,7 +436,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
     if( x_used < d_straightLength.getValue())
     {
-        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), Quat());
+        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), Quat<Real>());
         return;
     }
 
@@ -447,7 +447,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         // angle in the z direction
         Real phi= atan(d_spireHeight.getValue()/projetedLength);
 
-        Quat Qphi;
+        Quat<Real> Qphi;
         Qphi.axisToQuat(Vec3(0,0,1),phi);
 
         // spire angle (if theta=2*PI, there is a complete spire between startx and x_used)
@@ -456,7 +456,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         Real theta= 2*M_PI*numSpire;
 
         // computation of the Quat
-        Quat Qtheta;
+        Quat<Real> Qtheta;
         Qtheta.axisToQuat(Vec3(0,1,0),theta);
         Quat newSpireQuat = Qtheta*Qphi;
 
@@ -609,7 +609,7 @@ void WireRestShape<DataTypes>::initFromLoader()
     vector<Vec2> edges;
 
     //get the topology position
-    typedef  vector<sofa::defaulttype::Vec<3,SReal> > topoPosition;
+    typedef  vector<sofa::type::Vec<3,SReal> > topoPosition;
     topoPosition &topoVertices = (*loader->d_positions.beginEdit());
 
     //copy the topology edges in a local vector
@@ -700,7 +700,7 @@ void WireRestShape<DataTypes>::initRestConfig()
     m_curvAbs.clear();
     double tot = 0;
     m_curvAbs.push_back(0);
-    Quat input, output;
+    Quat<Real> input, output;
     input.identity();
     m_localRestTransforms.resize(m_localRestPositions.size());
     m_localRestTransforms[0].setOrigin(Vec3(0,0,0));
@@ -760,7 +760,7 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
         alpha = (abs - m_curvAbs[index-1] ) / (m_curvAbs[index] - m_curvAbs[index-1]);
         one_minus_alpha = 1 - alpha;
         result = m_localRestTransforms[index - 1].getOrigin() * one_minus_alpha + m_localRestTransforms[index].getOrigin() * alpha;
-        Quat slerp;
+        Quat<Real> slerp;
         slerp.slerp( m_localRestTransforms[index - 1].getOrientation(),  m_localRestTransforms[index].getOrientation(), alpha, true );
 
         slerp.normalize();
@@ -792,7 +792,7 @@ void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned in
 }
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q, Quat &result)
+void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat<Real>& Q, Quat<Real> &result)
 {
     Vec3 PQ = AB;
     Quat quat = Q;

@@ -5,7 +5,8 @@
   <VisualStyle displayFlags="showVisualModels hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
   <MasterConstraintSolver printLog="false" maxIterations="20" tolerance="1e-8" />
   <CollisionPipeline verbose="0" name="CollisionPipeline"/>
-  <BruteForceDetection name="N2" />
+  <BruteForceBroadPhase/>
+  <BVHNarrowPhase/>
 <!--  <LocalMinDistance name="Proximity" angleCone="0.2" alarmDistance="0.8" contactDistance="0.2"/>-->
   <LocalMinDistance name="Proximity" angleCone="0.2" alarmDistance="0.2" contactDistance="0.05"/>
   <CollisionResponse name="Response" response="FrictionContact" />

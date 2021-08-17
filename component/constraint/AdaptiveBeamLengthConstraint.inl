@@ -28,8 +28,8 @@
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/defaulttype/Vec.h>
-#include <sofa/helper/gl/template.h>
-#include <sofa/core/visual/DrawTool.h>
+#include <sofa/gl/template.h>
+#include <sofa/helper/visual/DrawTool.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
 #include "AdaptiveBeamLengthConstraint.h"
 
@@ -403,8 +403,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     glColor4f(0.0f,1.0f,0.0f,1.0f);
     for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
     {
-        helper::gl::glVertexT(m_constraintIntervals[i].posBegin);
-        helper::gl::glVertexT(m_constraintIntervals[i].posEnd);
+        gl::glVertexT(m_constraintIntervals[i].posBegin);
+        gl::glVertexT(m_constraintIntervals[i].posEnd);
     }
     glEnd();
 
@@ -419,8 +419,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
             glColor4f(1.0f,0.5f,0.0f,1.0f);
         else
             glColor4f(0.0f,1.0f,0.0f,1.0f);
-        helper::gl::glVertexT(m_constraintIntervals[i].posBegin);
-        helper::gl::glVertexT(m_constraintIntervals[i].posEnd);
+        gl::glVertexT(m_constraintIntervals[i].posBegin);
+        gl::glVertexT(m_constraintIntervals[i].posEnd);
     }
 
     glEnd();
