@@ -419,7 +419,28 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
 
     unsigned int lastNumBeams = m_beamMechanicalStates.size();
     unsigned int numBeams = l_interpolation->getNumBeams();
-    m_localBeamMatrices.resize(numBeams);
+
+    // If the number of beams changed, the corresponding beam info is updated
+    if (lastNumBeams != numBeams)
+    {
+        m_localBeamMatrices.resize(numBeams);
+        m_gaussPoints.resize(numBeams);
+        m_beamMechanicalStates.resize(numBeams, MechanicalState::ELASTIC);
+        m_lastPos = mstate->read(core::ConstVecCoordId::restPosition())->getValue();
+
+        if (lastNumBeams < numBeams)
+        {
+            const vector<BeamGeometry> beamGeometryParams = l_interpolation->getBeamGeometryParameters();
+            for (unsigned int b = lastNumBeams; b < numBeams; b++)
+            {
+                BeamLocalMatrices* beamMatrices = &m_localBeamMatrices[b];
+
+                initialiseInterval(b, m_integrationIntervals, beamGeometryParams[b]);
+                initialiseGaussPoints(b, m_gaussPoints, m_integrationIntervals[b]);
+                updateTangentStiffness(b, *beamMatrices); //Prior to plastic deformation, computes an elastic stiffness with Cep = C
+            }
+        }
+    }
 
     if (d_computeMass.getValue())
         computeGravityVector();
