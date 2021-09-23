@@ -83,7 +83,7 @@ public:
     typedef typename Coord::value_type Real;
     typedef Data<VecCoord> DataVecCoord;
     typedef Data<VecDeriv> DataVecDeriv;
-    typedef sofa::helper::types::RGBAColor RGBAColor;
+    typedef sofa::type::RGBAColor RGBAColor;
     typedef AdaptiveBeamForceFieldAndMass<DataTypes>::BeamLocalMatrices BeamLocalMatrices;
     typedef BeamInterpolation<DataTypes> BInterpolation;
 

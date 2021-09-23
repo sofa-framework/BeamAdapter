@@ -42,7 +42,7 @@ namespace _adaptiveplasticbeamforcefield_
 {
 
 using sofa::core::objectmodel::BaseContext;
-using sofa::defaulttype::Quat;
+using sofa::type::Quat;
 
 template <class DataTypes>
 AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField() :
