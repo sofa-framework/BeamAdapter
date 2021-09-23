@@ -46,6 +46,7 @@ using sofa::type::Quat;
 
 template <class DataTypes>
 AdaptivePlasticBeamForceField<DataTypes>::AdaptivePlasticBeamForceField() :
+    Inherit1(),
     d_poissonRatio(initData(&d_poissonRatio, Real(0.3), "poissonRatio",
         "Value of the poisson ratio for the considered material")),
     d_youngModulus(initData(&d_youngModulus, "youngModulus",
@@ -80,11 +81,18 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
 
     ForceField<DataTypes>::init();
 
+    bwdInit();
+}
+
+
+template <class DataTypes>
+void AdaptivePlasticBeamForceField<DataTypes>::bwdInit()
+{
     // The interpolation component has to be initiated before, in order to get
     // the information required for Gauss points initialisation. But with this method,
     // bwdInit() will be called twice on the interpolation component.
     // TO DO : is there a better way to guarantee the order of initialisation ?
-    l_interpolation->bwdInit();
+    //l_interpolation->bwdInit();
 
     const vector<BeamGeometry> beamGeometryParams = l_interpolation->getBeamGeometryParameters();
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -99,13 +107,13 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     m_genHookesLaw[0][4] = m_genHookesLaw[0][8] = m_genHookesLaw[4][0] = m_genHookesLaw[8][0] = nu;
     m_genHookesLaw[4][8] = m_genHookesLaw[8][4] = nu;
 
-    m_genHookesLaw[1][1] = m_genHookesLaw[2][2] = m_genHookesLaw[3][3] = (1 - 2*nu) / 2;
-    m_genHookesLaw[5][5] = m_genHookesLaw[6][6] = m_genHookesLaw[7][7] = (1 - 2*nu) / 2;
+    m_genHookesLaw[1][1] = m_genHookesLaw[2][2] = m_genHookesLaw[3][3] = (1 - 2 * nu) / 2;
+    m_genHookesLaw[5][5] = m_genHookesLaw[6][6] = m_genHookesLaw[7][7] = (1 - 2 * nu) / 2;
 
-    m_genHookesLaw[1][3] = m_genHookesLaw[2][6] = m_genHookesLaw[5][7] = (1 - 2*nu) / 2;
-    m_genHookesLaw[3][1] = m_genHookesLaw[6][2] = m_genHookesLaw[7][5] = (1 - 2*nu) / 2;
+    m_genHookesLaw[1][3] = m_genHookesLaw[2][6] = m_genHookesLaw[5][7] = (1 - 2 * nu) / 2;
+    m_genHookesLaw[3][1] = m_genHookesLaw[6][2] = m_genHookesLaw[7][5] = (1 - 2 * nu) / 2;
 
-    m_genHookesLaw *= E / ((1 + nu)*(1 - 2*nu));
+    m_genHookesLaw *= E / ((1 + nu) * (1 - 2 * nu));
 
     //Initialisation of Gauss points, integration intervals, and local matrices
     m_localBeamMatrices.clear();
@@ -125,10 +133,9 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
 
     //Initialisaiton of beam mechanical states to ELASTIC
     m_beamMechanicalStates.clear();
-    m_beamMechanicalStates.resize(numBeams);
-    std::fill(m_beamMechanicalStates.begin(), m_beamMechanicalStates.end(), MechanicalState::ELASTIC);
+    m_beamMechanicalStates.resize(numBeams, MechanicalState::ELASTIC);
 
-    //Initialisation of the comparison threshold for stress tensor norms to 0.
+    // Initialisation of the comparison threshold for stress tensor norms to 0.
     // Plasticity computation requires to basically compare stress tensor norms to 0.
     // As stress norm values can vary of several orders of magnitude, depending on the
     // considered materials and/or applied forces, this comparison has to be carried out
@@ -138,7 +145,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::init()
     // We rely on the value of the initial Yield stress, as we can expect plastic
     // deformation to occur inside a relatively small intervl of stresses around this value.
     const int orderOfMagnitude = d_initialYieldStress.getValue(); //Should use std::abs, but d_initialYieldStress > 0
-    m_stressComparisonThreshold = std::numeric_limits<double>::epsilon()*orderOfMagnitude;
+    m_stressComparisonThreshold = std::numeric_limits<double>::epsilon() * orderOfMagnitude;
 }
 
 
@@ -410,6 +417,7 @@ void AdaptivePlasticBeamForceField<DataTypes>::addForce(const MechanicalParams* 
 
     f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
+    unsigned int lastNumBeams = m_beamMechanicalStates.size();
     unsigned int numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
 

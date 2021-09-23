@@ -196,6 +196,7 @@ public:
     /// This is inhereted from BaseObject
     /////////////////////////////////////
     virtual void init() override;
+    virtual void bwdInit() override;
     virtual void reinit() override;
 
     /////////////////////////////////////
