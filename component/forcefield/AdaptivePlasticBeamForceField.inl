@@ -755,6 +755,13 @@ template< class DataTypes>
 void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned int beamIndex,
                                                                       BeamLocalMatrices& beamLocalMatrices)
 {
+    // DEBUG : Comparison with the elastic stiffness matrix of AdaptiveBeamForceFieldAndMass
+    //computeStiffness(beamIndex, beamLocalMatrices);
+    //Matrix12x12 K = Matrix12x12();
+    //K.setsub(0, 0, beamLocalMatrices.m_K00);
+    //K.setsub(0, 6, beamLocalMatrices.m_K01);
+    //K.setsub(6, 0, beamLocalMatrices.m_K10);
+    //K.setsub(6, 6, beamLocalMatrices.m_K11);
 
     // Switching to the 12x12 format for gaussian quadrature
     Matrix12x12 Kt = Matrix12x12();
@@ -805,6 +812,17 @@ void AdaptivePlasticBeamForceField<DataTypes>::updateTangentStiffness(unsigned i
     Kt.getsub(0, 6, beamLocalMatrices.m_K01);
     Kt.getsub(6, 0, beamLocalMatrices.m_K10);
     Kt.getsub(6, 6, beamLocalMatrices.m_K11);
+
+    // DEBUG : Comparison with the elastic stiffness matrix of AdaptiveBeamForceFieldAndMass
+    //std::cout << "[AdaptivePlasticBeam] K :" << std::endl;
+    //sofa::type::printMatlab<12, 12, Real>(std::cout, K);
+    //std::cout << std::endl;
+    //std::cout << "[AdaptivePlasticBeam] Kt :" << std::endl;
+    //sofa::type::printMatlab<12, 12, Real>(std::cout, Kt);
+    //std::cout << std::endl;
+    //std::cout << "[AdaptivePlasticBeam] C :" << std::endl;
+    //sofa::type::printMatlab<9, 9, Real>(std::cout, m_genHookesLaw);
+    //std::cout << std::endl;
 }
 
 //----- Implementation of the Von Mises yield function -----//
