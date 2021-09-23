@@ -2,7 +2,7 @@
 <Node name="root" dt="0.1" gravity="0 -0.01 0">
  	<RequiredPlugin pluginName="BeamAdapter"/>
  	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
-	<GenericConstraintSolver tolerance="1e-6"/>
+	<GenericConstraintSolver tolerance="1e-6" maxIterations="1000"/>
 	<FreeMotionMasterSolver />
 	<CollisionPipeline depth="6" verbose="1" draw="0"/>
 	<BruteForceBroadPhase/>
@@ -52,7 +52,7 @@
 		<AdaptiveBeamForceFieldAndMass name="GuideForceField"  interpolation="@InterpolGuide"  massDensity="0.1"/> 	
 
 		<InterventionalRadiologyController  name="m_ircontroller" template="Rigid" printLog="1" xtip="2.01 0.3"  step="3.0" rotationInstrument="0 0" 
-					controlledInstrument="0" startingPos="0 0 0 -0.7071068 0 0 0.7071068"  instruments="  @InterpolCatheter  @InterpolGuide  "/>
+					controlledInstrument="0" startingPos="0 0 0 -0.7071068 0 0 0.7071068"  instruments="InterpolCatheter  InterpolGuide"/>
 		<LinearSolverConstraintCorrection printLog="false" />
 
 		<FixedConstraint name="FixedConstraint" indices="0" />

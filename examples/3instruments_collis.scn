@@ -1,17 +1,29 @@
 <?xml version='1.0'?>
 <Node name='root' dt='0.05'  gravity='0 0 0'> 
+
     <RequiredPlugin pluginName="BeamAdapter"/>
+    <RequiredPlugin name="SofaBoundaryCondition"/> <!-- Needed to use components [FixedConstraint] -->
+    <RequiredPlugin name="SofaConstraint"/> <!-- Needed to use components [FreeMotionAnimationLoop, LCPConstraintSolver, LinearSolverConstraintCorrection, LocalMinDistance] -->
+    <RequiredPlugin name="SofaDeformable"/> <!-- Needed to use components [RestShapeSpringsForceField] -->
+    <RequiredPlugin name="SofaGeneralLinearSolver"/> <!-- Needed to use components [BTDLinearSolver] -->
+    <RequiredPlugin name="SofaImplicitOdeSolver"/> <!-- Needed to use components [EulerImplicitSolver] -->
+    <RequiredPlugin name="SofaLoader"/> <!-- Needed to use components [MeshObjLoader] -->
+    <RequiredPlugin name="SofaMiscCollision"/> <!-- Needed to use components [DefaultCollisionGroupManager] -->
+    <RequiredPlugin name="SofaMeshCollision"/> <!-- Needed to use components [LineCollisionModel, PointCollisionModel, TriangleCollisionModel] -->
+    <RequiredPlugin name="SofaOpenglVisual"/> <!-- Needed to use components [OglModel] -->
+    <RequiredPlugin name="SofaTopologyMapping"/> <!-- Needed to use components [Edge2QuadTopologicalMapping] -->
+
     <VisualStyle displayFlags='showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields' />
  	<FreeMotionAnimationLoop />
 	<LCPConstraintSolver mu='0.1' tolerance='1e-6' maxIt='1000' build_lcp='false' />
 	<!--<GenericConstraintSolver tolerance='1e-10'/>-->
-	
-	<CollisionPipeline depth='6' verbose='1' draw='0'/>
+
+	<DefaultPipeline depth='6' verbose='1' draw='0'/>
 	<BruteForceBroadPhase/>
 	<BVHNarrowPhase/>
 	<LocalMinDistance name='localmindistance' alarmDistance='3' contactDistance='1' angleCone='0.02'/>
-	<CollisionResponse name='Response' response='FrictionContact' />
-	<CollisionGroup name='Group' />
+	<DefaultContactManager name='Response' response='FrictionContact' />
+	<DefaultCollisionGroupManager name='Group' />
 
 
 
@@ -19,49 +31,51 @@
 <!--------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -------------------------------->
 
 	<Node name='topoLines_cath'>
-		<WireRestShape template='Rigid' printLog='0' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
+		<WireRestShape template='Rigid3d' printLog='0' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
 					    densityOfBeams='40 10' numEdges='200' numEdgesCollis='40 20'  youngModulus='10000' youngModulusExtremity='10000'/> <!-- silicone -->		
 		<EdgeSetTopologyContainer name='meshLinesCath' />
 		<EdgeSetTopologyModifier   name='Modifier' />
-		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
-		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
-		<MechanicalObject template='Rigid' name='dofTopo1' />
+		<!-- <EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid3d' /> -->
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
+		<MechanicalObject template='Rigid3d' name='dofTopo1' />
 	</Node>	
 	<Node name='topoLines_guide'>
-		<WireRestShape template='Rigid' printLog='0' name='GuideRestShape' length='1000.0'  straightLength='980.0' spireDiameter='25' spireHeight='0.0'
+		<WireRestShape template='Rigid3d' printLog='0' name='GuideRestShape' length='1000.0'  straightLength='980.0' spireDiameter='25' spireHeight='0.0'
 						densityOfBeams='30 5' numEdges='200' numEdgesCollis='50 10'  youngModulus='10000' youngModulusExtremity='10000'/>
 		<EdgeSetTopologyContainer name='meshLinesGuide' />
 		<EdgeSetTopologyModifier   name='Modifier' />
-		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
-		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
-		<MechanicalObject template='Rigid' name='dofTopo2' />
+		<!-- <EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid3d' /> -->
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
+		<MechanicalObject template='Rigid3d' name='dofTopo2' />
 	</Node>		
 	<Node name='topoLines_coils'>
-		<WireRestShape template='Rigid' printLog='0' name='CoilRestShape' length='600.0'  straightLength='540.0' spireDiameter='7' spireHeight='5.0'
+		<WireRestShape template='Rigid3d' printLog='0' name='CoilRestShape' length='600.0'  straightLength='540.0' spireDiameter='7' spireHeight='5.0'
 						densityOfBeams='40 20' numEdges='400' numEdgesCollis='30 30'  youngModulus='168000' youngModulusExtremity='168000'/>
 		<EdgeSetTopologyContainer name='meshLinesCoils' />
 		<EdgeSetTopologyModifier   name='Modifier' />
-		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
-		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
-		<MechanicalObject template='Rigid' name='dofTopo3' />
+		<!-- <EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid3d' /> -->
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
+		<MechanicalObject template='Rigid3d' name='dofTopo3' />
 	</Node>	
 	
 
 	<Node name='InstrumentCombined'>
-		<EulerImplicit rayleighStiffness='0.2' rayleighMass='0.1' printLog='false' />
+		<EulerImplicitSolver rayleighStiffness='0.2' rayleighMass='0.1' printLog='false' />
 		<BTDLinearSolver subpartSolve='0' verification='0' verbose='0'/>
 <!-- 		<CudaBTDLinearSolver verbose='0' /> -->
-		<RegularGrid name='meshLinesCombined'
+		<RegularGridTopology name='meshLinesCombined'
 		nx='60' ny='1' nz='1'
 		xmin='0.0' xmax='1.0'
 		ymin='0' ymax='0'
 		zmin='1' zmax='1'
 		/>		
-		<MechanicalObject template='Rigid' name='DOFs' showIndices='0' ry='-90'/> 
+		<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' ry='-90'/> 
 
 		<WireBeamInterpolation name='InterpolCatheter' WireRestShape='@../topoLines_cath/catheterRestShape' radius='1' printLog='0'/> 
-		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter' massDensity='0.00000155'/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
-
+		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter' massDensity='0.00000155'/> stiff silicone E = 10000 MPa // 1550 Kg/m3	
+        <!-- <AdaptivePlasticBeamForceField name="PlasticBeamForceField" interpolation='@InterpolCatheter' youngModulus="1e4" computeMass="0" massDensity='0.00000155' -->
+                                       <!-- poissonRatio="0.3" initialYieldStress="5e3" plasticModulus="3462.0"/> -->
+                                       
 		<WireBeamInterpolation name='InterpolGuide' WireRestShape='@../topoLines_guide/GuideRestShape' radius='0.9' printLog='0'/> 
 		<AdaptiveBeamForceFieldAndMass name='GuideForceField' interpolation='@InterpolGuide' massDensity='0.00000155'/> 	
 
@@ -69,7 +83,7 @@
 		<AdaptiveBeamForceFieldAndMass name='CoilsForceField' interpolation='@InterpolCoils' massDensity='0.000021'/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
 
 		
-		<InterventionalRadiologyController template='Rigid' name='m_ircontroller' printLog='0' xtip='1 0 0'  step='3' rotationInstrument='0 0 0' 
+		<InterventionalRadiologyController template='Rigid3d' name='m_ircontroller' printLog='0' xtip='1 0 0'  step='3' rotationInstrument='0 0 0' 
 							controlledInstrument='0' startingPos='0 0 0 0 -0.7071068 0 0.7071068' speed='0' instruments='InterpolCatheter InterpolGuide InterpolCoils' />
 
 		<LinearSolverConstraintCorrection printLog='false' wire_optimization='true'/>
@@ -83,15 +97,15 @@
 				<EdgeSetTopologyModifier   name='colliseEdgeModifier' />
 				<MechanicalObject name='CollisionDOFs'/>
 				<MultiAdaptiveBeamMapping  name='collisMap'  controller='../m_ircontroller' useCurvAbs='1' printLog='0'/> 
-				<Line proximity='0.0' group='1'/>
-				<Point proximity='0.0' group='1'/>
+				<LineCollisionModel proximity='0.0' group='1'/>
+				<PointCollisionModel proximity='0.0' group='1'/>
 		</Node>	
 
 		<Node name='VisuCatheter' activated='true'>
 			<MechanicalObject name='Quads' />
 			<QuadSetTopologyContainer  name='ContainerCath' />
 			<QuadSetTopologyModifier   name='Modifier' />
-			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<!-- <QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' /> -->
 			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='2' input='@../../topoLines_cath/meshLinesCath' output='@ContainerCath' flipNormals='true'/>
 
@@ -107,7 +121,7 @@
 			<MechanicalObject name='Quads' />
 			<QuadSetTopologyContainer  name='ContainerGuide' />
 			<QuadSetTopologyModifier   name='Modifier' />
-			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<!-- <QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' /> -->
 			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='1' input='@../../topoLines_guide/meshLinesGuide' output='@ContainerGuide'  flipNormals='true' listening='true'/> 
 			<AdaptiveBeamMapping  name='visuMapGuide' useCurvAbs='1' printLog='0' interpolation='@../InterpolGuide' input='@../DOFs' output='@Quads' isMechanical='false' />
@@ -121,7 +135,7 @@
 			<MechanicalObject name='Quads'/>
 			<QuadSetTopologyContainer  name='ContainerCoils' />
 			<QuadSetTopologyModifier   name='Modifier' />
-			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<!-- <QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' /> -->
 			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='0.3'  input='@../../topoLines_coils/meshLinesCoils' output='@ContainerCoils'  flipNormals='true' listening='true' /> 
 			<AdaptiveBeamMapping  name='visuMapCoils' useCurvAbs='1' printLog='0' interpolation='@../InterpolCoils' input='@../DOFs' output='@Quads' isMechanical='false' />
@@ -140,14 +154,13 @@
 	</Node> 
 	-->
 	
-
 	<Node name='CollisionModel'> 
 		<MeshObjLoader name='meshLoader' filename='mesh/phantom.obj' triangulate='true' flipNormals='1'/>
-		<Mesh position='@meshLoader.position'  triangles='@meshLoader.triangles'/>
+		<MeshTopology position='@meshLoader.position'  triangles='@meshLoader.triangles'/>
 		<MechanicalObject name='DOFs1' position='0 0 400' scale='3' ry='90'/>	
-			<Triangle simulated='0' moving='0'/>	
-		<Line simulated='0' moving='0'/>
-		<Point simulated='0' moving='0'/>
+		<TriangleCollisionModel simulated='0' moving='0'/>	
+		<LineCollisionModel simulated='0' moving='0'/>
+		<PointCollisionModel simulated='0' moving='0'/>
 		<OglModel name='Visual' fileMesh='mesh/phantom.obj' color='1 0 0 0.3' scale='3' ry='90'/>
 	</Node>
 	
