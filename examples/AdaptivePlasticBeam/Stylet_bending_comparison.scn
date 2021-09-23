@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 0 0" dt="1e-5" bbox="-1e-1 -1e-1 -1e-1 1e-1 1e-1 1e-1" >
+
+    <RequiredPlugin pluginName="SofaBoundaryCondition"/>
+    <RequiredPlugin pluginName="SofaDenseSolver"/>
+    <RequiredPlugin pluginName="SofaGeneralSimpleFem"/>
+    <RequiredPlugin pluginName="SofaGeneralTopology"/>
+    <RequiredPlugin pluginName="SofaImplicitOdeSolver"/>
+    <RequiredPlugin pluginName="SofaMeshCollision"/>
+    <RequiredPlugin pluginName="SofaMiscMapping"/>
+    <RequiredPlugin pluginName="BeamAdapter"/>
+    <RequiredPlugin name="SofaOpenglVisual"/> <!-- Needed to use components [OglModel] -->
+    <RequiredPlugin name="SofaTopologyMapping"/> <!-- Needed to use components [Edge2QuadTopologicalMapping] -->
+
+    <VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields hideVisualModels" />
+    
+    <DefaultAnimationLoop />
+    <DefaultVisualManagerLoop />
+
+    <Node name="AdaptivePlasticBeam">
+        <EulerImplicitSolver rayleighStiffness="5e1" rayleighMass="2" printLog="false" />
+        <!-- <StaticSolver newton_iterations="2" relative_correction_tolerance_threshold="1e-3" /> -->
+        <LULinearSolver verbose="0"/>
+        <MechanicalObject template="Rigid3d" name="DOFs" position="0 0 0 0 0 0 1  1e-2 0 0 0 0 0 1  2e-2 0 0 0 0 0 1  3e-2 0 0 0 0 0 1
+                                                                   4e-2 0 0 0 0 0 1  5e-2 0 0 0 0 0 1  6e-2 0 0 0 0 0 1  7e-2 0 0 0 0 0 1
+                                                                   8e-2 0 0 0 0 0 1  8.33e-2 0 0 0 0 0 1  8.66e-2 0 0 0 0 0 1
+                                                                   9e-2 0 0 0 0 0 1  9.33e-2 0 0 0 0 0 1  9.66e-2 0 0 0 0 0 1
+                                                                   1e-1 0 0 0 0 0 1 "/>
+        <!-- <RegularGridTopology name='meshLines' -->
+		                     <!-- nx='60' ny='1' nz='1' -->
+		                     <!-- xmin='0.0' xmax='1.0' -->
+		                     <!-- ymin='0' ymax='0' -->
+		                     <!-- zmin='1' zmax='1' -->
+		<!-- /> -->
+        <!-- <MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' ry='-90'/>  -->
+        <MeshTopology name="beamLines" lines="0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 " />
+        <FixedConstraint name="FixedConstraint" indices="0 7" />
+        <!-- <UniformMass vertexMass="1 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" /> -->
+
+        <BeamInterpolation name="beamInterpol" crossSectionShape="circular" radius="3.5e-4"
+                           defaultYoungModulus="1e6" defaultPoissonRatio="0.3"/>
+        <AdaptivePlasticBeamForceField name="PlasticBeamForceField" interpolation='@beamInterpol' youngModulus="2.00e11" computeMass="1" massDensity="7.7e3"
+                                       poissonRatio="0.3" initialYieldStress="2.20e12" plasticModulus="34628588874.0"/>
+        <!-- 306 SSL properties in ambient temperature: -->
+        <!-- Density = 7.7 g/cm3                        -->
+        <!-- Young's modulus E: 200 GPa                 -->
+        <!-- Yield strength Re: > 220 MPa               -->
+        <!-- <ConstantForceField name="BendingMoment1" indices="12" forces="0 0 0 0 0 5e-2" /> -->
+        <!-- <ConstantForceField name="BendingMoment2" indices="13" forces="0 0 0 0 0 5e-2" /> -->
+        <ConstantForceField name="BendingMoment3" indices="14" forces="0 0 0 0 0 5e-1" />
+        
+        <Node name='VisuGuide' activated='true'>
+			<MechanicalObject name='Quads' translation="0.0 0.0 -1.0" />
+			<QuadSetTopologyContainer name='beamContainer' />
+			<QuadSetTopologyModifier name='Modifier' />
+			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='3.5e-4' input='@../beamLines' output='@beamContainer' flipNormals='true' listening='true'/> 
+			<AdaptiveBeamMapping  name='visuMapGuide' useCurvAbs='1' printLog='0' interpolation='@../beamInterpol'
+                                  input='@../DOFs' output='@Quads' isMechanical='false' />
+			<Node name='VisuOgl'>
+				<OglModel name='Visual' color='0.2 0.2 0.8'  material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20'
+                          quads='@../beamContainer.quads'/>
+				<IdentityMapping input='@../Quads' output='@Visual'/>
+			</Node>		
+		</Node>
+        
+    </Node>
+
+    <Node name="AdaptiveElasticBeam">
+        <EulerImplicitSolver rayleighStiffness="5e1" rayleighMass="2" printLog="false" />
+        <!-- <StaticSolver newton_iterations="2" relative_correction_tolerance_threshold="1e-3" /> -->
+        <LULinearSolver verbose="0"/>
+        <MechanicalObject template="Rigid3d" name="DOFs" position="0 0 1e-1 0 0 0 1  1e-2 0 1e-1 0 0 0 1  2e-2 0 1e-1 0 0 0 1  3e-2 0 1e-1 0 0 0 1
+                                                                   4e-2 0 1e-1 0 0 0 1  5e-2 0 1e-1 0 0 0 1  6e-2 0 1e-1 0 0 0 1  7e-2 0 1e-1 0 0 0 1
+                                                                   8e-2 0 1e-1 0 0 0 1  8.33e-2 0 1e-1 0 0 0 1  8.66e-2 0 1e-1 0 0 0 1
+                                                                   9e-2 0 1e-1 0 0 0 1  9.33e-2 0 1e-1 0 0 0 1  9.66e-2 0 1e-1 0 0 0 1
+                                                                   1e-1 0 1e-1 0 0 0 1 "/>
+        <!-- <RegularGridTopology name='meshLines' -->
+		                     <!-- nx='60' ny='1' nz='1' -->
+		                     <!-- xmin='0.0' xmax='1.0' -->
+		                     <!-- ymin='0' ymax='0' -->
+		                     <!-- zmin='1' zmax='1' -->
+		<!-- /> -->
+        <!-- <MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' ry='-90'/>  -->
+        <MeshTopology name="beamLines" lines="0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 " />
+        <FixedConstraint name="FixedConstraint" indices="0 7" />
+        <!-- <UniformMass vertexMass="1 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" /> -->
+
+        <BeamInterpolation name="beamInterpol" crossSectionShape="circular" radius="3.5e-4"
+                           defaultYoungModulus="2.00e11" defaultPoissonRatio="0.3"/>
+        <AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter' computeMass="1" massDensity="7.7e3"/>
+        <!-- 306 SSL properties in ambient temperature: -->
+        <!-- Density = 7.7 g/cm3                        -->
+        <!-- Young's modulus E: 200 GPa                 -->
+        <!-- Yield strength Re: > 220 MPa               -->
+        <!-- <ConstantForceField name="BendingMoment1" indices="12" forces="0 0 0 0 0 5e-2" /> -->
+        <!-- <ConstantForceField name="BendingMoment2" indices="13" forces="0 0 0 0 0 5e-2" /> -->
+        <ConstantForceField name="BendingMoment3" indices="14" forces="0 0 0 0 0 5e-1" />
+        
+        <Node name='VisuGuide' activated='true'>
+			<MechanicalObject name='Quads' translation="0.0 0.0 -1.0" />
+			<QuadSetTopologyContainer name='beamContainer' />
+			<QuadSetTopologyModifier name='Modifier' />
+			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='3.5e-4' input='@../beamLines' output='@beamContainer' flipNormals='true' listening='true'/> 
+			<AdaptiveBeamMapping  name='visuMapGuide' useCurvAbs='1' printLog='0' interpolation='@../beamInterpol'
+                                  input='@../DOFs' output='@Quads' isMechanical='false' />
+			<Node name='VisuOgl'>
+				<OglModel name='Visual' color='0.2 0.2 0.8'  material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20'
+                          quads='@../beamContainer.quads'/>
+				<IdentityMapping input='@../Quads' output='@Visual'/>
+			</Node>		
+		</Node>
+        
+    </Node>
+
+</Node>
