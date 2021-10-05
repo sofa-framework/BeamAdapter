@@ -230,7 +230,6 @@ protected:
      BeamSection beamSection2;
 
      TopologyContainer* _topology {nullptr} ;
-     EdgeSetGeometryAlgorithms<DataTypes>* edgeGeo ;
      EdgeSetTopologyModifier* edgeMod {nullptr} ;
      Edge2QuadTopologicalMapping* edge2QuadMap ;
      MeshLoader* loader {nullptr};

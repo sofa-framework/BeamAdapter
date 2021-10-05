@@ -159,7 +159,6 @@ template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
     /// Have to add because was remove from the .h due to forward déclarations
-    edgeGeo = nullptr;
     edge2QuadMap = nullptr;
     loader = nullptr;
 
@@ -190,12 +189,7 @@ void WireRestShape<DataTypes>::init()
         msg_error() << "cannot find topology container";
     }
 
-    this->getContext()->get(edgeGeo);
     this->getContext()->get(edgeMod);
-
-    //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    msg_error_when(edgeGeo == NULL)
-            << "EdgeSetController has no binding EdgeSetGeometryAlgorithms." ;
 
     if (edgeMod == NULL)
     {
