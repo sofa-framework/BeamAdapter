@@ -1,13 +1,9 @@
 import Sofa
 
-from splib3.animation import AnimationManager
-
 def createScene(rootNode):
 
     rootNode.addObject('RequiredPlugin', pluginName='SoftRobots')
     rootNode.addObject('RequiredPlugin', pluginName='BeamAdapter')
-
-    AnimationManager(rootNode)  
 
     rootNode.addObject('VisualStyle', displayFlags='showVisualModels showBehaviorModels showCollisionModels hideMappings showForceFields')
     rootNode.addObject('FreeMotionAnimationLoop')
