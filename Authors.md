@@ -1,13 +1,19 @@
 Authors
 -------
 
-The following authors contributed to the BeamAdapter plugin:
-
+- Duriez, Christian
+- Marchal, Damien
+- Coevoet, Eulalie
 - Adagolodjo, Yinoussa
+- Schegg, Pierre
+
+
+# Contributors
+
+The following collaborators contributed to the BeamAdapter plugin:
+
 - Bensoussan, Pierre-Jean
 - Carrez, Bruno
-- Duriez, Christian
-- Coevoet, Eulalie
 - De La Plata Alcade, Juan Pablo
 - Dequidt, Jeremie
 - Dervaux, Francois
@@ -18,13 +24,11 @@ The following authors contributed to the BeamAdapter plugin:
 - Kerrien, Erwan
 - Largiliere, Frederic
 - Lin, Meichun
-- Marchal, Damien
 - Nelissen, Sebastien
 - Paran, Guillaume
 - Peterlik, Igor
 - Roy, Frederick
 - Saad, Camille
-- Schegg, Pierre
 - Spadoni, Federico
 - Talbot, Hugo
 - Vanneste, Felix
