@@ -45,9 +45,9 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 
-#include <sofa/helper/vector.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
+#include <sofa/type/vector.h>
+#include <sofa/type/Vec.h>
+#include <sofa/type/Mat.h>
 
 #include <sofa/core/objectmodel/BaseObject.h>
 
@@ -66,9 +66,9 @@ namespace _wirebeaminterpolation_
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
-using sofa::defaulttype::Vec ;
-using sofa::defaulttype::Vec3d ;
-using sofa::helper::vector;
+using sofa::type::Vec ;
+using sofa::type::Vec3d ;
+using sofa::type::vector;
 /*!
  * \class WireBeamInterpolation
  * WireAdaptiveBeam Interpolation provides the implementation of a 1D parameteric beam model.
@@ -123,7 +123,7 @@ public:
     void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
 
-    virtual void getSamplingParameters(helper::vector<Real>& xP_noticeable, helper::vector< int>& nbP_density)
+    virtual void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector< int>& nbP_density)
     {
         this->m_restShape->getSamplingParameters(xP_noticeable, nbP_density);
     }

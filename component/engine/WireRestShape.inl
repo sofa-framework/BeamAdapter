@@ -224,7 +224,7 @@ void WireRestShape<DataTypes>::init()
 
     //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
     //if(!edge2QuadMap)
-    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping"<<sendl;
+    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping";
 
 
     ////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
     if ( edgeMod == NULL )
     {
-        msg_error() << "no edgeSetModifier in the node -> cannot do the topological change"<<sendl;
+        msg_error() << "no edgeSetModifier in the node -> cannot do the topological change";
         return;
     }
     ///////// remove the edge that is cut //////

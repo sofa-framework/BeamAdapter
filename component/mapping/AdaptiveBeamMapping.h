@@ -37,10 +37,10 @@
 #define SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <sofa/helper/vector.h>
+#include <sofa/type/vector.h>
 #include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
+#include <sofa/type/Vec.h>
+#include <sofa/type/Mat.h>
 #include <sofa/core/Mapping.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
@@ -84,13 +84,13 @@ using namespace sofa::core::objectmodel;
 
 using sofa::core::State ;
 using core::Mapping;
-using sofa::defaulttype::Vec;
-using sofa::defaulttype::Mat;
+using sofa::type::Vec;
+using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
 using std::pair;
 using sofa::component::fem::BeamInterpolation;
-using sofa::helper::vector;
+using sofa::type::vector;
 using std::string;
 using core::MechanicalParams;
 using core::ConstraintParams;

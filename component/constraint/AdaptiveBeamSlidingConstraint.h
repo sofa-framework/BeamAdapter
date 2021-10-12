@@ -54,7 +54,7 @@ using sofa::core::ConstraintParams ;
 using sofa::defaulttype::SolidTypes ;
 using sofa::defaulttype::BaseVector ;
 using sofa::core::objectmodel::Data ;
-using sofa::defaulttype::Vec ;
+using sofa::type::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;
 using std::vector;
 

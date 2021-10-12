@@ -443,7 +443,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 {
 
-    const sofa::helper::vector<Vec3>& pts = d_points.getValue();
+    const sofa::type::vector<Vec3>& pts = d_points.getValue();
 
     if (pts.size() == 0)
     {
@@ -456,7 +456,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
         }
         else
         {
-            sofa::helper::vector<Vec3>& pts2 = *(d_points.beginEdit());
+            sofa::type::vector<Vec3>& pts2 = *(d_points.beginEdit());
             msg_info() <<"No point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State";
             for(unsigned int i=0; i<xTo.size();i++)
             {

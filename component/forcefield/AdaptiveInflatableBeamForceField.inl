@@ -71,7 +71,7 @@ namespace _AdaptiveInflatableBeamForceField_
 /* ************* ADAPTIVE FORCEFIELD_AND_MASS ************** */
 using sofa::core::behavior::ForceField ;
 using sofa::core::objectmodel::BaseContext ;
-using sofa::defaulttype::Vector3 ;
+using sofa::type::Vector3 ;
 using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;

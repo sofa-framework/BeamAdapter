@@ -27,7 +27,7 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/defaulttype/Vec.h>
+#include <sofa/type/Vec.h>
 #include <sofa/gl/template.h>
 #include <sofa/helper/visual/DrawTool.h>
 #include <sofa/core/behavior/ConstraintResolution.h>

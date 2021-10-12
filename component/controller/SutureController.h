@@ -76,8 +76,8 @@ namespace _suturecontroller_
 {
 
 using std::set ;
-using sofa::helper::vector ;
-using sofa::defaulttype::Vec ;
+using sofa::type::vector ;
+using sofa::type::Vec ;
 using sofa::defaulttype::Rigid3dTypes ;
 using sofa::defaulttype::Rigid3fTypes ;
 using sofa::defaulttype::SolidTypes ;

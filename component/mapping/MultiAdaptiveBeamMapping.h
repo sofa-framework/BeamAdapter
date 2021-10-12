@@ -80,29 +80,29 @@ public:
     typedef typename In::VecDeriv           InVecDeriv   ;
     typedef typename In::MatrixDeriv        InMatrixDeriv;
 
-    typedef helper::vector<unsigned int> VecIndex;
+    typedef type::vector<unsigned int> VecIndex;
     typedef sofa::core::topology::BaseMeshTopology::EdgeID ElementID;
-    typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::Edge>   VecEdges    ;
-    typedef sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
+    typedef sofa::type::vector<sofa::core::topology::BaseMeshTopology::Edge>   VecEdges    ;
+    typedef sofa::type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> VecElementID;
 
 
     typedef typename sofa::defaulttype::SolidTypes<InReal>::Transform Transform;
     typedef std::pair<int, Transform> IndexedTransform;
     typedef typename sofa::defaulttype::SolidTypes< InReal>::SpatialVector SpatialVector;
 
-    typedef sofa::defaulttype::Vec<3, Real> Vec3;
-    typedef sofa::defaulttype::Vec<6, Real> Vec6;
-    typedef sofa::defaulttype::Mat<3,12,Real> Mat3x12;
-    typedef sofa::defaulttype::Mat<12,3,Real> Mat12x3;
-    typedef sofa::defaulttype::Mat<6,12,Real> Mat6x12;
-    typedef sofa::defaulttype::Mat<12,6,Real> Mat12x6;
+    typedef sofa::type::Vec<3, Real> Vec3;
+    typedef sofa::type::Vec<6, Real> Vec6;
+    typedef sofa::type::Mat<3,12,Real> Mat3x12;
+    typedef sofa::type::Mat<12,3,Real> Mat12x3;
+    typedef sofa::type::Mat<6,12,Real> Mat6x12;
+    typedef sofa::type::Mat<12,6,Real> Mat12x6;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
     typedef sofa::component::controller::InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
 
 public:
     Data<bool> useCurvAbs;
-    Data< helper::vector< std::string > > m_controlerPath;
+    Data< type::vector< std::string > > m_controlerPath;
 
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller);
     MultiAdaptiveBeamMapping();
@@ -155,12 +155,12 @@ protected:
     void assignSubMappingFromControllerInfo();
 
     // for fromSeveralInterpolations option
-    sofa::helper::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
-    sofa::helper::vector<  AdaptiveBeamMapping<TIn, TOut>* > m_subMappingList;
+    sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
+    sofa::type::vector<  AdaptiveBeamMapping<TIn, TOut>* > m_subMappingList;
     TInterventionalRadiologyController* m_ircontroller;
     sofa::component::topology::EdgeSetTopologyModifier* _edgeMod;
-    sofa::helper::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
-    sofa::helper::vector<int> _idm_instrumentList; //=> for each mapped point provides the interpolation (in m_instrumentList)
+    sofa::type::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
+    sofa::type::vector<int> _idm_instrumentList; //=> for each mapped point provides the interpolation (in m_instrumentList)
     bool isBarycentricMapping;
 
 
