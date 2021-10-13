@@ -1,9 +1,10 @@
+#include <sofa/testing/BaseSimulationTest.h>
+
 #include <regex>
 #include <vector>
 #include <string>
 using std::string ;
 
-#include <SofaTest/Sofa_test.h>
 #include <sofa/helper/BackTrace.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 
@@ -34,7 +35,7 @@ using sofa::component::container::MechanicalObject ;
 namespace sofa
 {
 
-struct BeamInterpolationTest : public Sofa_test<>,
+struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         public ::testing::WithParamInterface<std::vector<std::string>>
 {
     void simpleScene(const std::vector<std::string>& lines)
