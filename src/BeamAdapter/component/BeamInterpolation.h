@@ -37,7 +37,7 @@
 #define SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H
 
 
-#include <BeamAdapter/initBeamAdapter.h>
+#include <BeamAdapter/config.h>
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/defaulttype/SolidTypes.h>

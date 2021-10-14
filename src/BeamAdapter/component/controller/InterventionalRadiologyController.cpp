@@ -38,7 +38,7 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <BeamAdapter/initBeamAdapter.h>
+#include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 

@@ -35,7 +35,7 @@
 #ifndef SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
 #define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
 
-#include <BeamAdapter/initBeamAdapter.h>
+#include <BeamAdapter/config.h>
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
 #include <BeamAdapter/component/BeamInterpolation.h>

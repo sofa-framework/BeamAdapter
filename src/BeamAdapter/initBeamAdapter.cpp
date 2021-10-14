@@ -34,10 +34,7 @@ using sofa::core::ObjectFactory;
 #include <BeamAdapter/component/MultiAdaptiveBeamContactMapper.h>
 #endif // SOFA_DEV
 
-namespace sofa
-{
-
-namespace component
+namespace sofa::component
 {
 	extern "C" {
 		SOFA_BEAMADAPTER_API void initExternalModule();
@@ -48,9 +45,7 @@ namespace component
 		SOFA_BEAMADAPTER_API const char* getModuleComponentList();
 	}
 
-	//Here are just several convenient functions to help user to know what contains the plugin
-	
-	void initExternalModule()
+	void initBeamAdapter()
 	{
 		static bool first = true;
 		if (first)
@@ -58,6 +53,14 @@ namespace component
 			first = false;
 		}
 	}
+
+	//Here are just several convenient functions to help user to know what contains the plugin
+	
+	void initExternalModule()
+	{
+		initBeamAdapter();
+	}
+
 	const char* getModuleLicense()
 	{
 		return "INRIA and Digital-Trainers";
@@ -65,12 +68,12 @@ namespace component
 
 	const char* getModuleName()
 	{
-		return "BeamAdapter";
+		return sofa_tostring(SOFA_TARGET);
 	}
 
 	const char* getModuleVersion()
 	{
-		return "0.1";
+		return sofa_tostring(BEAMADAPTER_VERSION);
 	}
 
 	const char* getModuleDescription()
@@ -84,5 +87,5 @@ namespace component
 		static std::string classes = ObjectFactory::getInstance()->listClassesFromTarget(sofa_tostring(SOFA_TARGET));
 		return classes.c_str();
 	}
-} 
-} 
+
+} // namespace sofa::component

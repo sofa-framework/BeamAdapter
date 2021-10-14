@@ -38,7 +38,7 @@
 #ifndef SOFA_COMPONENT_ENGINE_STEERABLECATHETER_H
 #define SOFA_COMPONENT_ENGINE_STEERABLECATHETER_H
 
-#include <BeamAdapter/initBeamAdapter.h>
+#include <BeamAdapter/config.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
 

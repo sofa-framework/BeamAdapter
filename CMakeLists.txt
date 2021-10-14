@@ -10,6 +10,7 @@ find_package(SofaAdvancedConstraint QUIET)
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
 set(HEADER_FILES
+    ${BEAMADAPTER_SRC}/config.h.in
     ${BEAMADAPTER_SRC}/initBeamAdapter.h
 
     ${BEAMADAPTER_SRC}/component/BeamInterpolation.h

@@ -24,17 +24,12 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_PLUGIN_BEAM_ADAPTER_H
-#define SOFA_PLUGIN_BEAM_ADAPTER_H
+#pragma once
+#include <BeamAdapter/config.h>
 
-#include <sofa/helper/config.h>
+namespace sofa::component
+{
 
+void SOFA_BEAMADAPTER_API initBeamAdapter();
 
-#ifdef SOFA_BUILD_BEAMADAPTER
-#  define SOFA_BEAMADAPTER_API SOFA_EXPORT_DYNAMIC_LIBRARY
-#else
-#  define SOFA_BEAMADAPTER_API SOFA_IMPORT_DYNAMIC_LIBRARY
-#endif
-
-
-#endif /* SOFA_PLUGIN_BEAM_ADAPTER_H */
+} // namespace sofa::component
