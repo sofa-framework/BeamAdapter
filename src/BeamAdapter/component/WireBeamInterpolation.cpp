@@ -35,7 +35,7 @@
 //
 
 
-#include <BeamAdapter/component/initBeamAdapter.h>
+#include <BeamAdapter/initBeamAdapter.h>
 #include <BeamAdapter/component/WireBeamInterpolation.inl>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>

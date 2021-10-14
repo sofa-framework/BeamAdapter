@@ -24,7 +24,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include <BeamAdapter/component/initBeamAdapter.h>
+#include <BeamAdapter/initBeamAdapter.h>
 
 #include <sofa/core/ObjectFactory.h>
 using sofa::core::ObjectFactory;

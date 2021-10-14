@@ -36,7 +36,7 @@
 #ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
 #define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
 
-#include <BeamAdapter/component/initBeamAdapter.h>
+#include <BeamAdapter/initBeamAdapter.h>
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
 
