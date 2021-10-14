@@ -1,7 +1,8 @@
-#include <string>
-using std::string ;
+#include <sofa/testing/BaseSimulationTest.h>
 
-#include <SofaTest/Sofa_test.h>
+#include <string>
+using std::string;
+
 #include <sofa/helper/BackTrace.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 
@@ -32,7 +33,7 @@ using sofa::component::forcefield::AdaptiveBeamForceFieldAndMass;
 namespace sofa
 {
 
-struct AdaptiveBeamForceFieldAndMassTest : public Sofa_test<>
+struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationTest
 {
     void simpleSceneTest(){
         string scene =

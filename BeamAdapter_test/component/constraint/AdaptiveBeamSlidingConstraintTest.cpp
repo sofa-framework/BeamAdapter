@@ -1,9 +1,9 @@
-#include <string>
-using std::string ;
-
-#include <SofaTest/Sofa_test.h>
+#include <sofa/testing/BaseSimulationTest.h>
 #include <sofa/helper/BackTrace.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
+
+#include <string>
+using std::string;
 
 #include <SofaBaseLinearSolver/FullVector.h>
 using sofa::core::topology::BaseMeshTopology ;
@@ -34,7 +34,7 @@ namespace sofa
 {
 
 template <typename DataTypes>
-struct AdaptiveBeamSlidingConstraintTest : public Sofa_test<typename DataTypes::Real>, AdaptiveBeamSlidingConstraint<DataTypes>
+struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationTest, AdaptiveBeamSlidingConstraint<DataTypes>
 {
     void normalBehavior(){
         Simulation* simu;
