@@ -1,11 +1,9 @@
 #include <sofa/testing/BaseSimulationTest.h>
 
-#include <regex>
-#include <vector>
-#include <string>
-using std::string ;
-
 #include <sofa/helper/BackTrace.h>
+
+#include <SofaBaseUtils/initSofaBaseUtils.h>
+
 #include <SofaBaseMechanics/MechanicalObject.h>
 
 #include <SofaBaseLinearSolver/FullVector.h>
@@ -30,6 +28,11 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
+#include <regex>
+#include <vector>
+#include <string>
+using std::string;
+
 #include "../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
 
 namespace sofa
@@ -41,13 +44,17 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
     void simpleScene(const std::vector<std::string>& lines)
     {
         assert(lines.size()==3);
+        sofa::component::initSofaBaseUtils();
+
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
+                "               <RequiredPlugin name='SofaBaseLinearSolver' />"
+                "               <RequiredPlugin name='SofaImplicitOdeSolver' />"
                 "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
-                "               <BeamInterpolation template='Rigid' name='Interpol' radius='0.1'/>"
+                "               <BeamInterpolation template='Rigid3d' name='Interpol' radius='0.1'/>"
                 "               $line2"
                 "</Node> " ;
 
@@ -80,22 +87,22 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 static std::vector<std::vector<std::string>> teststrings ={
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,""
         , "T"
     },
     {
-        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,"<Mesh name='meshSuture' edges='0 1' />"
         , "T"
     },
     {
         "<Mesh name='meshSuture' edges='0 1' />"
-        ,"<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        ,"<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         , "W"
     },
     {
-        "<MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+        "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
         , "W"
     },
