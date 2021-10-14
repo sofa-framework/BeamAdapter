@@ -45,7 +45,7 @@
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 
-#include "AdaptiveBeamController.h"
+#include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
 
 namespace sofa

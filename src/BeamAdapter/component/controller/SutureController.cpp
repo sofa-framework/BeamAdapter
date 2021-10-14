@@ -37,7 +37,7 @@
 #include <sofa/defaulttype/RigidTypes.h>
 
 #define SOFA_SUTURECONTROLLER_CPP
-#include "SutureController.inl"
+#include <BeamAdapter/component/controller/SutureController.inl>
 
 namespace sofa
 {

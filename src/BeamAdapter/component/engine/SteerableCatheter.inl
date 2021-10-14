@@ -36,8 +36,9 @@
 #ifndef SOFA_COMPONENT_ENGINE_STEERABLECATHETER_INL
 #define SOFA_COMPONENT_ENGINE_STEERABLECATHETER_INL
 
-#include "SteerableCatheter.h"
-#include "math.h"
+#include <BeamAdapter/component/engine/SteerableCatheter.h>
+
+#include <math.h>
 
 namespace sofa
 {

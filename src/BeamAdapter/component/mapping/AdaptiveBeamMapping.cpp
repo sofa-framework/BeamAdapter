@@ -38,7 +38,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/ObjectFactory.h>
 
-#include "AdaptiveBeamMapping.inl"
+#include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 
 namespace sofa
 {

@@ -37,7 +37,7 @@
 #define SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_INL
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include "AdaptiveBeamMapping.h"
+#include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <string>
 #include <sofa/core/Mapping.inl>

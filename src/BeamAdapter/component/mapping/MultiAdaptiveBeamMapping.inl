@@ -36,7 +36,8 @@
 #ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
 #define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
 
-#include "MultiAdaptiveBeamMapping.h"
+#include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.h>
+
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/core/MechanicalParams.h>
 

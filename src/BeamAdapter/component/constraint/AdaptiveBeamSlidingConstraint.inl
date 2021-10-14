@@ -29,7 +29,7 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/gl/template.h>
 
-#include "AdaptiveBeamSlidingConstraint.h"
+#include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
 
 namespace sofa

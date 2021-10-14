@@ -36,7 +36,7 @@
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
 
-#include "../initBeamAdapter.h"
+#include <BeamAdapter/component/initBeamAdapter.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>

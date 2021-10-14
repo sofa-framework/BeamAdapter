@@ -24,13 +24,14 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include "initBeamAdapter.h"
-#include <cstring>
-#include <string>
+#include <BeamAdapter/component/initBeamAdapter.h>
+
+#include <sofa/core/ObjectFactory.h>
+using sofa::core::ObjectFactory;
 
 #ifdef SOFA_DEV
-#include "AdaptiveBeamContactMapper.h"
-#include "MultiAdaptiveBeamContactMapper.h"
+#include <BeamAdapter/component/AdaptiveBeamContactMapper.h>
+#include <BeamAdapter/component/MultiAdaptiveBeamContactMapper.h>
 #endif // SOFA_DEV
 
 namespace sofa
@@ -79,25 +80,9 @@ namespace component
 
 	const char* getModuleComponentList()
 	{
-        return	"AdaptiveBeamConstraint \n"
-                "AdaptiveBeamController \n"
-                "AdaptiveBeamForceFieldAndMass"
-                "AdaptiveBeamLengthConstraint"
-                "AdaptiveBeamMapping"
-                "BeamInterpolation"
-                "InterventionalRadiologyController"
-                "MultiAdaptiveBeamMapping"
-                "SteerableCatheter"
-                "SutureController"
-                "UnbuiltGenericConstraintSolver"
-                "WireBeamInterpolation"
-                "WireRestShape";
+		/// string containing the names of the classes provided by the plugin
+		static std::string classes = ObjectFactory::getInstance()->listClassesFromTarget(sofa_tostring(SOFA_TARGET));
+		return classes.c_str();
 	}
 } 
 } 
-
-
-
-#ifdef SOFA_HAVE_SOFAEVE
-    #endif
-

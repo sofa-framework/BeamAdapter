@@ -37,7 +37,7 @@
 #define SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_INL
 
 #include <sofa/core/behavior/ForceField.inl>
-#include "AdaptiveInflatableBeamForceField.h"
+#include <BeamAdapter/component/forcefield/AdaptiveInflatableBeamForceField.h>
 
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/helper/decompose.h>

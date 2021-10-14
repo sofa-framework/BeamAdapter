@@ -35,10 +35,11 @@
 #ifndef SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
 #define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
 
+#include <BeamAdapter/component/initBeamAdapter.h>
 
-#include "initBeamAdapter.h"
-#include "engine/WireRestShape.h"
-#include "BeamInterpolation.h"
+#include <BeamAdapter/component/engine/WireRestShape.h>
+#include <BeamAdapter/component/BeamInterpolation.h>
+
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/core/objectmodel/Data.h>

@@ -22,10 +22,9 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include "AdaptiveBeamLengthConstraint.inl"
+#include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.inl>
 
 #include <sofa/defaulttype/VecTypes.h>
-//#include <BaseMechanics/MechanicalObject.h>
 #include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
 

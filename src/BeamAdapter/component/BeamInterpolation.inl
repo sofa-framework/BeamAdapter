@@ -36,7 +36,7 @@
 #ifndef SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL
 #define SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL
 
-#include "BeamInterpolation.h"
+#include <BeamAdapter/component/BeamInterpolation.h>
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <sofa/core/topology/BaseMeshTopology.h>

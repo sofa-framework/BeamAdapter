@@ -47,7 +47,7 @@
 #include <sofa/type/vector_algorithm.h>
 
 
-#include "InterventionalRadiologyController.h"
+#include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 
 namespace sofa
 {

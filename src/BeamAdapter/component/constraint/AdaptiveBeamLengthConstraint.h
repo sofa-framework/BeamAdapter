@@ -33,7 +33,7 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/type/Vec.h>
 
-#include "../WireBeamInterpolation.h"
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration

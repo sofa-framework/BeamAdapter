@@ -39,7 +39,7 @@
 /// This define is here to prevent the declaration of the template instances as "extern".
 /// Have a look a the end of BeamInterpolation.h
 #define SOFA_BEAMINTERPOLATION_CPP
-#include "BeamInterpolation.inl"
+#include <BeamAdapter/component/BeamInterpolation.inl>
 
 namespace sofa
 {

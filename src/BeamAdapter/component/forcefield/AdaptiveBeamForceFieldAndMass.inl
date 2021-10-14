@@ -37,7 +37,7 @@
 #define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL
 
 #include <sofa/core/behavior/ForceField.inl>
-#include "AdaptiveBeamForceFieldAndMass.h"
+#include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/helper/decompose.h>

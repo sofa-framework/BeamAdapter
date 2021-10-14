@@ -49,9 +49,9 @@
 #include <sofa/gl/Axis.h>
 #include <algorithm>
 
-#include "engine/WireRestShape.h"
-#include "WireBeamInterpolation.h"
-#include "BeamInterpolation.inl"
+#include <BeamAdapter/component/engine/WireRestShape.h>
+#include <BeamAdapter/component/WireBeamInterpolation.h>
+#include <BeamAdapter/component/BeamInterpolation.inl>
 
 namespace sofa
 {

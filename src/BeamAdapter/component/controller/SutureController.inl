@@ -36,14 +36,13 @@
 
 #ifndef SOFA_COMPONENT_CONTROLLER_SutureController_INL
 #define SOFA_COMPONENT_CONTROLLER_SutureController_INL
-#include <sofa/helper/set.h>
 
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/simulation/MechanicalVisitor.h>
 #include <sofa/simulation/UpdateMappingVisitor.h>
 
-#include "SutureController.h"
-#include "../WireBeamInterpolation.h"
+#include <BeamAdapter/component/controller/SutureController.h>
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 
 namespace sofa
 {

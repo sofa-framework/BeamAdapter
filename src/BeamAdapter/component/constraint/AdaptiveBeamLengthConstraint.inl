@@ -31,7 +31,7 @@
 #include <sofa/gl/template.h>
 #include <sofa/helper/visual/DrawTool.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
-#include "AdaptiveBeamLengthConstraint.h"
+#include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
 
 namespace sofa
 {

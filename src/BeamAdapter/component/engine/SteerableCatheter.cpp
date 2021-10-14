@@ -32,7 +32,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "SteerableCatheter.inl"
+#include <BeamAdapter/component/engine/SteerableCatheter.inl>
 
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>

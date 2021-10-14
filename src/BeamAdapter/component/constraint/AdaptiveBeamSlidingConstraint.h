@@ -27,7 +27,7 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/PairInteractionConstraint.h>
-#include "../WireBeamInterpolation.h"
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 
 
 namespace sofa

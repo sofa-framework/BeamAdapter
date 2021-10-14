@@ -39,7 +39,7 @@
 #include <sofa/core/ObjectFactory.h>
 
 #define SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP
-#include "AdaptiveBeamForceFieldAndMass.inl"
+#include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
 
 namespace sofa
 {

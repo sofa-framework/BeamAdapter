@@ -33,7 +33,7 @@ using sofa::component::container::MechanicalObject ;
 #include <string>
 using std::string;
 
-#include "../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
+#include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 
 namespace sofa
 {

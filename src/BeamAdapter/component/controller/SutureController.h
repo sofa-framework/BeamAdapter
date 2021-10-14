@@ -45,8 +45,8 @@
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
 
-#include "../WireBeamInterpolation.h"
-#include "../initBeamAdapter.h"
+#include <BeamAdapter/component/WireBeamInterpolation.h>
+#include <BeamAdapter/component/initBeamAdapter.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalPropagateOnlyPositionAndVelocityVisitor.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalProjectPositionAndVelocityVisitor.h>
 

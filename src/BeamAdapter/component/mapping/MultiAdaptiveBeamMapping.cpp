@@ -34,7 +34,7 @@
 //
 //
 
-#include "MultiAdaptiveBeamMapping.inl"
+#include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
 #include <sofa/core/ObjectFactory.h>
 
 namespace sofa

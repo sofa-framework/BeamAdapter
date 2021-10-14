@@ -36,7 +36,7 @@
 #ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
 #define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
 
-#include "WireRestShape.h"
+#include <BeamAdapter/component/engine/WireRestShape.h>
 #include <cmath>
 
 #include <sofa/core/behavior/MechanicalState.h>

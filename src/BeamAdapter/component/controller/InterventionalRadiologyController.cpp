@@ -38,8 +38,8 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include "../initBeamAdapter.h"
-#include "InterventionalRadiologyController.inl"
+#include <BeamAdapter/component/initBeamAdapter.h>
+#include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 
 namespace sofa

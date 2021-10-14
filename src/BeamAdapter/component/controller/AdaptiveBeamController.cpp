@@ -39,8 +39,8 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include "../initBeamAdapter.h"
-#include "../controller/AdaptiveBeamController.inl"
+#include <BeamAdapter/component/initBeamAdapter.h>
+#include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
 namespace sofa
 {

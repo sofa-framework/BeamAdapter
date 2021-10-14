@@ -27,13 +27,13 @@
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 
-#include "AdaptiveBeamSlidingConstraint.inl"
+#include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.inl>
 
 
 using sofa::core::objectmodel::BaseObject ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::core::objectmodel::BaseObjectDescription ;
-#include "../../utils/deprecatedcomponent.h"
+#include <BeamAdapter/utils/deprecatedcomponent.h>
 using sofa::component::DeprecatedComponent;
 using sofa::defaulttype::Rigid3Types;
 using sofa::defaulttype::Rigid3Types;
