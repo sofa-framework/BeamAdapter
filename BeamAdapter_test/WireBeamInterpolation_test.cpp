@@ -32,7 +32,7 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
-#include "../component/forcefield/AdaptiveBeamForceFieldAndMass.h"
+#include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 
 namespace sofa
 {

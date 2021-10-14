@@ -24,8 +24,8 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::container::MechanicalObject ;
 
-#include "component/constraint/AdaptiveBeamSlidingConstraint.h"
-#include "component/WireBeamInterpolation.h"
+#include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
 using sofa::component::fem::WireBeamInterpolation ;
 
