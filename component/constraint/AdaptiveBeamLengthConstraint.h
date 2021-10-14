@@ -31,7 +31,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/behavior/Constraint.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/defaulttype/Vec.h>
+#include <sofa/type/Vec.h>
 
 #include "../WireBeamInterpolation.h"
 
@@ -65,8 +65,8 @@ using sofa::core::behavior::Constraint ;
 using sofa::core::behavior::MechanicalState ;
 using sofa::core::ConstraintParams ;
 using sofa::core::objectmodel::Data ;
-using sofa::defaulttype::Vec ;
-using sofa::helper::vector;
+using sofa::type::Vec ;
+using sofa::type::vector;
 using sofa::defaulttype::SolidTypes;
 using sofa::defaulttype::BaseVector ;
 

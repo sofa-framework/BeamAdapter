@@ -69,12 +69,12 @@ namespace controller
 namespace _interventionalradiologycontroller_
 {
 
-using sofa::defaulttype::Vec;
-using sofa::defaulttype::Vec3d;
+using sofa::type::Vec;
+using sofa::type::Vec3d;
 using namespace sofa::component::fem;
 using namespace sofa::helper;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::helper::vector;
+using sofa::type::vector;
 using sofa::component::projectiveconstraintset::FixedConstraint;
 
 

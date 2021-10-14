@@ -893,7 +893,7 @@ void BeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList
 
     ///////// TODO :
     unsigned int node0Idx, node1Idx;
-    dmsg_info() << "in computeStrechAndTwist" << sendl;
+    dmsg_info() << "in computeStrechAndTwist";
     getNodeIndices(edgeInList,node0Idx,node1Idx);
 
     Real length0, length1;

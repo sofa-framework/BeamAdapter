@@ -99,7 +99,7 @@ void AdaptiveBeamController<DataTypes>::init()
     }
 
     if(m_adaptiveinterpolation==nullptr){
-        msg_error() <<"No Beam Interpolation component found. This component is thus de-actiated. "<<sendl;
+        msg_error() <<"No Beam Interpolation component found. This component is thus de-actiated. ";
     }
     else {
         msg_info() <<"This component operates on '"<<m_adaptiveinterpolation->getName()<<"'." ;

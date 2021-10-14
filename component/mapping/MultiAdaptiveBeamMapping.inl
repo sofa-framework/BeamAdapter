@@ -159,7 +159,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::handleEvent(sofa::core::objectmodel::
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 {
-    sofa::helper::vector<int> removeEdgeAtPoint;
+    sofa::type::vector<int> removeEdgeAtPoint;
 
     // 1. get the new controls
     m_ircontroller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
@@ -169,7 +169,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         //Case if this is not a barycentric mapping
         // 2. assign each value of xPointList to the corresponding "sub Mapping"
         // i.e = each point from xPointList of the collision model is controlled by a given instrument wich id is provided in _id_m_instrumentList
-        sofa::helper::vector< sofa::helper::vector < Vec3 >* > pointsList;
+        sofa::type::vector< sofa::type::vector < Vec3 >* > pointsList;
         pointsList.clear();
         pointsList.resize(m_subMappingList.size());
 
@@ -194,13 +194,13 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
         // handle the possible topological change
 
-        sofa::helper::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edgeToRemove;
+        sofa::type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edgeToRemove;
         edgeToRemove.clear();
 
         for (unsigned int i=0; i<removeEdgeAtPoint.size(); i++)
         {
             /// look if the edge is already suppressed (only one edge around the targetted point)
-            sofa::helper::vector<sofa::core::topology::BaseMeshTopology::PointID> baseEdge(0);
+            sofa::type::vector<sofa::core::topology::BaseMeshTopology::PointID> baseEdge(0);
             baseEdge = _topology->getEdgesAroundVertex((sofa::core::topology::BaseMeshTopology::PointID) removeEdgeAtPoint[i]);
 
             /// need to be removed
@@ -265,7 +265,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
                 ///////// get the Adaptive Interpolation component ///////
                 core::objectmodel::BaseContext * c = this->getContext();
 
-                const helper::vector<std::string>& interpolName = m_controlerPath.getValue();
+                const type::vector<std::string>& interpolName = m_controlerPath.getValue();
                 if (interpolName.empty()) {
                     m_ircontroller = c->get<TInterventionalRadiologyController>(core::objectmodel::BaseContext::Local);
                 } else {
@@ -383,7 +383,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     this->getMechTo()[0]->resize(returnId+1);
 
     assert(m_ircontroller !=NULL && isBarycentricMapping);
-    const helper::vector<helper::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
+    const type::vector<type::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
     int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
     int totalNbEdges = m_ircontroller->getTotalNbEdges();
     int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
@@ -396,8 +396,8 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     else
     {
         int controledEdgeId = edgeId-nbUnControlledEdges;
-        const sofa::helper::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
-        sofa::helper::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
+        const sofa::type::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
+        sofa::type::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
         m_ircontroller->getInstrumentList(m_instrumentsList);
         Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
         int idInstrument  = id_instrument_table_on_node[0];

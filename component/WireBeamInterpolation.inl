@@ -97,8 +97,8 @@ void WireBeamInterpolation<DataTypes>::init()
         return;
     }
 
-    helper::vector<Real> xP_noticeable;
-    helper::vector< int> nbP_density;
+    type::vector<Real> xP_noticeable;
+    type::vector< int> nbP_density;
 
     m_restShape.get()->getSamplingParameters(xP_noticeable, nbP_density);
 }

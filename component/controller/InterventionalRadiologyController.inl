@@ -44,7 +44,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/helper/AdvancedTimer.h>
 #include <sofa/helper/system/FileRepository.h>
-#include <sofa/helper/vector_algorithm.h>
+#include <sofa/type/vector_algorithm.h>
 
 
 #include "InterventionalRadiologyController.h"
@@ -61,7 +61,7 @@ namespace controller
 namespace _interventionalradiologycontroller_
 {
 
-using helper::vector;
+using type::vector;
 using core::objectmodel::BaseContext;
 using helper::WriteAccessor;
 using core::objectmodel::KeypressedEvent;
@@ -477,8 +477,8 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
     {
         if( m_nodeCurvAbs[i] > (xBegin +  xBreak + eps) )
         {
-            helper::removeIndex(m_nodeCurvAbs,i);
-            helper::removeIndex(m_idInstrumentCurvAbsTable, i);
+            type::removeIndex(m_nodeCurvAbs,i);
+            type::removeIndex(m_idInstrumentCurvAbsTable, i);
             i--;
         }
     }
@@ -829,11 +829,10 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             //2. this is not the case and the node position can be interpolated using previous step positions
         if(xabs > xmax_prev + d_threshold.getValue())
         {
-            if (f_printLog.getValue()){
-                serr<<"case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = "<<xabs<<" - xmax_prev = "<<xmax_prev<<sendl;
-                serr<<"newCurvAbs  = "<<newCurvAbs<<"  previous nodeCurvAbs"<<m_nodeCurvAbs<<sendl;
-                serr<<"modifiedCurvAbs ="<<modifiedCurvAbs<<sendl;
-            }
+            msg_error_when(f_printLog.getValue())
+                << "case 1 should never happen ==> avoid using totalLengthIsChanging ! xabs = " << xabs << " - xmax_prev = " << xmax_prev
+                << "newCurvAbs  = " << newCurvAbs << "  previous nodeCurvAbs" << m_nodeCurvAbs
+                << "modifiedCurvAbs =" << modifiedCurvAbs;
             // case 1 (the abs curv is further than the previous state of the instrument)
             // verifier qu'il s'agit bien d'un instrument qu'on est en train de controller
             // interpoler toutes les positions "sorties" de l'instrument en supprimant l'ajout de dx qu'on vient de faire
@@ -1044,7 +1043,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(vector<Real> &cur
             }
         }
 
-        helper::removeIndex( curvAbs, index_min);
+        type::removeIndex( curvAbs, index_min);
 
         // verify using a eps that the same node does not already exist
         Real xLast;

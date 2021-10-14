@@ -43,9 +43,9 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 
-#include <sofa/helper/vector.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
+#include <sofa/type/vector.h>
+#include <sofa/type/Vec.h>
+#include <sofa/type/Mat.h>
 
 #include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/core/visual/VisualParams.h>
@@ -81,15 +81,15 @@ namespace forcefield
 namespace _adaptivebeamforcefieldandmass_
 {
 
-using sofa::helper::vector;
+using sofa::type::vector;
 using sofa::component::engine::WireRestShape ;
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::behavior::MultiMatrixAccessor ;
 using sofa::core::visual::VisualParams ;
 using sofa::core::behavior::Mass ;
 using sofa::core::MechanicalParams ;
-using sofa::defaulttype::Vec ;
-using sofa::defaulttype::Mat ;
+using sofa::type::Vec ;
+using sofa::type::Mat ;
 using sofa::defaulttype::Rigid3Types ;
 using core::objectmodel::Data ;
 using core::topology::BaseMeshTopology;
@@ -189,15 +189,25 @@ public:
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& )
-    {SOFA_UNUSED(mparams);serr<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available"<<sendl;}
+    {
+        SOFA_UNUSED(mparams);
+        msg_error()<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available";
+    }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const ///< vMv/2 using dof->getV()
-    {SOFA_UNUSED(mparams);serr<<"getKineticEnergy not yet implemented"<<sendl;return 0;}
+    {
+        SOFA_UNUSED(mparams);
+        msg_error() << "getKineticEnergy not yet implemented";
+        return 0;
+    }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
-    {SOFA_UNUSED(mparams);serr<<"addGravityToV not implemented yet"<<sendl;}
+    {
+        SOFA_UNUSED(mparams);
+        msg_error() << "addGravityToV not implemented yet";
+    }
     
     bool isDiagonal() const override { return false; }
 
@@ -211,8 +221,12 @@ public:
                            DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )
-    const {SOFA_UNUSED(mparams);serr<<"getPotentialEnergy not yet implemented"<<sendl; return 0; }
+    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const 
+    {
+        SOFA_UNUSED(mparams);
+        msg_error()<<"getPotentialEnergy not yet implemented"; 
+        return 0; 
+    }
 
     void addKToMatrix(const MechanicalParams* mparams,
                       const MultiMatrixAccessor* matrix);
