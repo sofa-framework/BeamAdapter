@@ -7,84 +7,86 @@ find_package(SofaFramework REQUIRED)
 find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
 find_package(SofaAdvancedConstraint QUIET)
 
+set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
+
 set(HEADER_FILES
-    component/initBeamAdapter.h
+    ${BEAMADAPTER_SRC}/component/initBeamAdapter.h
 
-    component/BeamInterpolation.h
-    component/BeamInterpolation.inl
-    component/WireBeamInterpolation.h
-    component/WireBeamInterpolation.inl
+    ${BEAMADAPTER_SRC}/component/BeamInterpolation.h
+    ${BEAMADAPTER_SRC}/component/BeamInterpolation.inl
+    ${BEAMADAPTER_SRC}/component/WireBeamInterpolation.h
+    ${BEAMADAPTER_SRC}/component/WireBeamInterpolation.inl
 
-    component/constraint/AdaptiveBeamSlidingConstraint.h
-    component/constraint/AdaptiveBeamSlidingConstraint.inl
-    component/constraint/AdaptiveBeamLengthConstraint.h
-    component/constraint/AdaptiveBeamLengthConstraint.inl
-#    component/constraint/ImplicitSurfaceAdaptiveConstraint.h
-#    component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamSlidingConstraint.h
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamSlidingConstraint.inl
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.h
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.inl
+#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.h
+#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
 
-    component/controller/AdaptiveBeamController.h
-    component/controller/AdaptiveBeamController.inl
-    component/controller/InterventionalRadiologyController.h
-    component/controller/InterventionalRadiologyController.inl
-    component/controller/SutureController.h
-    component/controller/SutureController.inl
+    ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.h
+    ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.inl
+    ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.h
+    ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.inl
+    ${BEAMADAPTER_SRC}/component/controller/SutureController.h
+    ${BEAMADAPTER_SRC}/component/controller/SutureController.inl
 
-    component/engine/WireRestShape.h
-    component/engine/WireRestShape.inl
-    component/engine/SteerableCatheter.h
-    component/engine/SteerableCatheter.inl
+    ${BEAMADAPTER_SRC}/component/engine/WireRestShape.h
+    ${BEAMADAPTER_SRC}/component/engine/WireRestShape.inl
+    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.h
+    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.inl
 
-    component/forcefield/AdaptiveBeamForceFieldAndMass.h
-    component/forcefield/AdaptiveBeamForceFieldAndMass.inl
-    component/forcefield/AdaptiveInflatableBeamForceField.h
-    component/forcefield/AdaptiveInflatableBeamForceField.inl
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.h
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.inl
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveInflatableBeamForceField.h
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveInflatableBeamForceField.inl
 
-    component/mapping/AdaptiveBeamMapping.h
-    component/mapping/AdaptiveBeamMapping.inl
-    component/mapping/MultiAdaptiveBeamMapping.h
-    component/mapping/MultiAdaptiveBeamMapping.inl
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.h
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.inl
+    ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.h
+    ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.inl
     )
 
 set(SOURCE_FILES
-    component/initBeamAdapter.cpp
+    ${BEAMADAPTER_SRC}/component/initBeamAdapter.cpp
 
-    component/BeamInterpolation.cpp
-    component/WireBeamInterpolation.cpp
+    ${BEAMADAPTER_SRC}/component/BeamInterpolation.cpp
+    ${BEAMADAPTER_SRC}/component/WireBeamInterpolation.cpp
 
-    component/constraint/AdaptiveBeamSlidingConstraint.cpp
-    component/constraint/AdaptiveBeamLengthConstraint.cpp
-#    component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamSlidingConstraint.cpp
+    ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.cpp
+#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
 
-    component/controller/AdaptiveBeamController.cpp
-    component/controller/InterventionalRadiologyController.cpp
-    component/controller/SutureController.cpp
+    ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.cpp
+    ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.cpp
+    ${BEAMADAPTER_SRC}/component/controller/SutureController.cpp
 
-    component/engine/WireRestShape.cpp
-    component/engine/SteerableCatheter.cpp
+    ${BEAMADAPTER_SRC}/component/engine/WireRestShape.cpp
+    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.cpp
 
-    component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
-    component/forcefield/AdaptiveInflatableBeamForceField.cpp
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
+    ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveInflatableBeamForceField.cpp
 
-    component/mapping/AdaptiveBeamMapping.cpp
-    component/mapping/MultiAdaptiveBeamMapping.cpp
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.cpp
+    ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.cpp
     )
 
 set(README_FILE "BeamAdapter.txt" )
 
 if(SofaAdvancedConstraint_FOUND)
     set(HEADER_FILES ${HEADER_FILES}
-        component/AdaptiveBeamContactMapper.h
-        component/AdaptiveBeamContactMapper.inl
-#        component/AdaptiveBeamFrictionContact.h
-#        component/AdaptiveBeamFrictionContact.inl
-        component/MultiAdaptiveBeamContactMapper.h
-        component/MultiAdaptiveBeamContactMapper.inl
+        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.h
+        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.inl
+#        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.h
+#        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.inl
+        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.h
+        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.inl
         )
 
     set(SOURCE_FILES ${SOURCE_FILES}
-        component/AdaptiveBeamContactMapper.cpp
-        component/AdaptiveBeamFrictionContact.cpp
-        component/MultiAdaptiveBeamContactMapper.cpp
+        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.cpp
+        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.cpp
+        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.cpp
         )
 
     #find_package(CUDA REQUIRED)
@@ -106,7 +108,7 @@ sofa_create_package_with_targets(
     PACKAGE_NAME ${PROJECT_NAME}
     PACKAGE_VERSION ${PROJECT_VERSION}
     TARGETS ${PROJECT_NAME} AUTO_SET_TARGET_PROPERTIES
-    INCLUDE_SOURCE_DIR ".."
+    INCLUDE_SOURCE_DIR "src"
     INCLUDE_INSTALL_DIR ${PROJECT_NAME}
     EXAMPLE_INSTALL_DIR "examples"
     RELOCATABLE "plugins"
