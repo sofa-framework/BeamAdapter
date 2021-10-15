@@ -8,10 +8,6 @@ Authors
 - Schegg, Pierre
 
 
-# Contributors
-
-The following collaborators contributed to the BeamAdapter plugin:
-
 - Bensoussan, Pierre-Jean
 - Carrez, Bruno
 - De La Plata Alcade, Juan Pablo
