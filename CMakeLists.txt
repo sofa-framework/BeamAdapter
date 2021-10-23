@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(BeamAdapter VERSION 1.0)
 
+include(cmake/environment.cmake)
 
 find_package(SofaFramework REQUIRED)
 find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
