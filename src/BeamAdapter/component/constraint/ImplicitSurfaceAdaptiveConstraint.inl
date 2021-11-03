@@ -25,11 +25,6 @@
 
 #include "ImplicitSurfaceAdaptiveConstraint.h"
 
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/helper/gl/template.h>
-#include <sofa/helper/vector.h>
-
-#include <sofa/helper/gl/template.h>
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
 #include <SofaBaseTopology/RegularGridTopology.h>
@@ -40,6 +35,7 @@
 #include <SofaConstraint/UnilateralInteractionConstraint.h>
 
 #include <sofa/core/visual/VisualParams.h>
+#include <sofa/core/ConstraintParams.h>
 
 
 double TimeResolution = 0.0;
@@ -64,8 +60,6 @@ namespace component
 namespace constraint
 {
 
-using defaulttype::Vec3d;
-using sofa::helper::vector;
 using sofa::core::VecCoordId;
 using sofa::core::MultiVecCoordId;
 using sofa::core::ConstMultiVecCoordId;
@@ -363,8 +357,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const C
     dmsg_info() <<" in buildConstraintMatrix: cParams->x()="<<cParams->x();
 
     MultiVecCoordId x = VecCoordId::position();
-    const ConstMultiVecCoordId &xId = cParams->x();
-    ConstVecCoordId xtest = xId.getId(this->mstate2);
+    ConstVecCoordId xtest = cParams->readX(this->mstate2);
 
     if(xtest != x.getId(this->mstate2))
     {
@@ -660,7 +653,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vpar
     glBegin(GL_POINTS);
 
 
-    typename sofa::helper::vector<potentialContact>::iterator it = m_vecPotentialContact.begin();
+    typename sofa::type::vector<potentialContact>::iterator it = m_vecPotentialContact.begin();
     for (unsigned int p=0; p<m_posSample.size(); p++)
     {
 
@@ -668,7 +661,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vpar
         if(m_vecPotentialContact.size()>0 && (*it).posSampleId==p) // in potiential contact
         {
             glColor4f(1.0f,0.0f,0.0f,1.0f);
-            helper::gl::glVertexT(m_posSample[p]);
+            sofa::gl::glVertexT(m_posSample[p]);
 
             if (it!=m_vecPotentialContact.end())
                 it++;
@@ -676,7 +669,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vpar
         else
         {
             glColor4f(0.0f,1.0f,1.0f,1.0f);
-            helper::gl::glVertexT(m_posSample[p]);
+            sofa::gl::glVertexT(m_posSample[p]);
         }
 
     }
@@ -689,18 +682,18 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vpar
         glColor4f(1.0f,0.0f,0.0f,1.0f);
         potentialContact &pt= m_vecPotentialContact[i];
         Vec3 Pos = m_posSample[pt.posSampleId];
-        helper::gl::glVertexT(Pos);
-        helper::gl::glVertexT(Pos + pt.n);
+        sofa::gl::glVertexT(Pos);
+        sofa::gl::glVertexT(Pos + pt.n);
 
         if(m_friction)
         {
             glColor4f(0.0f,1.0f,0.0f,1.0f);
-            helper::gl::glVertexT(Pos);
-            helper::gl::glVertexT(Pos + pt.t);
+            sofa::gl::glVertexT(Pos);
+            sofa::gl::glVertexT(Pos + pt.t);
 
             glColor4f(0.0f,0.0f,1.0f,1.0f);
-            helper::gl::glVertexT(Pos);
-            helper::gl::glVertexT(Pos + pt.s);
+            sofa::gl::glVertexT(Pos);
+            sofa::gl::glVertexT(Pos + pt.s);
         }
 
     }
@@ -722,7 +715,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vpar
         double mmin = 150;
         double mmax = -150;
 
-        defaulttype::Vec3d PosLastPoint=m_posSample[m_posSample.size()-1];
+        type::Vec3d PosLastPoint=m_posSample[m_posSample.size()-1];
 
         while(z<=d_posMax.getValue()[2])
         {
