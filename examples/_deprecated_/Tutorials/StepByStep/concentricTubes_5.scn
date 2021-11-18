@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.01" gravity="0 0 0">
+	
+		
+	<RequiredPlugin pluginName="BeamAdapter"/>
+  
+ 	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
+	
+	<GenericConstraintSolver maxIterations='1000' tolerance="1e-6"/>
+	<FreeMotionAnimationLoop/>
+	
+	<CollisionPipeline depth="6" verbose="1" draw="0"/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name="localmindistance" alarmDistance="5" contactDistance="2" />
+	<CollisionResponse name="Response" response="FrictionContact" />
+	<CollisionGroup name="Group" />
+	
+	<Node name="restShapes">
+				<Node name="tube_0">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="1.54" straightLength="0" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_1">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="3.08" straightLength="1.54" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_2">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="4.62" straightLength="3.08" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_3">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="6.16" straightLength="4.62" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_4">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="7.7" straightLength="6.16" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_5">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="9.24" straightLength="7.7" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_6">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="10.78" straightLength="9.24" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_7">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="12.32" straightLength="10.78" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_8">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="13.86" straightLength="12.32" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+				<Node name="tube_9">
+			
+			<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="true"
+				densityOfBeams="11" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+				length="15.4" straightLength="13.86" spireDiameter="2" spireHeight="0.0"
+				draw="false"/>
+
+			<EdgeSetTopologyContainer name="meshLines" />
+			<EdgeSetTopologyModifier   name="Modifier" />
+			<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+			<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+			<MechanicalObject template="Rigid" name="dofTopo1" />
+		</Node>	
+			</Node>
+	
+	<Node name="instruments">
+		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
+		
+		<RegularGrid
+		nx="100" ny="1" nz="1"/>	
+		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/>
+		
+		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.1 "  step="0.020" rotationInstrument="0 45 90 135 180 225 270 315 360 405 " controlledInstrument="0" startingPos="0 0 0 0 0 0 1" speed="0." threshold="1e-06"
+			instruments="Interpol_0 Interpol_1 Interpol_2 Interpol_3 Interpol_4 Interpol_5 Interpol_6 Interpol_7 Interpol_8 Interpol_9 " />
+		
+				<WireBeamInterpolation 
+			name="Interpol_0" 
+			WireRestShape="@../restShapes/tube_0/restShape" 
+			radius="0.02" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_0" 
+			interpolation="@Interpol_0" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_1" 
+			WireRestShape="@../restShapes/tube_1/restShape" 
+			radius="0.018" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_1" 
+			interpolation="@Interpol_1" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_2" 
+			WireRestShape="@../restShapes/tube_2/restShape" 
+			radius="0.016" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_2" 
+			interpolation="@Interpol_2" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_3" 
+			WireRestShape="@../restShapes/tube_3/restShape" 
+			radius="0.014" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_3" 
+			interpolation="@Interpol_3" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_4" 
+			WireRestShape="@../restShapes/tube_4/restShape" 
+			radius="0.012" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_4" 
+			interpolation="@Interpol_4" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_5" 
+			WireRestShape="@../restShapes/tube_5/restShape" 
+			radius="0.01" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_5" 
+			interpolation="@Interpol_5" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_6" 
+			WireRestShape="@../restShapes/tube_6/restShape" 
+			radius="0.008" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_6" 
+			interpolation="@Interpol_6" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_7" 
+			WireRestShape="@../restShapes/tube_7/restShape" 
+			radius="0.006" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_7" 
+			interpolation="@Interpol_7" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_8" 
+			WireRestShape="@../restShapes/tube_8/restShape" 
+			radius="0.004" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_8" 
+			interpolation="@Interpol_8" 
+			massDensity="0.00000155"/>
+				<WireBeamInterpolation 
+			name="Interpol_9" 
+			WireRestShape="@../restShapes/tube_9/restShape" 
+			radius="0.002" 
+			printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass 
+			name="ForceField_9" 
+			interpolation="@Interpol_9" 
+			massDensity="0.00000155"/>
+			
+		<LinearSolverConstraintCorrection printLog="false" />
+		<FixedConstraint name="FixedConstraint" indices="0" />
+		
+				<Node name="VisuTube_0">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_0" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.02" 
+				input="@../../restShapes/tube_0/meshLines" 
+				output="@ContainerTube_0" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_0" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0 0 0"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_1">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_1" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.018" 
+				input="@../../restShapes/tube_1/meshLines" 
+				output="@ContainerTube_1" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_1" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.1 0.1 0.1"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_2">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_2" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.016" 
+				input="@../../restShapes/tube_2/meshLines" 
+				output="@ContainerTube_2" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_2" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.2 0.2 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_3">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_3" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.014" 
+				input="@../../restShapes/tube_3/meshLines" 
+				output="@ContainerTube_3" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_3" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.3 0.3 0.3"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_4">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_4" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.012" 
+				input="@../../restShapes/tube_4/meshLines" 
+				output="@ContainerTube_4" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_4" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.4 0.4 0.4"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_5">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_5" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.01" 
+				input="@../../restShapes/tube_5/meshLines" 
+				output="@ContainerTube_5" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_5" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.5 0.5 0.5"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_6">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_6" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.008" 
+				input="@../../restShapes/tube_6/meshLines" 
+				output="@ContainerTube_6" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_6" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.6 0.6 0.6"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_7">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_7" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.006" 
+				input="@../../restShapes/tube_7/meshLines" 
+				output="@ContainerTube_7" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_7" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.7 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_8">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_8" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.004" 
+				input="@../../restShapes/tube_8/meshLines" 
+				output="@ContainerTube_8" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_8" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.8 0.8 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+				<Node name="VisuTube_9">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_9" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.002" 
+				input="@../../restShapes/tube_9/meshLines" 
+				output="@ContainerTube_9" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol_9" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.9 0.9 0.9"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+			</Node>
+	
+</Node>

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 -9.81 0" dt="0.001" >
+	
+	<RequiredPlugin pluginName="BeamAdapter"/>
+	<VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
+	<MasterConstraintSolver />
+	<CollisionPipeline depth="6" verbose="0" draw="0"/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name="Proximity"  alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
+	<CollisionResponse name="Response" response="FrictionContact"/>
+	
+<!-- !! MOTION !! -->	
+   <Node name="BVH">
+    <!-- <EulerImplicit rayleighStiffness="0" rayleighMass="0" printLog="false" />-->	
+	<!--<CGLinearSolver  iterations="25" threshold="1.0e-15"  tolerance="1.0e-9" />-->
+    <MechanicalObject name="Articulations" template="Vec1d"/>
+    <Node name="6D_DOFs1">
+      <MechanicalObject name="6D_Dof" template="Rigid"/>
+      <UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+      <ArticulatedSystemMapping object1="Articulations" object2="6D_Dof"/>
+    </Node>
+    <ArticulatedHierarchyContainer filename="node.bvh"/>
+    <ArticulatedHierarchyBVHController />
+  </Node>
+	
+	<Node name="AdaptiveBeam">
+      <EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+	  <LULinearSolver verbose="0"/>
+	  	  		<Object type="RegularGrid"
+				nx="27" ny="1" nz="1"
+				xmin="-0.9" xmax="3.0"
+				ymin="0" ymax="0"
+				zmin="0" zmax="0"
+			/>
+			<MechanicalObject template="Rigid" name="DOFs" />
+	  <!--
+      <MechanicalObject template="Rigid" name="DOFs" position="0 0 0 0 0 0 1  0.5 0 0 0 0 0 1  1 0 0 0 0 0 1  1.5 0 0 0 0 0 1  2 0 0 0 0 0 1  2.5 0 0 0 0 0 1  3 0 0 0 0 0 1"/> 
+      <Mesh name="lines" lines="0 1 1 2 2 3 3 4 4 5 5 6" /> 
+	  -->
+      <FixedConstraint name="FixedConstraint" indices="0 1 2" />
+      <!--<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />	-->	
+	  <!--<AdaptiveBeamController template="Rigid"/>	--->
+	  <AdaptiveBeamInterpolation name="BeamInterpolation" radius="0.025" straightRestShape="1" /> 
+	  <AdaptiveBeamForceFieldAndMass name="BeamForceField"  youngModulus="1000000" massDensity="0.5"/> 
+	  <LinearSolverConstraintCorrection />
+	  
+	  <Node name="Collision">
+	  		<Object type="RegularGrid"
+				nx="150" ny="1" nz="1"
+				xmin="0.0" xmax="3.89"
+				ymin="0" ymax="0"
+				zmin="0" zmax="0"
+			/>
+			<MechanicalObject name="CollisionDOFs" template="Vec3d"/>
+			<!--<Mesh name="lines" lines="0 1" />-->
+			<Line selfCollision="1"/>
+			<Point selfCollision="1"/>
+			<AdaptiveBeamMapping  useCurvAbs="1"   /> <!--points="0 0 0  0.2 0 0  0.4 0 0  0.6 0 0  0.8 0 0"-->
+	  </Node>
+	  
+   </Node>
+   
+   <Node name="6D_DOF_fixed">
+		<MechanicalObject name="6D_Dof" template="Rigid" position="-0.6 0 0 0 0 0 1 -0.45 0 0 0 0 0 1  -0.3 0 0 0 0 0 1  -0.15 0 0 0 0 0 1  " />
+   </Node>
+   
+  
+   <BilateralInteractionConstraint object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="1" second_point="26" />
+   <BilateralInteractionConstraint object1="@BVH/6D_DOFs1/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="0" second_point="6" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="0" second_point="2" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="1" second_point="3" />    
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="2" second_point="4" />
+   <BilateralInteractionConstraint object1="@6D_DOF_fixed/6D_Dof" object2="@AdaptiveBeam/DOFs" first_point="3" second_point="5" />  
+
+</Node>

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.03" gravity="0 0 -9810"> <!---9810-->
+	<RequiredPlugin pluginName="BeamAdapter"/>
+	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields showInteractionForceFields" />
+ 	<FreeMotionAnimationLoop />
+	<!--<LCPConstraintSolver mu="0.1" tolerance="1e-10" maxIt="50" build_lcp="false" displayDebug="false"/>-->
+	<GenericConstraintSolver tolerance="1e-10"  maxIterations="50" unbuilt="true" printLog="0"/>
+	
+	<CollisionPipeline depth="6" verbose="1" draw="0"/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name="localmindistance" alarmDistance="0" contactDistance="0" angleCone="0.0"/>
+	<CollisionResponse name="Response" response="FrictionContact" />
+	<CollisionGroup name="Group" />
+
+
+
+    <Node name="blobbyModel">
+      <MechanicalObject name="blobbyDOFS" />
+	  <EdgeSetTopologyContainer position="-3 0 0  0 0 0  3 0 0" name="test"/>
+
+      <blobby name="blob" centers="@test.position" radii="5 5 5" kernel="GaussianNorm" points="@test.position" debugDraw="false" isoSurfaceValue="0.5"/>
+    </Node>
+	
+	</Node>
+
+	<Node name="ImplicitSurface">
+		<MechanicalObject template="Rigid" name="implicitSurfaceMO"/>
+		<blobbyTree name="blob" filename="Implicit/mini.tree" />
+		<!--<SphereSurface center="0 0 0" radius="5" name="suzanne" inside="1" />-->
+
+		
+		 <OglModel template="ExtVec3f" name="Objective" fileMesh="mesh/sphere_10.obj" scale="0.1" color="0.2 0.2 0.2 0.4"/>
+	</Node>
+	
+	<!--
+	<Node name="Germaine" >
+		<MechanicalObject template="Rigid" name="implicitSurfaceMO"/>
+
+		<SphereSurface center="0 7 0" radius="5" name="germaine" inside="0" />
+		
+		 <OglModel template="ExtVec3f" name="Objective" fileMesh="mesh/sphere_10.obj" scale="0.1" color="0.2 0.2 0.2 0.4" dy="7"/>
+	</Node>
+-->
+</Node>
+
+<!--------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -------------------------------->
+
+	<Node name="topoLines_cath">
+		<WireRestShape template="Rigid" printLog="1" name="catheterRestShape" length="1000.0"  straightLength="600" spireDiameter="4000.0" spireHeight="0.0"
+					    densityOfBeams="20 10" numEdges="200" numEdgesCollis="60 40"  youngModulus="10000" youngModulusExtremity="10000"/> <!-- silicone -->		
+
+		<EdgeSetTopologyContainer name="meshLinesCath" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+		<MechanicalObject template="Rigid" name="dofTopo1" />
+	</Node>	
+	<Node name="topoLines_guide">
+		<WireRestShape template="Rigid" printLog="1" name="GuideRestShape" length="1000.0"  straightLength="980.0" spireDiameter="25" spireHeight="0.0"
+						densityOfBeams="30 5" numEdges="200" numEdgesCollis="90 5"  youngModulus="10000" youngModulusExtremity="10000"/>
+		<EdgeSetTopologyContainer name="meshLinesGuide" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+		<MechanicalObject template="Rigid" name="dofTopo2" />
+	</Node>		
+	<Node name="topoLines_coils">
+		<WireRestShape template="Rigid" printLog="1" name="CoilRestShape" length="200.0"  straightLength="140.0" spireDiameter="12" spireHeight="10.0"
+						densityOfBeams="40 20" numEdges="400" numEdgesCollis="50 60"  youngModulus="16800" youngModulusExtremity="16800"/>
+		<EdgeSetTopologyContainer name="meshLinesCoils" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+		<MechanicalObject template="Rigid" name="dofTopo3" />
+	</Node>	
+	
+
+	<Node name="InstrumentCombined">
+		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
+		<!--<CudaBTDLinearSolver verbose="0"  template="NewMatSymmetricBand" blockSize="6"/>-->
+		<RegularGrid name="meshLinesCombined"
+		nx="60" ny="1" nz="1"
+		xmin="0.0" xmax="1.0"
+		ymin="0" ymax="0"
+		zmin="1" zmax="1"
+		/>		
+		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
+
+
+		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="1 0 0"  step="0.5" rotationInstrument="0 0 0" 
+							controlledInstrument="0" startingPos="0 0 0 0 -0.7071068 0 0.7071068" speed="0." 
+							instruments="InterpolCatheter InterpolGuide InterpolCoils"
+							rigidCurvAbs="40 1000" />
+
+		<WireBeamInterpolation name="InterpolCatheter" WireRestShape="@../topoLines_cath/catheterRestShape" radius="2" printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@InterpolCatheter" massDensity="0.00000155"/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+
+		<WireBeamInterpolation name="InterpolGuide" WireRestShape="@../topoLines_guide/GuideRestShape" radius="1" printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass name="GuideForceField" interpolation="@InterpolGuide" massDensity="0.00000155"/> 	
+
+		<WireBeamInterpolation name="InterpolCoils" WireRestShape="@../topoLines_coils/CoilRestShape" radius="0.5" printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass name="CoilsForceField" interpolation="@InterpolCoils" massDensity="0.000021"/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+
+		
+
+
+		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true" cancelPointThreshold="0.1"/>
+
+		<FixedConstraint name="FixedConstraint" indices="0" />
+		<ControllerVerification controller="@m_ircontroller" KeyPressedEvents="2++++"/>
+
+
+		<!--
+		<Node name="Collis">
+				<EdgeSetTopologyContainer name="collisEdgeSet" />
+				<EdgeSetTopologyModifier   name="colliseEdgeModifier" />
+				<MechanicalObject name="CollisionDOFs" />  
+				<MultiAdaptiveBeamMapping  name="collisMap"  ircontroller="../m_ircontroller" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0" /> 
+				<Line proximity="0.0" group="2" selfCollision="1" LineActiverPath="../m_ircontroller"/>
+				<Point proximity="0.0" group="2" selfCollision="1" PointActiverPath="../m_ircontroller"/>
+		</Node>
+		-->
+
+		<ImplicitSurfaceAdaptiveConstraint listBeams="@InterpolCoils.beamCollision" frictionCoef="0.5" visualization="1" object1="@../ImplicitSurface/implicitSurfaceMO" object2="@DOFs" interpolation="@InterpolCoils"	alarmDistance="2.0" radius="@InterpolCoils.radius"/>		
+
+		<noImplicitSurfaceAdaptiveConstraint  friction="0.2" visualization="1" object1="@../Germaine/implicitSurfaceMO" object2="@DOFs" interpolation="@InterpolCoils"	alarmDistance="2.0" radius="@InterpolCoils.radius"/>		
+
+
+
+		<!--
+
+		<Node name="VisuCoils">
+			<MechanicalObject name="Quads" />
+			<QuadSetTopologyContainer  name="ContainerCoils" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.3"  input="@../../topoLines_coils/meshLinesCoils" output="@ContainerCoils"  flipNormals="true" listening="true" /> 
+			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="@../InterpolCoils" input="@../DOFs" output="@Quads" isMechanical="false" />
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.2 0.8 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>		
+		</Node>   
+		-->
+ 
+	</Node>
+
+
+</Node>
+

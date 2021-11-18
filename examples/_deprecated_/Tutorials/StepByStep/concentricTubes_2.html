@@ -1,0 +1,63 @@
+<html>
+
+<head>
+<link href="../../../../../../examples/Objects/sofa_white.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+	<div id="contenu">
+	
+		<h1> Concentric Tubes Tutorials </h1>
+		<h2> 2/5 </h2>
+		
+		<center><img src="concentricTubes_2.png"/></center>
+		
+		<p align="justify">
+		In the previous scene, we defined a rest shape for a tube. In this step, we define the instrument itself, in a different node.
+		</p>
+		
+		<p align="justify">
+		From a mechanical point of view, we add the following components:
+		<ul>
+			<li><span style="color:#FF5F09">EulerImplicit</span> to integrate the system in time</li>
+			<li><span style="color:#FF5F09">BTDLinearSolver</span> to solve the system. This component is adapted to wires, as it solves block tridiagonal matrices</li>
+			<li><span style="color:#FF5F09">RegularGrid</span> to define the edge topology of the wire. The grid is built in only one direction to be a wire topology</li>
+			<li><span style="color:#FF5F09">MechanicalObject</span></li>
+			<li><span style="color:#FF5F09">InterventionalRadiologyController</span> controls the instrument</li>
+			<li><span style="color:#FF5F09">WireBeamInterpolation</span> makes the interpolation between two different beams</li>
+			<li><span style="color:#FF5F09">AdaptiveBeamForceFieldAndMass</span></li>
+			<li><span style="color:#FF5F09">LinearSolverConstraintCorrection</span> solves the constraints</li>
+			<li><span style="color:#FF5F09">FixedConstraint</span> constraints the first beams</li>
+		</ul>
+		</p>
+		
+		<p align="justify">
+		The node VisuTube_0 is used for the visualization of the tube. It creates a mapping between the beams and a quad topology.
+		</p>
+		
+		
+		<p align="justify">
+		To test the scene, click the 'Animate' button. Use the keyboard controls of the <span style="color:#FF5F09">InterventionalRadiologyController</span> to control the tube:
+		<ul>
+			<li>To progress instrument
+				<ul> 
+				<li><b> ctrl + &uarr; </b> to deploy it </li>
+				<li><b> ctrl + &darr;  </b> to undeploy it</li>
+				</ul>
+			</li>
+			<li>To turn instrument
+				<ul> 
+				<li><b> ctrl + &rarr;  </b> to turn on the right (clockwise in the direction of deployment)</li>
+				<li><b> ctrl + &larr; </b> to turn on the left (counterclockwise) </li>
+				</ul>
+			</li>
+		</ul>
+		</p>
+		
+		<h3><a href="concentricTubes_3.scn">Next</a></center></h3>
+	</div>
+
+</body>
+
+</html>
