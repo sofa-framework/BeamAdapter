@@ -6,7 +6,6 @@
 
  	<FreeMotionAnimationLoop />
 	<LCPConstraintSolver mu='0.1' tolerance='1e-10' maxIt='1000' build_lcp='false' />
-	<!--<GenericConstraintSolver tolerance='1e-10'/>-->
 	
 	<DefaultPipeline depth='6' verbose='1' draw='0'/>
 	<BruteForceBroadPhase/>
@@ -18,7 +17,7 @@
 
 
 
-<!--------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -------------------------------->
+<!-- ------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  ------------------------------ -->
 
 	<Node name='topoLines_cath'>
 		<WireRestShape template='Rigid3d' printLog='0' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
@@ -72,7 +71,6 @@
 		<LinearSolverConstraintCorrection printLog='false' wire_optimization='true'/>
 
 		<FixedConstraint name='FixedConstraint' indices='0' />
-<!--         <FixedConstraint name='FixedConstraint2' indices='@m_ircontroller.indexFirstNode' /> -->
         <RestShapeSpringsForceField  points='@m_ircontroller.indexFirstNode' stiffness='1e8' angularStiffness='1e8'   />
 
 		<Node name='Collis' activated='true'>
@@ -135,7 +133,7 @@
 		<TriangleCollisionModel simulated='0' moving='0'/>	
 		<LineCollisionModel simulated='0' moving='0'/>
 		<PointCollisionModel simulated='0' moving='0'/>
-		<OglModel name='Visual' fileMesh='mesh/phantom.obj' color='1 0 0 0.3' scale='3' ry='90'/>
+		<OglModel name='Visual' src='@meshLoader' color='1 0 0 0.3' scale='3' ry='90'/>
 	</Node>
 	
 	

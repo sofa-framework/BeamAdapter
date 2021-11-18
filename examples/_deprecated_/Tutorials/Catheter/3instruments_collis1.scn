@@ -1,0 +1,159 @@
+<?xml version='1.0'?>
+<Node name='root' dt='0.02'  gravity='0 0 0'> 
+
+    <RequiredPlugin pluginName="BeamAdapter"/>
+    <VisualStyle displayFlags='showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields' />
+ 	
+ 	
+ 	<FreeMotionAnimationLoop />
+	<LCPConstraintSolver mu='0.1' tolerance='1e-10' maxIt='1000' build_lcp='false' />
+	<!--<GenericConstraintSolver tolerance='1e-10'/>-->
+	
+	<CollisionPipeline depth='6' verbose='1' draw='0'/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name='localmindistance' alarmDistance='3' contactDistance='1' angleCone='0.02'/>
+	<CollisionResponse name='Response' response='FrictionContact' />
+	<CollisionGroup name='Group' />
+
+
+	<Node name='topoLines_cath'>
+		<WireRestShape template='Rigid' printLog='1' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
+					    densityOfBeams='25 8' numEdges='200' numEdgesCollis='40 20'  youngModulus='10000' youngModulusExtremity='10000'/> <!-- silicone -->		
+		<EdgeSetTopologyContainer name='meshLinesCath' />
+		<EdgeSetTopologyModifier   name='Modifier' />
+		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
+		<MechanicalObject template='Rigid' name='dofTopo1' />
+	</Node>	
+	<Node name='topoLines_guide'>
+		<WireRestShape template='Rigid' printLog='1' name='GuideRestShape' length='1000.0'  straightLength='980.0' spireDiameter='25' spireHeight='0.0'
+						densityOfBeams='25 5' numEdges='200' numEdgesCollis='50 10'  youngModulus='10000' youngModulusExtremity='10000'/>
+		<EdgeSetTopologyContainer name='meshLinesGuide' />
+		<EdgeSetTopologyModifier   name='Modifier' />
+		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
+		<MechanicalObject template='Rigid' name='dofTopo2' />
+	</Node>		
+	<Node name='topoLines_coils'>
+		<WireRestShape template='Rigid' printLog='1' name='CoilRestShape' length='600.0'  straightLength='540.0' spireDiameter='7' spireHeight='5.0'
+						densityOfBeams='20 20' numEdges='400' numEdgesCollis='30 30'  youngModulus='168000' youngModulusExtremity='168000'/>
+		<EdgeSetTopologyContainer name='meshLinesCoils' />
+		<EdgeSetTopologyModifier   name='Modifier' />
+		<EdgeSetTopologyAlgorithms name='TopoAlgo'   template='Rigid' />
+		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid' />
+		<MechanicalObject template='Rigid' name='dofTopo3' />
+	</Node>	
+    
+    
+    
+    
+	<Node name='InstrumentCombined'>
+		<EulerImplicit rayleighStiffness='0.2' rayleighMass='0.1' printLog='false' />
+		<BTDLinearSolver subpartSolve='0' verification='0' verbose='0'/>
+<!-- 		<CudaBTDLinearSolver verbose='0' /> -->
+		<RegularGrid name='meshLinesCombined'
+		nx='40' ny='1' nz='1'
+		xmin='0.0' xmax='1.0'
+		ymin='0' ymax='0'
+		zmin='1' zmax='1'
+		/>		
+		<MechanicalObject template='Rigid' name='DOFs' showIndices='0' ry='-90'/> 
+
+		<WireBeamInterpolation name='InterpolCatheter' WireRestShape='@../topoLines_cath/catheterRestShape' radius='1' printLog='1'/> 
+		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter' massDensity='0.00000155'/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+
+		<WireBeamInterpolation name='InterpolGuide' WireRestShape='@../topoLines_guide/GuideRestShape' radius='0.9' printLog='1'/> 
+		<AdaptiveBeamForceFieldAndMass name='GuideForceField' interpolation='@InterpolGuide' massDensity='0.00000155'/> 	
+
+		<WireBeamInterpolation name='InterpolCoils' WireRestShape='@../topoLines_coils/CoilRestShape' radius='0.1' printLog='1'/> 
+		<AdaptiveBeamForceFieldAndMass name='CoilsForceField' interpolation='@InterpolCoils' massDensity='0.000021'/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+
+		
+		<InterventionalRadiologyController template='Rigid' name='m_ircontroller' printLog='1' xtip='1 0 0'  step='3' rotationInstrument='0 0 0' 
+							controlledInstrument='0' startingPos='0 0 0 0 -0.7071068 0 0.7071068' speed='0' instruments='InterpolCatheter InterpolGuide InterpolCoils' />
+
+		<LinearSolverConstraintCorrection printLog='false' wire_optimization='true'/>
+
+		<FixedConstraint name='FixedConstraint' indices='0' />
+<!--         <FixedConstraint name='FixedConstraint2' indices='@m_ircontroller.indexFirstNode' /> -->
+        <RestShapeSpringsForceField  points='@m_ircontroller.indexFirstNode' stiffness='1e8' angularStiffness='1e8'   />
+
+		<Node name='Collis' activated='true'>
+				<EdgeSetTopologyContainer name='collisEdgeSet' />
+				<EdgeSetTopologyModifier   name='colliseEdgeModifier' />
+				<MechanicalObject name='CollisionDOFs'/>
+				<MultiAdaptiveBeamMapping  name='collisMap'  controller='../m_ircontroller' useCurvAbs='1' printLog='1'/> 
+				<Line proximity='0.0' group='1'/>
+				<Point proximity='0.0' group='1'/>
+		</Node>	
+
+		<Node name='VisuCatheter' activated='true'>
+			<MechanicalObject name='Quads' />
+			<QuadSetTopologyContainer  name='ContainerCath' />
+			<QuadSetTopologyModifier   name='Modifier' />
+			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='2' input='@../../topoLines_cath/meshLinesCath' output='@ContainerCath' flipNormals='true'/>
+
+			<AdaptiveBeamMapping  name='VisuMapCath' useCurvAbs='1' printLog='1' interpolation='@../InterpolCatheter' input='@../DOFs' output='@Quads' isMechanical='false'  />
+
+			<Node name='VisuOgl' activated='true'>
+				<OglModel name='Visual' color='0.7 0.7 0.7'  quads='@../ContainerCath.quads' material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20'/>
+				<IdentityMapping input='@../Quads' output='@Visual'/>
+			</Node>	
+		</Node>
+	
+		<Node name='VisuGuide' activated='true'>
+			<MechanicalObject name='Quads' />
+			<QuadSetTopologyContainer  name='ContainerGuide' />
+			<QuadSetTopologyModifier   name='Modifier' />
+			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='1' input='@../../topoLines_guide/meshLinesGuide' output='@ContainerGuide'  flipNormals='true' listening='true'/> 
+			<AdaptiveBeamMapping  name='visuMapGuide' useCurvAbs='1' printLog='1' interpolation='@../InterpolGuide' input='@../DOFs' output='@Quads' isMechanical='false' />
+			<Node name='VisuOgl'>
+				<OglModel name='Visual' color='0.2 0.2 0.8'  material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20' quads='@../ContainerGuide.quads'/>
+				<IdentityMapping input='@../Quads' output='@Visual'/>
+			</Node>		
+		</Node> 
+	   
+		<Node name='VisuCoils' activated='true'>
+			<MechanicalObject name='Quads'/>
+			<QuadSetTopologyContainer  name='ContainerCoils' />
+			<QuadSetTopologyModifier   name='Modifier' />
+			<QuadSetTopologyAlgorithms name='TopoAlgo'  template='Vec3d' />
+			<QuadSetGeometryAlgorithms name='GeomAlgo'  template='Vec3d' />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='0.3'  input='@../../topoLines_coils/meshLinesCoils' output='@ContainerCoils'  flipNormals='true' listening='true' /> 
+			<AdaptiveBeamMapping  name='visuMapCoils' useCurvAbs='1' printLog='1' interpolation='@../InterpolCoils' input='@../DOFs' output='@Quads' isMechanical='false' />
+			<Node name='VisuOgl'>
+				<OglModel name='Visual' color='0.2 0.8 0.2'  material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20' quads='@../ContainerCoils.quads'/>
+				<IdentityMapping input='@../Quads' output='@Visual'/>
+			</Node>		
+		</Node>   
+	</Node>
+
+ <!--
+	<Node name='CollidedPoints'>
+		<MechanicalObject name='DOFs1' position='0 0 40' />		
+		<FixedConstraint name='m_fixedConstraint' indices='0' />
+		<Point radius='10'/>
+	</Node> 
+	-->
+	
+
+	<Node name='CollisionModel'> 
+		<MeshObjLoader name='meshLoader' filename='phantom.obj' triangulate='true' flipNormals='1'/>
+		<Mesh position='@meshLoader.position'  triangles='@meshLoader.triangles'/>
+		<MechanicalObject name='DOFs1' position='0 0 400' scale='3' ry='90'/>	
+			<Triangle simulated='0' moving='0'/>	
+		<Line simulated='0' moving='0'/>
+		<Point simulated='0' moving='0'/>
+		<OglModel name='Visual' fileMesh='phantom.obj' color='1 0 0 0.3' scale='3' ry='90'/>
+	</Node>
+	
+	
+	
+	
+</Node>
+

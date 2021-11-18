@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.01" gravity="0 0 0">
+	
+	<RequiredPlugin pluginName="BeamAdapter"/>
+  
+ 	<VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields" />
+	
+	<GenericConstraintSolver maxIterations='1000' tolerance="1e-6"/>
+	<FreeMotionAnimationLoop/>
+	
+	<CollisionPipeline depth="6" verbose="1" draw="0"/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name="localmindistance" alarmDistance="5" contactDistance="2" />
+	<CollisionResponse name="Response" response="FrictionContact" />
+	<CollisionGroup name="Group" />
+	
+	
+	<Node name="tube_0">
+		<MeshObjLoader filename="tube.obj"/>
+		<WireRestShape template="Rigid" printLog="1" name="restShape" isAProceduralShape="false"
+			densityOfBeams="10" numEdges="200" numEdgesCollis="40"  youngModulus="10000"
+			draw="true"/>
+
+		<EdgeSetTopologyContainer name="meshLines" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid"/>
+		<MechanicalObject template="Rigid" name="dofTopo1" />
+	</Node>	
+	
+    	
+    	<Node name="startPos">
+        	<MechanicalObject name="startPosMO" template="Rigid" position="0 0 0 0 0 0 1.0" />
+    	</Node>
+    
+	
+	<Node name="instruments">
+		<EulerImplicit rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
+		
+		<RegularGrid
+		nx="100" ny="1" nz="1"/>	
+		<MechanicalObject template="Rigid" name="DOFs" showIndices="0" />
+		
+		<InterventionalRadiologyController template="Rigid" name="m_ircontroller" printLog="1" xtip="0.1 "  step="0.02" rotationInstrument="0" controlledInstrument="0" startingPos="@../startPos/startPosMO.position" speed="0." instruments="Interpol"/>
+		<WireBeamInterpolation name="Interpol" WireRestShape="@../tube_0/restShape" radius="1" printLog="1"/> 
+		<AdaptiveBeamForceFieldAndMass name="CatheterForceField" interpolation="@Interpol" massDensity="0.00000155"/>
+		
+		<LinearSolverConstraintCorrection printLog="false" />
+		<FixedConstraint name="FixedConstraint" indices="0" />
+        	<RestShapeSpringsForceField stiffness="1e7" angularStiffness="1e7" points="@m_ircontroller.indexFirstNode" external_rest_shape="@../startPos/startPosMO" external_points="0" />
+		
+        
+		<Node name="VisuTube_0">
+			<MechanicalObject name="Quads" />
+			
+			<QuadSetTopologyContainer  name="ContainerTube_0" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.02" input="@../../tube_0/meshLines" output="@ContainerTube_0" flipNormals="true"/>
+
+			<AdaptiveBeamMapping  name="VisuMap" useCurvAbs="1" printLog="0" interpolation="@../Interpol" input="@../DOFs" output="@Quads" isMechanical="false"  />
+
+			<Node name="VisuOgl">
+				<OglModel name="Visual" color="0.0 0.7 0.7"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerTube_0.quads"/>
+				<IdentityMapping input="@../Quads" output="@Visual"/>
+			</Node>	
+		</Node>
+	</Node>
+	
+	
+
+	
+</Node>

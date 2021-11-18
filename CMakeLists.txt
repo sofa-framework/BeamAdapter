@@ -4,7 +4,7 @@ project(BeamAdapter VERSION 1.0)
 include(cmake/environment.cmake)
 
 find_package(SofaFramework REQUIRED)
-find_package(SofaImplicitField REQUIRED) # for ImplicitSurfaceAdaptiveConstraint
+find_package(SofaImplicitField QUIET)
 find_package(SofaAdvancedConstraint QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
@@ -147,5 +147,8 @@ endif()
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")
+
+# Config files and install rules for pythons scripts
+sofa_set_python_directory(${PROJECT_NAME} "python3/beamadapter")
 
 include(cmake/packaging.cmake)

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 -9.81 0" dt="0.01" bbox="-3 -6 -3 3 3 3">
+ 	<RequiredPlugin pluginName="BeamAdapter SofaBoundaryCondition SofaGeneralLinearSolver SofaConstraint SofaImplicitOdeSolver"/>
+	<VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
+
+	<DefaultAnimationLoop />
+	<DefaultVisualManagerLoop />
+	
+	<Node name="BeamModel">
+		<EulerImplicitSolver rayleighStiffness="0" rayleighMass="0" printLog="false" />
+		<BTDLinearSolver verbose="0"/>
+		<MechanicalObject template="Rigid3d" name="DOFs" position="0 0 0 0 0 0 1  2 0 0 0 0 0 1  4 0 0 0 0 0 1  6 0 0 0 0 0 1"/> 
+		<MeshTopology name="lines" lines="0 1 1 2 2 3" /> 
+		<FixedConstraint name="FixedConstraint" indices="0" />
+		<BeamInterpolation name="BeamInterpolation" radius="0.1" /> 
+		<AdaptiveBeamForceFieldAndMass name="BeamForceField"  computeMass="1" massDensity="10"/>
+	</Node>  
+	
+</Node>

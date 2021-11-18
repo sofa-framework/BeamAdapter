@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<Node name="root" gravity="0 -9.81 0" dt="0.01" bbox="0 0 0 10 10 10">
+    <RequiredPlugin pluginName="BeamAdapter SofaBoundaryCondition SofaConstraint SofaDeformable SofaGeneralLinearSolver SofaImplicitOdeSolver SofaMeshCollision"/>
+    <VisualStyle displayFlags="hideVisualModels hideBehaviorModels showCollisionModels hideMappings showInteractionForceFields" />
+
+    <FreeMotionAnimationLoop />
+    <DefaultVisualManagerLoop />
+
+    <LCPConstraintSolver mu='0.1' tolerance='1e-10' maxIt='1000' build_lcp='false' />
+    <DefaultPipeline draw='0' depth='6' verbose='1' />
+    <BruteForceBroadPhase name='N2' />
+    <BVHNarrowPhase />
+    <LocalMinDistance contactDistance='1' alarmDistance='5' name='localmindistance' angleCone='0.02' />
+    <DefaultContactManager name='Response' response='FrictionContact' />
+
+
+    <Node name="EdgeTopology">
+        <WireRestShape name="BeamRestShape" straightLength="980.0" length="1000.0"
+                                 numEdges="200" youngModulus="20000"
+                                 spireDiameter="25" numEdgesCollis="50 10"
+                                 printLog="1" template="Rigid3d" spireHeight="0.0"
+                                 densityOfBeams="30 5" youngModulusExtremity="20000" />
+        <EdgeSetTopologyContainer name="meshLinesBeam"/>
+        <EdgeSetTopologyModifier name="Modifier"/> 
+        <EdgeSetGeometryAlgorithms name="GeomAlgo" template="Rigid3d" /> 
+        <MechanicalObject name="dofTopo2" template="Rigid3d" />
+    </Node>  
+    
+    <Node name="BeamModel">
+        <EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
+        <BTDLinearSolver verbose="0"/>
+        <RegularGridTopology name="MeshLines" nx="60" ny="1" nz="1"
+                                    xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
+                                    p0="0 0 0" drawEdges="1"/>
+        <MechanicalObject template="Rigid3d" name="DOFs Container" ry="-90" /> 
+
+        <WireBeamInterpolation name="BeamInterpolation" WireRestShape="@../EdgeTopology/BeamRestShape" radius="0.9"/>
+        <AdaptiveBeamForceFieldAndMass name="BeamForceField"  massDensity="0.00000155" interpolation="@BeamInterpolation"/>
+        <InterventionalRadiologyController name="DeployController" template="Rigid3d" instruments="BeamInterpolation"
+                                    startingPos="0 0 0 0 0 0 1" xtip="0 0 0" printLog="1" 
+                                    rotationInstrument="0 0 0" step="5" speed="5" 
+                                    listening="1" controlledInstrument="0"/>
+        <LinearSolverConstraintCorrection wire_optimization='true' printLog="0" />
+        <FixedConstraint name="FixedConstraint" indices="0" />
+        <RestShapeSpringsForceField name="RestSPForceField" points="@DeployController.indexFirstNode" angularStiffness="1e8" stiffness="1e8"/> 
+
+        <Node name="CollisionModel">
+            <EdgeSetTopologyContainer name='collisEdgeSet' />
+            <EdgeSetTopologyModifier name='colliseEdgeModifier' />
+            <MechanicalObject name='CollisionDOFs' />
+            <MultiAdaptiveBeamMapping controller='../DeployController' useCurvAbs="1" printLog="0" name='collisMap' />
+            <LineCollisionModel proximity="0.0" />
+            <PointCollisionModel proximity="0.0" />
+        </Node>
+    </Node>  
+    
+    <Node name="Carotids">
+        <MeshSTLLoader filename='mesh/carotids.stl' flipNormals="0" triangulate="1" name='meshLoader' rotation="10.0 0.0 -90.0" />
+        <MeshTopology position='@meshLoader.position' triangles='@meshLoader.triangles' />
+        <MechanicalObject position="0 0 400" scale="3" name='DOFs1' ry="90" />
+        <TriangleCollisionModel moving="0" simulated="0" />
+        <LineCollisionModel moving="0" simulated="0" />
+    </Node>
+</Node>
+

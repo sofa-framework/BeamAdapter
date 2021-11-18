@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.002" gravity="0 -98.81 0">
+ 	
+	<RequiredPlugin pluginName="BeamAdapter"/>
+	<VisualStyle displayFlags="hideVisualModels showBehaviorModels showCollisionModels hideMappings hideForceFields hideWireFrame" />
+	<FreeMotionAnimationLoop />
+	<GenericConstraintSolver tolerance="1e-4"  maxIterations="100" unbuilt="false" printLog="0"/>
+	<CollisionPipeline depth="6" verbose="1" draw="0"/>
+	<BruteForceBroadPhase/>
+	<BVHNarrowPhase/>
+	<LocalMinDistance name="localmindistance" alarmDistance="0.08" contactDistance="0.05" coneFactor="0.5" angleCone="0.1" filterIntersection="true"/>
+	<CollisionResponse name="Response" response="FrictionContact" />
+	<CollisionGroup name="Group" />
+	
+   <Node name="BVH">
+    <MechanicalObject name="Articulations" template="Vec1d"/>
+    <Node name="6D_DOFs1">
+      <MechanicalObject name="6D_Dof" template="Rigid"/>
+      <UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+	  <ArticulatedSystemMapping input1="@../Articulations" input2="" output="@6D_Dof"/>
+	  
+    </Node>
+		<ArticulatedHierarchyContainer filename="Extension.bvh"/>
+		<ArticulatedHierarchyBVHController />
+	</Node>
+
+	<Node name="topoLines_suture">
+		<WireRestShape template="Rigid" printLog="0" name="sutureRestShape" length="4"  straightLength="4" spireDiameter="4000.0" spireHeight="0.0"
+					    densityOfBeams="15 0" numEdges="150" numEdgesCollis="150 0"  youngModulus="1000000" youngModulusExtremity="10000"/> <!-- silicone -->		
+
+		<EdgeSetTopologyContainer name="meshLinesSuture" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />
+		<MechanicalObject template="Rigid" name="dofTopo1" />
+	</Node>	
+
+	<Node name="AdaptiveBeam">
+		<EulerImplicit rayleighStiffness="0.08" rayleighMass="0.08" printLog="false" />
+		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/> 
+
+		<EdgeSetTopologyContainer name="meshSuture" />
+		<EdgeSetTopologyModifier   name="Modifier" />
+		<EdgeSetTopologyAlgorithms name="TopoAlgo"   template="Rigid" />
+		<EdgeSetGeometryAlgorithms name="GeomAlgo"   template="Rigid" />	
+
+		
+		<MechanicalObject template="Rigid" name="DOFs" showIndices="0"/> 
+
+		<WireBeamInterpolation name="InterpolSuture" WireRestShape="@../topoLines_suture/sutureRestShape" radius="0.05" printLog="0" dofsAndBeamsAligned="false"/> 
+		<AdaptiveBeamForceFieldAndMass name="SutureForceField" interpolation="@InterpolSuture" massDensity="1.0" elongationFactor="10" />
+		<SutureController template="Rigid" name="m_ircontroller" printLog="0"  startingPos="-4 0 0 0 0 0 1" interpolation="@InterpolSuture"  threshold="1e-3" maxBendingAngle="1e6"/>
+		<AdaptiveBeamLengthConstraint interpolation="@InterpolSuture"/>
+		<RestShapeSpringsForceField stiffness="1e4"  angularStiffness="1e1"  external_rest_shape="../BVH/6D_DOFs1/6D_Dof" points="15" external_points="1" />
+
+		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
+
+		<FixedConstraint name="FixedConstraint" indices="0" />
+		
+		<Node name="ConstrainedFames">
+			<MechanicalObject name="AttachedFrame" template="Rigid" position=" 0 0 0 0 0 0 1" />
+			<UniformMass mass="0.5 1 0.01 0 0 0 0.1 0 0 0 0.1" printLog="false" />
+			<AdaptiveBeamMapping  name="FrameMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" points="4 0 0" mapForces="0" mapMasses="0"/> 
+		</Node>
+		
+		<Node name="Collis">
+				<RegularGrid name="test"
+				nx="120" ny="1" nz="1"
+				xmin="0.0" xmax="4"
+				ymin="0" ymax="0"
+				zmin="0" zmax="0"
+				/>
+				<MechanicalObject name="CollisionDOFs" />
+				<AdaptiveBeamMapping  name="collisMap"  interpolation="@../InterpolSuture" useCurvAbs="1" printLog="0" mapForces="0" mapMasses="0"/> 
+				<Line proximity="0.0" group="1"  selfCollision="1" />
+				<Point proximity="0.0" group="1" selfCollision="1"/>
+		</Node>	
+
+		<Node name="VisuSuture">
+			<MechanicalObject name="Quads" />
+			<QuadSetTopologyContainer  name="ContainerSuture" />
+			<QuadSetTopologyModifier   name="Modifier" />
+			<QuadSetTopologyAlgorithms name="TopoAlgo"  template="Vec3d" />
+			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
+			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="6" radius="0.03" input="@../../topoLines_suture/meshLinesSuture" output="@ContainerSuture" flipNormals="true"/>
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolSuture" input="@../DOFs" output="@Quads" isMechanical="false"  mapForces="0" mapMasses="0"/>
+
+			<Node name="VisuOgl">
+				<VisualModel  name="VisualBody" />
+				<IdentityMapping input="@../Quads" output="@VisualBody"/>
+			</Node>	
+		</Node>
+	</Node>
+</Node>
+
