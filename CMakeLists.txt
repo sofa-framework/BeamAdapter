@@ -22,8 +22,6 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamSlidingConstraint.inl
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.h
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.inl
-#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.h
-#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
 
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.h
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.inl
@@ -59,7 +57,6 @@ set(SOURCE_FILES
 
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamSlidingConstraint.cpp
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.cpp
-#    ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
 
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.cpp
     ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.cpp
@@ -78,6 +75,17 @@ set(SOURCE_FILES
 
 set(README_FILE "README.md" )
 
+if(SofaImplicitField_FOUND)
+    set(HEADER_FILES ${HEADER_FILES}
+        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.h
+        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
+        )
+
+    set(SOURCE_FILES ${SOURCE_FILES}
+        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
+        )
+
+endif()
 
 if(SofaAdvancedConstraint_FOUND)
     set(HEADER_FILES ${HEADER_FILES}

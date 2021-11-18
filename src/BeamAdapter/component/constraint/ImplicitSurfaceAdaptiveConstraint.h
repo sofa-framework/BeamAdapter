@@ -26,15 +26,16 @@
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/visual/VisualModel.h>
-#include <sofa/helper/gl/template.h>
+#include <sofa/gl/template.h>
 #include <iostream>
 
-#include <sofa/defaulttype/Mat.h>
-#include <sofa/defaulttype/Vec.h>
+#include <sofa/type/Mat.h>
+#include <sofa/type/Vec.h>
+#include <sofa/type/vector.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/core/objectmodel/Event.h>
-#include <sofa/helper/vector.h>
 #include <SofaBaseTopology/TopologyData.h>
+#include <sofa/core/behavior/ConstraintResolution.h>
 
 #include <SofaImplicitField/deprecated/ImplicitSurfaceContainer.h>
 
@@ -63,12 +64,11 @@ using namespace sofa::defaulttype;
 using sofa::core::ConstVecCoordId;
 using core::behavior::ConstraintResolution;
 using sofa::component::fem::WireBeamInterpolation;
-using sofa::helper::vector;
+using sofa::type::vector;
 using sofa::core::behavior::MechanicalState;
-using defaulttype::Vec3d;
+using type::Vec3d;
 using sofa::component::container::ImplicitSurfaceContainer;
 using sofa::core::behavior::PairInteractionConstraint;
-using defaulttype::Vec3d;
 using core::behavior::BaseMechanicalState;
 using core::visual::VisualParams;
 using sofa::core::ConstraintParams;
@@ -79,7 +79,7 @@ using sofa::core::ConstraintParams;
  * \brief ImplicitSurfaceAdaptiveConstraintResolution Class
  */
 template<class DataTypes>
-class ImplicitSurfaceAdaptiveConstraintResolution : public ConstraintResolution
+class ImplicitSurfaceAdaptiveConstraintResolution : public sofa::core::behavior::ConstraintResolution
 {
 public:
     ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, WireBeamInterpolation<DataTypes>* wireInterpol)
@@ -120,8 +120,8 @@ public:
     typedef typename DataTypes::Deriv Deriv;
     typedef typename DataTypes::DPos DPos;
     typedef typename Coord::value_type Real;
-    typedef Vec<3,Real> Vec3;
-    typedef Vec<3,double> Vec3d;
+    typedef type::Vec<3,Real> Vec3;
+    typedef type::Vec<3,double> Vec3d;
     typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
     typedef WireBeamInterpolation<DataTypes> WBInterpolation;
 
