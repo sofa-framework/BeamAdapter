@@ -69,20 +69,7 @@ jobs:
           name: BeamAdapter_${{ steps.sofa.outputs.run_branch }}_for-SOFA-${{ steps.sofa.outputs.sofa_version }}_${{ runner.os }}
           path: ${{ env.WORKSPACE_ARTIFACT_PATH }}
       
-      - name: Set env vars for tests
-        shell: bash
-        run: |
-          # Set env vars for tests
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            echo "$(cd $WORKSPACE_ARTIFACT_PATH/lib && pwd -W)" >> $GITHUB_PATH
-            echo "$(cd $WORKSPACE_ARTIFACT_PATH/bin && pwd -W)" >> $GITHUB_PATH
-          elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            echo "DYLD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$DYLD_LIBRARY_PATH" | tee -a $GITHUB_ENV
-          fi
-          echo "LD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$LD_LIBRARY_PATH" | tee -a $GITHUB_ENV
-          # Add execution right on the tests
-          chmod +x $WORKSPACE_ARTIFACT_PATH/bin/*.Tests${{ steps.sofa.outputs.exe }}
-      
+
       #- name: Check environment for tests
       #  shell: bash
       #  run: |
