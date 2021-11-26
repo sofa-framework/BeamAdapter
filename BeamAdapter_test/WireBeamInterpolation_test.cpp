@@ -109,7 +109,7 @@ struct WireBeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 
 static std::vector<std::vector<std::string>> teststrings ={
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         "<WireRestShape template='Rigid3d' name='restShape' length='600.0'  straightLength='400' spireDiameter='4000.0' spireHeight='0.0' densityOfBeams='15 0' numEdges='200' numEdgesCollis='40 40'  youngModulus='1000' youngModulusExtremity='1000'/>"
         "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ""
@@ -122,7 +122,7 @@ static std::vector<std::vector<std::string>> teststrings ={
         , "T"
     },
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         ,"<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         , "W"
     },
@@ -132,7 +132,7 @@ static std::vector<std::vector<std::string>> teststrings ={
         , "W"
     },
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
         , "W"
     }
