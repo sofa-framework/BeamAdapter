@@ -4,6 +4,12 @@ project(BeamAdapter VERSION 1.0)
 include(cmake/environment.cmake)
 
 find_package(SofaFramework REQUIRED)
+find_package(SofaBaseMechanics REQUIRED)
+find_package(SofaConstraint REQUIRED)
+find_package(SofaUserInteraction REQUIRED)
+find_package(SofaImplicitField REQUIRED)
+find_package(Sofa.GL REQUIRED)
+
 find_package(SofaImplicitField QUIET)
 find_package(SofaAdvancedConstraint QUIET)
 
@@ -118,6 +124,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BIN
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
 
 target_link_libraries(${PROJECT_NAME} Sofa.Helper Sofa.Core SofaConstraint SofaBaseMechanics SofaUserInteraction SofaImplicitField Sofa.GL)
+
 sofa_create_package_with_targets(
     PACKAGE_NAME ${PROJECT_NAME}
     PACKAGE_VERSION ${PROJECT_VERSION}
