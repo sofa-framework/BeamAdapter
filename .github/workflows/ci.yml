@@ -86,7 +86,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          chmod +x $WORKSPACE_BUILD_PATH/BeamAdapter_test${{ steps.sofa.outputs.exe }}
+          chmod +x $WORKSPACE_BUILD_PATH/BeamAdapter_test/BeamAdapter_test${{ steps.sofa.outputs.exe }}
           cd $WORKSPACE_BUILD_PATH
           ./BeamAdapter_test/BeamAdapter_test${{ steps.sofa.outputs.exe }}
 
