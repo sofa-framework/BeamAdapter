@@ -9,7 +9,6 @@ find_package(Threads REQUIRED)
 
 set(SOURCE_FILES
     BeamInterpolation_test.cpp
-    WireBeamInterpolation_test.cpp
     component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
     component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp
     )
