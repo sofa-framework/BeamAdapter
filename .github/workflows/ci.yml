@@ -23,7 +23,6 @@ jobs:
           sofa_root: ${{ github.workspace }}/sofa
           sofa_version: ${{ matrix.sofa_branch }}
           sofa_scope: 'full'
-
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
@@ -69,7 +68,6 @@ jobs:
           name: BeamAdapter_${{ steps.sofa.outputs.run_branch }}_for-SOFA-${{ steps.sofa.outputs.sofa_version }}_${{ runner.os }}
           path: ${{ env.WORKSPACE_ARTIFACT_PATH }}
       
-
       #- name: Check environment for tests
       #  shell: bash
       #  run: |
@@ -91,6 +89,7 @@ jobs:
           chmod +x $WORKSPACE_BUILD_PATH/BeamAdapter_test${{ steps.sofa.outputs.exe }}
           cd $WORKSPACE_BUILD_PATH
           ./BeamAdapter_test${{ steps.sofa.outputs.exe }}
+
 
   deploy:
     name: Deploy artifacts
