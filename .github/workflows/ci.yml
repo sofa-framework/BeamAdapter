@@ -83,14 +83,14 @@ jobs:
       #    ls -la "$WORKSPACE_ARTIFACT_PATH"
       #    echo '----------------------'
       #    echo "SOFA_ROOT = $SOFA_ROOT"
-      #    python -c "import sys; print('sys.version = ' + str(sys.version)); print('sys.path = ' + str(sys.path))"
 
-      #- name: Run BeamAdapter_test
-      #  if: always()
-      #  shell: bash
-      #  run: |
-      #    cd $WORKSPACE_ARTIFACT_PATH
-      #    ./bin/BeamAdapter_test${{ steps.sofa.outputs.exe }}
+      - name: Run BeamAdapter_test
+        if: always()
+        shell: bash
+        run: |
+          chmod +x $WORKSPACE_BUILD_PATH/BeamAdapter_test${{ steps.sofa.outputs.exe }}
+          cd $WORKSPACE_BUILD_PATH
+          ./BeamAdapter_test${{ steps.sofa.outputs.exe }}
 
   deploy:
     name: Deploy artifacts
