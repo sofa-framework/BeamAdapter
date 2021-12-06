@@ -3,7 +3,13 @@
 @PACKAGE_INIT@
 
 find_package(SofaFramework REQUIRED)
+find_package(SofaBaseMechanics REQUIRED)
+find_package(SofaConstraint REQUIRED)
+find_package(SofaUserInteraction REQUIRED)
 find_package(SofaImplicitField REQUIRED)
+find_package(Sofa.GL REQUIRED)
+
+find_package(SofaImplicitField QUIET)
 find_package(SofaAdvancedConstraint QUIET)
 
 
