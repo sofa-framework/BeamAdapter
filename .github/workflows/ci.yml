@@ -52,7 +52,7 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_INSTALL_PREFIX="$WORKSPACE_INSTALL_PATH" \
               ../src
-            ninja install
+            ninja install -v
             echo ${CCACHE_BASEDIR}
             ccache -s
           fi
