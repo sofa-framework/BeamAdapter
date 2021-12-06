@@ -52,7 +52,7 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_INSTALL_PREFIX="$WORKSPACE_INSTALL_PATH" \
               ../src
-            ninja install -v
+            ninja install
             echo ${CCACHE_BASEDIR}
             ccache -s
           fi
@@ -86,9 +86,9 @@ jobs:
         if: always()
         shell: bash
         run: |
-          chmod +x $WORKSPACE_BUILD_PATH/BeamAdapter_test/BeamAdapter_test${{ steps.sofa.outputs.exe }}
+          chmod +x $WORKSPACE_BUILD_PATH/bin/BeamAdapter_test${{ steps.sofa.outputs.exe }}
           cd $WORKSPACE_BUILD_PATH
-          ./BeamAdapter_test/BeamAdapter_test${{ steps.sofa.outputs.exe }}
+          ./bin/BeamAdapter_test${{ steps.sofa.outputs.exe }}
 
 
   deploy:
