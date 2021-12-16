@@ -797,7 +797,7 @@ void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams
 
 
 template <class TIn, class TOut>
-const defaulttype::BaseMatrix* BeamLengthMapping<TIn, TOut>::getK()
+const sofa::linearalgebra::BaseMatrix* BeamLengthMapping<TIn, TOut>::getK()
 {
     return &K_geom;
 }

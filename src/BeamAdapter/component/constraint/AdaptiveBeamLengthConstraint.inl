@@ -46,7 +46,7 @@ using helper::ReadAccessor;
 using sofa::core::ConstVecCoordId;
 using std::stringstream;
 using core::ConstraintParams;
-using defaulttype::BaseVector;
+using linearalgebra::BaseVector;
 using core::visual::VisualParams;
 
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
