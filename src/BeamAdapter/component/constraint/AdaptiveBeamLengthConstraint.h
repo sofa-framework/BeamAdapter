@@ -65,7 +65,7 @@ using sofa::core::objectmodel::Data ;
 using sofa::type::Vec ;
 using sofa::type::vector;
 using sofa::defaulttype::SolidTypes;
-using sofa::defaulttype::BaseVector ;
+using sofa::linearalgebra::BaseVector ;
 
 
 template<typename Real>

@@ -191,7 +191,7 @@ public:
 
     // interface of baseMapping.h
     virtual void updateK( const MechanicalParams* /*mparams*/, core::ConstMultiVecDerivId /*outForce*/ ) override;
-    const defaulttype::BaseMatrix* getK() override;
+    const linearalgebra::BaseMatrix* getK() override;
 
 
 
