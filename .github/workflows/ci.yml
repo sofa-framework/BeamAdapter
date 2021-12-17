@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-10.15, windows-2019]
-        sofa_branch: [v21.12,master]
+        sofa_branch: [master, v21.12]
 
     steps:
       - name: Setup SOFA and environment
@@ -22,7 +22,7 @@ jobs:
         with:
           sofa_root: ${{ github.workspace }}/sofa
           sofa_version: ${{ matrix.sofa_branch }}
-          sofa_scope: 'full'
+          sofa_scope: 'standard'
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
