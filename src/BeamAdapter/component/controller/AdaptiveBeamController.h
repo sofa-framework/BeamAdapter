@@ -51,9 +51,13 @@
 namespace sofa {
     namespace component {
         namespace topology {
-            template <class T>
-            class EdgeSetGeometryAlgorithms;
-            class EdgeSetTopologyModifier;
+            namespace container {
+                namespace dynamic {
+                    template <class T>
+                    class EdgeSetGeometryAlgorithms;
+                    class EdgeSetTopologyModifier;
+                }
+            }
         }
     }
 }
@@ -78,8 +82,8 @@ namespace _adaptivebeamcontroller_
 {
 
 using sofa::component::projectiveconstraintset::FixedConstraint ;
-using sofa::component::topology::EdgeSetTopologyModifier ;
-using sofa::component::topology::EdgeSetGeometryAlgorithms ;
+using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
+using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::objectmodel::KeypressedEvent ;
 using sofa::core::objectmodel::MouseEvent ;

@@ -53,11 +53,13 @@
 namespace sofa {
 namespace component {
 namespace topology {
+namespace container {
+namespace dynamic {
     template <class T> class EdgeSetGeometryAlgorithms;
     class EdgeSetTopologyModifier;
     }
   }
-}
+}}}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

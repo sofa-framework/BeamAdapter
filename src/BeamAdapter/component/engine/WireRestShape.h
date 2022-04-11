@@ -44,9 +44,19 @@
 namespace sofa {
     namespace component {
         namespace topology {
-            template <class T>
-            class EdgeSetGeometryAlgorithms ;
-            class Edge2QuadTopologicalMapping ;
+            namespace container {
+                namespace dynamic {
+                    template <class T>
+                    class EdgeSetGeometryAlgorithms ;
+                }
+            }
+        }
+    }
+    namespace component {
+        namespace topology {
+            namespace mapping {
+                class Edge2QuadTopologicalMapping ;
+            }
         }
     }
     namespace core {
@@ -68,9 +78,9 @@ namespace _wirerestshape_
 using sofa::type::Quat;
 using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
-using sofa::component::topology::EdgeSetGeometryAlgorithms;
+using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
 using sofa::component::topology::EdgeSetTopologyModifier;
-using sofa::component::topology::Edge2QuadTopologicalMapping;
+using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
 
 /**

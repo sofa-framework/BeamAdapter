@@ -36,7 +36,7 @@
 #define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 
 #include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <SofaBoundaryCondition/FixedConstraint.h>
 #include <sofa/core/DataEngine.h>
@@ -50,10 +50,14 @@
 namespace sofa {
 namespace component {
 namespace topology {
+namespace container {
+namespace dynamic {
     template <class T> class EdgeSetGeometryAlgorithms;
     class EdgeSetTopologyModifier;
     }
   }
+}
+}
 }
 
 
