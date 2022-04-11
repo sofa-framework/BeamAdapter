@@ -134,10 +134,14 @@ sofa_create_package_with_targets(
     RELOCATABLE "plugins"
     )
 
-option(BEAMADAPTER_BUILD_TESTS "Build unit tests" ON)
+# Tests
+# If SOFA_BUILD_TESTS exists and is OFF, then these tests will be auto-disabled
+cmake_dependent_option(BEAMADAPTER_BUILD_TESTS "Compile the automatic tests" ON "SOFA_BUILD_TESTS OR NOT DEFINED SOFA_BUILD_TESTS" OFF)
 if(BEAMADAPTER_BUILD_TESTS)
-    add_subdirectory(BeamAdapter_test)
+    enable_testing()
+    add_subdirectory(${PROJECT_NAME}_test)
 endif()
+
 
 # this paragraph has not been ported to the new build system yet...
 #if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
