@@ -39,7 +39,7 @@
 #include <sofa/core/behavior/MechanicalState.h>
 #include <SofaBaseTopology/QuadSetTopologyModifier.h>
 #include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
-#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
+#include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 
 #include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
@@ -333,7 +333,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             if(edge2QuadMap!=NULL)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
-                sofa::component::topology::QuadSetTopologyModifier *quadMod;
+                sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
                 edge2QuadMap->getContext()->get(quadMod);
                 quadMod->notifyEndingEvent();
             }

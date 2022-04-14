@@ -50,13 +50,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa {
-namespace component {
-namespace topology {
-    template <class T> class EdgeSetGeometryAlgorithms;
+namespace sofa::component::topology::container::dynamic
+{
+    template <class T> 
+    class EdgeSetGeometryAlgorithms;
     class EdgeSetTopologyModifier;
-    }
-  }
 }
 
 
