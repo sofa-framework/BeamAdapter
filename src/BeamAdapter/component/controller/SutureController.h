@@ -41,6 +41,7 @@
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
+#include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/config.h>
@@ -258,7 +259,7 @@ private:
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #if !defined(SOFA_SUTURECONTROLLER_CPP)
-extern template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
+extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_
 
