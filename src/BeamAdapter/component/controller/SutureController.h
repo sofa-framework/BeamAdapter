@@ -41,24 +41,15 @@
 #include <SofaUserInteraction/MechanicalStateController.h>
 #include <SofaMeshCollision/PointModel.h>
 #include <SofaMeshCollision/LineModel.h>
+#include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/config.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalPropagateOnlyPositionAndVelocityVisitor.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalProjectPositionAndVelocityVisitor.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa {
-namespace component {
-namespace topology {
-    template <class T> class EdgeSetGeometryAlgorithms;
-    class EdgeSetTopologyModifier;
-    }
-  }
-}
-
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
+#include <sofa/defaulttype/RigidTypes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////DECLARATIONS /////////////////////////////////////////////////
@@ -268,7 +259,7 @@ private:
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #if !defined(SOFA_SUTURECONTROLLER_CPP)
-extern template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
+extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_
 

@@ -25,6 +25,7 @@
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/type/Vec.h>
+#include <sofa/linearalgebra/BaseVector.h>
 #include <sofa/gl/template.h>
 #include <sofa/helper/visual/DrawTool.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
@@ -45,9 +46,10 @@ namespace _adaptivebeamlengthconstraint_
 using helper::ReadAccessor;
 using sofa::core::ConstVecCoordId;
 using std::stringstream;
-using core::ConstraintParams;
-using linearalgebra::BaseVector;
-using core::visual::VisualParams;
+using sofa::core::ConstraintParams;
+using sofa::linearalgebra::BaseVector;
+using sofa::core::visual::VisualParams;
+
 
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
