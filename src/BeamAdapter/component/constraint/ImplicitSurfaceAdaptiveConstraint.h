@@ -73,6 +73,7 @@ using sofa::core::behavior::PairInteractionConstraint;
 using core::behavior::BaseMechanicalState;
 using core::visual::VisualParams;
 using sofa::core::ConstraintParams;
+using sofa::linearalgebra::BaseVector ;
 
 
 /*!

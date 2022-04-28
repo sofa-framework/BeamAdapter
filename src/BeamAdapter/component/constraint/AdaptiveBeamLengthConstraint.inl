@@ -50,6 +50,7 @@ using sofa::core::ConstraintParams;
 using sofa::linearalgebra::BaseVector;
 using sofa::core::visual::VisualParams;
 
+
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:

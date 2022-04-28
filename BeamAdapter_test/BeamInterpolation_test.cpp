@@ -72,7 +72,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
                 "               <RequiredPlugin name='SofaBaseLinearSolver' />"
                 "               <RequiredPlugin name='SofaImplicitOdeSolver' />"
-                "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "   		<EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
                 "               <BeamInterpolation template='Rigid3d' name='Interpol' radius='0.1'/>"
