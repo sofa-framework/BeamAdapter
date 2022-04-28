@@ -37,24 +37,9 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <SofaBaseTopology/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa {
-    namespace component {
-        namespace topology {
-            template <class T>
-            class EdgeSetGeometryAlgorithms ;
-            class Edge2QuadTopologicalMapping ;
-        }
-    }
-    namespace core {
-        namespace loader {
-            class MeshLoader ;
-        }
-    }
-}
+#include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa
 {
@@ -68,9 +53,9 @@ namespace _wirerestshape_
 using sofa::type::Quat;
 using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
-using sofa::component::topology::EdgeSetGeometryAlgorithms;
+using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
 using sofa::component::topology::EdgeSetTopologyModifier;
-using sofa::component::topology::Edge2QuadTopologicalMapping;
+using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
 
 /**

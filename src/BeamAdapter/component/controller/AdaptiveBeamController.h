@@ -43,21 +43,8 @@
 
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa {
-    namespace component {
-        namespace topology {
-            template <class T>
-            class EdgeSetGeometryAlgorithms;
-            class EdgeSetTopologyModifier;
-        }
-    }
-}
-
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
@@ -78,8 +65,8 @@ namespace _adaptivebeamcontroller_
 {
 
 using sofa::component::projectiveconstraintset::FixedConstraint ;
-using sofa::component::topology::EdgeSetTopologyModifier ;
-using sofa::component::topology::EdgeSetGeometryAlgorithms ;
+using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
+using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
 using sofa::core::objectmodel::KeypressedEvent ;
 using sofa::core::objectmodel::MouseEvent ;

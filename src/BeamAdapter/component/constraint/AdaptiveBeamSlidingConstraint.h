@@ -49,7 +49,7 @@ using sofa::core::behavior::ConstraintResolution ;
 using sofa::core::visual::VisualParams ;
 using sofa::core::ConstraintParams ;
 using sofa::defaulttype::SolidTypes ;
-using sofa::defaulttype::BaseVector ;
+using sofa::linearalgebra::BaseVector ;
 using sofa::core::objectmodel::Data ;
 using sofa::type::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;

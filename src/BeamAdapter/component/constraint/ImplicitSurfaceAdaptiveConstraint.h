@@ -67,6 +67,7 @@ using sofa::component::fem::WireBeamInterpolation;
 using sofa::type::vector;
 using sofa::core::behavior::MechanicalState;
 using type::Vec3d;
+using sofa::linearalgebra::BaseVector;
 using sofa::component::container::ImplicitSurfaceContainer;
 using sofa::core::behavior::PairInteractionConstraint;
 using core::behavior::BaseMechanicalState;

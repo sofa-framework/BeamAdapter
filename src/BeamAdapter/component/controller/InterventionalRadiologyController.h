@@ -44,18 +44,8 @@
 #include <SofaMeshCollision/LineModel.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-
-
-///FORWARD DECLARATION
-namespace sofa {
-namespace component {
-namespace topology {
-    template <class T> class EdgeSetGeometryAlgorithms;
-    class EdgeSetTopologyModifier;
-    }
-  }
-}
-
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 namespace sofa
 {
@@ -73,7 +63,6 @@ using namespace sofa::helper;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::type::vector;
 using sofa::component::projectiveconstraintset::FixedConstraint;
-
 
 /*!
  * \class InterventionalRadiologyController

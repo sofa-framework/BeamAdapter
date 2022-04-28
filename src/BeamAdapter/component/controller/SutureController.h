@@ -46,19 +46,9 @@
 #include <BeamAdapter/config.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalPropagateOnlyPositionAndVelocityVisitor.h>
 #include <sofa/simulation/mechanicalvisitor/MechanicalProjectPositionAndVelocityVisitor.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa {
-namespace component {
-namespace topology {
-    template <class T> class EdgeSetGeometryAlgorithms;
-    class EdgeSetTopologyModifier;
-    }
-  }
-}
-
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
+#include <sofa/defaulttype/RigidTypes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////DECLARATIONS /////////////////////////////////////////////////
