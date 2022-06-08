@@ -4,6 +4,10 @@ project(BeamAdapter_test VERSION 1.0)
 
 #find_package(BeamAdapter REQUIRED)
 find_package(Sofa.Testing REQUIRED)
+find_package(SofaCore REQUIRED)
+find_package(SofaConstraint REQUIRED)
+find_package(SofaBaseMechanics REQUIRED)
+find_package(SofaUserInteraction REQUIRED)
 find_package(SofaBaseUtils REQUIRED)
 find_package(Threads REQUIRED)
 
