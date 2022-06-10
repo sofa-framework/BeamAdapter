@@ -173,7 +173,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 
 
     // STEP 4: verify if listBeams is void => all beams are activated
-    const vector<int> &list_B= d_listBeams.getValue();
+    const type::vector<int> &list_B= d_listBeams.getValue();
     if( list_B.size() == 0)
         m_allActivated=true;
     else
@@ -216,7 +216,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Ve
 /// "filters" contacts (the normal of contact is supposed to be perp to the tangent of the curve except on the tip point)
 /// set  normal and tangential directions
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, type::vector<int>& listBeam)
 {
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
 
@@ -328,7 +328,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const C
 
     //1st step: computation of sample point position (10 / beam)
     // if all activated => all beam considered otherwize, use listBeams...
-    vector<int> list_B;
+    type::vector<int> list_B;
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
     m_allActivated=false;
     if (m_allActivated)

@@ -64,7 +64,6 @@ using namespace sofa::defaulttype;
 using sofa::core::ConstVecCoordId;
 using core::behavior::ConstraintResolution;
 using sofa::component::fem::WireBeamInterpolation;
-using sofa::type::vector;
 using sofa::core::behavior::MechanicalState;
 using type::Vec3d;
 using sofa::linearalgebra::BaseVector;
@@ -133,7 +132,7 @@ public:
 
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
-    typedef typename vector<int>::iterator VectorIntIterator;
+    typedef typename type::vector<int>::iterator VectorIntIterator;
 
 protected :
     SingleLink<ImplicitSurfaceAdaptiveConstraint<DataTypes>, WBInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_wireBinterpolation;
@@ -145,7 +144,7 @@ protected :
     Data<Real>  d_alarmDistance;
     Data<Real>  d_radius;
     Data<Real>  d_frictionCoef;
-    Data<vector<int> > d_listBeams;
+    Data<type::vector<int> > d_listBeams;
 
 #ifdef SOFAEVE
     sofaeve::implicit::MarchingCube * mc;
@@ -154,7 +153,7 @@ protected :
     unsigned int m_cid;
     double m_cData[100000000];
     Real m_isoValue;
-    vector<bool> m_activeList;
+    type::vector<bool> m_activeList;
     bool m_friction;
     bool m_allActivated; /// list of beams to be considered for collision
     ImplicitSurfaceContainer* m_contactSurface;
@@ -193,8 +192,8 @@ public:
 
 
 private:
-    vector<Vec3> m_posSample;
-    vector<int> m_domainSample;
+    type::vector<Vec3> m_posSample;
+    type::vector<int> m_domainSample;
 
     struct potentialContact{
         unsigned int beamId;
@@ -204,10 +203,10 @@ private:
         Real d;
     };
 
-    vector<potentialContact> m_vecPotentialContact;
+    type::vector<potentialContact> m_vecPotentialContact;
 
     void getOrthogonalVectors(const Vec3& dir, Vec3& vec1, Vec3& vec2);
-    void detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam);
+    void detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, type::vector<int>& listBeam);
     void computeTangentialViolation(const Vec3 &Pos, const Vec3 &freePos, const Vec3 &t, const Vec3 &s,
                                     const Real& d, const Real& dfree, Real &dfree_t, Real &dfree_s );
 
