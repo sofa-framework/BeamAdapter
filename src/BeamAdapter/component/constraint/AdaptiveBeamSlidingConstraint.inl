@@ -254,6 +254,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(const Con
                                                                 vector<ConstraintResolution*>& resTab,
                                                                 unsigned int& offset)
 {
+    SOFA_UNUSED(cParams);
+
     unsigned int nb = mstate2->getSize();
     for(unsigned int i=0; i<nb; i++)
     {

@@ -58,7 +58,7 @@ public:
     {
     }
     virtual void init(int line, double** w, double* force);
-    virtual void resolution(int line, double** w, double* d, double* force);
+    virtual void resolution(int line, double** w, double* d, double* force) override;
     virtual void store(int line, double* force, bool convergence);
 
 protected:

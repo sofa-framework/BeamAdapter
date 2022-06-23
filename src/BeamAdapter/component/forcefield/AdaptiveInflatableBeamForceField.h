@@ -227,7 +227,7 @@ public:
     }
 
     void addKToMatrix(const MechanicalParams* mparams,
-                      const MultiMatrixAccessor* matrix);
+                      const MultiMatrixAccessor* matrix) override;
 
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);

@@ -98,9 +98,13 @@ void SteerableCatheter<DataTypes>::init()
         if(spireDiameter>m_maxUnbendingDiameter || spireDiameter == 0.0)
         {
                 if(spireDiameter>m_maxUnbendingDiameter)
+                {
                     msg_info()<<"(SteerableCatheter) Wrong spireDiameter: must be below "<<m_maxUnbendingDiameter;
+                }
                 else
+                {
                     msg_info()<<"(SteerableCatheter) Wrong spireDiameter: must be non-zero (==infinite curvature) ";
+                }
                 m_currentAngleRadian = flatAngle * M_PI / 360;
                 d_spireDiameter.setValue( m_maxUnbendingDiameter );
         }

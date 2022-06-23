@@ -316,7 +316,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
         return;
     }
     ///////// remove the edge that is cut //////
-    for ( int i=0; i<_topology->getNbPoints(); i++)
+    for ( sofa::Size i=0; i<_topology->getNbPoints(); i++)
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
