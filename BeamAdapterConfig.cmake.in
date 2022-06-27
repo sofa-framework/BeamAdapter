@@ -2,15 +2,14 @@
 
 @PACKAGE_INIT@
 
-find_package(SofaFramework REQUIRED)
-find_package(SofaBaseMechanics REQUIRED)
-find_package(SofaConstraint REQUIRED)
-find_package(SofaUserInteraction REQUIRED)
-find_package(SofaImplicitField REQUIRED)
+find_package(Sofa.Component.MechanicalLoad REQUIRED)
+find_package(Sofa.Component.Topology.Container.Dynamic REQUIRED)
+find_package(Sofa.Component.Topology.Mapping REQUIRED)
+find_package(Sofa.Component.Constraint.Projective REQUIRED)
+find_package(Sofa.Component.StateContainer REQUIRED)
+find_package(Sofa.Component.Collision.Geometry REQUIRED)
+find_package(Sofa.Component.Controller REQUIRED)
 find_package(Sofa.GL REQUIRED)
-
-find_package(SofaImplicitField QUIET)
-find_package(SofaAdvancedConstraint QUIET)
 
 
 if(NOT TARGET @PROJECT_NAME@)
