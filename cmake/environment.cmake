@@ -11,7 +11,7 @@ endif()
 
 ## Force default install prefix
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR NOT "${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
 endif()
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
 
