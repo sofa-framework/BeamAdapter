@@ -9,11 +9,13 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-## Force default install prefix
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR NOT "${PROJECT_BINARY_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-    set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install/${PROJECT_NAME}" CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
+## Force default install prefix (only for out-of-tree)
+if(NOT TARGET Sofa.Config)
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR NOT "${PROJECT_BINARY_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+        set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install/${PROJECT_NAME}" CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
+    endif()
+    message(STATUS "BeamAdapter: Install prefix: ${CMAKE_INSTALL_PREFIX}")
 endif()
-message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 ## Set the output directories globally
 set(ARCHIVE_OUTPUT_DIRECTORY lib)
