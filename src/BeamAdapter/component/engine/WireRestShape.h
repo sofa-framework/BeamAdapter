@@ -35,7 +35,7 @@
 
 #include <BeamAdapter/config.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
@@ -54,7 +54,7 @@ using sofa::type::Quat;
 using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
-using sofa::component::topology::EdgeSetTopologyModifier;
+using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier;
 using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
 

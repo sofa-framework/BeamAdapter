@@ -155,7 +155,7 @@ protected:
     sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
     sofa::type::vector<  AdaptiveBeamMapping<TIn, TOut>* > m_subMappingList;
     TInterventionalRadiologyController* m_ircontroller;
-    sofa::component::topology::EdgeSetTopologyModifier* _edgeMod;
+    sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod;
     sofa::type::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
     sofa::type::vector<int> _idm_instrumentList; //=> for each mapped point provides the interpolation (in m_instrumentList)
     bool isBarycentricMapping;
