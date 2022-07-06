@@ -43,7 +43,7 @@
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/core/objectmodel/Event.h>
 #include <sofa/core/visual/VisualParams.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/BeamInterpolation.h>

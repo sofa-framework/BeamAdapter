@@ -38,9 +38,9 @@
 #define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #include <sofa/helper/set.h>
 
-#include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaMeshCollision/PointModel.h>
-#include <SofaMeshCollision/LineModel.h>
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <sofa/component/collision/geometry/PointModel.h>
+#include <sofa/component/collision/geometry/LineModel.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>

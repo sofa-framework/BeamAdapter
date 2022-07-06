@@ -36,10 +36,10 @@
 #define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaBoundaryCondition/FixedConstraint.h>
-#include <SofaMeshCollision/PointModel.h>
-#include <SofaMeshCollision/LineModel.h>
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <sofa/component/constraint/projective/FixedConstraint.h>
+#include <sofa/component/collision/geometry/PointModel.h>
+#include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
@@ -64,7 +64,7 @@ namespace controller
 namespace _adaptivebeamcontroller_
 {
 
-using sofa::component::projectiveconstraintset::FixedConstraint ;
+using sofa::component::constraint::projective::FixedConstraint ;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
