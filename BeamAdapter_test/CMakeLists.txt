@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(BeamAdapter_test VERSION 1.0)
 
-find_package(BeamAdapter REQUIRED)
+#find_package(BeamAdapter REQUIRED)
 find_package(Sofa.Testing REQUIRED)
 find_package(Threads REQUIRED)
 
