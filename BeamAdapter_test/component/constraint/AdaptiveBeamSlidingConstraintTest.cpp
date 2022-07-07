@@ -21,29 +21,29 @@
 ******************************************************************************/
 #include <sofa/testing/BaseSimulationTest.h>
 #include <sofa/helper/BackTrace.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 
 #include <string>
 using std::string;
 
-#include <SofaBaseLinearSolver/FullVector.h>
+#include <sofa/linearalgebra/FullVector.h>
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
 using sofa::helper::WriteAccessor ;
 using sofa::defaulttype::Rigid3dTypes ;
 
-#include <SofaSimulationCommon/SceneLoaderXML.h>
+#include <sofa/simulation/common/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML ;
 
-#include <SofaSimulationGraph/DAGSimulation.h>
+#include <sofa/simulation/graph/DAGSimulation.h>
 using sofa::simulation::graph::DAGSimulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
 using sofa::simulation::setSimulation ;
 using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>

@@ -22,7 +22,7 @@
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.inl>
 
 #include <sofa/defaulttype/VecTypes.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
 
 namespace sofa
