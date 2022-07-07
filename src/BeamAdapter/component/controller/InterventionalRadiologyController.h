@@ -35,13 +35,13 @@
 #ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 #define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
 
-#include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <SofaBoundaryCondition/FixedConstraint.h>
+#include <sofa/component/constraint/projective/FixedConstraint.h>
 #include <sofa/core/DataEngine.h>
-#include <SofaMeshCollision/PointModel.h>
-#include <SofaMeshCollision/LineModel.h>
+#include <sofa/component/collision/geometry/PointModel.h>
+#include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
@@ -62,7 +62,7 @@ using namespace sofa::component::fem;
 using namespace sofa::helper;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::type::vector;
-using sofa::component::projectiveconstraintset::FixedConstraint;
+using sofa::component::constraint::projective::FixedConstraint;
 
 /*!
  * \class InterventionalRadiologyController

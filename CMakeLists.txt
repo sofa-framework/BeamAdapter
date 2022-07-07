@@ -3,14 +3,18 @@ project(BeamAdapter VERSION 1.0)
 
 include(cmake/environment.cmake)
 
-find_package(SofaFramework REQUIRED)
-find_package(SofaBaseMechanics REQUIRED)
-find_package(SofaConstraint REQUIRED)
-find_package(SofaUserInteraction REQUIRED)
-find_package(Sofa.GL REQUIRED)
+find_package(Sofa.Simulation.Core REQUIRED)
 
-find_package(SofaImplicitField QUIET)
-find_package(SofaAdvancedConstraint QUIET)
+sofa_find_package(Sofa.GL REQUIRED)
+sofa_find_package(Sofa.Component.StateContainer REQUIRED)
+sofa_find_package(Sofa.Component.Controller REQUIRED)
+sofa_find_package(Sofa.Component.Topology.Container.Dynamic REQUIRED)
+sofa_find_package(Sofa.Component.Topology.Mapping REQUIRED)
+sofa_find_package(Sofa.Component.Collision.Geometry REQUIRED)
+sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
+sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
+sofa_find_package(SofaImplicitField QUIET)
+sofa_find_package(SofaAdvancedConstraint QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
@@ -111,17 +115,15 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_BEAMADAPTER")
+target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core Sofa.GL)
+target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.StateContainer Sofa.Component.Controller Sofa.Component.Topology.Container.Dynamic Sofa.Component.Topology.Mapping)
+target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.Collision.Geometry Sofa.Component.Constraint.Lagrangian Sofa.Component.Constraint.Projective)
 
-target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>")
-target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
-
-target_link_libraries(${PROJECT_NAME} Sofa.Helper Sofa.Core SofaConstraint SofaBaseMechanics SofaUserInteraction Sofa.GL)
 if(SofaImplicitField_FOUND)
-    target_link_libraries(${PROJECT_NAME} SofaImplicitField)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SofaImplicitField)
 endif()
 if(SofaAdvancedConstraint_FOUND)
-    target_link_libraries(${PROJECT_NAME} SofaAdvancedConstraint)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
 endif()
 
 sofa_create_package_with_targets(

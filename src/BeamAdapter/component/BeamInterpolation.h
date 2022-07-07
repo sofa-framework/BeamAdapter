@@ -39,7 +39,7 @@
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
 
@@ -67,7 +67,7 @@ using sofa::type::Vec ;
 using sofa::type::Quat ;
 using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 /*!
  * \class BeamInterpolation
