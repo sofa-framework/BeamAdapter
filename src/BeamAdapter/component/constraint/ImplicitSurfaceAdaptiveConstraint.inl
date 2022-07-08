@@ -120,7 +120,7 @@ ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::init()
 {
-    PairInteractionConstraint<DataTypes>::init();
+    Inherit::init();
 }
 
 
@@ -173,7 +173,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 
 
     // STEP 4: verify if listBeams is void => all beams are activated
-    const vector<int> &list_B= d_listBeams.getValue();
+    const type::vector<int> &list_B= d_listBeams.getValue();
     if( list_B.size() == 0)
         m_allActivated=true;
     else
@@ -328,7 +328,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
 
     //1st step: computation of sample point position (10 / beam)
     // if all activated => all beam considered otherwize, use listBeams...
-    vector<int> list_B;
+    type::vector<int> list_B;
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
     m_allActivated=false;
     if (m_allActivated)
