@@ -356,8 +356,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
     // the following code verify that the position is correct:
     dmsg_info() <<" in buildConstraintMatrix: cParams->x()="<<cParams->x();
 
-    MultiVecCoordId x = VecCoordId::position();
-    ConstVecCoordId xtest = cParams->readX(this->mstate2);
+    MultiVecCoordId x = VecCoordId::position(); 
+    ConstVecCoordId xtest = cParams->x()[this->mstate2.get()];
+    //ConstVecCoordId xtest = cParams->readX(this->mstate2);
 
     if(xtest != x.getId(this->mstate2))
     {
@@ -368,7 +369,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
     const VecCoord &x2buf = x2.getValue();
     sofa::core::VecCoordId x_in = sofa::core::VecCoordId::position();
 
-    const VecCoord &x2test=*this->mstate2->getX();
+    auto x2test = sofa::helper::getReadAccessor(*(this->mstate2->read(core::ConstVecCoordId::position())));
     l_wireBinterpolation->updateBezierPoints(x2test, x_in );
 
     // interpolates the position of the sample points
