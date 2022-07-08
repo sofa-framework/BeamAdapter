@@ -216,7 +216,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Ve
 /// "filters" contacts (the normal of contact is supposed to be perp to the tangent of the curve except on the tip point)
 /// set  normal and tangential directions
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, type::vector<int>& listBeam)
 {
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
 
@@ -312,7 +312,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams* cParams,
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams* cParams,
                                                                          DataMatrixDeriv &c1,
                                                                          DataMatrixDeriv &c2,
                                                                          unsigned int &cIndex,
@@ -541,8 +541,8 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const ConstraintParams* cParams,
-                                                                          BaseVector *v,
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const core::ConstraintParams* cParams,
+                                                                          linearalgebra::BaseVector *v,
                                                                           const DataVecCoord &x1,
                                                                           const DataVecCoord &x2,
                                                                           const DataVecDeriv &v1,
@@ -602,7 +602,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const 
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<core::behavior::ConstraintResolution* > & resTab, unsigned int& offset)
 {
 
 #ifdef DEBUG
@@ -629,7 +629,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vparams)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
 {
 #ifdef DEBUG
     dmsg_info()<<" entering draw";
