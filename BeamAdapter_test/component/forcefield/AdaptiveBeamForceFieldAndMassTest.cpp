@@ -23,28 +23,26 @@
 
 #include <sofa/helper/BackTrace.h>
 
-#include <SofaBaseUtils/initSofaBaseUtils.h>
-
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
-#include <SofaBaseTopology/TetrahedronSetTopologyContainer.h>
-using sofa::component::topology::TetrahedronSetTopologyContainer ;
+#include <sofa/component/topology/container/dynamic/TetrahedronSetTopologyContainer.h>
+using sofa::component::topology::container::dynamic::TetrahedronSetTopologyContainer;
 
 using sofa::helper::WriteAccessor ;
 using sofa::defaulttype::Rigid3dTypes ;
 
-#include <SofaSimulationCommon/SceneLoaderXML.h>
-using sofa::simulation::SceneLoaderXML ;
+#include <sofa/simulation/common/SceneLoaderXML.h>
+using sofa::simulation::SceneLoaderXML;
 
-#include <SofaSimulationGraph/DAGSimulation.h>
+#include <sofa/simulation/graph/DAGSimulation.h>
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
 using sofa::simulation::setSimulation ;
 using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 using sofa::component::forcefield::AdaptiveBeamForceFieldAndMass;
@@ -58,17 +56,15 @@ namespace sofa
 struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationTest
 {
     void simpleSceneTest(){
-        sofa::component::initSofaBaseUtils();
-
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "               <RequiredPlugin name='BeamAdapter' />"
-                "               <RequiredPlugin name='Sofa.Component.LinearSolver' />"
-                "               <RequiredPlugin name='Sofa.Component.ODESolver' />"
-                "               <RequiredPlugin name='Sofa.Component.Topology' />"
+                "               <RequiredPlugin name='Sofa.Component.ODESolver.Backward' />"
+                "               <RequiredPlugin name='Sofa.Component.LinearSolver.Iterative' />"
                 "               <RequiredPlugin name='Sofa.Component.StateContainer' />"
-                "               <RequiredPlugin name='Sofa.Component.Constraint' />"
+                "               <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
+                "               <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
+                "               <RequiredPlugin name='BeamAdapter' />"
                 "   			<EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               <MeshTopology name='meshSuture' edges='0 1' />"

@@ -60,21 +60,6 @@ namespace constraint
 namespace _implicitsurfaceadaptiveconstraint_
 {
 
-using namespace sofa::defaulttype;
-using sofa::core::ConstVecCoordId;
-using core::behavior::ConstraintResolution;
-using sofa::component::fem::WireBeamInterpolation;
-using sofa::core::behavior::MechanicalState;
-using type::Vec3d;
-using sofa::linearalgebra::BaseVector;
-using sofa::component::container::ImplicitSurfaceContainer;
-using sofa::core::behavior::PairInteractionConstraint;
-using core::behavior::BaseMechanicalState;
-using core::visual::VisualParams;
-using sofa::core::ConstraintParams;
-using sofa::linearalgebra::BaseVector ;
-
-
 /*!
  * \class ImplicitSurfaceAdaptiveConstraintResolution
  * \brief ImplicitSurfaceAdaptiveConstraintResolution Class
@@ -83,7 +68,7 @@ template<class DataTypes>
 class ImplicitSurfaceAdaptiveConstraintResolution : public sofa::core::behavior::ConstraintResolution
 {
 public:
-    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, WireBeamInterpolation<DataTypes>* wireInterpol)
+    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, sofa::component::fem::WireBeamInterpolation<DataTypes>* wireInterpol)
         : ConstraintResolution(3)
         , m_wireInterpolation(wireInterpol)
         , m_mu(frictionCoef)
@@ -94,7 +79,7 @@ public:
     virtual void resolution(int line, double** w, double* d, double* force);
 
 private:
-    WireBeamInterpolation<DataTypes>* m_wireInterpolation;
+    sofa::component::fem::WireBeamInterpolation<DataTypes>* m_wireInterpolation;
     double m_mu;
     int m_line;
 };
@@ -105,10 +90,10 @@ private:
  * \brief ImplicitSurfaceAdaptiveConstraint Class
  */
 template<class DataTypes>
-class ImplicitSurfaceAdaptiveConstraint : public PairInteractionConstraint<DataTypes>
+class ImplicitSurfaceAdaptiveConstraint : public sofa::core::behavior::PairInteractionConstraint<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(ImplicitSurfaceAdaptiveConstraint,DataTypes),SOFA_TEMPLATE(PairInteractionConstraint,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(ImplicitSurfaceAdaptiveConstraint,DataTypes),SOFA_TEMPLATE(sofa::core::behavior::PairInteractionConstraint,DataTypes));
 
     typedef typename core::behavior::PairInteractionConstraint<DataTypes> Inherit;
 
@@ -124,14 +109,14 @@ public:
     typedef type::Vec<3,Real> Vec3;
     typedef type::Vec<3,double> Vec3d;
     typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-    typedef WireBeamInterpolation<DataTypes> WBInterpolation;
+    typedef typename component::fem::WireBeamInterpolation<DataTypes> WBInterpolation;
 
     typedef Data<VecCoord>		 DataVecCoord;
     typedef Data<VecDeriv>		 DataVecDeriv;
     typedef Data<MatrixDeriv>    DataMatrixDeriv;
 
-    typedef typename SolidTypes<Real>::Transform Transform;
-    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    typedef typename defaulttype::SolidTypes<Real>::Transform Transform;
+    typedef typename defaulttype::SolidTypes<Real>::SpatialVector SpatialVector;
     typedef typename type::vector<int>::iterator VectorIntIterator;
 
 protected :
@@ -156,7 +141,7 @@ protected :
     type::vector<bool> m_activeList;
     bool m_friction;
     bool m_allActivated; /// list of beams to be considered for collision
-    ImplicitSurfaceContainer* m_contactSurface;
+    component::container::ImplicitSurfaceContainer* m_contactSurface;
     int m_nbConstraints;
     bool isHolonomic() {return false;} /// this constraint is NOT holonomic
 
@@ -168,8 +153,8 @@ public:
 
     ~ImplicitSurfaceAdaptiveConstraint(){}
 
-    BaseMechanicalState* getMechModel1() { return this->mstate1; }
-    BaseMechanicalState* getMechModel2() { return this->mstate2; }
+    core::behavior::BaseMechanicalState* getMechModel1() { return this->mstate1; }
+    core::behavior::BaseMechanicalState* getMechModel2() { return this->mstate2; }
 
     void init();
     void clear();
@@ -178,17 +163,17 @@ public:
     void reset();
     void reinit(){internalInit();}
 
-    void buildConstraintMatrix(const ConstraintParams* cParams,
+    void buildConstraintMatrix(const core::ConstraintParams* cParams,
                                DataMatrixDeriv &c1, DataMatrixDeriv &c2, unsigned int &cIndex,
                                const DataVecCoord &, const DataVecCoord &x2) ;
 
-    void getConstraintViolation(const ConstraintParams* cParams, BaseVector *v,
+    void getConstraintViolation(const core::ConstraintParams* cParams, linearalgebra::BaseVector *v,
                                 const DataVecCoord &x1, const DataVecCoord &x2,
                                 const DataVecDeriv &v1, const DataVecDeriv &v2) ;
 
-    void getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset);
+    void getConstraintResolution(std::vector<core::behavior::ConstraintResolution*>& resTab, unsigned int& offset);
 
-    void draw(const VisualParams* vparams);
+    void draw(const core::visual::VisualParams* vparams);
 
 
 private:
@@ -206,13 +191,13 @@ private:
     type::vector<potentialContact> m_vecPotentialContact;
 
     void getOrthogonalVectors(const Vec3& dir, Vec3& vec1, Vec3& vec2);
-    void detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, type::vector<int>& listBeam);
+    void detectPotentialContactOnImplicitSurface(const core::ConstVecCoordId &vecXId, type::vector<int>&listBeam);
     void computeTangentialViolation(const Vec3 &Pos, const Vec3 &freePos, const Vec3 &t, const Vec3 &s,
                                     const Real& d, const Real& dfree, Real &dfree_t, Real &dfree_s );
 
 
-    using PairInteractionConstraint<DataTypes>::mstate1;
-    using PairInteractionConstraint<DataTypes>::mstate2;
+    using core::behavior::PairInteractionConstraint<DataTypes>::mstate1;
+    using core::behavior::PairInteractionConstraint<DataTypes>::mstate2;
 
 };
 
