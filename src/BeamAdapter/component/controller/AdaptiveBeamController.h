@@ -41,7 +41,6 @@
 #include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/component/BeamInterpolation.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
@@ -152,7 +151,9 @@ protected:
     bool                        RW {false} ;
 };
 
-
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamController<defaulttype::Rigid3Types>;
+#endif
 
 } /// namespace _adaptivebeamcontroller_
 

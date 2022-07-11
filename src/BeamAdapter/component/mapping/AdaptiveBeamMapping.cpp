@@ -30,6 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMMAPPING_CPP
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
@@ -37,13 +38,7 @@
 
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 using namespace defaulttype;
@@ -63,13 +58,9 @@ using namespace core::behavior;
 static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
 .add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
 .add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >()
-
-
 ;
 
-} // namespace mapping
+template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types>;
 
-} // namespace component
-
-} // namespace sofa
-
+} // namespace sofa::component::mapping

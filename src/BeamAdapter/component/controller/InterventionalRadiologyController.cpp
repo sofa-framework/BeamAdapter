@@ -30,6 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP
 
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
@@ -39,13 +40,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace controller
+namespace sofa::component::controller
 {
 
 namespace _interventionalradiologycontroller_
@@ -64,16 +59,10 @@ using namespace sofa::defaulttype;
 
 static int InterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
 .add< InterventionalRadiologyController<Rigid3Types> >(true)
-
 ;
 
 template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
 
-
 } // namespace _interventionalradiologycontroller_
 
-} // namespace controller
-
-} // namespace component
-
-} // namespace sofa
+} // namespace sofa::component::controller

@@ -249,6 +249,10 @@ public:
     bool testForProjection(Real curvAbs);
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIREBEAMINTERPOLATION_CPP)
+extern template class SOFA_BEAMADAPTER_API WireBeamInterpolation<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _wirebeaminterpolation_
 
 /// Import the privately defined into the expected sofa namespace.

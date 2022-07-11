@@ -35,16 +35,10 @@
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
-#define SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 namespace _adaptivebeamforcefieldandmass_
@@ -65,7 +59,6 @@ using sofa::defaulttype::Rigid3dTypes;
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 static int AdaptiveBeamForceFieldAndMassClass = RegisterObject("Adaptive Beam finite elements")
 .add< AdaptiveBeamForceFieldAndMass<Rigid3Types> >()
-
 ;
 
 template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types>;
@@ -74,9 +67,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types>;
 
 } /// _adaptivebeamforcefiedlandmass_
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
+} /// namespace sofa::component::forcefield

@@ -138,7 +138,7 @@ private:
     ////////////////////////////////////////////////////////////////////////////
 };
 
-#if !defined(SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMSLIDINGCONSTRAINT_CPP)
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<defaulttype::Rigid3Types>;
 #endif
 

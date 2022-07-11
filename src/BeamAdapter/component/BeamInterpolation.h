@@ -337,7 +337,7 @@ protected :
     unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if !defined(SOFA_BEAMINTERPOLATION_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 #endif
 

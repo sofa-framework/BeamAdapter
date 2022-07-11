@@ -161,6 +161,9 @@ private:
     vector<IntervalDefinition<Real>>                                   m_constraintIntervals;
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMLENGTHCONSTRAINT_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamLengthConstraint<defaulttype::Rigid3Types>;
+#endif
 
 } /// namespace _adaptivebeamlengthconstraint_
 

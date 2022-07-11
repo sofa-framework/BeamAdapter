@@ -130,5 +130,8 @@ protected:
 
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_STEERABLECATHETER_CPP)
+extern template class SOFA_BEAMADAPTER_API SteerableCatheter<sofa::defaulttype::Rigid3Types>;
+#endif
 
 } // namespace sofa::component::engine

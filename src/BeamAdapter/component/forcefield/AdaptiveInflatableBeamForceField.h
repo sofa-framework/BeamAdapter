@@ -254,9 +254,8 @@ private:
 };
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
-#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEINFLATABLEBEAMFORCEFIELD_CPP)
 extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types> ;
-
 #endif
 
 } /// namespace _AdaptiveInflatableBeamForceField_

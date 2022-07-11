@@ -19,6 +19,8 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMSLIDINGCONSTRAINT_CPP
+
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
@@ -37,13 +39,7 @@ using sofa::defaulttype::Rigid3Types;
 using sofa::core::RegisterObject;
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraintset
+namespace sofa::component::constraintset
 {
 
 namespace _adaptiveBeamSlidingConstraint_
@@ -107,13 +103,7 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3Types>;
 
 } // namespace _adaptiveBeamSlidingConstraint_
 
-} // namespace constraintset
-
-} // namespace component
-
-} // namespace sofa
-
-
+} // namespace sofa::component::constraintset
 
 
 

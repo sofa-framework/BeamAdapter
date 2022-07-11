@@ -254,7 +254,7 @@ private:
 /// overall compilation time of SOFA. In the .h these instances are declared as 'extern' meaning
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#if !defined(SOFA_SUTURECONTROLLER_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP)
 extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_

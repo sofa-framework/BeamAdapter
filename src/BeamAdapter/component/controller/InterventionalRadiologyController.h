@@ -166,6 +166,10 @@ public:
     bool                            m_dropCall;
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _interventionalradiologycontroller_
 
 using _interventionalradiologycontroller_::InterventionalRadiologyController;

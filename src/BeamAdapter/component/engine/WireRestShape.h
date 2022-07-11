@@ -214,6 +214,9 @@ protected:
 };
 
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP)
+extern template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
+#endif
 
 } // namespace _wirerestshape_
 

@@ -156,4 +156,8 @@ protected:
 
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_MULTIADAPTIVEBEAMMAPPING_CPP)
+extern template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace sofa::component::mapping
