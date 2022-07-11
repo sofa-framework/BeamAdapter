@@ -49,7 +49,7 @@
 #include <sofa/simulation/Simulation.h>
 #include <sofa/gl/Axis.h>
 #include <sofa/core/visual/VisualParams.h>
-
+#include <sofa/helper/ScopedAdvancedTimer.h>
 
 
 
@@ -73,6 +73,7 @@ using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;
 using std::set ;
+using sofa::helper::ScopedAdvancedTimer;
 
 template <class DataTypes>
 AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
@@ -525,6 +526,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
                                                          const DataVecCoord& datax,
                                                          const DataVecDeriv& v)
 {
+    ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addForce");
     SOFA_UNUSED(v);
 
     VecDeriv& f = *dataf.beginEdit() ;
@@ -689,6 +691,8 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const MechanicalParams* mparams,
                                                          DataVecDeriv& datadF, const DataVecDeriv& datadX )
 {
+    ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addDForce");
+
     VecDeriv& df = *datadF.beginEdit();
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
