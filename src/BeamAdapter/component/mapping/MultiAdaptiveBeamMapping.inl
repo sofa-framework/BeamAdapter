@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
-#define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
+#pragma once
 
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.h>
 
@@ -40,13 +39,7 @@
 #include <sofa/helper/ScopedAdvancedTimer.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 using namespace sofa::defaulttype;
@@ -431,10 +424,4 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::clear(int size)
 }
 
 
-} // namespace mapping
-
-} // namespace component
-
-} // namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL */
+} // namespace sofa::component::mapping

@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H
-#define SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
@@ -61,13 +60,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -275,12 +268,4 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigi
 using _AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField ;
 
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
-
-
-#endif  /* SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_H */
+} /// namespace sofa::component::forcefield

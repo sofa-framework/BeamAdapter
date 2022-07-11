@@ -32,8 +32,7 @@
 //
 //
 
-#ifndef SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/component/controller/MechanicalStateController.h>
@@ -49,11 +48,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-namespace component
-{
-namespace controller
+namespace sofa::component::controller
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -157,15 +152,12 @@ protected:
     bool                        RW {false} ;
 };
 
+
+
 } /// namespace _adaptivebeamcontroller_
+
 
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 using _adaptivebeamcontroller_::AdaptiveBeamController ;
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H */
+} /// namespace sofa::component::controller

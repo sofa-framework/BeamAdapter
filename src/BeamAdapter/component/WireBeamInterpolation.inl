@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_INL
-#define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_INL
+#pragma once
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <sofa/core/topology/BaseMeshTopology.h>
@@ -50,13 +49,7 @@
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _wirebeaminterpolation_
@@ -681,10 +674,4 @@ bool ProjectionSearch<DataTypes>::testForProjection(Real curvAbs)
 
 } // namespace _wirebeaminterpolation_
 
-} // namespace fem
-
-} // namespace component
-
-} // namespace sofa
-
-#endif  /* SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_INL */
+} // namespace sofa::component::fem

@@ -29,9 +29,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
-#define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
+#pragma once
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
 #include <cmath>
@@ -55,13 +53,7 @@
 #define EPSILON 0.0000000001
 #define VERIF 1
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace engine
+namespace sofa::component::engine
 {
 
 namespace _wirerestshape_
@@ -837,10 +829,4 @@ void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*
 } // namespace _wirerestshape_
 using _wirerestshape_::WireRestShape;
 
-} // namespace engine
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL */
+} // namespace sofa::component::engine

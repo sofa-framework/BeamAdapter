@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_INL
-#define SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_INL
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
@@ -46,13 +45,7 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 namespace _adaptivebeammapping_
@@ -946,16 +939,6 @@ int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types   >;
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types >;
 
-
-
-
-
 } /// namespace _adaptivebeammapping_
 
-} /// namespace mapping
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_INL */
+} /// namespace sofa::component::mapping

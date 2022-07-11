@@ -19,21 +19,14 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
-#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMSLIDINGCONSTRAINT_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraintset
+namespace sofa::component::constraintset
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -155,10 +148,4 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<default
 /// we can use them instead as sofa::component::constraintset::AdaptiveBeamSlidingConstraint.
 using _adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint ;
 
-} // namespace constraintset
-
-} // namespace component
-
-} // namespace sofa
-
-#endif // SOFA_COMPONENT_CONSTRAINTSET_AdaptiveBeamSlidingConstraint_H
+} // namespace sofa::component::constraintset

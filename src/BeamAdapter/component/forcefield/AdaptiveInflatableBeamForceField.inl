@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_INL
-#define SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_INL
+#pragma once
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveInflatableBeamForceField.h>
@@ -53,13 +52,7 @@
 
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 namespace _AdaptiveInflatableBeamForceField_
@@ -858,10 +851,4 @@ void AdaptiveInflatableBeamForceField<DataTypes>::drawElement(const VisualParams
 
 } /// namespace _AdaptiveInflatableBeamForceField_
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_FORCEFIELD_AdaptiveInflatableBeamForceField_INL */
+} /// namespace sofa::component::forcefield

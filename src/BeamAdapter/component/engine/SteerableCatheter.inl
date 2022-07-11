@@ -29,21 +29,13 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_STEERABLECATHETER_INL
-#define SOFA_COMPONENT_ENGINE_STEERABLECATHETER_INL
+#pragma once
 
 #include <BeamAdapter/component/engine/SteerableCatheter.h>
 
 #include <math.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace engine
+namespace sofa::component::engine
 {
 
 template <class DataTypes>
@@ -209,8 +201,4 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
 }
 
 
-} // namespace engine
-} // namespace component
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_STEERABLECATHETER_INL */
+} // namespace sofa::component::engine
