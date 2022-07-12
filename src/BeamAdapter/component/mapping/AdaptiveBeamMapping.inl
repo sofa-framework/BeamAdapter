@@ -936,9 +936,6 @@ int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point
     return nbPoints;
 }
 
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types   >;
-template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types >;
-
 } /// namespace _adaptivebeammapping_
 
 } /// namespace sofa::component::mapping
