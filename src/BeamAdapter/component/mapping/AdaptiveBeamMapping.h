@@ -235,7 +235,7 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigi
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
 #endif
 
-} /// _adaptivebeammappin_
+} /// _adaptivebeammapping_
 
 using _adaptivebeammapping_::AdaptiveBeamMapping ;
 

@@ -38,7 +38,7 @@
 
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 
-namespace sofa::component::mapping
+namespace sofa::component::mapping::_adaptivebeammapping_
 {
 
 using namespace defaulttype;
@@ -228,4 +228,4 @@ static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions an
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types>;
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types>;
 
-} // namespace sofa::component::mapping
+} // namespace sofa::component::mapping::_adaptivebeammapping_
