@@ -691,8 +691,6 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const MechanicalParams* mparams,
                                                          DataVecDeriv& datadF, const DataVecDeriv& datadX )
 {
-    ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addDForce");
-
     VecDeriv& df = *datadF.beginEdit();
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
