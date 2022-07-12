@@ -42,6 +42,7 @@
 
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/helper/AdvancedTimer.h>
+#include <sofa/helper/ScopedAdvancedTimer.h>
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
@@ -63,6 +64,7 @@ using helper::ReadAccessor;
 using helper::WriteAccessor;
 using sofa::core::ConstVecCoordId;
 using sofa::helper::AdvancedTimer;
+using sofa::helper::ScopedAdvancedTimer;
 using sofa::core::MultiVecCoordId;
 using sofa::core::VecCoordId;
 using sofa::core::ConstMultiVecCoordId;
@@ -192,7 +194,7 @@ void AdaptiveBeamMapping< TIn, TOut>::clear(int size)
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
-    AdvancedTimer::stepBegin("AdaptiveBeamMapping_Apply");
+    ScopedAdvancedTimer timer("AdaptiveBeamMapping_Apply");
     VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in = dIn.getValue();
 
@@ -248,7 +250,6 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     AdvancedTimer::stepEnd("computeNewInterpolation");
 
     dOut.endEdit();
-    AdvancedTimer::stepEnd("AdaptiveBeamMapping_Apply");
 }
 
 
@@ -256,8 +257,8 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams, Data<VecDeriv>& dOut, const Data<InVecDeriv>& dIn)
 {
     SOFA_UNUSED(mparams);
+    ScopedAdvancedTimer timer("AdaptiveBeamMapping_applyJ");
 
-    AdvancedTimer::stepBegin("AdaptiveBeamMapping_applyJ");
     VecDeriv& out = *dOut.beginEdit();
     const InVecDeriv& in= dIn.getValue();
     Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
@@ -307,7 +308,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
     dOut.endEdit();
     dataInX.endEdit();
-    AdvancedTimer::stepEnd("AdaptiveBeamMapping_applyJ");
 }
 
 
@@ -316,7 +316,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
 {
     SOFA_UNUSED(mparams);
 
-    AdvancedTimer::stepBegin("AdaptiveBeamMapping_applyJT");
+    ScopedAdvancedTimer timer("AdaptiveBeamMapping_applyJT");
     InVecDeriv& out = *dOut.beginEdit();
     const VecDeriv& in= dIn.getValue();
 
@@ -348,7 +348,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
     }
 
     dOut.endEdit();
-    AdvancedTimer::stepEnd("AdaptiveBeamMapping_applyJT");
 }
 
 
@@ -362,7 +361,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
 {
     SOFA_UNUSED(cparams);
 
-    AdvancedTimer::stepBegin("AdaptiveBeamMapping_ApplyJT");
+    ScopedAdvancedTimer timer("AdaptiveBeamMapping_ApplyJT");
     
     InMatrixDeriv& out = *dOut.beginEdit();
     const OutMatrixDeriv& in = dIn.getValue();
@@ -433,7 +432,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     }
 
     dOut.endEdit();
-    AdvancedTimer::stepEnd("AdaptiveBeamMapping_ApplyJT");
 }
 
 template <class TIn, class TOut>
