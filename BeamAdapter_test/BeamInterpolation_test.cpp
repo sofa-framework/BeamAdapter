@@ -25,7 +25,6 @@
 
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
-#include <sofa/linearalgebra/FullVector.h>
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
