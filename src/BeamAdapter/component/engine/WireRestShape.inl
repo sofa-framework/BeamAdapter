@@ -37,9 +37,9 @@
 #include <cmath>
 
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/component/topology/container/dynamic/QuadSetTopologyModifier.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
-#include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
+#include <SofaBaseTopology/QuadSetTopologyModifier.h>
+#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
 
 #include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
@@ -316,7 +316,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
         return;
     }
     ///////// remove the edge that is cut //////
-    for ( int i=0; i<_topology->getNbPoints(); i++)
+    for ( sofa::Size i=0; i<_topology->getNbPoints(); i++)
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
@@ -333,7 +333,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             if(edge2QuadMap!=NULL)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
-                sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
+                sofa::component::topology::QuadSetTopologyModifier *quadMod;
                 edge2QuadMap->getContext()->get(quadMod);
                 quadMod->notifyEndingEvent();
             }

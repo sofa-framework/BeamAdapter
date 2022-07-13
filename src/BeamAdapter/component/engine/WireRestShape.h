@@ -94,7 +94,7 @@ public:
      ~WireRestShape(){}
 
      /////////////////////////// Inherited from Base //////////////////////////////////////////
-     virtual std::string getTemplateName() const
+     virtual std::string getTemplateName() const override
      {
          return templateName(this);
      }
@@ -113,7 +113,7 @@ public:
 
 
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
-     virtual void parse(BaseObjectDescription* arg) ;
+     virtual void parse(BaseObjectDescription* arg) override;
      virtual void init() override ;
      virtual void reinit() override {}
      virtual void doUpdate() override {}

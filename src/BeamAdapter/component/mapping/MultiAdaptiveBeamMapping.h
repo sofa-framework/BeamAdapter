@@ -106,21 +106,21 @@ public:
 
     virtual ~MultiAdaptiveBeamMapping(){}
 
-    void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in);
+    void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
 
-    void applyJ(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecDeriv>& out, const Data<InVecDeriv>& in);
+    void applyJ(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;
 
-    void applyJT(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<InVecDeriv>& out, const Data<VecDeriv>& in);
+    void applyJT(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<InVecDeriv>& out, const Data<VecDeriv>& in) override;
 
-    void applyJT(const core::ConstraintParams *cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in);
+    void applyJT(const core::ConstraintParams *cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in) override;
 
 
-    virtual void init();
-    virtual void bwdInit();
+    virtual void init() override;
+    virtual void bwdInit() override;
 
-    virtual void handleEvent(sofa::core::objectmodel::Event *);
+    virtual void handleEvent(sofa::core::objectmodel::Event *) override;
 
-    virtual void draw(const core::visual::VisualParams*);
+    virtual void draw(const core::visual::VisualParams*) override;
 
     void setBarycentricMapping();
 

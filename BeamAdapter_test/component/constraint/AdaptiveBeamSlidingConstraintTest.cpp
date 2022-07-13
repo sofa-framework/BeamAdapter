@@ -84,7 +84,7 @@ struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationT
 using ::testing::Types;
 typedef Types<Rigid3dTypes> DataTypes;
 
-TYPED_TEST_CASE(AdaptiveBeamSlidingConstraintTest, DataTypes);
+TYPED_TEST_SUITE(AdaptiveBeamSlidingConstraintTest, DataTypes);
 
 TYPED_TEST(AdaptiveBeamSlidingConstraintTest, NormalBehavior) {
     this->normalBehavior() ;

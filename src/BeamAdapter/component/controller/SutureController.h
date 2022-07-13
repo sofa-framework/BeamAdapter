@@ -237,9 +237,6 @@ private:
     Data< vector<Vec2> > d_curvatureList;
     Data< VecCoord >     d_controlPoints;
 
-    /// Interface for topology changes
-    TopologyContainer*  m_topology {nullptr} ;
-
     void dummyController(vector<Real> &newCurvAbs);
 
     /// If true update interpolation and subgraph on beginAnimationStep
@@ -247,6 +244,9 @@ private:
     Data< bool>         d_applyOrientationFirstInCreateNeedle;
     Data< bool >        d_reinitilizeWireOnInit;
     Data<vector<Real> > d_actualStepNoticeablePoints;
+
+    /// Interface for topology changes
+    TopologyContainer*  m_topology {nullptr} ;
 
     /// internal data necessary for computeSampling
     /// bool addingBeams is true when we are currently "adding" new Beams (for more precise computation)

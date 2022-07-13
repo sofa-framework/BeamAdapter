@@ -6,10 +6,9 @@ import os
 path = os.path.dirname(os.path.abspath(__file__))+'/mesh/'
 
 def createScene(rootNode):
-        rootNode.addObject('RequiredPlugin',name='BeamAdapter', pluginName='BeamAdapter SofaConstraint SofaLoader SofaMeshCollision SofaOpenglVisual SofaBoundaryCondition SofaDeformable SofaGeneralLinearSolver SofaImplicitOdeSolver SofaTopologyMapping')
-        #rootNode.addObject('RequiredPlugin',name='SofaShells', pluginName='SofaShells')
-        rootNode.addObject('RequiredPlugin',name='SoftRobots', pluginName='SoftRobots')
+        rootNode.addObject('RequiredPlugin',name='BeamAdapter', pluginName='BeamAdapter ')
         rootNode.addObject('RequiredPlugin',name='SofaPython3', pluginName='SofaPython3')
+        rootNode.addObject('RequiredPlugin',name='SOFA Modules', pluginName='Sofa.Component.AnimationLoop Sofa.Component.Collision.Detection.Algorithm Sofa.Component.Collision.Detection.Intersection Sofa.Component.Collision.Geometry Sofa.Component.Collision.Response.Contact Sofa.Component.Constraint.Lagrangian.Correction Sofa.Component.Constraint.Lagrangian.Solver Sofa.Component.Constraint.Projective Sofa.Component.IO.Mesh Sofa.Component.LinearSolver.Direct Sofa.Component.ODESolver.Backward Sofa.Component.SolidMechanics.Spring Sofa.Component.Topology.Container.Constant Sofa.Component.Topology.Container.Dynamic Sofa.Component.Topology.Container.Grid  Sofa.Component.Topology.Mapping Sofa.Component.Visual Sofa.GL.Component.Rendering3D')
         rootNode.findData('dt').value=0.01
         rootNode.findData('gravity').value=[0,0,0]
         rootNode.addObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideMappings hideForceFields showInteractionForceFields hideWireframe')
@@ -24,7 +23,7 @@ def createScene(rootNode):
 
 
         cochleaNode = rootNode.addChild('cochleaNode')
-        cochleaNode.addObject('MeshObjLoader', name='loader', filename='Mesh/cochleeCompleteTroueeSimpleOrientationMegaTrou.obj', flipNormals="false")
+        cochleaNode.addObject('MeshOBJLoader', name='loader', filename='Mesh/cochleeCompleteTroueeSimpleOrientationMegaTrou.obj', flipNormals="false")
         cochleaNode.addObject('MeshTopology',src = '@loader')
         cochleaNode.addObject('MechanicalObject', name='dofs', template='Vec3d', showIndices='false', showIndicesScale='4e-5', rx='0',printLog="0")
         cochleaNode.addObject('TriangleCollisionModel', group='1')

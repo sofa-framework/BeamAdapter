@@ -137,7 +137,7 @@ TEST_P(BeamInterpolationTest, checkMinimalScene) {
     ASSERT_NO_THROW(this->simpleScene(GetParam())) ;
 }
 
-INSTANTIATE_TEST_CASE_P(checkMinimalScene,
+INSTANTIATE_TEST_SUITE_P(checkMinimalScene,
                         BeamInterpolationTest, ::testing::ValuesIn(teststrings) ) ;
 
 }

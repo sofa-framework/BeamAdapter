@@ -127,7 +127,7 @@ public :
     virtual void onBeginAnimationStep(const double dt) override ;
 
     //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
-    virtual string getTemplateName() const
+    virtual string getTemplateName() const override
     {
       return templateName(this);
     }

@@ -84,10 +84,10 @@ public:
     ~SteerableCatheter(){}
 
     /// Initialization function
-    void init();
+    void init() override;
 
     /// Function handling the event (listening needs to be true)
-    void handleEvent(core::objectmodel::Event* ev);
+    void handleEvent(core::objectmodel::Event* ev) override;
 
 
     /// Construction method called by ObjectFactory.
@@ -97,7 +97,7 @@ public:
          return core::objectmodel::BaseObject::create(obj, context, arg);
     }
 
-    virtual std::string getTemplateName() const
+    virtual std::string getTemplateName() const override
     {
          return templateName(this);
     }
