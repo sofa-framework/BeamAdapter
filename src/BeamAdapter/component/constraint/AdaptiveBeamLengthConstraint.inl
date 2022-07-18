@@ -19,8 +19,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_INL
-#define SOFA_COMPONENT_CONSTRAINTSET_ADAPTIVEBEAMLENGTHCONSTRAINT_INL
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
@@ -31,13 +30,7 @@
 #include <sofa/core/behavior/ConstraintResolution.h>
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraintset
+namespace sofa::component::constraintset
 {
 
 namespace _adaptivebeamlengthconstraint_
@@ -431,10 +424,4 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
 
 } /// namespace _adaptivebeamlengthconstraint_
 
-} /// namespace constraintset
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif
+} /// namespace sofa::component::constraintset

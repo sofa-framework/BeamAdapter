@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_H
-#define SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/type/vector.h>
@@ -59,13 +58,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -237,15 +230,13 @@ public:
     void computeDistribution();
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMMAPPING_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Vec3Types>;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
+#endif
 
-} /// _adaptivebeammappin_
+} /// _adaptivebeammapping_
 
 using _adaptivebeammapping_::AdaptiveBeamMapping ;
 
-} /// namespace mapping
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_H */
+} /// namespace sofa::component::mapping

@@ -31,9 +31,7 @@
 //
 //
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_STEERABLECATHETER_H
-#define SOFA_COMPONENT_ENGINE_STEERABLECATHETER_H
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <sofa/defaulttype/SolidTypes.h>
@@ -45,16 +43,8 @@
 #include <sofa/core/objectmodel/KeyreleasedEvent.h>
 #include <sofa/simulation/AnimateBeginEvent.h>
 
-namespace sofa
+namespace sofa::component::engine
 {
-
-namespace component
-{
-
-namespace engine
-{
-
-
 
 /*!
  * \class SteerableCatheter
@@ -140,11 +130,8 @@ protected:
 
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_STEERABLECATHETER_CPP)
+extern template class SOFA_BEAMADAPTER_API SteerableCatheter<sofa::defaulttype::Rigid3Types>;
+#endif
 
-} // namespace engine
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_STEERABLECATHETER_H */
+} // namespace sofa::component::engine

@@ -29,9 +29,7 @@
 //
 // Copyright: See COPYING file that comes with this distribution
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
-#define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <sofa/defaulttype/SolidTypes.h>
@@ -41,12 +39,9 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa
+namespace sofa::component::engine
 {
-namespace component
-{
-namespace engine
-{
+
 namespace _wirerestshape_
 {
 
@@ -218,14 +213,13 @@ protected:
      bool edgeSetInNode {false};
 };
 
+
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP)
+extern template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _wirerestshape_
 
 using _wirerestshape_::WireRestShape;
 
-} // namespace engine
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H */
+} // namespace sofa::component::engine

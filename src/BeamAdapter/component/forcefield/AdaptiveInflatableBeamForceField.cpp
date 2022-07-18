@@ -30,21 +30,14 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEINFLATABLEBEAMFORCEFIELD_CPP
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
-
-#define SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP
 #include <BeamAdapter/component/forcefield/AdaptiveInflatableBeamForceField.inl>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 namespace _AdaptiveInflatableBeamForceField_
@@ -65,7 +58,6 @@ using sofa::defaulttype::Rigid3dTypes;
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 static int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
 .add< AdaptiveInflatableBeamForceField<Rigid3Types> >()
-
 ;
 
 template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types>;
@@ -74,9 +66,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types
 
 } /// _adaptivebeamforcefiedlandmass_
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
+} /// namespace sofa::component::forcefield

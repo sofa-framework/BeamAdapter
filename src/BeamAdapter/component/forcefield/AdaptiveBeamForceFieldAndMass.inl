@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL
-#define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL
+#pragma once
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
@@ -53,13 +52,7 @@
 
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 namespace _adaptivebeamforcefieldandmass_
@@ -848,10 +841,4 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::drawElement(const VisualParams *v
 
 } /// namespace _adaptivebeamforcefieldandmass_
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL */
+} /// namespace sofa::component::forcefield

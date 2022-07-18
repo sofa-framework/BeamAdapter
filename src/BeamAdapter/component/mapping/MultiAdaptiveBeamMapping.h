@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
-#define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
@@ -41,13 +40,7 @@ using namespace sofa::component::controller;
 using namespace sofa::component::fem;
 using namespace sofa::core::objectmodel;
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 /*!
@@ -163,10 +156,8 @@ protected:
 
 };
 
-} // namespace mapping
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_MULTIADAPTIVEBEAMMAPPING_CPP)
+extern template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<sofa::defaulttype::Rigid3Types>;
+#endif
 
-} // namespace component
-
-} // namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_H */
+} // namespace sofa::component::mapping

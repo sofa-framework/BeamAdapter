@@ -30,7 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
+#define SOFA_PLUGIN_BEAMADAPTER_WIREBEAMINTERPOLATION_CPP
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/WireBeamInterpolation.inl>
@@ -39,13 +39,7 @@
 #include <sofa/core/ObjectFactory.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _wirebeaminterpolation_
@@ -68,9 +62,4 @@ template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;
 
 } // namespace _wirebeaminterpolation_
 
-} // namespace fem
-
-} // namespace component
-
-} // namespace sofa
-
+} // namespace sofa::component::fem

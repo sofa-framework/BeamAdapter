@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL
-#define SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL
+#pragma once
 
 #include <BeamAdapter/component/BeamInterpolation.h>
 
@@ -47,13 +46,7 @@
 #include <sofa/simulation/Simulation.h>
 #include <sofa/gl/Axis.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _beaminterpolation_
@@ -1543,10 +1536,4 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
 
 } /// namespace _beaminterpolation_
 
-} /// namespace fem
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /* SOFA_COMPONENT_FEM_BEAMINTERPOLATION_INL */
+} /// namespace sofa::component::fem

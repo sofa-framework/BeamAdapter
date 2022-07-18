@@ -31,9 +31,7 @@
 //
 //
 //
-
-#ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H
+#pragma once
 
 #include <sofa/component/controller/MechanicalStateController.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
@@ -47,12 +45,9 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
-namespace sofa
+namespace sofa::component::controller
 {
-namespace component
-{
-namespace controller
-{
+
 namespace _interventionalradiologycontroller_
 {
 
@@ -171,14 +166,12 @@ public:
     bool                            m_dropCall;
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _interventionalradiologycontroller_
 
 using _interventionalradiologycontroller_::InterventionalRadiologyController;
 
-} // namespace controller
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_H */
+} // namespace sofa::component::controller

@@ -30,9 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H
-#define SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H
-
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <sofa/core/behavior/ForceField.h>
@@ -43,13 +41,7 @@
 #include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _beaminterpolation_
@@ -345,7 +337,7 @@ protected :
     unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if !defined(SOFA_BEAMINTERPOLATION_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 #endif
 
@@ -353,10 +345,4 @@ extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 
 using _beaminterpolation_::BeamInterpolation ;
 
-} /// namespace fem
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /*SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H*/
+} /// namespace sofa::component::fem

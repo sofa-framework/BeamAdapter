@@ -30,9 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#ifndef SOFA_COMPONENT_CONTROLLER_SutureController_INL
-#define SOFA_COMPONENT_CONTROLLER_SutureController_INL
+#pragma once
 
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/simulation/MechanicalVisitor.h>
@@ -41,13 +39,7 @@
 #include <BeamAdapter/component/controller/SutureController.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace controller
+namespace sofa::component::controller
 {
 
 namespace _suturecontroller_
@@ -1235,10 +1227,4 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
 
 } /// namespace _suturecontroller_
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_SutureController_INL */
+} /// namespace sofa::component::controller

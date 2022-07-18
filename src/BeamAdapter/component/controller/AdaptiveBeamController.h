@@ -32,8 +32,7 @@
 //
 //
 
-#ifndef SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/component/controller/MechanicalStateController.h>
@@ -42,18 +41,13 @@
 #include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/component/BeamInterpolation.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-namespace component
-{
-namespace controller
+namespace sofa::component::controller
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -157,15 +151,14 @@ protected:
     bool                        RW {false} ;
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamController<defaulttype::Rigid3Types>;
+#endif
+
 } /// namespace _adaptivebeamcontroller_
+
 
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 using _adaptivebeamcontroller_::AdaptiveBeamController ;
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H */
+} /// namespace sofa::component::controller

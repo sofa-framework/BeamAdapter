@@ -29,8 +29,7 @@
 //
 // Copyright: See COPYING file that comes with this distribution
 //
-#ifndef SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
-#define SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H
+#pragma once
 
 #include <BeamAdapter/config.h>
 
@@ -50,13 +49,7 @@
 #include <sofa/core/objectmodel/BaseObject.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _wirebeaminterpolation_
@@ -256,15 +249,13 @@ public:
     bool testForProjection(Real curvAbs);
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIREBEAMINTERPOLATION_CPP)
+extern template class SOFA_BEAMADAPTER_API WireBeamInterpolation<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _wirebeaminterpolation_
 
 /// Import the privately defined into the expected sofa namespace.
 using _wirebeaminterpolation_::WireBeamInterpolation ;
 
-} // namespace fem
-
-} // namespace component
-
-} // namespace sofa
-
-#endif  /*SOFA_COMPONENT_FEM_WIREBEAMINTERPOLATION_H*/
+} // namespace sofa::component::fem

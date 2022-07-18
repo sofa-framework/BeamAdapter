@@ -33,9 +33,8 @@
 //
 //
 //
+#pragma once
 
-#ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #include <sofa/helper/set.h>
 
 #include <sofa/component/controller/MechanicalStateController.h>
@@ -54,12 +53,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////DECLARATIONS /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
+namespace sofa::component::controller
 {
-namespace component
-{
-namespace controller
-{
+
 namespace _suturecontroller_
 {
 
@@ -258,17 +254,11 @@ private:
 /// overall compilation time of SOFA. In the .h these instances are declared as 'extern' meaning
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#if !defined(SOFA_SUTURECONTROLLER_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP)
 extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_
 
 using _suturecontroller_::SutureController ;
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H */
+} /// namespace sofa::component::controller

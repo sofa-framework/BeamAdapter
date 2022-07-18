@@ -29,6 +29,8 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_STEERABLECATHETER_CPP
+
 #include <BeamAdapter/component/engine/SteerableCatheter.inl>
 
 #include <sofa/core/ObjectFactory.h>
@@ -36,13 +38,7 @@
 #include <sofa/defaulttype/RigidTypes.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace engine
+namespace sofa::component::engine
 {
 
 using namespace sofa::defaulttype;
@@ -63,10 +59,4 @@ static int SteerableCatheterClass = core::RegisterObject("")
 
 template class SOFA_BEAMADAPTER_API SteerableCatheter<Rigid3Types>;
 
-
-
-}// namespace engine
-
-} // namespace component
-
-} // namespace sofa
+}// namespace sofa::component::engine
