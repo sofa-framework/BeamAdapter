@@ -263,25 +263,31 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(const Con
 template<class DataTypes>
 void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
-#ifndef SOFA_NO_OPENGL
-    if(!vparams->displayFlags().getShowInteractionForceFields()) return;
+    if (!vparams->displayFlags().getShowInteractionForceFields()) return;
+    
+    vparams->drawTool()->saveLastState();
 
-    glDisable(GL_LIGHTING);
-    glPointSize(10);
-    glBegin(GL_POINTS);
+    ReadAccessor<Data<VecCoord> > x = mstate2->read(ConstVecCoordId::position());
+    sofa::type::Vector3 point;
+    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::RGBAColor> colors;
 
-    ReadAccessor<Data<VecCoord> > x = mstate2->read(ConstVecCoordId::position()) ;
-    unsigned int m = x.size();
+    points.reserve(x.size());
+    colors.reserve(x.size());
 
-    for(unsigned int i=0; i<m; i++)
+    for (auto i = 0; i < x.size(); i++)
     {
-        glColor4f(0.0f,1.0f,m_projected[i]?1:0.0f,1.0f);
-        gl::glVertexT(x[i]);
+        point = DataTypes::getCPos(x[i]);
+        points.push_back(point);
+        
+        if (m_projected[i])
+            colors.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
+        else
+            colors.emplace_back(0.0f, 1.0f, 1.0f, 1.0f);
     }
+    vparams->drawTool()->drawPoints(points, 10, colors);
 
-    glEnd();
-    glPointSize(1);
-#endif // SOFA_NO_OPENGL
+    vparams->drawTool()->restoreLastState();
 }
 
 } // namespace _adaptiveBeamSlidingConstraint_

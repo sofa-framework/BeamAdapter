@@ -381,45 +381,34 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const Cons
 template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
-#ifndef SOFA_NO_OPENGL
     if (!vparams->displayFlags().getShowInteractionForceFields())
         return;
 
     if(m_constraintIntervals.size()==0)
         return;
 
-    ///trace a point at the beginning and at the end of each constraint interval
-    glDisable(GL_LIGHTING);
-    glPointSize(10);
-    glBegin(GL_POINTS);
-    glColor4f(0.0f,1.0f,0.0f,1.0f);
-    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
-    {
-        gl::glVertexT(m_constraintIntervals[i].posBegin);
-        gl::glVertexT(m_constraintIntervals[i].posEnd);
-    }
-    glEnd();
+    vparams->drawTool()->saveLastState();
+    vparams->drawTool()->setLightingEnabled(false);
 
-    glPointSize(1);
+    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::RGBAColor> colors;
+    points.reserve(m_constraintIntervals.size()*2);
+    colors.reserve(m_constraintIntervals.size());
 
-    /// TODO: change color if constrained Length reached...
-    /// trace a straight line between the beginning and the end of each interval
-    glBegin(GL_LINES);
-    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
+    for (unsigned int i = 0; i < m_constraintIntervals.size(); i++)
     {
-        if(m_constraintIntervals[i].active)
-            glColor4f(1.0f,0.5f,0.0f,1.0f);
+        points.emplace_back(m_constraintIntervals[i].posBegin);
+        points.emplace_back(m_constraintIntervals[i].posEnd);
+
+        if (m_constraintIntervals[i].active)
+            colors.emplace_back(1.0f, 0.5f, 0.0f, 1.0f);
         else
-            glColor4f(0.0f,1.0f,0.0f,1.0f);
-        gl::glVertexT(m_constraintIntervals[i].posBegin);
-        gl::glVertexT(m_constraintIntervals[i].posEnd);
+            colors.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
     }
+    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor(0.0, 1.0, 0.0, 1.0));
+    vparams->drawTool()->drawLines(points, 1.0f, colors);
 
-    glEnd();
-
-    glEnable(GL_LIGHTING);
-
-#endif /// SOFA_NO_OPENGL
+    vparams->drawTool()->restoreLastState();
 }
 
 } /// namespace _adaptivebeamlengthconstraint_
