@@ -405,7 +405,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
         else
             colors.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
     }
-    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor(0.0, 1.0, 0.0, 1.0));
+    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor::green());
     vparams->drawTool()->drawLines(points, 1.0f, colors);
 
     vparams->drawTool()->restoreLastState();

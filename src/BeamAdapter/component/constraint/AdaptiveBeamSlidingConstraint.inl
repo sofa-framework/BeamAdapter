@@ -285,7 +285,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
         else
             colors.emplace_back(0.0f, 1.0f, 1.0f, 1.0f);
     }
-    vparams->drawTool()->drawPoints(points, 10, colors);
+    vparams->drawTool()->drawPoints(points, 10.f, colors);
 
     vparams->drawTool()->restoreLastState();
 }
