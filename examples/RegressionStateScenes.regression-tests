@@ -1,0 +1,6 @@
+# WARNING: 
+# REGRESSION_TEST DOES NOT SUPPORT DASHES ("-") IN SCENE NAMES.
+# USE UNDERSCORES ("_") INSTEAD.
+
+### Demo scenes ###
+3instruments_collis.scn 2000 1e-4 1 1
