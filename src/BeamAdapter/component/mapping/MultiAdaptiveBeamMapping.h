@@ -113,8 +113,6 @@ public:
 
     virtual void handleEvent(sofa::core::objectmodel::Event *) override;
 
-    virtual void draw(const core::visual::VisualParams*) override;
-
     void setBarycentricMapping();
 
     /*

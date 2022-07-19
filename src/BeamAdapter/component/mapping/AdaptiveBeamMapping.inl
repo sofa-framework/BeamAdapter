@@ -762,13 +762,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv
 }
 
 
-template <class TIn, class TOut>
-void AdaptiveBeamMapping< TIn, TOut>::draw(const VisualParams* vparams)
-{
-    if (!vparams->displayFlags().getShowMappings())
-        return;
-}
-
 } /// namespace _adaptivebeammapping_
 
 } /// namespace sofa::component::mapping
