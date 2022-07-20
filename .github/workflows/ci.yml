@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-10.15, windows-2019]
-        sofa_branch: [master, v22.06]
+        sofa_branch: [master]
 
     steps:
       - name: Setup SOFA and environment
@@ -22,7 +22,7 @@ jobs:
         with:
           sofa_root: ${{ github.workspace }}/sofa
           sofa_version: ${{ matrix.sofa_branch }}
-          sofa_scope: 'standard'
+          sofa_scope: 'full'
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
@@ -75,9 +75,9 @@ jobs:
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             echo "$WORKSPACE_ARTIFACT_PATH/lib" >> $GITHUB_PATH
             echo "$WORKSPACE_ARTIFACT_PATH/bin" >> $GITHUB_PATH
+            echo "SOFA_PLUGIN_PATH=$WORKSPACE_ARTIFACT_PATH/bin" | tee -a $GITHUB_ENV
           else
-            # need to add the new lib dir for SOFA to load with PluginManager (no need on Windows, it will find it from PATH)
-            echo "SOFA_PLUGIN_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_PLUGIN_PATH" | tee -a $GITHUB_ENV
+            echo "SOFA_PLUGIN_PATH=$WORKSPACE_ARTIFACT_PATH/lib" | tee -a $GITHUB_ENV
           fi
 
           if [[ "$RUNNER_OS" == "macOS" ]]; then
@@ -88,19 +88,19 @@ jobs:
             echo "LD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$LD_LIBRARY_PATH" | tee -a $GITHUB_ENV
           fi
 
-      #- name: Check environment for tests
-      #  shell: bash
-      #  run: |
-      #    echo '------ ls -la "$WORKSPACE_SRC_PATH" ------'
-      #    ls -la "$WORKSPACE_SRC_PATH"
-      #    echo '------ ls -la "$WORKSPACE_BUILD_PATH" ------'
-      #    ls -la "$WORKSPACE_BUILD_PATH"
-      #    echo '------ ls -la "$WORKSPACE_INSTALL_PATH" ------'
-      #    ls -la "$WORKSPACE_INSTALL_PATH"
-      #    echo '------ ls -la "$WORKSPACE_ARTIFACT_PATH" ------'
-      #    ls -la "$WORKSPACE_ARTIFACT_PATH"
-      #    echo '----------------------'
-      #    echo "SOFA_ROOT = $SOFA_ROOT"
+      # - name: Check environment for tests
+      #   shell: bash
+      #   run: |
+      #     echo '------ ls -la "$WORKSPACE_SRC_PATH" ------'
+      #     ls -la "$WORKSPACE_SRC_PATH"
+      #     echo '------ ls -la "$WORKSPACE_BUILD_PATH" ------'
+      #     ls -la "$WORKSPACE_BUILD_PATH"
+      #     echo '------ ls -la "$WORKSPACE_INSTALL_PATH" ------'
+      #     ls -la "$WORKSPACE_INSTALL_PATH"
+      #     echo '------ ls -la "$WORKSPACE_ARTIFACT_PATH" ------'
+      #     ls -la "$WORKSPACE_ARTIFACT_PATH"
+      #     echo '----------------------'
+      #     echo "SOFA_ROOT = $SOFA_ROOT"
 
       - name: Run BeamAdapter_test
         if: always()
@@ -110,6 +110,26 @@ jobs:
           cd $WORKSPACE_BUILD_PATH
           ./bin/BeamAdapter_test${{ steps.sofa.outputs.exe }}
 
+      - name: Fetch, install and run Regression_test
+        if: always()
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" != "macOS" ]]; then
+            # Get regression from github releases
+            mkdir -p "${{ runner.temp }}/regression_tmp/install"
+            curl --output "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -L https://github.com/fredroy/regression/releases/download/release-add_ga/Regression_test_add_ga_for-SOFA-master_${RUNNER_OS}.zip
+            unzip -qq "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -d "${{ runner.temp }}/regression_tmp/install"
+            # Install it in the SOFA bin directory
+            $SUDO mv "${{ runner.temp }}"/regression_tmp/install/Regression_*/bin/* "${SOFA_ROOT}/bin"
+            chmod +x ${SOFA_ROOT}/bin/Regression_test${{ steps.sofa.outputs.exe }}
+            # Setup mandatory env vars
+            export REGRESSION_SCENES_DIR="${WORKSPACE_SRC_PATH}/examples"
+            export REGRESSION_REFERENCES_DIR="${WORKSPACE_SRC_PATH}/regression/references"
+            # Run regression test bench
+            ${SOFA_ROOT}/bin/Regression_test${{ steps.sofa.outputs.exe }}
+          else
+            echo "Regression tests are not supported on the CI for macOS yet (TODO)"
+          fi
 
   deploy:
     name: Deploy artifacts
