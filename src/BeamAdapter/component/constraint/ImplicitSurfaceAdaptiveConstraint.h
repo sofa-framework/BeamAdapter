@@ -34,7 +34,6 @@
 #include <sofa/type/vector.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/core/objectmodel/Event.h>
-#include <SofaBaseTopology/TopologyData.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
 
 #include <SofaImplicitField/deprecated/ImplicitSurfaceContainer.h>

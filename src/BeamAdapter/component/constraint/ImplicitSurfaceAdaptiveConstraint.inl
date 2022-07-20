@@ -27,9 +27,7 @@
 
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
-#include <SofaBaseTopology/RegularGridTopology.h>
 #include <SofaBaseMechanics/AddMToMatrixFunctor.h>
-#include <SofaBaseTopology/TopologyData.inl>
 
 #include <sofa/helper/system/thread/CTime.h>
 #include <SofaConstraint/UnilateralInteractionConstraint.h>
