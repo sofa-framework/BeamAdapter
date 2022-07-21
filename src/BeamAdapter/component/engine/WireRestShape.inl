@@ -171,7 +171,7 @@ void WireRestShape<DataTypes>::init()
     //////////////////////////////////////////////
     this->getContext()->get(_topology);
 
-    if(_topology != NULL){
+    if(_topology != nullptr){
         msg_info() << "found topology named "<< _topology->getName() ;
     }else{
         //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
@@ -180,7 +180,7 @@ void WireRestShape<DataTypes>::init()
 
     this->getContext()->get(edgeMod);
 
-    if (edgeMod == NULL)
+    if (edgeMod == nullptr)
     {
         //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
         msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier." ;
@@ -302,7 +302,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
     d_brokenIn2.setValue(true);
 
-    if ( edgeMod == NULL )
+    if ( edgeMod == nullptr )
     {
         msg_error() << "no edgeSetModifier in the node -> cannot do the topological change";
         return;
@@ -322,7 +322,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
 
             // propagate the topological change to the topological mapping //
-            if(edge2QuadMap!=NULL)
+            if(edge2QuadMap!=nullptr)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
                 sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;

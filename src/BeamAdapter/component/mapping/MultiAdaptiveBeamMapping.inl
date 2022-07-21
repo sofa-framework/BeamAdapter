@@ -62,7 +62,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
-, m_ircontroller(NULL)
+, m_ircontroller(nullptr)
 , isBarycentricMapping(false)
 {
     this->addAlias(&m_controlerPath, "controller");
@@ -260,7 +260,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 {
-        if (m_ircontroller==NULL) {
+        if (m_ircontroller==nullptr) {
                 ///////// get the Adaptive Interpolation component ///////
                 core::objectmodel::BaseContext * c = this->getContext();
 
@@ -271,7 +271,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
                     m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
                 }
 
-                if(m_ircontroller==NULL)
+                if(m_ircontroller==nullptr)
                     msg_error() << " no Beam Interpolation found !!! the component can not work";
                 else
                     msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName()<<")";
@@ -293,12 +293,12 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     ///////// STEP 3 : get the edgeSet topology and fill it with segments
     this->getContext()->get(_topology);
 
-    if(_topology != NULL && this->f_printLog.getValue() )
+    if(_topology != nullptr && this->f_printLog.getValue() )
         msg_info() << " FIND topology named " << _topology->getName();
 
     this->getContext()->get(_edgeMod);
 
-    if (_edgeMod == NULL)
+    if (_edgeMod == nullptr)
         msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier.";
 
     // fill topology :
@@ -374,7 +374,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     int returnId=this->getMechTo()[0]->getSize();
     this->getMechTo()[0]->resize(returnId+1);
 
-    assert(m_ircontroller !=NULL && isBarycentricMapping);
+    assert(m_ircontroller !=nullptr && isBarycentricMapping);
     const type::vector<type::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
     int nbControlledEdge  = static_cast<int>(id_instrument_curvAbs_table.size()) - 1;
     int totalNbEdges = m_ircontroller->getTotalNbEdges();

@@ -92,7 +92,7 @@ public:
     virtual void reinit() override;
     virtual void draw(const core::visual::VisualParams*) override {}
     virtual std::string getTemplateName() const override;
-    static std::string templateName(const InterventionalRadiologyController<DataTypes>* = NULL);
+    static std::string templateName(const InterventionalRadiologyController<DataTypes>* = nullptr);
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 

@@ -109,7 +109,7 @@ public:
     using Inherit1::getMechanicalState;
 
 public:
-    SutureController(WInterpolation* _adaptiveinterpolation = NULL) ;
+    SutureController(WInterpolation* _adaptiveinterpolation = nullptr) ;
     virtual ~SutureController() override {}
 
     /////////////////// Inherited from Base //////////////////////////////////////////////////
@@ -124,7 +124,7 @@ public:
         return templateName(this);
     }
 
-    static std::string templateName(const SutureController<DataTypes>* = NULL)
+    static std::string templateName(const SutureController<DataTypes>* = nullptr)
     {
         return DataTypes::Name();
     }

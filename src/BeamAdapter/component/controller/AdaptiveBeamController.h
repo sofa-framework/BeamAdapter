@@ -126,7 +126,7 @@ public :
       return templateName(this);
     }
 
-    static string templateName(const AdaptiveBeamController<DataTypes>* = NULL)
+    static string templateName(const AdaptiveBeamController<DataTypes>* = nullptr)
     {
       return DataTypes::Name();
     }

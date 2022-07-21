@@ -149,7 +149,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
     else
         msg_error() <<"No mstate1 found.";
 
-    if (m_contactSurface == NULL)
+    if (m_contactSurface == nullptr)
     {
         msg_error() <<"No surface found for contact.";
         return;

@@ -153,9 +153,9 @@ public:
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
 
 
-    AdaptiveBeamMapping(State< In >* from=NULL,
-                        State< Out >* to=NULL,
-                        BeamInterpolation< TIn >* interpolation=NULL,
+    AdaptiveBeamMapping(State< In >* from=nullptr,
+                        State< Out >* to=nullptr,
+                        BeamInterpolation< TIn >* interpolation=nullptr,
                         bool isSubMapping=false) ;
 
     virtual ~AdaptiveBeamMapping(){}

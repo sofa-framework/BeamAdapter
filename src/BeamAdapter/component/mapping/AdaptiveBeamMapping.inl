@@ -74,7 +74,7 @@ AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out
     , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
-    , m_inputMapping(NULL)
+    , m_inputMapping(nullptr)
     , m_isSubMapping(isSubMapping)
     , m_isBarycentricMapping(false)
 {
@@ -488,7 +488,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     if(d_contactDuplicate.getValue()==true)
     {
         this->fromModel->getContext()->get(m_inputMapping, sofa::core::objectmodel::BaseContext::SearchRoot);
-        if(m_inputMapping==NULL)
+        if(m_inputMapping==nullptr)
             msg_warning() <<"Can not found the input  Mapping";
         else
             msg_info()<<"Input Mapping named "<<m_inputMapping->getName()<<" is found";

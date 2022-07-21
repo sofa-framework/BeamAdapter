@@ -202,7 +202,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
 {
     unsigned int numDofs = 0;
 
-    if (getMechanicalState() != NULL)
+    if (getMechanicalState() != nullptr)
     {
         numDofs = getMechanicalState()->getSize();
         if (numDofs == 0)
@@ -247,7 +247,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
         }
     }
 
-    if (m_topology != NULL)
+    if (m_topology != nullptr)
     {
         if ((unsigned int)m_topology->getNbPoints() != numDofs || (unsigned int)m_topology->getNbEdges() != (numDofs+numRigidPts-1))
             return false;
@@ -258,7 +258,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
         return false;
     }
 
-    if (l_adaptiveInterpolation != NULL)
+    if (l_adaptiveInterpolation != nullptr)
     {
         if (l_adaptiveInterpolation->getNumBeams() != (numDofs + numRigidPts - 1))
             return false;

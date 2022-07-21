@@ -47,7 +47,7 @@ using sofa::core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(double* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
     virtual void init(int line, double** w, double* force);
@@ -373,7 +373,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const Cons
     unsigned int nb = m_violations.size();
     for(unsigned int i=0; i<nb; i++)
     {
-        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &m_constraintIntervals[i].active);
+        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(nullptr, &m_constraintIntervals[i].active);
         offset++;
     }
 }

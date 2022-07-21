@@ -73,7 +73,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 , d_curvAbs(initData(&d_curvAbs,"CurvAbs", "curvi-linear abscissa of the DOFs" ))
 {
-    m_fixedConstraint = NULL;
+    m_fixedConstraint = nullptr;
     m_dropCall = false;
     m_sensored =false;
 }
@@ -95,7 +95,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     {
         for (unsigned int i=0;i<instrumentPathList.size();++i)
         {
-            WBeamInterpolation * wbinterpol = NULL;
+            WBeamInterpolation * wbinterpol = nullptr;
             context->get(wbinterpol,instrumentPathList[i]);
             if( wbinterpol)
                 m_instrumentsList.push_back(wbinterpol)  ;
@@ -138,7 +138,7 @@ void InterventionalRadiologyController<DataTypes>::init()
         m_instrumentsList[i]->setControlled(true);
 
     context->get(m_fixedConstraint);
-    if(m_fixedConstraint==NULL)
+    if(m_fixedConstraint==nullptr)
         msg_error()<<"No fixedConstraint found.";
 
     /// List of the instrument for which a "DROPPED" was proceeed TODO
