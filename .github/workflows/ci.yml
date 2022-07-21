@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-10.15, windows-2019]
-        sofa_branch: [master]
+        sofa_branch: [master, v22.06]
 
     steps:
       - name: Setup SOFA and environment
@@ -22,7 +22,7 @@ jobs:
         with:
           sofa_root: ${{ github.workspace }}/sofa
           sofa_version: ${{ matrix.sofa_branch }}
-          sofa_scope: 'full'
+          sofa_scope: 'standard'
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
@@ -117,6 +117,7 @@ jobs:
           if [[ "$RUNNER_OS" != "macOS" ]]; then
             # Get regression from github releases
             mkdir -p "${{ runner.temp }}/regression_tmp/install"
+            # TODO: need to change the URL once the release are created on regression
             curl --output "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -L https://github.com/fredroy/regression/releases/download/release-add_ga/Regression_test_add_ga_for-SOFA-master_${RUNNER_OS}.zip
             unzip -qq "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -d "${{ runner.temp }}/regression_tmp/install"
             # Install it in the SOFA bin directory
