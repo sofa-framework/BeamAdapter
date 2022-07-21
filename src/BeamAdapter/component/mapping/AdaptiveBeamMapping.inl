@@ -253,15 +253,17 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecDeriv& in= dIn.getValue();
+    
     Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
-    InVecCoord& x = *dataInX.beginEdit();
+    auto x = sofa::helper::getWriteOnlyAccessor(dataInX);
+
     InVecCoord xBuf2;
 
     if(m_isXBufferUsed)
     {
         // TODO : solve this problem during constraint motion propagation !!
         xBuf2 = x;
-        x = m_xBuffer;
+        x.wref() = m_xBuffer;
     }
 
     if (out.size() != m_pointBeamDistribution.size() && !m_isSubMapping)
@@ -282,7 +284,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
         Deriv vResult;
 
-        applyJonPoint(i, vDOF0, vDOF1, vResult, x);
+        applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
 
         if(m_isSubMapping)
         {
@@ -294,11 +296,11 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     }
     if(m_isXBufferUsed)
     {
-        x = xBuf2;
+        x.wref() = xBuf2;
         m_isXBufferUsed = false;
     }
 
-    dataInX.endEdit();
+    //dataInX.endEdit();
 }
 
 
