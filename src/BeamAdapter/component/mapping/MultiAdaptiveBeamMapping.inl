@@ -74,12 +74,12 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
 {
     ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_apply");
 
-    VecCoord& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     if(!isBarycentricMapping)
         out.resize(_xPointList.size());
     else if(out.size() != this->getMechTo()[0]->getSize())
         out.resize(this->getMechTo()[0]->getSize());
-    dOut.endEdit();
+
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
@@ -168,27 +168,21 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         //Case if this is not a barycentric mapping
         // 2. assign each value of xPointList to the corresponding "sub Mapping"
         // i.e = each point from xPointList of the collision model is controlled by a given instrument wich id is provided in _id_m_instrumentList
-        sofa::type::vector< sofa::type::vector < Vec3 >* > pointsList;
-        pointsList.clear();
-        pointsList.resize(m_subMappingList.size());
-
         for (unsigned int i=0; i<m_subMappingList.size(); i++)
         {
-            pointsList[i] = m_subMappingList[i]->d_points.beginEdit();
-            pointsList[i]->clear();
+            auto pointList = sofa::helper::getWriteOnlyAccessor(m_subMappingList[i]->d_points);
+            pointList.clear();
             m_subMappingList[i]->clearIdPointSubMap();
         }
 
         for (unsigned int i=0; i< _xPointList.size(); i++)
         {
             unsigned int  id = _idm_instrumentList[i];
-            pointsList[ id ]->push_back( Vec3( _xPointList[i], 0, 0) );
-            m_subMappingList[id]->addIdPointSubMap(i);
-        }
 
-        for (unsigned int i=0; i<m_subMappingList.size(); i++)
-        {
-            m_subMappingList[i]->d_points.endEdit();
+            auto pointList = sofa::helper::getWriteOnlyAccessor(m_subMappingList[id]->d_points);
+            pointList.wref().emplace_back(  _xPointList[i], 0, 0 );
+
+            m_subMappingList[id]->addIdPointSubMap(i);
         }
 
         // handle the possible topological change
