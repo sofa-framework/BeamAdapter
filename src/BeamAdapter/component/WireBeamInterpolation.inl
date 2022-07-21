@@ -111,11 +111,11 @@ template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
-    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
-    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
-    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
-    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
-    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
@@ -331,11 +331,11 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
     // put the info of the second part of the wire at the begining
     unsigned int i=0;
 
-    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
-    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
-    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
-    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
-    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     const unsigned int curvAbsListSize = curvAbsList.size();
 
