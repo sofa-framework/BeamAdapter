@@ -42,12 +42,11 @@
 namespace sofa::component::mapping
 {
 
-using namespace sofa::defaulttype;
 using sofa::helper::ScopedAdvancedTimer;
 
 
 template <class TIn, class TOut>
-MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller)
+MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller)
 : Inherit(from, to)
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
@@ -124,7 +123,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
 
 // MultiAdaptiveBeamMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in) //
 // this function propagate the constraint through the Adaptive Beam mapping :
-// if one constraint along (vector n) with a value (v) is applied on the childModel (like collision model)
+// if one constraint along (type::vector n) with a value (v) is applied on the childModel (like collision model)
 // then this constraint is transformed by (Jt.n) with value (v) for the rigid model
 // note : the value v is not propagated through the mapping
 template <class TIn, class TOut>

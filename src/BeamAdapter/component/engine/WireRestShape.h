@@ -72,7 +72,6 @@ public:
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
     typedef sofa::type::Vec<3, Real> Vec3;
     typedef sofa::type::Vec<2, Real> Vec2;
-    typedef typename vector<Vec2>::iterator vecIt;
 
     typedef typename core::visual::VisualParams VisualParams;
     typedef typename core::objectmodel::BaseContext BaseContext;
@@ -131,10 +130,10 @@ public:
      void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
 
      /**
-      * This function provides a vector with the curviliar abscissa of the noticeable point(s)
+      * This function provides a type::vector with the curviliar abscissa of the noticeable point(s)
       * and the minimum density (number of points) between them
       */
-     void getSamplingParameters(vector<Real>& xP_noticeable, vector<int>& nbP_density) const ;
+     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<int>& nbP_density) const ;
 
 
      /// Functions enabling to load and use a geometry given from OBJ external file
@@ -164,10 +163,10 @@ protected:
      Data<Real> d_straightLength;
      Data<Real> d_spireDiameter;
      Data<Real> d_spireHeight;
-     Data<vector<int> > d_density;
-     Data<vector<Real> > d_keyPoints;
+     Data<type::vector<int> > d_density;
+     Data<type::vector<Real> > d_keyPoints;
      Data< int > d_numEdges;
-     Data<vector<int> > d_numEdgesCollis;
+     Data<type::vector<int> > d_numEdgesCollis;
 
      /// User Data about the Young modulus
      Data<Real> d_poissonRatio;
@@ -188,9 +187,9 @@ protected:
      Data<bool>	d_drawRestShape;
 
      /// Data required for the File loading
-     vector<Vec3> 		m_localRestPositions;
-     vector<Transform> 	m_localRestTransforms;
-     vector<Real> 		m_curvAbs ;
+     type::vector<Vec3> 		m_localRestPositions;
+     type::vector<Transform> 	m_localRestTransforms;
+     type::vector<Real> 		m_curvAbs ;
      double 							m_absOfGeometry {0};
 
      struct BeamSection{

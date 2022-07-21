@@ -73,7 +73,7 @@ AdaptiveInflatableBeamForceField<DataTypes>::AdaptiveInflatableBeamForceField()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , d_pressure(initData(&d_pressure, (Real)0.0, "pressure", "pressure inside the inflatable Beam"))
-    , d_dataG(initData(&d_dataG,"dataG","Gravity vector"))
+    , d_dataG(initData(&d_dataG,"dataG","Gravity type::vector"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
@@ -397,7 +397,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams*
     unsigned int numBeams = l_interpolation->getNumBeams();
 
     if (f.size()!=dx.size())
-        f.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+        f.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     for (unsigned int b=0; b<numBeams; b++)
     {
@@ -538,7 +538,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
     VecDeriv& f = *dataf.beginEdit() ;
     const VecCoord& x = datax.getValue();
 
-    f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    f.resize(x.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
@@ -671,7 +671,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
         Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
-        /// Add this force to vector f (negative as it is internal force)
+        /// Add this force to type::vector f (negative as it is internal force)
         for (unsigned int i=0; i<6; i++)
         {
             f[node0Idx][i]-=F0_ref[i];
@@ -698,7 +698,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addDForce(const MechanicalPara
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
 
-    df.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    df.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 
@@ -789,7 +789,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
         if(vparams->displayFlags().getShowForceFields())
         {
             // /  test ///
-            vector<Vector3> points;
+            type::vector<Vector3> points;
             Vec3 pos = globalH0Local.getOrigin();
             for (double i=0.0; i<1.00001; i+=0.02)
             {

@@ -34,7 +34,6 @@ namespace sofa::component::constraintset
 namespace _adaptiveBeamSlidingConstraint_
 {
 
-using std::vector;
 using sofa::core::behavior::ConstraintResolution ;
 using sofa::core::ConstVecCoordId;
 using sofa::core::ConstraintParams;
@@ -244,7 +243,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintViolation(const Cons
 
 template<class DataTypes>
 void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(const ConstraintParams* cParams,
-                                                                vector<ConstraintResolution*>& resTab,
+                                                                std::vector<ConstraintResolution*>& resTab,
                                                                 unsigned int& offset)
 {
     SOFA_UNUSED(cParams);

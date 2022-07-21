@@ -239,8 +239,8 @@ void BeamInterpolation<DataTypes>::bwdInit()
             edgeList.push_back(i);
         }
 
-        vector<Transform> &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-        vector<Transform> &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
+        type::vector<Transform> &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
+        type::vector<Transform> &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
 
         if (!d_dofsAndBeamsAligned.getValue())
         {
@@ -254,7 +254,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
         ReadAccessor<Data<VecCoord> > statePos = m_mstate->read(ConstVecCoordId::position()) ;
 
-        vector< double > &lengthList = *d_lengthList.beginEdit();
+        type::vector< double > &lengthList = *d_lengthList.beginEdit();
         lengthList.clear();
 
         const unsigned int edgeListSize = d_edgeList.getValue().size();
@@ -366,7 +366,7 @@ template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
     //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
-    dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
+    dmsg_info() << "The type::vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
 
     const VecElementID &edgeList = d_edgeList.getValue();
     for (unsigned int j = 0; j < edgeList.size(); j++)
@@ -387,10 +387,10 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::clear()
 {
     VecElementID &edgeList = *d_edgeList.beginEdit();
-    vector< double > &lengthList = *d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
+    type::vector< double > &lengthList = *d_lengthList.beginEdit();
+    type::vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
+    type::vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
+    type::vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
 
     if(m_brokenInTwo)
     {
@@ -421,10 +421,10 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
 {
     VecElementID &edgeList = *d_edgeList.beginEdit();
-    vector< double > &lengthList = *d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
+    type::vector< double > &lengthList = *d_lengthList.beginEdit();
+    type::vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
+    type::vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
+    type::vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
 
     curvAbsList.push_back(Vec2(x0, x1));
 
@@ -504,7 +504,7 @@ template <class DataTypes>
 typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRestTotalLength()
 {
     Real le(0.0);
-    const vector< double > &lengthList = d_lengthList.getValue();
+    const type::vector< double > &lengthList = d_lengthList.getValue();
 
     for (unsigned int i = 0; i < lengthList.size(); i++)
         le += lengthList[i];
@@ -545,7 +545,7 @@ void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const
 
     if (!zeroORone)
     {
-        vector<Transform> &DOF0_TransformNode0 = *d_DOF0TransformNode0.beginEdit();
+        type::vector<Transform> &DOF0_TransformNode0 = *d_DOF0TransformNode0.beginEdit();
 
         DOF0_TransformNode0[beam] = DOF_H_Node;
 
@@ -553,7 +553,7 @@ void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const
     }
     else
     {
-        vector<Transform> &DOF1_TransformNode1 = *d_DOF1TransformNode1.beginEdit();
+        type::vector<Transform> &DOF1_TransformNode1 = *d_DOF1TransformNode1.beginEdit();
 
         DOF1_TransformNode1[beam] = DOF_H_Node;
 
@@ -703,7 +703,7 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getLen
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::setLength(unsigned int edgeInList, Real &length)
 {
-    vector<double> &lengthList = *d_lengthList.beginEdit();
+    type::vector<double> &lengthList = *d_lengthList.beginEdit();
     lengthList[edgeInList] = length;
     d_lengthList.endEdit();
 }
@@ -1006,7 +1006,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     }
     else
     {
-        /// no need to recompute the positions of the Spline  => we will read their value in the vector which id is vecXId
+        /// no need to recompute the positions of the Spline  => we will read their value in the type::vector which id is vecXId
         const Real& _L = d_lengthList.getValue()[edgeInList];
 
         if(localPos.norm() >_L*1e-10)
@@ -1118,7 +1118,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     /// -   1.Data<helper::OptionsGroup > d_vecID;
     ///         VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
     ///
-    /// -   2. Data< vector< Vec2 > > d_InterpolationInputs;
+    /// -   2. Data< type::vector< Vec2 > > d_InterpolationInputs;
     ///         Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
     /// ouptus:
     /// -   1. d_InterpolatedPos  => result interpolate the position (6 D0Fs type rigid: position/quaterion)
@@ -1127,7 +1127,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if (BEAMADAPTER_WITH_VERIFICATION)
         dmsg_info() <<"entering updateInterpolation" ;
 
-    const vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
+    const type::vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
     unsigned int numInterpolatedPositions = interpolationInputs.size();
 
     VecCoord &interpolatedPos= (*d_InterpolatedPos.beginEdit());
@@ -1392,7 +1392,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
     VelNode0inNode0= DOF0_H_local0.inversed()*VelDOF0inDOF0;
     VelNode1inNode1= DOF1_H_local1.inversed()*VelDOF1inDOF1;
 
-    /// 7. Interpolate the result and put in "Deriv" vector...
+    /// 7. Interpolate the result and put in "Deriv" type::vector...
     v_interpol.getVCenter()= global_H_local0.projectVector(VelNode0inNode0.getLinearVelocity() ) * (1-baryCoord) +
             global_H_local1.projectVector(VelNode1inNode1.getLinearVelocity() ) * baryCoord;
 

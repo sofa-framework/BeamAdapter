@@ -97,7 +97,7 @@ public:
     typedef typename Coord::value_type   Real    ;
 
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
 
     typedef MechanicalStateController<DataTypes> Inherit;
 
@@ -134,10 +134,10 @@ public :
 protected:
     void applyController(void) ;
 
-    Data<vector<string>>   d_interpolationPath;
+    Data<type::vector<string>>   d_interpolationPath;
     Data<int>                   d_controlledInstrument;
-    Data<vector<Real>>          d_xtip;
-    Data<vector<Real>>          d_rotationInstrument;
+    Data<type::vector<Real>>          d_xtip;
+    Data<type::vector<Real>>          d_rotationInstrument;
     Data<Real>                  d_step;
     Data<Real>                  d_angularStep;
     Data<Real>                  d_speed;
@@ -145,7 +145,7 @@ protected:
     BInterpolation*             m_adaptiveinterpolation {nullptr};
 
     ////// for point and line activer
-    vector<Real>                m_xAbsCollisionPointsBuffer;
+    type::vector<Real>                m_xAbsCollisionPointsBuffer;
 
     bool                        FF {false} ;
     bool                        RW {false} ;

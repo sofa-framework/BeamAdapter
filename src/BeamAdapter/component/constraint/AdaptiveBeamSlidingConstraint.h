@@ -46,7 +46,6 @@ using sofa::linearalgebra::BaseVector ;
 using sofa::core::objectmodel::Data ;
 using sofa::type::Vec ;
 using sofa::component::fem::WireBeamInterpolation ;
-using std::vector;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
@@ -103,7 +102,7 @@ public:
                                         const DataVecCoord &x1, const DataVecCoord &x2,
                                         const DataVecDeriv &v1, const DataVecDeriv &v2) override;
 
-    virtual void getConstraintResolution(const ConstraintParams* cParams, vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
+    virtual void getConstraintResolution(const ConstraintParams* cParams, std::vector<ConstraintResolution*>& resTab, unsigned int& offset) override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 protected:
@@ -117,10 +116,10 @@ private:
 
     unsigned int          m_cid;
     int                   m_nbConstraints; 		/*!< number of constraints created */
-    vector<Real>     m_violations;
-    vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
-    vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
-    vector<bool>     m_projected;
+    type::vector<Real>     m_violations;
+    type::vector<Real>     m_previousPositions;	/*!< the position on which each point was projected */
+    type::vector<double>   m_displacements; 		/*!< displacement=double for compatibility with constraint resolution */
+    type::vector<bool>     m_projected;
 
     /*! link to the interpolation component in the scene */
     SingleLink<AdaptiveBeamSlidingConstraint<DataTypes>,

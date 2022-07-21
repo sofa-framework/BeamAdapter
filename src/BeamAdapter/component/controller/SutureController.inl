@@ -122,8 +122,8 @@ void SutureController<DataTypes>::initWireModel()
         global_T_init.setOrientation(startPos.getOrientation());
     }
 
-    vector< Real > xP_noticeable;
-    vector< int > nbP_density;
+    type::vector< Real > xP_noticeable;
+    type::vector< int > nbP_density;
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
     // computation of the number of node on the structure:
@@ -132,7 +132,7 @@ void SutureController<DataTypes>::initWireModel()
     for (unsigned int i=0; i<nbP_density.size(); i++)
         numNodes += nbP_density[i]; // numBeams between each noticeable point
 
-    vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
+    type::vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
 
     // Initial position of the nodes:
     nodeCurvAbs.clear();
@@ -220,7 +220,7 @@ bool SutureController<DataTypes>::wireIsAlreadyInitialized()
     int nbRigidAbs = rigidCurvAbs->size();
     if (nbRigidAbs>0 && (nbRigidAbs%2)==0)
     {
-        const vector<Real>& curvAbs = d_nodeCurvAbs.getValue();
+        const type::vector<Real>& curvAbs = d_nodeCurvAbs.getValue();
         RealConstIterator it;
         unsigned int i = 0, nbCurvAbs = curvAbs.size();
         for(it=rigidCurvAbs->begin(); it!=rigidCurvAbs->end();)
@@ -348,7 +348,7 @@ void SutureController<DataTypes>::onEndAnimationStep(const double /*dt*/)
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::dummyController(vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::dummyController(type::vector<Real> &newCurvAbs)
 {
     static int compteur = 0;
     Real length = d_nodeCurvAbs.getValue()[d_nodeCurvAbs.getValue().size() - 1];
@@ -407,9 +407,9 @@ void SutureController<DataTypes>::dummyController(vector<Real> &newCurvAbs)
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::addRigidCurvAbs(vector<Real> &newCurvAbs, const Real &tol)
+void SutureController<DataTypes>::addRigidCurvAbs(type::vector<Real> &newCurvAbs, const Real &tol)
 {
-    vector<Real> newCurvAbsBuf=newCurvAbs;
+    type::vector<Real> newCurvAbsBuf=newCurvAbs;
 
     newCurvAbs.clear();
 
@@ -462,14 +462,14 @@ void SutureController<DataTypes>::addRigidCurvAbs(vector<Real> &newCurvAbs, cons
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::addImposedCurvAbs(vector<Real> &newCurvAbs, const Real &tol)
+void SutureController<DataTypes>::addImposedCurvAbs(type::vector<Real> &newCurvAbs, const Real &tol)
 {
     m_listOfImposedNodesOnXcurv.sort();
     m_listOfImposedNodesOnXcurv.unique();
 
     ListRealIterator it_xcurv_imposed;
 
-    vector<Real> newCurvAbsBuf=newCurvAbs;
+    type::vector<Real> newCurvAbsBuf=newCurvAbs;
     newCurvAbs.clear();
     unsigned int iterator=1;
     newCurvAbs.push_back(newCurvAbsBuf[0]);
@@ -514,7 +514,7 @@ void SutureController<DataTypes>::applyController()
     VecCoord& x = *datax->beginEdit();
     VecDeriv& v = *datav->beginEdit();
 
-    vector<Real> newCurvAbs;
+    type::vector<Real> newCurvAbs;
 
     storeRigidSegmentsTransformations();
 
@@ -531,7 +531,7 @@ void SutureController<DataTypes>::applyController()
     verifyRigidSegmentsTransformations();
     m_prevRigidCurvSegments = m_rigidCurveSegments;
 
-    vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
+    type::vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
     nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
     d_nodeCurvAbs.endEdit();
 
@@ -593,7 +593,7 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::computeTangentOnDiscretePoints(vector<Vec3> TangTable, vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos)
+void SutureController<DataTypes>::computeTangentOnDiscretePoints(type::vector<Vec3> TangTable, type::vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos)
 {
 
     TangTable.clear();
@@ -625,7 +625,7 @@ void SutureController<DataTypes>::computeTangentOnDiscretePoints(vector<Vec3> Ta
 }
 
 template <class DataTypes>
-void SutureController<DataTypes>::detectRigidBeams(const vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::detectRigidBeams(const type::vector<Real> &newCurvAbs)
 {
     unsigned int seg=0;
 
@@ -657,7 +657,7 @@ void SutureController<DataTypes>::detectRigidBeams(const vector<Real> &newCurvAb
 // When a new sampling is defined in "newCurvAbs", the position and the velocity needs to be "re-interpolated"
 
 template <class DataTypes>
-void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAbs, const vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v)
+void SutureController<DataTypes>::applyNewSampling(const type::vector<Real> &newCurvAbs, const type::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v)
 {
     VecCoord x_buf=x;
     VecDeriv v_buf=v;
@@ -709,7 +709,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
     /// Compute a gravity center for the rigid segments
     m_vecGlobalHGravityCenter.clear();
-    vector<Deriv> vec_Vel_gravityCenter;
+    type::vector<Deriv> vec_Vel_gravityCenter;
 
 
     Transform global_H_gravityC;
@@ -840,7 +840,7 @@ void SutureController<DataTypes>::applyNewSampling(const vector<Real> &newCurvAb
 
             if (!rigidification) //begining of the rigidification
             {
-                // the last element of vector x is replaced by the gravity center of the rigid zone
+                // the last element of type::vector x is replaced by the gravity center of the rigid zone
                 x.pop_back();
                 xDof.getCenter()     = m_vecGlobalHGravityCenter[Rseg].getOrigin();
                 xDof.getOrientation()= m_vecGlobalHGravityCenter[Rseg].getOrientation();
@@ -921,14 +921,14 @@ bool SutureController<DataTypes>::verifyRigidCurveSegmentSort()
 
 
 template <class DataTypes>
-void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecCoord &x)
+void SutureController<DataTypes>::computeSampling(type::vector<Real> &newCurvAbs, VecCoord &x)
 {
-    vector<Real> xP_noticeable;
-    vector<int> nbP_density;
+    type::vector<Real> xP_noticeable;
+    type::vector<int> nbP_density;
 
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
-    helper::ReadAccessor< Data< vector<Real> > > actualNoticeable = d_actualStepNoticeablePoints;
+    helper::ReadAccessor< Data< type::vector<Real> > > actualNoticeable = d_actualStepNoticeablePoints;
     if (!actualNoticeable.empty()) {
         xP_noticeable.insert(xP_noticeable.end(), actualNoticeable.begin(), actualNoticeable.end());
         std::sort(xP_noticeable.begin(), xP_noticeable.end());
@@ -941,7 +941,7 @@ void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecC
             nbP_density.push_back(int((diff/beamLength)*Real(density)+1));
         }
 
-        helper::WriteAccessor< Data< vector<Real> > > wActualNoticeable = d_actualStepNoticeablePoints;
+        helper::WriteAccessor< Data< type::vector<Real> > > wActualNoticeable = d_actualStepNoticeablePoints;
         wActualNoticeable.clear();
     }
 
@@ -954,7 +954,7 @@ void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecC
     unsigned int nbBeams = l_adaptiveInterpolation->getNumBeams();
     beamsCurvature.resize(nbBeams);
 
-    helper::WriteAccessor< Data< vector<Vec2> > > curvatureList = d_curvatureList;
+    helper::WriteAccessor< Data< type::vector<Vec2> > > curvatureList = d_curvatureList;
     curvatureList.clear();
     curvatureList.resize(nbBeams);
     // Computing the curvature of each beam (from the previous timestep)
@@ -968,7 +968,7 @@ void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecC
         curvatureList[b][1] = beamsCurvature[b] = l_adaptiveInterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
     }
 
-    vector<Real> newCurvAbs_notSecure;
+    type::vector<Real> newCurvAbs_notSecure;
     newCurvAbs_notSecure.clear();
     Real currentCurvAbs = 0.0, currentAngle = 0.0, maxAngle = d_maxBendingAngle.getValue();
     unsigned int currentBeam = 0;
@@ -1055,19 +1055,19 @@ void SutureController<DataTypes>::computeSampling(vector<Real> &newCurvAbs, VecC
 }
 
 template <class DataTypes>
-void SutureController<DataTypes>::verifyRigidSegmentsSampling(vector<Real> &newCurvAbs)
+void SutureController<DataTypes>::verifyRigidSegmentsSampling(type::vector<Real> &newCurvAbs)
 {
     // Making sure we keep the same sampling in the rigid segments from one timestep to the next
     if(!d_fixRigidTransforms.getValue())
         return;
 
-    const vector<Real> &oldCurvAbs = d_nodeCurvAbs.getValue();
-    typename vector<Real>::iterator newIter, newIter2;
-    typename vector<Real>::const_iterator oldIter, oldIter2;
+    const type::vector<Real> &oldCurvAbs = d_nodeCurvAbs.getValue();
+    typename type::vector<Real>::iterator newIter, newIter2;
+    typename type::vector<Real>::const_iterator oldIter, oldIter2;
     newIter = newCurvAbs.begin();
     oldIter = oldCurvAbs.begin();
 
-    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename type::vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each segment
     for(rigidIter = m_rigidCurveSegments.begin(); rigidIter != m_rigidCurveSegments.end(); ++rigidIter)
     {
@@ -1104,7 +1104,7 @@ void SutureController<DataTypes>::storeRigidSegmentsTransformations()
 
     m_prevRigidTransforms.clear();
 
-    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename type::vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each rigid segment
     for(rigidIter = m_prevRigidCurvSegments.begin(); rigidIter != m_prevRigidCurvSegments.end(); ++rigidIter)
     {
@@ -1139,7 +1139,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
     if(!d_fixRigidTransforms.getValue())
         return;
 
-    typename vector< std::pair<Real, Real> >::const_iterator rigidIter;
+    typename type::vector< std::pair<Real, Real> >::const_iterator rigidIter;
     // For each rigid segment
     for(rigidIter = m_rigidCurveSegments.begin(); rigidIter != m_rigidCurveSegments.end(); ++rigidIter)
     {
@@ -1202,7 +1202,7 @@ void SutureController<DataTypes>::updateControlPointsPositions()
 template <class DataTypes>
 void SutureController<DataTypes>::insertActualNoticeablePoint(Real _absc)
 {
-    helper::WriteAccessor< Data< vector<Real> > > actualNoticeable = d_actualStepNoticeablePoints;
+    helper::WriteAccessor< Data< type::vector<Real> > > actualNoticeable = d_actualStepNoticeablePoints;
     actualNoticeable.push_back(_absc);
 }
 

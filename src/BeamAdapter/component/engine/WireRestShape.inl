@@ -219,7 +219,7 @@ void WireRestShape<DataTypes>::init()
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
-    vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
+    type::vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
     if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
@@ -233,7 +233,7 @@ void WireRestShape<DataTypes>::init()
 
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
-        vector<int> &densityList = (*d_density.beginEdit());
+        type::vector<int> &densityList = (*d_density.beginEdit());
 
         if(d_density.getValue().size() > keyPointList.size()-1 )
             densityList.resize(keyPointList.size()-1);
@@ -257,7 +257,7 @@ void WireRestShape<DataTypes>::init()
 
     if(!d_numEdgesCollis.getValue().size())
     {
-        vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
+        type::vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
             densityCol[i] = 20;
@@ -312,7 +312,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
+            type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
@@ -342,8 +342,8 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
-                                                     vector<int>& nbP_density) const
+void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noticeable,
+                                                     type::vector<int>& nbP_density) const
 {
 
     xP_noticeable.clear();
@@ -588,32 +588,25 @@ void WireRestShape<DataTypes>::initFromLoader()
     if (!checkTopology())
         return;
 
-    vector<Vec3> vertices;
-    vector<Vec2> edges;
+    type::vector<Vec3> vertices;
+    sofa::core::topology::BaseMeshTopology::SeqEdges edges;
 
     //get the topology position
-    typedef  vector<sofa::type::Vec<3,SReal> > topoPosition;
-    topoPosition &topoVertices = (*loader->d_positions.beginEdit());
+    auto topoVertices = sofa::helper::getReadAccessor(loader->d_positions);
 
-    //copy the topology edges in a local vector
-    typedef  vector<sofa::core::topology::Topology::Edge > topoEdge;
-    topoEdge &topoEdges = (*loader->d_edges.beginEdit());
-    for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
-        edges.push_back(Vec2((*it)[0], (*it)[1]));
-    loader->d_edges.endEdit();
+    //copy the topology edges in a local type::vector
+    auto topoEdges = sofa::helper::getReadAccessor(loader->d_edges);
+    edges = topoEdges.ref();
 
     /** renumber the vertices  **/
-    vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
+    type::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
     for(unsigned int i =0; i < topoVertices.size(); i++)
         verticesConnexion.push_back(2);
 
-    for(unsigned int i = 0; i < edges.size(); i++)
+    for(const auto& ed : edges)
     {
-        Vec2 ed = edges[i];
-        unsigned int e1 = floor(ed[0]);
-        unsigned int e2 = floor(ed[1]);
-        verticesConnexion[e1]--;
-        verticesConnexion[e2]--;
+        verticesConnexion[ed[0]]--;
+        verticesConnexion[ed[1]]--;
     }
 
     msg_info() << "Successfully compute the vertex connexion" ;
@@ -639,14 +632,14 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     while(edges.size() > 0)
     {
-        vecIt it = edges.begin();
-        vecIt end = edges.end();
+        auto it = edges.begin();
+        auto end = edges.end();
 
         bool notFound = true;
         while (notFound && (it != end))
         {
-            Vec2 ed = (*it);
-            vecIt toDel = it;
+            const auto& ed = (*it);
+            auto toDel = it;
             it++;
             if(ed[0] == firstIndex)
             {

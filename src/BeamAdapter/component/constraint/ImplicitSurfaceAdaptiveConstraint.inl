@@ -193,7 +193,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Vec3& dir, Vec3& vec1, Vec3& vec2)
 {
-    Vec3 temp; // Any vector such as temp != dir
+    Vec3 temp; // Any type::vector such as temp != dir
     temp[0] = dir[1];
     temp[1] = dir[2];
     temp[2] = dir[0];

@@ -197,20 +197,6 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsi
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
 
-
-template <>
-int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point, int indexFrom)
-{
-    SOFA_UNUSED(indexFrom);
-
-    int nbPoints = d_points.getValue().size();
-    Vec3 coord = point.getCenter();
-
-    d_points.beginEdit()->push_back(coord);
-    return nbPoints;
-}
-
-
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
 /// Register the component into the sofa factory.

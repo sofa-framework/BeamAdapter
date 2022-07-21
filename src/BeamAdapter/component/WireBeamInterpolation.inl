@@ -112,10 +112,10 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
     VecElementID &edgeList = *this->d_edgeList.beginEdit();
-    vector< double > &lengthList = *this->d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
+    type::vector< double > &lengthList = *this->d_lengthList.beginEdit();
+    type::vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
+    type::vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
+    type::vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
@@ -338,10 +338,10 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
     unsigned int i=0;
 
     VecElementID &edgeList = *this->d_edgeList.beginEdit();
-    vector< double > &lengthList = *this->d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
+    type::vector< double > &lengthList = *this->d_lengthList.beginEdit();
+    type::vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
+    type::vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
+    type::vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
 
     const unsigned int curvAbsListSize = curvAbsList.size();
 

@@ -53,10 +53,7 @@ namespace _interventionalradiologycontroller_
 
 using sofa::type::Vec;
 using sofa::type::Vec3d;
-using namespace sofa::component::fem;
-using namespace sofa::helper;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::type::vector;
 using sofa::component::constraint::projective::FixedConstraint;
 
 /*!
@@ -81,7 +78,7 @@ public:
 
     typedef Vec<3, Real>                            Vec3;
     typedef BaseMeshTopology::EdgeID                ElementID;
-    typedef vector<BaseMeshTopology::EdgeID>        VecElementID;
+    typedef type::vector<BaseMeshTopology::EdgeID>        VecElementID;
     typedef MechanicalStateController<DataTypes>    Inherit;
     typedef fem::WireBeamInterpolation<DataTypes>   WBeamInterpolation;
 
@@ -108,11 +105,11 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     virtual bool modifyTopology(void);
-    void interventionalRadiologyCollisionControls(vector<Real> &x_point_list,
-                                                  vector<int> &id_instrument_list,
-                                                  vector<int> &removeEdge);
-    void getInstrumentList(vector<sofa::component::fem::WireBeamInterpolation<DataTypes>*>& list);
-    const vector< vector<int> >& get_id_instrument_curvAbs_table()const;
+    void interventionalRadiologyCollisionControls(type::vector<Real> &x_point_list,
+                                                  type::vector<int> &id_instrument_list,
+                                                  type::vector<int> &removeEdge);
+    void getInstrumentList(type::vector<sofa::component::fem::WireBeamInterpolation<DataTypes>*>& list);
+    const type::vector< type::vector<int> >& get_id_instrument_curvAbs_table()const;
     int getTotalNbEdges()const;
 
 public:
@@ -123,45 +120,45 @@ public:
     using Inherit1::getMechanicalState;
 
     /// Conditional elements for construction of InterventionalRadiologyController
-    Data< vector< std::string > >  d_instrumentsPath;
-    vector< WBeamInterpolation * > m_instrumentsList;
+    Data< type::vector< std::string > >  d_instrumentsPath;
+    type::vector< WBeamInterpolation * > m_instrumentsList;
 
     /// For point and line activer
-    vector<bool> m_activatedPointsBuf;
+    type::vector<bool> m_activatedPointsBuf;
 
     /// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
     virtual void computeVertexT();
 
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
-    void interventionalRadiologyComputeSampling(vector<Real> &newCurvAbs, vector< vector<int> > &id_instrument_table, const vector<Real> &xBegin, const Real& xEnd);
+    void interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs, type::vector< type::vector<int> > &id_instrument_table, const type::vector<Real> &xBegin, const Real& xEnd);
     /// Sort the curv Abs in the ascending order and avoid doubloon
-    void sortCurvAbs(vector<Real> &CurvAbs,  vector< vector<int> >& id_instrument_table);
-    void totalLengthIsChanging(const vector<Real>& newNodeCurvAbs, vector<Real>& modifiedNodeCurvAbs, const vector< vector<int> >& newTable);
+    void sortCurvAbs(type::vector<Real> &CurvAbs,  type::vector< type::vector<int> >& id_instrument_table);
+    void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
-    void activateBeamListForCollision( vector<Real> &curv_abs, vector< vector<int> > &id_instrument_table);
+    void activateBeamListForCollision( type::vector<Real> &curv_abs, type::vector< type::vector<int> > &id_instrument_table);
     void loadMotionData(std::string filename);
 
     Data<int>            d_controlledInstrument;
-    Data<vector<Real>>   d_xTip;
-    Data<vector<Real>>   d_rotationInstrument;
+    Data<type::vector<Real>>   d_xTip;
+    Data<type::vector<Real>>   d_rotationInstrument;
     Data<Real>           d_step;
     Data<Real>           d_angularStep;
     Data<Real>           d_speed;
     Data<Coord>          d_startingPos;
     Data<Real>           d_threshold;
-    Data<vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
+    Data<type::vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
     Data<std::string>    d_motionFilename;
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
-    Data<vector<Real>>   d_curvAbs;
+    Data<type::vector<Real>>   d_curvAbs;
 
     bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;
-    vector<int>                     m_droppedInstruments;
-    vector<Vec3d>                   m_sensorMotionData;
+    type::vector<int>                     m_droppedInstruments;
+    type::vector<Vec3d>                   m_sensorMotionData;
     unsigned int                    m_currentSensorData;
-    vector<Real>                    m_nodeCurvAbs;
-    vector< vector<int> >           m_idInstrumentCurvAbsTable;
+    type::vector<Real>                    m_nodeCurvAbs;
+    type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
     unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
     bool                            m_dropCall;
 };

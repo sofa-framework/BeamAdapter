@@ -51,7 +51,6 @@ namespace sofa::component::mapping
 namespace _adaptivebeammapping_
 {
 
-using namespace sofa::defaulttype;
 using sofa::core::State;
 using helper::ReadAccessor;
 using helper::WriteAccessor;
@@ -86,7 +85,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::init()
 {
     if (!l_adaptativebeamInterpolation)
-        l_adaptativebeamInterpolation.set(dynamic_cast<BaseContext *>(this->getContext())->get<BInterpolation>());
+        l_adaptativebeamInterpolation.set(dynamic_cast<sofa::core::objectmodel::BaseContext *>(this->getContext())->get<BInterpolation>());
 
     if (!l_adaptativebeamInterpolation)
         msg_error() <<"No Beam Interpolation found, the component can not work.";
@@ -126,12 +125,14 @@ int AdaptiveBeamMapping< TIn, TOut>::addPoint (const Coord& point, int indexFrom
 {
     SOFA_UNUSED(indexFrom) ;
 
-    int nbPoints = d_points.getValue().size();
-    Vec3 coord(point[0],point[1],point[2]);
+    auto points = sofa::helper::getWriteAccessor(d_points);
 
-    d_points.beginEdit()->push_back(coord);
-    d_points.endEdit();
-    return nbPoints;
+    const auto nbPoints = points.size();
+    const auto coord = TOut::getCPos(point);
+
+    points.wref().emplace_back(coord[0], coord[1], coord[2]);
+
+    return static_cast<int>(nbPoints);
 }
 
 
@@ -139,7 +140,9 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::setBarycentricMapping()
 {
     m_isBarycentricMapping=true;
-    d_points.beginEdit()->clear();d_points.endEdit();
+
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
+    points.clear();
 }
 
 
@@ -333,7 +336,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
         SpatialVector FNode0, FNode1;
         applyJTonPoint(i, finput, FNode0, FNode1, x);
 
-        //2. put the result in out vector computes the equivalent forces on nodes + rotate to Global Frame from DOF frame
+        //2. put the result in out type::vector computes the equivalent forces on nodes + rotate to Global Frame from DOF frame
         In::setDPos(out[IdxNode0], In::getDPos(out[IdxNode0]) + FNode0.getForce());
         In::setDPos(out[IdxNode1], In::getDPos(out[IdxNode1]) + FNode1.getForce());
         In::setDRot(out[IdxNode0], In::getDRot(out[IdxNode0]) + FNode0.getTorque());
@@ -346,7 +349,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
 
 /// AdaptiveBeamMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in)
 /// this function propagate the constraint through the Adaptive Beam mapping :
-/// if one constraint along (vector n) with a value (v) is applied on the childModel (like collision model)
+/// if one constraint along (type::vector n) with a value (v) is applied on the childModel (like collision model)
 /// then this constraint is transformed by (Jt.n) with value (v) for the rigid model
 /// note : the value v is not propagated through the mapping
 template <class TIn, class TOut>
@@ -535,7 +538,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
     if(!m_isBarycentricMapping)
     {
         bool curvAbs = d_useCurvAbs.getValue();
-        const vector<Vec3>& points = d_points.getValue();
+        const type::vector<Vec3>& points = d_points.getValue();
         m_pointBeamDistribution.clear();
 
         unsigned int numBeams = l_adaptativebeamInterpolation->getNumBeams();
@@ -551,7 +554,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
             double ptsPerBeam = d_nbPointsPerBeam.getValue();
             if(ptsPerBeam)
             {	// Recreating the distribution based on the current sampling of the beams
-                WriteAccessor<Data<vector<Real>>> waSegmentsCurvAbs = d_segmentsCurvAbs;
+                WriteAccessor<Data<type::vector<Real>>> waSegmentsCurvAbs = d_segmentsCurvAbs;
                 waSegmentsCurvAbs.clear();
 
                 double step = 1.0 / ptsPerBeam;
