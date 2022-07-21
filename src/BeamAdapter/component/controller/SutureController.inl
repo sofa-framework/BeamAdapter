@@ -132,7 +132,7 @@ void SutureController<DataTypes>::initWireModel()
     for (unsigned int i=0; i<nbP_density.size(); i++)
         numNodes += nbP_density[i]; // numBeams between each noticeable point
 
-    type::vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
+    auto nodeCurvAbs = sofa::helper::getWriteOnlyAccessor(d_nodeCurvAbs);
 
     // Initial position of the nodes:
     nodeCurvAbs.clear();
@@ -141,8 +141,8 @@ void SutureController<DataTypes>::initWireModel()
 
     Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
     Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
-    VecCoord& x = *datax->beginEdit();
-    VecDeriv& v = *datav->beginEdit();
+    auto x = sofa::helper::getWriteOnlyAccessor(*datax);
+    auto v = sofa::helper::getWriteOnlyAccessor(*datav);
 
     getMechanicalState()->resize(numNodes);
 
@@ -190,10 +190,6 @@ void SutureController<DataTypes>::initWireModel()
         }
 
     }
-
-    datax->endEdit();
-    datav->endEdit();
-    d_nodeCurvAbs.endEdit();
 }
 
 
@@ -511,9 +507,8 @@ void SutureController<DataTypes>::applyController()
 {
     Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
     Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
-    VecCoord& x = *datax->beginEdit();
-    VecDeriv& v = *datav->beginEdit();
-
+    auto x = sofa::helper::getWriteOnlyAccessor(*datax);
+    auto v = sofa::helper::getWriteOnlyAccessor(*datav);
     type::vector<Real> newCurvAbs;
 
     storeRigidSegmentsTransformations();
@@ -521,22 +516,18 @@ void SutureController<DataTypes>::applyController()
     if (d_useDummyController.getValue())
         dummyController(newCurvAbs);
     else
-        computeSampling(newCurvAbs, x);
+        computeSampling(newCurvAbs, x.wref());
 
     addImposedCurvAbs(newCurvAbs, 0.0001);
 
     verifyRigidSegmentsSampling(newCurvAbs);
 
-    applyNewSampling(newCurvAbs, d_nodeCurvAbs.getValue(), x, v);
+    applyNewSampling(newCurvAbs, d_nodeCurvAbs.getValue(), x.wref(), v.wref());
     verifyRigidSegmentsTransformations();
     m_prevRigidCurvSegments = m_rigidCurveSegments;
 
-    type::vector<Real> &nodeCurvAbs = *d_nodeCurvAbs.beginEdit();
-    nodeCurvAbs.assign(newCurvAbs.begin(), newCurvAbs.end());
-    d_nodeCurvAbs.endEdit();
-
-    datax->endEdit();
-    datav->endEdit();
+    auto nodeCurvAbs = sofa::helper::getWriteOnlyAccessor(d_nodeCurvAbs);
+    nodeCurvAbs.wref().assign(newCurvAbs.begin(), newCurvAbs.end());
 }
 
 
@@ -1177,7 +1168,7 @@ void SutureController<DataTypes>::verifyRigidSegmentsTransformations()
 template <class DataTypes>
 void SutureController<DataTypes>::updateControlPointsPositions()
 {
-    VecCoord& ctrlPts = *d_controlPoints.beginEdit();
+    auto ctrlPts = sofa::helper::getWriteOnlyAccessor(d_controlPoints);
     ctrlPts.clear();
 
     unsigned int numBeams = l_adaptiveInterpolation->getNumBeams();
@@ -1195,8 +1186,6 @@ void SutureController<DataTypes>::updateControlPointsPositions()
     pt.getCenter() = global_H1_local.getOrigin();
     pt.getOrientation() = global_H1_local.getOrientation();
     ctrlPts.push_back(pt);
-
-    d_controlPoints.endEdit();
 }
 
 template <class DataTypes>

@@ -219,7 +219,7 @@ void WireRestShape<DataTypes>::init()
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
-    type::vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
+    auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
     if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
@@ -228,14 +228,11 @@ void WireRestShape<DataTypes>::init()
         keyPointList.push_back(d_length.getValue());
     }
 
-    d_keyPoints.endEdit();
-
-
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
-        type::vector<int> &densityList = (*d_density.beginEdit());
+        auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
 
-        if(d_density.getValue().size() > keyPointList.size()-1 )
+        if(densityList.size() > keyPointList.size()-1 )
             densityList.resize(keyPointList.size()-1);
         else
         {
@@ -252,17 +249,14 @@ void WireRestShape<DataTypes>::init()
                 densityList.push_back(numNodes);
             }
         }
-        d_density.endEdit();
     }
 
     if(!d_numEdgesCollis.getValue().size())
     {
-        type::vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
+        auto densityCol = sofa::helper::getWriteOnlyAccessor(d_numEdgesCollis);
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
             densityCol[i] = 20;
-
-        d_numEdgesCollis.endEdit();
     }
 
     msg_info() <<"WireRestShape end init" ;
@@ -665,8 +659,6 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     for(unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
         m_localRestPositions[i] *= d_nonProceduralScale.getValue();
-
-    loader->d_positions.endEdit();
 }
 
 

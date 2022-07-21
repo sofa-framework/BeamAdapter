@@ -126,13 +126,11 @@ void InterventionalRadiologyController<DataTypes>::init()
         msg_error()<<"No instrument found ( no WireBeamInterpolation).";
         return;
     }
-    type::vector<Real> &x_instr_tip = (*d_xTip.beginEdit());
+    auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xTip);
     x_instr_tip.resize(m_instrumentsList.size());
-    d_xTip.endEdit();
 
-    type::vector<Real> &angle_Instrument = (*d_rotationInstrument.beginEdit());
+    auto angle_Instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
     angle_Instrument.resize(m_instrumentsList.size());
-    d_rotationInstrument.endEdit();
 
     for(unsigned int i=0; i<m_instrumentsList.size(); i++)
         m_instrumentsList[i]->setControlled(true);
@@ -265,49 +263,43 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedE
             break;
 
         case 20: // droite = 20
-            {
+            {    
+                auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
                 int id = d_controlledInstrument.getValue();
-                type::vector<Real> &rotInstrument = (*d_rotationInstrument.beginEdit());
                 rotInstrument[id] += d_angularStep.getValue();
-                d_rotationInstrument.endEdit();
             }
             break;
         case 18: // gauche = 18
             {
                 int id = d_controlledInstrument.getValue();
-                type::vector<Real> &rotInstrument = (*d_rotationInstrument.beginEdit());
+                auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
                 rotInstrument[id] -= d_angularStep.getValue();
-                d_rotationInstrument.endEdit();
             }
             break;
 
         case 19: // fleche haut = 19
             {
                 int id = d_controlledInstrument.getValue();
-                type::vector<Real> &xInstrTip = (*d_xTip.beginEdit());
+                auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
                 if (id >= (int)xInstrTip.size())
                 {
                     msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead";
                     id=0;
                 }
                 xInstrTip[id] += d_step.getValue();
-
-                d_xTip.endEdit();
             }
             break;
 
         case 21: // bas = 21
             {
                 int id = d_controlledInstrument.getValue();
-                type::vector<Real> &xInstrTip = (*d_xTip.beginEdit());
+                auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
                 if (id >= (int)xInstrTip.size())
                 {
                     msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead.";
                     id=0;
                 }
                 xInstrTip[id] -= d_step.getValue();
-
-                d_xTip.endEdit();
             }
             break;
 
@@ -347,7 +339,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     SOFA_UNUSED(dt);
 
     BaseContext* context = getContext();
-    type::vector<Real> &xInstrTip = (*d_xTip.beginEdit());
+    auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
     if(m_FF || m_RW)
     {
         int id = d_controlledInstrument.getValue();
@@ -395,8 +387,6 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         if (xInstrTip[i] > m_instrumentsList[i]->getRestTotalLength() )
             xInstrTip[i] = m_instrumentsList[i]->getRestTotalLength();
-
-    d_xTip.endEdit();
 
     applyInterventionalRadiologyController();
 }
@@ -452,9 +442,8 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
         // for now, we simply suppress one more beam !
         m_numControlledNodes -= (numBeamsNotUnderControlled + 1);
 
-        type::vector<Real> &xEnds = (*d_xTip.beginEdit());
+        auto xEnds = sofa::helper::getWriteOnlyAccessor(d_xTip);
         xEnds[ci] =  xBegin +  xBreak;
-        d_xTip.endEdit();
     }
     else
         return;
@@ -770,9 +759,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     // if the totalLength is 0, move the first instrument
     if(totalLengthCombined<0.0001)
     {
-        type::vector<Real> &x = (*d_xTip.beginEdit());
+        auto x = sofa::helper::getWriteOnlyAccessor(d_xTip);
         x[0]=0.0001;
-        d_xTip.endEdit();
         applyInterventionalRadiologyController();
         return;
     }
@@ -797,8 +785,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     unsigned int nnode=newCurvAbs.size(); // number of simulated nodes
 
     unsigned int nnode_old= m_nodeCurvAbs.size(); // previous number of simulated nodes;
-    Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());
-    VecCoord& x = *datax->beginEdit();
+    Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());                
+    auto x = sofa::helper::getWriteOnlyAccessor(*datax);
 
     VecCoord xbuf =x;
 
@@ -969,8 +957,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     m_nodeCurvAbs = newCurvAbs;
     m_idInstrumentCurvAbsTable = idInstrumentTable;
     helper::AdvancedTimer::stepEnd("step5");
-
-    datax->endEdit();
 }
 
 template <class DataTypes>
@@ -1010,7 +996,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real> &curvAbs,
                                                                type::vector<type::vector<int> >& idInstrumentTable)
 {
-    type::vector<Real> &newCurvAbs =(*d_curvAbs.beginEdit());
+    auto newCurvAbs = sofa::helper::getWriteOnlyAccessor(d_curvAbs);
     Real eps = d_threshold.getValue();
 
    // here we sort CurvAbs
@@ -1071,7 +1057,6 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
         idInstrumentTable.push_back(listNewNode);
 
     }
-    d_curvAbs.endEdit();
 }
 
 

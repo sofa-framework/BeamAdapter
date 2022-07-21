@@ -405,7 +405,8 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
 
     /////////////////
     // 3d step: setting the constraint direction
-    MatrixDeriv& c2w = *c2.beginEdit();
+    auto c2w = sofa::helper::getWriteOnlyAccessor(c2);
+
     m_nbConstraints = 0;
     m_cid = cIndex;
     for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
@@ -458,7 +459,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
         }
 
     }
-    c2.endEdit();
 
 #ifdef DEBUG
     dmsg_info() <<" * 3d step ok: constraints are set...\n done *************";

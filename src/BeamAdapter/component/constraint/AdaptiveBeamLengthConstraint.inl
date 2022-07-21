@@ -303,7 +303,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
     ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
     ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
 
-    MatrixDeriv& c = *c_d.beginEdit();
+    auto c = sofa::helper::getWriteOnlyAccessor(c_d);
 
     m_constraintIntervals.clear();
     detectElongation( x.ref(), xfree.ref());
@@ -343,7 +343,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
         dmsg_info_when(lever0.norm() > 0.0001) << " lever0 ="<<lever0<<" dir ="<<dir ;
         dmsg_info_when(lever1.norm() > 0.0001) << " lever1 ="<<lever1<<" -dir ="<<-dir ;
 
-        MatrixDerivRowIterator c_it = c.writeLine(m_cid + m_nbConstraints);
+        MatrixDerivRowIterator c_it = c.wref().writeLine(m_cid + m_nbConstraints);
 
         c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
         c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );

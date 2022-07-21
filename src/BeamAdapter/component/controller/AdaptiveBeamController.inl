@@ -125,21 +125,21 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)
     /// Translation input
     Real PosYcorr = 0.0;
     int idy = d_controlledInstrument.getValue();
-    type::vector<Real> &x_instr_tip = (*d_xtip.beginEdit());
+    auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xtip);
+
     if (idy >= (int)x_instr_tip.size()){
         msg_warning() << "The instrument number "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") switching to instrument 0 instead.";
         idy=0;
     }
     PosYcorr = -PosY*0.2;
     x_instr_tip[idy] += PosYcorr;
-    this->d_xtip.endEdit();
 
     /// Rotation input
     Real PosXcorr = 0.0;
 
     //TODO(dmarchal@cduriez) why is this the same as idy but with a different name?
     int idx = d_controlledInstrument.getValue();
-    type::vector<Real> &rot_instrument = (*d_rotationInstrument.beginEdit());
+    auto rot_instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
     PosXcorr = PosX*0.015;
     rot_instrument[idx] += PosXcorr;
 }
@@ -160,44 +160,40 @@ void AdaptiveBeamController<DataTypes>::onKeyPressedEvent(KeypressedEvent *kev)
     case 'A':
     {
         int id = d_controlledInstrument.getValue();
-        type::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        auto rot_instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
         rot_instrument[id] += d_angularStep.getValue();
-        this->d_rotationInstrument.endEdit();
     }
         break;
     case 'E':
     {
 
         int id = d_controlledInstrument.getValue();
-        type::vector<Real> &rot_instrument = (*this->d_rotationInstrument.beginEdit());
+        auto rot_instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
         rot_instrument[id] -= d_angularStep.getValue();
-        this->d_rotationInstrument.endEdit();
 
     }
         break;
     case '+':
     {
         int id = d_controlledInstrument.getValue();
-        type::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+        auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xtip);
         if (id >= (int)x_instr_tip.size()){
             msg_warning() << "Controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead" ;
             id=0;
         }
         x_instr_tip[id] += d_step.getValue();
-        this->d_xtip.endEdit();
     }
         break;
 
     case '-':
     {
         int id = d_controlledInstrument.getValue();
-        type::vector<Real> &x_instr_tip = (*this->d_xtip.beginEdit());
+        auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xtip);
         if (id >= (int)x_instr_tip.size()){
             msg_warning() << "Controlled Instument num "<<id<<" do not exist (size ="<< x_instr_tip.size() <<") use instrument 0 instead" ;
             id=0;
         }
         x_instr_tip[id] -= d_step.getValue();
-        this->d_xtip.endEdit();
     }
         break;
 
@@ -241,8 +237,8 @@ void AdaptiveBeamController<DataTypes>::applyController()
 {
     Data<VecCoord>* datax = this->getMechanicalState()->write(VecCoordId::position());
     Data<VecDeriv>* datav = this->getMechanicalState()->write(VecDerivId::velocity());
-    VecCoord& x = *datax->beginEdit();
-    VecDeriv& v = *datav->beginEdit();
+    auto x = sofa::helper::getWriteOnlyAccessor(*datax);
+    auto v = sofa::helper::getWriteOnlyAccessor(*datav);
 
     /////// analyse de la beam actuelle :: TODO => use nodeCurvAbs which store this info
     Real totalLength=0.0;
@@ -329,9 +325,6 @@ void AdaptiveBeamController<DataTypes>::applyController()
     //on definie la longueur de la dernière beam:
     Real L = newCurvAbs[newCurvAbs.size()-1] - newCurvAbs[newCurvAbs.size()-2];
     m_adaptiveinterpolation->setLength(newCurvAbs.size()-2,L);
-
-    datax->endEdit();
-    datav->endEdit();
 }
 
 } // namespace _adaptivebeamcontroller_
