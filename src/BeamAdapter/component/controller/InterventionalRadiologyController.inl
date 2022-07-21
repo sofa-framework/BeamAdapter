@@ -443,7 +443,7 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
 
     // Step2 : on verifie que cette abscisse curviligne est compatible avec celle de l'instrument
     // (on ne peut pas casser un instrument s'il est à l'intérieur d'un autre instrument)
-    int numBeamsNotUnderControlled=0.0;
+    int numBeamsNotUnderControlled = 0;
     Real xBreak;
     if( m_instrumentsList[ci]->breaksInTwo(xMinOutLocal, xBreak, numBeamsNotUnderControlled) )
     {
@@ -508,7 +508,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
     // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
     // When there are rigid segments, # of dofs is different than # of edges and beams
     const type::vector< Real > *rigidCurvAbs = &d_rigidCurvAbs.getValue();
-    int nb = rigidCurvAbs->size();
+    const auto nb = rigidCurvAbs->size();
 
     bool begin=true;
     if(nb>0 && (nb%2)==0)	// Make sure we have pairs of curv abs
@@ -589,7 +589,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
         segRemove.push_back(0);
 
-    for (int i=xPointList.size()-1; i>=0; i--)
+    for (int i = static_cast<int>(xPointList.size()) - 1; i>=0; i--)
     {
         //1.  we determin if the poin ument
         int instrumentId = idInstrumentList[i];

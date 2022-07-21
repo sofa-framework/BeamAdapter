@@ -376,7 +376,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
 
     assert(m_ircontroller !=NULL && isBarycentricMapping);
     const type::vector<type::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
-    int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
+    int nbControlledEdge  = static_cast<int>(id_instrument_curvAbs_table.size()) - 1;
     int totalNbEdges = m_ircontroller->getTotalNbEdges();
     int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
     assert(nbUnControlledEdges>=0);

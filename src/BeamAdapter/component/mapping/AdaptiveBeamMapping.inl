@@ -154,11 +154,11 @@ int AdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& beamId, const Vec3&
     //attention, beamId here is not the edge Id, but the id of a vec_edge_list defined in BeamInterpolation
     SOFA_UNUSED(straightlineSplineOption);
 
-    int newPointId = m_pointBeamDistribution.size();
+    const auto newPointId = m_pointBeamDistribution.size();
     m_pointBeamDistribution.resize(newPointId+1);
     m_pointBeamDistribution[newPointId].baryPoint=baryCoord;
     m_pointBeamDistribution[newPointId].beamId=beamId;
-    return newPointId;
+    return static_cast<int>(newPointId);
 }
 
 
@@ -598,7 +598,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                 if(topo)
                 {
                     topo->clear();
-                    int nbEdges = m_pointBeamDistribution.size() - 1;
+                    int nbEdges = static_cast<int>(m_pointBeamDistribution.size()) - 1;
                     for(int i=0; i<nbEdges; ++i)
                         topo->addEdge(i, i+1);
                 }
