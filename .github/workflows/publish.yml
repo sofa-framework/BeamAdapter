@@ -1,0 +1,28 @@
+name: Publish Doxygen on Pages
+
+# generate only if master has been updated (or on workflow_dispatch trigger)
+on:
+  push:    
+  #  branches:
+  #    - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: "true"
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen -y
+      - name: Generate Doxygen Documentation
+        run: doxygen doc/Doxyfile
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: docs/html
+
