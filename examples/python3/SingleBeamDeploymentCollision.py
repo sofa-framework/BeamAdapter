@@ -14,7 +14,7 @@ def createScene(rootNode):
     rootNode.addObject('BruteForceBroadPhase', name='N2')
     rootNode.addObject('BVHNarrowPhase')
     rootNode.addObject('LocalMinDistance', contactDistance='1', alarmDistance='5', name='localmindistance', angleCone='0.02')
-    rootNode.addObject('DefaultContactManager', name='Response', response='FrictionContact')
+    rootNode.addObject('DefaultContactManager', name='Response', response='FrictionContactConstraint')
 
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('WireRestShape', name='BeamRestShape', 
