@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <Node name="root" gravity="0 -9.81 0" dt="0.01" bbox="0 0 0 10 10 10">
-    <RequiredPlugin pluginName="BeamAdapter SofaBoundaryCondition SofaConstraint SofaDeformable SofaGeneralLinearSolver SofaImplicitOdeSolver"/>
+    <RequiredPlugin name="BeamAdapter"/> <!-- Needed to use components [WireBeamInterpolation WireRestShape] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
+    <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->
+    <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
+    <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->
+    <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [EdgeSetGeometryAlgorithms EdgeSetTopologyContainer EdgeSetTopologyModifier] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [RegularGridTopology] -->
+    <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->
     <VisualStyle displayFlags="showVisualModels showBehaviorModels showCollisionModels hideMappings showForceFields" />
 
     <DefaultAnimationLoop />

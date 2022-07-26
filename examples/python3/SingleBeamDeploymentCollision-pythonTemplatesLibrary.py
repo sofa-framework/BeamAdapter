@@ -16,8 +16,7 @@ def createScene(rootNode):
     rootNode.addObject('BruteForceBroadPhase', name='N2')
     rootNode.addObject('BVHNarrowPhase')
     rootNode.addObject('LocalMinDistance', contactDistance='1', alarmDistance='3', name='localmindistance', angleCone='0.02')
-    rootNode.addObject('DefaultContactManager', name='Response', response='FrictionContact')
-    rootNode.addObject('DefaultCollisionGroupManager', name='Group')
+    rootNode.addObject('DefaultContactManager', name='Response', response='FrictionContactConstraint')
 
 
     topoLines_guide = createGuide(rootNode, 'guide', straightLength=980.0, length=1000.0, 
