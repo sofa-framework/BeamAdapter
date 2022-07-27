@@ -1,0 +1,4 @@
+var namespacesofa_1_1component_1_1controller_1_1__adaptivebeamcontroller__ =
+[
+    [ "AdaptiveBeamController", "classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller.html", "classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller" ]
+];

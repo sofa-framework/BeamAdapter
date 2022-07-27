@@ -1,0 +1,4 @@
+var namespacesofa_1_1component_1_1mapping_1_1__adaptivebeammapping__ =
+[
+    [ "AdaptiveBeamMapping", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping" ]
+];

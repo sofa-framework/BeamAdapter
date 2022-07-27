@@ -1,0 +1,5 @@
+var classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571 =
+[
+    [ "ImplicitSurfaceAdaptiveConstraintResolution", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html#ae6838791868fd47bf3473b2c2ff18e5d", null ],
+    [ "resolution", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html#a779a5723059b5ba7cee63f9a72555b90", null ]
+];
