@@ -171,8 +171,6 @@ public:
     virtual void bwdInit() override;  // get the points
     virtual void reset() override;
     virtual void reinit() override;
-    virtual void draw(const VisualParams*) override;
-
 
     virtual void apply(const MechanicalParams *mparams, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
     virtual void applyJ(const MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;

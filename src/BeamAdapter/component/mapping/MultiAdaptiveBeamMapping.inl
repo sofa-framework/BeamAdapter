@@ -359,13 +359,6 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::bwdInit()
 }
 
 
-
-template <class TIn, class TOut>
-void MultiAdaptiveBeamMapping< TIn, TOut>::draw(const core::visual::VisualParams* vparams)
-{
-    if (!vparams->displayFlags().getShowMappings()) return;
-}
-
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::setBarycentricMapping()
 {

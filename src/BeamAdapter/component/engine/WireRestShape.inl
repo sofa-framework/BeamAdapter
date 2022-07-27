@@ -807,23 +807,24 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat<Rea
 }
 
 template<class DataTypes>
-void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*/)
+void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* vparams)
 {
     if (!d_drawRestShape.getValue())
         return;
 
-    glDisable(GL_LIGHTING);
-    glColor3d(1.0,0.0,0.0);
-    glPointSize(10.0);
-    for (unsigned int i = 0 ; i < m_localRestPositions.size(); i++)
-    {
-        glBegin(GL_POINTS);
-        glVertex3d(m_localRestPositions[i][0],m_localRestPositions[i][1],m_localRestPositions[i][2]);
-        glEnd();
-    }
-    glPointSize(1.0);
-    glEnable(GL_LIGHTING);
+    vparams->drawTool()->saveLastState();
+    vparams->drawTool()->setLightingEnabled(false);
 
+    std::vector< sofa::type::Vector3 > points;
+    points.reserve(m_localRestPositions.size());
+
+    for (unsigned int i = 0; i < m_localRestPositions.size(); i++)
+    {
+        points.emplace_back(m_localRestPositions[i][0], m_localRestPositions[i][1], m_localRestPositions[i][2]);
+    }
+
+    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor(1, 0.5, 0.5, 1));
+    vparams->drawTool()->restoreLastState();
 }
 
 } // namespace _wirerestshape_

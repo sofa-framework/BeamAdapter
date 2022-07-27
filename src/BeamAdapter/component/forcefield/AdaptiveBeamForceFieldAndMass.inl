@@ -761,6 +761,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
     if (!mstate) return;
 
+    vparams->drawTool()->saveLastState();
+
     ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -819,9 +821,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
             vparams->drawTool()->drawArrow(P1,P1 + y, radius_arrow, sofa::type::RGBAColor(1,0,0,1));
             vparams->drawTool()->drawArrow(P1,P1 + z, radius_arrow, sofa::type::RGBAColor(1,0,0,1));
         }
-
     }
 
+    vparams->drawTool()->restoreLastState();
 }
 
 
