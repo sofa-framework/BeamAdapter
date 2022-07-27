@@ -30,26 +30,18 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H
-#define SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H
-
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace fem
+namespace sofa::component::fem
 {
 
 namespace _beaminterpolation_
@@ -67,7 +59,7 @@ using sofa::type::Vec ;
 using sofa::type::Quat ;
 using sofa::defaulttype::Rigid3Types ;
 using sofa::core::behavior::MechanicalState ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 /*!
  * \class BeamInterpolation
@@ -345,7 +337,7 @@ protected :
     unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
-#if !defined(SOFA_BEAMINTERPOLATION_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 #endif
 
@@ -353,10 +345,4 @@ extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 
 using _beaminterpolation_::BeamInterpolation ;
 
-} /// namespace fem
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /*SOFA_COMPONENT_FEM_BEAMINTERPOLATION_H*/
+} /// namespace sofa::component::fem

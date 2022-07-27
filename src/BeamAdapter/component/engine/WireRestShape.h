@@ -29,24 +29,19 @@
 //
 // Copyright: See COPYING file that comes with this distribution
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
-#define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H
+#pragma once
 
 #include <BeamAdapter/config.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa
+namespace sofa::component::engine
 {
-namespace component
-{
-namespace engine
-{
+
 namespace _wirerestshape_
 {
 
@@ -54,7 +49,7 @@ using sofa::type::Quat;
 using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
-using sofa::component::topology::EdgeSetTopologyModifier;
+using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier;
 using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
 
@@ -94,7 +89,7 @@ public:
      ~WireRestShape(){}
 
      /////////////////////////// Inherited from Base //////////////////////////////////////////
-     virtual std::string getTemplateName() const
+     virtual std::string getTemplateName() const override
      {
          return templateName(this);
      }
@@ -113,7 +108,7 @@ public:
 
 
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
-     virtual void parse(BaseObjectDescription* arg) ;
+     virtual void parse(BaseObjectDescription* arg) override;
      virtual void init() override ;
      virtual void reinit() override {}
      virtual void doUpdate() override {}
@@ -218,14 +213,13 @@ protected:
      bool edgeSetInNode {false};
 };
 
+
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP)
+extern template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
+#endif
+
 } // namespace _wirerestshape_
 
 using _wirerestshape_::WireRestShape;
 
-} // namespace engine
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_H */
+} // namespace sofa::component::engine

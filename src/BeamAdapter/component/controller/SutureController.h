@@ -33,14 +33,13 @@
 //
 //
 //
+#pragma once
 
-#ifndef SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H
 #include <sofa/helper/set.h>
 
-#include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaMeshCollision/PointModel.h>
-#include <SofaMeshCollision/LineModel.h>
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <sofa/component/collision/geometry/PointModel.h>
+#include <sofa/component/collision/geometry/LineModel.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
@@ -54,12 +53,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////DECLARATIONS /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
+namespace sofa::component::controller
 {
-namespace component
-{
-namespace controller
-{
+
 namespace _suturecontroller_
 {
 
@@ -237,9 +233,6 @@ private:
     Data< vector<Vec2> > d_curvatureList;
     Data< VecCoord >     d_controlPoints;
 
-    /// Interface for topology changes
-    TopologyContainer*  m_topology {nullptr} ;
-
     void dummyController(vector<Real> &newCurvAbs);
 
     /// If true update interpolation and subgraph on beginAnimationStep
@@ -247,6 +240,9 @@ private:
     Data< bool>         d_applyOrientationFirstInCreateNeedle;
     Data< bool >        d_reinitilizeWireOnInit;
     Data<vector<Real> > d_actualStepNoticeablePoints;
+
+    /// Interface for topology changes
+    TopologyContainer*  m_topology {nullptr} ;
 
     /// internal data necessary for computeSampling
     /// bool addingBeams is true when we are currently "adding" new Beams (for more precise computation)
@@ -258,17 +254,11 @@ private:
 /// overall compilation time of SOFA. In the .h these instances are declared as 'extern' meaning
 /// they will not be instanciated. The actual instanciation is done in the corresponding .cpp file.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#if !defined(SOFA_SUTURECONTROLLER_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP)
 extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
 } /// namespace _suturecontroller_
 
 using _suturecontroller_::SutureController ;
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_SUTURECONTROLLER_H */
+} /// namespace sofa::component::controller

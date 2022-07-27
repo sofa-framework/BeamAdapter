@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
-#define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
@@ -61,13 +60,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -180,12 +173,12 @@ public:
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor);
-    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix);
-    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix);
+    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& )
+    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available";
@@ -200,7 +193,7 @@ public:
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& )
+    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error() << "addGravityToV not implemented yet";
@@ -212,13 +205,13 @@ public:
     /// ForceField Interface
     /////////////////////////////////////
     virtual void addForce(const MechanicalParams* mparams,
-                          DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v);
+                          DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v) override;
 
     virtual void addDForce(const MechanicalParams* mparams,
-                           DataVecDeriv&   datadF , const DataVecDeriv&   datadX );
+                           DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const 
+    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"getPotentialEnergy not yet implemented"; 
@@ -226,7 +219,7 @@ public:
     }
 
     void addKToMatrix(const MechanicalParams* mparams,
-                      const MultiMatrixAccessor* matrix);
+                      const MultiMatrixAccessor* matrix) override;
 
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
@@ -260,9 +253,8 @@ private:
 };
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
-#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTVEBEAMFORCEFIELD_CPP)
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP)
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types> ;
-
 #endif
 
 } /// namespace _adaptivebeamforcefieldandmass_
@@ -274,12 +266,4 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3T
 using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
 
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
-
-
-#endif  /* SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_H */
+} /// namespace sofa::component::forcefield

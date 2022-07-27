@@ -27,9 +27,7 @@
 
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
-#include <SofaBaseTopology/RegularGridTopology.h>
 #include <SofaBaseMechanics/AddMToMatrixFunctor.h>
-#include <SofaBaseTopology/TopologyData.inl>
 
 #include <sofa/helper/system/thread/CTime.h>
 #include <SofaConstraint/UnilateralInteractionConstraint.h>
@@ -120,7 +118,7 @@ ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(
 template<class DataTypes>
 void ImplicitSurfaceAdaptiveConstraint<DataTypes>::init()
 {
-    PairInteractionConstraint<DataTypes>::init();
+    Inherit::init();
 }
 
 
@@ -173,7 +171,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
 
 
     // STEP 4: verify if listBeams is void => all beams are activated
-    const vector<int> &list_B= d_listBeams.getValue();
+    const type::vector<int> &list_B= d_listBeams.getValue();
     if( list_B.size() == 0)
         m_allActivated=true;
     else
@@ -216,7 +214,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getOrthogonalVectors(const Ve
 /// "filters" contacts (the normal of contact is supposed to be perp to the tangent of the curve except on the tip point)
 /// set  normal and tangential directions
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, vector<int>& listBeam)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImplicitSurface(const ConstVecCoordId &vecXId, type::vector<int>& listBeam)
 {
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
 
@@ -312,7 +310,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::detectPotentialContactOnImpli
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams* cParams,
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const core::ConstraintParams* cParams,
                                                                          DataMatrixDeriv &c1,
                                                                          DataMatrixDeriv &c2,
                                                                          unsigned int &cIndex,
@@ -328,7 +326,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const C
 
     //1st step: computation of sample point position (10 / beam)
     // if all activated => all beam considered otherwize, use listBeams...
-    vector<int> list_B;
+    type::vector<int> list_B;
     unsigned int numBeams= l_wireBinterpolation->getNumBeams();
     m_allActivated=false;
     if (m_allActivated)
@@ -356,8 +354,9 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const C
     // the following code verify that the position is correct:
     dmsg_info() <<" in buildConstraintMatrix: cParams->x()="<<cParams->x();
 
-    MultiVecCoordId x = VecCoordId::position();
-    ConstVecCoordId xtest = cParams->readX(this->mstate2);
+    MultiVecCoordId x = VecCoordId::position(); 
+    ConstVecCoordId xtest = cParams->x()[this->mstate2.get()];
+    //ConstVecCoordId xtest = cParams->readX(this->mstate2);
 
     if(xtest != x.getId(this->mstate2))
     {
@@ -368,7 +367,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const C
     const VecCoord &x2buf = x2.getValue();
     sofa::core::VecCoordId x_in = sofa::core::VecCoordId::position();
 
-    const VecCoord &x2test=*this->mstate2->getX();
+    auto x2test = sofa::helper::getReadAccessor(*(this->mstate2->read(core::ConstVecCoordId::position())));
     l_wireBinterpolation->updateBezierPoints(x2test, x_in );
 
     // interpolates the position of the sample points
@@ -541,8 +540,8 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::computeTangentialViolation(co
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const ConstraintParams* cParams,
-                                                                          BaseVector *v,
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const core::ConstraintParams* cParams,
+                                                                          linearalgebra::BaseVector *v,
                                                                           const DataVecCoord &x1,
                                                                           const DataVecCoord &x2,
                                                                           const DataVecDeriv &v1,
@@ -602,7 +601,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintViolation(const 
 
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<ConstraintResolution*>& resTab, unsigned int& offset)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::vector<core::behavior::ConstraintResolution* > & resTab, unsigned int& offset)
 {
 
 #ifdef DEBUG
@@ -629,7 +628,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::getConstraintResolution(std::
 }
 
 template<class DataTypes>
-void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const VisualParams* vparams)
+void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::VisualParams* vparams)
 {
 #ifdef DEBUG
     dmsg_info()<<" entering draw";

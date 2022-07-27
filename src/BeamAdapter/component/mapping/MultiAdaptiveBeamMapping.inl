@@ -30,26 +30,20 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
-#define SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL
+#pragma once
 
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.h>
 
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/core/MechanicalParams.h>
+#include <sofa/helper/ScopedAdvancedTimer.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 using namespace sofa::defaulttype;
-
+using sofa::helper::ScopedAdvancedTimer;
 
 
 template <class TIn, class TOut>
@@ -79,6 +73,8 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
+    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_apply");
+
     VecCoord& out = *dOut.beginEdit();
     if(!isBarycentricMapping)
         out.resize(_xPointList.size());
@@ -99,6 +95,8 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecDeriv>& dOut, const Data<InVecDeriv>& dIn)
 {
+    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJ");
+
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
@@ -111,6 +109,8 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* 
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<InVecDeriv>& dOut, const Data<VecDeriv>& dIn)
 {
+    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJT");
+
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
@@ -130,6 +130,8 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& dOut, const Data<OutMatrixDeriv>& dIn)
 {
+    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJT");
+
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
@@ -422,10 +424,4 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::clear(int size)
 }
 
 
-} // namespace mapping
-
-} // namespace component
-
-} // namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_MULTIADAPTIVEBEAMMAPPING_INL */
+} // namespace sofa::component::mapping

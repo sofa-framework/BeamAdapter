@@ -23,31 +23,29 @@
 
 #include <sofa/helper/BackTrace.h>
 
-#include <SofaBaseUtils/initSofaBaseUtils.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 
-#include <SofaBaseMechanics/MechanicalObject.h>
-
-#include <SofaBaseLinearSolver/FullVector.h>
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
-#include <SofaBaseTopology/TetrahedronSetTopologyContainer.h>
-using sofa::component::topology::TetrahedronSetTopologyContainer ;
+#include <sofa/component/topology/container/dynamic/TetrahedronSetTopologyContainer.h>
+using sofa::component::topology::container::dynamic::TetrahedronSetTopologyContainer ;
 
 using sofa::helper::WriteAccessor ;
 using sofa::defaulttype::Rigid3dTypes ;
 using sofa::core::ExecParams ;
 
-#include <SofaSimulationCommon/SceneLoaderXML.h>
-using sofa::simulation::SceneLoaderXML ;
+#include <sofa/simulation/common/SceneLoaderXML.h>
+using sofa::simulation::SceneLoaderXML;
 
-#include <SofaSimulationGraph/DAGSimulation.h>
+#include <sofa/simulation/graph/DAGSimulation.h>
+using sofa::simulation::graph::DAGSimulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
 using sofa::simulation::setSimulation ;
 using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 #include <regex>
 #include <vector>
@@ -65,14 +63,15 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
     void simpleScene(const std::vector<std::string>& lines)
     {
         assert(lines.size()==3);
-        sofa::component::initSofaBaseUtils();
-
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "               <RequiredPlugin name='SofaBaseLinearSolver' />"
-                "               <RequiredPlugin name='SofaImplicitOdeSolver' />"
-                "   		<EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "               <RequiredPlugin name='Sofa.Component.ODESolver.Backward' />"
+                "               <RequiredPlugin name='Sofa.Component.LinearSolver.Iterative' />"
+                "               <RequiredPlugin name='Sofa.Component.StateContainer' />"
+                "               <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
+                "               <RequiredPlugin name='BeamAdapter' />"
+                "   		    <EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
                 "               <BeamInterpolation template='Rigid3d' name='Interpol' radius='0.1'/>"
@@ -107,18 +106,18 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 
 static std::vector<std::vector<std::string>> teststrings ={
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         ,""
         , "T"
     },
     {
         "<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
-        ,"<Mesh name='meshSuture' edges='0 1' />"
+        ,"<MeshTopology name='meshSuture' edges='0 1' />"
         , "T"
     },
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         ,"<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
         , "W"
     },
@@ -128,7 +127,7 @@ static std::vector<std::vector<std::string>> teststrings ={
         , "W"
     },
     {
-        "<Mesh name='meshSuture' edges='0 1' />"
+        "<MeshTopology name='meshSuture' edges='0 1' />"
         ,"<AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
         , "W"
     }
@@ -138,7 +137,7 @@ TEST_P(BeamInterpolationTest, checkMinimalScene) {
     ASSERT_NO_THROW(this->simpleScene(GetParam())) ;
 }
 
-INSTANTIATE_TEST_CASE_P(checkMinimalScene,
+INSTANTIATE_TEST_SUITE_P(checkMinimalScene,
                         BeamInterpolationTest, ::testing::ValuesIn(teststrings) ) ;
 
 }

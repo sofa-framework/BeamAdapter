@@ -29,17 +29,15 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#ifndef SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
-#define SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL
+#pragma once
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
 #include <cmath>
 
 #include <sofa/core/behavior/MechanicalState.h>
-#include <SofaBaseTopology/QuadSetTopologyModifier.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
-#include <SofaTopologyMapping/Edge2QuadTopologicalMapping.h>
+#include <sofa/component/topology/container/dynamic/QuadSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 
 #include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
@@ -55,13 +53,7 @@
 #define EPSILON 0.0000000001
 #define VERIF 1
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace engine
+namespace sofa::component::engine
 {
 
 namespace _wirerestshape_
@@ -316,7 +308,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
         return;
     }
     ///////// remove the edge that is cut //////
-    for ( int i=0; i<_topology->getNbPoints(); i++)
+    for ( sofa::Size i=0; i<_topology->getNbPoints(); i++)
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
@@ -333,7 +325,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             if(edge2QuadMap!=NULL)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
-                sofa::component::topology::QuadSetTopologyModifier *quadMod;
+                sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
                 edge2QuadMap->getContext()->get(quadMod);
                 quadMod->notifyEndingEvent();
             }
@@ -837,10 +829,4 @@ void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*
 } // namespace _wirerestshape_
 using _wirerestshape_::WireRestShape;
 
-} // namespace engine
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_ENGINE_WIRERESTSHAPE_INL */
+} // namespace sofa::component::engine

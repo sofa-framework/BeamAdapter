@@ -32,16 +32,14 @@
 //
 //
 
-#ifndef SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
-#define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <SofaUserInteraction/MechanicalStateController.h>
-#include <SofaBoundaryCondition/FixedConstraint.h>
-#include <SofaMeshCollision/PointModel.h>
-#include <SofaMeshCollision/LineModel.h>
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <sofa/component/constraint/projective/FixedConstraint.h>
+#include <sofa/component/collision/geometry/PointModel.h>
+#include <sofa/component/collision/geometry/LineModel.h>
 
-#include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
@@ -49,11 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa
-{
-namespace component
-{
-namespace controller
+namespace sofa::component::controller
 {
 
 /////////////////////////////////// private namespace pattern //////////////////////////////////////
@@ -64,7 +58,7 @@ namespace controller
 namespace _adaptivebeamcontroller_
 {
 
-using sofa::component::projectiveconstraintset::FixedConstraint ;
+using sofa::component::constraint::projective::FixedConstraint ;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
@@ -127,7 +121,7 @@ public :
     virtual void onBeginAnimationStep(const double dt) override ;
 
     //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
-    virtual string getTemplateName() const
+    virtual string getTemplateName() const override
     {
       return templateName(this);
     }
@@ -157,15 +151,14 @@ protected:
     bool                        RW {false} ;
 };
 
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamController<defaulttype::Rigid3Types>;
+#endif
+
 } /// namespace _adaptivebeamcontroller_
+
 
 /// 'Export' the objects defined in the private namespace into the 'public' one.
 using _adaptivebeamcontroller_::AdaptiveBeamController ;
 
-} /// namespace controller
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_H */
+} /// namespace sofa::component::controller

@@ -31,27 +31,19 @@
 //
 //
 
-#ifndef SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_INL
-#define SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_INL
-
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace controller
+namespace sofa::component::controller
 {
 
 namespace _adaptivebeamcontroller_
@@ -344,10 +336,4 @@ void AdaptiveBeamController<DataTypes>::applyController()
 
 } // namespace _adaptivebeamcontroller_
 
-} // namespace controller
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_ADAPTIVEBEAMCONTROLLER_INL */
+} // namespace sofa::component::controller

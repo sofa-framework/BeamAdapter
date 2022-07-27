@@ -31,6 +31,8 @@
 //
 //
 
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMCONTROLLER_CPP
+
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
@@ -39,13 +41,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace controller
+namespace sofa::component::controller
 {
 
 namespace _adaptivebeamcontroller_
@@ -66,7 +62,6 @@ using core::RegisterObject;
 //TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
 static int AdaptiveBeamControllerClass = RegisterObject("")
 .add< AdaptiveBeamController<Rigid3Types> >()
-
 ;
 
 template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
@@ -74,8 +69,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
 
 } // namespace _adaptivebeamcontroller_
 
-} // namespace controller
-
-} // namespace component
-
-} // namespace sofa
+} // namespace sofa::component::controller

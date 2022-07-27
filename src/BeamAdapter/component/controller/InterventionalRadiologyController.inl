@@ -30,14 +30,12 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#ifndef SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_INL
-#define SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_INL
+#pragma once
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
-#include <SofaBaseTopology/EdgeSetGeometryAlgorithms.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/helper/AdvancedTimer.h>
 #include <sofa/helper/system/FileRepository.h>
@@ -46,13 +44,7 @@
 
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace controller
+namespace sofa::component::controller
 {
 
 namespace _interventionalradiologycontroller_
@@ -1142,10 +1134,4 @@ int InterventionalRadiologyController<DataTypes>::getTotalNbEdges() const
 
 } // namespace _interventionalradiologycontroller_
 
-} // namespace controller
-
-} // namespace component
-
-} // namespace sofa
-
-#endif /* SOFA_COMPONENT_CONTROLLER_INTERVENTIONALRADIOLOGYCONTROLLER_INL */
+} // namespace sofa::component::controller

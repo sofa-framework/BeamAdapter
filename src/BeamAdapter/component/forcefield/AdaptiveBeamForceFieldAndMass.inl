@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL
-#define SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL
+#pragma once
 
 #include <sofa/core/behavior/ForceField.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
@@ -49,17 +48,11 @@
 #include <sofa/simulation/Simulation.h>
 #include <sofa/gl/Axis.h>
 #include <sofa/core/visual/VisualParams.h>
+#include <sofa/helper/ScopedAdvancedTimer.h>
 
 
 
-
-namespace sofa
-{
-
-namespace component
-{
-
-namespace forcefield
+namespace sofa::component::forcefield
 {
 
 namespace _adaptivebeamforcefieldandmass_
@@ -73,6 +66,7 @@ using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;
 using std::set ;
+using sofa::helper::ScopedAdvancedTimer;
 
 template <class DataTypes>
 AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
@@ -525,6 +519,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
                                                          const DataVecCoord& datax,
                                                          const DataVecDeriv& v)
 {
+    ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addForce");
     SOFA_UNUSED(v);
 
     VecDeriv& f = *dataf.beginEdit() ;
@@ -846,10 +841,4 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::drawElement(const VisualParams *v
 
 } /// namespace _adaptivebeamforcefieldandmass_
 
-} /// namespace forcefield
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif /* SOFA_COMPONENT_FORCEFIELD_ADAPTIVEBEAMFORCEFIELDANDMASS_INL */
+} /// namespace sofa::component::forcefield

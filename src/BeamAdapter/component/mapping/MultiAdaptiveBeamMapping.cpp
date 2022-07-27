@@ -30,18 +30,14 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_MULTIADAPTIVEBEAMMAPPING_CPP
 
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa
+namespace sofa::component::mapping
 {
 
-namespace component
-{
-
-namespace mapping
-{
 using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
@@ -60,14 +56,6 @@ static int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positio
 
 ;
 
+template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types >;
 
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types >;
-
-
-
-} // namespace mapping
-
-} // namespace component
-
-} // namespace sofa
-
+} // namespace sofa::component::mapping

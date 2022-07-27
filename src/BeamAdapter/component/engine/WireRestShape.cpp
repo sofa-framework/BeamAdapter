@@ -29,19 +29,15 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP
+
 #include <BeamAdapter/component/engine/WireRestShape.inl>
 
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace engine
+namespace sofa::component::engine
 {
 
 namespace _wirerestshape_
@@ -67,8 +63,4 @@ template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3Types>;
 
 } // namespace _wirerestshape_
 
-}// namespace engine
-
-} // namespace component
-
-} // namespace sofa
+}// namespace sofa::component::engine

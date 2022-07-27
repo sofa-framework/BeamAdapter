@@ -19,8 +19,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_DEPRECATED_H
-#define SOFA_COMPONENT_DEPRECATED_H
+#pragma once
 
 #include <sofa/core/objectmodel/BaseObject.h>
 
@@ -51,5 +50,3 @@ private:
 } // namespace component
 
 } // namespace sofa
-
-#endif // SOFA_COMPONENT_CONSTRAINTSET_CABLEACTUATOR_H

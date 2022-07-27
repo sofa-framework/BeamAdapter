@@ -19,19 +19,15 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMLENGTHCONSTRAINT_CPP
+
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.inl>
 
 #include <sofa/defaulttype/VecTypes.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraintset
+namespace sofa::component::constraintset
 {
 
 namespace _adaptivebeamlengthconstraint_
@@ -84,9 +80,4 @@ template class AdaptiveBeamLengthConstraint<Rigid3Types>;
 
 } /// namespace _adaptivebeamlengthconstraint_
 
-} /// namespace constraintset
-
-} /// namespace component
-
-} /// namespace sofa
-
+} /// namespace sofa::component::constraintset
