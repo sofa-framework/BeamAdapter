@@ -87,15 +87,6 @@ public:
       */
      virtual ~WireRestShape() = default;
 
-     /////////////////////////// Inherited from Base //////////////////////////////////////////
-     /// Construction method called by ObjectFactory.
-     template<class T>
-     static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)
-     {
-         return core::objectmodel::BaseObject::create(obj, context, arg);
-     }
-
-
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      virtual void parse(BaseObjectDescription* arg) override;
      virtual void init() override ;

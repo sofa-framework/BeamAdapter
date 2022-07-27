@@ -146,14 +146,11 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams*
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::handleEvent(sofa::core::objectmodel::Event * event)
 {
-
-    if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
+    if (sofa::simulation::AnimateBeginEvent::checkEventType(event))
     {
         assignSubMappingFromControllerInfo();
     }
 }
-
-
 
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
