@@ -117,7 +117,8 @@ public:
     {
         if (dynamic_cast<MechanicalState<DataTypes>*>(context->getMechanicalState()) == nullptr)
         {
-            msg_error("BeamInterpolation") << "Could not find a Mechanical State with the requested template in its context.";
+            arg->logError(std::string("No mechanical state with the datatype '") + DataTypes::Name() +
+                "' found in the context node.");
             return false;
         }
         return BaseObject::canCreate(obj, context, arg);
