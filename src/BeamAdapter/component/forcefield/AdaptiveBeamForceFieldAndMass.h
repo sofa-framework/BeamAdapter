@@ -192,7 +192,7 @@ public:
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const ///< vMv/2 using dof->getV()
+    virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getKineticEnergy not yet implemented";
