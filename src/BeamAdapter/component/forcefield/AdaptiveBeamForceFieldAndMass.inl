@@ -74,7 +74,7 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
-    , d_dataG(initData(&d_dataG,"dataG","Gravity vector"))
+    , d_dataG(initData(&d_dataG,"dataG","Gravity type::vector"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
@@ -112,7 +112,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 {
     Vec3 gravity = getContext()->getGravity();
 
-    VecDeriv& _G = *d_dataG.beginEdit();
+    auto _G = sofa::helper::getWriteOnlyAccessor(d_dataG);
     _G.resize(l_interpolation->getStateSize());
 
     m_gravity = Vec3(gravity[0],gravity[1],gravity[2]);
@@ -133,8 +133,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
         _G[i][4]=(Real)0.0;
         _G[i][5]=(Real)0.0;
     }
-
-    d_dataG.endEdit();
 }
 
 
@@ -377,23 +375,21 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mp
 {
     SOFA_UNUSED(mparams);
 
-    VecDeriv& f = *dataf.beginEdit() ;
+    auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecDeriv& dx = datadx.getValue();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 
     if (f.size()!=dx.size())
-        f.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+        f.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     for (unsigned int b=0; b<numBeams; b++)
     {
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        applyMassLarge( f, dx, b, node0Idx, node1Idx, factor );
+        applyMassLarge( f.wref(), dx, b, node0Idx, node1Idx, factor);
     }
-
-    dataf.endEdit() ;
 }
 
 
@@ -522,10 +518,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addForce");
     SOFA_UNUSED(v);
 
-    VecDeriv& f = *dataf.beginEdit() ;
+    auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecCoord& x = datax.getValue();
 
-    f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    f.resize(x.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
@@ -663,7 +659,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
         Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
-        /// Add this force to vector f
+        /// Add this force to type::vector f
         for (unsigned int i=0; i<6; i++)
         {
             f[node0Idx][i]-=F0_ref[i];
@@ -676,7 +672,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         /// add gravity:
         addMDx(mparams, dataf, d_dataG, 1.0);
     }
-    dataf.endEdit() ;
 }
 
 
@@ -684,11 +679,11 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const MechanicalParams* mparams,
                                                          DataVecDeriv& datadF, const DataVecDeriv& datadX )
 {
-    VecDeriv& df = *datadF.beginEdit();
+    auto df = sofa::helper::getWriteOnlyAccessor(datadF);
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
 
-    df.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    df.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 
@@ -697,10 +692,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const MechanicalParams*
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        applyStiffnessLarge( df, dx, b, node0Idx, node1Idx, kFactor );
+        applyStiffnessLarge( df.wref(), dx, b, node0Idx, node1Idx, kFactor);
     }
-
-    datadF.endEdit();
 }
 
 
@@ -779,7 +772,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
         if(vparams->displayFlags().getShowForceFields())
         {
             // /  test ///
-            vector<Vector3> points;
+            type::vector<Vector3> points;
             Vec3 pos = globalH0Local.getOrigin();
             for (double i=0.0; i<1.00001; i+=0.02)
             {

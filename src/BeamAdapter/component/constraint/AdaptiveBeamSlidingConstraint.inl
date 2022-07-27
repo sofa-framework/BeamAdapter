@@ -34,7 +34,6 @@ namespace sofa::component::constraintset
 namespace _adaptiveBeamSlidingConstraint_
 {
 
-using std::vector;
 using sofa::core::behavior::ConstraintResolution ;
 using sofa::core::ConstVecCoordId;
 using sofa::core::ConstraintParams;
@@ -151,8 +150,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
 
     unsigned int m2 = x2free.size();
     WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
-    MatrixDeriv& c1 = *c1_d.beginEdit();
-    MatrixDeriv& c2 = *c2_d.beginEdit();
+    auto c1 = sofa::helper::getWriteOnlyAccessor(c1_d);
+    auto c2 = sofa::helper::getWriteOnlyAccessor(c2_d);
     const VecCoord& x1= x1_d.getValue();
     const VecCoord& x2= x2_d.getValue();
 
@@ -193,24 +192,24 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
         Vec3 nullRot(0,0,0);
         interpolation->getNodeIndices(beam, node0, node1);
 
-        MatrixDerivRowIterator c1_it = c1.writeLine(m_cid + m_nbConstraints);
-        MatrixDerivRowIterator c2_it = c2.writeLine(m_cid + m_nbConstraints);
+        MatrixDerivRowIterator c1_it = c1.wref().writeLine(m_cid + m_nbConstraints);
+        MatrixDerivRowIterator c2_it = c2.wref().writeLine(m_cid + m_nbConstraints);
         interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir1, sv0, sv1);
         c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
         c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
         c2_it.addCol(i, Deriv(-dir1, nullRot));
         m_nbConstraints++;
 
-        c1_it = c1.writeLine(m_cid + m_nbConstraints);
-        c2_it = c2.writeLine(m_cid + m_nbConstraints);
+        c1_it = c1.wref().writeLine(m_cid + m_nbConstraints);
+        c2_it = c2.wref().writeLine(m_cid + m_nbConstraints);
         interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir2, sv0, sv1);
         c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
         c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
         c2_it.addCol(i, Deriv(-dir2, nullRot));
         m_nbConstraints++;
 
-        c1_it = c1.writeLine(m_cid + m_nbConstraints);
-        c2_it = c2.writeLine(m_cid + m_nbConstraints);
+        c1_it = c1.wref().writeLine(m_cid + m_nbConstraints);
+        c2_it = c2.wref().writeLine(m_cid + m_nbConstraints);
         interpolation->MapForceOnNodeUsingSpline(beam, baryCoord, Pos(0,0,0), x1, dir0, sv0, sv1);
         c1_it.addCol(node0, Vec6(sv0.getForce(), sv0.getTorque()));
         c1_it.addCol(node1, Vec6(sv1.getForce(), sv1.getTorque()));
@@ -219,8 +218,6 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
     }
 
     constraintId += m_nbConstraints;
-    c1_d.endEdit();
-    c2_d.endEdit();
 }
 
 
@@ -244,7 +241,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintViolation(const Cons
 
 template<class DataTypes>
 void AdaptiveBeamSlidingConstraint<DataTypes>::getConstraintResolution(const ConstraintParams* cParams,
-                                                                vector<ConstraintResolution*>& resTab,
+                                                                std::vector<ConstraintResolution*>& resTab,
                                                                 unsigned int& offset)
 {
     SOFA_UNUSED(cParams);

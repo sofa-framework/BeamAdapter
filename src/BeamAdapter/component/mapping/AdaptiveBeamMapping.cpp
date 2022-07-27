@@ -48,7 +48,7 @@ using namespace core::behavior;
 template<>
 void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParams*, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
 {
-    VecCoord& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in= dIn.getValue();
 
     m_isXBufferUsed=false;
@@ -68,8 +68,6 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParam
         out[i].getCenter() = posTransform.getOrigin();
         out[i].getOrientation() = posTransform.getOrientation();
     }
-
-    dOut.endEdit();
 }
 
 
@@ -196,20 +194,6 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsi
 
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
-
-
-template <>
-int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point, int indexFrom)
-{
-    SOFA_UNUSED(indexFrom);
-
-    int nbPoints = d_points.getValue().size();
-    Vec3 coord = point.getCenter();
-
-    d_points.beginEdit()->push_back(coord);
-    return nbPoints;
-}
-
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
