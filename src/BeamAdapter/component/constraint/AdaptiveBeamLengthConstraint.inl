@@ -71,11 +71,6 @@ AdaptiveBeamLengthConstraint<DataTypes>::AdaptiveBeamLengthConstraint(TypedMecha
 }
 
 template<class DataTypes>
-AdaptiveBeamLengthConstraint<DataTypes>::~AdaptiveBeamLengthConstraint()
-{
-}
-
-template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::init()
 {
     this->mstate= dynamic_cast< MechanicalState<DataTypes> *> (this->getContext()->getMechanicalState());

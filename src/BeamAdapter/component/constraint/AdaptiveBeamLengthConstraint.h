@@ -140,7 +140,7 @@ public:
 
 protected:
     AdaptiveBeamLengthConstraint(TypedMechanicalState* object = nullptr) ;
-    virtual ~AdaptiveBeamLengthConstraint() ;
+    virtual ~AdaptiveBeamLengthConstraint() = default;
 
     void internalInit();
 

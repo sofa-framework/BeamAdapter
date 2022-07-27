@@ -80,13 +80,6 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
 {
 }
 
-
-template <class DataTypes>
-AdaptiveBeamForceFieldAndMass<DataTypes>::~AdaptiveBeamForceFieldAndMass()
-{
-}
-
-
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::init()
 {

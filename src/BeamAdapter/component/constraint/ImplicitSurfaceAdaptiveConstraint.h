@@ -150,7 +150,7 @@ public:
     ImplicitSurfaceAdaptiveConstraint(MechanicalState* object);
     ImplicitSurfaceAdaptiveConstraint();
 
-    ~ImplicitSurfaceAdaptiveConstraint(){}
+    virtual ~ImplicitSurfaceAdaptiveConstraint() = default;
 
     core::behavior::BaseMechanicalState* getMechModel1() { return this->mstate1; }
     core::behavior::BaseMechanicalState* getMechModel2() { return this->mstate2; }

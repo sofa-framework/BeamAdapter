@@ -85,19 +85,9 @@ public:
      /*!
       * @brief Default Destructor.
       */
-     ~WireRestShape(){}
+     virtual ~WireRestShape() = default;
 
      /////////////////////////// Inherited from Base //////////////////////////////////////////
-     virtual std::string getTemplateName() const override
-     {
-         return templateName(this);
-     }
-
-     static std::string templateName(const WireRestShape<DataTypes>* = nullptr)
-     {
-         return DataTypes::Name();
-     }
-
      /// Construction method called by ObjectFactory.
      template<class T>
      static typename T::SPtr create(T* obj, BaseContext* context, BaseObjectDescription* arg)

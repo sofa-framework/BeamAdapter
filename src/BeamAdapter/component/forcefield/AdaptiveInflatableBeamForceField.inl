@@ -79,13 +79,6 @@ AdaptiveInflatableBeamForceField<DataTypes>::AdaptiveInflatableBeamForceField()
 {
 }
 
-
-template <class DataTypes>
-AdaptiveInflatableBeamForceField<DataTypes>::~AdaptiveInflatableBeamForceField()
-{
-}
-
-
 template <class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::init()
 {

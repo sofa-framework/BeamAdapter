@@ -66,13 +66,6 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine:
 
 
 }
-
-template <class DataTypes>
-WireBeamInterpolation<DataTypes>::~WireBeamInterpolation()
-{
-
-}
-
 //////////// useful tool
 
 template <class DataTypes>

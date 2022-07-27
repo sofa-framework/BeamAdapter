@@ -1078,20 +1078,6 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
     d_indexFirstNode = firstSimulatedNode-1 ;
 }
 
-
-template <class DataTypes>
-std::string InterventionalRadiologyController<DataTypes>::getTemplateName() const
-{
-    return templateName(this);
-}
-
-template <class DataTypes>
-std::string InterventionalRadiologyController<DataTypes>::templateName(const InterventionalRadiologyController<DataTypes>* thisClass)
-{
-    SOFA_UNUSED(thisClass);
-    return DataTypes::Name();
-}
-
 template <class DataTypes>
 bool InterventionalRadiologyController<DataTypes>::modifyTopology(void)
 {

@@ -93,7 +93,7 @@ public:
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller);
     MultiAdaptiveBeamMapping();
 
-    virtual ~MultiAdaptiveBeamMapping(){}
+    virtual ~MultiAdaptiveBeamMapping() = default;
 
     void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
 

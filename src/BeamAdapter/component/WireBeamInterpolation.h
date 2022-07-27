@@ -103,7 +103,7 @@ public:
 
     WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
 
-    virtual ~WireBeamInterpolation();
+    virtual ~WireBeamInterpolation() = default;
 
     void init() override;
     void bwdInit() override;

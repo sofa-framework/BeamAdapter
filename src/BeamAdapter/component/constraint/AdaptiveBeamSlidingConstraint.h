@@ -109,7 +109,7 @@ protected:
     AdaptiveBeamSlidingConstraint(TypedMechanicalState* object1, TypedMechanicalState* object2) ;
     AdaptiveBeamSlidingConstraint(TypedMechanicalState* object) ;
     AdaptiveBeamSlidingConstraint() ;
-    virtual ~AdaptiveBeamSlidingConstraint(){}
+    virtual ~AdaptiveBeamSlidingConstraint() = default;
 
 private:
     void internalInit();

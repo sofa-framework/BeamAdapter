@@ -71,7 +71,7 @@ public:
     /*!
     * @brief Default Destructor.
     */
-    ~SteerableCatheter(){}
+    virtual ~SteerableCatheter() = default;
 
     /// Initialization function
     void init() override;
@@ -86,17 +86,6 @@ public:
     {
          return core::objectmodel::BaseObject::create(obj, context, arg);
     }
-
-    virtual std::string getTemplateName() const override
-    {
-         return templateName(this);
-    }
-
-    static std::string templateName(const SteerableCatheter<DataTypes>* = nullptr)
-    {
-         return DataTypes::Name();
-    }
-
 
     /// Boolean for bending
     Data<bool> d_activeBending;

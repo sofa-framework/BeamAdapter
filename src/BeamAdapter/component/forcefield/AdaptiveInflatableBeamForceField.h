@@ -159,7 +159,7 @@ protected:
 public:
 
     AdaptiveInflatableBeamForceField( ) ;
-    virtual ~AdaptiveInflatableBeamForceField() ;
+    virtual ~AdaptiveInflatableBeamForceField() = default;
 
 
     /////////////////////////////////////

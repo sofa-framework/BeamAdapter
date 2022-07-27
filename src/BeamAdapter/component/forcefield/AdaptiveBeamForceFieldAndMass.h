@@ -159,7 +159,7 @@ protected:
 public:
 
     AdaptiveBeamForceFieldAndMass( ) ;
-    virtual ~AdaptiveBeamForceFieldAndMass() ;
+    virtual ~AdaptiveBeamForceFieldAndMass() = default;
 
 
     /////////////////////////////////////

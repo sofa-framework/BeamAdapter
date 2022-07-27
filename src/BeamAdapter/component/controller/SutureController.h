@@ -110,7 +110,7 @@ public:
 
 public:
     SutureController(WInterpolation* _adaptiveinterpolation = nullptr) ;
-    virtual ~SutureController() override {}
+    virtual ~SutureController() override = default;
 
     /////////////////// Inherited from Base //////////////////////////////////////////////////
     virtual void init() override;
@@ -118,16 +118,6 @@ public:
     virtual void reinit() override;
     virtual void reset() override { init(); applyController();}
     virtual void draw(const core::visual::VisualParams*) override;
-
-    virtual std::string getTemplateName() const override
-    {
-        return templateName(this);
-    }
-
-    static std::string templateName(const SutureController<DataTypes>* = nullptr)
-    {
-        return DataTypes::Name();
-    }
 
     /////////////////// Inherited from Controller //////////////////////////////////////////////////
     virtual void onMouseEvent(core::objectmodel::MouseEvent *)override {}

@@ -158,7 +158,7 @@ public:
                         BeamInterpolation< TIn >* interpolation=nullptr,
                         bool isSubMapping=false) ;
 
-    virtual ~AdaptiveBeamMapping(){}
+    virtual ~AdaptiveBeamMapping() = default;
 
 
     virtual void init() override;     // get the interpolation

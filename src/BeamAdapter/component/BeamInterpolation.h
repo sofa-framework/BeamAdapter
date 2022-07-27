@@ -107,7 +107,7 @@ public:
 
 public:
     BeamInterpolation() ;
-    virtual ~BeamInterpolation() override {}
+    virtual ~BeamInterpolation() override = default;
 
     //////////////////////////////////// Exposing this object in the factory ///////////////////////
     /// Pre-construction check method called by ObjectFactory.
@@ -117,6 +117,7 @@ public:
     {
         if (dynamic_cast<MechanicalState<DataTypes>*>(context->getMechanicalState()) == nullptr)
         {
+            msg_error("BeamInterpolation") << "Could not find a Mechanical State with the requested template in its context.";
             return false;
         }
         return BaseObject::canCreate(obj, context, arg);

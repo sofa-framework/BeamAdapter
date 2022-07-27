@@ -109,7 +109,7 @@ public:
 
 public :
     AdaptiveBeamController();
-    virtual ~AdaptiveBeamController(){}
+    virtual ~AdaptiveBeamController() = default;
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
     virtual void init() override ;
@@ -119,17 +119,6 @@ public :
     virtual void onMouseEvent(MouseEvent *) override ;
     virtual void onKeyPressedEvent(KeypressedEvent *) override ;
     virtual void onBeginAnimationStep(const double dt) override ;
-
-    //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
-    virtual string getTemplateName() const override
-    {
-      return templateName(this);
-    }
-
-    static string templateName(const AdaptiveBeamController<DataTypes>* = nullptr)
-    {
-      return DataTypes::Name();
-    }
 
 protected:
     void applyController(void) ;

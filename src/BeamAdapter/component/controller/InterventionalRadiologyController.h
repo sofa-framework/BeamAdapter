@@ -84,15 +84,13 @@ public:
 
 public:
     InterventionalRadiologyController();
-    virtual ~InterventionalRadiologyController(){}
+    virtual ~InterventionalRadiologyController() = default;
 
     ////////////////////// Inherited from BaseObject ///////////////////////////////////////////////
     virtual void init() override ;
     virtual void bwdInit() override ;
     virtual void reinit() override;
     virtual void draw(const core::visual::VisualParams*) override {}
-    virtual std::string getTemplateName() const override;
-    static std::string templateName(const InterventionalRadiologyController<DataTypes>* = nullptr);
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
