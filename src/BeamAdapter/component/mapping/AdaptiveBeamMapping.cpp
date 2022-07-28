@@ -46,9 +46,9 @@ using namespace core;
 using namespace core::behavior;
 
 template<>
-void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParams*, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParams*, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
 {
-    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
+    VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in= dIn.getValue();
 
     m_isXBufferUsed=false;
@@ -68,11 +68,13 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParam
         out[i].getCenter() = posTransform.getOrigin();
         out[i].getOrientation() = posTransform.getOrientation();
     }
+
+    dOut.endEdit();
 }
 
 
 template<>
-void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJonPoint(unsigned int i, SpatialVector& VNode0input, SpatialVector& VNode1input, Deriv& vOutput, const  InVecCoord& x)
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJonPoint(unsigned int i, SpatialVector& VNode0input, SpatialVector& VNode1input, Deriv& vOutput, const  InVecCoord& x)
 {
     //1. get the curvilinear abs;
     PosPointDefinition  ppd = m_pointBeamDistribution[i];
@@ -122,7 +124,7 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJonPoint(unsigned int 
 
 
 template<>
-void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x)
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x)
 {
     //1. get the curvilinear abs;
     PosPointDefinition  ppd = m_pointBeamDistribution[i];
@@ -138,7 +140,7 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::applyJTonPoint(unsigned int
 
 
 template <>
-void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsigned int i, const  InVecCoord& x)
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsigned int i, const  InVecCoord& x)
 {
     /////// TEST : calcul d'une jacobienne:
     Mat6x12 J;
@@ -194,6 +196,20 @@ void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::computeJacobianOnPoint(unsi
 
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
+
+
+template <>
+SOFA_BEAMADAPTER_API int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point, int indexFrom)
+{
+    SOFA_UNUSED(indexFrom);
+
+    int nbPoints = d_points.getValue().size();
+    Vec3 coord = point.getCenter();
+
+    d_points.beginEdit()->push_back(coord);
+    return nbPoints;
+}
+
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///

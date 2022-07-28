@@ -25,8 +25,14 @@
 #include <BeamAdapter/component/BeamInterpolation.inl>
 #include <BeamAdapter/component/engine/WireRestShape.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
+#include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
+#include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
+// #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
 
 #include <sofa/core/behavior/Mass.inl>
+#include <sofa/core/Mapping.inl>
+#include <sofa/component/controller/MechanicalStateController.inl>
+#include <sofa/component/constraint/projective/FixedConstraint.inl> // for InterventionalRadiologyController
 
 #include <sofa/core/ObjectFactory.h>
 
@@ -45,12 +51,23 @@ namespace sofa::component::fem::_wirebeaminterpolation_
 namespace sofa::component::engine::_wirerestshape_
 {
     template class SOFA_BEAMADAPTER_API WireRestShape<CudaRigid3dTypes>;
-}
+} // namespace sofa::component::engine::_wirerestshape_
 
-namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_
+namespace sofa::component::controller::_interventionalradiologycontroller_
 {
-    template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes>;
-}
+    template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<CudaRigid3dTypes>;
+} // namespace sofa::component::controller::_interventionalradiologycontroller_
+
+namespace sofa::component::mapping::_adaptivebeammapping_
+{
+//    template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
+} // namespace sofa::component::mapping::_adaptivebeammapping_
+
+namespace sofa::component::mapping
+{
+    // template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
+} // namespace sofa::component::mapping
+
 
 namespace sofa::gpu::cuda
 {
@@ -65,7 +82,16 @@ int CudaWireRestShapenClass = core::RegisterObject("Wire Shape")
     .add< sofa::component::engine::WireRestShape<CudaRigid3dTypes> >();
 
 int CudaAdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements")
-.add< sofa::component::forcefield::AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes> >();
+    .add< sofa::component::forcefield::AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes> >();
+
+int CudaInterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+    .add< sofa::component::controller::InterventionalRadiologyController<CudaRigid3dTypes> >();
+
+//int CudaAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+//    .add< sofa::component::mapping::AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >();
+
+//int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+//.add< sofa::component::mapping::MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >();
 
 
 } // namespace sofa::gpu::cuda
