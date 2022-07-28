@@ -114,6 +114,14 @@ if(SofaAdvancedConstraint_FOUND)
     #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
 endif()
 
+
+find_package(SofaCUDA REQUIRED)
+if(SofaCUDA_FOUND)
+    list (APPEND SOURCE_FILES
+        ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstanciations.cpp
+    )
+endif()
+
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core Sofa.GL)
@@ -125,6 +133,9 @@ if(SofaImplicitField_FOUND)
 endif()
 if(SofaAdvancedConstraint_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
+endif()
+if(SofaCUDA_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SofaCUDA)
 endif()
 
 sofa_create_package_with_targets(

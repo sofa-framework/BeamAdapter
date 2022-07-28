@@ -100,7 +100,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_poissonRatio(initData(&d_poissonRatio, type::vector<Real>(1, m_defaultPoissonRatio), "defaultPoissonRatio",
                                    "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
-  , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<sofa::defaulttype::Vec3Types> >())
+  , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
   , d_lengthList(initData(&d_lengthList, "lengthList", "list of the length of each beam"))
   , d_DOF0TransformNode0(initData(&d_DOF0TransformNode0, "DOF0TransformNode0",
