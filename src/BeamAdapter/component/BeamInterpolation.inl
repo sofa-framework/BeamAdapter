@@ -105,9 +105,11 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_lengthZ(initData(&d_lengthZ, Real(1.0), "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
   , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
                                    "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, "defaultYoungModulus",
+  , m_defaultYoungModulus(Real(1e5))
+  , m_defaultPoissonRatio(Real(0.4))
+  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, type::vector<Real>(1, m_defaultYoungModulus), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
-  , d_poissonRatio(initData(&d_poissonRatio, "defaultPoissonRatio",
+  , d_poissonRatio(initData(&d_poissonRatio, type::vector<Real>(1, m_defaultPoissonRatio), "defaultPoissonRatio",
                                    "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<sofa::defaulttype::Vec3Types> >())
