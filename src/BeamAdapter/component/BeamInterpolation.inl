@@ -105,9 +105,9 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_lengthZ(initData(&d_lengthZ, Real(1.0), "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
   , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
                                    "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, Real(100000), "defaultYoungModulus",
+  , d_defaultYoungModulus(initData(&d_defaultYoungModulus, "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
-  , d_poissonRatio(initData(&d_poissonRatio, Real(0.4), "defaultPoissonRatio",
+  , d_poissonRatio(initData(&d_poissonRatio, "defaultPoissonRatio",
                                    "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
   , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<sofa::defaulttype::Vec3Types> >())
@@ -226,7 +226,35 @@ void BeamInterpolation<DataTypes>::bwdInit()
     }
 
     m_topologyEdges = &m_topology->getEdges();
+    Size nbEdges = m_topology->getNbEdges();
 
+    auto youngModulus = sofa::helper::getWriteOnlyAccessor(d_defaultYoungModulus);
+    if (youngModulus.size() != nbEdges)
+    {
+        Real value = m_defaultYoungModulus;
+        if (youngModulus.size() == 0){
+            msg_warning() << "Empty data field for " << d_defaultYoungModulus.getName() <<". Set default " << value;
+        } else {
+            value = youngModulus[0];
+        }
+        youngModulus.resize(nbEdges);
+        for (auto& beamYoungModulus: youngModulus)
+            beamYoungModulus = value;
+    }
+
+    auto poissonRatio = sofa::helper::getWriteOnlyAccessor(d_poissonRatio);
+    if (poissonRatio.size() != nbEdges)
+    {
+        Real value = m_defaultPoissonRatio;
+        if (poissonRatio.size() == 0){
+            msg_warning() << "Empty data field for " << d_poissonRatio.getName() << ". Set default " << value;
+        } else {
+            value = poissonRatio[0];
+        }
+        poissonRatio.resize(nbEdges);
+        for (auto& beamPoissonRatio: poissonRatio)
+            beamPoissonRatio = value;
+    }
 
     if (!interpolationIsAlreadyInitialized())
     {
@@ -527,10 +555,10 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getYoungModulusAtX(int /*beamId*/,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
+void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
-    youngModulus = Real(d_defaultYoungModulus.getValue());
-    cPoisson     = Real(d_poissonRatio.getValue());
+    youngModulus = Real(d_defaultYoungModulus.getValue()[beamId]);
+    cPoisson     = Real(d_poissonRatio.getValue()[beamId]);
 }
 
 
