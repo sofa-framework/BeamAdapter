@@ -224,7 +224,7 @@ public:
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMMAPPING_CPP)
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Vec3Types>;
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
+// extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
 #endif
 
 } /// _adaptivebeammapping_
