@@ -19,11 +19,10 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_INL
-#define SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_INL
+#pragma once
 
 
-#include "ImplicitSurfaceAdaptiveConstraint.h"
+#include <BeamAdapter/component/constraint/ImplicitSurfaceAdaptiveConstraint.h>
 
 #include <sofa/helper/system/thread/CTime.h>
 #include <sofa/defaulttype/RigidTypes.h>
@@ -45,13 +44,7 @@ double TimeProjection2= 0.0;
 //#define DEBUG_DFREE_COMPUTATION
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraint
+namespace sofa::component::constraint
 {
 
 using sofa::core::VecCoordId;
@@ -774,10 +767,4 @@ void ImplicitSurfaceAdaptiveConstraintResolution<DataTypes>::resolution(int line
     force[line]=0.0;
 }
 
-} // namespace constraint
-
-} // namespace component
-
-} // namespace sofa
-
-#endif
+} // namespace sofa::component::constraint
