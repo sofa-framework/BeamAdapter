@@ -123,7 +123,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
 
 // MultiAdaptiveBeamMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in) //
 // this function propagate the constraint through the Adaptive Beam mapping :
-// if one constraint along (type::vector n) with a value (v) is applied on the childModel (like collision model)
+// if one constraint along (vector n) with a value (v) is applied on the childModel (like collision model)
 // then this constraint is transformed by (Jt.n) with value (v) for the rigid model
 // note : the value v is not propagated through the mapping
 template <class TIn, class TOut>

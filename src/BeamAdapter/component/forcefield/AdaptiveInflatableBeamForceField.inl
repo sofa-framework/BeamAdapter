@@ -388,7 +388,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams*
     unsigned int numBeams = l_interpolation->getNumBeams();
 
     if (f.size()!=dx.size())
-        f.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+        f.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     for (unsigned int b=0; b<numBeams; b++)
     {
@@ -527,7 +527,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecCoord& x = datax.getValue();
 
-    f.resize(x.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
@@ -536,7 +536,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         computeGravityVector();
 
     /// TODO:
-    ///* Redimentionner _localBeamMatrices
+    ///* Redimensionner _localBeamMatrices
     ///* Calculer les rotation et les transformations
     ///* Calculer la matrice "locale"
     ///* Calculer la force exercée par chaque beam
@@ -660,7 +660,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
         Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
-        /// Add this force to type::vector f (negative as it is internal force)
+        /// Add this force to vector f (negative as it is internal force)
         for (unsigned int i=0; i<6; i++)
         {
             f[node0Idx][i]-=F0_ref[i];
@@ -686,7 +686,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addDForce(const MechanicalPara
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
 
-    df.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    df.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

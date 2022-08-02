@@ -374,7 +374,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mp
     unsigned int numBeams = l_interpolation->getNumBeams();
 
     if (f.size()!=dx.size())
-        f.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+        f.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     for (unsigned int b=0; b<numBeams; b++)
     {
@@ -514,7 +514,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecCoord& x = datax.getValue();
 
-    f.resize(x.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
@@ -652,7 +652,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
         Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
 
-        /// Add this force to type::vector f
+        /// Add this force to vector f
         for (unsigned int i=0; i<6; i++)
         {
             f[node0Idx][i]-=F0_ref[i];
@@ -676,7 +676,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const MechanicalParams*
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
 
-    df.resize(dx.size()); // current content of the type::vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
+    df.resize(dx.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

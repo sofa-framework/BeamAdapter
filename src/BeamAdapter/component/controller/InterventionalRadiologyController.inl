@@ -769,7 +769,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     /// STEP 2:
     /// get the noticeable points that need to be simulated
-    // Fill=> newCurvAbs which provides a type::vector with curvilinear abscissa of each simulated node
+    // Fill=> newCurvAbs which provides a vector with curvilinear abscissa of each simulated node
     //     => id_instrument_table which provides for each simulated node, the id of all instruments which belong this node
     //     => xbegin (theoritical curv abs of the beginning point of the instrument (could be negative) xbegin= xtip - intrumentLength)
     helper::AdvancedTimer::stepBegin("step2");

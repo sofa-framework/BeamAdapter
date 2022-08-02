@@ -59,7 +59,7 @@ using sofa::core::VecDerivId;
 // (remove in 1 year if not answered).
 template <class DataTypes>
 AdaptiveBeamController<DataTypes>::AdaptiveBeamController()
-    //TODO(dmarchal 2017-05-17) a Data<type::vector of string> is a weird beast. Have to write test to validate behavior (remove in 1 year if not done).
+    //TODO(dmarchal 2017-05-17) a Data<vector of string> is a weird beast. Have to write test to validate behavior (remove in 1 year if not done).
     : d_interpolationPath(initData(&d_interpolationPath,"interpolation", "Path to the Interpolation component on scene"))
     , d_controlledInstrument(initData(&d_controlledInstrument, 0, "controlledInstrument", "provide the id of the interventional radiology instrument which is under control: press contr + number to change it"))
     , d_xtip(initData(&d_xtip,"xtip", "curvilinear abscissa of the tip of each interventional radiology instrument"))

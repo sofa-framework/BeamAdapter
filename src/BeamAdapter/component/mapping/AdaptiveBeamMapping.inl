@@ -333,7 +333,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
         SpatialVector FNode0, FNode1;
         applyJTonPoint(i, finput, FNode0, FNode1, x);
 
-        //2. put the result in out type::vector computes the equivalent forces on nodes + rotate to Global Frame from DOF frame
+        //2. put the result in out vector computes the equivalent forces on nodes + rotate to Global Frame from DOF frame
         In::setDPos(out[IdxNode0], In::getDPos(out[IdxNode0]) + FNode0.getForce());
         In::setDPos(out[IdxNode1], In::getDPos(out[IdxNode1]) + FNode1.getForce());
         In::setDRot(out[IdxNode0], In::getDRot(out[IdxNode0]) + FNode0.getTorque());
@@ -344,7 +344,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
 
 /// AdaptiveBeamMapping::applyJT(InMatrixDeriv& out, const OutMatrixDeriv& in)
 /// this function propagate the constraint through the Adaptive Beam mapping :
-/// if one constraint along (type::vector n) with a value (v) is applied on the childModel (like collision model)
+/// if one constraint along (vector n) with a value (v) is applied on the childModel (like collision model)
 /// then this constraint is transformed by (Jt.n) with value (v) for the rigid model
 /// note : the value v is not propagated through the mapping
 template <class TIn, class TOut>

@@ -588,7 +588,7 @@ void WireRestShape<DataTypes>::initFromLoader()
     //get the topology position
     auto topoVertices = sofa::helper::getReadAccessor(loader->d_positions);
 
-    //copy the topology edges in a local type::vector
+    //copy the topology edges in a local vector
     auto topoEdges = sofa::helper::getReadAccessor(loader->d_edges);
     edges = topoEdges.ref();
 

@@ -979,7 +979,7 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
     }
     else
     {
-        /// no need to recompute the positions of the Spline  => we will read their value in the type::vector which id is vecXId
+        /// no need to recompute the positions of the Spline  => we will read their value in the vector which id is vecXId
         const Real& _L = d_lengthList.getValue()[edgeInList];
 
         if(localPos.norm() >_L*1e-10)
@@ -1361,7 +1361,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformAndVelUsingSpline(unsigne
     VelNode0inNode0= DOF0_H_local0.inversed()*VelDOF0inDOF0;
     VelNode1inNode1= DOF1_H_local1.inversed()*VelDOF1inDOF1;
 
-    /// 7. Interpolate the result and put in "Deriv" type::vector...
+    /// 7. Interpolate the result and put in "Deriv" vector...
     v_interpol.getVCenter()= global_H_local0.projectVector(VelNode0inNode0.getLinearVelocity() ) * (1-baryCoord) +
             global_H_local1.projectVector(VelNode1inNode1.getLinearVelocity() ) * baryCoord;
 

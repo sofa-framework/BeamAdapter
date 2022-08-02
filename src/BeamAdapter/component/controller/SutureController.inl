@@ -831,7 +831,7 @@ void SutureController<DataTypes>::applyNewSampling(const type::vector<Real> &new
 
             if (!rigidification) //begining of the rigidification
             {
-                // the last element of type::vector x is replaced by the gravity center of the rigid zone
+                // the last element of vector x is replaced by the gravity center of the rigid zone
                 x.pop_back();
                 xDof.getCenter()     = m_vecGlobalHGravityCenter[Rseg].getOrigin();
                 xDof.getOrientation()= m_vecGlobalHGravityCenter[Rseg].getOrientation();

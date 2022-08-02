@@ -121,7 +121,7 @@ public:
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
 
     typedef Vec<3, Real> Vec3;
-    typedef Vec<6, Real> Vec6;          ///< the displacement type::vector
+    typedef Vec<6, Real> Vec6;          ///< the displacement vector
     typedef Mat<6, 6, Real> Matrix6x6;
 
     /*!
