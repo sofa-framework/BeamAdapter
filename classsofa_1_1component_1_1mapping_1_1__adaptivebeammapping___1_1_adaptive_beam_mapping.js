@@ -54,7 +54,6 @@ var classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_be
     [ "computeIdxAndBaryCoordsForAbs", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a8d5c710529e84ddc9f8a787f2375cdf8", null ],
     [ "computeJacobianOnPoint", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#aab8b0037660f778eb0f1493e7c496421", null ],
     [ "computeJacobianOnPoint", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#abe2b1550f2083203594e96383cd96269", null ],
-    [ "draw", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a0f67b1c255106184cbd5b172b4420590", null ],
     [ "getPointBeamDistribution", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a7de316f81dea8ddddc0b683d71bb1efc", null ],
     [ "init", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "printIstrumentInfo", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a4067fda0e61fe5b62d73b1667cc4ae78", null ],

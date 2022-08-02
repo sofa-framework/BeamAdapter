@@ -40,7 +40,6 @@ var classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping =
     [ "assignSubMappingFromControllerInfo", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#aa7958f6357d85d2b66e96d9e3a414c36", null ],
     [ "bwdInit", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#aac70e2eeedc06de9ab4be138cf23fae4", null ],
     [ "clear", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a8264297497870a52be97e38f5a6104b9", null ],
-    [ "draw", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#aa8c1e22ec6f8ac7e9eaa9c1a6f88cfac", null ],
     [ "handleEvent", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a047e7c67375af81bfb39fd5ba238e5f4", null ],
     [ "init", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "setBarycentricMapping", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#aad9faef279bc359e8ccd536f7cfde76a", null ],
