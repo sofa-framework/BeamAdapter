@@ -188,6 +188,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
     ScopedAdvancedTimer timer("AdaptiveBeamMapping_Apply");
+
     VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in = dIn.getValue();
 
@@ -202,8 +203,16 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     AdvancedTimer::stepBegin("resizeToModel&Out");
     if (!m_isSubMapping)
     {
-        this->toModel->resize( m_pointBeamDistribution.size() );
-        out.resize(m_pointBeamDistribution.size());
+        if (d_nbPointsPerBeam.getValue() > 0)
+        {
+            this->toModel->resize(m_pointBeamDistribution.size());
+            out.resize(m_pointBeamDistribution.size());
+        }
+        else
+        {
+            this->toModel->resize(d_points.getValue().size());
+            out.resize(d_points.getValue().size());
+        }
     }
     AdvancedTimer::stepEnd("resizeToModel&Out");
 
@@ -264,17 +273,26 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
         xBuf2 = x;
         x = m_xBuffer;
     }
-
-    if (out.size() != m_pointBeamDistribution.size() && !m_isSubMapping)
-        out.resize(m_pointBeamDistribution.size());
+    // should not be necessary if apply() was called first
+    if (!m_isSubMapping)
+    {
+        if (d_nbPointsPerBeam.getValue() > 0)
+        {
+            out.resize(m_pointBeamDistribution.size());
+        }
+        else
+        {
+            out.resize(d_points.getValue().size());
+        }
+    }
 
     for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
     {
         PosPointDefinition pointBeamDistribution = m_pointBeamDistribution[i];
 
         unsigned int IdxNode0, IdxNode1;
-        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId,IdxNode0,IdxNode1);
-
+        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+       
         SpatialVector vDOF0, vDOF1;
         vDOF0.setLinearVelocity (In::getDPos(in[IdxNode0]));
         vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
