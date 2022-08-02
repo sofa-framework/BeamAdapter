@@ -243,6 +243,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
         for (auto& beamYoungModulus: youngModulus)
             beamYoungModulus = value;
     }
+    m_defaultYoungModulus = youngModulus[0]; // if the sizes mismatch again at runtime, will use this default value
 
     auto poissonRatio = sofa::helper::getWriteOnlyAccessor(d_poissonRatio);
     if (poissonRatio.size() != nbEdges)
@@ -257,6 +258,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
         for (auto& beamPoissonRatio: poissonRatio)
             beamPoissonRatio = value;
     }
+    m_defaultPoissonRatio = poissonRatio[0]; // if the sizes mismatch again at runtime, will use this default value
 
     if (!interpolationIsAlreadyInitialized())
     {
@@ -557,10 +559,19 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId,Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
+void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId, Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
-    youngModulus = Real(d_defaultYoungModulus.getValue()[beamId]);
-    cPoisson     = Real(d_poissonRatio.getValue()[beamId]);
+    if (beamId < d_defaultYoungModulus.getValue().size()) {
+        youngModulus = d_defaultYoungModulus.getValue()[beamId];
+    } else {
+        youngModulus = m_defaultYoungModulus;
+    }
+
+    if (beamId < d_poissonRatio.getValue().size()) {
+        cPoisson     = d_poissonRatio.getValue()[beamId];
+    } else {
+        cPoisson     = m_defaultPoissonRatio;
+    }
 }
 
 
