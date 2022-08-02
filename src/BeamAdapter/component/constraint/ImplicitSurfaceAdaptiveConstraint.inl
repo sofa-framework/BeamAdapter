@@ -25,16 +25,12 @@
 
 #include "ImplicitSurfaceAdaptiveConstraint.h"
 
+#include <sofa/helper/system/thread/CTime.h>
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/defaulttype/DataTypeInfo.h>
-#include <SofaBaseMechanics/AddMToMatrixFunctor.h>
-
-#include <sofa/helper/system/thread/CTime.h>
-#include <SofaConstraint/UnilateralInteractionConstraint.h>
-
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/ConstraintParams.h>
-
+#include <sofa/component/constraint/lagrangian/model/UnilateralInteractionConstraint.h>
 
 double TimeResolution = 0.0;
 double TimeCount = 0.0;
@@ -63,8 +59,8 @@ using sofa::core::MultiVecCoordId;
 using sofa::core::ConstMultiVecCoordId;
 using sofa::core::ConstVecCoordId;
 
-using sofa::component::constraintset::UnilateralConstraintResolution;
-using sofa::component::constraintset::UnilateralConstraintResolutionWithFriction;
+using sofa::component::constraint::lagrangian::model::UnilateralConstraintResolution;
+using sofa::component::constraint::lagrangian::model::UnilateralConstraintResolutionWithFriction;
 
 template<class DataTypes>
 ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object1, MechanicalState* object2)
