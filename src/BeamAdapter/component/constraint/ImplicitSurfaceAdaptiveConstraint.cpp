@@ -19,19 +19,12 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include "ImplicitSurfaceAdaptiveConstraint.inl"
+#include <BeamAdapter/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl>
 
 #include <sofa/defaulttype/VecTypes.h>
-#include <SofaBaseMechanics/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraint
+namespace sofa::component::constraint
 {
 
 using namespace sofa::defaulttype;
@@ -45,15 +38,8 @@ SOFA_DECL_CLASS(ImplicitSurfaceAdaptiveConstraint)
 int ImplicitSurfaceAdaptiveConstraintClass = RegisterObject("PROUT TODO-ImplicitSurfaceAdaptiveConstraint")
 .add< ImplicitSurfaceAdaptiveConstraint<Rigid3Types> >(true)
 
-;
-
 template class ImplicitSurfaceAdaptiveConstraint<Rigid3Types>;
-
 
 #endif  // SOFAEVE
 
-} // namespace constraint
-
-} // namespace component
-
-} // namespace sofa
+} // namespace sofa::component::constraint
