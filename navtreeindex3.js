@@ -248,6 +248,6 @@ var NAVTREEINDEX3 =
 "functions_type.html":[3,2,3],
 "functions_vars.html":[3,2,2],
 "hierarchy.html":[3,1],
-"index.html":[0],
-"index.html":[]
+"index.html":[],
+"index.html":[0]
 };
