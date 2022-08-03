@@ -561,14 +561,16 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId, Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
-    if (beamId < d_defaultYoungModulus.getValue().size()) {
-        youngModulus = d_defaultYoungModulus.getValue()[beamId];
+    const auto& defaultYoungModuli = d_defaultYoungModulus.getValue();
+    if (beamId < defaultYoungModuli.size()) {
+        youngModulus = defaultYoungModuli[beamId];
     } else {
         youngModulus = m_defaultYoungModulus;
     }
-
-    if (beamId < d_poissonRatio.getValue().size()) {
-        cPoisson     = d_poissonRatio.getValue()[beamId];
+    
+    const auto& poissonRatios = d_poissonRatio.getValue();
+    if (beamId < poissonRatios.size()) {
+        cPoisson     = poissonRatios[beamId];
     } else {
         cPoisson     = m_defaultPoissonRatio;
     }
