@@ -198,6 +198,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     // When using an adaptatif controller, one need to redistribute the points at each time step
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
         computeDistribution();
+
     AdvancedTimer::stepEnd("pointsRedistribution");
 
     AdvancedTimer::stepBegin("resizeToModel&Out");
@@ -266,6 +267,8 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
     InVecCoord& x = *dataInX.beginEdit();
     InVecCoord xBuf2;
+
+    computeDistribution();
 
     if(m_isXBufferUsed)
     {
@@ -556,7 +559,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
         const vector<Vec3>& points = d_points.getValue();
         m_pointBeamDistribution.clear();
 
-        unsigned int numBeams = l_adaptativebeamInterpolation->getNumBeams();
+        const unsigned int numBeams = l_adaptativebeamInterpolation->getNumBeams();
         if(numBeams==0)
         {
             if (this->f_printLog.getValue())
@@ -574,9 +577,8 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
                 double step = 1.0 / ptsPerBeam;
                 double posInBeam = 0;
-                unsigned int nbBeams = l_adaptativebeamInterpolation->getNumBeams();
                 InReal segStart, segEnd, segLength;
-                for(unsigned int b=0; b<nbBeams; ++b)
+                for(unsigned int b=0; b< numBeams; ++b)
                 {
                     l_adaptativebeamInterpolation->getAbsCurvXFromBeam(b, segStart, segEnd);
                     segLength = segEnd - segStart;
@@ -596,12 +598,12 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                     posInBeam -= 1.0;
                 }
 
-                if (nbBeams && fabs(posInBeam - step) > 0.01)
+                if (numBeams && fabs(posInBeam - step) > 0.01)
                 {
                     // Last point
                     waSegmentsCurvAbs.push_back(segEnd);
                     PosPointDefinition beamDistrib;
-                    beamDistrib.beamId = nbBeams-1;
+                    beamDistrib.beamId = numBeams -1;
                     beamDistrib.baryPoint[0] = 1.0;
                     beamDistrib.baryPoint[1] = 0.0;
                     beamDistrib.baryPoint[2] = 0.0;
@@ -778,7 +780,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv
     const Vec3 Fin(finput[0], finput[1], finput[2]);
     l_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, x, Fin, FNode0output, FNode1output );
 }
-
 
 } /// namespace _adaptivebeammapping_
 
