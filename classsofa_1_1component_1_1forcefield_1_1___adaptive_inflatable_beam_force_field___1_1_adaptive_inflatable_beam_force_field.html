@@ -150,12 +150,12 @@ typedef unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>Index
 <tr class="memitem:a2a1cdd56c5a469e78cbf56aa7bb5143f"><td class="memItemLeft" align="right" valign="top"><a id="a2a1cdd56c5a469e78cbf56aa7bb5143f"></a>
 typedef BaseMeshTopology::Edge&#160;</td><td class="memItemRight" valign="bottom"><b>Element</b></td></tr>
 <tr class="separator:a2a1cdd56c5a469e78cbf56aa7bb5143f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0282d5527b28aed863822c02059df6df"><td class="memItemLeft" align="right" valign="top"><a id="a0282d5527b28aed863822c02059df6df"></a>
-typedef vector&lt; BaseMeshTopology::Edge &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElement</b></td></tr>
-<tr class="separator:a0282d5527b28aed863822c02059df6df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e13ffe2dae7869bd0d73858f0f62e28"><td class="memItemLeft" align="right" valign="top"><a id="a9e13ffe2dae7869bd0d73858f0f62e28"></a>
-typedef vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecIndex</b></td></tr>
-<tr class="separator:a9e13ffe2dae7869bd0d73858f0f62e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01509897af378eab5b1060a92792deb0"><td class="memItemLeft" align="right" valign="top"><a id="a01509897af378eab5b1060a92792deb0"></a>
+typedef type::vector&lt; BaseMeshTopology::Edge &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElement</b></td></tr>
+<tr class="separator:a01509897af378eab5b1060a92792deb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa71d2ca820e135da53d8da0fac0327fd"><td class="memItemLeft" align="right" valign="top"><a id="aa71d2ca820e135da53d8da0fac0327fd"></a>
+typedef type::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecIndex</b></td></tr>
+<tr class="separator:aa71d2ca820e135da53d8da0fac0327fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78e736af69f68efe8b63702ba237cc24"><td class="memItemLeft" align="right" valign="top"><a id="a78e736af69f68efe8b63702ba237cc24"></a>
 typedef SolidTypes&lt; Real &gt;::Transform&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b></td></tr>
 <tr class="separator:a78e736af69f68efe8b63702ba237cc24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,9 +270,9 @@ SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1___ad
 <tr class="memitem:a22e393868f95d615e3785ebfa39a1da8"><td class="memItemLeft" align="right" valign="top"><a id="a22e393868f95d615e3785ebfa39a1da8"></a>
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>m_gravity</b></td></tr>
 <tr class="separator:a22e393868f95d615e3785ebfa39a1da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab62283d35a6af792bc97c5370cb016d4"><td class="memItemLeft" align="right" valign="top"><a id="ab62283d35a6af792bc97c5370cb016d4"></a>
-vector&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_ia5c9c0085fb1a64db4499a843dafea79.html">BeamLocalMatrices</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_localBeamMatrices</b></td></tr>
-<tr class="separator:ab62283d35a6af792bc97c5370cb016d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5fa35e9f56ceac2f2ba7b8f5086dea3"><td class="memItemLeft" align="right" valign="top"><a id="ae5fa35e9f56ceac2f2ba7b8f5086dea3"></a>
+type::vector&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_ia5c9c0085fb1a64db4499a843dafea79.html">BeamLocalMatrices</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_localBeamMatrices</b></td></tr>
+<tr class="separator:ae5fa35e9f56ceac2f2ba7b8f5086dea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
@@ -329,10 +329,10 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 
 <p>ForceField Interface. </p>
 <p>TODO:</p><ul>
-<li>Redimentionner _localBeamMatrices</li>
-<li>Calculer les rotation et les transformations</li>
-<li>Calculer la matrice "locale"</li>
-<li>Calculer la force exercée par chaque beam</li>
+<li>Resize _localBeamMatrices</li>
+<li>Compute rotations and transformations</li>
+<li>Compute local frame matrix</li>
+<li>Compute force contribution of each beam</li>
 <li>Calculer la force exercée par la gravitée</li>
 </ul>
 <p>find the indices of the nodes</p>
@@ -646,7 +646,7 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field__.html">_AdaptiveInflatableBeamForceField_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField</a></li>
-    <li class="footer">Generated on Thu Aug 4 2022 01:02:59 for BeamAdapter by
+    <li class="footer">Generated on Thu Aug 4 2022 07:30:57 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

@@ -85,7 +85,6 @@ $(document).ready(function(){initNavTree('classsofa_1_1component_1_1controller_1
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -136,9 +135,9 @@ typedef Vec&lt; 3, Real &gt;&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="memitem:a5434809f42dc8850ac79010dc2c2f12d"><td class="memItemLeft" align="right" valign="top"><a id="a5434809f42dc8850ac79010dc2c2f12d"></a>
 typedef BaseMeshTopology::EdgeID&#160;</td><td class="memItemRight" valign="bottom"><b>ElementID</b></td></tr>
 <tr class="separator:a5434809f42dc8850ac79010dc2c2f12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bbcde2e1f56e7392010a93fa31f350e"><td class="memItemLeft" align="right" valign="top"><a id="a5bbcde2e1f56e7392010a93fa31f350e"></a>
-typedef vector&lt; BaseMeshTopology::EdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
-<tr class="separator:a5bbcde2e1f56e7392010a93fa31f350e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fb05b78c9fcf3b9d947bed2b2fc39ee"><td class="memItemLeft" align="right" valign="top"><a id="a9fb05b78c9fcf3b9d947bed2b2fc39ee"></a>
+typedef type::vector&lt; BaseMeshTopology::EdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
+<tr class="separator:a9fb05b78c9fcf3b9d947bed2b2fc39ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade8bc2e94589f6309bf88a2942b05475"><td class="memItemLeft" align="right" valign="top"><a id="ade8bc2e94589f6309bf88a2942b05475"></a>
 typedef MechanicalStateController&lt; DataTypes &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Inherit</b></td></tr>
 <tr class="separator:ade8bc2e94589f6309bf88a2942b05475"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,9 +161,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reinit</b> ()
 <tr class="memitem:a4f14cc6d28601658a0b4b2ad15a7697b"><td class="memItemLeft" align="right" valign="top"><a id="a4f14cc6d28601658a0b4b2ad15a7697b"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (const core::visual::VisualParams *) override</td></tr>
 <tr class="separator:a4f14cc6d28601658a0b4b2ad15a7697b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19a62db0b60cec4caa23f1420a5b8ba2"><td class="memItemLeft" align="right" valign="top"><a id="a19a62db0b60cec4caa23f1420a5b8ba2"></a>
-virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getTemplateName</b> () const override</td></tr>
-<tr class="separator:a19a62db0b60cec4caa23f1420a5b8ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09b156aa7b37b61bd03d45d19f40213c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a09b156aa7b37b61bd03d45d19f40213c">onMouseEvent</a> (core::objectmodel::MouseEvent *) override</td></tr>
 <tr class="separator:a09b156aa7b37b61bd03d45d19f40213c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e2cd5ebe1cd6ce6e019fd2543fcdd37"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a1e2cd5ebe1cd6ce6e019fd2543fcdd37">onKeyPressedEvent</a> (core::objectmodel::KeypressedEvent *) override</td></tr>
@@ -174,15 +170,15 @@ virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getTem
 <tr class="memitem:aec003e89fabe2956569495a20dd40144"><td class="memItemLeft" align="right" valign="top"><a id="aec003e89fabe2956569495a20dd40144"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>modifyTopology</b> (void)</td></tr>
 <tr class="separator:aec003e89fabe2956569495a20dd40144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7926bce1cfe13f948cf64dd8d53d9770"><td class="memItemLeft" align="right" valign="top"><a id="a7926bce1cfe13f948cf64dd8d53d9770"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interventionalRadiologyCollisionControls</b> (vector&lt; Real &gt; &amp;x_point_list, vector&lt; int &gt; &amp;id_instrument_list, vector&lt; int &gt; &amp;removeEdge)</td></tr>
-<tr class="separator:a7926bce1cfe13f948cf64dd8d53d9770"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a615764efef94206398287b0164f5932f"><td class="memItemLeft" align="right" valign="top"><a id="a615764efef94206398287b0164f5932f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getInstrumentList</b> (vector&lt; <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">sofa::component::fem::WireBeamInterpolation</a>&lt; DataTypes &gt; * &gt; &amp;list)</td></tr>
-<tr class="separator:a615764efef94206398287b0164f5932f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b1edecd1821110932a29fb1eaeb1963"><td class="memItemLeft" align="right" valign="top"><a id="a4b1edecd1821110932a29fb1eaeb1963"></a>
-const vector&lt; vector&lt; int &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_id_instrument_curvAbs_table</b> () const</td></tr>
-<tr class="separator:a4b1edecd1821110932a29fb1eaeb1963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab413a53e3dac3a8bebfaa97be7d5d095"><td class="memItemLeft" align="right" valign="top"><a id="ab413a53e3dac3a8bebfaa97be7d5d095"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>interventionalRadiologyCollisionControls</b> (type::vector&lt; Real &gt; &amp;x_point_list, type::vector&lt; int &gt; &amp;id_instrument_list, type::vector&lt; int &gt; &amp;removeEdge)</td></tr>
+<tr class="separator:ab413a53e3dac3a8bebfaa97be7d5d095"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4540902dd765599d2086f14cb04a7750"><td class="memItemLeft" align="right" valign="top"><a id="a4540902dd765599d2086f14cb04a7750"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getInstrumentList</b> (type::vector&lt; <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">sofa::component::fem::WireBeamInterpolation</a>&lt; DataTypes &gt; * &gt; &amp;list)</td></tr>
+<tr class="separator:a4540902dd765599d2086f14cb04a7750"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86bda514d1532a1e8a0c74c82a42679e"><td class="memItemLeft" align="right" valign="top"><a id="a86bda514d1532a1e8a0c74c82a42679e"></a>
+const type::vector&lt; type::vector&lt; int &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_id_instrument_curvAbs_table</b> () const</td></tr>
+<tr class="separator:a86bda514d1532a1e8a0c74c82a42679e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af01ae8b6e3fe216bc981be58d3cb8744"><td class="memItemLeft" align="right" valign="top"><a id="af01ae8b6e3fe216bc981be58d3cb8744"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getTotalNbEdges</b> () const</td></tr>
 <tr class="separator:af01ae8b6e3fe216bc981be58d3cb8744"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,54 +191,48 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>computeVertex
 <tr class="memitem:a98a1e72c60c9e5c530cb013fd6813d5a"><td class="memItemLeft" align="right" valign="top"><a id="a98a1e72c60c9e5c530cb013fd6813d5a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>processDrop</b> (unsigned int &amp;previousNumControlledNodes, unsigned int &amp;seg_remove)</td></tr>
 <tr class="separator:a98a1e72c60c9e5c530cb013fd6813d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c9f33e12dee4cdaf34795f198fc7f8b"><td class="memItemLeft" align="right" valign="top"><a id="a9c9f33e12dee4cdaf34795f198fc7f8b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interventionalRadiologyComputeSampling</b> (vector&lt; Real &gt; &amp;newCurvAbs, vector&lt; vector&lt; int &gt; &gt; &amp;id_instrument_table, const vector&lt; Real &gt; &amp;xBegin, const Real &amp;xEnd)</td></tr>
-<tr class="separator:a9c9f33e12dee4cdaf34795f198fc7f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac1e4d34a47c73a71d604dce0607d4e5"><td class="memItemLeft" align="right" valign="top"><a id="aac1e4d34a47c73a71d604dce0607d4e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aac1e4d34a47c73a71d604dce0607d4e5">sortCurvAbs</a> (vector&lt; Real &gt; &amp;CurvAbs, vector&lt; vector&lt; int &gt; &gt; &amp;id_instrument_table)</td></tr>
-<tr class="memdesc:aac1e4d34a47c73a71d604dce0607d4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort the curv Abs in the ascending order and avoid doubloon. <br /></td></tr>
-<tr class="separator:aac1e4d34a47c73a71d604dce0607d4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70a81175c5c15a0aa8cf9f003be528c"><td class="memItemLeft" align="right" valign="top"><a id="ab70a81175c5c15a0aa8cf9f003be528c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>totalLengthIsChanging</b> (const vector&lt; Real &gt; &amp;newNodeCurvAbs, vector&lt; Real &gt; &amp;modifiedNodeCurvAbs, const vector&lt; vector&lt; int &gt; &gt; &amp;newTable)</td></tr>
-<tr class="separator:ab70a81175c5c15a0aa8cf9f003be528c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4971670fd87b61e3ae043dfef7b425ba"><td class="memItemLeft" align="right" valign="top"><a id="a4971670fd87b61e3ae043dfef7b425ba"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>interventionalRadiologyComputeSampling</b> (type::vector&lt; Real &gt; &amp;newCurvAbs, type::vector&lt; type::vector&lt; int &gt; &gt; &amp;id_instrument_table, const type::vector&lt; Real &gt; &amp;xBegin, const Real &amp;xEnd)</td></tr>
+<tr class="separator:a4971670fd87b61e3ae043dfef7b425ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67e602b6b3407115309289385947252"><td class="memItemLeft" align="right" valign="top"><a id="af67e602b6b3407115309289385947252"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#af67e602b6b3407115309289385947252">sortCurvAbs</a> (type::vector&lt; Real &gt; &amp;CurvAbs, type::vector&lt; type::vector&lt; int &gt; &gt; &amp;id_instrument_table)</td></tr>
+<tr class="memdesc:af67e602b6b3407115309289385947252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort the curv Abs in the ascending order and avoid doubloon. <br /></td></tr>
+<tr class="separator:af67e602b6b3407115309289385947252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa008a24fee79ec18101e81df4406535"><td class="memItemLeft" align="right" valign="top"><a id="afa008a24fee79ec18101e81df4406535"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>totalLengthIsChanging</b> (const type::vector&lt; Real &gt; &amp;newNodeCurvAbs, type::vector&lt; Real &gt; &amp;modifiedNodeCurvAbs, const type::vector&lt; type::vector&lt; int &gt; &gt; &amp;newTable)</td></tr>
+<tr class="separator:afa008a24fee79ec18101e81df4406535"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b1fd708963a2a40b5d02f52b1da9749"><td class="memItemLeft" align="right" valign="top"><a id="a0b1fd708963a2a40b5d02f52b1da9749"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>fixFirstNodesWithUntil</b> (unsigned int first_simulated_Node)</td></tr>
 <tr class="separator:a0b1fd708963a2a40b5d02f52b1da9749"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3fec3739c3599e8aff8b7b0f9c3a433"><td class="memItemLeft" align="right" valign="top"><a id="ac3fec3739c3599e8aff8b7b0f9c3a433"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>activateBeamListForCollision</b> (vector&lt; Real &gt; &amp;curv_abs, vector&lt; vector&lt; int &gt; &gt; &amp;id_instrument_table)</td></tr>
-<tr class="separator:ac3fec3739c3599e8aff8b7b0f9c3a433"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca5f2b3962d12172fd40a7e0ffc9eb76"><td class="memItemLeft" align="right" valign="top"><a id="aca5f2b3962d12172fd40a7e0ffc9eb76"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>activateBeamListForCollision</b> (type::vector&lt; Real &gt; &amp;curv_abs, type::vector&lt; type::vector&lt; int &gt; &gt; &amp;id_instrument_table)</td></tr>
+<tr class="separator:aca5f2b3962d12172fd40a7e0ffc9eb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b741ee1dc3c59518e148dbf143e4d3e"><td class="memItemLeft" align="right" valign="top"><a id="a2b741ee1dc3c59518e148dbf143e4d3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>loadMotionData</b> (std::string filename)</td></tr>
 <tr class="separator:a2b741ee1dc3c59518e148dbf143e4d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ab324577ebbd652757e2e2ff42b6ebb1c"><td class="memItemLeft" align="right" valign="top"><a id="ab324577ebbd652757e2e2ff42b6ebb1c"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>templateName</b> (const <a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html">InterventionalRadiologyController</a>&lt; DataTypes &gt; *=NULL)</td></tr>
-<tr class="separator:ab324577ebbd652757e2e2ff42b6ebb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a92e364a04eb6f91d222e8228ada0ed65"><td class="memItemLeft" align="right" valign="top"><a id="a92e364a04eb6f91d222e8228ada0ed65"></a>
-Data&lt; vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a92e364a04eb6f91d222e8228ada0ed65">d_instrumentsPath</a></td></tr>
-<tr class="memdesc:a92e364a04eb6f91d222e8228ada0ed65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conditional elements for construction of <a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>. <br /></td></tr>
-<tr class="separator:a92e364a04eb6f91d222e8228ada0ed65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab781eed10d45d9ac06a5c6709b84bcaf"><td class="memItemLeft" align="right" valign="top"><a id="ab781eed10d45d9ac06a5c6709b84bcaf"></a>
-vector&lt; <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">WBeamInterpolation</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_instrumentsList</b></td></tr>
-<tr class="separator:ab781eed10d45d9ac06a5c6709b84bcaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3757d0f401332a7f2fa57622ba94c42b"><td class="memItemLeft" align="right" valign="top"><a id="a3757d0f401332a7f2fa57622ba94c42b"></a>
-vector&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a3757d0f401332a7f2fa57622ba94c42b">m_activatedPointsBuf</a></td></tr>
-<tr class="memdesc:a3757d0f401332a7f2fa57622ba94c42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">For point and line activer. <br /></td></tr>
-<tr class="separator:a3757d0f401332a7f2fa57622ba94c42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b3fc730c99fe37f572743c8ad43b1d6"><td class="memItemLeft" align="right" valign="top"><a id="a6b3fc730c99fe37f572743c8ad43b1d6"></a>
+Data&lt; type::vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a6b3fc730c99fe37f572743c8ad43b1d6">d_instrumentsPath</a></td></tr>
+<tr class="memdesc:a6b3fc730c99fe37f572743c8ad43b1d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conditional elements for construction of <a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html" title="InterventionalRadiologyController Class.">InterventionalRadiologyController</a>. <br /></td></tr>
+<tr class="separator:a6b3fc730c99fe37f572743c8ad43b1d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a600a75824fd0a59c6dc27e163ba91d57"><td class="memItemLeft" align="right" valign="top"><a id="a600a75824fd0a59c6dc27e163ba91d57"></a>
+type::vector&lt; <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">WBeamInterpolation</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_instrumentsList</b></td></tr>
+<tr class="separator:a600a75824fd0a59c6dc27e163ba91d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa57cca3ded28b9c310eccbc079d04462"><td class="memItemLeft" align="right" valign="top"><a id="aa57cca3ded28b9c310eccbc079d04462"></a>
+type::vector&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aa57cca3ded28b9c310eccbc079d04462">m_activatedPointsBuf</a></td></tr>
+<tr class="memdesc:aa57cca3ded28b9c310eccbc079d04462"><td class="mdescLeft">&#160;</td><td class="mdescRight">For point and line activer. <br /></td></tr>
+<tr class="separator:aa57cca3ded28b9c310eccbc079d04462"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32a524ae9e68a8854f88cec5ae8eb7b4"><td class="memItemLeft" align="right" valign="top"><a id="a32a524ae9e68a8854f88cec5ae8eb7b4"></a>
 Data&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_controlledInstrument</b></td></tr>
 <tr class="separator:a32a524ae9e68a8854f88cec5ae8eb7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a833490409092178979359fbc64a61a21"><td class="memItemLeft" align="right" valign="top"><a id="a833490409092178979359fbc64a61a21"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_xTip</b></td></tr>
-<tr class="separator:a833490409092178979359fbc64a61a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedfed3951c8edb3988cc0e20780ac6f7"><td class="memItemLeft" align="right" valign="top"><a id="aedfed3951c8edb3988cc0e20780ac6f7"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rotationInstrument</b></td></tr>
-<tr class="separator:aedfed3951c8edb3988cc0e20780ac6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56d40385ca097a816092aafe8b07fa53"><td class="memItemLeft" align="right" valign="top"><a id="a56d40385ca097a816092aafe8b07fa53"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_xTip</b></td></tr>
+<tr class="separator:a56d40385ca097a816092aafe8b07fa53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a120f6d454d1e9a625748808c389604cf"><td class="memItemLeft" align="right" valign="top"><a id="a120f6d454d1e9a625748808c389604cf"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rotationInstrument</b></td></tr>
+<tr class="separator:a120f6d454d1e9a625748808c389604cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8df8e753563d436cc10756147af9bc5"><td class="memItemLeft" align="right" valign="top"><a id="ab8df8e753563d436cc10756147af9bc5"></a>
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_step</b></td></tr>
 <tr class="separator:ab8df8e753563d436cc10756147af9bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,18 +248,18 @@ Data&lt; Coord &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_star
 <tr class="memitem:a04262927b5f62b162ade6994d92007db"><td class="memItemLeft" align="right" valign="top"><a id="a04262927b5f62b162ade6994d92007db"></a>
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_threshold</b></td></tr>
 <tr class="separator:a04262927b5f62b162ade6994d92007db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b8a937b9b4be3f0ed62ffe13028c00d"><td class="memItemLeft" align="right" valign="top"><a id="a7b8a937b9b4be3f0ed62ffe13028c00d"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rigidCurvAbs</b></td></tr>
-<tr class="separator:a7b8a937b9b4be3f0ed62ffe13028c00d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89a5e669ec02e829dcf746c372f6552b"><td class="memItemLeft" align="right" valign="top"><a id="a89a5e669ec02e829dcf746c372f6552b"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rigidCurvAbs</b></td></tr>
+<tr class="separator:a89a5e669ec02e829dcf746c372f6552b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec866c4fab56031a90780fab26b0018"><td class="memItemLeft" align="right" valign="top"><a id="a9ec866c4fab56031a90780fab26b0018"></a>
 Data&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_motionFilename</b></td></tr>
 <tr class="separator:a9ec866c4fab56031a90780fab26b0018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0431481cea257a1c3284591fdeb40443"><td class="memItemLeft" align="right" valign="top"><a id="a0431481cea257a1c3284591fdeb40443"></a>
 Data&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_indexFirstNode</b></td></tr>
 <tr class="separator:a0431481cea257a1c3284591fdeb40443"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61f25bb5b4513511a011c70129f8413e"><td class="memItemLeft" align="right" valign="top"><a id="a61f25bb5b4513511a011c70129f8413e"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_curvAbs</b></td></tr>
-<tr class="separator:a61f25bb5b4513511a011c70129f8413e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcc7570019d891778f2995908d227912"><td class="memItemLeft" align="right" valign="top"><a id="abcc7570019d891778f2995908d227912"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_curvAbs</b></td></tr>
+<tr class="separator:abcc7570019d891778f2995908d227912"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a052d2f15f1c72796c27d7024ee614224"><td class="memItemLeft" align="right" valign="top"><a id="a052d2f15f1c72796c27d7024ee614224"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_FF</b></td></tr>
 <tr class="separator:a052d2f15f1c72796c27d7024ee614224"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,21 +272,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_sensored</b></td></
 <tr class="memitem:aa2b1c8bf8024be526c03d57bbc050798"><td class="memItemLeft" align="right" valign="top"><a id="aa2b1c8bf8024be526c03d57bbc050798"></a>
 FixedConstraint&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>m_fixedConstraint</b></td></tr>
 <tr class="separator:aa2b1c8bf8024be526c03d57bbc050798"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f33de4f6f0e3fc66366bb9f7bb5fb16"><td class="memItemLeft" align="right" valign="top"><a id="a4f33de4f6f0e3fc66366bb9f7bb5fb16"></a>
-vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_droppedInstruments</b></td></tr>
-<tr class="separator:a4f33de4f6f0e3fc66366bb9f7bb5fb16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1de9aec8f42431467484f825ba163c45"><td class="memItemLeft" align="right" valign="top"><a id="a1de9aec8f42431467484f825ba163c45"></a>
-vector&lt; Vec3d &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_sensorMotionData</b></td></tr>
-<tr class="separator:a1de9aec8f42431467484f825ba163c45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50c056d1f8978624fb432fd1ae1d88e3"><td class="memItemLeft" align="right" valign="top"><a id="a50c056d1f8978624fb432fd1ae1d88e3"></a>
+type::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_droppedInstruments</b></td></tr>
+<tr class="separator:a50c056d1f8978624fb432fd1ae1d88e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70dd846456f2f9b257c75e4eea5650ee"><td class="memItemLeft" align="right" valign="top"><a id="a70dd846456f2f9b257c75e4eea5650ee"></a>
+type::vector&lt; Vec3d &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_sensorMotionData</b></td></tr>
+<tr class="separator:a70dd846456f2f9b257c75e4eea5650ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcf3dadc7d1fbb6504894156dc47b56d"><td class="memItemLeft" align="right" valign="top"><a id="adcf3dadc7d1fbb6504894156dc47b56d"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_currentSensorData</b></td></tr>
 <tr class="separator:adcf3dadc7d1fbb6504894156dc47b56d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef43ff44557e0dd57cd5f34914f5c0d9"><td class="memItemLeft" align="right" valign="top"><a id="aef43ff44557e0dd57cd5f34914f5c0d9"></a>
-vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_nodeCurvAbs</b></td></tr>
-<tr class="separator:aef43ff44557e0dd57cd5f34914f5c0d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d6e4cf7e086c366911a0ba73333fa6f"><td class="memItemLeft" align="right" valign="top"><a id="a3d6e4cf7e086c366911a0ba73333fa6f"></a>
-vector&lt; vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_idInstrumentCurvAbsTable</b></td></tr>
-<tr class="separator:a3d6e4cf7e086c366911a0ba73333fa6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b0e1e177b0fd3bc56d7030fa25c14c1"><td class="memItemLeft" align="right" valign="top"><a id="a2b0e1e177b0fd3bc56d7030fa25c14c1"></a>
+type::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_nodeCurvAbs</b></td></tr>
+<tr class="separator:a2b0e1e177b0fd3bc56d7030fa25c14c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b5988d25510ba24eab9ddb3c77a726"><td class="memItemLeft" align="right" valign="top"><a id="ad1b5988d25510ba24eab9ddb3c77a726"></a>
+type::vector&lt; type::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_idInstrumentCurvAbsTable</b></td></tr>
+<tr class="separator:ad1b5988d25510ba24eab9ddb3c77a726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65c744ced4bcf54f2aa5d071a47ae164"><td class="memItemLeft" align="right" valign="top"><a id="a65c744ced4bcf54f2aa5d071a47ae164"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_numControlledNodes</b></td></tr>
 <tr class="separator:a65c744ced4bcf54f2aa5d071a47ae164"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -458,7 +448,7 @@ class sofa::component::controller::_interventionalradiologycontroller_::Interven
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1controller.html">controller</a></li><li class="navelem"><b>_interventionalradiologycontroller_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html">InterventionalRadiologyController</a></li>
-    <li class="footer">Generated on Thu Aug 4 2022 01:02:59 for BeamAdapter by
+    <li class="footer">Generated on Thu Aug 4 2022 07:30:56 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

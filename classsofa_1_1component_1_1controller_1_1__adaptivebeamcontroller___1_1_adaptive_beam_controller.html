@@ -85,7 +85,6 @@ $(document).ready(function(){initNavTree('classsofa_1_1component_1_1controller_1
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller-members.html">List of all members</a>  </div>
@@ -125,9 +124,9 @@ typedef Coord::value_type&#160;</td><td class="memItemRight" valign="bottom"><b>
 <tr class="memitem:a5434809f42dc8850ac79010dc2c2f12d"><td class="memItemLeft" align="right" valign="top"><a id="a5434809f42dc8850ac79010dc2c2f12d"></a>
 typedef BaseMeshTopology::EdgeID&#160;</td><td class="memItemRight" valign="bottom"><b>ElementID</b></td></tr>
 <tr class="separator:a5434809f42dc8850ac79010dc2c2f12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bbcde2e1f56e7392010a93fa31f350e"><td class="memItemLeft" align="right" valign="top"><a id="a5bbcde2e1f56e7392010a93fa31f350e"></a>
-typedef vector&lt; BaseMeshTopology::EdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
-<tr class="separator:a5bbcde2e1f56e7392010a93fa31f350e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fb05b78c9fcf3b9d947bed2b2fc39ee"><td class="memItemLeft" align="right" valign="top"><a id="a9fb05b78c9fcf3b9d947bed2b2fc39ee"></a>
+typedef type::vector&lt; BaseMeshTopology::EdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
+<tr class="separator:a9fb05b78c9fcf3b9d947bed2b2fc39ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade8bc2e94589f6309bf88a2942b05475"><td class="memItemLeft" align="right" valign="top"><a id="ade8bc2e94589f6309bf88a2942b05475"></a>
 typedef MechanicalStateController&lt; DataTypes &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Inherit</b></td></tr>
 <tr class="separator:ade8bc2e94589f6309bf88a2942b05475"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,15 +162,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onKeyPressedE
 <tr class="memitem:a48a6b5fc8981006bbf7b84b78696c40e"><td class="memItemLeft" align="right" valign="top"><a id="a48a6b5fc8981006bbf7b84b78696c40e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onBeginAnimationStep</b> (const double dt) override</td></tr>
 <tr class="separator:a48a6b5fc8981006bbf7b84b78696c40e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad849e1cbdf178a8b4a071a4be704c0dc"><td class="memItemLeft" align="right" valign="top"><a id="ad849e1cbdf178a8b4a071a4be704c0dc"></a>
-virtual string&#160;</td><td class="memItemRight" valign="bottom"><b>getTemplateName</b> () const override</td></tr>
-<tr class="separator:ad849e1cbdf178a8b4a071a4be704c0dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2cc52500ce6941e283ca9343ad9913fb"><td class="memItemLeft" align="right" valign="top"><a id="a2cc52500ce6941e283ca9343ad9913fb"></a>
-static string&#160;</td><td class="memItemRight" valign="bottom"><b>templateName</b> (const <a class="el" href="classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller.html">AdaptiveBeamController</a>&lt; DataTypes &gt; *=NULL)</td></tr>
-<tr class="separator:a2cc52500ce6941e283ca9343ad9913fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -180,18 +170,18 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aec083a71ef628cd0aca93d86aa86ce85"><td class="memItemLeft" align="right" valign="top"><a id="aec083a71ef628cd0aca93d86aa86ce85"></a>
-Data&lt; vector&lt; string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_interpolationPath</b></td></tr>
-<tr class="separator:aec083a71ef628cd0aca93d86aa86ce85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab631fc065fda2802e667450a4dfaafa7"><td class="memItemLeft" align="right" valign="top"><a id="ab631fc065fda2802e667450a4dfaafa7"></a>
+Data&lt; type::vector&lt; string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_interpolationPath</b></td></tr>
+<tr class="separator:ab631fc065fda2802e667450a4dfaafa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32a524ae9e68a8854f88cec5ae8eb7b4"><td class="memItemLeft" align="right" valign="top"><a id="a32a524ae9e68a8854f88cec5ae8eb7b4"></a>
 Data&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_controlledInstrument</b></td></tr>
 <tr class="separator:a32a524ae9e68a8854f88cec5ae8eb7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada70f2584d5f14f474fda8dd21dac3cf"><td class="memItemLeft" align="right" valign="top"><a id="ada70f2584d5f14f474fda8dd21dac3cf"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_xtip</b></td></tr>
-<tr class="separator:ada70f2584d5f14f474fda8dd21dac3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedfed3951c8edb3988cc0e20780ac6f7"><td class="memItemLeft" align="right" valign="top"><a id="aedfed3951c8edb3988cc0e20780ac6f7"></a>
-Data&lt; vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rotationInstrument</b></td></tr>
-<tr class="separator:aedfed3951c8edb3988cc0e20780ac6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5da74f9a12ef4041f956a88eea2c1c1"><td class="memItemLeft" align="right" valign="top"><a id="ad5da74f9a12ef4041f956a88eea2c1c1"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_xtip</b></td></tr>
+<tr class="separator:ad5da74f9a12ef4041f956a88eea2c1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a120f6d454d1e9a625748808c389604cf"><td class="memItemLeft" align="right" valign="top"><a id="a120f6d454d1e9a625748808c389604cf"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_rotationInstrument</b></td></tr>
+<tr class="separator:a120f6d454d1e9a625748808c389604cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8df8e753563d436cc10756147af9bc5"><td class="memItemLeft" align="right" valign="top"><a id="ab8df8e753563d436cc10756147af9bc5"></a>
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_step</b></td></tr>
 <tr class="separator:ab8df8e753563d436cc10756147af9bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,9 +194,9 @@ Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_speed
 <tr class="memitem:af06ec0be968097a27783d306c16b5a6c"><td class="memItemLeft" align="right" valign="top"><a id="af06ec0be968097a27783d306c16b5a6c"></a>
 <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BInterpolation</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_adaptiveinterpolation</b> {nullptr}</td></tr>
 <tr class="separator:af06ec0be968097a27783d306c16b5a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc3bd5fba9f9e8f77d51a50a9d0c694f"><td class="memItemLeft" align="right" valign="top"><a id="adc3bd5fba9f9e8f77d51a50a9d0c694f"></a>
-vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_xAbsCollisionPointsBuffer</b></td></tr>
-<tr class="separator:adc3bd5fba9f9e8f77d51a50a9d0c694f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae34a2285e221e4ae407d2ab9a756bf8c"><td class="memItemLeft" align="right" valign="top"><a id="ae34a2285e221e4ae407d2ab9a756bf8c"></a>
+type::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_xAbsCollisionPointsBuffer</b></td></tr>
+<tr class="separator:ae34a2285e221e4ae407d2ab9a756bf8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a510217112d91ff6b6585383ef07feeaf"><td class="memItemLeft" align="right" valign="top"><a id="a510217112d91ff6b6585383ef07feeaf"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>FF</b> {false}</td></tr>
 <tr class="separator:a510217112d91ff6b6585383ef07feeaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,7 +274,7 @@ class sofa::component::controller::_adaptivebeamcontroller_::AdaptiveBeamControl
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1controller.html">controller</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1controller_1_1__adaptivebeamcontroller__.html">_adaptivebeamcontroller_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller.html">AdaptiveBeamController</a></li>
-    <li class="footer">Generated on Thu Aug 4 2022 01:02:59 for BeamAdapter by
+    <li class="footer">Generated on Thu Aug 4 2022 07:30:56 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

@@ -85,7 +85,6 @@ $(document).ready(function(){initNavTree('classsofa_1_1component_1_1controller_1
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">SutureController&lt; DataTypes &gt; Class Template Reference</div>  </div>
@@ -129,9 +128,9 @@ typedef Vec&lt; 2, Real &gt;&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="memitem:a5434809f42dc8850ac79010dc2c2f12d"><td class="memItemLeft" align="right" valign="top"><a id="a5434809f42dc8850ac79010dc2c2f12d"></a>
 typedef BaseMeshTopology::EdgeID&#160;</td><td class="memItemRight" valign="bottom"><b>ElementID</b></td></tr>
 <tr class="separator:a5434809f42dc8850ac79010dc2c2f12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d28d972a742b0e29d5eef26654c1042"><td class="memItemLeft" align="right" valign="top"><a id="a6d28d972a742b0e29d5eef26654c1042"></a>
-typedef vector&lt; ElementID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
-<tr class="separator:a6d28d972a742b0e29d5eef26654c1042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41d58db6effa08226a76ea513a233e5"><td class="memItemLeft" align="right" valign="top"><a id="af41d58db6effa08226a76ea513a233e5"></a>
+typedef type::vector&lt; ElementID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b></td></tr>
+<tr class="separator:af41d58db6effa08226a76ea513a233e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a967c452461fc4f04afbd904e970a8c92"><td class="memItemLeft" align="right" valign="top"><a id="a967c452461fc4f04afbd904e970a8c92"></a>
 typedef std::list&lt; Real &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><b>ListRealIterator</b></td></tr>
 <tr class="separator:a967c452461fc4f04afbd904e970a8c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,9 +152,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c472d53de04feb590b0dc7120999022"><td class="memItemLeft" align="right" valign="top"><a id="a3c472d53de04feb590b0dc7120999022"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SOFA_CLASS</b> (SOFA_TEMPLATE(<a class="el" href="classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html">SutureController</a>, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes))</td></tr>
 <tr class="separator:a3c472d53de04feb590b0dc7120999022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13354a0c20483d5e64a3c1203b501f57"><td class="memItemLeft" align="right" valign="top"><a id="a13354a0c20483d5e64a3c1203b501f57"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SutureController</b> (WInterpolation *_adaptiveinterpolation=NULL)</td></tr>
-<tr class="separator:a13354a0c20483d5e64a3c1203b501f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a575d23dfff2bcbb1abd85338cd202bc2"><td class="memItemLeft" align="right" valign="top"><a id="a575d23dfff2bcbb1abd85338cd202bc2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>SutureController</b> (WInterpolation *_adaptiveinterpolation=nullptr)</td></tr>
+<tr class="separator:a575d23dfff2bcbb1abd85338cd202bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,9 +170,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> () 
 <tr class="memitem:aa8c1e22ec6f8ac7e9eaa9c1a6f88cfac"><td class="memItemLeft" align="right" valign="top"><a id="aa8c1e22ec6f8ac7e9eaa9c1a6f88cfac"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (const core::visual::VisualParams *) override</td></tr>
 <tr class="separator:aa8c1e22ec6f8ac7e9eaa9c1a6f88cfac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac66acba0756e532d4ef34f8486b468e0"><td class="memItemLeft" align="right" valign="top"><a id="ac66acba0756e532d4ef34f8486b468e0"></a>
-virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getTemplateName</b> () const override</td></tr>
-<tr class="separator:ac66acba0756e532d4ef34f8486b468e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3346f4e11df6cd26c6d3682d86e9622e"><td class="memItemLeft" align="right" valign="top"><a id="a3346f4e11df6cd26c6d3682d86e9622e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onMouseEvent</b> (core::objectmodel::MouseEvent *) override</td></tr>
 <tr class="separator:a3346f4e11df6cd26c6d3682d86e9622e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,12 +182,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onBeginAnimat
 <tr class="memitem:abb9d7937af358a3ff7b880479dac44cb"><td class="memItemLeft" align="right" valign="top"><a id="abb9d7937af358a3ff7b880479dac44cb"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onEndAnimationStep</b> (const double dt) override</td></tr>
 <tr class="separator:abb9d7937af358a3ff7b880479dac44cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a7797ce7e893479d1720a35efb44eb57d"><td class="memItemLeft" align="right" valign="top"><a id="a7797ce7e893479d1720a35efb44eb57d"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>templateName</b> (const <a class="el" href="classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html">SutureController</a>&lt; DataTypes &gt; *=NULL)</td></tr>
-<tr class="separator:a7797ce7e893479d1720a35efb44eb57d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
@@ -205,7 +195,7 @@ class sofa::component::controller::_suturecontroller_::SutureController&lt; Data
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1controller.html">controller</a></li><li class="navelem"><b>_suturecontroller_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html">SutureController</a></li>
-    <li class="footer">Generated on Thu Aug 4 2022 01:02:59 for BeamAdapter by
+    <li class="footer">Generated on Thu Aug 4 2022 07:30:56 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
