@@ -73,18 +73,12 @@ AdaptiveInflatableBeamForceField<DataTypes>::AdaptiveInflatableBeamForceField()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , d_pressure(initData(&d_pressure, (Real)0.0, "pressure", "pressure inside the inflatable Beam"))
-    , d_dataG(initData(&d_dataG,"dataG","Gravity vector"))
+    , d_dataG(initData(&d_dataG,"dataG","Gravity 3d vector"))
+
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
 }
-
-
-template <class DataTypes>
-AdaptiveInflatableBeamForceField<DataTypes>::~AdaptiveInflatableBeamForceField()
-{
-}
-
 
 template <class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::init()
@@ -111,7 +105,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeGravityVector()
 {
     Vec3 gravity = getContext()->getGravity();
 
-    VecDeriv& _G = *d_dataG.beginEdit();
+    auto _G = sofa::helper::getWriteOnlyAccessor(d_dataG);
     _G.resize(l_interpolation->getStateSize());
 
     m_gravity = Vec3(gravity[0],gravity[1],gravity[2]);
@@ -132,8 +126,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeGravityVector()
         _G[i][4]=(Real)0.0;
         _G[i][5]=(Real)0.0;
     }
-
-    d_dataG.endEdit();
 }
 
 
@@ -391,7 +383,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams*
 {
     SOFA_UNUSED(mparams);
 
-    VecDeriv& f = *dataf.beginEdit() ;
+    auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecDeriv& dx = datadx.getValue();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -404,10 +396,8 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams*
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        applyMassLarge( f, dx, b, node0Idx, node1Idx, factor );
+        applyMassLarge( f.wref(), dx, b, node0Idx, node1Idx, factor);
     }
-
-    dataf.endEdit() ;
 }
 
 
@@ -535,7 +525,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
 {
     SOFA_UNUSED(v);
 
-    VecDeriv& f = *dataf.beginEdit() ;
+    auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecCoord& x = datax.getValue();
 
     f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
@@ -547,10 +537,14 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         computeGravityVector();
 
     /// TODO:
-    ///* Redimentionner _localBeamMatrices
-    ///* Calculer les rotation et les transformations
-    ///* Calculer la matrice "locale"
-    ///* Calculer la force exercée par chaque beam
+    ///* Resize _localBeamMatrices
+
+    ///* Compute rotations and transformations
+
+    ///* Compute local frame matrix
+
+    ///* Compute force contribution of each beam
+
     ///* Calculer la force exercée par la gravitée
     for (unsigned int b=0; b<numBeams; b++)
     {
@@ -686,7 +680,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         /// add gravity:
         addMDx(mparams, dataf, d_dataG, 1.0);
     }
-    dataf.endEdit() ;
 }
 
 
@@ -694,7 +687,7 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::addDForce(const MechanicalParams* mparams,
                                                          DataVecDeriv& datadF, const DataVecDeriv& datadX )
 {
-    VecDeriv& df = *datadF.beginEdit();
+    auto df = sofa::helper::getWriteOnlyAccessor(datadF);
     const VecDeriv& dx = datadX.getValue();
     const double kFactor = mparams->kFactor();
 
@@ -707,10 +700,8 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addDForce(const MechanicalPara
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        applyStiffnessLarge( df, dx, b, node0Idx, node1Idx, kFactor );
+        applyStiffnessLarge( df.wref(), dx, b, node0Idx, node1Idx, kFactor);
     }
-
-    datadF.endEdit();
 }
 
 
@@ -789,7 +780,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
         if(vparams->displayFlags().getShowForceFields())
         {
             // /  test ///
-            vector<Vector3> points;
+            type::vector<Vector3> points;
             Vec3 pos = globalH0Local.getOrigin();
             for (double i=0.0; i<1.00001; i+=0.02)
             {

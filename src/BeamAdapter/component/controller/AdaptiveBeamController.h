@@ -97,7 +97,7 @@ public:
     typedef typename Coord::value_type   Real    ;
 
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
 
     typedef MechanicalStateController<DataTypes> Inherit;
 
@@ -109,7 +109,7 @@ public:
 
 public :
     AdaptiveBeamController();
-    virtual ~AdaptiveBeamController(){}
+    virtual ~AdaptiveBeamController() = default;
 
     /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
     virtual void init() override ;
@@ -120,24 +120,13 @@ public :
     virtual void onKeyPressedEvent(KeypressedEvent *) override ;
     virtual void onBeginAnimationStep(const double dt) override ;
 
-    //TODO(dmarchal 2017-05-17) Check that these two are really needed (remove 1 one year if not done)
-    virtual string getTemplateName() const override
-    {
-      return templateName(this);
-    }
-
-    static string templateName(const AdaptiveBeamController<DataTypes>* = NULL)
-    {
-      return DataTypes::Name();
-    }
-
 protected:
     void applyController(void) ;
 
-    Data<vector<string>>   d_interpolationPath;
+    Data<type::vector<string>>   d_interpolationPath;
     Data<int>                   d_controlledInstrument;
-    Data<vector<Real>>          d_xtip;
-    Data<vector<Real>>          d_rotationInstrument;
+    Data<type::vector<Real>>          d_xtip;
+    Data<type::vector<Real>>          d_rotationInstrument;
     Data<Real>                  d_step;
     Data<Real>                  d_angularStep;
     Data<Real>                  d_speed;
@@ -145,7 +134,7 @@ protected:
     BInterpolation*             m_adaptiveinterpolation {nullptr};
 
     ////// for point and line activer
-    vector<Real>                m_xAbsCollisionPointsBuffer;
+    type::vector<Real>                m_xAbsCollisionPointsBuffer;
 
     bool                        FF {false} ;
     bool                        RW {false} ;

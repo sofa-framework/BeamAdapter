@@ -71,32 +71,13 @@ public:
     /*!
     * @brief Default Destructor.
     */
-    ~SteerableCatheter(){}
+    virtual ~SteerableCatheter() = default;
 
     /// Initialization function
     void init() override;
 
     /// Function handling the event (listening needs to be true)
     void handleEvent(core::objectmodel::Event* ev) override;
-
-
-    /// Construction method called by ObjectFactory.
-    template<class T>
-    static typename T::SPtr create(T* obj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
-    {
-         return core::objectmodel::BaseObject::create(obj, context, arg);
-    }
-
-    virtual std::string getTemplateName() const override
-    {
-         return templateName(this);
-    }
-
-    static std::string templateName(const SteerableCatheter<DataTypes>* = NULL)
-    {
-         return DataTypes::Name();
-    }
-
 
     /// Boolean for bending
     Data<bool> d_activeBending;

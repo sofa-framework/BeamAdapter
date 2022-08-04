@@ -101,9 +101,9 @@ public:
     typedef typename Inherited::Vec3 Vec3;
     typedef typename Inherited::Vec6 Vec6;
 
-    WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = NULL);
+    WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
 
-    virtual ~WireBeamInterpolation();
+    virtual ~WireBeamInterpolation() = default;
 
     void init() override;
     void bwdInit() override;

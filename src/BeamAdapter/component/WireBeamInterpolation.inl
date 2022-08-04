@@ -66,13 +66,6 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine:
 
 
 }
-
-template <class DataTypes>
-WireBeamInterpolation<DataTypes>::~WireBeamInterpolation()
-{
-
-}
-
 //////////// useful tool
 
 template <class DataTypes>
@@ -111,11 +104,11 @@ template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
-    VecElementID &edgeList = *this->d_edgeList.beginEdit();
-    vector< double > &lengthList = *this->d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     edgeList.push_back(eID);
     lengthList.push_back(length);
@@ -126,12 +119,6 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
     this->d_dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(DOF0_H_Node0);
     DOF1TransformNode1.push_back(DOF1_H_Node1);
-
-    this->d_edgeList.endEdit();
-    this->d_lengthList.endEdit();
-    this->d_DOF0TransformNode0.endEdit();
-    this->d_DOF1TransformNode1.endEdit();
-    this->d_curvAbsList.endEdit();
 }
 
 
@@ -149,7 +136,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
-    if (this->isControlled() && this->m_restShape!=NULL)
+    if (this->isControlled() && this->m_restShape!=nullptr)
     {
         const Vec2 &curvAbs = this->d_curvAbsList.getValue()[edgeInList];
 
@@ -318,7 +305,7 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
         return false;
     }
 
-    if (!this->isControlled() || this->m_restShape == NULL || x_min_out <= eps)
+    if (!this->isControlled() || this->m_restShape == nullptr || x_min_out <= eps)
     {
         msg_error() << "Problem with function breaksInTwo ";
         return false;
@@ -337,11 +324,11 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
     // put the info of the second part of the wire at the begining
     unsigned int i=0;
 
-    VecElementID &edgeList = *this->d_edgeList.beginEdit();
-    vector< double > &lengthList = *this->d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *this->d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *this->d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *this->d_curvAbsList.beginEdit();
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     const unsigned int curvAbsListSize = curvAbsList.size();
 
@@ -371,12 +358,6 @@ bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real 
         }
     }
 
-    this->d_edgeList.endEdit();
-    this->d_lengthList.endEdit();
-    this->d_DOF0TransformNode0.endEdit();
-    this->d_DOF1TransformNode1.endEdit();
-    this->d_curvAbsList.endEdit();
-
     if (duplicatePoint == 0)
         msg_error() << " Problem no point were found at the x_break position ! getReleaseCurvAbs() should provide a <<notable>> point" ;
 
@@ -392,18 +373,18 @@ template<class DataTypes>
 template<class T>
 typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 {
-    WireRestShape<DataTypes>* _restShape = NULL;
+    WireRestShape<DataTypes>* _restShape = nullptr;
     std::string _restShapePath;
     bool pathOK = false;
 
     if(arg)
     {
-        if (arg->getAttribute("WireRestShape",NULL) != NULL)
+        if (arg->getAttribute("WireRestShape",nullptr) != nullptr)
         {
             _restShapePath = arg->getAttribute("WireRestShape");
-            context->findLinkDest(_restShape, _restShapePath, NULL);
+            context->findLinkDest(_restShape, _restShapePath, nullptr);
 
-            if(_restShape == NULL)
+            if(_restShape == nullptr)
               msg_warning(context) << " ("<< tObj->getClassName() <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;

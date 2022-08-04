@@ -263,8 +263,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
     if (!interpolationIsAlreadyInitialized())
     {
-        VecElementID &edgeList = *d_edgeList.beginEdit();
-
+        auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
         edgeList.clear();
 
         for (unsigned int i=0; i<m_topology->getNbEdges(); i++)
@@ -272,8 +271,8 @@ void BeamInterpolation<DataTypes>::bwdInit()
             edgeList.push_back(i);
         }
 
-        vector<Transform> &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-        vector<Transform> &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
+        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
+        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
 
         if (!d_dofsAndBeamsAligned.getValue())
         {
@@ -281,13 +280,9 @@ void BeamInterpolation<DataTypes>::bwdInit()
             DOF1TransformNode1.resize(edgeList.size());
         }
 
-        d_edgeList.endEdit();
-        d_DOF0TransformNode0.endEdit();
-        d_DOF1TransformNode1.endEdit();
-
         ReadAccessor<Data<VecCoord> > statePos = m_mstate->read(ConstVecCoordId::position()) ;
 
-        vector< double > &lengthList = *d_lengthList.beginEdit();
+        auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
         lengthList.clear();
 
         const unsigned int edgeListSize = d_edgeList.getValue().size();
@@ -336,9 +331,6 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
 
         }
-
-
-        d_lengthList.endEdit();
     }
 
     if(!verifyTopology())
@@ -351,7 +343,8 @@ void BeamInterpolation<DataTypes>::bwdInit()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::reinit()
 {
-    init(); bwdInit();
+    init(); 
+    bwdInit();
 }
 
 template<class DataTypes>
@@ -369,7 +362,8 @@ void BeamInterpolation<DataTypes>::reset()
     if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
-    bwdInit(); m_numBeamsNotUnderControl=0;
+    bwdInit(); 
+    m_numBeamsNotUnderControl=0;
 }
 
 template<class DataTypes>
@@ -401,6 +395,7 @@ bool BeamInterpolation<DataTypes>::verifyTopology()
     //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
     dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
 
+
     const VecElementID &edgeList = d_edgeList.getValue();
     for (unsigned int j = 0; j < edgeList.size(); j++)
     {
@@ -419,11 +414,11 @@ bool BeamInterpolation<DataTypes>::verifyTopology()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::clear()
 {
-    VecElementID &edgeList = *d_edgeList.beginEdit();
-    vector< double > &lengthList = *d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
 
     if(m_brokenInTwo)
     {
@@ -441,23 +436,17 @@ void BeamInterpolation<DataTypes>::clear()
         DOF1TransformNode1.clear();
         curvAbsList.clear();
     }
-
-    d_edgeList.endEdit();
-    d_lengthList.endEdit();
-    d_DOF0TransformNode0.endEdit();
-    d_DOF1TransformNode1.endEdit();
-    d_curvAbsList.endEdit();
 }
 
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
 {
-    VecElementID &edgeList = *d_edgeList.beginEdit();
-    vector< double > &lengthList = *d_lengthList.beginEdit();
-    vector< Transform > &DOF0TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-    vector< Transform > &DOF1TransformNode1 = *d_DOF1TransformNode1.beginEdit();
-    vector< Vec2 > &curvAbsList = *d_curvAbsList.beginEdit();
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
 
     curvAbsList.push_back(Vec2(x0, x1));
 
@@ -472,12 +461,6 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     d_dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(Transform(Vec3(0, 0, 0), QuatX ));
     DOF1TransformNode1.push_back(Transform(Vec3(0, 0, 0), QuatX ));
-
-    d_edgeList.endEdit();
-    d_lengthList.endEdit();
-    d_DOF0TransformNode0.endEdit();
-    d_DOF1TransformNode1.endEdit();
-    d_curvAbsList.endEdit();
 }
 
 
@@ -537,7 +520,7 @@ template <class DataTypes>
 typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRestTotalLength()
 {
     Real le(0.0);
-    const vector< double > &lengthList = d_lengthList.getValue();
+    const type::vector< double > &lengthList = d_lengthList.getValue();
 
     for (unsigned int i = 0; i < lengthList.size(); i++)
         le += lengthList[i];
@@ -589,19 +572,13 @@ void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const
 
     if (!zeroORone)
     {
-        vector<Transform> &DOF0_TransformNode0 = *d_DOF0TransformNode0.beginEdit();
-
-        DOF0_TransformNode0[beam] = DOF_H_Node;
-
-        d_DOF0TransformNode0.endEdit();
+        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
+        DOF0TransformNode0[beam] = DOF_H_Node;
     }
     else
     {
-        vector<Transform> &DOF1_TransformNode1 = *d_DOF1TransformNode1.beginEdit();
-
-        DOF1_TransformNode1[beam] = DOF_H_Node;
-
-        d_DOF1TransformNode1.endEdit();
+        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
+        DOF1TransformNode1[beam] = DOF_H_Node;
     }
 }
 
@@ -747,9 +724,8 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getLen
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::setLength(unsigned int edgeInList, Real &length)
 {
-    vector<double> &lengthList = *d_lengthList.beginEdit();
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
     lengthList[edgeInList] = length;
-    d_lengthList.endEdit();
 }
 
 
@@ -757,17 +733,15 @@ void BeamInterpolation<DataTypes>::setLength(unsigned int edgeInList, Real &leng
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::addCollisionOnBeam(unsigned int b)
 {
-    sofa::type::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
+    auto beamCollisList = sofa::helper::getWriteOnlyAccessor(d_beamCollision);
     beamCollisList.push_back(b);
-    d_beamCollision.endEdit();
 }
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::clearCollisionOnBeam()
 {
-    sofa::type::vector<int>& beamCollisList = (*d_beamCollision.beginEdit());
+    auto beamCollisList = sofa::helper::getWriteOnlyAccessor(d_beamCollision);
     beamCollisList.clear();
-    d_beamCollision.endEdit();
 }
 
 template<class DataTypes>
@@ -822,15 +796,15 @@ int BeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
                                                  unsigned int &node0Idx,
                                                  unsigned int &node1Idx )
 {
-    if ( m_topologyEdges==nullptr)
+    if ( m_topologyEdges == nullptr)
     {
         msg_error() <<"This object does not have edge topology defined (computation halted). " ;
         return -1;
     }
 
     /// 1. Get the indices of element and nodes
-    ElementID e = d_edgeList.getValue()[edgeInList] ;
-    BaseMeshTopology::Edge edge=  (*m_topologyEdges)[e];
+    const ElementID& e = d_edgeList.getValue()[edgeInList] ;
+    const BaseMeshTopology::Edge& edge=  (*m_topologyEdges)[e];
     node0Idx = edge[0];
     node1Idx = edge[1];
 
@@ -1125,15 +1099,13 @@ template<class DataTypes>
 void  BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out){
     ///Mechanical Object to stock Bezier points.
     m_StateNodes->resize(d_edgeList.getValue().size()*4);
-    Data<VectorVec3>* datax = m_StateNodes->write(vId_Out);
-    VectorVec3& bezierPosVec = *datax->beginEdit();
+    auto bezierPosVec = sofa::helper::getWriteOnlyAccessor(*m_StateNodes->write(vId_Out));
     bezierPosVec.resize(d_edgeList.getValue().size()*4);
 
     for(unsigned int i=0; i< d_edgeList.getValue().size(); i++){
-        updateBezierPoints(x,i,bezierPosVec);
+        updateBezierPoints(x,i,bezierPosVec.wref());
 
     }
-    datax->endEdit();
 }
 
 template<class DataTypes>
@@ -1162,7 +1134,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     /// -   1.Data<helper::OptionsGroup > d_vecID;
     ///         VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
     ///
-    /// -   2. Data< vector< Vec2 > > d_InterpolationInputs;
+    /// -   2. Data< type::vector< Vec2 > > d_InterpolationInputs;
     ///         Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
     /// ouptus:
     /// -   1. d_InterpolatedPos  => result interpolate the position (6 D0Fs type rigid: position/quaterion)
@@ -1171,11 +1143,11 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if (BEAMADAPTER_WITH_VERIFICATION)
         dmsg_info() <<"entering updateInterpolation" ;
 
-    const vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
+    const type::vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
     unsigned int numInterpolatedPositions = interpolationInputs.size();
 
-    VecCoord &interpolatedPos= (*d_InterpolatedPos.beginEdit());
-    VecDeriv &interpolatedVel = (*d_InterpolatedVel.beginEdit());
+    auto interpolatedPos = sofa::helper::getWriteOnlyAccessor(d_InterpolatedPos);
+    auto interpolatedVel = sofa::helper::getWriteOnlyAccessor(d_InterpolatedVel);
 
     interpolatedPos.resize(numInterpolatedPositions);
     interpolatedVel.resize(numInterpolatedPositions);
@@ -1238,8 +1210,6 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         interpolatedPos[i].getCenter() = global_H_localResult.getOrigin();
         interpolatedPos[i].getOrientation() = global_H_localResult.getOrientation();
     }
-    d_InterpolatedPos.endEdit();
-    d_InterpolatedVel.endEdit();
 }
 
 /// InterpolateTransformUsingSpline

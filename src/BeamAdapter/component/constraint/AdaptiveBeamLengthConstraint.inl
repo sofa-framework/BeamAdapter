@@ -47,7 +47,7 @@ using sofa::core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(double* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
     virtual void init(int line, double** w, double* force);
@@ -67,11 +67,6 @@ AdaptiveBeamLengthConstraint<DataTypes>::AdaptiveBeamLengthConstraint(TypedMecha
     , m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam (default=1.05"))
     , m_maxBendingAngle(initData(&m_maxBendingAngle,  (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one constraint interval (default=0.1)"))
     , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-{
-}
-
-template<class DataTypes>
-AdaptiveBeamLengthConstraint<DataTypes>::~AdaptiveBeamLengthConstraint()
 {
 }
 
@@ -303,7 +298,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
     ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
     ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
 
-    MatrixDeriv& c = *c_d.beginEdit();
+    auto c = sofa::helper::getWriteOnlyAccessor(c_d);
 
     m_constraintIntervals.clear();
     detectElongation( x.ref(), xfree.ref());
@@ -343,7 +338,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
         dmsg_info_when(lever0.norm() > 0.0001) << " lever0 ="<<lever0<<" dir ="<<dir ;
         dmsg_info_when(lever1.norm() > 0.0001) << " lever1 ="<<lever1<<" -dir ="<<-dir ;
 
-        MatrixDerivRowIterator c_it = c.writeLine(m_cid + m_nbConstraints);
+        MatrixDerivRowIterator c_it = c.wref().writeLine(m_cid + m_nbConstraints);
 
         c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
         c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );
@@ -373,7 +368,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const Cons
     unsigned int nb = m_violations.size();
     for(unsigned int i=0; i<nb; i++)
     {
-        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &m_constraintIntervals[i].active);
+        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(nullptr, &m_constraintIntervals[i].active);
         offset++;
     }
 }

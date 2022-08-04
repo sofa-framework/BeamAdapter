@@ -127,7 +127,7 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
 {
     // *****************************
     // Update bending at benginEvent
-    if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
+    if (simulation::AnimateBeginEvent::checkEventType(event))
     {
         //Bending activated
         if(d_activeBending.getValue())
@@ -149,13 +149,13 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
         }
     }
 
-
-
-
     // **********************
     // Keyboard events ...
-    if(sofa::core::objectmodel::KeypressedEvent* ev = dynamic_cast<sofa::core::objectmodel::KeypressedEvent*>(event))
+    if (sofa::core::objectmodel::KeypressedEvent::checkEventType(event))
     {
+        auto* ev = dynamic_cast<sofa::core::objectmodel::KeypressedEvent*>(event);
+        assert(ev != nullptr);
+
         switch(ev->getKey())
         {
         case '6':
@@ -176,9 +176,11 @@ void SteerableCatheter<DataTypes>::handleEvent(core::objectmodel::Event* event)
         }
     }
 
-
-    if(sofa::core::objectmodel::KeyreleasedEvent* ev = dynamic_cast<sofa::core::objectmodel::KeyreleasedEvent*>(event))
+    if (sofa::core::objectmodel::KeyreleasedEvent::checkEventType(event))
     {
+        auto* ev = dynamic_cast<sofa::core::objectmodel::KeyreleasedEvent*>(event);
+        assert(ev != nullptr);
+
         switch(ev->getKey())
         {
         case '6':

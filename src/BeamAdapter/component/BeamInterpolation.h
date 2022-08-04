@@ -92,9 +92,9 @@ public:
     typedef typename Coord::value_type Real;
     typedef unsigned int Index;
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
-    typedef vector<BaseMeshTopology::Edge> VecEdges;
-    typedef vector<unsigned int> VecIndex;
+    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef type::vector<BaseMeshTopology::Edge> VecEdges;
+    typedef type::vector<unsigned int> VecIndex;
 
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
@@ -103,11 +103,11 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    typedef vector<Vec<3, Real> > VectorVec3;
+    typedef type::vector<Vec<3, Real> > VectorVec3;
 
 public:
     BeamInterpolation() ;
-    virtual ~BeamInterpolation() override {}
+    virtual ~BeamInterpolation() override = default;
 
     //////////////////////////////////// Exposing this object in the factory ///////////////////////
     /// Pre-construction check method called by ObjectFactory.
@@ -117,6 +117,8 @@ public:
     {
         if (dynamic_cast<MechanicalState<DataTypes>*>(context->getMechanicalState()) == nullptr)
         {
+            arg->logError(std::string("No mechanical state with the datatype '") + DataTypes::Name() +
+                "' found in the context node.");
             return false;
         }
         return BaseObject::canCreate(obj, context, arg);
@@ -300,16 +302,16 @@ protected :
     const VecEdges*             m_topologyEdges {nullptr};
 
     ///2.m_lengthList: list of the length of each beam
-    Data< vector< double > >    d_lengthList;
+    Data< type::vector< double > >    d_lengthList;
 
     ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
     /// Indexation based on the num of Edge
-    Data< vector< Transform > > d_DOF0TransformNode0;
+    Data< type::vector< Transform > > d_DOF0TransformNode0;
 
     ///4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
-    Data< vector< Transform > > d_DOF1TransformNode1;
+    Data< type::vector< Transform > > d_DOF1TransformNode1;
 
-    Data< vector< Vec2 > >      d_curvAbsList;
+    Data< type::vector< Vec2 > >      d_curvAbsList;
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
     Data< sofa::type::vector<int> > d_beamCollision;
@@ -318,7 +320,7 @@ protected :
     ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
     Data< OptionsGroup > d_vecID;
     ///Input 2. Vector of 2-tuples (indice of the beam   ,   barycentric between 0 and 1)
-    Data< vector< Vec2 > > d_InterpolationInputs;
+    Data< type::vector< Vec2 > > d_InterpolationInputs;
 
     ///Output
     Data< VecCoord > d_InterpolatedPos;
