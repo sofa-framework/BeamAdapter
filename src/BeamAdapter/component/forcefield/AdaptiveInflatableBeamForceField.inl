@@ -73,7 +73,8 @@ AdaptiveInflatableBeamForceField<DataTypes>::AdaptiveInflatableBeamForceField()
     , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , d_pressure(initData(&d_pressure, (Real)0.0, "pressure", "pressure inside the inflatable Beam"))
-    , d_dataG(initData(&d_dataG,"dataG","Gravity type::vector"))
+    , d_dataG(initData(&d_dataG,"dataG","Gravity 3d vector"))
+
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
     , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
@@ -536,10 +537,14 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         computeGravityVector();
 
     /// TODO:
-    ///* Redimensionner _localBeamMatrices
-    ///* Calculer les rotation et les transformations
-    ///* Calculer la matrice "locale"
-    ///* Calculer la force exercée par chaque beam
+    ///* Resize _localBeamMatrices
+
+    ///* Compute rotations and transformations
+
+    ///* Compute local frame matrix
+
+    ///* Compute force contribution of each beam
+
     ///* Calculer la force exercée par la gravitée
     for (unsigned int b=0; b<numBeams; b++)
     {
