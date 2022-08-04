@@ -19,22 +19,17 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_INL
-#define SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_INL
+#pragma once
 
 
-#include "ImplicitSurfaceAdaptiveConstraint.h"
-
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/defaulttype/DataTypeInfo.h>
-#include <SofaBaseMechanics/AddMToMatrixFunctor.h>
+#include <BeamAdapter/component/constraint/ImplicitSurfaceAdaptiveConstraint.h>
 
 #include <sofa/helper/system/thread/CTime.h>
-#include <SofaConstraint/UnilateralInteractionConstraint.h>
-
+#include <sofa/defaulttype/RigidTypes.h>
+#include <sofa/defaulttype/DataTypeInfo.h>
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/ConstraintParams.h>
-
+#include <sofa/component/constraint/lagrangian/model/UnilateralInteractionConstraint.h>
 
 double TimeResolution = 0.0;
 double TimeCount = 0.0;
@@ -49,13 +44,7 @@ double TimeProjection2= 0.0;
 //#define DEBUG_DFREE_COMPUTATION
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraint
+namespace sofa::component::constraint
 {
 
 using sofa::core::VecCoordId;
@@ -63,8 +52,8 @@ using sofa::core::MultiVecCoordId;
 using sofa::core::ConstMultiVecCoordId;
 using sofa::core::ConstVecCoordId;
 
-using sofa::component::constraintset::UnilateralConstraintResolution;
-using sofa::component::constraintset::UnilateralConstraintResolutionWithFriction;
+using sofa::component::constraint::lagrangian::model::UnilateralConstraintResolution;
+using sofa::component::constraint::lagrangian::model::UnilateralConstraintResolutionWithFriction;
 
 template<class DataTypes>
 ImplicitSurfaceAdaptiveConstraint<DataTypes>::ImplicitSurfaceAdaptiveConstraint(MechanicalState* object1, MechanicalState* object2)
@@ -149,7 +138,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::internalInit()
     else
         msg_error() <<"No mstate1 found.";
 
-    if (m_contactSurface == NULL)
+    if (m_contactSurface == nullptr)
     {
         msg_error() <<"No surface found for contact.";
         return;
@@ -405,7 +394,8 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
 
     /////////////////
     // 3d step: setting the constraint direction
-    MatrixDeriv& c2w = *c2.beginEdit();
+    auto c2w = sofa::helper::getWriteOnlyAccessor(c2);
+
     m_nbConstraints = 0;
     m_cid = cIndex;
     for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
@@ -458,7 +448,6 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::buildConstraintMatrix(const c
         }
 
     }
-    c2.endEdit();
 
 #ifdef DEBUG
     dmsg_info() <<" * 3d step ok: constraints are set...\n done *************";
@@ -778,10 +767,4 @@ void ImplicitSurfaceAdaptiveConstraintResolution<DataTypes>::resolution(int line
     force[line]=0.0;
 }
 
-} // namespace constraint
-
-} // namespace component
-
-} // namespace sofa
-
-#endif
+} // namespace sofa::component::constraint

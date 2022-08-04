@@ -171,7 +171,7 @@ void WireRestShape<DataTypes>::init()
     //////////////////////////////////////////////
     this->getContext()->get(_topology);
 
-    if(_topology != NULL){
+    if(_topology != nullptr){
         msg_info() << "found topology named "<< _topology->getName() ;
     }else{
         //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
@@ -180,7 +180,7 @@ void WireRestShape<DataTypes>::init()
 
     this->getContext()->get(edgeMod);
 
-    if (edgeMod == NULL)
+    if (edgeMod == nullptr)
     {
         //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
         msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier." ;
@@ -219,7 +219,7 @@ void WireRestShape<DataTypes>::init()
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
-    vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
+    auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
     if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
@@ -228,14 +228,11 @@ void WireRestShape<DataTypes>::init()
         keyPointList.push_back(d_length.getValue());
     }
 
-    d_keyPoints.endEdit();
-
-
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
-        vector<int> &densityList = (*d_density.beginEdit());
+        auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
 
-        if(d_density.getValue().size() > keyPointList.size()-1 )
+        if(densityList.size() > keyPointList.size()-1 )
             densityList.resize(keyPointList.size()-1);
         else
         {
@@ -252,17 +249,14 @@ void WireRestShape<DataTypes>::init()
                 densityList.push_back(numNodes);
             }
         }
-        d_density.endEdit();
     }
 
     if(!d_numEdgesCollis.getValue().size())
     {
-        vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
+        auto densityCol = sofa::helper::getWriteOnlyAccessor(d_numEdgesCollis);
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
             densityCol[i] = 20;
-
-        d_numEdgesCollis.endEdit();
     }
 
     msg_info() <<"WireRestShape end init" ;
@@ -302,7 +296,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
     d_brokenIn2.setValue(true);
 
-    if ( edgeMod == NULL )
+    if ( edgeMod == nullptr )
     {
         msg_error() << "no edgeSetModifier in the node -> cannot do the topological change";
         return;
@@ -312,7 +306,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
+            type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
@@ -322,7 +316,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
 
             // propagate the topological change to the topological mapping //
-            if(edge2QuadMap!=NULL)
+            if(edge2QuadMap!=nullptr)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
                 sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
@@ -342,8 +336,8 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
-                                                     vector<int>& nbP_density) const
+void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noticeable,
+                                                     type::vector<int>& nbP_density) const
 {
 
     xP_noticeable.clear();
@@ -588,32 +582,25 @@ void WireRestShape<DataTypes>::initFromLoader()
     if (!checkTopology())
         return;
 
-    vector<Vec3> vertices;
-    vector<Vec2> edges;
+    type::vector<Vec3> vertices;
+    sofa::core::topology::BaseMeshTopology::SeqEdges edges;
 
     //get the topology position
-    typedef  vector<sofa::type::Vec<3,SReal> > topoPosition;
-    topoPosition &topoVertices = (*loader->d_positions.beginEdit());
+    auto topoVertices = sofa::helper::getReadAccessor(loader->d_positions);
 
     //copy the topology edges in a local vector
-    typedef  vector<sofa::core::topology::Topology::Edge > topoEdge;
-    topoEdge &topoEdges = (*loader->d_edges.beginEdit());
-    for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
-        edges.push_back(Vec2((*it)[0], (*it)[1]));
-    loader->d_edges.endEdit();
+    auto topoEdges = sofa::helper::getReadAccessor(loader->d_edges);
+    edges = topoEdges.ref();
 
     /** renumber the vertices  **/
-    vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
+    type::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
     for(unsigned int i =0; i < topoVertices.size(); i++)
         verticesConnexion.push_back(2);
 
-    for(unsigned int i = 0; i < edges.size(); i++)
+    for(const auto& ed : edges)
     {
-        Vec2 ed = edges[i];
-        unsigned int e1 = floor(ed[0]);
-        unsigned int e2 = floor(ed[1]);
-        verticesConnexion[e1]--;
-        verticesConnexion[e2]--;
+        verticesConnexion[ed[0]]--;
+        verticesConnexion[ed[1]]--;
     }
 
     msg_info() << "Successfully compute the vertex connexion" ;
@@ -639,14 +626,14 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     while(edges.size() > 0)
     {
-        vecIt it = edges.begin();
-        vecIt end = edges.end();
+        auto it = edges.begin();
+        auto end = edges.end();
 
         bool notFound = true;
         while (notFound && (it != end))
         {
-            Vec2 ed = (*it);
-            vecIt toDel = it;
+            const auto& ed = (*it);
+            auto toDel = it;
             it++;
             if(ed[0] == firstIndex)
             {
@@ -672,8 +659,6 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     for(unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
         m_localRestPositions[i] *= d_nonProceduralScale.getValue();
-
-    loader->d_positions.endEdit();
 }
 
 

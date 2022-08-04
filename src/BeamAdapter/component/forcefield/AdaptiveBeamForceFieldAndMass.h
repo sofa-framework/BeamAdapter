@@ -114,8 +114,8 @@ public:
 
     typedef unsigned int Index;
     typedef BaseMeshTopology::Edge Element;
-    typedef vector<BaseMeshTopology::Edge> VecElement;
-    typedef vector<unsigned int> VecIndex;
+    typedef type::vector<BaseMeshTopology::Edge> VecElement;
+    typedef type::vector<unsigned int> VecIndex;
 
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
@@ -159,7 +159,7 @@ protected:
 public:
 
     AdaptiveBeamForceFieldAndMass( ) ;
-    virtual ~AdaptiveBeamForceFieldAndMass() ;
+    virtual ~AdaptiveBeamForceFieldAndMass() = default;
 
 
     /////////////////////////////////////
@@ -241,7 +241,7 @@ protected :
     void computeGravityVector();
 
     Vec3 m_gravity;
-    vector<BeamLocalMatrices> m_localBeamMatrices;
+    type::vector<BeamLocalMatrices> m_localBeamMatrices;
 
     using Mass<DataTypes>::getContext;
     using Mass<DataTypes>::mstate;

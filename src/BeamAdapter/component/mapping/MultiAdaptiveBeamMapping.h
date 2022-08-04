@@ -36,10 +36,6 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
 
-using namespace sofa::component::controller;
-using namespace sofa::component::fem;
-using namespace sofa::core::objectmodel;
-
 namespace sofa::component::mapping
 {
 
@@ -94,10 +90,10 @@ public:
     Data<bool> useCurvAbs;
     Data< type::vector< std::string > > m_controlerPath;
 
-    MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller);
+    MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller);
     MultiAdaptiveBeamMapping();
 
-    virtual ~MultiAdaptiveBeamMapping(){}
+    virtual ~MultiAdaptiveBeamMapping() = default;
 
     void apply(const core::MechanicalParams *mparams /* PARAMS FIRST */, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
 

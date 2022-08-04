@@ -19,15 +19,10 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#ifndef SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_H
-#define SOFA_COMPONENT_CONSTRAINT_IMPLICITSURFACEADAPTIVECONSTRAINT_H
-
 #include <sofa/core/behavior/BaseInteractionConstraint.h>
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/core/visual/VisualModel.h>
 #include <sofa/gl/template.h>
-#include <iostream>
 
 #include <sofa/type/Mat.h>
 #include <sofa/type/Vec.h>
@@ -38,7 +33,7 @@
 
 #include <SofaImplicitField/deprecated/ImplicitSurfaceContainer.h>
 
-#include "../WireBeamInterpolation.h"
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 
 //#define SOFAEVE  //temporary fix for compilation, this component does not work without SOFAEVE (which is however not accessible easily)
 
@@ -47,13 +42,7 @@
 #endif
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace constraint
+namespace sofa::component::constraint
 {
 
 namespace _implicitsurfaceadaptiveconstraint_
@@ -150,7 +139,7 @@ public:
     ImplicitSurfaceAdaptiveConstraint(MechanicalState* object);
     ImplicitSurfaceAdaptiveConstraint();
 
-    ~ImplicitSurfaceAdaptiveConstraint(){}
+    virtual ~ImplicitSurfaceAdaptiveConstraint() override = default;
 
     core::behavior::BaseMechanicalState* getMechModel1() { return this->mstate1; }
     core::behavior::BaseMechanicalState* getMechModel2() { return this->mstate2; }
@@ -200,15 +189,9 @@ private:
 
 };
 
-}
+} // namespace _implicitsurfaceadaptiveconstraint_
 
 using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraint;
 using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraintResolution;
 
-} // namespace constraint
-
-} // namespace component
-
-} // namespace sofa
-
-#endif // SOFA_COMPONENT_CONSTRAINT_BILATERALINTERACTIONCONSTRAINT_H
+} // namespace sofa::component::constraint
