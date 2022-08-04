@@ -269,7 +269,8 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
     InVecCoord xBuf2;
 
-    computeDistribution();
+    if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
+        computeDistribution();
 
     if(m_isXBufferUsed)
     {
