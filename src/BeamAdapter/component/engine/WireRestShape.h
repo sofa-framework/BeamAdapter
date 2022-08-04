@@ -32,6 +32,7 @@
 #pragma once
 
 #include <BeamAdapter/config.h>
+#include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
@@ -76,6 +77,8 @@ public:
     typedef typename core::visual::VisualParams VisualParams;
     typedef typename core::objectmodel::BaseContext BaseContext;
     typedef typename core::objectmodel::BaseObjectDescription BaseObjectDescription;
+
+    using BeamSection = sofa::beamadapter::BeamSection;
 
     /**
      * @brief Default Constructor.
@@ -172,17 +175,7 @@ protected:
      type::vector<Transform> 	m_localRestTransforms;
      type::vector<Real> 		m_curvAbs ;
      double 							m_absOfGeometry {0};
-
-     struct BeamSection{
-        double _r; 			///>radius of the section
-        double _rInner; 	///>inner radius of the section if beam is hollow
-        double _Iy;
-        double _Iz; 		///>Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
-        double _J;  		///>Polar moment of inertia (J = Iy + Iz)
-        double _A; 			///> A is the cross-sectional area;
-        double _Asy; 		///>_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-        double _Asz; 		///>_Asz is the z-direction effective shear area;
-     };
+     
      BeamSection beamSection1;
      BeamSection beamSection2;
 
