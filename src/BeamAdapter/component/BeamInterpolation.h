@@ -263,8 +263,12 @@ public:
     Data<Real>          d_lengthY;
     Data<Real>          d_lengthZ;
     Data<bool>          d_dofsAndBeamsAligned;
-    Data<Real>          d_defaultYoungModulus;
-    Data<Real>          d_poissonRatio;
+
+    Real          m_defaultYoungModulus;
+    Real          m_defaultPoissonRatio;
+    Data<type::vector<Real>>          d_defaultYoungModulus;
+    Data<type::vector<Real>>          d_poissonRatio;
+
     Data<bool>          d_straight;
 
     virtual void clear();
