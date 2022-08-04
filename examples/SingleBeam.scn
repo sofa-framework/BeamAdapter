@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Node name="root" gravity="0 -9.81 0" dt="0.01" bbox="-3 -6 -3 3 3 3">
  	<RequiredPlugin name="BeamAdapter"/> <!-- Needed to use components [WireBeamInterpolation WireRestShape] -->
-        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
+	<RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
  	<RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->
  	<RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
  	<RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
