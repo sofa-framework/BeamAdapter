@@ -360,7 +360,8 @@ template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
     //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
-    dmsg_info() << "The type::vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
+    dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
+
 
     const VecElementID &edgeList = d_edgeList.getValue();
     for (unsigned int j = 0; j < edgeList.size(); j++)
