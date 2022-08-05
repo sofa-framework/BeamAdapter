@@ -21,7 +21,6 @@
 ******************************************************************************/
 #pragma once
 
-#include <sofa/defaulttype/SolidTypes.h>
 
 namespace sofa::beamadapter
 {
