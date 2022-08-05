@@ -36,4 +36,4 @@ namespace sofa::beamadapter
         double _Asz; 		///< _Asz is the z-direction effective shear area
     };
 
-} // namespace sofa::BeamAdapter
+} // namespace sofa::beamAdapter
