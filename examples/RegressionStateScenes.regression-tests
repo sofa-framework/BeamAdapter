@@ -3,4 +3,7 @@
 # USE UNDERSCORES ("_") INSTEAD.
 
 ### Demo scenes ###
+SingleBeam.scn 1000 1e-4 1 1
+SingleBeamDeployment.scn 1000 1e-4 1 1
+SingleBeamDeploymentCollision.scn 1000 1e-4 1 1
 3instruments_collis.scn 2000 1e-4 1 1
