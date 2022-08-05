@@ -91,7 +91,9 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
   , d_brokenIn2(initData(&d_brokenIn2, (bool)false, "brokenIn2", ""))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
-  , edge2QuadMap(nullptr)
+  , l_topology(initLink("topology", "link to the topology container"))
+  , l_loader(initLink("loader", "link to the MeshLoader"))
+  , l_edge2QuadMapping(initLink("edge2QuadMapping", "link to the edge2QuadMapping to render this beam"))
 {
     d_spireDiameter.setGroup("Procedural");
     d_spireHeight.setGroup("Procedural");
@@ -125,7 +127,7 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat<Real> &input, Vec
 }
 
 template<class DataTypes>
-void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
+void WireRestShape<DataTypes>::parse(core::objectmodel::BaseObjectDescription* args)
 {
     const char* arg = args->getAttribute("procedural") ;
     if(arg)
@@ -147,50 +149,69 @@ void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
 template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
-    /// Have to add because was remove from the .h due to forward déclarations
-    edge2QuadMap = nullptr;
-    loader = nullptr;
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
 
     if(!d_isAProceduralShape.getValue())
     {
-        /// get the mesh loader
-        this->getContext()->get(loader);
-
+        // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
+        loader = l_loader.get();
+        
         if (!loader)
-            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" ;
+            this->getContext()->get(loader);
+
+        if (!loader) {
+            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node or use l_loader to specify the path in the scene graph.";
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            return;
+        }
         else
         {
             msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges" ;
-            initFromLoader();
-            initRestConfig();
+            return initFromLoader();
         }
     }
 
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
-    this->getContext()->get(_topology);
+    
+    // Get pointer to given topology using the link. If not found will search in current context.
+    _topology = l_topology.get();
 
-    if(_topology != nullptr){
+    if (!_topology)
+        this->getContext()->get(_topology);
+
+    if(_topology != nullptr)
+    {
         msg_info() << "found topology named "<< _topology->getName() ;
-    }else{
-        //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-        msg_error() << "cannot find topology container";
+    }
+    else
+    {
+        msg_error() << "Cannot find topology container. Please specify the link to the topology or insert one in the same node.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
     }
 
-    this->getContext()->get(edgeMod);
+
+    // Get pointer to the topology Modifier (for topological changes)
+    _topology->getContext()->get(edgeMod);
 
     if (edgeMod == nullptr)
     {
-        //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-        msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier." ;
-        edgeSetInNode=false;
+        msg_warning() << "No EdgeSetTopologyModifier found in the same node as the topology container: " << _topology->getName() << ". This wire won't support topological changes.";
     }
+
 
     /// fill topology :
     _topology->clear();
     _topology->cleanup();
-    Real dx = this->d_length.getValue() / d_numEdges.getValue();
+    int nbrEdges = d_numEdges.getValue();
+    if (nbrEdges <= 0)
+    {
+        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
+        nbrEdges = 10;
+    }
+    Real dx = this->d_length.getValue() / nbrEdges;
 
     /// add points
     for ( int i=0; i<d_numEdges.getValue()+1; i++)
@@ -199,21 +220,16 @@ void WireRestShape<DataTypes>::init()
     /// add segments
     for (int i=0; i<d_numEdges.getValue(); i++)
         _topology->addEdge(i,i+1);
+    
+    /// Get possible edge2Quad Mapping if one set. 
+    // TODO epernod 2022-08-05: check if the pointer to the mapping is still useful. Only used in releaseWirePart which should be now automatically handle by Topological changes mechanism.
+    edge2QuadMap = l_edge2QuadMapping.get();
 
-    //// get the possible Topological mapping (with tags)
-    const TagSet &tags = this->getTags() ;
-
-    //TODO(dmarchal): replace with for each loop.
-    for (TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
+    const TagSet& tags = this->getTags();
+    if (!tags.empty())
     {
-        dmsg_error() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
-        dynamic_cast<BaseContext *>(this->getContext())->get( edge2QuadMap , *it, BaseContext::SearchRoot );
+        msg_warning() << "Using tags to find edge2QuadMapping has been depreciate. Please use 'edge2QuadMapping' link to set the path to the correct topological mapping.";
     }
-
-
-    //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    //if(!edge2QuadMap)
-    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping";
 
 
     ////////////////////////////////////////////////////////
@@ -283,13 +299,10 @@ void WireRestShape<DataTypes>::init()
     this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
     this->beamSection2._Asy 	= 0.0;
     this->beamSection2._Asz 	= 0.0;
+
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
-
-template <class DataTypes>
-void WireRestShape<DataTypes>::bwdInit()
-{
-}
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::releaseWirePart(){
@@ -580,7 +593,10 @@ template <class DataTypes>
 void WireRestShape<DataTypes>::initFromLoader()
 {
     if (!checkTopology())
+    {
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
+    }
 
     type::vector<Vec3> vertices;
     sofa::core::topology::BaseMeshTopology::SeqEdges edges;
@@ -619,6 +635,7 @@ void WireRestShape<DataTypes>::initFromLoader()
     if(firstIndex == verticesConnexion.size())
     {
         msg_error() << "The first vertex of the beam structure is not found, probably because of a closed structure" ;
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
 
@@ -659,6 +676,10 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     for(unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
         m_localRestPositions[i] *= d_nonProceduralScale.getValue();
+
+    initRestConfig();
+    // TODO epernod 2022-08-05: Init from loader seems quite buggy, need to check if this is still needed and working
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
