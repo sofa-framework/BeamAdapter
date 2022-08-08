@@ -91,7 +91,9 @@ public:
 
     using Vec3 = sofa::type::Vec<3, Real>;
     using Vec6 = sofa::type::Vec<6, Real>;
+    using Vec6NoInit = sofa::type::VecNoInit<6, Real>;
     using Matrix6x6 = sofa::type::Mat<6, 6, Real>;
+    using Matrix6x6NoInit = sofa::type::MatNoInit<6, 6, Real>;
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
@@ -125,9 +127,9 @@ protected:
         }
         ~BeamLocalMatrices(){}
 
-        Matrix6x6 m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
-        Matrix6x6 m_M00, m_M01, m_M10, m_M11; /// mass Matrices
-        Matrix6x6 m_A0Ref, m_A1Ref;   /// adjoint Matrices
+        Matrix6x6NoInit m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
+        Matrix6x6NoInit m_M00, m_M01, m_M10, m_M11; /// mass Matrices
+        Matrix6x6NoInit m_A0Ref, m_A1Ref;   /// adjoint Matrices
     };
 
 public:
