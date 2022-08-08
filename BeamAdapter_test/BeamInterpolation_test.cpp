@@ -24,6 +24,7 @@
 #include <sofa/helper/BackTrace.h>
 
 #include <sofa/component/statecontainer/MechanicalObject.h>
+#include <sofa/core/ExecParams.h>
 
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
