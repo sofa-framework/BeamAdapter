@@ -138,17 +138,17 @@ public:
     /////////////////////////////////////
     /// This is inhereted from BaseObject
     /////////////////////////////////////
-    virtual void init() override ;
-    virtual void reinit() override ;
-    virtual void draw(const VisualParams* vparams) override ;
+    void init() override ;
+    void reinit() override ;
+    void draw(const VisualParams* vparams) override ;
 
 
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
-    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
-    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
+    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
