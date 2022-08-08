@@ -27,9 +27,6 @@
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
-#include <sofa/component/topology/container/dynamic/TetrahedronSetTopologyContainer.h>
-using sofa::component::topology::container::dynamic::TetrahedronSetTopologyContainer;
-
 using sofa::helper::WriteAccessor ;
 using sofa::defaulttype::Rigid3dTypes ;
 
@@ -47,14 +44,20 @@ using sofa::component::statecontainer::MechanicalObject ;
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 using sofa::component::forcefield::AdaptiveBeamForceFieldAndMass;
 
+#include <sofa/helper/system/thread/CTime.h>
+//#include <limits>
+
 #include <string>
 using std::string;
 
 namespace sofa
 {
+using sofa::helper::system::thread::ctime_t;
 
 struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationTest
 {
+    using VecCoord = MechanicalObject<defaulttype::Rigid3dTypes>::VecCoord;   
+
     void simpleSceneTest(){
         string scene =
                 "<?xml version='1.0'?>"
@@ -90,10 +93,157 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         ASSERT_NO_THROW(beamForceFieldMass->init());
         ASSERT_NO_THROW(beamForceFieldMass->reinit());
     }
+
+
+
+    Node::SPtr createSingleBeam()
+    {
+        string scene =
+            "<?xml version='1.0'?>"
+            "<Node 	name='Root' gravity='0 -9.81 0' dt='0.01'>"
+            "    <RequiredPlugin name='Sofa.Component.ODESolver.Backward' />"
+            "    <RequiredPlugin name='Sofa.Component.LinearSolver.Direct' />"
+            "    <RequiredPlugin name='Sofa.Component.StateContainer' />"
+            "    <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
+            "    <RequiredPlugin name='Sofa.Component.StateContainer' />"
+            "    <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
+            "    <RequiredPlugin name='BeamAdapter' />"
+            "    <DefaultAnimationLoop />"
+            "    <DefaultVisualManagerLoop />"
+            "    <Node name='BeamModel'/>"
+            "        <EulerImplicitSolver rayleighStiffness='0.0' rayleighMass='0.0' />"
+            "        <BTDLinearSolver />"
+            "        <RegularGridTopology name='MeshLines' nx='200' ny='1' nz='1' xmax='100' xmin='0' ymin='0' ymax='0' zmax='0' zmin='0'/>"
+            "        <MechanicalObject template='Rigid3d' name='DOFs' />"
+            "        <FixedConstraint indices='0' />"
+            "        <BeamInterpolation name='Interpol' radius='0.1'/>"
+            "        <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='10.0'/>"
+            "    </Node> "
+            "</Node> ";            
+
+        Node::SPtr root = SceneLoaderXML::loadFromMemory("singleBeam", scene.c_str(), (unsigned int)(scene.size()));
+        sofa::simulation::getSimulation()->init(root.get());
+
+        return root;
+    }
+
+
+    void checkCreation()
+    {
+        Node::SPtr root = createSingleBeam();
+
+        // Search for Beam FF
+        AdaptiveBeamForceFieldAndMass<defaulttype::Rigid3dTypes>* beamForceFieldMass = nullptr;
+        root->getTreeObject(beamForceFieldMass);
+        ASSERT_NE(beamForceFieldMass, nullptr);
+
+        // Check component state and Data default values
+        
+        ASSERT_EQ(beamForceFieldMass->d_componentState.getValue(), sofa::core::objectmodel::ComponentState::Valid);
+        ASSERT_EQ(beamForceFieldMass->d_computeMass.getValue(), true);
+        ASSERT_FLOAT_EQ(beamForceFieldMass->d_massDensity.getValue(), 10.0);
+        ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighMass.getValue(), 0.0);
+        ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighStiffness.getValue(), 0.0);
+    }
+
+
+    void checkValues()
+    {
+        int nbrStep = 500;
+        int nbrGrid = 200;
+        Node::SPtr root = createSingleBeam();
+
+        // Search for Beam FF
+        AdaptiveBeamForceFieldAndMass<defaulttype::Rigid3dTypes>* beamForceFieldMass = nullptr;
+        root->getTreeObject(beamForceFieldMass);
+        ASSERT_NE(beamForceFieldMass, nullptr);
+
+        // Access mstate
+        MechanicalObject<defaulttype::Rigid3dTypes>* dofs = nullptr;
+        root->getTreeObject(dofs);
+
+        // Access dofs
+        const VecCoord& positions = dofs->x.getValue();
+        ASSERT_EQ(positions.size(), nbrGrid);
+
+        // Check position at init
+        auto id = nbrGrid - 1;
+        EXPECT_NEAR(positions[id][0], 100, 1e-4);
+        EXPECT_NEAR(positions[id][1], 0, 1e-4);
+        EXPECT_NEAR(positions[id][2], 0, 1e-4);
+
+        // run some simulation steps
+        auto simulation = sofa::simulation::getSimulation();
+        for (int i = 0; i < nbrStep; i++)
+        {
+            simulation->animate(root.get(), 0.01);
+        }
+
+        // Check position after simulation
+        EXPECT_NEAR(positions[id][0], -1.34228, 1e-4);
+        EXPECT_NEAR(positions[id][1], -110.274221, 1e-4);
+        EXPECT_NEAR(positions[id][2], 0, 1e-4);
+    }
+
+
+    void testPerformances()
+    {
+        Node::SPtr root = createSingleBeam();
+
+        int nbrStep = 1000;
+        int nbrTest = 10;
+
+        double diffTimeMs = 0;
+        double timeMin = std::numeric_limits<double>::max();
+        double timeMax = std::numeric_limits<double>::min();
+
+        auto simulation = sofa::simulation::getSimulation();
+        for (int i = 0; i < nbrTest; ++i)
+        {
+            ctime_t startTime = sofa::helper::system::thread::CTime::getRefTime();
+            for (int i = 0; i < nbrStep; i++)
+            {
+                simulation->animate(root.get(), 0.01);
+            }
+
+            ctime_t diffTime = sofa::helper::system::thread::CTime::getRefTime() - startTime;
+            double diffTimed = sofa::helper::system::thread::CTime::toSecond(diffTime);
+
+            if (timeMin > diffTimed)
+                timeMin = diffTimed;
+            if (timeMax < diffTimed)
+                timeMax = diffTimed;
+
+            diffTimeMs += diffTimed;
+            simulation->reset(root.get());
+        }
+
+        //std::cout << "timeMean: " << diffTimeMs/nbrTest << std::endl;
+        //std::cout << "timeMin: " << timeMin << std::endl;
+        //std::cout << "timeMax: " << timeMax << std::endl;
+
+        // Some logs (2022-08-08):
+        //timeMean: 1.00409
+        //timeMin : 0.977432
+        //timeMax : 1.02568
+
+    }
 };
 
 TEST_F(AdaptiveBeamForceFieldAndMassTest, SimpleScene) {
     ASSERT_NO_THROW(this->simpleSceneTest()) ;
+}
+
+TEST_F(AdaptiveBeamForceFieldAndMassTest, checkCreation) {
+    ASSERT_NO_THROW(this->checkCreation());
+}
+
+TEST_F(AdaptiveBeamForceFieldAndMassTest, checkValues) {
+    ASSERT_NO_THROW(this->checkValues());
+}
+
+TEST_F(AdaptiveBeamForceFieldAndMassTest, DISABLED_testPerformances) {
+    ASSERT_NO_THROW(this->testPerformances());
 }
 
 }
