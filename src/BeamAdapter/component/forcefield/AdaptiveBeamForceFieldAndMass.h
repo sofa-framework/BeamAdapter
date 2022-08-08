@@ -99,7 +99,7 @@ public:
 
     using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
     using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
-    using Mass<DataTypes>::mstate;
+    using core::behavior::Mass<DataTypes>::mstate;
 
 protected:
 
