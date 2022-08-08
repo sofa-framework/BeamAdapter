@@ -91,7 +91,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::reinit()
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 {
-    Vec3 gravity = getContext()->getGravity();
+    Vec3 gravity = this->getContext()->getGravity();
 
     auto _G = sofa::helper::getWriteOnlyAccessor(d_dataG);
     _G.resize(l_interpolation->getStateSize());
