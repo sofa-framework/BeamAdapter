@@ -84,13 +84,18 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::init()
 {
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
+
     if(!l_interpolation)
         l_interpolation.set(dynamic_cast<BaseContext *>(this->getContext())->get<BInterpolation>(BaseContext::Local));
 
-    if(!l_interpolation)
+    if (!l_interpolation) {
         msg_error() << "No Beam Interpolation found, the component can not work.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+    }
 
     ForceField<DataTypes>::init();
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
