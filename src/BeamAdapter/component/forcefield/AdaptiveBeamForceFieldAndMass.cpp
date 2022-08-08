@@ -30,12 +30,12 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
-#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
 
 namespace sofa::component::forcefield
@@ -43,10 +43,6 @@ namespace sofa::component::forcefield
 
 namespace _adaptivebeamforcefieldandmass_
 {
-
-using sofa::core::RegisterObject ;
-using sofa::defaulttype::Rigid3fTypes;
-using sofa::defaulttype::Rigid3dTypes;
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
@@ -57,11 +53,11 @@ using sofa::defaulttype::Rigid3dTypes;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int AdaptiveBeamForceFieldAndMassClass = RegisterObject("Adaptive Beam finite elements")
-.add< AdaptiveBeamForceFieldAndMass<Rigid3Types> >()
+const static int AdaptiveBeamForceFieldAndMassClass = sofa::core::RegisterObject("Adaptive Beam finite elements")
+.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >()
 ;
 
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

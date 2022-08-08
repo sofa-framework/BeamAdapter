@@ -35,17 +35,6 @@
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
-#include <sofa/core/objectmodel/Data.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/topology/BaseMeshTopology.h>
-
-#include <sofa/type/vector.h>
-#include <sofa/type/Vec.h>
-#include <sofa/type/Mat.h>
-
-#include <sofa/core/objectmodel/BaseObject.h>
-#include <sofa/core/visual/VisualParams.h>
-
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
@@ -71,19 +60,9 @@ namespace sofa::component::forcefield
 namespace _adaptivebeamforcefieldandmass_
 {
 
-using sofa::type::vector;
-using sofa::component::engine::WireRestShape ;
-using sofa::component::fem::BeamInterpolation ;
-using sofa::core::behavior::MultiMatrixAccessor ;
-using sofa::core::visual::VisualParams ;
-using sofa::core::behavior::Mass ;
-using sofa::core::MechanicalParams ;
-using sofa::type::Vec ;
-using sofa::type::Mat ;
-using sofa::defaulttype::Rigid3Types ;
-using core::objectmodel::Data ;
-using core::topology::BaseMeshTopology;
-using sofa::defaulttype::SolidTypes;
+using sofa::core::behavior::MultiMatrixAccessor;
+using sofa::core::visual::VisualParams;
+using sofa::core::MechanicalParams;
 
 /*!
  * \class AdaptiveBeamForceFieldAndMass
@@ -94,42 +73,37 @@ using sofa::defaulttype::SolidTypes;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamForceFieldAndMass : public Mass<DataTypes>
+class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
 {
 public:
-
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
                SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
 
-    typedef typename DataTypes::VecCoord VecCoord;
-    typedef typename DataTypes::VecDeriv VecDeriv;
-    typedef typename DataTypes::VecReal VecReal;
-    typedef VecCoord Vector;
-    typedef typename DataTypes::Coord Coord;
-    typedef typename DataTypes::Deriv Deriv;
-    typedef typename Coord::value_type Real;
-    typedef Data<VecCoord> DataVecCoord;
-    typedef Data<VecDeriv> DataVecDeriv;
-    typedef BeamInterpolation<DataTypes> BInterpolation;
+    using Coord = typename DataTypes::Coord;
+    using VecCoord = typename DataTypes::VecCoord;
+    using Real = typename Coord::value_type;
 
-    typedef unsigned int Index;
-    typedef BaseMeshTopology::Edge Element;
-    typedef type::vector<BaseMeshTopology::Edge> VecElement;
-    typedef type::vector<unsigned int> VecIndex;
+    using Deriv = typename DataTypes::Deriv;
+    using VecDeriv = typename DataTypes::VecDeriv;
 
-    typedef typename SolidTypes<Real>::Transform Transform;
-    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    using DataVecCoord = Data<VecCoord>;
+    using DataVecDeriv = Data<VecDeriv>;
 
-    typedef Vec<3, Real> Vec3;
-    typedef Vec<6, Real> Vec6;          ///< the displacement vector
-    typedef Mat<6, 6, Real> Matrix6x6;
+    using Vec3 = sofa::type::Vec<3, Real>;
+    using Vec6 = sofa::type::Vec<6, Real>;
+    using Matrix6x6 = sofa::type::Mat<6, 6, Real>;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
+
+    using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
+    using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
+  
+protected:
 
     /*!
      * \class BeamLocalMatrices
-     * @brief BeamLocalMatrices Class
-     */
-protected:
-
+    * @brief BeamLocalMatrices Class
+    */
     class BeamLocalMatrices{
 
     public:
@@ -157,7 +131,6 @@ protected:
     };
 
 public:
-
     AdaptiveBeamForceFieldAndMass( ) ;
     virtual ~AdaptiveBeamForceFieldAndMass() = default;
 
@@ -233,8 +206,8 @@ public:
 
 protected :
 
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
@@ -242,9 +215,6 @@ protected :
 
     Vec3 m_gravity;
     type::vector<BeamLocalMatrices> m_localBeamMatrices;
-
-    using Mass<DataTypes>::getContext;
-    using Mass<DataTypes>::mstate;
 
 private:
 
@@ -254,7 +224,7 @@ private:
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP)
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types> ;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> ;
 #endif
 
 } /// namespace _adaptivebeamforcefieldandmass_

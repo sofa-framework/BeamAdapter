@@ -32,24 +32,11 @@
 //
 #pragma once
 
-#include <sofa/core/behavior/ForceField.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
-
-#include <sofa/core/topology/BaseMeshTopology.h>
-#include <sofa/helper/decompose.h>
-
-
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/VecTypes.h>
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/helper/OptionsGroup.h>
-
-#include <sofa/gl/Cylinder.h>
-#include <sofa/simulation/Simulation.h>
-#include <sofa/gl/Axis.h>
+#include <sofa/core/behavior/MultiMatrixAccessor.h>
+#include <sofa/core/MechanicalParams.h>
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/helper/ScopedAdvancedTimer.h>
-
 
 
 namespace sofa::component::forcefield
