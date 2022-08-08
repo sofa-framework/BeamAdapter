@@ -31,13 +31,13 @@
 //
 #pragma once
 
+
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa::component::engine
@@ -46,10 +46,7 @@ namespace sofa::component::engine
 namespace _wirerestshape_
 {
 
-using sofa::type::Quat;
-using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
-using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier;
 using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
@@ -70,6 +67,7 @@ public:
     using Real = typename Coord::value_type;
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using Vec3 = sofa::type::Vec<3, Real>;
+    using Quat = sofa::type::Quat<Real>;
    
     using BeamSection = sofa::beamadapter::BeamSection;
 
@@ -115,7 +113,7 @@ public:
      /// Functions enabling to load and use a geometry given from OBJ external file
      void initRestConfig();
      void getRestPosNonProcedural(Real& abs, Coord &p);
-     void computeOrientation(const Vec3& AB, const Quat<Real>& Q, Quat<Real> &result);     
+     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);     
      void initFromLoader();
      bool checkTopology();
 
@@ -128,7 +126,7 @@ public:
      // todo => topological change !
      void releaseWirePart();
 
-     void rotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output);
+     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
 
 
 public:
