@@ -93,6 +93,7 @@ public:
 
     typedef typename Inherited::Vec2 Vec2;
     typedef typename Inherited::Vec3 Vec3;
+    typedef typename Inherited::Quat Quat;
 
     WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
 
