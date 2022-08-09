@@ -93,6 +93,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
             "    <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
             "    <RequiredPlugin name='Sofa.Component.StateContainer' />"
             "    <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
+            "    <RequiredPlugin name='Sofa.Component.Topology.Container.Grid' />"
             "    <RequiredPlugin name='BeamAdapter' />"
             "    <DefaultAnimationLoop />"
             "    <DefaultVisualManagerLoop />"
