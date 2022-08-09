@@ -404,7 +404,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
     for (unsigned int b=0; b<numBeams; b++)
     {
         unsigned int node0Idx, node1Idx;
-        BeamLocalMatrices &bLM = m_localBeamMatrices[b];
+        const BeamLocalMatrices &bLM = m_localBeamMatrices[b];
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
         int index0[6], index1[6];
@@ -680,7 +680,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalPara
     for (unsigned int b=0; b<numBeams; b++)
     {
         unsigned int node0Idx, node1Idx;
-        BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[b];
+        const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[b];
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
         if(node0Idx==node1Idx)
