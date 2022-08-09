@@ -118,55 +118,44 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, BeamLocalMatrices& beamLocalMatrices)
 {
     Real x_curv = 0.0 ;
     Real _nu = 0.0 ;
     Real _E = 0.0 ;
 
     ///Get the curvilinear abscissa of the extremity of the beam
-    l_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
+    l_interpolation->getYoungModulusAtX(beamId, x_curv, _E, _nu);
 
     /// material parameters
     Real _G = _E / (2.0 * (1.0 + _nu));
-
-    /// interpolation & geometrical parameters
-    Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
-    l_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
-
-    /// Temp : we only overide values for which a Data has been set in the WireRestShape
-    if(l_instrumentParameters.get())
-    {
-        Real x_curv = 0, _rho;
-        l_interpolation->getAbsCurvXFromBeam(beam, x_curv);
-        l_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);	// The length of the beams is only known to the interpolation !
-    }
+    
     Real phiy, phiz;
-    Real L2 = (Real) (_L * _L);
-    Real L3 = (Real) (L2 * _L);
-    Real EIy = (Real)(_E * _Iy);
-    Real EIz = (Real)(_E * _Iz);
+    Real L2 = (Real) (beamLocalMatrices._L * beamLocalMatrices._L);
+    Real L3 = (Real) (L2 * beamLocalMatrices._L);
+    Real EIy = (Real)(_E * beamLocalMatrices._Iy);
+    Real EIz = (Real)(_E * beamLocalMatrices._Iz);
 
     /// Find shear-deformation parameters
-    if (_Asy == 0)
+    if (beamLocalMatrices._Asy == 0)
         phiy = 0.0;
     else
-        phiy =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)*_Iz/(_Asy*L2));
+        phiy =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)* beamLocalMatrices._Iz/(beamLocalMatrices._Asy*L2));
 
-    if (_Asz == 0)
+    if (beamLocalMatrices._Asz == 0)
         phiz = 0.0;
     else
-        phiz =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)*_Iy/(_Asz*L2));
+        phiz =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)* beamLocalMatrices._Iy/(beamLocalMatrices._Asz*L2));
 
     beamLocalMatrices.m_K00.clear(); beamLocalMatrices.m_K01.clear(); beamLocalMatrices.m_K10.clear(); beamLocalMatrices.m_K11.clear();
 
     /// diagonal values
-    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = (_L == 0.0)? 0.0 :_E*_A/_L;
+    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = (beamLocalMatrices._L == 0.0)? 0.0 :_E* beamLocalMatrices._A/ beamLocalMatrices._L;
     beamLocalMatrices.m_K00[1][1] = beamLocalMatrices.m_K11[1][1] = (L3 == 0.0)? 0.0 :(Real)(12.0*EIz/(L3*(1.0+phiy)));
     beamLocalMatrices.m_K00[2][2] = beamLocalMatrices.m_K11[2][2] = (L3 == 0.0)? 0.0 : (Real)(12.0*EIy/(L3*(1.0+phiz)));
-    beamLocalMatrices.m_K00[3][3] = beamLocalMatrices.m_K11[3][3] = (_L == 0.0)? 0.0 : _G*_J/_L;
-    beamLocalMatrices.m_K00[4][4] = beamLocalMatrices.m_K11[4][4] = (_L == 0.0)? 0.0 : (Real)((4.0+phiz)*EIy/(_L*(1.0+phiz)));
-    beamLocalMatrices.m_K00[5][5] = beamLocalMatrices.m_K11[5][5] = (_L == 0.0)? 0.0 : (Real)((4.0+phiy)*EIz/(_L*(1.0+phiy)));
+    beamLocalMatrices.m_K00[3][3] = beamLocalMatrices.m_K11[3][3] = (beamLocalMatrices._L == 0.0)? 0.0 : _G* beamLocalMatrices._J/ beamLocalMatrices._L;
+    beamLocalMatrices.m_K00[4][4] = beamLocalMatrices.m_K11[4][4] = (beamLocalMatrices._L == 0.0)? 0.0 : (Real)((4.0+phiz)*EIy/(beamLocalMatrices._L*(1.0+phiz)));
+    beamLocalMatrices.m_K00[5][5] = beamLocalMatrices.m_K11[5][5] = (beamLocalMatrices._L == 0.0)? 0.0 : (Real)((4.0+phiy)*EIz/(beamLocalMatrices._L*(1.0+phiy)));
 
     /// diagonal blocks
     beamLocalMatrices.m_K00[4][2]  =(L2 == 0.0)? 0.0 : (Real)(-6.0*EIy/(L2*(1.0+phiz)));
@@ -182,9 +171,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
     beamLocalMatrices.m_K10[2][4]   = -beamLocalMatrices.m_K00[4][2];
     beamLocalMatrices.m_K10[3][3]   = -beamLocalMatrices.m_K00[3][3];
     beamLocalMatrices.m_K10[4][2]  = beamLocalMatrices.m_K00[4][2];
-    beamLocalMatrices.m_K10[4][4]  =(_L == 0.0)? 0.0 : (Real)((2.0-phiz)*EIy/(_L*(1.0+phiz)));
+    beamLocalMatrices.m_K10[4][4]  =(beamLocalMatrices._L == 0.0)? 0.0 : (Real)((2.0-phiz)*EIy/(beamLocalMatrices._L*(1.0+phiz)));
     beamLocalMatrices.m_K10[5][1]  = beamLocalMatrices.m_K00[5][1];
-    beamLocalMatrices.m_K10[5][5]  =(_L == 0.0)? 0.0 : (Real)((2.0-phiy)*EIz/(_L*(1.0+phiy)));
+    beamLocalMatrices.m_K10[5][5]  =(beamLocalMatrices._L == 0.0)? 0.0 : (Real)((2.0-phiy)*EIz/(beamLocalMatrices._L*(1.0+phiy)));
 
     /// Make a symetric matrix with diagonal blocks
     for (int i=0; i<=5; i++)
@@ -202,60 +191,44 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beam, BeamLocalMatrices& beamLocalMatrix)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beamId, BeamLocalMatrices& beamLocalMatrix)
 {
-    /// material parameters
-    Real _rho;
-    _rho = d_massDensity.getValue();
-
-    /// interpolation & geometrical parameters
-    Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
-    l_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
-
-    /// Temp : we only overide values for which a Data has been set in the WireRestShape
-    if(l_instrumentParameters.get())
-    {
-        Real x_curv = 0;
-        l_interpolation->getAbsCurvXFromBeam(beam, x_curv);
-
-        /// The length of the beams is only known to the interpolation !
-        l_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);
-    }
-
-    Real L2 = (Real) (_L * _L);
+    Real L2 = (Real) (beamLocalMatrix._L * beamLocalMatrix._L);
     beamLocalMatrix.m_M00.clear(); beamLocalMatrix.m_M01.clear(); beamLocalMatrix.m_M10.clear(); beamLocalMatrix.m_M11.clear();
+
+    //Real _AL = beamLocalMatrix._A * beamLocalMatrix._L;
 
     /// diagonal values
     beamLocalMatrix.m_M00[0][0] = beamLocalMatrix.m_M11[0][0] = (Real)(1.0/3.0);
-    beamLocalMatrix.m_M00[1][1] = beamLocalMatrix.m_M11[1][1] =(L2 == 0.0) || (_A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0*_Iz/(5.0*_A*L2));
-    beamLocalMatrix.m_M00[2][2] = beamLocalMatrix.m_M11[2][2] =(L2 == 0.0) || (_A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0*_Iy/(5.0*_A*L2));
-    beamLocalMatrix.m_M00[3][3] = beamLocalMatrix.m_M11[3][3] =(_A == 0.0) ? 0.0: (Real)(_J/(3.0*_A));
-    beamLocalMatrix.m_M00[4][4] = beamLocalMatrix.m_M11[4][4] =(_A == 0.0) ? 0.0: (Real)(L2/105.0 + 2*_Iy/(15.0*_A));
-    beamLocalMatrix.m_M00[5][5] = beamLocalMatrix.m_M11[5][5] =(_A == 0.0) ? 0.0: (Real)(L2/105.0 + 2*_Iz/(15.0*_A));
+    beamLocalMatrix.m_M00[1][1] = beamLocalMatrix.m_M11[1][1] =(L2 == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0* beamLocalMatrix._Iz/(5.0*beamLocalMatrix._A*L2));
+    beamLocalMatrix.m_M00[2][2] = beamLocalMatrix.m_M11[2][2] =(L2 == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 : (Real)(13.0/35.0 + 6.0* beamLocalMatrix._Iy/(5.0*beamLocalMatrix._A*L2));
+    beamLocalMatrix.m_M00[3][3] = beamLocalMatrix.m_M11[3][3] =(beamLocalMatrix._A == 0.0) ? 0.0: (Real)(beamLocalMatrix._J/(3.0*beamLocalMatrix._A));
+    beamLocalMatrix.m_M00[4][4] = beamLocalMatrix.m_M11[4][4] =(beamLocalMatrix._A == 0.0) ? 0.0: (Real)(L2/105.0 + 2* beamLocalMatrix._Iy/(15.0*beamLocalMatrix._A));
+    beamLocalMatrix.m_M00[5][5] = beamLocalMatrix.m_M11[5][5] =(beamLocalMatrix._A == 0.0) ? 0.0: (Real)(L2/105.0 + 2* beamLocalMatrix._Iz/(15.0*beamLocalMatrix._A));
 
     /// diagonal blocks
-    beamLocalMatrix.m_M00[4][2]  =(_L == 0.0) || (_A ==0.0) ? 0.0 : (Real)(-11.0*_L/210.0 - _Iy/(10*_A*_L)  );
-    beamLocalMatrix.m_M00[5][1]  =(_L == 0.0) || (_A ==0.0) ? 0.0 : (Real)( 11.0*_L/210.0 + _Iz/(10*_A*_L)  );
+    beamLocalMatrix.m_M00[4][2]  =(beamLocalMatrix._L == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 : (Real)(-11.0* beamLocalMatrix._L/210.0 - beamLocalMatrix._Iy/(10*beamLocalMatrix._A* beamLocalMatrix._L)  );
+    beamLocalMatrix.m_M00[5][1]  =(beamLocalMatrix._L == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 : (Real)( 11.0* beamLocalMatrix._L/210.0 + beamLocalMatrix._Iz/(10*beamLocalMatrix._A* beamLocalMatrix._L)  );
     beamLocalMatrix.m_M11[5][1]  = -beamLocalMatrix.m_M00[5][1];
     beamLocalMatrix.m_M11[4][2]  = -beamLocalMatrix.m_M00[4][2];
 
-    beamLocalMatrix.m_M00 *= _rho*_A*_L;
-    beamLocalMatrix.m_M11 *= _rho*_A*_L;
+    beamLocalMatrix.m_M00 *= beamLocalMatrix._rho*beamLocalMatrix._A* beamLocalMatrix._L;
+    beamLocalMatrix.m_M11 *= beamLocalMatrix._rho*beamLocalMatrix._A* beamLocalMatrix._L;
 
     /// lower non-diagonal blocks
     beamLocalMatrix.m_M10[0][0]  = (Real)(1.0/6.0);
-    beamLocalMatrix.m_M10[1][1]  = (L2 == 0.0) || (_A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0*_Iz/(5.0*_A*L2));
-    beamLocalMatrix.m_M10[2][2]  = (L2 == 0.0) || (_A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0*_Iy/(5.0*_A*L2));
-    beamLocalMatrix.m_M10[3][3]  = (_A == 0.0) ? 0.0: (Real)(_J/(6.0*_A));
-    beamLocalMatrix.m_M10[4][4]  = (_A == 0.0) ? 0.0: (Real)(-L2/140.0 - _Iy/(30.0*_A));
-    beamLocalMatrix.m_M10[5][5]  = (_A == 0.0) ? 0.0: (Real)(-L2/140.0 - _Iz/(30.0*_A));
+    beamLocalMatrix.m_M10[1][1]  = (L2 == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0* beamLocalMatrix._Iz/(5.0*beamLocalMatrix._A*L2));
+    beamLocalMatrix.m_M10[2][2]  = (L2 == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 :(Real)(9.0/70.0 - 6.0* beamLocalMatrix._Iy/(5.0*beamLocalMatrix._A*L2));
+    beamLocalMatrix.m_M10[3][3]  = (beamLocalMatrix._A == 0.0) ? 0.0: (Real)(beamLocalMatrix._J/(6.0*beamLocalMatrix._A));
+    beamLocalMatrix.m_M10[4][4]  = (beamLocalMatrix._A == 0.0) ? 0.0: (Real)(-L2/140.0 - beamLocalMatrix._Iy/(30.0*beamLocalMatrix._A));
+    beamLocalMatrix.m_M10[5][5]  = (beamLocalMatrix._A == 0.0) ? 0.0: (Real)(-L2/140.0 - beamLocalMatrix._Iz/(30.0*beamLocalMatrix._A));
 
-    beamLocalMatrix.m_M10[1][5]  = (_L == 0.0) || (_A ==0.0) ? 0.0 :(Real)( 13*_L/420.0 - _Iz/(10.0*_A*_L));
-    beamLocalMatrix.m_M10[2][4]  = (_L == 0.0) || (_A ==0.0) ? 0.0 :(Real)(-13*_L/420.0 + _Iy/(10.0*_A*_L));
+    beamLocalMatrix.m_M10[1][5]  = (beamLocalMatrix._L == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 :(Real)( 13* beamLocalMatrix._L/420.0 - beamLocalMatrix._Iz/(10.0*beamLocalMatrix._A* beamLocalMatrix._L));
+    beamLocalMatrix.m_M10[2][4]  = (beamLocalMatrix._L == 0.0) || (beamLocalMatrix._A ==0.0) ? 0.0 :(Real)(-13* beamLocalMatrix._L/420.0 + beamLocalMatrix._Iy/(10.0*beamLocalMatrix._A* beamLocalMatrix._L));
     beamLocalMatrix.m_M10[4][2]  = -beamLocalMatrix.m_M10[2][4];
     beamLocalMatrix.m_M10[5][1]  = -beamLocalMatrix.m_M10[1][5];
 
-    beamLocalMatrix.m_M10 *= _rho*_A*_L;
+    beamLocalMatrix.m_M10 *= beamLocalMatrix._rho*beamLocalMatrix._A* beamLocalMatrix._L;
 
     /// Make a symetric matrix with diagonal blocks
     for (int i=0; i<=5; i++)
@@ -509,26 +482,25 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ///* Calculer la matrice "locale"
     ///* Calculer la force exercée par chaque beam
     ///* Calculer la force exercée par la gravitée
-    for (unsigned int b=0; b<numBeams; b++)
+    for (unsigned int beamId=0; beamId <numBeams; beamId++)
     {
         ///find the indices of the nodes
         unsigned int node0Idx, node1Idx;
-        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+        l_interpolation->getNodeIndices(beamId,  node0Idx, node1Idx );
 
         ///find the beamMatrices:
-        BeamLocalMatrices  *beamMatrices = &m_localBeamMatrices[b]  ;//new BeamLocalMatrices();
+        BeamLocalMatrices& beamMatrices = m_localBeamMatrices[beamId];
 
         ///////////// new : Calcul du repère local de la beam & des transformations adequates///////////////
         Transform global_H_local0, global_H_local1;
 
         /// 1. get the current transform of the beam:
-        dmsg_info() << "in addForce";
-        l_interpolation->computeTransform2(b, global_H_local0, global_H_local1, x);
+        l_interpolation->computeTransform2(beamId, global_H_local0, global_H_local1, x);
 
         /// 2. Computes the frame of the beam based on the spline interpolation:
         Transform global_H_local;
         Real baryX = 0.5;
-        Real L = l_interpolation->getLength(b);
+        Real L = l_interpolation->getLength(beamId);
 
         l_interpolation->InterpolateTransformUsingSpline(global_H_local, baryX, global_H_local0, global_H_local1, L);
 
@@ -537,7 +509,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
 
         /// 3. Computes the transformation from the DOF (in global frame) to the node's local frame DOF0global_H_Node0local and DOF1global_H_Node1local
         Transform DOF0_H_local0, DOF1_H_local1;
-        l_interpolation->getDOFtoLocalTransform(b, DOF0_H_local0, DOF1_H_local1);
+        l_interpolation->getDOFtoLocalTransform(beamId, DOF0_H_local0, DOF1_H_local1);
 
         /// 4. Computes the adequate transformation
         Transform global_R_DOF0(Vec3(0,0,0), x[node0Idx].getOrientation());
@@ -555,15 +527,37 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         //TODO A verifier : global_H_local0.getOrigin() == x[node0Idx].getOrientation().rotate(DOF0_H_local0.getOrigin())
 
         /// compute Adjoint Matrices:
-        beamMatrices->m_A0Ref = DOF0global_H_Node0local.inversed().getAdjointMatrix();
-        beamMatrices->m_A1Ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
+        beamMatrices.m_A0Ref = DOF0global_H_Node0local.inversed().getAdjointMatrix();
+        beamMatrices.m_A1Ref = DOF1global_H_Node1local.inversed().getAdjointMatrix();
 
         /////////////////////////////////////// COMPUTATION OF THE MASS AND STIFFNESS  MATRIX (LOCAL)
+
+        /// Update Interpolation & geometrical parameters with current positions
+
+        /// material parameters
+        beamMatrices._rho = d_massDensity.getValue();
+
+        /// Temp : we only overide values for which a Data has been set in the WireRestShape
+        if (l_instrumentParameters.get())
+        {
+            Real x_curv = 0;
+            l_interpolation->getAbsCurvXFromBeam(beamId, x_curv);
+
+            /// The length of the beams is only known to the interpolation !
+            l_instrumentParameters->getInterpolationParam(x_curv, beamMatrices._rho, beamMatrices._A, beamMatrices._Iy,
+                beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
+        }
+        else
+        {
+            l_interpolation->getInterpolationParam(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
+                beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
+        }
+
+
         /// compute the local mass matrices
         if(d_computeMass.getValue())
         {
-            computeMass(b, (*beamMatrices));
-
+            computeMass(beamId, beamMatrices);
         }
 
         /// IF RIGIDIFICATION: no stiffness forces:
@@ -571,13 +565,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
             continue;
 
         /// compute the local stiffness matrices
-        computeStiffness(b, (*beamMatrices));
+        computeStiffness(beamId, beamMatrices);
 
         /////////////////////////////COMPUTATION OF THE STIFFNESS FORCE
         /// compute the current local displacement of the beam (6dofs)
         /// 1. get the rest transformation from local to 0 and local to 1
         Transform local_H_local0_rest,local_H_local1_rest;
-        l_interpolation->getSplineRestTransform(b,local_H_local0_rest, local_H_local1_rest);
+        l_interpolation->getSplineRestTransform(beamId, local_H_local0_rest, local_H_local1_rest);
 
         ///2. computes the local displacement of 0 and 1 in frame local:
         SpatialVector u0 = local_H_local0.CreateSpatialVector() - local_H_local0_rest.CreateSpatialVector();
@@ -598,9 +592,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         {
             Vec3 P0,P1,P2,P3;
             Real length;
-            Real rest_length = l_interpolation->getLength(b);
-            l_interpolation->getSplinePoints(b,x,P0,P1,P2,P3);
-            l_interpolation->computeActualLength(length, P0,P1,P2,P3);
+            Real rest_length = l_interpolation->getLength(beamId);
+            l_interpolation->getSplinePoints(beamId, x, P0, P1, P2, P3);
+            l_interpolation->computeActualLength(length, P0, P1, P2, P3);
 
             U0local[0]=(-length+rest_length)/2;
             U1local[0]=( length-rest_length)/2;
@@ -611,10 +605,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
             /////////////////// TEST //////////////////////
             /// test: correction due to spline computation;
             Vec3 ResultNode0, ResultNode1;
-            l_interpolation->computeStrechAndTwist(b, x, ResultNode0, ResultNode1);
+            l_interpolation->computeStrechAndTwist(beamId, x, ResultNode0, ResultNode1);
 
-            Real ux0 =-ResultNode0[0] + l_interpolation->getLength(b)/2;
-            Real ux1 = ResultNode1[0] - l_interpolation->getLength(b)/2;
+            Real ux0 =-ResultNode0[0] + l_interpolation->getLength(beamId)/2;
+            Real ux1 = ResultNode1[0] - l_interpolation->getLength(beamId)/2;
 
             U0local[0] = ux0;
             U1local[0] = ux1;
@@ -626,12 +620,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         }
 
         /// compute the force in the local frame:
-        Vec6 f0 = beamMatrices->m_K00 * U0local + beamMatrices->m_K01 * U1local;
-        Vec6 f1 = beamMatrices->m_K10 * U0local + beamMatrices->m_K11 * U1local;
+        Vec6 f0 = beamMatrices.m_K00 * U0local + beamMatrices.m_K01 * U1local;
+        Vec6 f1 = beamMatrices.m_K10 * U0local + beamMatrices.m_K11 * U1local;
 
         /// compute the force in the global frame
-        Vec6 F0_ref = beamMatrices->m_A0Ref.multTranspose(f0);
-        Vec6 F1_ref = beamMatrices->m_A1Ref.multTranspose(f1);
+        Vec6 F0_ref = beamMatrices.m_A0Ref.multTranspose(f0);
+        Vec6 F1_ref = beamMatrices.m_A1Ref.multTranspose(f1);
 
         /// Add this force to vector f
         for (unsigned int i=0; i<6; i++)

@@ -131,6 +131,9 @@ protected:
         Matrix6x6NoInit m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
         Matrix6x6NoInit m_M00, m_M01, m_M10, m_M11; /// mass Matrices
         Matrix6x6NoInit m_A0Ref, m_A1Ref;   /// adjoint Matrices
+
+        Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J; ///< Interpolation & geometrical parameters
+        Real _rho;
     };
 
 public:
