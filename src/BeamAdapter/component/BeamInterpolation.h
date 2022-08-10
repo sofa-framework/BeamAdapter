@@ -94,6 +94,8 @@ public:
     
     using BeamSection = sofa::beamadapter::BeamSection;
 
+    using BeamSection = sofa::beamadapter::BeamSection;
+
 public:
     BeamInterpolation() ;
     virtual ~BeamInterpolation() override = default;
