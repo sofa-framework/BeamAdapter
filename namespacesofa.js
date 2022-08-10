@@ -1,5 +1,8 @@
 var namespacesofa =
 [
+    [ "beamadapter", null, [
+      [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ]
+    ] ],
     [ "component", null, [
       [ "collision", null, [
         [ "AdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper" ],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BeamAdapter: src/BeamAdapter/utils/deprecatedcomponent.h Source File</title>
+<title>BeamAdapter: src/BeamAdapter/utils/BeamSection.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('deprecatedcomponent_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('_beam_section_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -83,7 +83,7 @@ $(document).ready(function(){initNavTree('deprecatedcomponent_8h_source.html',''
 
 <div class="header">
   <div class="headertitle">
-<div class="title">deprecatedcomponent.h</div>  </div>
+<div class="title">BeamSection.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/******************************************************************************</span></div>
@@ -109,42 +109,35 @@ $(document).ready(function(){initNavTree('deprecatedcomponent_8h_source.html',''
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">******************************************************************************/</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;sofa/core/objectmodel/BaseObject.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacesofa.html">sofa</a></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>component</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">using</span> sofa::core::objectmodel::BaseObject ;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">using</span> sofa::core::objectmodel::BaseContext ;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">using</span> sofa::core::objectmodel::BaseObjectDescription ;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">class </span>DeprecatedComponent : <span class="keyword">public</span> BaseObject</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      SOFA_CLASS(DeprecatedComponent, BaseObject) ;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classsofa_1_1component_1_1_deprecated_component.html#a9bf7906473f8c43020b0ec91c8b634b7">canCreate</a>(T* obj, BaseContext* <span class="comment">/*context*/</span>, BaseObjectDescription* <span class="comment">/*arg*/</span>)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;          obj-&gt;serr &lt;&lt; <span class="stringliteral">&quot;[Deprecated component]: &quot;</span> &lt;&lt; obj-&gt;getName() ;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;          <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;} ;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace component</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;} <span class="comment">// namespace sofa</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>sofa::beamadapter</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">struct </span>BeamSection {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#a3c7e2592540bfbfddb22de4d0bc0f4c3">_r</a>;                      </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#aaaf94e9eb3386aa6b7cc03b5df40d406">_rInner</a>;         </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#a4fbee621082134ea53a5cd584cfbab69">_Iy</a>;         </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#ac59d8fe90481fe43c55657f249680a78">_Iz</a>;             </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#af368a48cd9a239ed881f2053692bc11c">_J</a>;              </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#a917b0c6f7f54c334d83f71c2843baf3f">_A</a>;                      </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#a84ed1ca54bfce4334957eaa53bf72a44">_Asy</a>;            </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html#ad4fd80e24eea92043d69a17d6df7d487">_Asz</a>;            </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    };</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;} <span class="comment">// namespace sofa::beamAdapter</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="anamespacesofa_html"><div class="ttname"><a href="namespacesofa.html">sofa</a></div><div class="ttdoc">Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration.</div><div class="ttdef"><b>Definition:</b> AdaptiveBeamContactMapper.cpp:28</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1_deprecated_component_html_a9bf7906473f8c43020b0ec91c8b634b7"><div class="ttname"><a href="classsofa_1_1component_1_1_deprecated_component.html#a9bf7906473f8c43020b0ec91c8b634b7">sofa::component::DeprecatedComponent::canCreate</a></div><div class="ttdeci">static bool canCreate(T *obj, BaseContext *, BaseObjectDescription *)</div><div class="ttdoc">Pre-construction check method called by ObjectFactory.</div><div class="ttdef"><b>Definition:</b> deprecatedcomponent.h:82</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_af368a48cd9a239ed881f2053692bc11c"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#af368a48cd9a239ed881f2053692bc11c">sofa::beamadapter::BeamSection::_J</a></div><div class="ttdeci">double _J</div><div class="ttdoc">Polar moment of inertia (J = Iy + Iz)</div><div class="ttdef"><b>Definition:</b> BeamSection.h:72</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_a84ed1ca54bfce4334957eaa53bf72a44"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#a84ed1ca54bfce4334957eaa53bf72a44">sofa::beamadapter::BeamSection::_Asy</a></div><div class="ttdeci">double _Asy</div><div class="ttdoc">_Asy is the y-direction effective shear area = 10/9 (for solid circular section) or 0 for a non-Timos...</div><div class="ttdef"><b>Definition:</b> BeamSection.h:74</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_aaaf94e9eb3386aa6b7cc03b5df40d406"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#aaaf94e9eb3386aa6b7cc03b5df40d406">sofa::beamadapter::BeamSection::_rInner</a></div><div class="ttdeci">double _rInner</div><div class="ttdoc">Inner radius of the section if beam is hollow.</div><div class="ttdef"><b>Definition:</b> BeamSection.h:69</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_ad4fd80e24eea92043d69a17d6df7d487"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#ad4fd80e24eea92043d69a17d6df7d487">sofa::beamadapter::BeamSection::_Asz</a></div><div class="ttdeci">double _Asz</div><div class="ttdoc">_Asz is the z-direction effective shear area</div><div class="ttdef"><b>Definition:</b> BeamSection.h:75</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_a3c7e2592540bfbfddb22de4d0bc0f4c3"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#a3c7e2592540bfbfddb22de4d0bc0f4c3">sofa::beamadapter::BeamSection::_r</a></div><div class="ttdeci">double _r</div><div class="ttdoc">Radius of the beam section.</div><div class="ttdef"><b>Definition:</b> BeamSection.h:68</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_ac59d8fe90481fe43c55657f249680a78"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#ac59d8fe90481fe43c55657f249680a78">sofa::beamadapter::BeamSection::_Iz</a></div><div class="ttdeci">double _Iz</div><div class="ttdoc">Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis,...</div><div class="ttdef"><b>Definition:</b> BeamSection.h:71</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_a917b0c6f7f54c334d83f71c2843baf3f"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#a917b0c6f7f54c334d83f71c2843baf3f">sofa::beamadapter::BeamSection::_A</a></div><div class="ttdeci">double _A</div><div class="ttdoc">A is the cross-sectional area.</div><div class="ttdef"><b>Definition:</b> BeamSection.h:73</div></div>
+<div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html_a4fbee621082134ea53a5cd584cfbab69"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html#a4fbee621082134ea53a5cd584cfbab69">sofa::beamadapter::BeamSection::_Iy</a></div><div class="ttdeci">double _Iy</div><div class="ttdoc">Iy is the cross-section moment of inertia (assuming mass ratio = 1) about the y axis,...</div><div class="ttdef"><b>Definition:</b> BeamSection.h:70</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_e2258b459b79d7bbb629dde38740b555.html">utils</a></li><li class="navelem"><b>deprecatedcomponent.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_e2258b459b79d7bbb629dde38740b555.html">utils</a></li><li class="navelem"><b>BeamSection.h</b></li>
     <li class="footer">Generated on Wed Aug 10 2022 03:43:49 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

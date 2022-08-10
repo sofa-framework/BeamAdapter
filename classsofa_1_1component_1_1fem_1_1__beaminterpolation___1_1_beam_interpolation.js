@@ -1,6 +1,6 @@
 var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation =
 [
-    [ "BeamSection", "structsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation_1_1_beam_section.html", "structsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation_1_1_beam_section" ],
+    [ "BeamSection", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a537e2fc02a77557e8e2a12cd94489ce1", null ],
     [ "Coord", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a7c0bd56aca42d0e855a400b50f3e078b", null ],
     [ "Deriv", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a705fac58c33b23c20e6bac3fd2b0bb87", null ],
     [ "ElementID", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a5434809f42dc8850ac79010dc2c2f12d", null ],

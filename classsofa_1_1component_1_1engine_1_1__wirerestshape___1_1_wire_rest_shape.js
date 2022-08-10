@@ -1,8 +1,8 @@
 var classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape =
 [
-    [ "BeamSection", "structsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_1_1_beam_section.html", "structsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_1_1_beam_section" ],
     [ "BaseContext", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a58259182239aefc0fc02c58b70df3449", null ],
     [ "BaseObjectDescription", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ace72da5a6b57d1a2638b8a84b5f6b104", null ],
+    [ "BeamSection", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a537e2fc02a77557e8e2a12cd94489ce1", null ],
     [ "Coord", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7c0bd56aca42d0e855a400b50f3e078b", null ],
     [ "Deriv", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a705fac58c33b23c20e6bac3fd2b0bb87", null ],
     [ "Real", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ae2bf7bec3beb53b1f58f6ed936c6c2a1", null ],
