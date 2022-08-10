@@ -71,8 +71,6 @@ public:
    
     using BeamSection = sofa::beamadapter::BeamSection;
 
-    using BeamSection = sofa::beamadapter::BeamSection;
-
     /**
      * @brief Default Constructor.
      */
