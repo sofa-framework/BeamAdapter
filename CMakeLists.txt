@@ -54,6 +54,7 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.inl
 
+    ${BEAMADAPTER_SRC}/utils/BeamSection.h
     ${BEAMADAPTER_SRC}/utils/deprecatedcomponent.h
     )
 

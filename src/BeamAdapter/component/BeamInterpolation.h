@@ -33,6 +33,7 @@
 #pragma once
 
 #include <BeamAdapter/config.h>
+#include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/defaulttype/SolidTypes.h>
@@ -104,6 +105,8 @@ public:
     typedef Vec<6, Real> Vec6;
 
     typedef type::vector<Vec<3, Real> > VectorVec3;
+
+    using BeamSection = sofa::beamadapter::BeamSection;
 
 public:
     BeamInterpolation() ;
@@ -234,16 +237,6 @@ public:
 
     unsigned int getStateSize() const ;
 
-    struct BeamSection{
-        double _r; 			///<radius of the section
-        double _rInner;		///<inner radius of the section if beam is hollow
-        double _Iy;         /// < Iy and Iz are the cross-section moment of inertia (assuming mass ratio = 1) about the y and z axis;
-        double _Iz; 		/// < see https://en.wikipedia.org/wiki/Second_moment_of_area
-        double _J;  		///< Polar moment of inertia (J = Iy + Iz)
-        double _A; 			///< A is the cross-sectional area;
-        double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-        double _Asz; 		///< _Asz is the z-direction effective shear area;
-    };
     BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
 
     Data<helper::OptionsGroup>   crossSectionShape;
