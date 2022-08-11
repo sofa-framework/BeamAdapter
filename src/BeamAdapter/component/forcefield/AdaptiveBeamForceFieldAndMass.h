@@ -35,17 +35,6 @@
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
-#include <sofa/core/objectmodel/Data.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/topology/BaseMeshTopology.h>
-
-#include <sofa/type/vector.h>
-#include <sofa/type/Vec.h>
-#include <sofa/type/Mat.h>
-
-#include <sofa/core/objectmodel/BaseObject.h>
-#include <sofa/core/visual/VisualParams.h>
-
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
@@ -71,19 +60,9 @@ namespace sofa::component::forcefield
 namespace _adaptivebeamforcefieldandmass_
 {
 
-using sofa::type::vector;
-using sofa::component::engine::WireRestShape ;
-using sofa::component::fem::BeamInterpolation ;
-using sofa::core::behavior::MultiMatrixAccessor ;
-using sofa::core::visual::VisualParams ;
-using sofa::core::behavior::Mass ;
-using sofa::core::MechanicalParams ;
-using sofa::type::Vec ;
-using sofa::type::Mat ;
-using sofa::defaulttype::Rigid3Types ;
-using core::objectmodel::Data ;
-using core::topology::BaseMeshTopology;
-using sofa::defaulttype::SolidTypes;
+using sofa::core::behavior::MultiMatrixAccessor;
+using sofa::core::visual::VisualParams;
+using sofa::core::MechanicalParams;
 
 /*!
  * \class AdaptiveBeamForceFieldAndMass
@@ -94,42 +73,40 @@ using sofa::defaulttype::SolidTypes;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamForceFieldAndMass : public Mass<DataTypes>
+class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
 {
 public:
-
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
                SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
 
-    typedef typename DataTypes::VecCoord VecCoord;
-    typedef typename DataTypes::VecDeriv VecDeriv;
-    typedef typename DataTypes::VecReal VecReal;
-    typedef VecCoord Vector;
-    typedef typename DataTypes::Coord Coord;
-    typedef typename DataTypes::Deriv Deriv;
-    typedef typename Coord::value_type Real;
-    typedef Data<VecCoord> DataVecCoord;
-    typedef Data<VecDeriv> DataVecDeriv;
-    typedef BeamInterpolation<DataTypes> BInterpolation;
+    using Coord = typename DataTypes::Coord;
+    using VecCoord = typename DataTypes::VecCoord;
+    using Real = typename Coord::value_type;
 
-    typedef unsigned int Index;
-    typedef BaseMeshTopology::Edge Element;
-    typedef type::vector<BaseMeshTopology::Edge> VecElement;
-    typedef type::vector<unsigned int> VecIndex;
+    using Deriv = typename DataTypes::Deriv;
+    using VecDeriv = typename DataTypes::VecDeriv;
 
-    typedef typename SolidTypes<Real>::Transform Transform;
-    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    using DataVecCoord = Data<VecCoord>;
+    using DataVecDeriv = Data<VecDeriv>;
 
-    typedef Vec<3, Real> Vec3;
-    typedef Vec<6, Real> Vec6;          ///< the displacement vector
-    typedef Mat<6, 6, Real> Matrix6x6;
+    using Vec3 = sofa::type::Vec<3, Real>;
+    using Vec6 = sofa::type::Vec<6, Real>;
+    using Vec6NoInit = sofa::type::VecNoInit<6, Real>;
+    using Matrix6x6 = sofa::type::Mat<6, 6, Real>;
+    using Matrix6x6NoInit = sofa::type::MatNoInit<6, 6, Real>;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
+
+    using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
+    using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
+    using core::behavior::Mass<DataTypes>::mstate;
+
+protected:
 
     /*!
      * \class BeamLocalMatrices
-     * @brief BeamLocalMatrices Class
-     */
-protected:
-
+    * @brief BeamLocalMatrices Class
+    */
     class BeamLocalMatrices{
 
     public:
@@ -151,13 +128,12 @@ protected:
         }
         ~BeamLocalMatrices(){}
 
-        Matrix6x6 m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
-        Matrix6x6 m_M00, m_M01, m_M10, m_M11; /// mass Matrices
-        Matrix6x6 m_A0Ref, m_A1Ref;   /// adjoint Matrices
+        Matrix6x6NoInit m_K00, m_K01, m_K10, m_K11; /// stiffness Matrices
+        Matrix6x6NoInit m_M00, m_M01, m_M10, m_M11; /// mass Matrices
+        Matrix6x6NoInit m_A0Ref, m_A1Ref;   /// adjoint Matrices
     };
 
 public:
-
     AdaptiveBeamForceFieldAndMass( ) ;
     virtual ~AdaptiveBeamForceFieldAndMass() = default;
 
@@ -165,27 +141,27 @@ public:
     /////////////////////////////////////
     /// This is inhereted from BaseObject
     /////////////////////////////////////
-    virtual void init() override ;
-    virtual void reinit() override ;
-    virtual void draw(const VisualParams* vparams) override ;
+    void init() override ;
+    void reinit() override ;
+    void draw(const VisualParams* vparams) override ;
 
 
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
-    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
-    virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
+    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
+    void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available";
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
+    double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getKineticEnergy not yet implemented";
@@ -193,7 +169,7 @@ public:
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
+    void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error() << "addGravityToV not implemented yet";
@@ -204,14 +180,12 @@ public:
     /////////////////////////////////////
     /// ForceField Interface
     /////////////////////////////////////
-    virtual void addForce(const MechanicalParams* mparams,
-                          DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v) override;
+    void addForce(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v) override;
 
-    virtual void addDForce(const MechanicalParams* mparams,
-                           DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
+    void addDForce(const MechanicalParams* mparams, DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
+    double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"getPotentialEnergy not yet implemented"; 
@@ -233,8 +207,8 @@ public:
 
 protected :
 
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
+    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
@@ -242,9 +216,6 @@ protected :
 
     Vec3 m_gravity;
     type::vector<BeamLocalMatrices> m_localBeamMatrices;
-
-    using Mass<DataTypes>::getContext;
-    using Mass<DataTypes>::mstate;
 
 private:
 
@@ -254,7 +225,7 @@ private:
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP)
-extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<Rigid3Types> ;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> ;
 #endif
 
 } /// namespace _adaptivebeamforcefieldandmass_

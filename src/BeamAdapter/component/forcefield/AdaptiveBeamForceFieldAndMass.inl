@@ -32,24 +32,11 @@
 //
 #pragma once
 
-#include <sofa/core/behavior/ForceField.inl>
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
-
-#include <sofa/core/topology/BaseMeshTopology.h>
-#include <sofa/helper/decompose.h>
-
-
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/VecTypes.h>
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/helper/OptionsGroup.h>
-
-#include <sofa/gl/Cylinder.h>
-#include <sofa/simulation/Simulation.h>
-#include <sofa/gl/Axis.h>
+#include <sofa/core/behavior/MultiMatrixAccessor.h>
+#include <sofa/core/MechanicalParams.h>
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/helper/ScopedAdvancedTimer.h>
-
 
 
 namespace sofa::component::forcefield
@@ -104,7 +91,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::reinit()
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 {
-    Vec3 gravity = getContext()->getGravity();
+    Vec3 gravity = this->getContext()->getGravity();
 
     auto _G = sofa::helper::getWriteOnlyAccessor(d_dataG);
     _G.resize(l_interpolation->getStateSize());
@@ -141,8 +128,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beam, BeamLo
     l_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
 
     /// material parameters
-    Real _G;
-    _G=_E/(2.0*(1.0+_nu));
+    Real _G = _E / (2.0 * (1.0 + _nu));
 
     /// interpolation & geometrical parameters
     Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
@@ -294,7 +280,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df
     if(nd0Id==nd1Id) /// Return in case of rigidification
         return;
 
-    Vec6 U0, U1, u0, u1, f0, f1, F0, F1;
+    Vec6NoInit U0, U1, u0, u1, f0, f1, F0, F1;
     BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[bIndex];
 
     for (unsigned int i=0; i<6; i++)
@@ -391,7 +377,7 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
     Real mFact = (Real)mparams->mFactor();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -403,12 +389,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalPara
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
         /// matrices in global frame
-        Matrix6x6 M00, M01, M10, M11;
-
-        M00=bLM.m_A0Ref.multTranspose( ( bLM.m_M00 * bLM.m_A0Ref  )  );
-        M01=bLM.m_A0Ref.multTranspose( ( bLM.m_M01 * bLM.m_A1Ref  )  );
-        M10=bLM.m_A1Ref.multTranspose( ( bLM.m_M10 * bLM.m_A0Ref  )  );
-        M11=bLM.m_A1Ref.multTranspose( ( bLM.m_M11 * bLM.m_A1Ref  )  );
+        Matrix6x6 M00 = bLM.m_A0Ref.multTranspose((bLM.m_M00 * bLM.m_A0Ref));
+        Matrix6x6 M01 = bLM.m_A0Ref.multTranspose((bLM.m_M01 * bLM.m_A1Ref));
+        Matrix6x6 M10 = bLM.m_A1Ref.multTranspose((bLM.m_M10 * bLM.m_A0Ref));
+        Matrix6x6 M11 = bLM.m_A1Ref.multTranspose((bLM.m_M11 * bLM.m_A1Ref));
 
         int index0[6], index1[6];
         for (int i=0;i<6;i++)
@@ -435,7 +419,7 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalParams* mparams,
                                                               const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
     Real kFact = (Real)mparams->kFactor();
     Real mFact = (Real)mparams->mFactor();
 
@@ -457,12 +441,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         if(node0Idx!=node1Idx) // no rigidification
         {
             // matrices in global frame
-            Matrix6x6 K00, K01, K10, K11;
-
-            K00=bLM.m_A0Ref.multTranspose( ( bLM.m_K00 * bLM.m_A0Ref  )  );
-            K01=bLM.m_A0Ref.multTranspose( ( bLM.m_K01 * bLM.m_A1Ref  )  );
-            K10=bLM.m_A1Ref.multTranspose( ( bLM.m_K10 * bLM.m_A0Ref  )  );
-            K11=bLM.m_A1Ref.multTranspose( ( bLM.m_K11 * bLM.m_A1Ref  )  );
+            Matrix6x6 K00 = bLM.m_A0Ref.multTranspose((bLM.m_K00 * bLM.m_A0Ref));
+            Matrix6x6 K01 = bLM.m_A0Ref.multTranspose((bLM.m_K01 * bLM.m_A1Ref));
+            Matrix6x6 K10 = bLM.m_A1Ref.multTranspose((bLM.m_K10 * bLM.m_A0Ref));
+            Matrix6x6 K11 = bLM.m_A1Ref.multTranspose((bLM.m_K11 * bLM.m_A1Ref));
 
             for (int i=0;i<6;i++)
             {
@@ -477,12 +459,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
         }
 
         // matrices in global frame
-        Matrix6x6 M00, M01, M10, M11;
-
-        M00=bLM.m_A0Ref.multTranspose( ( bLM.m_M00 * bLM.m_A0Ref  )  );
-        M01=bLM.m_A0Ref.multTranspose( ( bLM.m_M01 * bLM.m_A1Ref  )  );
-        M10=bLM.m_A1Ref.multTranspose( ( bLM.m_M10 * bLM.m_A0Ref  )  );
-        M11=bLM.m_A1Ref.multTranspose( ( bLM.m_M11 * bLM.m_A1Ref  )  );
+        Matrix6x6 M00 = bLM.m_A0Ref.multTranspose((bLM.m_M00 * bLM.m_A0Ref));
+        Matrix6x6 M01 = bLM.m_A0Ref.multTranspose((bLM.m_M01 * bLM.m_A1Ref));
+        Matrix6x6 M10 = bLM.m_A1Ref.multTranspose((bLM.m_M10 * bLM.m_A0Ref));
+        Matrix6x6 M11 = bLM.m_A1Ref.multTranspose((bLM.m_M11 * bLM.m_A1Ref));
 
         for (int i=0;i<6;i++)
         {
@@ -604,7 +584,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         SpatialVector u1 = local_H_local1.CreateSpatialVector() - local_H_local1_rest.CreateSpatialVector();
 
         /// 3. put the result in a Vec6
-        Vec6 U0local, U1local;
+        Vec6NoInit U0local, U1local;
 
         for (unsigned int i=0; i<3; i++)
         {
@@ -711,11 +691,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalPara
             continue;
 
         // matrices in global frame
-        Matrix6x6 K00, K01, K10, K11;
-        K00=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref  )  );
-        K01=beamLocalMatrix.m_A0Ref.multTranspose( ( beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref  )  );
-        K10=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref  )  );
-        K11=beamLocalMatrix.m_A1Ref.multTranspose( ( beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref  )  );
+        Matrix6x6 K00 = beamLocalMatrix.m_A0Ref.multTranspose((beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref));
+        Matrix6x6 K01 = beamLocalMatrix.m_A0Ref.multTranspose((beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref));
+        Matrix6x6 K10 = beamLocalMatrix.m_A1Ref.multTranspose((beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref));
+        Matrix6x6 K11 = beamLocalMatrix.m_A1Ref.multTranspose((beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref));
 
         int index0[6], index1[6];
         for (int i=0;i<6;i++)
