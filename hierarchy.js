@@ -32,6 +32,9 @@ var hierarchy =
     [ "Mapping", null, [
       [ "MultiAdaptiveBeamMapping< TIn, TOut >", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html", null ]
     ] ],
+    [ "Mass", null, [
+      [ "AdaptiveBeamForceFieldAndMass< DataTypes >", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html", null ]
+    ] ],
     [ "MechanicalStateController", null, [
       [ "AdaptiveBeamController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller.html", null ],
       [ "InterventionalRadiologyController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html", null ],
@@ -62,7 +65,6 @@ var hierarchy =
       [ "BeamLengthMapping< TIn, TOut >", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html", null ]
     ] ],
     [ "Mass", null, [
-      [ "AdaptiveBeamForceFieldAndMass< DataTypes >", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html", null ],
       [ "AdaptiveInflatableBeamForceField< DataTypes >", "classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html", null ]
     ] ],
     [ "PairInteractionConstraint", null, [
