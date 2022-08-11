@@ -1,14 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html":[2,0,1,0,3,0],
-"namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html":[3,0,0,1,6,0],
-"namespacesofa_1_1component_1_1mapping.html":[2,0,1,0,4],
-"namespacesofa_1_1component_1_1mapping.html":[3,0,0,1,7],
-"namespacesofa_1_1component_1_1mapping_1_1__adaptivebeammapping__.html":[2,0,1,0,4,0],
-"namespacesofa_1_1component_1_1mapping_1_1__adaptivebeammapping__.html":[3,0,0,1,7,0],
-"namespacesofa_1_1component_1_1mapping_1_1__beamlengthmapping__.html":[2,0,1,0,4,1],
-"namespacesofa_1_1component_1_1mapping_1_1__beamlengthmapping__.html":[3,0,0,1,7,1],
-"pages.html":[],
 "structsofa_1_1beamadapter_1_1_beam_section.html":[3,0,0,0,0],
 "structsofa_1_1beamadapter_1_1_beam_section.html#a3c7e2592540bfbfddb22de4d0bc0f4c3":[3,0,0,0,0,6],
 "structsofa_1_1beamadapter_1_1_beam_section.html#a4fbee621082134ea53a5cd584cfbab69":[3,0,0,0,0,3],
