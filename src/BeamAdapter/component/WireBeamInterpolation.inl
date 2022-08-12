@@ -32,20 +32,6 @@
 //
 #pragma once
 
-#include <sofa/core/behavior/ForceField.inl>
-#include <sofa/core/topology/BaseMeshTopology.h>
-#include <sofa/helper/decompose.h>
-
-#include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/defaulttype/VecTypes.h>
-#include <sofa/defaulttype/RigidTypes.h>
-
-#include <sofa/gl/Cylinder.h>
-#include <sofa/simulation/Simulation.h>
-#include <sofa/gl/Axis.h>
-#include <algorithm>
-
-#include <BeamAdapter/component/engine/WireRestShape.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
@@ -129,7 +115,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
     msg_warning() << "GetRestTransform not implemented for not straightRestShape" ;
 
     // the beam is straight: the transformation between local0 and local1 is provided by the length of the beam
-    local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat<Real>());
+    local0_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList], 0, 0), Quat());
 }
 
 
@@ -160,8 +146,8 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
     /// the transformation between local0 and local1 is provided by the length of the beam
     double edgeMidLength = this->d_lengthList.getValue()[edgeInList] / 2.0;
 
-    local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat<Real>());
-    local_H_local1_rest.set(Vec3(edgeMidLength,0,0), Quat<Real>());
+    local_H_local0_rest.set(-Vec3(edgeMidLength,0,0), Quat());
+    local_H_local1_rest.set(Vec3(edgeMidLength,0,0), Quat());
 }
 
 

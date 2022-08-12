@@ -31,12 +31,13 @@
 //
 #pragma once
 
+
 #include <BeamAdapter/config.h>
+#include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/DataEngine.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa::component::engine
@@ -45,10 +46,7 @@ namespace sofa::component::engine
 namespace _wirerestshape_
 {
 
-using sofa::type::Quat;
-using sofa::type::vector;
 using sofa::core::topology::TopologyContainer;
-using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier;
 using sofa::component::topology::mapping::Edge2QuadTopologicalMapping;
 using sofa::core::loader::MeshLoader;
@@ -64,18 +62,14 @@ class WireRestShape : public sofa::core::DataEngine
 {
 public:
     SOFA_CLASS(WireRestShape,sofa::core::DataEngine);
-    typedef typename DataTypes::VecCoord VecCoord;
-    typedef typename DataTypes::VecDeriv VecDeriv;
-    typedef typename DataTypes::Coord    Coord   ;
-    typedef typename DataTypes::Deriv    Deriv   ;
-    typedef typename Coord::value_type   Real    ;
-    typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
-    typedef sofa::type::Vec<3, Real> Vec3;
-    typedef sofa::type::Vec<2, Real> Vec2;
 
-    typedef typename core::visual::VisualParams VisualParams;
-    typedef typename core::objectmodel::BaseContext BaseContext;
-    typedef typename core::objectmodel::BaseObjectDescription BaseObjectDescription;
+    using Coord = typename DataTypes::Coord;
+    using Real = typename Coord::value_type;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using Vec3 = sofa::type::Vec<3, Real>;
+    using Quat = sofa::type::Quat<Real>;
+   
+    using BeamSection = sofa::beamadapter::BeamSection;
 
     /**
      * @brief Default Constructor.
@@ -88,12 +82,11 @@ public:
      virtual ~WireRestShape() = default;
 
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
-     virtual void parse(BaseObjectDescription* arg) override;
-     virtual void init() override ;
-     virtual void reinit() override {}
-     virtual void doUpdate() override {}
-     virtual void bwdInit() override ;
-     void draw(const VisualParams * vparams) override ;
+     void parse(core::objectmodel::BaseObjectDescription* arg) override;
+     void init() override ;
+     void doUpdate() override {}
+     
+     void draw(const core::visual::VisualParams * vparams) override ;
 
 
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
@@ -120,7 +113,7 @@ public:
      /// Functions enabling to load and use a geometry given from OBJ external file
      void initRestConfig();
      void getRestPosNonProcedural(Real& abs, Coord &p);
-     void computeOrientation(const Vec3& AB, const Quat<Real>& Q, Quat<Real> &result);
+     void computeOrientation(const Vec3& AB, const Quat& Q, Quat &result);     
      void initFromLoader();
      bool checkTopology();
 
@@ -133,10 +126,10 @@ public:
      // todo => topological change !
      void releaseWirePart();
 
-     void rotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output);
+     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
 
 
-protected:
+public:
      /// Analitical creation of wire shape...
      Data<bool> d_isAProceduralShape;
      Data<Real> d_nonProceduralScale;
@@ -167,30 +160,33 @@ protected:
      Data<bool> d_brokenIn2;
      Data<bool>	d_drawRestShape;
 
+private:
      /// Data required for the File loading
      type::vector<Vec3> 		m_localRestPositions;
      type::vector<Transform> 	m_localRestTransforms;
      type::vector<Real> 		m_curvAbs ;
      double 							m_absOfGeometry {0};
-
-     struct BeamSection{
-        double _r; 			///>radius of the section
-        double _rInner; 	///>inner radius of the section if beam is hollow
-        double _Iy;
-        double _Iz; 		///>Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis;
-        double _J;  		///>Polar moment of inertia (J = Iy + Iz)
-        double _A; 			///> A is the cross-sectional area;
-        double _Asy; 		///>_Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-        double _Asz; 		///>_Asz is the z-direction effective shear area;
-     };
+     
      BeamSection beamSection1;
      BeamSection beamSection2;
 
-     TopologyContainer* _topology {nullptr} ;
-     EdgeSetTopologyModifier* edgeMod {nullptr} ;
-     Edge2QuadTopologicalMapping* edge2QuadMap ;
-     MeshLoader* loader {nullptr};
-     bool edgeSetInNode {false};
+     /// Link to be set to the topology container in the component graph.
+     SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
+     /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
+     TopologyContainer* _topology{ nullptr }; 
+     /// Pointer to the topology modifier. Will be set at init by searching one in @sa _topology context.
+     EdgeSetTopologyModifier* edgeMod{ nullptr };
+
+     /// Link to be set to the topology container in the component graph.
+     SingleLink<WireRestShape<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;     
+     /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
+     MeshLoader* loader{ nullptr };
+
+     /// Link to a Edge2QuadTopologicalMapping, usually used for beam surface rendering to be set to propagate topological changes
+     SingleLink<WireRestShape<DataTypes>, Edge2QuadTopologicalMapping, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_edge2QuadMapping;
+     /// Pointer to a Edge2QuadTopologicalMapping usually used for beam surface rendering. To be set using @sa l_edge2QuadMapping
+     Edge2QuadTopologicalMapping* edge2QuadMap{ nullptr };
+
 };
 
 

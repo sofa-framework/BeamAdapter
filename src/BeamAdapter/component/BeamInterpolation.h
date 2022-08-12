@@ -33,13 +33,10 @@
 #pragma once
 
 #include <BeamAdapter/config.h>
-#include <sofa/core/behavior/ForceField.h>
-#include <sofa/core/behavior/Mass.h>
+#include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/component/statecontainer/MechanicalObject.h>
-#include <sofa/helper/logging/Messaging.h>
 #include <sofa/helper/OptionsGroup.h>
+#include <sofa/component/statecontainer/MechanicalObject.h>
 
 namespace sofa::component::fem
 {
@@ -47,19 +44,11 @@ namespace sofa::component::fem
 namespace _beaminterpolation_
 {
 
-
-using sofa::type::vector;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::core::objectmodel::BaseObjectDescription ;
-using sofa::core::objectmodel::BaseObject ;
-using sofa::core::ConstVecCoordId ;
-using sofa::defaulttype::SolidTypes ;
-using sofa::type::Vec ;
-using sofa::type::Quat ;
-using sofa::defaulttype::Rigid3Types ;
-using sofa::core::behavior::MechanicalState ;
-using sofa::component::statecontainer::MechanicalObject ;
+using sofa::core::ConstVecCoordId;
+using sofa::core::behavior::MechanicalState;
+using sofa::component::statecontainer::MechanicalObject;
 
 /*!
  * \class BeamInterpolation
@@ -79,31 +68,31 @@ using sofa::component::statecontainer::MechanicalObject ;
  *
  */
 template<class DataTypes>
-class BeamInterpolation : public virtual BaseObject
+class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
 {
 public:
-    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , BaseObject);
+    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , sofa::core::objectmodel::BaseObject);
 
-    typedef typename DataTypes::VecCoord VecCoord;
-    typedef typename DataTypes::VecDeriv VecDeriv;
-    typedef typename DataTypes::VecReal VecReal;
-    typedef typename DataTypes::Coord Coord;
-    typedef typename DataTypes::Deriv Deriv;
-    typedef typename Coord::value_type Real;
-    typedef unsigned int Index;
-    typedef BaseMeshTopology::EdgeID ElementID;
-    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
-    typedef type::vector<BaseMeshTopology::Edge> VecEdges;
-    typedef type::vector<unsigned int> VecIndex;
+    using Coord = typename DataTypes::Coord;
+    using VecCoord = typename DataTypes::VecCoord;
+    using Real = typename Coord::value_type;
 
-    typedef typename SolidTypes<Real>::Transform Transform;
-    typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
+    using Deriv = typename DataTypes::Deriv;
+    using VecDeriv = typename DataTypes::VecDeriv;
 
-    typedef Vec<2, Real> Vec2;
-    typedef Vec<3, Real> Vec3;
-    typedef Vec<6, Real> Vec6;
+    using Vec2 = sofa::type::Vec<2, Real>;
+    using Vec3 = sofa::type::Vec<3, Real>;
+    using Quat = sofa::type::Quat<Real>;
+    using VectorVec3 = type::vector <Vec3>;
 
-    typedef type::vector<Vec<3, Real> > VectorVec3;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
+
+    using ElementID = BaseMeshTopology::EdgeID;
+    using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
+    using VecEdges = type::vector<BaseMeshTopology::Edge>;
+    
+    using BeamSection = sofa::beamadapter::BeamSection;
 
 public:
     BeamInterpolation() ;
@@ -113,7 +102,7 @@ public:
     /// Pre-construction check method called by ObjectFactory.
     /// Check that DataTypes matches the MechanicalState.
     template<class T>
-    static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, BaseObjectDescription* arg)
+    static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
     {
         if (dynamic_cast<MechanicalState<DataTypes>*>(context->getMechanicalState()) == nullptr)
         {
@@ -128,15 +117,15 @@ public:
 
 
     //////////////////////////////////// Inherited from Base ///////////////////////////////////////
-    virtual void init() override ;
-    virtual void bwdInit() override ;
-    virtual void reinit() override ;
-    virtual void reset() override ;
+    void init() override ;
+    void bwdInit() override ;
+    void reinit() override ;
+    void reset() override ;
 
     //TODO(dmarchal@cduriez) Ca me semble détourner l'API pour faire des choses par surprise. A mon avis la bonne solution
     //est d'implémenter un vrai binding Python pour BeamInterpolation. Avec une fonction updateInterpolation
     /// In the context of beam interpolation, this function (easily access with Python) is used to update the interpolation (input / output)
-    virtual void storeResetState() override ;
+    void storeResetState() override ;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -166,7 +155,7 @@ public:
 
 
     int computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
-                         Transform &local0_H_local1,  Quat<Real>& local_R_local0, const VecCoord &x);
+                         Transform &local0_H_local1,  Quat& local_R_local0, const VecCoord &x);
 
     int computeTransform2(unsigned int edgeInList,
                           Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
@@ -230,20 +219,10 @@ public:
                                           const Transform &global_H_local1,const Real &L,
                                           const Real& baryCoordMin, const Real& baryCoordMax);
 
-    void RotateFrameForAlignX(const Quat<Real> &input,  Vec3 &x, Quat<Real> &output);
+    void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
 
     unsigned int getStateSize() const ;
 
-    struct BeamSection{
-        double _r; 			///<radius of the section
-        double _rInner;		///<inner radius of the section if beam is hollow
-        double _Iy;         /// < Iy and Iz are the cross-section moment of inertia (assuming mass ratio = 1) about the y and z axis;
-        double _Iz; 		/// < see https://en.wikipedia.org/wiki/Second_moment_of_area
-        double _J;  		///< Polar moment of inertia (J = Iy + Iz)
-        double _A; 			///< A is the cross-sectional area;
-        double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-        double _Asz; 		///< _Asz is the z-direction effective shear area;
-    };
     BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
 
     Data<helper::OptionsGroup>   crossSectionShape;
@@ -344,7 +323,7 @@ protected :
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
-extern template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
+extern template class SOFA_BEAMADAPTER_API BeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
 } /// namespace _beaminterpolation_

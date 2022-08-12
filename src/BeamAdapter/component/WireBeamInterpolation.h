@@ -83,23 +83,17 @@ public:
 
     typedef typename Inherited::VecCoord VecCoord;
     typedef typename Inherited::VecDeriv VecDeriv;
-    typedef typename Inherited::VecReal VecReal;
     typedef typename Inherited::Coord Coord;
     typedef typename Inherited::Deriv Deriv;
 
     typedef typename Inherited::Real Real;
-    typedef typename Inherited::Index Index;
-    typedef typename Inherited::ElementID ElementID;
-    typedef typename Inherited::VecElementID VecElementID;
-    typedef typename Inherited::VecEdges VecEdges;
-    typedef typename Inherited::VecIndex VecIndex;
 
     typedef typename Inherited::Transform Transform;
     typedef typename Inherited::SpatialVector SpatialVector;
 
     typedef typename Inherited::Vec2 Vec2;
     typedef typename Inherited::Vec3 Vec3;
-    typedef typename Inherited::Vec6 Vec6;
+    typedef typename Inherited::Quat Quat;
 
     WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
 
@@ -114,36 +108,36 @@ public:
     void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
 
-    virtual void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector< int>& nbP_density) override
+    void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector< int>& nbP_density) override
     {
         this->m_restShape->getSamplingParameters(xP_noticeable, nbP_density);
     }
 
-    virtual Real getRestTotalLength() override
+    Real getRestTotalLength() override
     {
         return this->m_restShape->getLength();
     }
 
-    virtual void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override
+    void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override
     {
         this->m_restShape->getCollisionSampling(dx,x_localcurv_abs);
     }
 
-    virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override
+    void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override
     {
         this->m_restShape->getNumberOfCollisionSegment(dx,numLines);
     }
 
 
-    virtual void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override
+    void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override
     {
         this->getAbsCurvXFromBeam(beamId, x_curv);
         this->m_restShape->getYoungModulusAtX(x_curv, youngModulus, cPoisson);
     }
 
     virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
-    virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0) override;
+    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
+    void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0) override;
 
     void getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output);
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
@@ -162,8 +156,7 @@ public:
         }
         else
         {
-            global_H_local.set(Vec3(x,0,0), Quat<Real>());
-
+            global_H_local.set(Vec3(x,0,0), Quat());
         }
     }
 
