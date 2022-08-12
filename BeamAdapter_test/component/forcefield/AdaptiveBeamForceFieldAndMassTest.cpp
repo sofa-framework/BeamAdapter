@@ -125,14 +125,13 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         ASSERT_NE(beamForceFieldMass, nullptr);
 
         // Check component state and Data default values
-        
-        // TODO: activate this test in component init refactoring PR
-        //ASSERT_EQ(beamForceFieldMass->d_componentState.getValue(), sofa::core::objectmodel::ComponentState::Valid);
+        ASSERT_EQ(beamForceFieldMass->d_componentState.getValue(), sofa::core::objectmodel::ComponentState::Valid);
         ASSERT_EQ(beamForceFieldMass->d_computeMass.getValue(), true);
         ASSERT_FLOAT_EQ(beamForceFieldMass->d_massDensity.getValue(), 10.0);
         ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighMass.getValue(), 0.0);
         ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighStiffness.getValue(), 0.0);
     }
+
 
 
     void checkValues()
