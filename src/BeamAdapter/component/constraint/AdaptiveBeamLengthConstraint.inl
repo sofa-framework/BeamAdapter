@@ -51,7 +51,7 @@ public:
     {
     }
     void init(int line, double** w, double* force) override;
-    void resolution(int line, double** w, double* d, double* force) override;
+    void resolution(int line, double** w, double* d, double* force);
     void store(int line, double* force, bool convergence) override;
 
 protected:
