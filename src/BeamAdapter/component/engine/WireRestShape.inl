@@ -32,23 +32,13 @@
 #pragma once
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
-#include <cmath>
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/component/topology/container/dynamic/QuadSetTopologyModifier.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 
-#include <sofa/simulation/Node.h>
 #include <sofa/simulation/TopologyChangeVisitor.h>
-#include <sofa/core/topology/Topology.h>
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/core/loader/MeshLoader.h>
-
-#include <sofa/gl/template.h>
-
-#include <iostream>
-#include <fstream>
 
 #define EPSILON 0.0000000001
 #define VERIF 1
@@ -91,14 +81,16 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
   , d_brokenIn2(initData(&d_brokenIn2, (bool)false, "brokenIn2", ""))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
-  , edge2QuadMap(nullptr)
+  , l_topology(initLink("topology", "link to the topology container"))
+  , l_loader(initLink("loader", "link to the MeshLoader"))
+  , l_edge2QuadMapping(initLink("edge2QuadMapping", "link to the edge2QuadMapping to render this beam"))
 {
     d_spireDiameter.setGroup("Procedural");
     d_spireHeight.setGroup("Procedural");
 }
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat<Real> &input, Vec3 &x, Quat<Real> &output)
+void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
 {
     x.normalize();
     Vec3 x0=input.inverseRotate(x);
@@ -117,7 +109,7 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat<Real> &input, Vec
         dw.normalize();
 
         // computation of the rotation
-        Quat<Real> inputRoutput;
+        Quat inputRoutput;
         inputRoutput.axisToQuat(dw, theta);
 
         output=input*inputRoutput;
@@ -125,7 +117,7 @@ void WireRestShape<DataTypes>::rotateFrameForAlignX(const Quat<Real> &input, Vec
 }
 
 template<class DataTypes>
-void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
+void WireRestShape<DataTypes>::parse(core::objectmodel::BaseObjectDescription* args)
 {
     const char* arg = args->getAttribute("procedural") ;
     if(arg)
@@ -147,50 +139,69 @@ void WireRestShape<DataTypes>::parse(BaseObjectDescription* args)
 template<class DataTypes>
 void WireRestShape<DataTypes>::init()
 {
-    /// Have to add because was remove from the .h due to forward déclarations
-    edge2QuadMap = nullptr;
-    loader = nullptr;
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
 
     if(!d_isAProceduralShape.getValue())
     {
-        /// get the mesh loader
-        this->getContext()->get(loader);
-
+        // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
+        loader = l_loader.get();
+        
         if (!loader)
-            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node" ;
+            this->getContext()->get(loader);
+
+        if (!loader) {
+            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node or use l_loader to specify the path in the scene graph.";
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            return;
+        }
         else
         {
             msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges" ;
-            initFromLoader();
-            initRestConfig();
+            return initFromLoader();
         }
     }
 
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
-    this->getContext()->get(_topology);
+    
+    // Get pointer to given topology using the link. If not found will search in current context.
+    _topology = l_topology.get();
 
-    if(_topology != NULL){
-        msg_info() << "found topology named "<< _topology->getName() ;
-    }else{
-        //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-        msg_error() << "cannot find topology container";
-    }
+    if (!_topology)
+        this->getContext()->get(_topology);
 
-    this->getContext()->get(edgeMod);
-
-    if (edgeMod == NULL)
+    if(_topology != nullptr)
     {
-        //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-        msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier." ;
-        edgeSetInNode=false;
+        msg_info() << "found topology named "<< _topology->getName() ;
     }
+    else
+    {
+        msg_error() << "Cannot find topology container. Please specify the link to the topology or insert one in the same node.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+
+
+    // Get pointer to the topology Modifier (for topological changes)
+    _topology->getContext()->get(edgeMod);
+
+    if (edgeMod == nullptr)
+    {
+        msg_warning() << "No EdgeSetTopologyModifier found in the same node as the topology container: " << _topology->getName() << ". This wire won't support topological changes.";
+    }
+
 
     /// fill topology :
     _topology->clear();
     _topology->cleanup();
-    Real dx = this->d_length.getValue() / d_numEdges.getValue();
+    int nbrEdges = d_numEdges.getValue();
+    if (nbrEdges <= 0)
+    {
+        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
+        nbrEdges = 10;
+    }
+    Real dx = this->d_length.getValue() / nbrEdges;
 
     /// add points
     for ( int i=0; i<d_numEdges.getValue()+1; i++)
@@ -199,27 +210,22 @@ void WireRestShape<DataTypes>::init()
     /// add segments
     for (int i=0; i<d_numEdges.getValue(); i++)
         _topology->addEdge(i,i+1);
+    
+    /// Get possible edge2Quad Mapping if one set. 
+    // TODO epernod 2022-08-05: check if the pointer to the mapping is still useful. Only used in releaseWirePart which should be now automatically handle by Topological changes mechanism.
+    edge2QuadMap = l_edge2QuadMapping.get();
 
-    //// get the possible Topological mapping (with tags)
-    const TagSet &tags = this->getTags() ;
-
-    //TODO(dmarchal): replace with for each loop.
-    for (TagSet::const_iterator it=tags.begin();it!=tags.end();++it)
+    const TagSet& tags = this->getTags();
+    if (!tags.empty())
     {
-        dmsg_error() <<" NEED TO FIX line 148 in WireRestShape.inl " ;
-        dynamic_cast<BaseContext *>(this->getContext())->get( edge2QuadMap , *it, BaseContext::SearchRoot );
+        msg_warning() << "Using tags to find edge2QuadMapping has been depreciate. Please use 'edge2QuadMapping' link to set the path to the correct topological mapping.";
     }
-
-
-    //TODO(dmarchal): Explain here what will happen to the user and how he can remove this message"
-    //if(!edge2QuadMap)
-    //    msg_error()<< "No Edge2QuadTopologicalMapping map found to propagate the topological change to the topological mapping";
 
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
     ////////////////////////////////////////////////////////
-    vector<Real> &keyPointList = (*d_keyPoints.beginEdit());
+    auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
     if(!keyPointList.size())
     {
         keyPointList.push_back(0.0);
@@ -228,14 +234,11 @@ void WireRestShape<DataTypes>::init()
         keyPointList.push_back(d_length.getValue());
     }
 
-    d_keyPoints.endEdit();
-
-
     if( d_density.getValue().size() != keyPointList.size()-1)
     {
-        vector<int> &densityList = (*d_density.beginEdit());
+        auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
 
-        if(d_density.getValue().size() > keyPointList.size()-1 )
+        if(densityList.size() > keyPointList.size()-1 )
             densityList.resize(keyPointList.size()-1);
         else
         {
@@ -252,17 +255,14 @@ void WireRestShape<DataTypes>::init()
                 densityList.push_back(numNodes);
             }
         }
-        d_density.endEdit();
     }
 
     if(!d_numEdgesCollis.getValue().size())
     {
-        vector<int> &densityCol =  (*d_numEdgesCollis.beginEdit());
+        auto densityCol = sofa::helper::getWriteOnlyAccessor(d_numEdgesCollis);
         densityCol.resize(keyPointList.size()-1);
         for (unsigned int i=0; i<densityCol.size(); i++)
             densityCol[i] = 20;
-
-        d_numEdgesCollis.endEdit();
     }
 
     msg_info() <<"WireRestShape end init" ;
@@ -289,20 +289,17 @@ void WireRestShape<DataTypes>::init()
     this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
     this->beamSection2._Asy 	= 0.0;
     this->beamSection2._Asz 	= 0.0;
+
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
-
-template <class DataTypes>
-void WireRestShape<DataTypes>::bwdInit()
-{
-}
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::releaseWirePart(){
 
     d_brokenIn2.setValue(true);
 
-    if ( edgeMod == NULL )
+    if ( edgeMod == nullptr )
     {
         msg_error() << "no edgeSetModifier in the node -> cannot do the topological change";
         return;
@@ -312,7 +309,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
     {
         if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
         {
-            vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
+            type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
             edge_remove.push_back( i-1 );
 
             msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
@@ -322,7 +319,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
 
             // propagate the topological change to the topological mapping //
-            if(edge2QuadMap!=NULL)
+            if(edge2QuadMap!=nullptr)
             {
                 edge2QuadMap->updateTopologicalMappingTopDown();
                 sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
@@ -342,8 +339,8 @@ void WireRestShape<DataTypes>::releaseWirePart(){
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getSamplingParameters(vector<Real>& xP_noticeable,
-                                                     vector<int>& nbP_density) const
+void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noticeable,
+                                                     type::vector<int>& nbP_density) const
 {
 
     xP_noticeable.clear();
@@ -419,7 +416,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
     if( x_used < d_straightLength.getValue())
     {
-        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), Quat<Real>());
+        global_H_local.set(Vec3(x_used, 0.0, 0.0 ), Quat());
         return;
     }
 
@@ -430,7 +427,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         // angle in the z direction
         Real phi= atan(d_spireHeight.getValue()/projetedLength);
 
-        Quat<Real> Qphi;
+        Quat Qphi;
         Qphi.axisToQuat(Vec3(0,0,1),phi);
 
         // spire angle (if theta=2*PI, there is a complete spire between startx and x_used)
@@ -439,7 +436,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
         Real theta= 2*M_PI*numSpire;
 
         // computation of the Quat
-        Quat<Real> Qtheta;
+        Quat Qtheta;
         Qtheta.axisToQuat(Vec3(0,1,0),theta);
         Quat newSpireQuat = Qtheta*Qphi;
 
@@ -586,34 +583,30 @@ template <class DataTypes>
 void WireRestShape<DataTypes>::initFromLoader()
 {
     if (!checkTopology())
+    {
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
+    }
 
-    vector<Vec3> vertices;
-    vector<Vec2> edges;
+    type::vector<Vec3> vertices;
+    sofa::core::topology::BaseMeshTopology::SeqEdges edges;
 
     //get the topology position
-    typedef  vector<sofa::type::Vec<3,SReal> > topoPosition;
-    topoPosition &topoVertices = (*loader->d_positions.beginEdit());
+    auto topoVertices = sofa::helper::getReadAccessor(loader->d_positions);
 
     //copy the topology edges in a local vector
-    typedef  vector<sofa::core::topology::Topology::Edge > topoEdge;
-    topoEdge &topoEdges = (*loader->d_edges.beginEdit());
-    for (topoEdge::iterator it = topoEdges.begin(); it < topoEdges.end(); it++)
-        edges.push_back(Vec2((*it)[0], (*it)[1]));
-    loader->d_edges.endEdit();
+    auto topoEdges = sofa::helper::getReadAccessor(loader->d_edges);
+    edges = topoEdges.ref();
 
     /** renumber the vertices  **/
-    vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
+    type::vector<unsigned int> verticesConnexion; //gives the number of edges connected to a vertex
     for(unsigned int i =0; i < topoVertices.size(); i++)
         verticesConnexion.push_back(2);
 
-    for(unsigned int i = 0; i < edges.size(); i++)
+    for(const auto& ed : edges)
     {
-        Vec2 ed = edges[i];
-        unsigned int e1 = floor(ed[0]);
-        unsigned int e2 = floor(ed[1]);
-        verticesConnexion[e1]--;
-        verticesConnexion[e2]--;
+        verticesConnexion[ed[0]]--;
+        verticesConnexion[ed[1]]--;
     }
 
     msg_info() << "Successfully compute the vertex connexion" ;
@@ -632,6 +625,7 @@ void WireRestShape<DataTypes>::initFromLoader()
     if(firstIndex == verticesConnexion.size())
     {
         msg_error() << "The first vertex of the beam structure is not found, probably because of a closed structure" ;
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
 
@@ -639,14 +633,14 @@ void WireRestShape<DataTypes>::initFromLoader()
 
     while(edges.size() > 0)
     {
-        vecIt it = edges.begin();
-        vecIt end = edges.end();
+        auto it = edges.begin();
+        auto end = edges.end();
 
         bool notFound = true;
         while (notFound && (it != end))
         {
-            Vec2 ed = (*it);
-            vecIt toDel = it;
+            const auto& ed = (*it);
+            auto toDel = it;
             it++;
             if(ed[0] == firstIndex)
             {
@@ -673,7 +667,9 @@ void WireRestShape<DataTypes>::initFromLoader()
     for(unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
         m_localRestPositions[i] *= d_nonProceduralScale.getValue();
 
-    loader->d_positions.endEdit();
+    initRestConfig();
+    // TODO epernod 2022-08-05: Init from loader seems quite buggy, need to check if this is still needed and working
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
@@ -683,7 +679,7 @@ void WireRestShape<DataTypes>::initRestConfig()
     m_curvAbs.clear();
     double tot = 0;
     m_curvAbs.push_back(0);
-    Quat<Real> input, output;
+    Quat input, output;
     input.identity();
     m_localRestTransforms.resize(m_localRestPositions.size());
     m_localRestTransforms[0].setOrigin(Vec3(0,0,0));
@@ -743,7 +739,7 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
         alpha = (abs - m_curvAbs[index-1] ) / (m_curvAbs[index] - m_curvAbs[index-1]);
         one_minus_alpha = 1 - alpha;
         result = m_localRestTransforms[index - 1].getOrigin() * one_minus_alpha + m_localRestTransforms[index].getOrigin() * alpha;
-        Quat<Real> slerp;
+        Quat slerp;
         slerp.slerp( m_localRestTransforms[index - 1].getOrientation(),  m_localRestTransforms[index].getOrientation(), alpha, true );
 
         slerp.normalize();
@@ -775,7 +771,7 @@ void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned in
 }
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat<Real>& Q, Quat<Real> &result)
+void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q, Quat &result)
 {
     Vec3 PQ = AB;
     Quat quat = Q;
@@ -807,23 +803,24 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat<Rea
 }
 
 template<class DataTypes>
-void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* /*vparams*/)
+void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* vparams)
 {
     if (!d_drawRestShape.getValue())
         return;
 
-    glDisable(GL_LIGHTING);
-    glColor3d(1.0,0.0,0.0);
-    glPointSize(10.0);
-    for (unsigned int i = 0 ; i < m_localRestPositions.size(); i++)
-    {
-        glBegin(GL_POINTS);
-        glVertex3d(m_localRestPositions[i][0],m_localRestPositions[i][1],m_localRestPositions[i][2]);
-        glEnd();
-    }
-    glPointSize(1.0);
-    glEnable(GL_LIGHTING);
+    vparams->drawTool()->saveLastState();
+    vparams->drawTool()->setLightingEnabled(false);
 
+    std::vector< sofa::type::Vector3 > points;
+    points.reserve(m_localRestPositions.size());
+
+    for (unsigned int i = 0; i < m_localRestPositions.size(); i++)
+    {
+        points.emplace_back(m_localRestPositions[i][0], m_localRestPositions[i][1], m_localRestPositions[i][2]);
+    }
+
+    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor(1, 0.5, 0.5, 1));
+    vparams->drawTool()->restoreLastState();
 }
 
 } // namespace _wirerestshape_

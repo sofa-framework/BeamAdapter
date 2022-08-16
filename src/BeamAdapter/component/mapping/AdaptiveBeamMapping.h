@@ -69,19 +69,13 @@ namespace sofa::component::mapping
 namespace _adaptivebeammapping_
 {
 
-using namespace sofa::component::fem;
-using namespace sofa::core::objectmodel;
-
 using sofa::core::State ;
 using core::Mapping;
 using sofa::type::Vec;
 using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
-using std::pair;
 using sofa::component::fem::BeamInterpolation;
-using sofa::type::vector;
-using std::string;
 using core::MechanicalParams;
 using core::ConstraintParams;
 using core::visual::VisualParams;
@@ -118,13 +112,13 @@ public:
     typedef typename In::VecDeriv           InVecDeriv   ;
     typedef typename In::MatrixDeriv        InMatrixDeriv;
 
-    typedef vector<unsigned int>             VecIndex;
+    typedef type::vector<unsigned int>             VecIndex;
     typedef BaseMeshTopology::EdgeID         ElementID;
-    typedef vector<BaseMeshTopology::Edge>   VecEdges    ;
-    typedef vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef type::vector<BaseMeshTopology::Edge>   VecEdges    ;
+    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
 
     typedef typename SolidTypes<InReal>::Transform      Transform       ;
-    typedef pair<int, Transform>                        IndexedTransform;
+    typedef std::pair<int, Transform>                        IndexedTransform;
     typedef typename SolidTypes< InReal>::SpatialVector SpatialVector   ;
 
     typedef Vec<3, Real>   Vec3;
@@ -135,7 +129,7 @@ public:
     typedef Mat<12,6,Real> Mat12x6;
     typedef BeamInterpolation<TIn> BInterpolation;
 
-    typedef pair<unsigned int, Vec3> BeamIdAndBaryCoord;
+    typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
     typedef struct
     {
        unsigned int beamId;
@@ -148,31 +142,29 @@ public:
 public:
 
     Data<bool> d_useCurvAbs;			  /*!< true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same */
-    Data<vector<Vec3>> d_points;	      /*!< defines the mapped points along the beam axis (in beam frame local coordinates) */
+    Data<type::vector<Vec3>> d_points;	      /*!< defines the mapped points along the beam axis (in beam frame local coordinates) */
     Data<double> d_proximity;			  /*!< if positive, the mapping is modified for the constraints to take into account the lever created by the proximity */
     Data<bool> d_contactDuplicate;		  /*!< if true, this mapping is a copy of an input mapping and is used to gather contact points (ContinuousFrictionContact Response) */
-    Data<string> d_inputMapName;		  /*!< if contactDuplicate==true, it provides the name of the input mapping */
+    Data<std::string> d_inputMapName;		  /*!< if contactDuplicate==true, it provides the name of the input mapping */
     Data<double> d_nbPointsPerBeam;		  /*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
-    Data<vector<Real>> d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
+    Data<type::vector<Real>> d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
 
     SingleLink<AdaptiveBeamMapping<TIn, TOut>,
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
 
 
-    AdaptiveBeamMapping(State< In >* from=NULL,
-                        State< Out >* to=NULL,
-                        BeamInterpolation< TIn >* interpolation=NULL,
+    AdaptiveBeamMapping(State< In >* from=nullptr,
+                        State< Out >* to=nullptr,
+                        BeamInterpolation< TIn >* interpolation=nullptr,
                         bool isSubMapping=false) ;
 
-    virtual ~AdaptiveBeamMapping(){}
+    virtual ~AdaptiveBeamMapping() = default;
 
 
     virtual void init() override;     // get the interpolation
     virtual void bwdInit() override;  // get the points
     virtual void reset() override;
     virtual void reinit() override;
-    virtual void draw(const VisualParams*) override;
-
 
     virtual void apply(const MechanicalParams *mparams, Data<VecCoord>& out, const Data<InVecCoord>& in) override;
     virtual void applyJ(const MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;
@@ -195,7 +187,7 @@ public:
     void addIdPointSubMap(unsigned int id) {m_idPointSubMap.push_back(id);}
     void setUseCurvAbs(bool value) {d_useCurvAbs.setValue(value);}
 
-    const vector<PosPointDefinition>& getPointBeamDistribution() const {return m_pointBeamDistribution;}
+    const type::vector<PosPointDefinition>&getPointBeamDistribution() const { return m_pointBeamDistribution; }
 
 
 
@@ -215,11 +207,11 @@ public:
     bool m_isXBufferUsed;
     typename In::VecCoord m_xBuffer;
 
-    vector< PosPointDefinition > m_pointBeamDistribution;
+    type::vector< PosPointDefinition > m_pointBeamDistribution;
 
     /// for continuous_friction_contact:
     AdaptiveBeamMapping<TIn, TOut>* m_inputMapping;
-    vector<unsigned int> m_idPointSubMap;
+    type::vector<unsigned int> m_idPointSubMap;
     bool m_isSubMapping ;
     bool m_isBarycentricMapping;
 

@@ -19,48 +19,20 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-//
-// C++ Implementation : WireBeamInterpolation / AdaptiveBeamForceFieldAndMass
-//
-// Description:
-//
-//
-// Author: Christian Duriez, INRIA
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
-#define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP
+#pragma once
 
-//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/core/ObjectFactory.h>
 
-#include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
-
-namespace sofa::component::forcefield
+namespace sofa::beamadapter
 {
+    struct BeamSection {
+        double _r; 			///< Radius of the beam section
+        double _rInner; 	///< Inner radius of the section if beam is hollow
+        double _Iy;         ///< Iy is the cross-section moment of inertia (assuming mass ratio = 1) about the y axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
+        double _Iz; 		///< Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
+        double _J;  		///< Polar moment of inertia (J = Iy + Iz)
+        double _A; 			///< A is the cross-sectional area
+        double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
+        double _Asz; 		///< _Asz is the z-direction effective shear area
+    };
 
-namespace _adaptivebeamforcefieldandmass_
-{
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-const static int AdaptiveBeamForceFieldAndMassClass = sofa::core::RegisterObject("Adaptive Beam finite elements")
-.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >()
-;
-
-template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types>;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-} /// _adaptivebeamforcefiedlandmass_
-
-} /// namespace sofa::component::forcefield
+} // namespace sofa::beamAdapter

@@ -42,12 +42,11 @@
 namespace sofa::component::mapping
 {
 
-using namespace sofa::defaulttype;
 using sofa::helper::ScopedAdvancedTimer;
 
 
 template <class TIn, class TOut>
-MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to,InterventionalRadiologyController<TIn>* _ircontroller)
+MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller)
 : Inherit(from, to)
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
@@ -63,7 +62,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
-, m_ircontroller(NULL)
+, m_ircontroller(nullptr)
 , isBarycentricMapping(false)
 {
     this->addAlias(&m_controlerPath, "controller");
@@ -75,12 +74,12 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
 {
     ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_apply");
 
-    VecCoord& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     if(!isBarycentricMapping)
         out.resize(_xPointList.size());
     else if(out.size() != this->getMechTo()[0]->getSize())
         out.resize(this->getMechTo()[0]->getSize());
-    dOut.endEdit();
+
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
         if (this->f_printLog.getValue()){
@@ -147,14 +146,11 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams*
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::handleEvent(sofa::core::objectmodel::Event * event)
 {
-
-    if (dynamic_cast<sofa::simulation::AnimateBeginEvent *>(event))
+    if (sofa::simulation::AnimateBeginEvent::checkEventType(event))
     {
         assignSubMappingFromControllerInfo();
     }
 }
-
-
 
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
@@ -169,27 +165,21 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         //Case if this is not a barycentric mapping
         // 2. assign each value of xPointList to the corresponding "sub Mapping"
         // i.e = each point from xPointList of the collision model is controlled by a given instrument wich id is provided in _id_m_instrumentList
-        sofa::type::vector< sofa::type::vector < Vec3 >* > pointsList;
-        pointsList.clear();
-        pointsList.resize(m_subMappingList.size());
-
         for (unsigned int i=0; i<m_subMappingList.size(); i++)
         {
-            pointsList[i] = m_subMappingList[i]->d_points.beginEdit();
-            pointsList[i]->clear();
+            auto pointList = sofa::helper::getWriteOnlyAccessor(m_subMappingList[i]->d_points);
+            pointList.clear();
             m_subMappingList[i]->clearIdPointSubMap();
         }
 
         for (unsigned int i=0; i< _xPointList.size(); i++)
         {
             unsigned int  id = _idm_instrumentList[i];
-            pointsList[ id ]->push_back( Vec3( _xPointList[i], 0, 0) );
-            m_subMappingList[id]->addIdPointSubMap(i);
-        }
 
-        for (unsigned int i=0; i<m_subMappingList.size(); i++)
-        {
-            m_subMappingList[i]->d_points.endEdit();
+            auto pointList = sofa::helper::getWriteOnlyAccessor(m_subMappingList[id]->d_points);
+            pointList.wref().emplace_back(  _xPointList[i], 0, 0 );
+
+            m_subMappingList[id]->addIdPointSubMap(i);
         }
 
         // handle the possible topological change
@@ -261,7 +251,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 {
-        if (m_ircontroller==NULL) {
+        if (m_ircontroller==nullptr) {
                 ///////// get the Adaptive Interpolation component ///////
                 core::objectmodel::BaseContext * c = this->getContext();
 
@@ -272,7 +262,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
                     m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
                 }
 
-                if(m_ircontroller==NULL)
+                if(m_ircontroller==nullptr)
                     msg_error() << " no Beam Interpolation found !!! the component can not work";
                 else
                     msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName()<<")";
@@ -294,12 +284,12 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     ///////// STEP 3 : get the edgeSet topology and fill it with segments
     this->getContext()->get(_topology);
 
-    if(_topology != NULL && this->f_printLog.getValue() )
+    if(_topology != nullptr && this->f_printLog.getValue() )
         msg_info() << " FIND topology named " << _topology->getName();
 
     this->getContext()->get(_edgeMod);
 
-    if (_edgeMod == NULL)
+    if (_edgeMod == nullptr)
         msg_error() << "EdgeSetController has no binding EdgeSetTopologyModifier.";
 
     // fill topology :
@@ -359,13 +349,6 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::bwdInit()
 }
 
 
-
-template <class TIn, class TOut>
-void MultiAdaptiveBeamMapping< TIn, TOut>::draw(const core::visual::VisualParams* vparams)
-{
-    if (!vparams->displayFlags().getShowMappings()) return;
-}
-
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::setBarycentricMapping()
 {
@@ -382,9 +365,9 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     int returnId=this->getMechTo()[0]->getSize();
     this->getMechTo()[0]->resize(returnId+1);
 
-    assert(m_ircontroller !=NULL && isBarycentricMapping);
+    assert(m_ircontroller !=nullptr && isBarycentricMapping);
     const type::vector<type::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
-    int nbControlledEdge  = id_instrument_curvAbs_table.size() - 1;
+    int nbControlledEdge  = static_cast<int>(id_instrument_curvAbs_table.size()) - 1;
     int totalNbEdges = m_ircontroller->getTotalNbEdges();
     int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
     assert(nbUnControlledEdges>=0);

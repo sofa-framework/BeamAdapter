@@ -22,8 +22,9 @@
 #include <sofa/testing/BaseSimulationTest.h>
 
 #include <sofa/helper/BackTrace.h>
-
+#include <sofa/core/ExecParams.h>
 #include <sofa/component/statecontainer/MechanicalObject.h>
+#include <sofa/core/ExecParams.h>
 
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
@@ -88,8 +89,8 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
             Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
             ASSERT_NE(root.get(), nullptr);
 
-            root->init(ExecParams::defaultInstance());
-            root->reinit(ExecParams::defaultInstance()) ;
+            root->init(core::ExecParams::defaultInstance());
+            root->reinit(core::ExecParams::defaultInstance()) ;
         }else if(lines[2]=="W")
         {
             EXPECT_MSG_EMIT(Error) ;
@@ -98,8 +99,8 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
             Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
             ASSERT_NE(root.get(), nullptr);
 
-            root->init(ExecParams::defaultInstance());
-            root->reinit(ExecParams::defaultInstance()) ;
+            root->init(core::ExecParams::defaultInstance());
+            root->reinit(core::ExecParams::defaultInstance()) ;
         }
     }
 };

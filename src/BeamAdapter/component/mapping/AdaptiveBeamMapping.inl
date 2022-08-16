@@ -51,7 +51,6 @@ namespace sofa::component::mapping
 namespace _adaptivebeammapping_
 {
 
-using namespace sofa::defaulttype;
 using sofa::core::State;
 using helper::ReadAccessor;
 using helper::WriteAccessor;
@@ -75,7 +74,7 @@ AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out
     , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
-    , m_inputMapping(NULL)
+    , m_inputMapping(nullptr)
     , m_isSubMapping(isSubMapping)
     , m_isBarycentricMapping(false)
 {
@@ -86,7 +85,7 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::init()
 {
     if (!l_adaptativebeamInterpolation)
-        l_adaptativebeamInterpolation.set(dynamic_cast<BaseContext *>(this->getContext())->get<BInterpolation>());
+        l_adaptativebeamInterpolation.set(dynamic_cast<sofa::core::objectmodel::BaseContext *>(this->getContext())->get<BInterpolation>());
 
     if (!l_adaptativebeamInterpolation)
         msg_error() <<"No Beam Interpolation found, the component can not work.";
@@ -126,12 +125,14 @@ int AdaptiveBeamMapping< TIn, TOut>::addPoint (const Coord& point, int indexFrom
 {
     SOFA_UNUSED(indexFrom) ;
 
-    int nbPoints = d_points.getValue().size();
-    Vec3 coord(point[0],point[1],point[2]);
+    auto points = sofa::helper::getWriteAccessor(d_points);
 
-    d_points.beginEdit()->push_back(coord);
-    d_points.endEdit();
-    return nbPoints;
+    const auto nbPoints = points.size();
+    const auto coord = TOut::getCPos(point);
+
+    points.wref().emplace_back(coord[0], coord[1], coord[2]);
+
+    return static_cast<int>(nbPoints);
 }
 
 
@@ -139,7 +140,9 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::setBarycentricMapping()
 {
     m_isBarycentricMapping=true;
-    d_points.beginEdit()->clear();d_points.endEdit();
+
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
+    points.clear();
 }
 
 
@@ -151,11 +154,11 @@ int AdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& beamId, const Vec3&
     //attention, beamId here is not the edge Id, but the id of a vec_edge_list defined in BeamInterpolation
     SOFA_UNUSED(straightlineSplineOption);
 
-    int newPointId = m_pointBeamDistribution.size();
+    const auto newPointId = m_pointBeamDistribution.size();
     m_pointBeamDistribution.resize(newPointId+1);
     m_pointBeamDistribution[newPointId].baryPoint=baryCoord;
     m_pointBeamDistribution[newPointId].beamId=beamId;
-    return newPointId;
+    return static_cast<int>(newPointId);
 }
 
 
@@ -168,17 +171,16 @@ void AdaptiveBeamMapping< TIn, TOut>::clear(int size)
 {
     clearIdPointSubMap();
     m_pointBeamDistribution.clear();
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
     if(size>0 && !m_isSubMapping)
     {
         m_pointBeamDistribution.reserve(size);
-        d_points.beginEdit()->reserve(size);
-        d_points.endEdit();
+        points->reserve(size);
         this->getMechTo()[0]->resize(size);
     }
     else //case where this clear is call by a Multimapping, all component will be clear to null size
     {
-        d_points.beginEdit()->resize(0);
-        d_points.endEdit();
+        points->resize(0);
         this->getMechTo()[0]->resize(0);
     }
 }
@@ -188,7 +190,8 @@ template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
     ScopedAdvancedTimer timer("AdaptiveBeamMapping_Apply");
-    VecCoord& out = *dOut.beginEdit();
+
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in = dIn.getValue();
 
     m_isXBufferUsed=false;
@@ -197,13 +200,22 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     // When using an adaptatif controller, one need to redistribute the points at each time step
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
         computeDistribution();
+
     AdvancedTimer::stepEnd("pointsRedistribution");
 
     AdvancedTimer::stepBegin("resizeToModel&Out");
     if (!m_isSubMapping)
     {
-        this->toModel->resize( m_pointBeamDistribution.size() );
-        out.resize(m_pointBeamDistribution.size());
+        if (d_nbPointsPerBeam.getValue() > 0)
+        {
+            this->toModel->resize(m_pointBeamDistribution.size());
+            out.resize(m_pointBeamDistribution.size());
+        }
+        else
+        {
+            this->toModel->resize(d_points.getValue().size());
+            out.resize(d_points.getValue().size());
+        }
     }
     AdvancedTimer::stepEnd("resizeToModel&Out");
 
@@ -241,10 +253,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
             out[i] = pos;
     }
     AdvancedTimer::stepEnd("computeNewInterpolation");
-
-    dOut.endEdit();
 }
-
 
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams, Data<VecDeriv>& dOut, const Data<InVecDeriv>& dIn)
@@ -252,29 +261,43 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     SOFA_UNUSED(mparams);
     ScopedAdvancedTimer timer("AdaptiveBeamMapping_applyJ");
 
-    VecDeriv& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecDeriv& in= dIn.getValue();
+    
     Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
-    InVecCoord& x = *dataInX.beginEdit();
+    auto x = sofa::helper::getWriteOnlyAccessor(dataInX);
+
     InVecCoord xBuf2;
+
+    if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
+        computeDistribution();
 
     if(m_isXBufferUsed)
     {
         // TODO : solve this problem during constraint motion propagation !!
         xBuf2 = x;
-        x = m_xBuffer;
+        x.wref() = m_xBuffer;
     }
-
-    if (out.size() != m_pointBeamDistribution.size() && !m_isSubMapping)
-        out.resize(m_pointBeamDistribution.size());
+    // should not be necessary if apply() was called first
+    if (!m_isSubMapping)
+    {
+        if (d_nbPointsPerBeam.getValue() > 0)
+        {
+            out.resize(m_pointBeamDistribution.size());
+        }
+        else
+        {
+            out.resize(d_points.getValue().size());
+        }
+    }
 
     for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
     {
         PosPointDefinition pointBeamDistribution = m_pointBeamDistribution[i];
 
         unsigned int IdxNode0, IdxNode1;
-        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId,IdxNode0,IdxNode1);
-
+        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+       
         SpatialVector vDOF0, vDOF1;
         vDOF0.setLinearVelocity (In::getDPos(in[IdxNode0]));
         vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
@@ -283,7 +306,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
         Deriv vResult;
 
-        applyJonPoint(i, vDOF0, vDOF1, vResult, x);
+        applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
 
         if(m_isSubMapping)
         {
@@ -295,12 +318,11 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     }
     if(m_isXBufferUsed)
     {
-        x = xBuf2;
+        x.wref() = xBuf2;
         m_isXBufferUsed = false;
     }
 
-    dOut.endEdit();
-    dataInX.endEdit();
+    //dataInX.endEdit();
 }
 
 
@@ -310,7 +332,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
     SOFA_UNUSED(mparams);
 
     ScopedAdvancedTimer timer("AdaptiveBeamMapping_applyJT");
-    InVecDeriv& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const VecDeriv& in= dIn.getValue();
 
     const Data<InVecCoord>& dataInX = *this->getFromModel()->read(ConstVecCoordId::position());
@@ -339,8 +361,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
         In::setDRot(out[IdxNode0], In::getDRot(out[IdxNode0]) + FNode0.getTorque());
         In::setDRot(out[IdxNode1], In::getDRot(out[IdxNode1]) + FNode1.getTorque());
     }
-
-    dOut.endEdit();
 }
 
 
@@ -355,8 +375,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     SOFA_UNUSED(cparams);
 
     ScopedAdvancedTimer timer("AdaptiveBeamMapping_ApplyJT");
-    
-    InMatrixDeriv& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const OutMatrixDeriv& in = dIn.getValue();
     const Data<InVecCoord>& dataInX = *this->getFromModel()->read(ConstVecCoordId::position());
     const InVecCoord& x = dataInX.getValue();
@@ -379,7 +398,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
         typename Out::MatrixDeriv::ColConstIterator colItEnd = rowIt.end();
         for (typename Out::MatrixDeriv::ColConstIterator colIt = rowIt.begin(); colIt != colItEnd; ++colIt)
         {
-            typename In::MatrixDeriv::RowIterator o = out.writeLine(rowIt.index());
+            typename In::MatrixDeriv::RowIterator o = out.wref().writeLine(rowIt.index());
             unsigned int indexIn = colIt.index();
             const Deriv data = colIt.val();
 
@@ -423,17 +442,15 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
             }
         }
     }
-
-    dOut.endEdit();
 }
 
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 {
 
-    const sofa::type::vector<Vec3>& pts = d_points.getValue();
+    const auto ptsSize = d_points.getValue().size();
 
-    if (pts.size() == 0)
+    if (ptsSize == 0)
     {
         helper::ReadAccessor<Data<VecCoord> > xTo = this->toModel->read(sofa::core::ConstVecCoordId::position()) ;
 
@@ -444,17 +461,16 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
         }
         else
         {
-            sofa::type::vector<Vec3>& pts2 = *(d_points.beginEdit());
+            auto pts2 = sofa::helper::getWriteOnlyAccessor(d_points);
             msg_info() <<"No point defined in the AdaptiveBeamMapping - uses positions defined by Mechanical State";
             for(unsigned int i=0; i<xTo.size();i++)
             {
-                Vec3 p(xTo[i][0], xTo[i][1], xTo[i][2]);
-                pts2.push_back(p);
+                pts2.wref().emplace_back(xTo[i][0], xTo[i][1], xTo[i][2]);
             }
-            d_points.endEdit();
         }
     }
 
+    const sofa::type::vector<Vec3>& pts = d_points.getValue();
 
     bool curvAbs = this->d_useCurvAbs.getValue();
     if (curvAbs)
@@ -485,7 +501,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
     if(d_contactDuplicate.getValue()==true)
     {
         this->fromModel->getContext()->get(m_inputMapping, sofa::core::objectmodel::BaseContext::SearchRoot);
-        if(m_inputMapping==NULL)
+        if(m_inputMapping==nullptr)
             msg_warning() <<"Can not found the input  Mapping";
         else
             msg_info()<<"Input Mapping named "<<m_inputMapping->getName()<<" is found";
@@ -495,8 +511,8 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::beginAddContactPoint()
 {
-    d_points.beginEdit()->clear();
-    d_points.endEdit();
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
+    points->clear();
     m_pointBeamDistribution.clear();
 }
 
@@ -505,8 +521,8 @@ template <class TIn, class TOut>
 int AdaptiveBeamMapping< TIn, TOut>::addContactPoint(const Vec3& bary)
 {
     unsigned int index = d_points.getValue().size();
-    d_points.beginEdit()->push_back(bary);
-    d_points.endEdit();
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
+    points->push_back(bary);
 
     if(this->toModel->getSize() <= index)
         this->toModel->resize(index+1);
@@ -535,10 +551,10 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
     if(!m_isBarycentricMapping)
     {
         bool curvAbs = d_useCurvAbs.getValue();
-        const vector<Vec3>& points = d_points.getValue();
+        const type::vector<Vec3>& points = d_points.getValue();
         m_pointBeamDistribution.clear();
 
-        unsigned int numBeams = l_adaptativebeamInterpolation->getNumBeams();
+        const unsigned int numBeams = l_adaptativebeamInterpolation->getNumBeams();
         if(numBeams==0)
         {
             if (this->f_printLog.getValue())
@@ -551,14 +567,13 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
             double ptsPerBeam = d_nbPointsPerBeam.getValue();
             if(ptsPerBeam)
             {	// Recreating the distribution based on the current sampling of the beams
-                WriteAccessor<Data<vector<Real>>> waSegmentsCurvAbs = d_segmentsCurvAbs;
+                WriteAccessor<Data<type::vector<Real>>> waSegmentsCurvAbs = d_segmentsCurvAbs;
                 waSegmentsCurvAbs.clear();
 
                 double step = 1.0 / ptsPerBeam;
                 double posInBeam = 0;
-                unsigned int nbBeams = l_adaptativebeamInterpolation->getNumBeams();
                 InReal segStart, segEnd, segLength;
-                for(unsigned int b=0; b<nbBeams; ++b)
+                for(unsigned int b=0; b< numBeams; ++b)
                 {
                     l_adaptativebeamInterpolation->getAbsCurvXFromBeam(b, segStart, segEnd);
                     segLength = segEnd - segStart;
@@ -578,12 +593,12 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                     posInBeam -= 1.0;
                 }
 
-                if (nbBeams && fabs(posInBeam - step) > 0.01)
+                if (numBeams && fabs(posInBeam - step) > 0.01)
                 {
                     // Last point
                     waSegmentsCurvAbs.push_back(segEnd);
                     PosPointDefinition beamDistrib;
-                    beamDistrib.beamId = nbBeams-1;
+                    beamDistrib.beamId = numBeams -1;
                     beamDistrib.baryPoint[0] = 1.0;
                     beamDistrib.baryPoint[1] = 0.0;
                     beamDistrib.baryPoint[2] = 0.0;
@@ -595,7 +610,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                 if(topo)
                 {
                     topo->clear();
-                    int nbEdges = m_pointBeamDistribution.size() - 1;
+                    int nbEdges = static_cast<int>(m_pointBeamDistribution.size()) - 1;
                     for(int i=0; i<nbEdges; ++i)
                         topo->addEdge(i, i+1);
                 }
@@ -759,14 +774,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv
     const Vec3 localPos(0.,pointBeamDistribution.baryPoint[1],pointBeamDistribution.baryPoint[2]);
     const Vec3 Fin(finput[0], finput[1], finput[2]);
     l_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, x, Fin, FNode0output, FNode1output );
-}
-
-
-template <class TIn, class TOut>
-void AdaptiveBeamMapping< TIn, TOut>::draw(const VisualParams* vparams)
-{
-    if (!vparams->displayFlags().getShowMappings())
-        return;
 }
 
 } /// namespace _adaptivebeammapping_

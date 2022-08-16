@@ -140,13 +140,13 @@ public:
 
 protected:
     AdaptiveBeamLengthConstraint(TypedMechanicalState* object = nullptr) ;
-    virtual ~AdaptiveBeamLengthConstraint() ;
+    virtual ~AdaptiveBeamLengthConstraint() = default;
 
     void internalInit();
 
     unsigned int           m_cid {0} ;
     int                    m_nbConstraints {0};
-    vector<Real>           m_violations;
+    type::vector<Real>           m_violations;
     std::map<Real, double> m_prevForces;	/// Map abscissa <-> previous constraint force
 
     Data<Real>             m_alarmLength ;
@@ -158,7 +158,7 @@ protected:
 
 private:
     void detectElongation(const VecCoord &x, const VecCoord& xfree);
-    vector<IntervalDefinition<Real>>                                   m_constraintIntervals;
+    type::vector<IntervalDefinition<Real>>                                   m_constraintIntervals;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMLENGTHCONSTRAINT_CPP)

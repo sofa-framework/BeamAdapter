@@ -94,7 +94,7 @@ public:
     typedef Vec<2, Real> Vec2;
 
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef vector< ElementID > VecElementID;
+    typedef type::vector< ElementID > VecElementID;
 
     typedef typename std::list< Real >::iterator ListRealIterator;
 
@@ -109,8 +109,8 @@ public:
     using Inherit1::getMechanicalState;
 
 public:
-    SutureController(WInterpolation* _adaptiveinterpolation = NULL) ;
-    virtual ~SutureController() override {}
+    SutureController(WInterpolation* _adaptiveinterpolation = nullptr) ;
+    virtual ~SutureController() override = default;
 
     /////////////////// Inherited from Base //////////////////////////////////////////////////
     virtual void init() override;
@@ -118,16 +118,6 @@ public:
     virtual void reinit() override;
     virtual void reset() override { init(); applyController();}
     virtual void draw(const core::visual::VisualParams*) override;
-
-    virtual std::string getTemplateName() const override
-    {
-        return templateName(this);
-    }
-
-    static std::string templateName(const SutureController<DataTypes>* = NULL)
-    {
-        return DataTypes::Name();
-    }
 
     /////////////////// Inherited from Controller //////////////////////////////////////////////////
     virtual void onMouseEvent(core::objectmodel::MouseEvent *)override {}
@@ -165,35 +155,35 @@ private:
 
 
     /// Computes the tangent value on a series of discrete points (store also the curv_abs of these discrete points)
-    void computeTangentOnDiscretePoints(vector<Vec3> TangTable, vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos);
+    void computeTangentOnDiscretePoints(type::vector<Vec3> TangTable, type::vector<Real> xTable,  unsigned int numDiscretePoints, const VecCoord& Pos);
 
 
     /// fill the list rigidBeamList
-    void detectRigidBeams(const vector<Real> &newCurvAbs);
+    void detectRigidBeams(const type::vector<Real> &newCurvAbs);
 
 
     /// when the sampling is computed, this function allows for reinterpolate the position and the velocity
-    void applyNewSampling(const vector<Real> &newCurvAbs, const vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
+    void applyNewSampling(const type::vector<Real> &newCurvAbs, const type::vector<Real> &oldCurvAbs, VecCoord &x, VecDeriv &v);
 
 
     /// Add the curv abs of the nodes at the extremity of the rigid segment
     /// if a node already exists or is very close (< tol), do not add any point
-    void addRigidCurvAbs(vector<Real> &newCurvAbs, const Real &tol);
+    void addRigidCurvAbs(type::vector<Real> &newCurvAbs, const Real &tol);
 
 
     /// Add the nodes that are imposed at a given curv abs
     /// if a node already exists or is very close (< tol), do not add any point
-    void addImposedCurvAbs(vector<Real> &newCurvAbs, const Real &tol);
+    void addImposedCurvAbs(type::vector<Real> &newCurvAbs, const Real &tol);
 
 
     /// Computes sampling
-    void computeSampling(vector<Real> &newCurvAbs, VecCoord& x);
+    void computeSampling(type::vector<Real> &newCurvAbs, VecCoord& x);
 
     /// little function to verify that the rigidCurveSegments are sorted
     bool verifyRigidCurveSegmentSort();
 
     /// make sure the sampling does not change for the rigid segments
-    void verifyRigidSegmentsSampling(vector<Real> &newCurvAbs);
+    void verifyRigidSegmentsSampling(type::vector<Real> &newCurvAbs);
 
     void storeRigidSegmentsTransformations();
     void verifyRigidSegmentsTransformations();
@@ -202,7 +192,7 @@ private:
 
 private:
     /// for point and line activer
-    vector<Real> m_XAbsCollisionPointsBuffer;
+    type::vector<Real> m_XAbsCollisionPointsBuffer;
 
     /// Data:
     Data< Coord >     d_startingPos;
@@ -216,30 +206,30 @@ private:
     SingleLink<SutureController<DataTypes>, WInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptiveInterpolation;
 
     /// for rigidity control
-    vector< std::pair<Real, Real> > m_rigidCurveSegments;
-    vector< std::pair<Real, Real> > m_prevRigidCurvSegments;
-    vector< bool >            m_rigidBeamList;
-    vector<Transform>         m_vecGlobalHGravityCenter;
+    type::vector< std::pair<Real, Real> > m_rigidCurveSegments;
+    type::vector< std::pair<Real, Real> > m_prevRigidCurvSegments;
+    type::vector< bool >            m_rigidBeamList;
+    type::vector<Transform>         m_vecGlobalHGravityCenter;
     std::map<Real, Transform> m_prevRigidTransforms;
 
     /// for re-interpolation
-    vector<Transform>    m_vecGlobalHNode;
-    vector<Deriv>        m_vecGlobalVelNode;
+    type::vector<Transform>    m_vecGlobalHNode;
+    type::vector<Deriv>        m_vecGlobalVelNode;
 
     /// for imposing nodes along the spline
     std::list< Real >    m_listOfImposedNodesOnXcurv;
 
-    Data< vector<Real> > d_nodeCurvAbs;
-    Data< vector<Vec2> > d_curvatureList;
+    Data< type::vector<Real> > d_nodeCurvAbs;
+    Data< type::vector<Vec2> > d_curvatureList;
     Data< VecCoord >     d_controlPoints;
 
-    void dummyController(vector<Real> &newCurvAbs);
+    void dummyController(type::vector<Real> &newCurvAbs);
 
     /// If true update interpolation and subgraph on beginAnimationStep
     Data< bool >        d_updateOnBeginAnimationStep;
     Data< bool>         d_applyOrientationFirstInCreateNeedle;
     Data< bool >        d_reinitilizeWireOnInit;
-    Data<vector<Real> > d_actualStepNoticeablePoints;
+    Data<type::vector<Real> > d_actualStepNoticeablePoints;
 
     /// Interface for topology changes
     TopologyContainer*  m_topology {nullptr} ;

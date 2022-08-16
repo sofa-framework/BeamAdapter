@@ -47,7 +47,7 @@ using sofa::core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=NULL, bool* active=NULL) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(double* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
     void init(int line, double** w, double* force) override;
@@ -67,11 +67,6 @@ AdaptiveBeamLengthConstraint<DataTypes>::AdaptiveBeamLengthConstraint(TypedMecha
     , m_constrainedLength(initData(&m_constrainedLength, (Real)1.05, "constrainedLength", "Allowed elongation of a beam (default=1.05"))
     , m_maxBendingAngle(initData(&m_maxBendingAngle,  (Real)0.1, "maxBendingAngle", "max bending criterion (in rad) for one constraint interval (default=0.1)"))
     , m_interpolation(initLink("interpolation", "link to the interpolation component in the scene"))
-{
-}
-
-template<class DataTypes>
-AdaptiveBeamLengthConstraint<DataTypes>::~AdaptiveBeamLengthConstraint()
 {
 }
 
@@ -303,7 +298,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
     ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
     ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
 
-    MatrixDeriv& c = *c_d.beginEdit();
+    auto c = sofa::helper::getWriteOnlyAccessor(c_d);
 
     m_constraintIntervals.clear();
     detectElongation( x.ref(), xfree.ref());
@@ -343,7 +338,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
         dmsg_info_when(lever0.norm() > 0.0001) << " lever0 ="<<lever0<<" dir ="<<dir ;
         dmsg_info_when(lever1.norm() > 0.0001) << " lever1 ="<<lever1<<" -dir ="<<-dir ;
 
-        MatrixDerivRowIterator c_it = c.writeLine(m_cid + m_nbConstraints);
+        MatrixDerivRowIterator c_it = c.wref().writeLine(m_cid + m_nbConstraints);
 
         c_it.addCol(n0, Vec6(dir, cross(lever0, dir) ) );
         c_it.addCol(n1, Vec6(-dir, cross(lever1, -dir)  ) );
@@ -373,7 +368,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const Cons
     unsigned int nb = m_violations.size();
     for(unsigned int i=0; i<nb; i++)
     {
-        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(NULL, &m_constraintIntervals[i].active);
+        resTab[offset] = new AdaptiveBeamLengthConstraintResolution(nullptr, &m_constraintIntervals[i].active);
         offset++;
     }
 }
@@ -381,45 +376,34 @@ void AdaptiveBeamLengthConstraint<DataTypes>::getConstraintResolution(const Cons
 template<class DataTypes>
 void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
 {
-#ifndef SOFA_NO_OPENGL
     if (!vparams->displayFlags().getShowInteractionForceFields())
         return;
 
     if(m_constraintIntervals.size()==0)
         return;
 
-    ///trace a point at the beginning and at the end of each constraint interval
-    glDisable(GL_LIGHTING);
-    glPointSize(10);
-    glBegin(GL_POINTS);
-    glColor4f(0.0f,1.0f,0.0f,1.0f);
-    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
-    {
-        gl::glVertexT(m_constraintIntervals[i].posBegin);
-        gl::glVertexT(m_constraintIntervals[i].posEnd);
-    }
-    glEnd();
+    vparams->drawTool()->saveLastState();
+    vparams->drawTool()->setLightingEnabled(false);
 
-    glPointSize(1);
+    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::RGBAColor> colors;
+    points.reserve(m_constraintIntervals.size()*2);
+    colors.reserve(m_constraintIntervals.size());
 
-    /// TODO: change color if constrained Length reached...
-    /// trace a straight line between the beginning and the end of each interval
-    glBegin(GL_LINES);
-    for(unsigned int i=0; i<m_constraintIntervals.size(); i++)
+    for (unsigned int i = 0; i < m_constraintIntervals.size(); i++)
     {
-        if(m_constraintIntervals[i].active)
-            glColor4f(1.0f,0.5f,0.0f,1.0f);
+        points.emplace_back(m_constraintIntervals[i].posBegin);
+        points.emplace_back(m_constraintIntervals[i].posEnd);
+
+        if (m_constraintIntervals[i].active)
+            colors.emplace_back(1.0f, 0.5f, 0.0f, 1.0f);
         else
-            glColor4f(0.0f,1.0f,0.0f,1.0f);
-        gl::glVertexT(m_constraintIntervals[i].posBegin);
-        gl::glVertexT(m_constraintIntervals[i].posEnd);
+            colors.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
     }
+    vparams->drawTool()->drawPoints(points, 10, sofa::type::RGBAColor::green());
+    vparams->drawTool()->drawLines(points, 1.0f, colors);
 
-    glEnd();
-
-    glEnable(GL_LIGHTING);
-
-#endif /// SOFA_NO_OPENGL
+    vparams->drawTool()->restoreLastState();
 }
 
 } /// namespace _adaptivebeamlengthconstraint_

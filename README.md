@@ -21,3 +21,7 @@ If this work is useful for your industrial application, your [support](https://w
 # Build instructions
 
 This plugin relies on the open-source project SOFA. To build the sources of this plugin, you can follow the associated "[Build a plugin from sources](https://www.sofa-framework.org/community/doc/plugins/build-a-plugin-from-sources/)" documentation page.
+
+# API documentation
+
+https://sofa-framework.github.io/BeamAdapter/
