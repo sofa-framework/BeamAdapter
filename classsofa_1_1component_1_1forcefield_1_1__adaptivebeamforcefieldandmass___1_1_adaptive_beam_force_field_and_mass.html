@@ -337,7 +337,11 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <li>rotation due to the optional transformation</li>
 </ul>
 <p>compute Adjoint Matrices:</p>
-<p>COMPUTATION OF THE MASS AND STIFFNESS MATRIX (LOCAL) compute the local mass matrices</p>
+<p>Update Interpolation &amp; geometrical parameters with current positions</p>
+<p>material parameters</p>
+<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
+<p>The length of the beams is only known to the interpolation !</p>
+<p>compute the local mass matrices</p>
 <p>IF RIGIDIFICATION: no stiffness forces:</p>
 <p>compute the local stiffness matrices</p>
 <p>COMPUTATION OF THE STIFFNESS FORCE compute the current local displacement of the beam (6dofs)</p><ol type="1">
@@ -546,10 +550,6 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
         </tr>
       </table>
 </div><div class="memdoc">
-<p>material parameters</p>
-<p>interpolation &amp; geometrical parameters</p>
-<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
-<p>The length of the beams is only known to the interpolation !</p>
 <p>diagonal values</p>
 <p>diagonal blocks</p>
 <p>lower non-diagonal blocks</p>
@@ -585,8 +585,6 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 </div><div class="memdoc">
 <p>Get the curvilinear abscissa of the extremity of the beam</p>
 <p>material parameters</p>
-<p>interpolation &amp; geometrical parameters</p>
-<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
 <p>Find shear-deformation parameters</p>
 <p>diagonal values</p>
 <p>diagonal blocks</p>
@@ -631,7 +629,7 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html">_adaptivebeamforcefieldandmass_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Fri Aug 12 2022 00:10:30 for BeamAdapter by
+    <li class="footer">Generated on Tue Aug 16 2022 07:00:51 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
