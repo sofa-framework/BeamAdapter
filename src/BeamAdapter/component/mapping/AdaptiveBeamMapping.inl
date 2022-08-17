@@ -269,17 +269,19 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
     auto x = sofa::helper::getWriteOnlyAccessor(dataInX);
 
-    InVecCoord xBuf2;
-
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
         computeDistribution();
 
-    if(m_isXBufferUsed)
+    // TODO: check if m_isXBufferUsed is set somewhere else
+    // As far as I could see, m_isXBufferUsed is never set to true
+    InVecCoord xBuf2{};
+    if (m_isXBufferUsed)
     {
         // TODO : solve this problem during constraint motion propagation !!
         xBuf2 = x.ref();
         x.wref() = m_xBuffer;
     }
+
     // should not be necessary if apply() was called first
     if (!m_isSubMapping)
     {
@@ -301,11 +303,8 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
             unsigned int IdxNode0, IdxNode1;
             l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
 
-            SpatialVector vDOF0, vDOF1;
-            vDOF0.setLinearVelocity(In::getDPos(in[IdxNode0]));
-            vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
-            vDOF1.setLinearVelocity(In::getDPos(in[IdxNode1]));
-            vDOF1.setAngularVelocity(In::getDRot(in[IdxNode1]));
+            SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
+            SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
 
             Deriv vResult;
 
@@ -322,31 +321,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
     );
 
-    //for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
-    //{
-    //    PosPointDefinition pointBeamDistribution = m_pointBeamDistribution[i];
-
-    //    unsigned int IdxNode0, IdxNode1;
-    //    l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
-    //   
-    //    SpatialVector vDOF0, vDOF1;
-    //    vDOF0.setLinearVelocity (In::getDPos(in[IdxNode0]));
-    //    vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
-    //    vDOF1.setLinearVelocity (In::getDPos(in[IdxNode1]));
-    //    vDOF1.setAngularVelocity(In::getDRot(in[IdxNode1]));
-
-    //    Deriv vResult;
-
-    //    applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
-
-    //    if(m_isSubMapping)
-    //    {
-    //        if(m_idPointSubMap.size()>0)
-    //            out[m_idPointSubMap[i]] = vResult;
-    //    }
-    //    else
-    //        out[i] = vResult;
-    //}
     if(m_isXBufferUsed)
     {
         x.wref() = xBuf2;
@@ -564,7 +538,7 @@ int AdaptiveBeamMapping< TIn, TOut>::addContactPoint(const Vec3& bary)
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::computeIdxAndBaryCoordsForAbs(unsigned int &b, Real &xBary, const Real &xAbs )
 {
-    InReal xAbsInput = (InReal) xAbs;
+    const InReal xAbsInput = (InReal) xAbs;
     InReal xBaryOutput = (InReal) xBary;
 
     l_adaptativebeamInterpolation->getBeamAtCurvAbs(xAbsInput,b,xBaryOutput);
@@ -612,13 +586,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                     for (; posInBeam <= 1.0; posInBeam += step)
                     {
                         waSegmentsCurvAbs.push_back(segStart + segLength * posInBeam);
-                        PosPointDefinition beamDistrib;
-                        beamDistrib.beamId = b;
-                        beamDistrib.baryPoint[0] = posInBeam;
-                        beamDistrib.baryPoint[1] = 0.0;
-                        beamDistrib.baryPoint[2] = 0.0;
-
-                        m_pointBeamDistribution.push_back(beamDistrib);
+                        m_pointBeamDistribution.emplace_back(PosPointDefinition{ b, { posInBeam, 0.0, 0.0} });
                     }
 
                     posInBeam -= 1.0;
@@ -628,13 +596,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                 {
                     // Last point
                     waSegmentsCurvAbs.push_back(segEnd);
-                    PosPointDefinition beamDistrib;
-                    beamDistrib.beamId = numBeams -1;
-                    beamDistrib.baryPoint[0] = 1.0;
-                    beamDistrib.baryPoint[1] = 0.0;
-                    beamDistrib.baryPoint[2] = 0.0;
-
-                    m_pointBeamDistribution.push_back(beamDistrib);
+                    m_pointBeamDistribution.emplace_back(PosPointDefinition{ numBeams - 1, { 1.0, 0.0, 0.0} });
                 }
 
                 BaseMeshTopology* topo = this->getContext()->getMeshTopology();
@@ -649,6 +611,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
             else
             {
                 // We use the points Data
+                m_pointBeamDistribution.reserve(points.size());
                 for (unsigned int i=0; i<points.size(); i++)
                 {
                     unsigned int b=0;
@@ -657,28 +620,18 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
                     computeIdxAndBaryCoordsForAbs(b, xBary,  xAbs );
 
-                    PosPointDefinition beamDistrib;
-                    beamDistrib.beamId = b;
-                    beamDistrib.baryPoint[0] = xBary;
-                    beamDistrib.baryPoint[1] = points[i][1];
-                    beamDistrib.baryPoint[2] = points[i][2];
-
-                    m_pointBeamDistribution.push_back(beamDistrib);
+                    m_pointBeamDistribution.emplace_back(PosPointDefinition{ b, { xBary, points[i][1], points[i][2]} });
                 }
             }
         }
         else
         {
+            m_pointBeamDistribution.reserve(points.size());
             for (unsigned int i=0; i<points.size(); i++)
             {
-                PosPointDefinition beamDistrib;
-                beamDistrib.beamId = (int) floor(points[i][0]);
-                if ( (beamDistrib.beamId>numBeams-1 || beamDistrib.beamId<0.0 ) && this->f_printLog.getValue()  )
-                    msg_warning() <<"Points["<<i<<"][0] = "<<beamDistrib.baryPoint[0]<<" is defined outside of the beam length";
-                beamDistrib.baryPoint[0] = points[i][0] - floor(points[i][0]);
-                beamDistrib.baryPoint[1] = points[i][1];
-                beamDistrib.baryPoint[2] = points[i][2];
-                m_pointBeamDistribution.push_back(beamDistrib);
+                const unsigned int beamId = (int)floor(points[i][0]);
+                msg_warning_when(this->f_printLog.getValue() && (beamId > numBeams-1)) << "Points[" << i << "][0] = " << beamId << " is defined outside of the beam length";
+                m_pointBeamDistribution.emplace_back(PosPointDefinition{ beamId, { points[i][0] - floor(points[i][0]), points[i][1], points[i][2]} });
             }
         }
     }

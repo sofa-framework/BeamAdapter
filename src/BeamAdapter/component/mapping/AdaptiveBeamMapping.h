@@ -130,14 +130,14 @@ public:
     typedef BeamInterpolation<TIn> BInterpolation;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
-    typedef struct
+    struct PosPointDefinition
     {
-       unsigned int beamId;
+       unsigned int beamId = 0;
        /// A bary point has 3 components
        /// -The first denote the curvilinear coordinate
        /// -The two followings denote the planar coordinate on the perpendicular cross section on the curve
-       Vec3 baryPoint;
-    } PosPointDefinition;
+       Vec3 baryPoint{};
+    } ;
 
 public:
 
