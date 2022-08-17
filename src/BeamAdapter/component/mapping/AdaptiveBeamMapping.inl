@@ -45,6 +45,8 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
+#include <execution>
+
 namespace sofa::component::mapping
 {
 
@@ -291,31 +293,60 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
         }
     }
 
-    for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
-    {
-        PosPointDefinition pointBeamDistribution = m_pointBeamDistribution[i];
-
-        unsigned int IdxNode0, IdxNode1;
-        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
-       
-        SpatialVector vDOF0, vDOF1;
-        vDOF0.setLinearVelocity (In::getDPos(in[IdxNode0]));
-        vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
-        vDOF1.setLinearVelocity (In::getDPos(in[IdxNode1]));
-        vDOF1.setAngularVelocity(In::getDRot(in[IdxNode1]));
-
-        Deriv vResult;
-
-        applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
-
-        if(m_isSubMapping)
+    std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(),
+        [&](const PosPointDefinition& pointBeamDistribution)
         {
-            if(m_idPointSubMap.size()>0)
-                out[m_idPointSubMap[i]] = vResult;
+            int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
+
+            unsigned int IdxNode0, IdxNode1;
+            l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+
+            SpatialVector vDOF0, vDOF1;
+            vDOF0.setLinearVelocity(In::getDPos(in[IdxNode0]));
+            vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
+            vDOF1.setLinearVelocity(In::getDPos(in[IdxNode1]));
+            vDOF1.setAngularVelocity(In::getDRot(in[IdxNode1]));
+
+            Deriv vResult;
+
+            applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
+
+            if (m_isSubMapping)
+            {
+                if (m_idPointSubMap.size() > 0)
+                    out[m_idPointSubMap[i]] = vResult;
+            }
+            else
+                out[i] = vResult;
         }
-        else
-            out[i] = vResult;
-    }
+
+    );
+
+    //for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
+    //{
+    //    PosPointDefinition pointBeamDistribution = m_pointBeamDistribution[i];
+
+    //    unsigned int IdxNode0, IdxNode1;
+    //    l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+    //   
+    //    SpatialVector vDOF0, vDOF1;
+    //    vDOF0.setLinearVelocity (In::getDPos(in[IdxNode0]));
+    //    vDOF0.setAngularVelocity(In::getDRot(in[IdxNode0]));
+    //    vDOF1.setLinearVelocity (In::getDPos(in[IdxNode1]));
+    //    vDOF1.setAngularVelocity(In::getDRot(in[IdxNode1]));
+
+    //    Deriv vResult;
+
+    //    applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
+
+    //    if(m_isSubMapping)
+    //    {
+    //        if(m_idPointSubMap.size()>0)
+    //            out[m_idPointSubMap[i]] = vResult;
+    //    }
+    //    else
+    //        out[i] = vResult;
+    //}
     if(m_isXBufferUsed)
     {
         x.wref() = xBuf2;
