@@ -75,6 +75,7 @@ AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out
     , d_inputMapName(initData(&d_inputMapName,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
     , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
+    , d_parallelApplyJ(initData(&d_parallelApplyJ, false, "parallelApplyJ", "flag to enable parallel internal computation of applyJ"))
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
     , m_inputMapping(nullptr)
     , m_isSubMapping(isSubMapping)
@@ -295,31 +296,38 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
         }
     }
 
-    std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(),
-        [&](const PosPointDefinition& pointBeamDistribution)
+    // effective computation for each element in pointBeamDistribution
+    auto applyJ_impl = [&](const PosPointDefinition& pointBeamDistribution)
+    {
+        int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
+
+        unsigned int IdxNode0, IdxNode1;
+        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+
+        SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
+        SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
+
+        Deriv vResult;
+
+        applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
+
+        if (m_isSubMapping)
         {
-            int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
-
-            unsigned int IdxNode0, IdxNode1;
-            l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
-
-            SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
-            SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
-
-            Deriv vResult;
-
-            applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
-
-            if (m_isSubMapping)
-            {
-                if (m_idPointSubMap.size() > 0)
-                    out[m_idPointSubMap[i]] = vResult;
-            }
-            else
-                out[i] = vResult;
+            if (m_idPointSubMap.size() > 0)
+                out[m_idPointSubMap[i]] = vResult;
         }
+        else
+            out[i] = vResult;
+    };
 
-    );
+    if (d_parallelApplyJ.getValue())
+    {
+        std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
+    }
+    else // standard for-loop for each element (sequential, ordered)
+    {
+        std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
+    }
 
     if(m_isXBufferUsed)
     {
