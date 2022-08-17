@@ -75,7 +75,7 @@ AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out
     , d_inputMapName(initData(&d_inputMapName,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
     , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
-    , d_parallelApplyJ(initData(&d_parallelApplyJ, false, "parallelApplyJ", "flag to enable parallel internal computation of applyJ"))
+    , d_parallelMapping(initData(&d_parallelMapping, true, "parallelMapping", "flag to enable parallel internal computation of apply/applyJ"))
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
     , m_inputMapping(nullptr)
     , m_isSubMapping(isSubMapping)
@@ -244,22 +244,34 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     }
 
     AdvancedTimer::stepBegin("computeNewInterpolation");
-    for(unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
+
+    // effective computation for each element in pointBeamDistribution
+    auto apply_impl = [&](const PosPointDefinition& pointBeamDistribution)
     {
-        const PosPointDefinition& pointBeamDistribution = m_pointBeamDistribution[i];
+        int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
 
         Vec<3, InReal> pos;
-        const Vec3 localPos(0.,pointBeamDistribution.baryPoint[1],pointBeamDistribution.baryPoint[2]);
+        const Vec3 localPos(0., pointBeamDistribution.baryPoint[1], pointBeamDistribution.baryPoint[2]);
         l_adaptativebeamInterpolation->interpolatePointUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, in, pos, false, xtest);
 
-        if(m_isSubMapping)
+        if (m_isSubMapping)
         {
-            if(m_idPointSubMap.size()>0)
+            if (m_idPointSubMap.size() > 0)
                 out[m_idPointSubMap[i]] = pos;
         }
         else
             out[i] = pos;
+    };
+
+    if (d_parallelMapping.getValue())
+    {
+        std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
     }
+    else // standard for-loop for each element (sequential, ordered)
+    {
+        std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
+    }
+
     AdvancedTimer::stepEnd("computeNewInterpolation");
 }
 
@@ -325,7 +337,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
             out[i] = vResult;
     };
 
-    if (d_parallelApplyJ.getValue())
+    if (d_parallelMapping.getValue())
     {
         std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
     }

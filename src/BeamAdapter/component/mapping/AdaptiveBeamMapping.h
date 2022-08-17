@@ -148,7 +148,7 @@ public:
     Data<std::string> d_inputMapName;		  /*!< if contactDuplicate==true, it provides the name of the input mapping */
     Data<double> d_nbPointsPerBeam;		  /*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
     Data<type::vector<Real>> d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
-    Data<bool> d_parallelApplyJ;           /*!< flag to enable parallel internal computation of applyJ */
+    Data<bool> d_parallelMapping;           /*!< flag to enable parallel internal computation of apply/applyJ */
 
     SingleLink<AdaptiveBeamMapping<TIn, TOut>,
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
