@@ -102,15 +102,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a07232851d20aa0c6530476a3784283e4"><td class="memItemLeft" align="right" valign="top"><a id="a07232851d20aa0c6530476a3784283e4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>AdaptiveBeamLengthConstraintResolution</b> (double *initF=nullptr, bool *active=nullptr)</td></tr>
 <tr class="separator:a07232851d20aa0c6530476a3784283e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4170224a237d74126f8d10a1f50a3d22"><td class="memItemLeft" align="right" valign="top"><a id="a4170224a237d74126f8d10a1f50a3d22"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (int line, double **w, double *force)</td></tr>
-<tr class="separator:a4170224a237d74126f8d10a1f50a3d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad946528053040e4a7141a9618747ca56"><td class="memItemLeft" align="right" valign="top"><a id="ad946528053040e4a7141a9618747ca56"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (int line, double **w, double *force) override</td></tr>
+<tr class="separator:ad946528053040e4a7141a9618747ca56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a779a5723059b5ba7cee63f9a72555b90"><td class="memItemLeft" align="right" valign="top"><a id="a779a5723059b5ba7cee63f9a72555b90"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>resolution</b> (int line, double **w, double *d, double *force)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resolution</b> (int line, double **w, double *d, double *force)</td></tr>
 <tr class="separator:a779a5723059b5ba7cee63f9a72555b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a3dcda7d271d5920b5536b36a536915"><td class="memItemLeft" align="right" valign="top"><a id="a4a3dcda7d271d5920b5536b36a536915"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>store</b> (int line, double *force, bool convergence)</td></tr>
-<tr class="separator:a4a3dcda7d271d5920b5536b36a536915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15b89f8f689bc9765bca2231beedb26e"><td class="memItemLeft" align="right" valign="top"><a id="a15b89f8f689bc9765bca2231beedb26e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>store</b> (int line, double *force, bool convergence) override</td></tr>
+<tr class="separator:a15b89f8f689bc9765bca2231beedb26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -127,7 +127,7 @@ bool *&#160;</td><td class="memItemRight" valign="bottom"><b>m_active</b></td></
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset.html">constraintset</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint__.html">_adaptivebeamlengthconstraint_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html">AdaptiveBeamLengthConstraintResolution</a></li>
-    <li class="footer">Generated on Tue Aug 16 2022 07:00:50 for BeamAdapter by
+    <li class="footer">Generated on Wed Aug 17 2022 00:44:28 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
