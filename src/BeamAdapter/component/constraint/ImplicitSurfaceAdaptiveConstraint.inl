@@ -31,6 +31,7 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/component/constraint/lagrangian/model/UnilateralInteractionConstraint.h>
 
+
 double TimeResolution = 0.0;
 double TimeCount = 0.0;
 double TimeProjection = 0.0;
