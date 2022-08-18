@@ -45,7 +45,12 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
+// execution policies only supported by MSVC >=2019 and GCC >=10
+#define HAS_SUPPORT_STL_PARALLELISM _MSC_VER > 1921 || (! defined(__GNUC__) || __GNUC__ > 9)
+
+#if HAS_SUPPORT_STL_PARALLELISM
 #include <execution>
+#endif
 
 namespace sofa::component::mapping
 {
@@ -96,6 +101,13 @@ void AdaptiveBeamMapping< TIn, TOut>::init()
 
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
     }
+#if not HAS_SUPPORT_STL_PARALLELISM
+    if (d_parallelMapping.getValue())
+    {
+        msg_error() << "Your compiler does not support STL parallelism, disabling parallel features.";
+        d_parallelMapping.setValue(false);
+    }
+#endif
 }
 
 
@@ -263,6 +275,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
             out[i] = pos;
     };
 
+#if HAS_SUPPORT_STL_PARALLELISM
     if (d_parallelMapping.getValue())
     {
         std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
@@ -271,6 +284,12 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     {
         std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
     }
+#else
+    for (const auto& p : m_pointBeamDistribution)
+    {
+        apply_impl(p);
+    }
+#endif // HAS_SUPPORT_STL_PARALLELISM
 
     AdvancedTimer::stepEnd("computeNewInterpolation");
 }
@@ -337,6 +356,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
             out[i] = vResult;
     };
 
+#if HAS_SUPPORT_STL_PARALLELISM
     if (d_parallelMapping.getValue())
     {
         std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
@@ -345,6 +365,12 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     {
         std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
     }
+#else
+    for (const auto& p : applyJ_impl)
+    {
+        apply_impl(p);
+    }
+#endif // HAS_SUPPORT_STL_PARALLELISM
 
     if(m_isXBufferUsed)
     {
