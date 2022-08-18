@@ -375,7 +375,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 #else
     for (const auto& p : m_pointBeamDistribution)
     {
-        apply_impl(p);
+        applyJ_impl(p);
     }
 #endif // HAS_SUPPORT_STL_PARALLELISM
 
