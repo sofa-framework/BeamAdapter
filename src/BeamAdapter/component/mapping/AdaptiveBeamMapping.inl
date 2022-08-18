@@ -46,7 +46,14 @@
 #include <sofa/core/MechanicalParams.h>
 
 // execution policies only supported by MSVC >=2019 and GCC >=10
-#define HAS_SUPPORT_STL_PARALLELISM _MSC_VER > 1921 || (! defined(__GNUC__) || __GNUC__ > 9)
+#ifdef _MSC_VER
+    #define HAS_SUPPORT_STL_PARALLELISM (_MSC_VER > 1921)
+#elif defined(__GNUC__)
+    #define HAS_SUPPORT_STL_PARALLELISM  (__GNUC__ > 9)
+#else
+    #define HAS_SUPPORT_STL_PARALLELISM  false
+#endif
+
 
 #if HAS_SUPPORT_STL_PARALLELISM
 #include <execution>
