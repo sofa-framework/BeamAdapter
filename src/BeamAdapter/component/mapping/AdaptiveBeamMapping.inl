@@ -373,7 +373,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
         std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
     }
 #else
-    for (const auto& p : applyJ_impl)
+    for (const auto& p : m_pointBeamDistribution)
     {
         apply_impl(p);
     }
