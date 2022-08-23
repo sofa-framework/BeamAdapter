@@ -642,7 +642,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                     for (; posInBeam <= 1.0; posInBeam += step)
                     {
                         waSegmentsCurvAbs.push_back(segStart + segLength * posInBeam);
-                        m_pointBeamDistribution.emplace_back( b, { posInBeam, 0.0, 0.0} );
+                        m_pointBeamDistribution.emplace_back( b, Vec3{ posInBeam, 0.0, 0.0} );
                     }
 
                     posInBeam -= 1.0;
@@ -652,7 +652,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                 {
                     // Last point
                     waSegmentsCurvAbs.push_back(segEnd);
-                    m_pointBeamDistribution.emplace_back(PosPointDefinition{ numBeams - 1, { 1.0, 0.0, 0.0} });
+                    m_pointBeamDistribution.emplace_back( numBeams - 1, Vec3{ 1.0, 0.0, 0.0} );
                 }
 
                 BaseMeshTopology* topo = this->getContext()->getMeshTopology();
@@ -676,7 +676,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
 
                     computeIdxAndBaryCoordsForAbs(b, xBary,  xAbs );
 
-                    m_pointBeamDistribution.emplace_back(PosPointDefinition{ b, { xBary, points[i][1], points[i][2]} });
+                    m_pointBeamDistribution.emplace_back( b, Vec3{ xBary, points[i][1], points[i][2]});
                 }
             }
         }
@@ -687,7 +687,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
             {
                 const unsigned int beamId = (int)floor(points[i][0]);
                 msg_warning_when(this->f_printLog.getValue() && (beamId > numBeams-1)) << "Points[" << i << "][0] = " << beamId << " is defined outside of the beam length";
-                m_pointBeamDistribution.emplace_back(PosPointDefinition{ beamId, { points[i][0] - floor(points[i][0]), points[i][1], points[i][2]} });
+                m_pointBeamDistribution.emplace_back( beamId, Vec3{ points[i][0] - floor(points[i][0]), points[i][1], points[i][2]});
             }
         }
     }

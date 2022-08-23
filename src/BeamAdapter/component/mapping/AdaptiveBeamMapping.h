@@ -137,6 +137,11 @@ public:
        /// -The first denote the curvilinear coordinate
        /// -The two followings denote the planar coordinate on the perpendicular cross section on the curve
        Vec3 baryPoint{};
+
+       PosPointDefinition() = default;
+       PosPointDefinition(unsigned int b, Vec3&& bary)
+           : beamId(b), baryPoint(std::move(bary))
+       {}
     } ;
 
 public:
