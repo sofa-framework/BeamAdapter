@@ -54,10 +54,11 @@
 #define HAS_SUPPORT_STL_PARALLELISM (_MSC_VER > 1921)
 #elif defined(__GNUC__)
 #define HAS_SUPPORT_STL_PARALLELISM  (__GNUC__ > 9)
+#elif defined(__clang_major__)
+#define HAS_SUPPORT_STL_PARALLELISM  (__clang_major__ > 10)
 #else
 #define HAS_SUPPORT_STL_PARALLELISM  false
 #endif
-
 
 #if HAS_SUPPORT_STL_PARALLELISM
 #include <execution>
@@ -225,7 +226,7 @@ public:
     // if this component was built without the support of the STL execution feature
     // inform the scene user that this is not supported.
 #if not HAS_SUPPORT_STL_PARALLELISM
-    void parse(core::objectmodel::BaseObjectDescription* args)
+    void parse(core::objectmodel::BaseObjectDescription* args) override
     {
         const char* arg = args->getAttribute("parallelMapping");
         if (arg)
