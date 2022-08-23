@@ -267,7 +267,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     // effective computation for each element in pointBeamDistribution
     auto apply_impl = [&](const PosPointDefinition& pointBeamDistribution)
     {
-        int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
+        const int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
 
         Vec<3, InReal> pos;
         const Vec3 localPos(0., pointBeamDistribution.baryPoint[1], pointBeamDistribution.baryPoint[2]);
@@ -342,7 +342,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     // effective computation for each element in pointBeamDistribution
     auto applyJ_impl = [&](const PosPointDefinition& pointBeamDistribution)
     {
-        int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
+        const int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
 
         unsigned int IdxNode0, IdxNode1;
         l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
@@ -642,7 +642,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
                     for (; posInBeam <= 1.0; posInBeam += step)
                     {
                         waSegmentsCurvAbs.push_back(segStart + segLength * posInBeam);
-                        m_pointBeamDistribution.emplace_back(PosPointDefinition{ b, { posInBeam, 0.0, 0.0} });
+                        m_pointBeamDistribution.emplace_back( b, { posInBeam, 0.0, 0.0} );
                     }
 
                     posInBeam -= 1.0;
