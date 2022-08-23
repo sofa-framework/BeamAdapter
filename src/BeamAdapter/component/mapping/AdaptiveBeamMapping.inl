@@ -289,10 +289,10 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     }
     else
 #endif // HAS_SUPPORT_STL_PARALLELISM
-for (const auto& p : m_pointBeamDistribution)
-{
-    apply_impl(p);
-}
+    for (const auto& p : m_pointBeamDistribution)
+    {
+        apply_impl(p);
+    }
 
 
     AdvancedTimer::stepEnd("computeNewInterpolation");
@@ -365,16 +365,12 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     {
         std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
     }
-    else // standard for-loop for each element (sequential, ordered)
-    {
-        std::for_each(std::execution::seq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
-    }
-#else
+    else
+#endif // HAS_SUPPORT_STL_PARALLELISM
     for (const auto& p : m_pointBeamDistribution)
     {
         applyJ_impl(p);
     }
-#endif // HAS_SUPPORT_STL_PARALLELISM
 
     if(m_isXBufferUsed)
     {
