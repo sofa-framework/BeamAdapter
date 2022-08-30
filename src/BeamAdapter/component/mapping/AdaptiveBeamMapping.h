@@ -222,9 +222,20 @@ public:
     void computeDistribution();
 };
 
+template<>
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types >::apply(const MechanicalParams*, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn);
+template<>
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types >::applyJonPoint(unsigned int i, SpatialVector& VNode0input, SpatialVector& VNode1input, Deriv& vOutput, const  InVecCoord& x);
+template<>
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types >::applyJTonPoint(unsigned int i, const Deriv& finput, SpatialVector& FNode0output, SpatialVector& FNode1output, const  InVecCoord& x);
+template <>
+SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types >::computeJacobianOnPoint(unsigned int i, const  InVecCoord& x);
+template <>
+SOFA_BEAMADAPTER_API int AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types >::addPoint(const Coord& point, int indexFrom);
+
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMMAPPING_CPP)
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Vec3Types>;
-// extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
+extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
 #endif
 
 } /// _adaptivebeammapping_

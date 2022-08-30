@@ -48,7 +48,7 @@ using namespace core::behavior;
 template<>
 SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(const MechanicalParams*, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn )
 {
-    VecCoord& out = *dOut.beginEdit();
+    auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in= dIn.getValue();
 
     m_isXBufferUsed=false;
@@ -68,8 +68,6 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(
         out[i].getCenter() = posTransform.getOrigin();
         out[i].getOrientation() = posTransform.getOrientation();
     }
-
-    dOut.endEdit();
 }
 
 
@@ -206,7 +204,9 @@ SOFA_BEAMADAPTER_API int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoin
     int nbPoints = d_points.getValue().size();
     Vec3 coord = point.getCenter();
 
-    d_points.beginEdit()->push_back(coord);
+    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
+    points.push_back(coord);
+
     return nbPoints;
 }
 
