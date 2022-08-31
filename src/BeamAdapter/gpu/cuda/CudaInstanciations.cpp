@@ -72,25 +72,25 @@ namespace sofa::component::mapping
 namespace sofa::gpu::cuda
 {
 
-int CudaBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
+int CudaBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation - Supports GPU-side computations using CUDA")
     .add< sofa::component::fem::BeamInterpolation<CudaRigid3dTypes> >();
 
-int CudaWireBeamInterpolationClass = core::RegisterObject("Adaptive Wire Beam Interpolation")
+int CudaWireBeamInterpolationClass = core::RegisterObject("Adaptive Wire Beam Interpolation - Supports GPU-side computations using CUDA")
     .add< sofa::component::fem::WireBeamInterpolation<CudaRigid3dTypes> >();
 
-int CudaWireRestShapenClass = core::RegisterObject("Wire Shape")
+int CudaWireRestShapenClass = core::RegisterObject("Wire Shape - Supports GPU-side computations using CUDA")
     .add< sofa::component::engine::WireRestShape<CudaRigid3dTypes> >();
 
-int CudaAdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements")
+int CudaAdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements - Supports GPU-side computations using CUDA")
     .add< sofa::component::forcefield::AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes> >();
 
-int CudaInterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+int CudaInterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology - Supports GPU-side computations using CUDA")
     .add< sofa::component::controller::InterventionalRadiologyController<CudaRigid3dTypes> >();
 
-int CudaAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+int CudaAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs - Supports GPU-side computations using CUDA")
     .add< sofa::component::mapping::AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >();
 
-int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
+int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs - Supports GPU-side computations using CUDA")
     .add< sofa::component::mapping::MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >();
 
 
