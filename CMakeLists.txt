@@ -118,7 +118,7 @@ endif()
 find_package(SofaCUDA REQUIRED)
 if(SofaCUDA_FOUND)
     list (APPEND SOURCE_FILES
-        ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstanciations.cpp
+        ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstantiations.cpp
     )
 endif()
 
