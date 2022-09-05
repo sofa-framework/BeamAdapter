@@ -73,11 +73,12 @@ using sofa::core::MechanicalParams;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamForceFieldAndMass : public core::behavior::Mass<DataTypes>
+class AdaptiveBeamForceFieldAndMass : virtual public sofa::core::behavior::Mass<DataTypes>, virtual public sofa::core::behavior::ForceField<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
-               SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
+    SOFA_CLASS2(SOFA_TEMPLATE(AdaptiveBeamForceFieldAndMass,DataTypes),
+               SOFA_TEMPLATE(core::behavior::Mass,DataTypes),
+               SOFA_TEMPLATE(core::behavior::ForceField,DataTypes));
 
     using Coord = typename DataTypes::Coord;
     using VecCoord = typename DataTypes::VecCoord;
@@ -99,7 +100,7 @@ public:
 
     using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
     using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
-    using core::behavior::Mass<DataTypes>::mstate;
+    typedef sofa::core::behavior::Mass<DataTypes> MassT;
 
 protected:
 
@@ -154,13 +155,6 @@ public:
         msg_error() << "getKineticEnergy not yet implemented";
         return 0;
     }
-
-    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
-    {
-        SOFA_UNUSED(mparams);
-        msg_error() << "addGravityToV not implemented yet";
-    }
     
     bool isDiagonal() const override { return false; }
 
@@ -179,6 +173,26 @@ public:
         return 0; 
     }
 
+    SReal getGravitationalPotentialEnergy(const core::MechanicalParams* mparams, const DataVecCoord& x, const Deriv& gravity) const override
+    {
+        SOFA_UNUSED(mparams);
+        SOFA_UNUSED(x);
+        SOFA_UNUSED(gravity);
+        msg_error()<<"getGravitationalPotentialEnergy not yet implemented";
+        return 0.0;
+    }
+
+    void addGravitationalForce(const core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v, const Deriv& gravity) override
+    {
+        // Force directly computed in addForce
+        SOFA_UNUSED(mparams);
+        SOFA_UNUSED(f);
+        SOFA_UNUSED(x);
+        SOFA_UNUSED(v);
+        SOFA_UNUSED(gravity);
+        return;
+    }
+
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
     void addKToMatrix(const MechanicalParams* mparams,
                       const MultiMatrixAccessor* matrix) override;
@@ -192,6 +206,10 @@ public:
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
     DataVecDeriv d_dataG;
+
+
+    bool insertInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::insertInNode(node); }
+    bool removeInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::removeInNode(node); }
 
 protected :
 

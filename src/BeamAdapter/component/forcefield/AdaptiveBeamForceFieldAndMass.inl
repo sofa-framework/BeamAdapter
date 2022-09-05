@@ -198,6 +198,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, Beam
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beamId, BeamLocalMatrices& beamLocalMatrix)
 {
+    SOFA_UNUSED(beamId);
     Real L2 = (Real) (beamLocalMatrix._L * beamLocalMatrix._L);
     beamLocalMatrix.m_M00.clear(); beamLocalMatrix.m_M01.clear(); beamLocalMatrix.m_M10.clear(); beamLocalMatrix.m_M11.clear();
 
@@ -357,7 +358,7 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(MassT::mstate);
     Real mFact = (Real)mparams->mFactor();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -399,7 +400,7 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalParams* mparams,
                                                               const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(MassT::mstate);
     Real kFact = (Real)mparams->kFactor();
     Real mFact = (Real)mparams->mFactor();
 
@@ -677,7 +678,7 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalParams* mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(mstate);
+    MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(MassT::mstate);
     Real k = (Real)mparams->kFactor();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -726,11 +727,11 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
 {
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
-    if (!mstate) return;
+    if (!MassT::mstate) return;
 
     vparams->drawTool()->saveLastState();
 
-    ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = MassT::mstate->read(ConstVecCoordId::position()) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

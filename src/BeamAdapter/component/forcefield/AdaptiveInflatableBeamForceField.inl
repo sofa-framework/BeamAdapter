@@ -405,7 +405,7 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->MassT::mstate);
     Real mFact = (Real)mparams->mFactor();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -449,7 +449,7 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::addMBKToMatrix(const MechanicalParams* mparams,
                                                               const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
+    MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->MassT::mstate);
     Real kFact = (Real)mparams->kFactor();
     Real mFact = (Real)mparams->mFactor();
 
@@ -710,7 +710,7 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::addKToMatrix(const MechanicalParams* mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
-    MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(mstate);
+    MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(MassT::mstate);
     Real k = (Real)mparams->kFactor();
 
     unsigned int numBeams = l_interpolation->getNumBeams();
@@ -760,9 +760,9 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vparams)
 {
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
-    if (!mstate) return;
+    if (!MassT::mstate) return;
 
-    ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = MassT::mstate->read(ConstVecCoordId::position()) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

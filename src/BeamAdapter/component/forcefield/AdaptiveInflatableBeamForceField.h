@@ -94,12 +94,13 @@ using sofa::defaulttype::SolidTypes;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveInflatableBeamForceField : public Mass<DataTypes>
+class AdaptiveInflatableBeamForceField : virtual public sofa::core::behavior::Mass<DataTypes>, virtual public sofa::core::behavior::ForceField<DataTypes>
 {
 public:
 
-    SOFA_CLASS(SOFA_TEMPLATE(AdaptiveInflatableBeamForceField,DataTypes),
-               SOFA_TEMPLATE(core::behavior::Mass,DataTypes));
+    SOFA_CLASS2(SOFA_TEMPLATE(AdaptiveInflatableBeamForceField,DataTypes),
+               SOFA_TEMPLATE(core::behavior::Mass,DataTypes),
+               SOFA_TEMPLATE(core::behavior::ForceField,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -192,14 +193,6 @@ public:
         return 0;
     }
 
-    //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
-    {
-        SOFA_UNUSED(mparams);
-        msg_error() << "addGravityToV not implemented yet";
-    }
-
-
     bool isDiagonal() const override { return false; }
 
     /////////////////////////////////////
@@ -219,6 +212,26 @@ public:
         return 0;
     }
 
+    SReal getGravitationalPotentialEnergy(const core::MechanicalParams* mparams, const DataVecCoord& x, const Deriv& gravity) const override
+    {
+        SOFA_UNUSED(mparams);
+        SOFA_UNUSED(x);
+        SOFA_UNUSED(gravity);
+        msg_error()<<"getGravitationalPotentialEnergy not yet implemented";
+        return 0.0;
+    }
+
+    void addGravitationalForce(const core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v, const Deriv& gravity) override
+    {
+        // Force directly computed in addForce
+        SOFA_UNUSED(mparams);
+        SOFA_UNUSED(f);
+        SOFA_UNUSED(x);
+        SOFA_UNUSED(v);
+        SOFA_UNUSED(gravity);
+        return;
+    }
+
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
     void addKToMatrix(const MechanicalParams* mparams,
                       const MultiMatrixAccessor* matrix) override;
@@ -233,6 +246,10 @@ public:
     Data<Real> d_pressure;                  ///< Pressure applied inside the inflatable beams
     DataVecDeriv d_dataG;
 
+
+    bool insertInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::insertInNode(node); }
+    bool removeInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::removeInNode(node); }
+
 protected :
 
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
@@ -246,7 +263,7 @@ protected :
     type::vector<BeamLocalMatrices> m_localBeamMatrices;
 
     using Mass<DataTypes>::getContext;
-    using Mass<DataTypes>::mstate;
+    typedef sofa::core::behavior::Mass<DataTypes> MassT;
 
 private:
 
