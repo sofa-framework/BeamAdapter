@@ -195,22 +195,6 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::comput
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
 
-
-template <>
-SOFA_BEAMADAPTER_API int AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::addPoint (const Coord& point, int indexFrom)
-{
-    SOFA_UNUSED(indexFrom);
-
-    int nbPoints = d_points.getValue().size();
-    Vec3 coord = point.getCenter();
-
-    auto points = sofa::helper::getWriteOnlyAccessor(d_points);
-    points.push_back(coord);
-
-    return nbPoints;
-}
-
-
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
 ///
 /// Register the component into the sofa factory.
