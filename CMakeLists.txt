@@ -120,7 +120,7 @@ if(SofaCUDA_FOUND)
     list (APPEND SOURCE_FILES
         ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstantiations.cpp
     )
-    message("BeamAdapter: SofaCUDA has been enabled, instantiations for CudaTypes will be enabled.")
+    message(STATUS "BeamAdapter: SofaCUDA has been enabled, instantiations for CudaTypes will be enabled.")
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
