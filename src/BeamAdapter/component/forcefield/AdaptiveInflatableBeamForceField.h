@@ -250,6 +250,8 @@ public:
     bool insertInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::insertInNode(node); }
     bool removeInNode( core::objectmodel::BaseNode* node ) override { return core::behavior::ForceField<DataTypes>::removeInNode(node); }
 
+    using sofa::core::behavior::ForceField<DataTypes>::canCreate;
+
 protected :
 
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
