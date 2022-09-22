@@ -22,6 +22,7 @@
 #pragma once
 
 #include <sofa/component/controller/MechanicalStateController.h>
+#include <BeamAdapter/utils/BeamActions.h>
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
@@ -44,6 +45,7 @@ public:
 
     void init() override;
     void onBeginAnimationStep(const double dt) override;
+    //void onKeyPressedEvent(core::objectmodel::KeypressedEvent*) override;
     void onMouseEvent(core::objectmodel::MouseEvent*) override;
 
     Data <type::vector<int> > d_actions;
@@ -51,9 +53,9 @@ public:
 
     SingleLink<BeamAdapterActionController<DataTypes>, InterventionalRadiologyController<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interventionController;
 
-protected:
+private:
     int readStep = 0;
-    int currAction = -1;
+    sofa::beamadapter::BeamAdapterAction currAction = NO_ACTION;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)

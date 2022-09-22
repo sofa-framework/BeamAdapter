@@ -49,6 +49,12 @@ void BeamAdapterActionController<DataTypes>::init()
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
     }
 
+    // the controller must listen to the event (in particular BeginAnimationStep event)
+    if (!f_listening.isSet())
+    {
+        f_listening.setValue(true);
+    }
+
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
@@ -65,14 +71,18 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
             Real time = times[readStep];
             if (getContext()->getTime() >= time) // check if another key time has been reached and change action
             {
-                currAction = d_actions.getValue()[readStep];
+                currAction = BeamAdapterAction(d_actions.getValue()[readStep]);
                 readStep++;
             }
         }
-
-        std::cout << "action: " << currAction << std::endl;
+       
         interventionCtrl* ctrl = l_interventionController.get();
-        ctrl->applyAction(BeamAdapterAction(currAction));
+        ctrl->applyAction(currAction);
+
+        if (currAction >= SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
+        {
+            currAction = NO_ACTION;
+        }
     }
 }
 
