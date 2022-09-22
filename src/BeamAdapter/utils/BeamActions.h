@@ -31,7 +31,11 @@ namespace sofa::beamadapter
         SPIN_RIGHT,
         SPIN_LEFT,
         SWITCH_NEXT_TOOL,
-        SWITCH_PREVIOUS_TOOL
+        SWITCH_PREVIOUS_TOOL,
+        DROP_TOOL,
+        USE_TOOL_0,
+        USE_TOOL_1,
+        USE_TOOL_2,
     } BeamAdapterAction;
 
 

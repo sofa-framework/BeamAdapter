@@ -238,72 +238,29 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedE
     switch(kev->getKey())
     {
         case 'D':
-            m_dropCall = true;
+            applyAction(DROP_TOOL);
             break;
-
         case '2':
-            {
-                if (2 >= (int)m_instrumentsList.size() && f_printLog.getValue() )
-                    msg_warning()<<"Controlled Instument num 2 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id";
-                else
-                    d_controlledInstrument.setValue(2);
-            }
+            applyAction(USE_TOOL_2);
             break;
-
         case '1':
-            {
-                if (1 >= (int)m_instrumentsList.size() && f_printLog.getValue() )
-                    msg_warning()<<"Controlled Instument num 1 do not exist (size ="<< m_instrumentsList.size() <<") do not change the instrument id";
-                else
-                    d_controlledInstrument.setValue(1);
-            }
+            applyAction(USE_TOOL_1);
             break;
-
         case '0':
-            d_controlledInstrument.setValue(0);
+            applyAction(USE_TOOL_0);
             break;
-
         case 20: // droite = 20
-            {    
-                auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
-                int id = d_controlledInstrument.getValue();
-                rotInstrument[id] += d_angularStep.getValue();
-            }
+            applyAction(SPIN_RIGHT);
             break;
         case 18: // gauche = 18
-            {
-                int id = d_controlledInstrument.getValue();
-                auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
-                rotInstrument[id] -= d_angularStep.getValue();
-            }
+            applyAction(SPIN_LEFT);
             break;
-
         case 19: // fleche haut = 19
-            {
-                int id = d_controlledInstrument.getValue();
-                auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
-                if (id >= (int)xInstrTip.size())
-                {
-                    msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead";
-                    id=0;
-                }
-                xInstrTip[id] += d_step.getValue();
-            }
+            applyAction(MOVE_FORWARD);
             break;
-
         case 21: // bas = 21
-            {
-                int id = d_controlledInstrument.getValue();
-                auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
-                if (id >= (int)xInstrTip.size())
-                {
-                    msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead.";
-                    id=0;
-                }
-                xInstrTip[id] -= d_step.getValue();
-            }
+            applyAction(MOVE_BACKWARD);
             break;
-
         case '*':
             {
                 if(m_RW)
@@ -317,7 +274,6 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedE
                 }
             }
             break;
-
         case '/':
             {
                 if(m_FF)
@@ -446,6 +402,31 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
         else
             d_controlledInstrument.setValue(id - 1);
         break;
+    }
+    case USE_TOOL_0:
+    {
+        d_controlledInstrument.setValue(0);
+        break;
+    }
+    case USE_TOOL_1:
+    {
+        if (1 >= m_instrumentsList.size())
+            msg_warning() << "Controlled Instument num 1 do not exist (size =" << m_instrumentsList.size() << ") do not change the instrument id";
+        else
+            d_controlledInstrument.setValue(1);
+        break;
+    }
+    case USE_TOOL_2:
+    {
+        if (2 >= m_instrumentsList.size())
+            msg_warning() << "Controlled Instument num 2 do not exist (size =" << m_instrumentsList.size() << ") do not change the instrument id";
+        else
+            d_controlledInstrument.setValue(2);
+        break;
+    }
+    case DROP_TOOL:
+    {
+        m_dropCall = true;
     }
     }
 }
