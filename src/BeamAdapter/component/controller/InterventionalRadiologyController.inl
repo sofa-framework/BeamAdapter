@@ -55,6 +55,7 @@ using core::objectmodel::BaseContext;
 using helper::WriteAccessor;
 using core::objectmodel::KeypressedEvent;
 using core::objectmodel::MouseEvent;
+using namespace sofa::beamadapter;
 
 
 template <class DataTypes>
@@ -389,6 +390,64 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
             xInstrTip[i] = m_instrumentsList[i]->getRestTotalLength();
 
     applyInterventionalRadiologyController();
+}
+
+
+template <class DataTypes>
+void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter::BeamAdapterAction action)
+{
+    int id = d_controlledInstrument.getValue();    
+    if (id >= m_instrumentsList.size())
+    {
+        msg_warning() << "Controlled Instument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
+        return;
+    }
+
+    switch (action)
+    {
+    case NO_ACTION:
+        break;
+    case MOVE_FORWARD:
+    {
+        auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
+        xInstrTip[id] += d_step.getValue();
+        break;
+    }
+    case MOVE_BACKWARD:
+    {
+        auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
+        xInstrTip[id] -= d_step.getValue();
+        break;
+    }
+    case SPIN_RIGHT:
+    {
+        auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
+        rotInstrument[id] += d_angularStep.getValue();
+        break;
+    }
+    case SPIN_LEFT:
+    {
+        auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
+        rotInstrument[id] -= d_angularStep.getValue();
+        break;
+    }
+    case SWITCH_NEXT_TOOL:
+    {
+        if (id + 1 >= m_instrumentsList.size())
+            msg_warning() << "Switching to next tool is not possible, no more instrument in list.";
+        else
+            d_controlledInstrument.setValue(id + 1);
+        break;
+    }
+    case SWITCH_PREVIOUS_TOOL:
+    {
+        if (id == 0)
+            msg_warning() << "Switching to previous tool is not possible, already controlling first instrument.";
+        else
+            d_controlledInstrument.setValue(id - 1);
+        break;
+    }
+    }
 }
 
 

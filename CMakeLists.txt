@@ -35,6 +35,8 @@ set(HEADER_FILES
 
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.h
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.inl
+    ${BEAMADAPTER_SRC}/component/controller/BeamAdapterActionController.h
+    ${BEAMADAPTER_SRC}/component/controller/BeamAdapterActionController.inl    
     ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.h
     ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.inl
     ${BEAMADAPTER_SRC}/component/controller/SutureController.h
@@ -56,6 +58,7 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.inl
 
     ${BEAMADAPTER_SRC}/utils/BeamSection.h
+    ${BEAMADAPTER_SRC}/utils/BeamActions.h
     ${BEAMADAPTER_SRC}/utils/deprecatedcomponent.h
     )
 
@@ -69,6 +72,7 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/constraint/AdaptiveBeamLengthConstraint.cpp
 
     ${BEAMADAPTER_SRC}/component/controller/AdaptiveBeamController.cpp
+    ${BEAMADAPTER_SRC}/component/controller/BeamAdapterActionController.cpp
     ${BEAMADAPTER_SRC}/component/controller/InterventionalRadiologyController.cpp
     ${BEAMADAPTER_SRC}/component/controller/SutureController.cpp
 

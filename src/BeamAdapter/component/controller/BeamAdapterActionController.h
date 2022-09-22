@@ -21,16 +21,43 @@
 ******************************************************************************/
 #pragma once
 
+#include <sofa/component/controller/MechanicalStateController.h>
+#include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
+#include <sofa/defaulttype/VecTypes.h>
+#include <sofa/defaulttype/RigidTypes.h>
+#include <sofa/core/objectmodel/MouseEvent.h>
+#include <sofa/core/objectmodel/KeypressedEvent.h>
 
-namespace sofa::beamadapter
+namespace sofa::component::controller
 {
-    typedef enum {
-        NO_ACTION = 0,
-        MOVE_FORWARD,
-        MOVE_BACKWARD,
-        SPIN_RIGHT,
-        SPIN_LEFT,
-        SWITCH_NEXT_TOOL,
-        SWITCH_PREVIOUS_TOOL
-    } BeamAdapterAction;
-} // namespace sofa::beamAdapter
+
+template<class DataTypes>
+class BeamAdapterActionController : public MechanicalStateController<DataTypes>
+{
+public:
+    SOFA_CLASS(SOFA_TEMPLATE(BeamAdapterActionController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
+
+    using interventionCtrl = InterventionalRadiologyController<DataTypes>;
+
+    BeamAdapterActionController();
+    virtual ~BeamAdapterActionController() = default;
+
+    void init() override;
+    void onBeginAnimationStep(const double dt) override;
+    void onMouseEvent(core::objectmodel::MouseEvent*) override;
+
+    Data <type::vector<int> > d_actions;
+    Data <type::vector<Real> > d_timeSteps;
+
+    SingleLink<BeamAdapterActionController<DataTypes>, InterventionalRadiologyController<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interventionController;
+
+protected:
+    int readStep = 0;
+    int currAction = -1;
+};
+
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)
+extern template class SOFA_BEAMADAPTER_API BeamAdapterActionController<sofa::defaulttype::Rigid3Types>;
+#endif
+
+} /// namespace sofa::component::controller
