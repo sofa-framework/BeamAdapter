@@ -35,7 +35,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/DataEngine.h>
+#include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 #include <sofa/core/loader/MeshLoader.h>
@@ -58,10 +58,10 @@ using sofa::core::loader::MeshLoader;
  *  Describe the shape functions on multiple segments using curvilinear abscissa
  */
 template <class DataTypes>
-class WireRestShape : public sofa::core::DataEngine
+class WireRestShape : public core::objectmodel::BaseObject
 {
 public:
-    SOFA_CLASS(WireRestShape,sofa::core::DataEngine);
+    SOFA_CLASS(WireRestShape, core::objectmodel::BaseObject);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -84,8 +84,7 @@ public:
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      void parse(core::objectmodel::BaseObjectDescription* arg) override;
      void init() override ;
-     void doUpdate() override {}
-     
+       
      void draw(const core::visual::VisualParams * vparams) override ;
 
 
