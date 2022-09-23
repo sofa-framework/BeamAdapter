@@ -68,16 +68,9 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_keyPoints(initData(&d_keyPoints,"keyPoints","key points of the shape (curv absc)"))
   , d_numEdges(initData(&d_numEdges, 10, "numEdges","number of Edges for the visual model"))
   , d_numEdgesCollis(initData(&d_numEdgesCollis,"numEdgesCollis", "number of Edges for the collision model" ))
-  , d_poissonRatio(initData(&d_poissonRatio,(Real)0.49,"poissonRatio","Poisson Ratio"))
-  , d_youngModulus1(initData(&d_youngModulus1,(Real)5000,"youngModulus","Young Modulus"))
-  , d_youngModulus2(initData(&d_youngModulus2,(Real)3000,"youngModulusExtremity","youngModulus for beams at the extremity\nonly if not straight"))
-  , d_radius1(initData(&d_radius1,(Real)1.0f,"radius","radius"))
-  , d_radius2(initData(&d_radius2,(Real)1.0f,"radiusExtremity","radius for beams at the extremity\nonly if not straight"))
-  , d_innerRadius1(initData(&d_innerRadius1,(Real)0.0f,"innerRadius","inner radius if it applies"))
-  , d_innerRadius2(initData(&d_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
-  , d_massDensity1(initData(&d_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
-  , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
+  , l_sectionMaterial1(initLink("main_material", "link to the fist Wire Section Material"))
+  , l_sectionMaterial2(initLink("extremity_material", "link to the second Wire Section Material"))
   , l_topology(initLink("topology", "link to the topology container"))
   , l_loader(initLink("loader", "link to the MeshLoader"))
 {
@@ -233,29 +226,6 @@ void WireRestShape<DataTypes>::init()
 
     msg_info() <<"WireRestShape end init" ;
 
-    // Prepare beam sections
-    double r 					= this->d_radius1.getValue();
-    double rInner 				= this->d_innerRadius1.getValue();
-    this->beamSection1._r 		= r;
-    this->beamSection1._rInner 	= rInner;
-    this->beamSection1._Iz		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-    this->beamSection1._Iy 		= this->beamSection1._Iz ;
-    this->beamSection1._J 		= this->beamSection1._Iz + this->beamSection1._Iy;
-    this->beamSection1._A 		= M_PI*(r*r - rInner*rInner);
-    this->beamSection1._Asy 	= 0.0;
-    this->beamSection1._Asz 	= 0.0;
-
-    r 							= this->d_radius2.getValue();
-    rInner 						= this->d_innerRadius2.getValue();
-    this->beamSection2._r 		= r;
-    this->beamSection2._rInner 	= rInner;
-    this->beamSection2._Iz 		= M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-    this->beamSection2._Iy 		= this->beamSection2._Iz ;
-    this->beamSection2._J 		= this->beamSection2._Iz + this->beamSection2._Iy;
-    this->beamSection2._A 		= M_PI*(r*r - rInner*rInner);
-    this->beamSection2._Asy 	= 0.0;
-    this->beamSection2._Asz 	= 0.0;
-
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
@@ -368,31 +338,11 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 template <class DataTypes>
 void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const
 {
-    //Initialization
-    Real _E1, _E2;
-    youngModulus = 0.0;
-    cPoisson = 0.0;
-
-    //Get the two possible values of the Young modulus
-    _E1 = this->d_youngModulus1.getValue();
-    _E2 = this->d_youngModulus2.getValue();
-
-    //Get User data
-    cPoisson = this->d_poissonRatio.getValue();
-
     //Depending on the position of the beam, determine the Young modulus
-    if(x_curv <= this->d_straightLength.getValue())
-    {
-        youngModulus = _E1;
-    }
+    if (x_curv > this->d_straightLength.getValue() && l_sectionMaterial2.get()) // extremity of the wire
+        return l_sectionMaterial2.get()->getYoungModulusAtX(youngModulus, cPoisson);
     else
-    {
-        if(_E2 == 0.0)
-            youngModulus = _E1;
-        else
-            youngModulus = _E2;
-    }
-    return;
+        return l_sectionMaterial1.get()->getYoungModulusAtX(youngModulus, cPoisson);
 }
 
 
@@ -401,43 +351,18 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
 {
     if(x_curv <= this->d_straightLength.getValue())
     {
-        if(d_massDensity1.isSet())
-            _rho = d_massDensity1.getValue();
-
-        if(d_radius1.isSet())
-        {
-            _A		=beamSection1._A;
-            _Iy		=beamSection1._Iy;
-            _Iz		=beamSection1._Iz;
-            _Asy	=beamSection1._Asy;
-            _Asz	=beamSection1._Asz;
-            _J		=beamSection1._J;
-        }
+        return l_sectionMaterial1.get()->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
     }
     else
     {
-        if(d_massDensity2.isSet())
-            _rho = d_massDensity2.getValue();
-        else if(d_massDensity1.isSet())
-            _rho = d_massDensity1.getValue();
-
-        if(d_radius2.isSet())
+        auto mat = l_sectionMaterial2.get();
+        if (mat)
         {
-            _A		=beamSection2._A;
-            _Iy		=beamSection2._Iy;
-            _Iz		=beamSection2._Iz;
-            _Asy	=beamSection2._Asy;
-            _Asz	=beamSection2._Asz;
-            _J		=beamSection2._J;
+            return mat->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
         }
-        else if(d_radius1.isSet())
+        else
         {
-            _A		=beamSection1._A;
-            _Iy		=beamSection1._Iy;
-            _Iz		=beamSection1._Iz;
-            _Asy	=beamSection1._Asy;
-            _Asz	=beamSection1._Asz;
-            _J		=beamSection1._J;
+            return l_sectionMaterial1.get()->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
         }
     }
 }

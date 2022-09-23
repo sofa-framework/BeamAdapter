@@ -34,6 +34,8 @@
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
+#include <BeamAdapter/component/model/WireSectionMaterial.h>
+
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyContainer.h>
@@ -47,6 +49,8 @@ namespace _wirerestshape_
 
 using sofa::core::topology::TopologyContainer;
 using sofa::core::loader::MeshLoader;
+
+using namespace sofa::beamadapter;
 
 /**
  * \class WireRestShape
@@ -144,22 +148,14 @@ public:
      Data< int > d_numEdges;
      Data<type::vector<int> > d_numEdgesCollis;
 
-     /// User Data about the Young modulus
-     Data<Real> d_poissonRatio;
-     Data<Real> d_youngModulus1;
-     Data<Real> d_youngModulus2;
-
-     /// Radius
-     Data<Real> d_radius1;
-     Data<Real> d_radius2;
-     Data<Real> d_innerRadius1;
-     Data<Real> d_innerRadius2;
-
-     Data<Real> d_massDensity1;
-     Data<Real> d_massDensity2;
-
      /// broken in 2 case
      Data<bool>	d_drawRestShape;
+
+     /// Link to be set to the topology container in the component graph.
+     SingleLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterial1;
+
+     /// Link to be set to the topology container in the component graph.
+     SingleLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterial2;
 
 private:
      /// Data required for the File loading
@@ -168,9 +164,6 @@ private:
      type::vector<Real> 		m_curvAbs ;
      double 							m_absOfGeometry {0};
      
-     BeamSection beamSection1;
-     BeamSection beamSection2;
-
      /// Link to be set to the topology container in the component graph.
      SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
      /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
