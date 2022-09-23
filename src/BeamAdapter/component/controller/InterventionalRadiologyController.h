@@ -89,7 +89,6 @@ public:
     ////////////////////// Inherited from BaseObject ///////////////////////////////////////////////
     virtual void init() override ;
     virtual void bwdInit() override ;
-    virtual void reinit() override;
     virtual void draw(const core::visual::VisualParams*) override {}
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -126,7 +125,6 @@ public:
 
     /// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
-    virtual void computeVertexT();
 
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     void interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs, type::vector< type::vector<int> > &id_instrument_table, const type::vector<Real> &xBegin, const Real& xEnd);

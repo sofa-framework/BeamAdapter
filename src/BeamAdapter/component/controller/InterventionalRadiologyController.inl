@@ -208,17 +208,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     reinit();
 }
 
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::reinit()
-{
-}
-
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::computeVertexT()
-{
-}
-
 
 /*!
  * \todo fix the mouse event with better controls
