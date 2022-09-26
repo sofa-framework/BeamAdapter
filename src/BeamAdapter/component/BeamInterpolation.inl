@@ -1237,8 +1237,9 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     }
     else
     {
-        Real bx2 = bx * bx;
-        Real invBx2 = invBx * invBx;
+        const Real bx2 = bx * bx;
+        const Real invBx2 = invBx * invBx;
+
         /// The position of the frame is computed using the interpolation of the spline
         posResult = P0 * invBx * invBx2 +    P1 * 3 * bx * invBx2 +    P2 * 3 * bx2 * invBx +    P3 * bx2 * bx;
 
