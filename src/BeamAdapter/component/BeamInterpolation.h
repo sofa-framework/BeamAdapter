@@ -84,7 +84,6 @@ public:
     using Vec3 = sofa::type::Vec<3, Real>;
     using Vec3NoInit = sofa::type::VecNoInit<3, Real>;
     using Quat = sofa::type::Quat<Real>;
-    using QuatNoInit = sofa::type::QuatNoInit<Real>;
     using VectorVec3 = type::vector <Vec3>;
 
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;

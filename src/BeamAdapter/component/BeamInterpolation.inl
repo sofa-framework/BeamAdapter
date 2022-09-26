@@ -441,7 +441,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     edgeList.push_back(eID);
     lengthList.push_back(length);
 
-    QuatNoInit QuatX ;
+    Quat QuatX ;
     QuatX.axisToQuat(Vec3(1,0,0), angle);
     QuatX.normalize();
 
@@ -1217,7 +1217,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
     const Real invBx = 1-baryCoord;
     Vec3NoInit posResult;
-    QuatNoInit quatResult;
+    Quat quatResult;
 
     const Vec3 dP01 = P1-P0;
     const Vec3 dP12 = P2-P1;
@@ -1247,7 +1247,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
         /// try to interpolate the "orientation" (especially the torsion) the best possible way...
         /// (but other ways should exit...)
-        QuatNoInit R0, R1, Rslerp;
+        Quat R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
         RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
