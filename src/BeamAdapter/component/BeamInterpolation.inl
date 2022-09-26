@@ -441,7 +441,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
     edgeList.push_back(eID);
     lengthList.push_back(length);
 
-    Quat QuatX ;
+    QuatNoInit QuatX ;
     QuatX.axisToQuat(Vec3(1,0,0), angle);
     QuatX.normalize();
 
@@ -1215,14 +1215,13 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
     /// find the spline points
     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
-    Real bx=baryCoord;
-    Real invBx = 1-baryCoord;
+    const Real invBx = 1-baryCoord;
     Vec3NoInit posResult;
-    Quat quatResult;
+    QuatNoInit quatResult;
 
-    Vec3 dP01 = P1-P0;
-    Vec3 dP12 = P2-P1;
-    Vec3 dP03 = P3-P0;
+    const Vec3 dP01 = P1-P0;
+    const Vec3 dP12 = P2-P1;
+    const Vec3 dP03 = P3-P0;
 
     if(dP01*dP12<0.0 && dP03.norm()<0.4*L)
     {
@@ -1233,29 +1232,29 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         quatResult = global_H_local0.getOrientation();
 
         //quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
-        posResult = P0 * invBx + P3*bx;
+        posResult = P0 * invBx + P3 * baryCoord;
     }
     else
     {
-        const Real bx2 = bx * bx;
+        const Real bx2 = baryCoord * baryCoord;
         const Real invBx2 = invBx * invBx;
 
         /// The position of the frame is computed using the interpolation of the spline
-        posResult = P0 * invBx * invBx2 +    P1 * 3 * bx * invBx2 +    P2 * 3 * bx2 * invBx +    P3 * bx2 * bx;
+        posResult = P0 * invBx * invBx2 + P1 * 3 * baryCoord * invBx2 + P2 * 3 * bx2 * invBx + P3 * bx2 * baryCoord;
 
         /// the tangent is computed by derivating the spline
-        Vec3 n_x =  P0*(-3* invBx2) + P1*(3-12*bx+9* bx2) + P2*(6*bx-9* bx2) + P3*(3* bx2);
+        Vec3 n_x = P0 * (-3 * invBx2) + P1 * (3 - 12 * baryCoord + 9 * bx2) + P2 * (6 * baryCoord - 9 * bx2) + P3 * (3 * bx2);
 
         /// try to interpolate the "orientation" (especially the torsion) the best possible way...
         /// (but other ways should exit...)
-        Quat R0, R1, Rslerp;
+        QuatNoInit R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
         RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
         RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
 
         ///     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
-        Rslerp.slerp(R0,R1, (float)bx,true);
+        Rslerp.slerp(R0,R1, (float)baryCoord,true);
         Rslerp.normalize();
 
         ///     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
