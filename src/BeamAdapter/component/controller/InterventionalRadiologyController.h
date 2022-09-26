@@ -131,7 +131,7 @@ public:
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     void interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs, type::vector< type::vector<int> > &id_instrument_table, const type::vector<Real> &xBegin, const Real& xEnd);
     /// Sort the curv Abs in the ascending order and avoid doubloon
-    void sortCurvAbs(type::vector<Real> &CurvAbs,  type::vector< type::vector<int> >& id_instrument_table);
+    void sortCurvAbs(type::vector<Real> &CurvAbs, type::vector< type::vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( type::vector<Real> &curv_abs, type::vector< type::vector<int> > &id_instrument_table);
@@ -159,6 +159,10 @@ public:
     type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
     unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
     bool                            m_dropCall;
+
+private:
+    /// Copy of @sa d_threshold for direct access in lambda unique function to avoid numerous getValue calls
+    Real m_threshold = 0.0;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)
