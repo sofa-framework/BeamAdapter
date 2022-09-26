@@ -170,6 +170,13 @@ void WireRestShape<DataTypes>::init()
             initFromLoader();
         }
     }
+    if (!l_sectionMaterial1.get())
+    {
+        msg_error() << "No WireSectionMaterial set. At least one material should be set and link using main_material";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+
     else
     {
         if (!fillTopology())
