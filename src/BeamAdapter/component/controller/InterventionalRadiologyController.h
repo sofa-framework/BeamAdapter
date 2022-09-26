@@ -109,6 +109,8 @@ public:
     const type::vector< type::vector<int> >& get_id_instrument_curvAbs_table()const;
     int getTotalNbEdges()const;
 
+    /// Getter to the tools curviline abscisses sorted @sa m_nodeCurvAbs at the current timestep.
+    [[nodiscard]] const type::vector<Real>& getCurrentCurvAbscisses() const { return m_nodeCurvAbs; }
 public:
 
     using Inherit1::f_printLog;
@@ -146,7 +148,8 @@ public:
     Data<type::vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
     Data<std::string>    d_motionFilename;
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
-    Data<type::vector<Real>>   d_curvAbs;
+    
+    
 
     bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;
