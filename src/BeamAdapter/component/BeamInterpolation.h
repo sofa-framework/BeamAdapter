@@ -82,6 +82,7 @@ public:
 
     using Vec2 = sofa::type::Vec<2, Real>;
     using Vec3 = sofa::type::Vec<3, Real>;
+    using Vec3NoInit = sofa::type::VecNoInit<3, Real>;
     using Quat = sofa::type::Quat<Real>;
     using VectorVec3 = type::vector <Vec3>;
 
