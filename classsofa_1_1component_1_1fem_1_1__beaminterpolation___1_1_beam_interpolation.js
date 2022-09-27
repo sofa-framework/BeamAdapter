@@ -10,6 +10,7 @@ var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolatio
     [ "Transform", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#af8d5dcfb2d169bae40623419200bee70", null ],
     [ "Vec2", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ada02d8c20beeac9df017dad4c650bcd5", null ],
     [ "Vec3", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a85de9d8e42751f59bd4e91bdf806e557", null ],
+    [ "Vec3NoInit", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#abcadde5b7a3d799f82c5a926f102d682", null ],
     [ "VecCoord", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a59d711efd3294f90a3a530180e6b60b5", null ],
     [ "VecDeriv", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a7d14e42cbdf606634f45900bd80c16e4", null ],
     [ "VecEdges", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#aa65e8974277a3c8bdbc036fd9a976228", null ],
