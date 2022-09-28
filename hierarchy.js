@@ -11,6 +11,9 @@ var hierarchy =
       [ "MultiAdaptiveBeamContactMapper< TCollisionModel, DataTypes >", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", null ]
     ] ],
     [ "BaseObject", null, [
+      [ "WireRestShape< DataTypes >", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", [
+        [ "SteerableCatheter< DataTypes >", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", null ]
+      ] ],
       [ "BeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html", [
         [ "WireBeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html", null ]
       ] ]
@@ -22,11 +25,6 @@ var hierarchy =
       [ "ImplicitSurfaceAdaptiveConstraintResolution< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
     ] ],
     [ "ContactMapper", "class_contact_mapper.html", null ],
-    [ "DataEngine", null, [
-      [ "WireRestShape< DataTypes >", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", [
-        [ "SteerableCatheter< DataTypes >", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", null ]
-      ] ]
-    ] ],
     [ "GenericConstraintProblem", null, [
       [ "UnbuiltGenericConstraintProblem", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_problem.html", null ]
     ] ],
