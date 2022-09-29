@@ -94,7 +94,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::reinit()
 template <class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 {
-    const Vec3& gravity = getContext()->getGravity();
+    const Vec3& gravity = this->getContext()->getGravity();
     m_gravity = Vec6(gravity[0], gravity[1], gravity[2], 0, 0, 0);
 }
 
