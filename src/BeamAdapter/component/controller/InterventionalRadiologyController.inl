@@ -1002,7 +1002,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
     // copy threshold in variable member for std::unique
     m_threshold = d_threshold.getValue();
 
-    // a threshod is used to remove the values that are "too" similars...
+    // a threshold is used to remove the values that are "too" close...
     auto it = std::unique(curvAbs.begin(), curvAbs.end(), [this](const Real v1, const Real v2) {
         return fabs(v1 - v2) < this->m_threshold;
     });
