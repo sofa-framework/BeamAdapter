@@ -211,16 +211,6 @@ void WireRestShape<DataTypes>::init()
     for (int i=0; i<d_numEdges.getValue(); i++)
         _topology->addEdge(i,i+1);
     
-    /// Get possible edge2Quad Mapping if one set. 
-    // TODO epernod 2022-08-05: check if the pointer to the mapping is still useful. Only used in releaseWirePart which should be now automatically handle by Topological changes mechanism.
-    edge2QuadMap = l_edge2QuadMapping.get();
-
-    const TagSet& tags = this->getTags();
-    if (!tags.empty())
-    {
-        msg_warning() << "Using tags to find edge2QuadMapping has been depreciate. Please use 'edge2QuadMapping' link to set the path to the correct topological mapping.";
-    }
-
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
@@ -317,19 +307,7 @@ void WireRestShape<DataTypes>::releaseWirePart(){
             edgeMod->removeEdges(edge_remove,false); // remove the single edge and do not remove any point...
 
             msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
-
-            // propagate the topological change to the topological mapping //
-            if(edge2QuadMap!=nullptr)
-            {
-                edge2QuadMap->updateTopologicalMappingTopDown();
-                sofa::component::topology::container::dynamic::QuadSetTopologyModifier *quadMod;
-                edge2QuadMap->getContext()->get(quadMod);
-                quadMod->notifyEndingEvent();
-            }
-
-
-            _topology->resetTopologyChangeList();
-
+            
             return;
         }
     }

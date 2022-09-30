@@ -183,9 +183,6 @@ private:
 
      /// Link to a Edge2QuadTopologicalMapping, usually used for beam surface rendering to be set to propagate topological changes
      SingleLink<WireRestShape<DataTypes>, Edge2QuadTopologicalMapping, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_edge2QuadMapping;
-     /// Pointer to a Edge2QuadTopologicalMapping usually used for beam surface rendering. To be set using @sa l_edge2QuadMapping
-     Edge2QuadTopologicalMapping* edge2QuadMap{ nullptr };
-
 };
 
 
