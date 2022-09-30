@@ -7,6 +7,7 @@ var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolatio
     [ "Quat", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a1aaa5dae624b2cfab7c34e10d728312d", null ],
     [ "Real", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a5dea320ebe517d73c4186acd09162cd0", null ],
     [ "SpatialVector", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a3840dd179bae8137ed77a52cfc9a5a72", null ],
+    [ "StateDataTypes", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#af7240bec65ca3fb869fcecc0b9fe48f5", null ],
     [ "Transform", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#af8d5dcfb2d169bae40623419200bee70", null ],
     [ "Vec2", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ada02d8c20beeac9df017dad4c650bcd5", null ],
     [ "Vec3", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a85de9d8e42751f59bd4e91bdf806e557", null ],
@@ -101,7 +102,7 @@ var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolatio
     [ "m_isControlled", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a96522858cf8e265feb111b1c6999543c", null ],
     [ "m_mstate", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ac074561fb74cc5e9283867841af8d010", null ],
     [ "m_numBeamsNotUnderControl", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a8c946e7e087f49364fd7f28bb5980a52", null ],
-    [ "m_StateNodes", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a231d29db351490a8483fab41e23b18b7", null ],
+    [ "m_StateNodes", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#adf66d8eadecd4d086b63929dce719999", null ],
     [ "m_topology", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a861c2f7fc6a0a3f8e4599d835889817b", null ],
     [ "m_topologyEdges", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#aea622cf27a2af6d3a736bd1f5c8c25f6", null ]
 ];

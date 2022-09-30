@@ -269,9 +269,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setUseCurvAbs</b> (bo
 <tr class="memitem:a51c44d20fb423d2c41c7e82b4c1a9ab2"><td class="memItemLeft" align="right" valign="top"><a id="a51c44d20fb423d2c41c7e82b4c1a9ab2"></a>
 const type::vector&lt; <a class="el" href="structsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping_1_1_pos_point_definition.html">PosPointDefinition</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPointBeamDistribution</b> () const</td></tr>
 <tr class="separator:a51c44d20fb423d2c41c7e82b4c1a9ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6a978f66b9c40a410a3390463a6927b"><td class="memItemLeft" align="right" valign="top"><a id="af6a978f66b9c40a410a3390463a6927b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>apply</b> (const MechanicalParams *, Data&lt; VecCoord &gt; &amp;dOut, const Data&lt; InVecCoord &gt; &amp;dIn)</td></tr>
-<tr class="separator:af6a978f66b9c40a410a3390463a6927b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ffdba6d4b4e11d40e22c7639d5a1c8"><td class="memItemLeft" align="right" valign="top"><a id="ae9ffdba6d4b4e11d40e22c7639d5a1c8"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>apply</b> (const MechanicalParams *, Data&lt; VecCoord &gt; &amp;dOut, const Data&lt; InVecCoord &gt; &amp;dIn)</td></tr>
+<tr class="separator:ae9ffdba6d4b4e11d40e22c7639d5a1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ffdba6d4b4e11d40e22c7639d5a1c8"><td class="memItemLeft" align="right" valign="top"><a id="ae9ffdba6d4b4e11d40e22c7639d5a1c8"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>apply</b> (const MechanicalParams *, Data&lt; VecCoord &gt; &amp;dOut, const Data&lt; InVecCoord &gt; &amp;dIn)</td></tr>
+<tr class="separator:ae9ffdba6d4b4e11d40e22c7639d5a1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -307,15 +310,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>computeJacobianOnPoin
 <tr class="memitem:a0110952fde103138d8ac44e400ae3539"><td class="memItemLeft" align="right" valign="top"><a id="a0110952fde103138d8ac44e400ae3539"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computeDistribution</b> ()</td></tr>
 <tr class="separator:a0110952fde103138d8ac44e400ae3539"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a223fe57ad39f74e268fed7c25595836b"><td class="memItemLeft" align="right" valign="top"><a id="a223fe57ad39f74e268fed7c25595836b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJonPoint</b> (unsigned int i, SpatialVector &amp;VNode0input, SpatialVector &amp;VNode1input, Deriv &amp;vOutput, const InVecCoord &amp;x)</td></tr>
-<tr class="separator:a223fe57ad39f74e268fed7c25595836b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95ffdc6539366fe1c350bb5033a2d297"><td class="memItemLeft" align="right" valign="top"><a id="a95ffdc6539366fe1c350bb5033a2d297"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJTonPoint</b> (unsigned int i, const Deriv &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output, const InVecCoord &amp;x)</td></tr>
-<tr class="separator:a95ffdc6539366fe1c350bb5033a2d297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab8b0037660f778eb0f1493e7c496421"><td class="memItemLeft" align="right" valign="top"><a id="aab8b0037660f778eb0f1493e7c496421"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeJacobianOnPoint</b> (unsigned int i, const InVecCoord &amp;x)</td></tr>
-<tr class="separator:aab8b0037660f778eb0f1493e7c496421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90643dae5f68e60959f5ecbcefb710a5"><td class="memItemLeft" align="right" valign="top"><a id="a90643dae5f68e60959f5ecbcefb710a5"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJonPoint</b> (unsigned int i, SpatialVector &amp;VNode0input, SpatialVector &amp;VNode1input, Deriv &amp;vOutput, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a90643dae5f68e60959f5ecbcefb710a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71b47d50f73ab5a983f3030aca7f3fd5"><td class="memItemLeft" align="right" valign="top"><a id="a71b47d50f73ab5a983f3030aca7f3fd5"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJTonPoint</b> (unsigned int i, const Deriv &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a71b47d50f73ab5a983f3030aca7f3fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65f8326aed936f024c3b6abd92576112"><td class="memItemLeft" align="right" valign="top"><a id="a65f8326aed936f024c3b6abd92576112"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>computeJacobianOnPoint</b> (unsigned int i, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a65f8326aed936f024c3b6abd92576112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90643dae5f68e60959f5ecbcefb710a5"><td class="memItemLeft" align="right" valign="top"><a id="a90643dae5f68e60959f5ecbcefb710a5"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJonPoint</b> (unsigned int i, SpatialVector &amp;VNode0input, SpatialVector &amp;VNode1input, Deriv &amp;vOutput, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a90643dae5f68e60959f5ecbcefb710a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71b47d50f73ab5a983f3030aca7f3fd5"><td class="memItemLeft" align="right" valign="top"><a id="a71b47d50f73ab5a983f3030aca7f3fd5"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJTonPoint</b> (unsigned int i, const Deriv &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a71b47d50f73ab5a983f3030aca7f3fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65f8326aed936f024c3b6abd92576112"><td class="memItemLeft" align="right" valign="top"><a id="a65f8326aed936f024c3b6abd92576112"></a>
+SOFA_BEAMADAPTER_API void&#160;</td><td class="memItemRight" valign="bottom"><b>computeJacobianOnPoint</b> (unsigned int i, const InVecCoord &amp;x)</td></tr>
+<tr class="separator:a65f8326aed936f024c3b6abd92576112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -463,7 +475,7 @@ class sofa::component::mapping::_adaptivebeammapping_::AdaptiveBeamMapping&lt; T
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1mapping.html">mapping</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1mapping_1_1__adaptivebeammapping__.html">_adaptivebeammapping_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a></li>
-    <li class="footer">Generated on Fri Sep 30 2022 08:18:59 for BeamAdapter by
+    <li class="footer">Generated on Fri Sep 30 2022 08:27:01 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
