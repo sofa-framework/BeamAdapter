@@ -275,7 +275,8 @@ public:
 
 protected :
     /// DATA INPUT (that could change in real-time)
-    MechanicalObject<sofa::defaulttype::Vec3Types>::SPtr m_StateNodes;
+    using StateDataTypes = sofa::defaulttype::StdVectorTypes< sofa::type::Vec<DataTypes::spatial_dimensions, Real>, sofa::type::Vec<DataTypes::spatial_dimensions, Real>, Real >;
+    typename MechanicalObject<StateDataTypes>::SPtr m_StateNodes;
 
     ///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
     Data< VecElementID >        d_edgeList;

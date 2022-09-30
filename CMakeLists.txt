@@ -15,6 +15,7 @@ sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
 sofa_find_package(SofaImplicitField QUIET)
 sofa_find_package(SofaAdvancedConstraint QUIET)
+sofa_find_package(SofaCUDA QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
@@ -114,6 +115,14 @@ if(SofaAdvancedConstraint_FOUND)
     #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
 endif()
 
+
+if(SofaCUDA_FOUND)
+    list (APPEND SOURCE_FILES
+        ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstantiations.cpp
+    )
+    message(STATUS "BeamAdapter: SofaCUDA has been enabled, instantiations for CudaTypes will be enabled.")
+endif()
+
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core Sofa.GL)
@@ -125,6 +134,9 @@ if(SofaImplicitField_FOUND)
 endif()
 if(SofaAdvancedConstraint_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
+endif()
+if(SofaCUDA_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SofaCUDA)
 endif()
 
 sofa_create_package_with_targets(

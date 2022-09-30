@@ -788,7 +788,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());                
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
 
-    VecCoord xbuf =x;
+    VecCoord xbuf = x.ref();
 
     type::vector<Real> modifiedCurvAbs;
 
