@@ -86,7 +86,8 @@ public:
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      void parse(core::objectmodel::BaseObjectDescription* arg) override;
      void init() override ;
-       
+     void initTopology();
+
      void draw(const core::visual::VisualParams * vparams) override ;
 
 
@@ -145,8 +146,6 @@ public:
      Data<Real> d_spireHeight;
      Data<type::vector<int> > d_density;
      Data<type::vector<Real> > d_keyPoints;
-     Data< int > d_numEdges;
-     Data<type::vector<int> > d_numEdgesCollis;
 
      /// broken in 2 case
      Data<bool>	d_drawRestShape;

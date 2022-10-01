@@ -66,8 +66,6 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_spireHeight(initData(&d_spireHeight, (Real)0.01, "spireHeight", "height between each spire"))
   , d_density(initData(&d_density, "densityOfBeams", "density of beams between key points"))
   , d_keyPoints(initData(&d_keyPoints,"keyPoints","key points of the shape (curv absc)"))
-  , d_numEdges(initData(&d_numEdges, 10, "numEdges","number of Edges for the visual model"))
-  , d_numEdgesCollis(initData(&d_numEdgesCollis,"numEdgesCollis", "number of Edges for the collision model" ))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
   , l_sectionMaterial1(initLink("main_material", "link to the fist Wire Section Material"))
   , l_sectionMaterial2(initLink("extremity_material", "link to the second Wire Section Material"))
@@ -187,6 +185,7 @@ void WireRestShape<DataTypes>::init()
         }
     }
   
+    initTopology();
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
@@ -223,17 +222,59 @@ void WireRestShape<DataTypes>::init()
         }
     }
 
-    if(!d_numEdgesCollis.getValue().size())
-    {
-        auto densityCol = sofa::helper::getWriteOnlyAccessor(d_numEdgesCollis);
-        densityCol.resize(keyPointList.size()-1);
-        for (unsigned int i=0; i<densityCol.size(); i++)
-            densityCol[i] = 20;
-    }
-
     msg_info() <<"WireRestShape end init" ;
 
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+}
+
+
+template <class DataTypes>
+void WireRestShape<DataTypes>::initTopology()
+{
+    /// fill topology :
+    _topology->clear();
+    _topology->cleanup();
+
+    const Real& fullLength = this->d_length.getValue();
+    const Real& straightLength = this->d_straightLength.getValue();
+
+    // Add topology of the first material 
+    WireSectionMaterial* mat1 = l_sectionMaterial1.get();
+    int nbrEdges1 = mat1->getNbVisualEdges();
+    Real dx1 = straightLength / nbrEdges1;
+
+    /// add points from main material
+    for (int i = 0; i < nbrEdges1 + 1; i++) {
+        _topology->addPoint(i * dx1, 0, 0);
+        //std::cout << "1. addPoint: " << i << " -> " << i * dx1 << std::endl;
+    }
+
+    /// add segments from main material
+    for (int i = 0; i < nbrEdges1; i++) {
+        _topology->addEdge(i, i + 1);
+        //std::cout << "1. addEdge: " << i << " - " << i + 1 << std::endl;
+    }
+
+
+    // Add topology of the second material 
+    if (WireSectionMaterial* mat2 = l_sectionMaterial2.get())
+    {
+        Real lengthExtremity = fullLength - straightLength;
+        int nbrEdges2 = mat2->getNbVisualEdges();
+        Real dx2 = lengthExtremity / nbrEdges2;
+
+        /// add points from main material
+        for (int i = 1; i < nbrEdges2 + 1; i++) {
+            _topology->addPoint(straightLength + i * dx2, 0, 0);
+            //std::cout << "2. addPoint: " << i + nbrEdges1 << " -> " << straightLength + i * dx2 << std::endl;
+        }
+
+        /// add segments from main material
+        for (int i = nbrEdges1; i < nbrEdges1 + nbrEdges2; i++) {
+            _topology->addEdge(i, i + 1);
+            //std::cout << "2. addEdge: " << i << " - " << i + 1 << std::endl;
+        }
+    }
 }
 
 
@@ -257,27 +298,41 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
         x_used=0.0;
 
     // verify that size of numEdgesCollis  =  size of keyPoints-1
-    if( d_numEdgesCollis.getValue().size() != d_keyPoints.getValue().size()-1)
+    //if( d_numEdgesCollis.getValue().size() != d_keyPoints.getValue().size()-1)
+    //{
+    //    msg_error() << "Problem size of numEdgesCollis ()" << d_numEdgesCollis.getValue().size() 
+    //        << " !=  size of keyPoints-1 " << d_keyPoints.getValue().size()-1 ;
+    //    numLines = (unsigned int)d_numEdgesCollis.getValue()[0];
+    //    dx=d_length.getValue()/numLines;
+    //    return;
+    //}
+
+    if (x_used <= d_straightLength.getValue())
     {
-        msg_error() << "Problem size of numEdgesCollis ()" << d_numEdgesCollis.getValue().size() << " !=  size of keyPoints-1 " << d_keyPoints.getValue().size()-1 ;
-        numLines = (unsigned int)d_numEdgesCollis.getValue()[0];
-        dx=d_length.getValue()/numLines;
-        return;
+        numLines = l_sectionMaterial1.get()->getNbCollisionEdges();
+        dx = d_straightLength.getValue() / numLines;
+    }
+    else if (x_used <= d_length.getValue())
+    {
+        numLines = l_sectionMaterial2.get()->getNbCollisionEdges();
+        dx = d_length.getValue() / numLines;
+    }
+    else
+    {
+        dx = d_length.getValue() / 20;
+        msg_error() << " problem is  getCollisionSampling : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
     }
 
+    //for (unsigned int i=1; i<this->d_keyPoints.getValue().size(); i++)
+    //{
+    //    if( x_used < this->d_keyPoints.getValue()[i] )
+    //    {
+    //        numLines = (unsigned int)d_numEdgesCollis.getValue()[i - 1];
+    //        dx = (this->d_keyPoints.getValue()[i] - this->d_keyPoints.getValue()[i - 1]) / numLines;
+    //        return;
+    //    }
+    //}
 
-    for (unsigned int i=1; i<this->d_keyPoints.getValue().size(); i++)
-    {
-        if( x_used < this->d_keyPoints.getValue()[i] )
-        {
-            numLines = (unsigned int)d_numEdgesCollis.getValue()[i-1];
-            dx=(this->d_keyPoints.getValue()[i] - this->d_keyPoints.getValue()[i-1])/numLines;
-            return;
-        }
-    }
-
-    dx=d_length.getValue()/20;
-    msg_error() << " problem is  getCollisionSampling : x_curv "<<x_used<<" is not between keyPoints"<<d_keyPoints.getValue() ;
 }
 
 
@@ -648,10 +703,11 @@ typename WireRestShape<DataTypes>::Real WireRestShape<DataTypes>::getLength()
 template <class DataTypes>
 void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
-    numLines = 0;
-    for (unsigned i=0; i<d_numEdgesCollis.getValue().size(); i++)
+    numLines = l_sectionMaterial1.get()->getNbCollisionEdges();
+
+    if (auto mat2 = l_sectionMaterial2.get())
     {
-        numLines += (unsigned int)d_numEdgesCollis.getValue()[i];
+        numLines += mat2->getNbCollisionEdges();
     }
     dx=d_length.getValue()/numLines;
 }
