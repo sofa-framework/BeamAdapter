@@ -180,9 +180,6 @@ private:
      SingleLink<WireRestShape<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;     
      /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
      MeshLoader* loader{ nullptr };
-
-     /// Link to a Edge2QuadTopologicalMapping, usually used for beam surface rendering to be set to propagate topological changes
-     SingleLink<WireRestShape<DataTypes>, Edge2QuadTopologicalMapping, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_edge2QuadMapping;
 };
 
 

@@ -83,7 +83,6 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
   , l_topology(initLink("topology", "link to the topology container"))
   , l_loader(initLink("loader", "link to the MeshLoader"))
-  , l_edge2QuadMapping(initLink("edge2QuadMapping", "link to the edge2QuadMapping to render this beam"))
 {
     d_spireDiameter.setGroup("Procedural");
     d_spireHeight.setGroup("Procedural");
