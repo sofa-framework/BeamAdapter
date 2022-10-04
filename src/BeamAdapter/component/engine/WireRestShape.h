@@ -51,8 +51,9 @@ using sofa::core::loader::MeshLoader;
 /**
  * \class WireRestShape
  * \brief Describe the shape functions on multiple segments
- *
- *  Describe the shape functions on multiple segments using curvilinear abscissa
+ *  
+ *  Describe the full shape of a Wire with a given length and radius. The wire is discretized by a set of beams (given by the keyPoints and the relatives Beam density)
+ *  This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
  */
 template <class DataTypes>
 class WireRestShape : public core::objectmodel::BaseObject
