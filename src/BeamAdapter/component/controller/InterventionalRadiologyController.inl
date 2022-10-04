@@ -996,66 +996,44 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real> &curvAbs,
                                                                type::vector<type::vector<int> >& idInstrumentTable)
 {
-    auto newCurvAbs = sofa::helper::getWriteOnlyAccessor(d_curvAbs);
-    Real eps = d_threshold.getValue();
+    // here we sort CurvAbs   
+    std::sort(curvAbs.begin(), curvAbs.end());
 
-   // here we sort CurvAbs
-   // a buffer verctor: newCurvAbs will be filled by iteratively removing the minimal values found in CurvAbs and push_back them in newCurvAbs
-   // a threshod is used to remove the values that are "too" similars...
-   // TODO: could be improve by function "sort" ???
 
-    newCurvAbs.clear();
-    while(curvAbs.size()>0)
-    {
-        Real xMin = 1.0e30;
-        unsigned int index_min=0;
-        for(unsigned int j=0; j<curvAbs.size(); j++)
-        {
-            if(xMin > curvAbs[j] )
-            {
-                xMin = curvAbs[j];
-               index_min=j;
-            }
-        }
+    // a threshold is used to remove the values that are "too" close...
+    const auto threshold = d_threshold.getValue();
+    auto it = std::unique(curvAbs.begin(), curvAbs.end(), [threshold](const Real v1, const Real v2) {
+        return fabs(v1 - v2) < threshold;
+    });
+    curvAbs.erase(it, curvAbs.end());
 
-        type::removeIndex( curvAbs, index_min);
-
-        // verify using a eps that the same node does not already exist
-        Real xLast;
-        if (newCurvAbs.size()>0 )
-            xLast= newCurvAbs[newCurvAbs.size()-1];
-        else
-            xLast=-1.0e30;
-
-        if( fabs(xMin - xLast) > eps)
-        {
-            newCurvAbs.push_back(xMin);
-        }
-    }
-
-    curvAbs = newCurvAbs;
-
-    // here we build a table that provides the list of each instrument for each dof in the list of newCurvAbs
+    // here we build a table that provides the list of each instrument for each dof in the list of curvAbs
     // dofs can be shared by several instruments
     idInstrumentTable.clear();
+    idInstrumentTable.resize(curvAbs.size());
 
-    for (unsigned int i=0; i<newCurvAbs.size(); i++)
+    const auto& xTip = d_xTip.getValue();
+    for (unsigned int id = 0; id < m_instrumentsList.size(); id++)
     {
-        type::vector<int> listNewNode;
-        for (unsigned int id=0; id<m_instrumentsList.size(); id++)
+        // Get instrument absciss range
+        Real xEnd = xTip[id];
+        Real xBegin = xEnd - m_instrumentsList[id]->getRestTotalLength();
+
+        // enlarge range to ensure to considere borders in absisses comparisons
+        xBegin -= threshold;
+        xEnd += threshold;
+
+        // check curvAbs sorted value, if value is inside [xBegin, xBegin] of the tool add it to instrumentList. 
+        for (unsigned int i = 0; i < curvAbs.size(); i++)
         {
-            Real xEnd= d_xTip.getValue()[id];
-            Real xBegin = xEnd - m_instrumentsList[id]->getRestTotalLength();
+            if (curvAbs[i] < xBegin) // still not inside range
+                continue;
 
-            if ( xBegin<(newCurvAbs[i]+eps) && xEnd >(newCurvAbs[i]-eps) )
-                listNewNode.push_back(id);
+            if (curvAbs[i] > xEnd) // exit range
+                break;
+
+            idInstrumentTable[i].push_back(id);
         }
-
-        if(listNewNode.size() ==0)
-            msg_error()<<"No instrument find for curvAbs"<<newCurvAbs[i];
-
-        idInstrumentTable.push_back(listNewNode);
-
     }
 }
 
