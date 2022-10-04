@@ -67,8 +67,7 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_density(initData(&d_density, "densityOfBeams", "density of beams between key points"))
   , d_keyPoints(initData(&d_keyPoints,"keyPoints","key points of the shape (curv absc)"))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
-  , l_sectionMaterial1(initLink("main_material", "link to the fist Wire Section Material"))
-  , l_sectionMaterial2(initLink("extremity_material", "link to the second Wire Section Material"))
+  , l_sectionMaterials(initLink("wireMaterials", "link to Wire Section Materials (to be ordered according to the instrument, from handle to tip)"))
   , l_topology(initLink("topology", "link to the topology container"))
   , l_loader(initLink("loader", "link to the MeshLoader"))
 {
@@ -168,9 +167,20 @@ void WireRestShape<DataTypes>::init()
             initFromLoader();
         }
     }
-    if (!l_sectionMaterial1.get())
+    if (l_sectionMaterials.empty())
     {
-        msg_error() << "No WireSectionMaterial set. At least one material should be set and link using main_material";
+        msg_error() << "No WireSectionMaterial set. At least one material should be set and link using wireMaterials.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+
+
+    ////////////////////////////////////////////////////////
+    ////////// keyPoint list and Density Assignement ///////
+    ////////////////////////////////////////////////////////
+
+    if (!initLengths())
+    {
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
@@ -187,94 +197,92 @@ void WireRestShape<DataTypes>::init()
   
     initTopology();
 
-    ////////////////////////////////////////////////////////
-    ////////// keyPoint list and Density Assignement ///////
-    ////////////////////////////////////////////////////////
-    auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
-    if(!keyPointList.size())
-    {
-        keyPointList.push_back(0.0);
-        if(d_straightLength.getValue()>= 0.001*this->d_length.getValue() && d_straightLength.getValue() <=  0.999*d_length.getValue())
-            keyPointList.push_back(d_straightLength.getValue());
-        keyPointList.push_back(d_length.getValue());
-    }
-
-    if( d_density.getValue().size() != keyPointList.size()-1)
-    {
-        auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
-
-        if(densityList.size() > keyPointList.size()-1 )
-            densityList.resize(keyPointList.size()-1);
-        else
-        {
-            densityList.clear();
-
-            if(d_straightLength.getValue()>= 0.001*this->d_length.getValue() )
-            {
-                int numNodes = (int) floor(5.0*d_straightLength.getValue() / d_length.getValue() );
-                densityList.push_back(numNodes);
-            }
-            if( d_straightLength.getValue() <=  0.999*d_length.getValue())
-            {
-                int numNodes = (int) floor(20.0*(1.0 - d_straightLength.getValue() / d_length.getValue()) );
-                densityList.push_back(numNodes);
-            }
-        }
-    }
-
-    msg_info() <<"WireRestShape end init" ;
-
+    
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+    msg_info() << "WireRestShape end init";    
 }
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::initTopology()
+bool WireRestShape<DataTypes>::initLengths()
+{
+    auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
+    auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
+
+    // In case use used length and straightLenght instead of keyPointList, create keyPointList
+    if (keyPointList.empty())
+    {
+        keyPointList.push_back(0.0);
+        if (d_straightLength.getValue() >= 0.001 * this->d_length.getValue() && d_straightLength.getValue() <= 0.999 * d_length.getValue())
+            keyPointList.push_back(d_straightLength.getValue());
+        keyPointList.push_back(d_length.getValue());
+    }
+
+    // checking sizes between keypointList and number of input material
+    if (l_sectionMaterials.size() != keyPointList.size() - 1)
+    {
+        msg_error() << "Wrong number of inputs. Component can't be init. Number of input materials: " << l_sectionMaterials.size() << ", should be equal to keyPointList.size()-1. keyPointList.size() is equal to: " << keyPointList.size();
+        return false;
+    }
+
+    if (densityList.size() != keyPointList.size() - 1)
+    {
+        msg_warning() << "Wrong number of densityOfBeams. Given: " << densityList.size() << ", should be equal to keyPointList.size()-1: '" << keyPointList.size() 
+            << "'. densityOfBeams will be recomputed using Wire material number of collision edges.";
+        densityList.clear();
+
+        for (unsigned int i = 0; i < keyPointList.size() - 1; ++i)
+        {
+            auto mat = l_sectionMaterials.get(i);
+            int nbrCollEdges = mat->getNbCollisionEdges();
+            densityList.push_back(nbrCollEdges);
+        }
+    }
+
+    return true;
+}
+
+
+template <class DataTypes>
+bool WireRestShape<DataTypes>::initTopology()
 {
     /// fill topology :
     _topology->clear();
     _topology->cleanup();
 
-    const Real& fullLength = this->d_length.getValue();
-    const Real& straightLength = this->d_straightLength.getValue();
-
-    // Add topology of the first material 
-    WireSectionMaterial* mat1 = l_sectionMaterial1.get();
-    int nbrEdges1 = mat1->getNbVisualEdges();
-    Real dx1 = straightLength / nbrEdges1;
-
-    /// add points from main material
-    for (int i = 0; i < nbrEdges1 + 1; i++) {
-        _topology->addPoint(i * dx1, 0, 0);
-        //std::cout << "1. addPoint: " << i << " -> " << i * dx1 << std::endl;
-    }
-
-    /// add segments from main material
-    for (int i = 0; i < nbrEdges1; i++) {
-        _topology->addEdge(i, i + 1);
-        //std::cout << "1. addEdge: " << i << " - " << i + 1 << std::endl;
-    }
-
-
-    // Add topology of the second material 
-    if (WireSectionMaterial* mat2 = l_sectionMaterial2.get())
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    if (l_sectionMaterials.size() != keyPts.size() - 1)
     {
-        Real lengthExtremity = fullLength - straightLength;
-        int nbrEdges2 = mat2->getNbVisualEdges();
-        Real dx2 = lengthExtremity / nbrEdges2;
-
-        /// add points from main material
-        for (int i = 1; i < nbrEdges2 + 1; i++) {
-            _topology->addPoint(straightLength + i * dx2, 0, 0);
-            //std::cout << "2. addPoint: " << i + nbrEdges1 << " -> " << straightLength + i * dx2 << std::endl;
-        }
-
-        /// add segments from main material
-        for (int i = nbrEdges1; i < nbrEdges1 + nbrEdges2; i++) {
-            _topology->addEdge(i, i + 1);
-            //std::cout << "2. addEdge: " << i << " - " << i + 1 << std::endl;
-        }
+        msg_error() << "Wrong number of inputs. Component can't be init. Number of input materials: " << l_sectionMaterials.size() << ", should be equal to keyPointList.size()-1. keyPointList.size() is equal to: " << keyPts.size();
+        return false;
     }
+    
+    Real prev_length = 0.0;
+    int prev_edges = 0;
+    int startPtId = 0; 
+    for (auto i = 0; i < l_sectionMaterials.size(); ++i)
+    {
+        // Add topology of the material 
+        int nbrVisuEdges = l_sectionMaterials.get(i)->getNbVisualEdges();
+        Real length = fabs(keyPts[i + 1] - keyPts[i]);
+        Real dx = length / nbrVisuEdges;
+
+        // add points from the material
+        for (int i = startPtId; i < nbrVisuEdges + 1; i++) {
+            _topology->addPoint(prev_length + i * dx, 0, 0);
+        }
+
+        // add segments from the material
+        for (int i = prev_edges; i < prev_edges + nbrVisuEdges; i++) {
+            _topology->addEdge(i, i + 1);
+        }
+
+        prev_length = length;
+        prev_edges = nbrVisuEdges;
+        startPtId = 1; // Assume the last point of mat[n] == first point of mat[n+1]
+    }
+
+    return true;
 }
 
 
@@ -297,42 +305,34 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
     if(x_used<0.0)
         x_used=0.0;
 
-    // verify that size of numEdgesCollis  =  size of keyPoints-1
-    //if( d_numEdgesCollis.getValue().size() != d_keyPoints.getValue().size()-1)
-    //{
-    //    msg_error() << "Problem size of numEdgesCollis ()" << d_numEdgesCollis.getValue().size() 
-    //        << " !=  size of keyPoints-1 " << d_keyPoints.getValue().size()-1 ;
-    //    numLines = (unsigned int)d_numEdgesCollis.getValue()[0];
-    //    dx=d_length.getValue()/numLines;
-    //    return;
-    //}
-
-    if (x_used <= d_straightLength.getValue())
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    
+    // verify that size of number of materials == size of keyPoints-1
+    if (l_sectionMaterials.size() != keyPts.size() - 1)
     {
-        numLines = l_sectionMaterial1.get()->getNbCollisionEdges();
-        dx = d_straightLength.getValue() / numLines;
-    }
-    else if (x_used <= d_length.getValue())
-    {
-        numLines = l_sectionMaterial2.get()->getNbCollisionEdges();
+        msg_error() << "Problem size of number of materials: " << l_sectionMaterials.size()
+                    << " !=  size of keyPoints-1 " << keyPts.size()-1 
+                    << ". Returning default values.";
+        numLines = 20;
         dx = d_length.getValue() / numLines;
+        return;
     }
-    else
+    
+    // Check in which section x_used belongs to and get access to this section material
+    for (auto i = 1; i< keyPts.size(); ++i)
     {
-        dx = d_length.getValue() / 20;
-        msg_error() << " problem is  getCollisionSampling : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
+        if (x_used <= keyPts[i])
+        {
+            numLines = l_sectionMaterials.get(i-1)->getNbCollisionEdges();
+            dx = d_straightLength.getValue() / numLines;
+            return;
+        }
     }
 
-    //for (unsigned int i=1; i<this->d_keyPoints.getValue().size(); i++)
-    //{
-    //    if( x_used < this->d_keyPoints.getValue()[i] )
-    //    {
-    //        numLines = (unsigned int)d_numEdgesCollis.getValue()[i - 1];
-    //        dx = (this->d_keyPoints.getValue()[i] - this->d_keyPoints.getValue()[i - 1]) / numLines;
-    //        return;
-    //    }
-    //}
-
+    // If x_used is out of bounds. Warn user and returns default value.
+    numLines = 20;
+    dx = d_length.getValue() / numLines;
+    msg_error() << " problem is  getCollisionSampling : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
 }
 
 
@@ -400,34 +400,36 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 template <class DataTypes>
 void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const
 {
-    //Depending on the position of the beam, determine the Young modulus
-    if (x_curv > this->d_straightLength.getValue() && l_sectionMaterial2.get()) // extremity of the wire
-        return l_sectionMaterial2.get()->getYoungModulusAtX(youngModulus, cPoisson);
-    else
-        return l_sectionMaterial1.get()->getYoungModulusAtX(youngModulus, cPoisson);
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    // Depending on the position of the beam, determine the corresponding section material and returning its Young modulus
+    for (auto i = 1; i < keyPts.size(); ++i)
+    {
+        if (x_curv <= keyPts[i])
+        {
+            return l_sectionMaterials.get(i - 1)->getYoungModulusAtX(youngModulus, cPoisson);
+        }
+    }
+
+    msg_error() << " problem in getYoungModulusAtX : x_curv " << x_curv << " is not between keyPoints" << keyPts;
 }
 
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const
 {
-    if(x_curv <= this->d_straightLength.getValue())
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    // Check in which section x_used belongs to and get access to this section material
+    for (auto i = 1; i < keyPts.size(); ++i)
     {
-        return l_sectionMaterial1.get()->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
-    }
-    else
-    {
-        auto mat = l_sectionMaterial2.get();
-        if (mat)
+        if (x_curv <= keyPts[i])
         {
-            return mat->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
-        }
-        else
-        {
-            return l_sectionMaterial1.get()->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
+            return l_sectionMaterials.get(i - 1)->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
         }
     }
+
+    msg_error() << " problem in getInterpolationParam : x_curv " << x_curv << " is not between keyPoints" << keyPts;
 }
+
 
 template <class DataTypes>
 bool WireRestShape<DataTypes>::checkTopology()
@@ -703,13 +705,12 @@ typename WireRestShape<DataTypes>::Real WireRestShape<DataTypes>::getLength()
 template <class DataTypes>
 void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
-    numLines = l_sectionMaterial1.get()->getNbCollisionEdges();
-
-    if (auto mat2 = l_sectionMaterial2.get())
+    numLines = 0;
+    for (auto i = 0; i < l_sectionMaterials.size(); ++i)
     {
-        numLines += mat2->getNbCollisionEdges();
+        numLines += l_sectionMaterials.get(i)->getNbCollisionEdges();
     }
-    dx=d_length.getValue()/numLines;
+    dx = d_length.getValue() / numLines;
 }
 
 template <class DataTypes>

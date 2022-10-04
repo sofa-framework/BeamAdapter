@@ -86,7 +86,6 @@ public:
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      void parse(core::objectmodel::BaseObjectDescription* arg) override;
      void init() override ;
-     void initTopology();
 
      void draw(const core::visual::VisualParams * vparams) override ;
 
@@ -123,6 +122,12 @@ public:
 
      void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
 
+protected:
+    /// Internal method to init Lengths vector @sa d_keyPoints if not set using @sa d_length and @sa d_straightLength. Returns false if init can't be performed.
+    bool initLengths();
+    /// Internal method to init Edge Topology @sa _topology using the list of materials @sa l_sectionMaterials. Returns false if init can't be performed.
+    bool initTopology();
+
 
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
@@ -149,12 +154,9 @@ public:
 
      /// broken in 2 case
      Data<bool>	d_drawRestShape;
-
-     /// Link to be set to the topology container in the component graph.
-     SingleLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterial1;
-
-     /// Link to be set to the topology container in the component graph.
-     SingleLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterial2;
+     
+     /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.
+     MultiLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterials;
 
 private:
      /// Data required for the File loading
