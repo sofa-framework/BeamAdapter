@@ -1012,10 +1012,11 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
     idInstrumentTable.clear();
     idInstrumentTable.resize(curvAbs.size());
 
+    const auto& xTip = d_xTip.getValue();
     for (unsigned int id = 0; id < m_instrumentsList.size(); id++)
     {
         // Get instrument absciss range
-        Real xEnd = d_xTip.getValue()[id];
+        Real xEnd = xTip[id];
         Real xBegin = xEnd - m_instrumentsList[id]->getRestTotalLength();
 
         // enlarge range to ensure to considere borders in absisses comparisons
@@ -1025,11 +1026,10 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
         // check curvAbs sorted value, if value is inside [xBegin, xBegin] of the tool add it to instrumentList. 
         for (unsigned int i = 0; i < curvAbs.size(); i++)
         {
-            auto xCurv = curvAbs[i];
-            if (xCurv < xBegin) // still not inside range
+            if (curvAbs[i] < xBegin) // still not inside range
                 continue;
 
-            if (xCurv > xEnd) // exit range
+            if (curvAbs[i] > xEnd) // exit range
                 break;
 
             idInstrumentTable[i].push_back(id);
