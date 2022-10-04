@@ -159,10 +159,6 @@ public:
     type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
     unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
     bool                            m_dropCall;
-
-private:
-    /// Copy of @sa d_threshold for direct access in lambda unique function to avoid numerous getValue calls
-    Real m_threshold = 0.0;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)

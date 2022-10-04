@@ -999,12 +999,11 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
     // here we sort CurvAbs   
     std::sort(curvAbs.begin(), curvAbs.end());
 
-    // copy threshold in variable member for std::unique
-    m_threshold = d_threshold.getValue();
 
     // a threshold is used to remove the values that are "too" close...
-    auto it = std::unique(curvAbs.begin(), curvAbs.end(), [this](const Real v1, const Real v2) {
-        return fabs(v1 - v2) < this->m_threshold;
+    const auto threshold = d_threshold.getValue();
+    auto it = std::unique(curvAbs.begin(), curvAbs.end(), [threshold](const Real v1, const Real v2) {
+        return fabs(v1 - v2) < threshold;
     });
     curvAbs.erase(it, curvAbs.end());
 
@@ -1020,8 +1019,8 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
         Real xBegin = xEnd - m_instrumentsList[id]->getRestTotalLength();
 
         // enlarge range to ensure to considere borders in absisses comparisons
-        xBegin -= m_threshold;
-        xEnd += m_threshold;
+        xBegin -= threshold;
+        xEnd += threshold;
 
         // check curvAbs sorted value, if value is inside [xBegin, xBegin] of the tool add it to instrumentList. 
         for (unsigned int i = 0; i < curvAbs.size(); i++)
