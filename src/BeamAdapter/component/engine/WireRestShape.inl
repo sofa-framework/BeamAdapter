@@ -324,7 +324,9 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
         if (x_used <= keyPts[i])
         {
             numLines = l_sectionMaterials.get(i-1)->getNbCollisionEdges();
-            dx = d_straightLength.getValue() / numLines;
+
+            Real length = fabs(keyPts[i] - keyPts[i-1]);
+            dx = length / numLines;
             return;
         }
     }
