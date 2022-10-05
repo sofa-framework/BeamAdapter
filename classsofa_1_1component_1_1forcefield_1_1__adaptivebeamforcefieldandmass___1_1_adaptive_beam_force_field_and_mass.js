@@ -27,7 +27,7 @@ var classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_
     [ "addMBKToMatrix", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ad81f5968ab6d5c789c4883ac7c718530", null ],
     [ "addMDx", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ad3934ee68333ff54a74b47dbaba8f410", null ],
     [ "addMToMatrix", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a35dde21d79be768329c5d146e6d79fca", null ],
-    [ "applyMassLarge", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ad875f2fcba2e8b7c36f252d1168e01b5", null ],
+    [ "applyMassLarge", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#af0f100841dc1a30bfe53bd71d86f958e", null ],
     [ "applyStiffnessLarge", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a0949f3c9e141f56754483bfce7911d2a", null ],
     [ "computeGravityVector", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a6151c3afd2ea8395734b42adb91cb6cf", null ],
     [ "computeMass", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a3e98b141d7aa180d1c1fa8a78c9849c8", null ],
@@ -40,12 +40,9 @@ var classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_
     [ "reinit", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ab1094b915e637faa84817a097d8d87be", null ],
     [ "SOFA_CLASS", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ac7fa0b8fd50fc979843d11892deabf62", null ],
     [ "d_computeMass", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#adb5c92db42161e2c9e01032d519b22c1", null ],
-    [ "d_dataG", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#af89f04f9d238da9cf3c701f341612898", null ],
     [ "d_massDensity", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#acf2f1a9ca7c25924faf4a7559b45b93b", null ],
     [ "d_reinforceLength", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a357d9f9e52aad598a1a2ea4def76b95e", null ],
     [ "d_useShearStressComputation", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#af7b53903dfad09f20bf0633a18bc0063", null ],
     [ "l_instrumentParameters", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a866e6b84ba4228231554087419b48a30", null ],
-    [ "l_interpolation", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a41543a9ddb40e6886d98f3ecff39abd4", null ],
-    [ "m_gravity", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a22e393868f95d615e3785ebfa39a1da8", null ],
-    [ "m_localBeamMatrices", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#ae5fa35e9f56ceac2f2ba7b8f5086dea3", null ]
+    [ "l_interpolation", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a41543a9ddb40e6886d98f3ecff39abd4", null ]
 ];
