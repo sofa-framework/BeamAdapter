@@ -160,7 +160,6 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     Inherit::init();
 
-    this->reinit();
 }
 
 template<class DataTypes>
@@ -204,7 +203,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     m_numControlledNodes = x.size();
 
     applyInterventionalRadiologyController();
-    this->reinit();
 }
 
 
