@@ -220,7 +220,8 @@ public:
                                           const Transform &global_H_local1,const Real &L,
                                           const Real& baryCoordMin, const Real& baryCoordMax);
 
-    void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
+    /// Method to rotate a Frame define by a Quat @param input around an axis @param x , x has to be normalized. Output is return inside @param output
+    void RotateFrameForAlignX(const Quat &input, const Vec3 &x, Quat &output);
 
     unsigned int getStateSize() const ;
 

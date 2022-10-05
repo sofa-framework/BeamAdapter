@@ -51,9 +51,8 @@ using sofa::helper::ReadAccessor ;
 
 /////////////////////////// TOOL /////////////////////////////////////////////////////////////////
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
+void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, const Vec3 &x, Quat &output)
 {
-    x.normalize();
     Vec3 x0=input.inverseRotate(x);
 
     Real cTheta=x0[0];
@@ -1244,6 +1243,7 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
 
         /// the tangent is computed by derivating the spline
         Vec3 n_x = P0 * (-3 * invBx2) + P1 * (3 - 12 * baryCoord + 9 * bx2) + P2 * (6 * baryCoord - 9 * bx2) + P3 * (3 * bx2);
+        n_x.normalize();
 
         /// try to interpolate the "orientation" (especially the torsion) the best possible way...
         /// (but other ways should exit...)
