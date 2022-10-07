@@ -141,26 +141,6 @@ void WireRestShape<DataTypes>::init()
 {
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
 
-    if(!d_isAProceduralShape.getValue())
-    {
-        // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
-        loader = l_loader.get();
-        
-        if (!loader)
-            this->getContext()->get(loader);
-
-        if (!loader) {
-            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node or use l_loader to specify the path in the scene graph.";
-            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-            return;
-        }
-        else
-        {
-            msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges" ;
-            return initFromLoader();
-        }
-    }
-
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
@@ -182,6 +162,26 @@ void WireRestShape<DataTypes>::init()
         return;
     }
 
+    if (!d_isAProceduralShape.getValue())
+    {
+        // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
+        loader = l_loader.get();
+
+        if (!loader)
+            this->getContext()->get(loader);
+
+        if (!loader) {
+            msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node or use l_loader to specify the path in the scene graph.";
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            return;
+        }
+        else
+        {
+            msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges";
+            return initFromLoader();
+        }
+    }
+
 
     // Get pointer to the topology Modifier (for topological changes)
     _topology->getContext()->get(edgeMod);
@@ -191,25 +191,12 @@ void WireRestShape<DataTypes>::init()
         msg_warning() << "No EdgeSetTopologyModifier found in the same node as the topology container: " << _topology->getName() << ". This wire won't support topological changes.";
     }
 
-
-    /// fill topology :
-    _topology->clear();
-    _topology->cleanup();
-    int nbrEdges = d_numEdges.getValue();
-    if (nbrEdges <= 0)
+    if (!fillTopology())
     {
-        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
-        nbrEdges = 10;
+        msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
     }
-    Real dx = this->d_length.getValue() / nbrEdges;
-
-    /// add points
-    for ( int i=0; i<d_numEdges.getValue()+1; i++)
-        _topology->addPoint( i*dx, 0, 0);
-
-    /// add segments
-    for (int i=0; i<d_numEdges.getValue(); i++)
-        _topology->addEdge(i,i+1);
     
     /// Get possible edge2Quad Mapping if one set. 
     // TODO epernod 2022-08-05: check if the pointer to the mapping is still useful. Only used in releaseWirePart which should be now automatically handle by Topological changes mechanism.
@@ -578,6 +565,47 @@ bool WireRestShape<DataTypes>::checkTopology()
 }
 
 
+template <class DataTypes>
+bool WireRestShape<DataTypes>::fillTopology()
+{
+    if (!_topology)
+    {
+        msg_error() << "Topology is null";
+        return false;
+    }
+
+    const auto length = this->d_length.getValue();
+    if (length <= Real(0.0))
+    {
+        msg_error() << "Length is 0 (or negative), check if d_length has been given or computed.";
+        return false;
+    }
+
+    int nbrEdges = d_numEdges.getValue();
+    if (nbrEdges <= 0)
+    {
+        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
+        nbrEdges = 10;
+    }
+
+    /// fill topology :
+    _topology->clear();
+    _topology->cleanup();
+
+    Real dx = this->d_length.getValue() / nbrEdges;
+
+    /// add points
+    for (int i = 0; i < d_numEdges.getValue() + 1; i++)
+        _topology->addPoint(i * dx, 0, 0);
+
+    /// add segments
+    for (int i = 0; i < d_numEdges.getValue(); i++)
+        _topology->addEdge(i, i + 1);
+
+    return true;
+}
+
+
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::initFromLoader()
@@ -586,6 +614,14 @@ void WireRestShape<DataTypes>::initFromLoader()
     {
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
+    }
+
+    // this is... dirty but d_straightLength itself is not relevant for loader-created wire
+    // but the code uses it actively and expects it to not be zero.
+    if (d_straightLength.getValue() <= 0.0)
+    {
+        msg_warning() << "straightLength cannot be 0 (or negative...). Setting a minimum value.";
+        d_straightLength.setValue(0.0001);
     }
 
     type::vector<Vec3> vertices;
@@ -709,6 +745,13 @@ void WireRestShape<DataTypes>::initRestConfig()
     d_length.setValue(newLength);
 
     msg_info() <<"Length of the loaded shape = "<< m_absOfGeometry << ", total length with straight length = " << newLength ;
+
+    if (!fillTopology())
+    {
+        msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
 }
 
 
