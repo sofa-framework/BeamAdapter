@@ -191,21 +191,18 @@ public:
     Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
-    DataVecDeriv d_dataG;
 
 protected :
-
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
-    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
+    void applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
     void computeGravityVector();
 
-    Vec3 m_gravity;
-    type::vector<BeamLocalMatrices> m_localBeamMatrices;
-
 private:
+    type::vector<BeamLocalMatrices> m_localBeamMatrices;
+    Vec6 m_gravity;
 
     void drawElement(const VisualParams* vparams, int beam,
                      Transform &global_H0_local, Transform &global_H1_local) ;
