@@ -44,23 +44,13 @@ public:
     typedef typename Rigid3Types::Coord    Coord;
     typedef typename Rigid3Types::Deriv    Deriv;
     typedef typename Coord::value_type   Real;
+    typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 
     void onSetUp() override
     {
         sofa::simpleapi::importPlugin("BeamAdapter");
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
-        //sofa::simpleapi::importPlugin("Sofa.Component.Engine.Select");
-
-
-
-            //<RequiredPlugin name = "Sofa.Component.LinearSolver.Direct" / > <!--Needed to use components[BTDLinearSolver] -->
-            //<RequiredPlugin name = "Sofa.Component.ODESolver.Backward" / > <!--Needed to use components[EulerImplicitSolver] -->
-            //<RequiredPlugin name = "Sofa.Component.SolidMechanics.Spring" / > <!--Needed to use components[RestShapeSpringsForceField] -->
-            //<RequiredPlugin name = "Sofa.Component.StateContainer" / > <!--Needed to use components[MechanicalObject] -->
-            //<RequiredPlugin name = "Sofa.Component.Topology.Container.Dynamic" / > <!--Needed to use components[EdgeSetGeometryAlgorithms EdgeSetTopologyContainer EdgeSetTopologyModifier] -->
-            //<RequiredPlugin name = "Sofa.Component.Topology.Container.Grid" / > <!--Needed to use components[RegularGridTopology] -->
-            //<RequiredPlugin name = "Sofa.Component.Visual" / > <!--Needed to use components[VisualStyle] -->
-
+ 
         m_simu = sofa::simpleapi::createSimulation("DAG");
         m_root = sofa::simpleapi::createRootNode(m_simu, "root");
     }
@@ -96,6 +86,11 @@ public:
 
     /// Test creation of WireRestShape in a default scene and check created topology 
     void testTopologyInit();
+
+    // TODO test on topology init from MeshLoader
+
+    /// Test WireRestShape transform methods 
+    void testTransformMethods();
 
 private:
     /// Pointer to SOFA simulation
@@ -194,7 +189,6 @@ void WireRestShape_test::testParameterInit()
 }
 
 
-/// Test creation of WireRestShape in a default scene and check created topology 
 void WireRestShape_test::testTopologyInit()
 {
     std::string scene =
@@ -235,8 +229,58 @@ void WireRestShape_test::testTopologyInit()
 }
 
 
+void WireRestShape_test::testTransformMethods()
+{
+    std::string scene =
+        "<?xml version='1.0'?>"
+        "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>             "
+        "   <Node name='BeamTopology'>                                "
+        "       <WireRestShape name='BeamRestShape' length='100.0'    "
+        "        straightLength='95.0' numEdges='30'/>        "
+        "       <EdgeSetTopologyContainer name='meshLinesBeam'/>      "
+        "       <EdgeSetTopologyModifier />                           "
+        "   </Node>                                                   "
+        "</Node>                                                      ";
 
+    loadScene(scene);
 
+    WireRestShapeRig3::SPtr wireRShape = this->m_root->get< WireRestShapeRig3 >(sofa::core::objectmodel::BaseContext::SearchDown);
+    WireRestShapeRig3* wire = wireRShape.get();
+    EXPECT_NE(wire, nullptr);
+
+    Real fullLength = wire->getLength();
+    Real straightLength = wire->getReleaseCurvAbs();
+    Real middHook = (fullLength + straightLength) / 2;
+
+    Transform transfo_0, transfo_1, transfo_2, transfo_3;
+    Transform transfo_0_ref, transfo_1_ref, transfo_2_ref, transfo_3_ref;
+    transfo_0_ref.set(Vec3(0.0, 0.0, 0.0), Quat<Real>());
+    transfo_1_ref.set(Vec3(straightLength / 2, 0.0, 0.0), Quat<Real>());
+    transfo_2_ref.set(Vec3(94.972534, 0.15907438, -0.0082204072), Quat<Real>(-0.00456144, -0.28667623, 0.01524152, 0.9578954));
+    transfo_3_ref.set(Vec3(94.9857, 0.07953719, -0.0020991669), Quat<Real>(-0.0023050411, -0.14486668, 0.015741583, 0.989323));
+
+    wire->getRestTransformOnX(transfo_0, 0.0);
+    wire->getRestTransformOnX(transfo_1, straightLength / 2);
+    wire->getRestTransformOnX(transfo_2, fullLength);
+    wire->getRestTransformOnX(transfo_3, middHook);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        EXPECT_NEAR(transfo_0.getOrigin()[i], transfo_0_ref.getOrigin()[i], 0.0001);
+        EXPECT_NEAR(transfo_1.getOrigin()[i], transfo_1_ref.getOrigin()[i], 0.0001);
+        EXPECT_NEAR(transfo_2.getOrigin()[i], transfo_2_ref.getOrigin()[i], 0.0001);
+        EXPECT_NEAR(transfo_3.getOrigin()[i], transfo_3_ref.getOrigin()[i], 0.0001);
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        EXPECT_NEAR(transfo_0.getOrientation()[i], transfo_0_ref.getOrientation()[i], 0.0001);
+        EXPECT_NEAR(transfo_1.getOrientation()[i], transfo_1_ref.getOrientation()[i], 0.0001);
+        EXPECT_NEAR(transfo_2.getOrientation()[i], transfo_2_ref.getOrientation()[i], 0.0001);
+        EXPECT_NEAR(transfo_3.getOrientation()[i], transfo_3_ref.getOrientation()[i], 0.0001);
+    }
+
+}
 
 
 
@@ -254,6 +298,10 @@ TEST_F(WireRestShape_test, test_init_parameters) {
 
 TEST_F(WireRestShape_test, test_init_topology) {
     testTopologyInit();
+}
+
+TEST_F(WireRestShape_test, test_Transform_methods) {
+    testTransformMethods();
 }
 
 } // namespace beamadapter_test
