@@ -10,6 +10,7 @@ set(SOURCE_FILES
     BeamInterpolation_test.cpp
     component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
     component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp
+	component/model/WireRestShape_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
