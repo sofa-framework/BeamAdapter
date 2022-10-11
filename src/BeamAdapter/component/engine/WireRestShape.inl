@@ -38,7 +38,7 @@
 #include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/visual/VisualParams.h>
 
-#define EPSILON 0.0000000001
+#define EPSILON 0.0001
 #define VERIF 1
 
 namespace sofa::component::engine
@@ -402,11 +402,13 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 template <class DataTypes>
 void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const
 {
+    const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
+
     // Depending on the position of the beam, determine the corresponding section material and returning its Young modulus
     for (auto i = 1; i < keyPts.size(); ++i)
     {
-        if (x_curv <= keyPts[i])
+        if (x_used <= keyPts[i])
         {
             return l_sectionMaterials.get(i - 1)->getYoungModulusAtX(youngModulus, cPoisson);
         }
@@ -419,11 +421,13 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
 template <class DataTypes>
 void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const
 {
+    const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
+
     // Check in which section x_used belongs to and get access to this section material
     for (auto i = 1; i < keyPts.size(); ++i)
     {
-        if (x_curv <= keyPts[i])
+        if (x_used <= keyPts[i])
         {
             return l_sectionMaterials.get(i - 1)->getInterpolationParam(_rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
         }
