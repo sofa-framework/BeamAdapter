@@ -178,10 +178,18 @@ void WireRestShape<DataTypes>::init()
         else
         {
             msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges";
-            return initFromLoader();
+            initFromLoader();
         }
     }
-
+    else
+    {
+        if (!fillTopology())
+        {
+            msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            return;
+        }
+    }
 
     // Get pointer to the topology Modifier (for topological changes)
     _topology->getContext()->get(edgeMod);
@@ -191,12 +199,6 @@ void WireRestShape<DataTypes>::init()
         msg_warning() << "No EdgeSetTopologyModifier found in the same node as the topology container: " << _topology->getName() << ". This wire won't support topological changes.";
     }
 
-    if (!fillTopology())
-    {
-        msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
-        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-        return;
-    }
     
     /// Get possible edge2Quad Mapping if one set. 
     // TODO epernod 2022-08-05: check if the pointer to the mapping is still useful. Only used in releaseWirePart which should be now automatically handle by Topological changes mechanism.
