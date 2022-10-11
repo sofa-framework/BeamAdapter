@@ -48,11 +48,12 @@ public:
 
     void onSetUp() override
     {
+        m_simu = sofa::simpleapi::createSimulation("DAG");
+        sofa::simulation::setSimulation(m_simu.get());
+        m_root = sofa::simpleapi::createRootNode(m_simu, "root");
+
         sofa::simpleapi::importPlugin("BeamAdapter");
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
- 
-        m_simu = sofa::simpleapi::createSimulation("DAG");
-        m_root = sofa::simpleapi::createRootNode(m_simu, "root");
     }
 
     /// Unload the scene
