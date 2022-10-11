@@ -201,6 +201,23 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
 
+    sofa::Size nbrBeam = 0;
+    for (unsigned int i = 0; i < m_instrumentsList.size(); i++)
+    {
+        type::vector<Real> xP_noticeable_I;
+        type::vector< int > density_I;
+        m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
+
+        for (auto nb : density_I)
+            nbrBeam += nb;
+    }
+
+    if (nbrBeam > m_numControlledNodes)
+    {
+        msg_warning() << "Parameter missmatch: According to the list of controlled instrument controlled. The number of potential beams: "
+            << nbrBeam << " exceed the number of degree of freedom in the MechanicalObject: " << m_numControlledNodes << ". This could lead to unespected behavior.";
+    }
+        
     applyInterventionalRadiologyController();
     reinit();
 }
