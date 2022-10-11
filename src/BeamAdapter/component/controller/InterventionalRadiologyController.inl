@@ -88,8 +88,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
     if (instrumentPathList.empty())
     {
-        WBeamInterpolation * wbinterpol= context->get< WBeamInterpolation >(BaseContext::Local);
-        m_instrumentsList.push_back(wbinterpol);
+        getContext()->get<WBeamInterpolation>(&m_instrumentsList, sofa::core::objectmodel::BaseContext::SearchRoot);
     }
     else
     {
@@ -104,8 +103,11 @@ void InterventionalRadiologyController<DataTypes>::init()
         }
     }
 
-    if(m_instrumentsList.empty())
-        msg_error()<<"No Beam Interpolation found !!! the component can not work.";
+    if (m_instrumentsList.empty()) {
+        msg_error() << "No instrument found (no WireBeamInterpolation)! the component can not work and will be set to Invalid.";
+        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
 
      m_activatedPointsBuf.clear();
 
@@ -121,11 +123,6 @@ void InterventionalRadiologyController<DataTypes>::init()
         loadMotionData(d_motionFilename.getValue());
     }
 
-    if (m_instrumentsList.size() == 0)
-    {
-        msg_error()<<"No instrument found ( no WireBeamInterpolation).";
-        return;
-    }
     auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xTip);
     x_instr_tip.resize(m_instrumentsList.size());
 
@@ -161,7 +158,7 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     Inherit::init();
 
-    reinit();
+    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 template<class DataTypes>
