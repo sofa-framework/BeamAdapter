@@ -66,9 +66,7 @@ public:
 
     void loadScene(const std::string& scene)
     {
-        m_root = sofa::simulation::SceneLoaderXML::loadFromMemory("testscene",
-            scene.c_str(),
-            scene.size());
+        m_root = sofa::simulation::SceneLoaderXML::loadFromMemory("testscene", scene.c_str());
 
         EXPECT_NE(m_root.get(), nullptr);
 
