@@ -71,7 +71,6 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
-, d_curvAbs(initData(&d_curvAbs,"CurvAbs", "curvi-linear abscissa of the DOFs" ))
 {
     m_fixedConstraint = nullptr;
     m_dropCall = false;
@@ -219,18 +218,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     }
         
     applyInterventionalRadiologyController();
-    reinit();
-}
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::reinit()
-{
-}
-
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::computeVertexT()
-{
 }
 
 
