@@ -808,7 +808,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         // 2 cases:  TODO : remove first case
             //1. the abs curv is further than the previous state of the instrument
             //2. this is not the case and the node position can be interpolated using previous step positions
-        if (xCurvAbs > prev_maxCurvAbs + threshold)
+        if ((xCurvAbs-0.0001) > prev_maxCurvAbs + threshold)
         {
             msg_error() << "Case 1 should never happen ==> avoid using totalLengthIsChanging! xCurvAbs = " << xCurvAbs 
                 << " > prev_maxCurvAbs = " << prev_maxCurvAbs << " + threshold: " << threshold << "\n"
@@ -992,12 +992,11 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
         unsigned int i=newTable.size()-1;
         while (i>0 && newTable[i].size()==1)
         {
-            modifiedNodeCurvAbs[i]-=dLength;
+            modifiedNodeCurvAbs[i] -= dLength;
 
-            // force modifiedNode to be "locally" sorted
-            if(modifiedNodeCurvAbs[i]<modifiedNodeCurvAbs[i-1])
+            if (modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
             {
-               modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i-1]+ d_threshold.getValue();
+                modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i - 1];
             }
 
             i--;
