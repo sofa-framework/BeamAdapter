@@ -71,7 +71,7 @@ void WireSectionMaterial::init()
     if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
     {
         msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-        d_nbEdgesVisu.setValue(10);
+        d_nbEdgesCollis.setValue(10);
     }
 }
 
