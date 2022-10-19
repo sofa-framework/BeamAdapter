@@ -458,27 +458,49 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                                                                                           const Real& xend)
 
 {
-    // Step 1 = put the noticeable Nodes
+    // Step 1 => put the noticeable Nodes
+    // Step 2 => add the beams given the sampling parameters
     double maxAbsLength=0.0;
-    for (unsigned int i=0; i<m_instrumentsList.size(); i++)
+    Real xSampling = 0.0;
+    for (auto i=0; i<m_instrumentsList.size(); i++)
     {
         type::vector<Real> xP_noticeable_I;
         type::vector< int > density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
 
-        for (unsigned int j=0; j<xP_noticeable_I.size(); j++)
+        // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.
+        for (unsigned int j=0; j<xP_noticeable_I.size()-1; j++)
         {
-            //compute the corresponding abs curv of this "noticeable point" on the combined intrument
-            Real curvAbs_xP = xBegin[i] + xP_noticeable_I[j];
-            if (curvAbs_xP>0.0)   // all the noticiable point that have a negative curv abs are not simulated => considered as outside of the patient...
-            {
-                newCurvAbs.push_back(curvAbs_xP);
+            const Real xP = xP_noticeable_I[j];
+            const Real nxP = xP_noticeable_I[j + 1];
 
-                if (curvAbs_xP > maxAbsLength)
-                    maxAbsLength=curvAbs_xP;
+            //compute the corresponding abs curv of this "noticeable point" on the combined intrument
+            const Real curvAbs_xP = xBegin[i] + xP;
+            const Real curvAbs_nxP = xBegin[i] + nxP;
+            
+            // compute interval between next point and previous one (0 for the first iter)
+            const Real curvAbs_interval = (curvAbs_nxP - xSampling);
+
+            if (curvAbs_interval > 0)
+            {
+                // compute the number of point of the emerged interval (if all the interval is emerged, i.e >0 , numNewNodes == density[j])
+                Real ratio = Real(density_I[j]) / (nxP - xP);
+                int numNewNodes = int(floor(curvAbs_interval * ratio)); // if density == 0, no sampling (numNewNodes == 0) 
+
+                // Add the new points in reverse order
+                for (int k = numNewNodes; k>0; k--)
+                {
+                    auto value = curvAbs_nxP - (k / ratio);
+                    newCurvAbs.push_back(value);
+                }
+
+                // Add j+1 bound point
+                newCurvAbs.push_back(curvAbs_nxP);
+                xSampling = curvAbs_nxP;
             }
         }
     }
+
 
     // Step 1(bis) = add Nodes the curv_abs of the rigid parts border
     // When there are rigid segments, # of dofs is different than # of edges and beams
@@ -506,34 +528,6 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                 }
                 begin = !begin;
                 newCurvAbs.push_back(abs);
-            }
-        }
-    }
-
-    // Step 2 => add the beams given the sampling parameters
-    Real xSampling = 0.0;
-    for (unsigned int i=0; i<m_instrumentsList.size(); i++)
-    {
-        type::vector<Real> xPNoticeableI;
-        type::vector< int > density_I;
-        m_instrumentsList[i]->getSamplingParameters(xPNoticeableI, density_I);
-
-        for (unsigned int j=0; j<density_I.size(); j++){
-
-            //compute the corresponding abs curv of this "noticeable point" on the combined intrument
-            Real curvAbsxP = xBegin[i] + xPNoticeableI[j+1];
-
-            // use density parameter (size = xP_noticeable_I -1 )
-            if (curvAbsxP > xSampling && density_I[j]>0)
-            {
-                Real ratio = (Real)density_I[j] / (xPNoticeableI[j+1]  - xPNoticeableI[j]) ;
-                int  numNewNodes = (int)floor( (curvAbsxP- xSampling)  *ratio) ;
-
-                for (int k=0; k<numNewNodes; k++)
-                {
-                    newCurvAbs.push_back( xPNoticeableI[j+1] + xBegin[i]  - (k+1) * (1/ratio) );
-                }
-                xSampling = curvAbsxP;
             }
         }
     }
