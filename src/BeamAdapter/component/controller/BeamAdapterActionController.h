@@ -46,9 +46,10 @@ public:
 
     void init() override;
     void onBeginAnimationStep(const double dt) override;
-    //void onKeyPressedEvent(core::objectmodel::KeypressedEvent*) override;
+    void onKeyPressedEvent(core::objectmodel::KeypressedEvent* kev) override;
     void onMouseEvent(core::objectmodel::MouseEvent*) override;
 
+    Data <bool> d_writeMode;
     Data <type::vector<int> > d_actions;
     Data <type::vector<std::string> > d_actionString;
     Data <type::vector<Real> > d_timeSteps;
@@ -58,6 +59,7 @@ public:
 private:
     int m_readStep = 0;
     sofa::beamadapter::BeamAdapterAction currAction = BeamAdapterAction::NO_ACTION;
+    sofa::beamadapter::BeamAdapterAction lastAction = BeamAdapterAction::NO_ACTION;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)

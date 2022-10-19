@@ -34,10 +34,12 @@ using namespace sofa::beamadapter;
 template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
     : l_interventionController(initLink("interventionController", "Path to the Interpolation component on scene"))
+    , d_writeMode(initData(&d_writeMode, false, "writeMode", "List of actions to script the intervention"))
     , d_actions(initData(&d_actions, "actions", "List of actions to script the intervention"))
     , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the intervention"))
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of time to change the action"))
 {
+    
 }
 
 template <class DataTypes>
@@ -57,30 +59,112 @@ void BeamAdapterActionController<DataTypes>::init()
 }
 
 
+template <class DataTypes>
+void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel::KeypressedEvent* kev)
+{
+    if (!d_writeMode.getValue())
+        return;
+
+    /// Control keys for interventonal Radiology simulations:
+    switch (kev->getKey())
+    {
+    case 'D':
+        currAction = BeamAdapterAction::DROP_TOOL;
+        break;
+    case '2':
+        currAction = BeamAdapterAction::USE_TOOL_2;
+        break;
+    case '1':
+        currAction = BeamAdapterAction::USE_TOOL_1;
+        break;
+    case '0':
+        currAction = BeamAdapterAction::USE_TOOL_0;
+        break;
+    case 20: // droite = 20
+        if (currAction == BeamAdapterAction::SPIN_RIGHT)
+            currAction = BeamAdapterAction::NO_ACTION;
+        else
+            currAction = BeamAdapterAction::SPIN_RIGHT;
+
+        break;
+    case 18: // gauche = 18
+        if (currAction == BeamAdapterAction::SPIN_LEFT)
+            currAction = BeamAdapterAction::NO_ACTION;
+        else
+            currAction = BeamAdapterAction::SPIN_LEFT;
+
+        break;
+    case 19: // fleche haut = 19
+        if (currAction == BeamAdapterAction::MOVE_FORWARD)
+            currAction = BeamAdapterAction::NO_ACTION;
+        else
+            currAction = BeamAdapterAction::MOVE_FORWARD;
+        
+        break;
+    case 21: // bas = 21
+        if (currAction == BeamAdapterAction::MOVE_BACKWARD)
+            currAction = BeamAdapterAction::NO_ACTION;
+        else
+            currAction = BeamAdapterAction::MOVE_BACKWARD;
+
+        break;
+    break;
+    }
+}
+
 
 template <class DataTypes>
 void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
-    const type::vector<Real>& times = d_timeSteps.getValue();
-    if (!times.empty())
+    if (d_writeMode.getValue())
     {
-        const auto currentTime = this->getContext()->getTime();
-        if (m_readStep < times.size())
-        {
-            Real time = times[m_readStep];
-            if (currentTime >= time) // check if another key time has been reached and change action
-            {
-                currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
-                m_readStep++;
-            }
-        }
-       
         interventionCtrl* ctrl = l_interventionController.get();
         ctrl->applyAction(currAction);
+
+        if (lastAction != currAction)
+        {
+            type::vector<Real>& times = *d_timeSteps.beginEdit();
+            type::vector<int>& actions = *d_actions.beginEdit();
+            times.push_back(getContext()->getTime());
+            actions.push_back(int(currAction));
+
+            std::cout << "Actions: " << actions << std::endl;
+            std::cout << "Times: " << times << std::endl;
+
+            d_timeSteps.endEdit();
+            d_actions.endEdit();
+
+            lastAction = currAction;
+        }
 
         if (currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
         {
             currAction = BeamAdapterAction::NO_ACTION;
+        }
+    }
+    else
+    {
+        const type::vector<Real>& times = d_timeSteps.getValue();
+        if (!times.empty())
+        {
+            const auto currentTime = this->getContext()->getTime();
+            if (m_readStep < times.size())
+            {
+                Real time = times[m_readStep];
+                if (currentTime >= time) // check if another key time has been reached and change action
+                {
+                    currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
+                    m_readStep++;
+                }
+            }
+
+            interventionCtrl* ctrl = l_interventionController.get();
+            ctrl->applyAction(currAction);
+
+            if (currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
+            {
+                currAction = BeamAdapterAction::NO_ACTION;
+            }
         }
     }
 }
