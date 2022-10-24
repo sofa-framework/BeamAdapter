@@ -23,7 +23,6 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/gl/template.h>
 
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <sofa/core/behavior/ConstraintResolution.h>

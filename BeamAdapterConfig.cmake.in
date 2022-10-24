@@ -7,7 +7,6 @@ set(BEAMADAPTER_HAVE_SOFADVANCEDCONSTRAINT @BEAMADAPTER_HAVE_SOFADVANCEDCONSTRAI
 set(BEAMADAPTER_HAVE_SOFACUDA @BEAMADAPTER_HAVE_SOFACUDA@)
 
 find_package(Sofa.Simulation.Core QUIET REQUIRED)
-find_package(Sofa.GL QUIET REQUIRED)
 find_package(Sofa.Component.StateContainer QUIET REQUIRED)
 find_package(Sofa.Component.Controller QUIET REQUIRED)
 find_package(Sofa.Component.Topology.Container.Dynamic QUIET REQUIRED)
