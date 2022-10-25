@@ -22,7 +22,6 @@
 #include <sofa/core/behavior/BaseInteractionConstraint.h>
 #include <sofa/core/behavior/PairInteractionConstraint.h>
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/gl/template.h>
 
 #include <sofa/type/Mat.h>
 #include <sofa/type/Vec.h>
