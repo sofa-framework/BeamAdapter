@@ -39,6 +39,7 @@ public:
     SOFA_CLASS(SOFA_TEMPLATE(BeamAdapterActionController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
 
     using interventionCtrl = InterventionalRadiologyController<DataTypes>;
+    using Real = typename DataTypes::Real;
 
     BeamAdapterActionController();
     virtual ~BeamAdapterActionController() = default;
