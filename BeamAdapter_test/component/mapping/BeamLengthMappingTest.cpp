@@ -28,20 +28,20 @@ using std::string ;
 #include <sofa/simulation/UpdateLinksVisitor.h>
 #include <sofa/simulation/InitVisitor.h>
 
-#include "../../../component/mapping/BeamLengthMapping.h"
-#include "../../../component/BeamInterpolation.h"
+#include <BeamAdapter/component/mapping/BeamLengthMapping.h>
+#include <BeamAdapter/component/BeamInterpolation.h>
 
-#include <SofaSimulationCommon/SceneLoaderXML.h>
+#include <sofa/simulation/common/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML ;
 using sofa::simulation::Node ;
-using sofa::component::container::MechanicalObject ;
+using sofa::component::statecontainer::MechanicalObject ;
 
 namespace sofa {
   namespace { // anonymous namespace
 using namespace core;
 using namespace component;
-using defaulttype::Vec;
-using defaulttype::Mat;
+using type::Vec;
+using type::Mat;
 
 
 /**  Test suite for RigidMapping.
