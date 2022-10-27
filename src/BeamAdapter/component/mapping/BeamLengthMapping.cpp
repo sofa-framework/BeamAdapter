@@ -67,7 +67,10 @@ int BeamLengthMappingClass = core::RegisterObject("computes the lengths of the b
         //.add< BeamLengthMapping<Rigid3Types, Rigid3Types > >()
 ;
 
-template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
+namespace _beamlengthmapping_
+{
+    template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
+}
 
 } // namespace mapping
 
