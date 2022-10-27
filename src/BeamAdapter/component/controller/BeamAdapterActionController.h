@@ -56,7 +56,7 @@ public:
 
 private:
     int readStep = 0;
-    sofa::beamadapter::BeamAdapterAction currAction = NO_ACTION;
+    sofa::beamadapter::BeamAdapterAction currAction = BeamAdapterAction::NO_ACTION;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)
