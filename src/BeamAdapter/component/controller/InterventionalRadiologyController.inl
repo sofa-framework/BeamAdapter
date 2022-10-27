@@ -107,6 +107,10 @@ void InterventionalRadiologyController<DataTypes>::init()
         sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
+    else
+    {
+        msg_info() << m_instrumentsList.size() << " instrument(s) found (WireBeamInterpolation)";
+    }
 
      m_activatedPointsBuf.clear();
 
