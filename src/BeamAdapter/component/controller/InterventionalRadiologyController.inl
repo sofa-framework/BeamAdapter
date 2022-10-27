@@ -87,7 +87,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
     if (instrumentPathList.empty())
     {
-        getContext()->template get<WBeamInterpolation>(&m_instrumentsList, sofa::core::objectmodel::BaseContext::SearchRoot);
+        getContext()->template get<WBeamInterpolation>(&m_instrumentsList, sofa::core::objectmodel::BaseContext::Local);
     }
     else
     {
