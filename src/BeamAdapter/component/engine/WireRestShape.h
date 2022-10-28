@@ -116,6 +116,7 @@ public:
      void initFromLoader();
      bool checkTopology();
 
+     [[nodiscard]] bool fillTopology();
      Real getLength() ;
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;

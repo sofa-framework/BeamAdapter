@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.15"  gravity="0 0 0"> 
+    <Node name="Plugins">
+        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
+        <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
+        <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Edge2QuadTopologicalMapping] -->  
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [RegularGridTopology] -->  
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [EdgeSetGeometryAlgorithms, EdgeSetTopologyContainer, EdgeSetTopologyModifier, QuadSetGeometryAlgorithms, QuadSetTopologyContainer, QuadSetTopologyModifier] -->  
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->  
+        <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->  
+        <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->  
+        <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->  
+        <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->  
+        <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->  
+        <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->  
+        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->  
+        <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->  
+        <RequiredPlugin name="BeamAdapter" />
+    </Node>
+
+    <VisualStyle displayFlags="showVisualModels showBehaviorModels hideMappings hideForceFields" />
+    <DefaultVisualManagerLoop/>
+    <DefaultAnimationLoop />
+
+    <Node name="GuideCatheter">
+        <MeshObjLoader name="loader" filename="mesh/key_tip.obj" />
+        <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" isAProceduralShape="false" 
+            radius="10" massDensity="0.1" poissonRatio="0.3"
+            densityOfBeams="300" numEdgesCollis="300" numEdges='300'
+            youngModulus="1000000" youngModulusExtremity="1000000" />
+
+        <EdgeSetTopologyContainer name="GC_mesh" />
+        <EdgeSetTopologyModifier />
+        <EdgeSetGeometryAlgorithms template="Rigid3d" />
+        <MechanicalObject name="GC_dof" template="Rigid3d" />
+    </Node>
+
+    <Node name="Instrument">
+        <EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" />
+        <BTDLinearSolver />
+        <RegularGridTopology name="MeshLines" nx="300" ny="1" nz="1"
+            xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
+            p0="0 0 0" drawEdges="0"/>
+                                
+        <MechanicalObject name="Instrument_DOFs" template="Rigid3d" /> 
+        
+        <WireBeamInterpolation name="Interpol_GCatheter" WireRestShape="@../GuideCatheter/GC_RestShape" radius="0.05" printLog="0"/> 
+        <AdaptiveBeamForceFieldAndMass name="FF_GCatheter" interpolation="@Interpol_GCatheter" massDensity="0.00000155"/>
+
+        <InterventionalRadiologyController name="IRController" template="Rigid3d" listening="true" controlledInstrument="0" 
+            instruments="Interpol_GCatheter" printLog="0" 
+            speed="10"  step="1" startingPos="0.0 0.0 0.0  0 0 0 1" 
+            rotationInstrument="0 0 0" xtip="0 0 0"  
+            mainDirection="1 0 0"
+        />
+        
+        <FixedConstraint name="FixedConstraint" indices="0" />
+        <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8" />
+
+        <Node name='VisuGuideCatheter'>
+            <MechanicalObject name='dof_visual_GC' />
+            <QuadSetTopologyContainer  name='ContainerGC' />
+            <QuadSetTopologyModifier />
+            <QuadSetGeometryAlgorithms template='Vec3d' />
+            <Edge2QuadTopologicalMapping nbPointsOnEachCircle='10' radius='2.06' input='@../../GuideCatheter/GC_mesh' output='@ContainerGC' flipNormals='true'/>
+
+            <AdaptiveBeamMapping  name='VisuMapGuideCath' useCurvAbs='1' printLog='0' interpolation='@../Interpol_GCatheter' input='@../Instrument_DOFs' output='@dof_visual_GC' isMechanical='false'  />
+
+            <Node name='VisuOgl' activated='true'>
+                <OglModel name='Visual' color='0.7 0.7 0.7'  quads='@../ContainerGC.quads' />
+                <IdentityMapping input='@../dof_visual_GC' output='@Visual'/>
+            </Node> 
+        </Node>
+    </Node>
+
+
+</Node>
+
