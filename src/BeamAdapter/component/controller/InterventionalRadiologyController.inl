@@ -87,8 +87,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
     if (instrumentPathList.empty())
     {
-        WBeamInterpolation * wbinterpol= context->get< WBeamInterpolation >(BaseContext::Local);
-        m_instrumentsList.push_back(wbinterpol);
+        getContext()->template get<WBeamInterpolation>(&m_instrumentsList, sofa::core::objectmodel::BaseContext::Local);
     }
     else
     {
@@ -103,8 +102,15 @@ void InterventionalRadiologyController<DataTypes>::init()
         }
     }
 
-    if(m_instrumentsList.empty())
-        msg_error()<<"No Beam Interpolation found !!! the component can not work.";
+    if (m_instrumentsList.empty()) {
+        msg_error() << "No instrument found (no WireBeamInterpolation)! the component can not work and will be set to Invalid.";
+        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+    else
+    {
+        msg_info() << m_instrumentsList.size() << " instrument(s) found (WireBeamInterpolation)";
+    }
 
      m_activatedPointsBuf.clear();
 
@@ -120,11 +126,6 @@ void InterventionalRadiologyController<DataTypes>::init()
         loadMotionData(d_motionFilename.getValue());
     }
 
-    if (m_instrumentsList.size() == 0)
-    {
-        msg_error()<<"No instrument found ( no WireBeamInterpolation).";
-        return;
-    }
     auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xTip);
     x_instr_tip.resize(m_instrumentsList.size());
 
@@ -160,6 +161,7 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     Inherit::init();
 
+    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 template<class DataTypes>
@@ -202,6 +204,23 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
 
+    sofa::Size nbrBeam = 0;
+    for (unsigned int i = 0; i < m_instrumentsList.size(); i++)
+    {
+        type::vector<Real> xP_noticeable_I;
+        type::vector< int > density_I;
+        m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
+
+        for (auto nb : density_I)
+            nbrBeam += nb;
+    }
+
+    if (nbrBeam > m_numControlledNodes)
+    {
+        msg_warning() << "Parameter missmatch: According to the list of controlled instrument controlled. The number of potential beams: "
+            << nbrBeam << " exceed the number of degree of freedom in the MechanicalObject: " << m_numControlledNodes << ". This could lead to unespected behavior.";
+    }
+        
     applyInterventionalRadiologyController();
 }
 
