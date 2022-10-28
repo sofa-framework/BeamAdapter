@@ -11,6 +11,7 @@ var classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape =
     [ "checkTopology", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a1b8890729fb2495abcdf8f2d7b293961", null ],
     [ "computeOrientation", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a661c2437a36a6efde7807189a0a2f709", null ],
     [ "draw", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a8673433953792026ae9baf91b348d7da", null ],
+    [ "fillTopology", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a08706b51ea2803326ea353a06f21b4fe", null ],
     [ "getCollisionSampling", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a442b303e271b4496a20ad609d662fbdb", null ],
     [ "getInterpolationParam", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#aae074d6fe822f8f67a1f751e62269f1e", null ],
     [ "getLength", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46c7834e4b3792318e83d1521c1e1d16", null ],

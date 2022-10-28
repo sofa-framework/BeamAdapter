@@ -142,7 +142,8 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a4121d4720627c76671afb19f95e5d2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46ecae0173eda77b82df7bd0902c8e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46ecae0173eda77b82df7bd0902c8e45">parse</a> (core::objectmodel::BaseObjectDescription *arg) override</td></tr>
 <tr class="separator:a46ecae0173eda77b82df7bd0902c8e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ad72eef1561c7a53b19b048397d4ef570">init</a> () override</td></tr>
+<tr class="memitem:ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8673433953792026ae9baf91b348d7da"><td class="memItemLeft" align="right" valign="top"><a id="a8673433953792026ae9baf91b348d7da"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (const core::visual::VisualParams *vparams) override</td></tr>
@@ -179,6 +180,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>computeOrientation</b
 <tr class="separator:a08cc998ac80700515707e68edc9d0a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b8890729fb2495abcdf8f2d7b293961"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a1b8890729fb2495abcdf8f2d7b293961">checkTopology</a> ()</td></tr>
 <tr class="separator:a1b8890729fb2495abcdf8f2d7b293961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08706b51ea2803326ea353a06f21b4fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a08706b51ea2803326ea353a06f21b4fe">fillTopology</a> ()</td></tr>
+<tr class="separator:a08706b51ea2803326ea353a06f21b4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46c7834e4b3792318e83d1521c1e1d16"><td class="memItemLeft" align="right" valign="top"><a id="a46c7834e4b3792318e83d1521c1e1d16"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> ()</td></tr>
 <tr class="separator:a46c7834e4b3792318e83d1521c1e1d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,6 +290,23 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
 
 </div>
 </div>
+<a id="a08706b51ea2803326ea353a06f21b4fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08706b51ea2803326ea353a06f21b4fe">&#9670;&nbsp;</a></span>fillTopology()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool fillTopology</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>fill topology :</p>
+<p>add points</p>
+<p>add segments</p>
+
+</div>
+</div>
 <a id="a6e625023539d89b1e77b8ee91ac7502f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e625023539d89b1e77b8ee91ac7502f">&#9670;&nbsp;</a></span>getSamplingParameters()</h2>
 
@@ -313,31 +333,6 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
       </table>
 </div><div class="memdoc">
 <p>This function provides a type::vector with the curviliar abscissa of the noticeable point(s) and the minimum density (number of points) between them. (Nb. nbP_density.size() == xP_noticeable.size() - 1) </p>
-
-</div>
-</div>
-<a id="ad72eef1561c7a53b19b048397d4ef570"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad72eef1561c7a53b19b048397d4ef570">&#9670;&nbsp;</a></span>init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void init</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>fill topology :</p>
-<p>add points</p>
-<p>add segments</p>
 
 </div>
 </div>
@@ -390,7 +385,7 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><b>engine</b></li><li class="navelem"><b>_wirerestshape_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a></li>
-    <li class="footer">Generated on Fri Oct 28 2022 15:28:56 for BeamAdapter by
+    <li class="footer">Generated on Fri Oct 28 2022 15:30:07 for BeamAdapter by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
