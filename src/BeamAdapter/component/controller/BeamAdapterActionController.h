@@ -60,6 +60,8 @@ private:
     int m_readStep = 0;
     sofa::beamadapter::BeamAdapterAction currAction = BeamAdapterAction::NO_ACTION;
     sofa::beamadapter::BeamAdapterAction lastAction = BeamAdapterAction::NO_ACTION;
+
+    bool m_exportActions = false;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)

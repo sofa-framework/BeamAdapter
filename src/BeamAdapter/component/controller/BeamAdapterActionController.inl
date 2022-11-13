@@ -68,6 +68,10 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
     /// Control keys for interventonal Radiology simulations:
     switch (kev->getKey())
     {
+    case 'E':
+        currAction = BeamAdapterAction::NO_ACTION;
+        m_exportActions = !m_exportActions;
+        break;
     case 'D':
         currAction = BeamAdapterAction::DROP_TOOL;
         break;
@@ -108,6 +112,8 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
             currAction = BeamAdapterAction::MOVE_BACKWARD;
 
         break;
+    default:
+        currAction = BeamAdapterAction::NO_ACTION;
     break;
     }
 }
@@ -123,16 +129,16 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
         if (lastAction != currAction)
         {
-            type::vector<Real>& times = *d_timeSteps.beginEdit();
-            type::vector<int>& actions = *d_actions.beginEdit();
+            auto times = sofa::helper::WriteAccessor(d_timeSteps);
+            auto actions = sofa::helper::WriteAccessor(d_actions);
             times.push_back(getContext()->getTime());
             actions.push_back(int(currAction));
 
-            std::cout << "Actions: " << actions << std::endl;
-            std::cout << "Times: " << times << std::endl;
-
-            d_timeSteps.endEdit();
-            d_actions.endEdit();
+            if (m_exportActions)
+            {
+                std::cout << "timeSteps='" << times.wref() << "'" << std::endl;
+                std::cout << "actions='" << actions.wref() << "'" << std::endl;
+            }
 
             lastAction = currAction;
         }
