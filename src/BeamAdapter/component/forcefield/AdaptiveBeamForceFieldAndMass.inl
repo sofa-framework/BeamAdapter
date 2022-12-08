@@ -48,7 +48,7 @@ namespace _adaptivebeamforcefieldandmass_
 /* ************* ADAPTIVE FORCEFIELD_AND_MASS ************** */
 using sofa::core::behavior::ForceField ;
 using sofa::core::objectmodel::BaseContext ;
-using sofa::type::Vector3 ;
+using sofa::type::Vec3 ;
 using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
 using sofa::core::ConstVecCoordId ;
@@ -134,7 +134,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, Beam
 
     /// material parameters
     Real _G = _E / (2.0 * (1.0 + _nu));
-    
+
     Real phiy, phiz;
     Real L2 = (Real) (beamLocalMatrices._L * beamLocalMatrices._L);
     Real L3 = (Real) (L2 * beamLocalMatrices._L);
@@ -748,7 +748,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
         if(vparams->displayFlags().getShowForceFields())
         {
             // /  test ///
-            type::vector<Vector3> points;
+            type::vector<type::Vec3> points;
             Vec3 pos = globalH0Local.getOrigin();
             for (double i=0.0; i<1.00001; i+=0.02)
             {
