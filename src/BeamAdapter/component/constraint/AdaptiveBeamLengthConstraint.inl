@@ -384,7 +384,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->saveLastState();
     vparams->drawTool()->setLightingEnabled(false);
 
-    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::Vec3 > points;
     std::vector< sofa::type::RGBAColor> colors;
     points.reserve(m_constraintIntervals.size()*2);
     colors.reserve(m_constraintIntervals.size());

@@ -264,8 +264,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->saveLastState();
 
     ReadAccessor<Data<VecCoord> > x = mstate2->read(ConstVecCoordId::position());
-    sofa::type::Vector3 point;
-    std::vector< sofa::type::Vector3 > points;
+    sofa::type::Vec3 point;
+    std::vector< sofa::type::Vec3 > points;
     std::vector< sofa::type::RGBAColor> colors;
 
     points.reserve(x.size());

@@ -833,7 +833,7 @@ void WireRestShape<DataTypes>::draw(const core::visual::VisualParams* vparams)
     vparams->drawTool()->saveLastState();
     vparams->drawTool()->setLightingEnabled(false);
 
-    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::Vec3 > points;
     points.reserve(m_localRestPositions.size());
 
     for (unsigned int i = 0; i < m_localRestPositions.size(); i++)

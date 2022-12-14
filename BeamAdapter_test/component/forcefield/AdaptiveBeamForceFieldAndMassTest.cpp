@@ -62,7 +62,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
                 "               <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='1.0'/>"
                 "               <FixedConstraint indices='0' />"
                 "</Node> " ;
-        Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
+        Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str());
 
         ASSERT_NE(root.get(), nullptr);
         MechanicalObject<Rigid3dTypes>* mechanicalObject = nullptr;
@@ -105,9 +105,9 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
             "        <BeamInterpolation name='Interpol' radius='0.1'/>"
             "        <AdaptiveBeamForceFieldAndMass name='ForceField' interpolation='@Interpol' massDensity='10.0'/>"
             "    </Node> "
-            "</Node> ";            
+            "</Node> ";
 
-        Node::SPtr root = SceneLoaderXML::loadFromMemory("singleBeam", scene.c_str(), (unsigned int)(scene.size()));
+        Node::SPtr root = SceneLoaderXML::loadFromMemory("singleBeam", scene.c_str());
         sofa::simulation::getSimulation()->init(root.get());
 
         return root;
@@ -179,7 +179,6 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         int nbrStep = 1000;
         int nbrTest = 10;
 
-        double diffTimeMs = 0;
         double timeMin = std::numeric_limits<double>::max();
         double timeMax = std::numeric_limits<double>::min();
 
@@ -200,19 +199,8 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
             if (timeMax < diffTimed)
                 timeMax = diffTimed;
 
-            diffTimeMs += diffTimed;
             simulation->reset(root.get());
         }
-
-        //std::cout << "timeMean: " << diffTimeMs/nbrTest << std::endl;
-        //std::cout << "timeMin: " << timeMin << std::endl;
-        //std::cout << "timeMax: " << timeMax << std::endl;
-
-        // Some logs (2022-08-08):
-        //timeMean: 1.00409
-        //timeMin : 0.977432
-        //timeMax : 1.02568
-
     }
 };
 
