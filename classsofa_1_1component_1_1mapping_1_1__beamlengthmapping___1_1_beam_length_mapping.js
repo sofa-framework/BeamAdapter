@@ -32,8 +32,6 @@ var classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_m
     [ "VecEdges", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a2df4c3f9d328bb9dd676ba3224a1aa67", null ],
     [ "VecElementID", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a5bbcde2e1f56e7392010a93fa31f350e", null ],
     [ "VecIndex", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a9e13ffe2dae7869bd0d73858f0f62e28", null ],
-    [ "Nin", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a06fc87d81c62e9abb8790b6e5713c55bae110c223c838511fe7c85539422611bf", null ],
-    [ "Nout", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a06fc87d81c62e9abb8790b6e5713c55bab85906d8e211063edf0724dad4efb50a", null ],
     [ "BeamLengthMapping", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a4ad456379234c2b89581420f88b38572", null ],
     [ "~BeamLengthMapping", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#ae6f73c341da967fd731adce4212cba08", null ],
     [ "apply", "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a27de6dee885e67d9a22a2d8d7448f8e6", null ],

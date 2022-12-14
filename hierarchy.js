@@ -13,7 +13,9 @@ var hierarchy =
     [ "BaseObject", null, [
       [ "WireRestShape< DataTypes >", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", [
         [ "SteerableCatheter< DataTypes >", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", null ]
-      ] ],
+      ] ]
+    ] ],
+    [ "BaseObject", null, [
       [ "BeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html", [
         [ "WireBeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html", null ]
       ] ]
@@ -57,8 +59,8 @@ var hierarchy =
       [ "AdaptiveBeamLengthConstraint< DataTypes >", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint.html", null ]
     ] ],
     [ "ConstraintResolution", null, [
-      [ "AdaptiveBeamLengthConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html", null ],
-      [ "AdaptiveBeamSlidingConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution.html", null ]
+      [ "AdaptiveBeamSlidingConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution.html", null ],
+      [ "AdaptiveBeamLengthConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html", null ]
     ] ],
     [ "Mapping", null, [
       [ "AdaptiveBeamMapping< TIn, TOut >", "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html", null ],
