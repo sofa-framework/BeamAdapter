@@ -51,7 +51,14 @@ using sofa::helper::ReadAccessor ;
 
 /////////////////////////// TOOL /////////////////////////////////////////////////////////////////
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, const Vec3 &x, Quat &output)
+void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output)
+{
+    x.normalize();
+    return RotateFrameForAlignNormalizedX(input, x, output);
+}
+
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat &input, const Vec3 &x, Quat &output)
 {
     Vec3 x0=input.inverseRotate(x);
 
@@ -1250,15 +1257,15 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         Quat R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
-        RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
-        RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
+        RotateFrameForAlignNormalizedX(global_H_local0.getOrientation(), n_x, R0);
+        RotateFrameForAlignNormalizedX(global_H_local1.getOrientation(), n_x, R1);
 
         ///     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
         Rslerp.slerp(R0,R1, (float)baryCoord,true);
         Rslerp.normalize();
 
         ///     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
-        RotateFrameForAlignX(Rslerp, n_x,quatResult);
+        RotateFrameForAlignNormalizedX(Rslerp, n_x,quatResult);
     }
 
     global_H_localResult.set(posResult, quatResult);
