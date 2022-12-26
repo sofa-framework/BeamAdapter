@@ -24,7 +24,8 @@
 
 namespace sofa::beamadapter
 {
-    typedef enum {
+    enum class BeamAdapterAction
+    {
         NO_ACTION = 0,
         MOVE_FORWARD,
         MOVE_BACKWARD,
@@ -36,7 +37,30 @@ namespace sofa::beamadapter
         USE_TOOL_0,
         USE_TOOL_1,
         USE_TOOL_2,
-    } BeamAdapterAction;
+    };
 
+    const static std::map<std::string, BeamAdapterAction> beamActionNames = {
+        {"stop", BeamAdapterAction::NO_ACTION},
+        {"fwd", BeamAdapterAction::MOVE_FORWARD},
+        {"bwd", BeamAdapterAction::MOVE_BACKWARD},
+        {"right", BeamAdapterAction::SPIN_RIGHT},
+        {"nextT", BeamAdapterAction::SWITCH_NEXT_TOOL},
+        {"prevT", BeamAdapterAction::SWITCH_PREVIOUS_TOOL},
+        {"dropT", BeamAdapterAction::DROP_TOOL},
+        {"tool0", BeamAdapterAction::USE_TOOL_0},
+        {"tool1", BeamAdapterAction::USE_TOOL_1},
+        {"tool2", BeamAdapterAction::USE_TOOL_2}
+    };
+
+
+    static BeamAdapterAction convertBeamAdapterAction(const std::string& sAction)
+    {
+        auto bAction = beamActionNames.find(sAction);
+
+        if (bAction != beamActionNames.end())
+            return bAction->second;
+        else
+            return BeamAdapterAction::NO_ACTION;
+    }
 
 } // namespace sofa::beamAdapter

@@ -224,28 +224,28 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedE
     switch(kev->getKey())
     {
         case 'D':
-            applyAction(DROP_TOOL);
+            applyAction(BeamAdapterAction::DROP_TOOL);
             break;
         case '2':
-            applyAction(USE_TOOL_2);
+            applyAction(BeamAdapterAction::USE_TOOL_2);
             break;
         case '1':
-            applyAction(USE_TOOL_1);
+            applyAction(BeamAdapterAction::USE_TOOL_1);
             break;
         case '0':
-            applyAction(USE_TOOL_0);
+            applyAction(BeamAdapterAction::USE_TOOL_0);
             break;
         case 20: // droite = 20
-            applyAction(SPIN_RIGHT);
+            applyAction(BeamAdapterAction::SPIN_RIGHT);
             break;
         case 18: // gauche = 18
-            applyAction(SPIN_LEFT);
+            applyAction(BeamAdapterAction::SPIN_LEFT);
             break;
         case 19: // fleche haut = 19
-            applyAction(MOVE_FORWARD);
+            applyAction(BeamAdapterAction::MOVE_FORWARD);
             break;
         case 21: // bas = 21
-            applyAction(MOVE_BACKWARD);
+            applyAction(BeamAdapterAction::MOVE_BACKWARD);
             break;
         case '*':
             {
@@ -347,33 +347,33 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
 
     switch (action)
     {
-    case NO_ACTION:
+    case BeamAdapterAction::NO_ACTION:
         break;
-    case MOVE_FORWARD:
+    case BeamAdapterAction::MOVE_FORWARD:
     {
         auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
         xInstrTip[id] += d_step.getValue();
         break;
     }
-    case MOVE_BACKWARD:
+    case BeamAdapterAction::MOVE_BACKWARD:
     {
         auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
         xInstrTip[id] -= d_step.getValue();
         break;
     }
-    case SPIN_RIGHT:
+    case BeamAdapterAction::SPIN_RIGHT:
     {
         auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
         rotInstrument[id] += d_angularStep.getValue();
         break;
     }
-    case SPIN_LEFT:
+    case BeamAdapterAction::SPIN_LEFT:
     {
         auto rotInstrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
         rotInstrument[id] -= d_angularStep.getValue();
         break;
     }
-    case SWITCH_NEXT_TOOL:
+    case BeamAdapterAction::SWITCH_NEXT_TOOL:
     {
         if (id + 1 >= m_instrumentsList.size())
             msg_warning() << "Switching to next tool is not possible, no more instrument in list.";
@@ -381,7 +381,7 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
             d_controlledInstrument.setValue(id + 1);
         break;
     }
-    case SWITCH_PREVIOUS_TOOL:
+    case BeamAdapterAction::SWITCH_PREVIOUS_TOOL:
     {
         if (id == 0)
             msg_warning() << "Switching to previous tool is not possible, already controlling first instrument.";
@@ -389,12 +389,12 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
             d_controlledInstrument.setValue(id - 1);
         break;
     }
-    case USE_TOOL_0:
+    case BeamAdapterAction::USE_TOOL_0:
     {
         d_controlledInstrument.setValue(0);
         break;
     }
-    case USE_TOOL_1:
+    case BeamAdapterAction::USE_TOOL_1:
     {
         if (1 >= m_instrumentsList.size())
             msg_warning() << "Controlled Instument num 1 do not exist (size =" << m_instrumentsList.size() << ") do not change the instrument id";
@@ -402,7 +402,7 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
             d_controlledInstrument.setValue(1);
         break;
     }
-    case USE_TOOL_2:
+    case BeamAdapterAction::USE_TOOL_2:
     {
         if (2 >= m_instrumentsList.size())
             msg_warning() << "Controlled Instument num 2 do not exist (size =" << m_instrumentsList.size() << ") do not change the instrument id";
@@ -410,7 +410,7 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
             d_controlledInstrument.setValue(2);
         break;
     }
-    case DROP_TOOL:
+    case BeamAdapterAction::DROP_TOOL:
     {
         m_dropCall = true;
     }

@@ -50,12 +50,13 @@ public:
     void onMouseEvent(core::objectmodel::MouseEvent*) override;
 
     Data <type::vector<int> > d_actions;
+    Data <type::vector<std::string> > d_actionString;
     Data <type::vector<Real> > d_timeSteps;
 
     SingleLink<BeamAdapterActionController<DataTypes>, InterventionalRadiologyController<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interventionController;
 
 private:
-    int readStep = 0;
+    int m_readStep = 0;
     sofa::beamadapter::BeamAdapterAction currAction = BeamAdapterAction::NO_ACTION;
 };
 

@@ -35,6 +35,7 @@ template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
     : l_interventionController(initLink("interventionController", "Path to the Interpolation component on scene"))
     , d_actions(initData(&d_actions, "actions", "List of actions to script the intervention"))
+    , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the intervention"))
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of time to change the action"))
 {
 }
@@ -64,13 +65,13 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
     if (!times.empty())
     {
         const auto currentTime = this->getContext()->getTime();
-        if (readStep < times.size())
+        if (m_readStep < times.size())
         {
-            Real time = times[readStep];
+            Real time = times[m_readStep];
             if (currentTime >= time) // check if another key time has been reached and change action
             {
-                currAction = BeamAdapterAction(d_actions.getValue()[readStep]);
-                readStep++;
+                currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
+                m_readStep++;
             }
         }
        
