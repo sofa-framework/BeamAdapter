@@ -48,7 +48,7 @@ public:
     using Real = typename DataTypes::Real;
 
     BeamAdapterActionController();
-    virtual ~BeamAdapterActionController() = default;
+    ~BeamAdapterActionController() override = default;
 
     /// Method to init the component. Will search for a InterventionalRadiologyController using link @sa l_interventionController
     void init() override;
@@ -60,7 +60,7 @@ public:
     void onKeyPressedEvent(core::objectmodel::KeypressedEvent* kev) override;
 
     /// Unused metho for mouse event
-    void onMouseEvent(core::objectmodel::MouseEvent*) override {}
+    void onMouseEvent(core::objectmodel::MouseEvent* ev) override { SOFA_UNUSED(ev);}
 
     Data <bool> d_writeMode; ///< If true, will accumulate actions in @sa d_actions for export. Press key E for export.
     Data <type::vector<int> > d_actions; ///< List of actions to import or export.

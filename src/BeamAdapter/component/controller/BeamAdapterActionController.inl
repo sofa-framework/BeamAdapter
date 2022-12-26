@@ -24,8 +24,6 @@
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
 
-
-
 namespace sofa::component::controller
 {
 
@@ -33,11 +31,11 @@ using namespace sofa::beamadapter;
 
 template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
-    : l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
-    , d_writeMode(initData(&d_writeMode, false, "writeMode", "If true, will accumulate actions from keyboard and dump the actions and times when key 'E' is pressed."))
+    : d_writeMode(initData(&d_writeMode, false, "writeMode", "If true, will accumulate actions from keyboard and dump the actions and times when key 'E' is pressed."))
     , d_actions(initData(&d_actions, "actions", "List of actions to script the BeamAdapter"))
     , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the BeamAdapter"))
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
+    , l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
 {
     
 }
@@ -122,6 +120,7 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 template <class DataTypes>
 void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
+    const auto currentTime = this->getContext()->getTime();
     if (d_writeMode.getValue())
     {
         interventionCtrl* ctrl = l_interventionController.get();
@@ -131,7 +130,7 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
         {
             auto times = sofa::helper::WriteAccessor(d_timeSteps);
             auto actions = sofa::helper::WriteAccessor(d_actions);
-            times.push_back(getContext()->getTime());
+            times.push_back(currentTime);
             actions.push_back(int(m_currAction));
 
             if (m_exportActions)
@@ -152,8 +151,7 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
     {
         const type::vector<Real>& times = d_timeSteps.getValue();
         if (!times.empty())
-        {
-            const auto currentTime = this->getContext()->getTime();
+        {            
             if (m_readStep < times.size())
             {
                 Real time = times[m_readStep];
