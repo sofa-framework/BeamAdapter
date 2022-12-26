@@ -44,6 +44,7 @@ class BeamAdapterActionController : public MechanicalStateController<DataTypes>
 public:
     SOFA_CLASS(SOFA_TEMPLATE(BeamAdapterActionController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
 
+    using BeamAdapterAction = sofa::beamadapter::BeamAdapterAction;
     using interventionCtrl = InterventionalRadiologyController<DataTypes>;
     using Real = typename DataTypes::Real;
 
@@ -72,8 +73,8 @@ public:
 
 private:
     int m_readStep = 0; ///< counter to the current action to read in @sa d_actions
-    sofa::beamadapter::BeamAdapterAction m_currAction = BeamAdapterAction::NO_ACTION; ///< Current action imported or to export
-    sofa::beamadapter::BeamAdapterAction m_lastAction = BeamAdapterAction::NO_ACTION; ///< Previous action imported or to export
+    BeamAdapterAction m_currAction = BeamAdapterAction::NO_ACTION; ///< Current action imported or to export
+    BeamAdapterAction m_lastAction = BeamAdapterAction::NO_ACTION; ///< Previous action imported or to export
 
     bool m_exportActions = false; ///< Bool to dump actions, will be set to true if key 'E' is pressed
 };
