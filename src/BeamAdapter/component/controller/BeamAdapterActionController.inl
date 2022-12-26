@@ -33,11 +33,11 @@ using namespace sofa::beamadapter;
 
 template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
-    : l_interventionController(initLink("interventionController", "Path to the Interpolation component on scene"))
-    , d_writeMode(initData(&d_writeMode, false, "writeMode", "List of actions to script the intervention"))
-    , d_actions(initData(&d_actions, "actions", "List of actions to script the intervention"))
-    , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the intervention"))
-    , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of time to change the action"))
+    : l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
+    , d_writeMode(initData(&d_writeMode, false, "writeMode", "If true, will accumulate actions from keyboard and dump the actions and times when key 'E' is pressed."))
+    , d_actions(initData(&d_actions, "actions", "List of actions to script the BeamAdapter"))
+    , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the BeamAdapter"))
+    , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
 {
     
 }
@@ -48,7 +48,7 @@ void BeamAdapterActionController<DataTypes>::init()
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
     if (!l_interventionController.get())
     {
-        msg_error() << "No l_interventionController given";
+        msg_error() << "No l_interventionController given. Component will be set to Invalid.";
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
     }
 
@@ -69,51 +69,51 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
     switch (kev->getKey())
     {
     case 'E':
-        currAction = BeamAdapterAction::NO_ACTION;
+        m_currAction = BeamAdapterAction::NO_ACTION;
         m_exportActions = !m_exportActions;
         break;
     case 'D':
-        currAction = BeamAdapterAction::DROP_TOOL;
+        m_currAction = BeamAdapterAction::DROP_TOOL;
         break;
     case '2':
-        currAction = BeamAdapterAction::USE_TOOL_2;
+        m_currAction = BeamAdapterAction::USE_TOOL_2;
         break;
     case '1':
-        currAction = BeamAdapterAction::USE_TOOL_1;
+        m_currAction = BeamAdapterAction::USE_TOOL_1;
         break;
     case '0':
-        currAction = BeamAdapterAction::USE_TOOL_0;
+        m_currAction = BeamAdapterAction::USE_TOOL_0;
         break;
     case 20: // droite = 20
-        if (currAction == BeamAdapterAction::SPIN_RIGHT)
-            currAction = BeamAdapterAction::NO_ACTION;
+        if (m_currAction == BeamAdapterAction::SPIN_RIGHT)
+            m_currAction = BeamAdapterAction::NO_ACTION;
         else
-            currAction = BeamAdapterAction::SPIN_RIGHT;
+            m_currAction = BeamAdapterAction::SPIN_RIGHT;
 
         break;
     case 18: // gauche = 18
-        if (currAction == BeamAdapterAction::SPIN_LEFT)
-            currAction = BeamAdapterAction::NO_ACTION;
+        if (m_currAction == BeamAdapterAction::SPIN_LEFT)
+            m_currAction = BeamAdapterAction::NO_ACTION;
         else
-            currAction = BeamAdapterAction::SPIN_LEFT;
+            m_currAction = BeamAdapterAction::SPIN_LEFT;
 
         break;
     case 19: // fleche haut = 19
-        if (currAction == BeamAdapterAction::MOVE_FORWARD)
-            currAction = BeamAdapterAction::NO_ACTION;
+        if (m_currAction == BeamAdapterAction::MOVE_FORWARD)
+            m_currAction = BeamAdapterAction::NO_ACTION;
         else
-            currAction = BeamAdapterAction::MOVE_FORWARD;
+            m_currAction = BeamAdapterAction::MOVE_FORWARD;
         
         break;
     case 21: // bas = 21
-        if (currAction == BeamAdapterAction::MOVE_BACKWARD)
-            currAction = BeamAdapterAction::NO_ACTION;
+        if (m_currAction == BeamAdapterAction::MOVE_BACKWARD)
+            m_currAction = BeamAdapterAction::NO_ACTION;
         else
-            currAction = BeamAdapterAction::MOVE_BACKWARD;
+            m_currAction = BeamAdapterAction::MOVE_BACKWARD;
 
         break;
     default:
-        currAction = BeamAdapterAction::NO_ACTION;
+        m_currAction = BeamAdapterAction::NO_ACTION;
     break;
     }
 }
@@ -125,14 +125,14 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
     if (d_writeMode.getValue())
     {
         interventionCtrl* ctrl = l_interventionController.get();
-        ctrl->applyAction(currAction);
+        ctrl->applyAction(m_currAction);
 
-        if (lastAction != currAction)
+        if (m_lastAction != m_currAction)
         {
             auto times = sofa::helper::WriteAccessor(d_timeSteps);
             auto actions = sofa::helper::WriteAccessor(d_actions);
             times.push_back(getContext()->getTime());
-            actions.push_back(int(currAction));
+            actions.push_back(int(m_currAction));
 
             if (m_exportActions)
             {
@@ -140,12 +140,12 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
                 std::cout << "actions='" << actions.wref() << "'" << std::endl;
             }
 
-            lastAction = currAction;
+            m_lastAction = m_currAction;
         }
 
-        if (currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
+        if (m_currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
         {
-            currAction = BeamAdapterAction::NO_ACTION;
+            m_currAction = BeamAdapterAction::NO_ACTION;
         }
     }
     else
@@ -159,26 +159,20 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
                 Real time = times[m_readStep];
                 if (currentTime >= time) // check if another key time has been reached and change action
                 {
-                    currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
+                    m_currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
                     m_readStep++;
                 }
             }
 
             interventionCtrl* ctrl = l_interventionController.get();
-            ctrl->applyAction(currAction);
+            ctrl->applyAction(m_currAction);
 
-            if (currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
+            if (m_currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
             {
-                currAction = BeamAdapterAction::NO_ACTION;
+                m_currAction = BeamAdapterAction::NO_ACTION;
             }
         }
     }
-}
-
-template <class DataTypes>
-void BeamAdapterActionController<DataTypes>::onMouseEvent(core::objectmodel::MouseEvent* mev)
-{
-
 }
 
 

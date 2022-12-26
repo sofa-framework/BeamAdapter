@@ -32,6 +32,12 @@
 namespace sofa::component::controller
 {
 
+/***
+* This class is a SOFA component inheriting from MechanicalStateController.
+* It can be used to script the InterventionalRadiologyController using @sa BeamActions 
+* If @sa d_writeMode mode is on, each keyboard interaction used to control the Beam will be exported with key times.
+* Otherwise, it will load a list of @sa BeamActions with their corresponding key times to replay a navigation. 
+*/
 template<class DataTypes>
 class BeamAdapterActionController : public MechanicalStateController<DataTypes>
 {
@@ -44,24 +50,32 @@ public:
     BeamAdapterActionController();
     virtual ~BeamAdapterActionController() = default;
 
+    /// Method to init the component. Will search for a InterventionalRadiologyController using link @sa l_interventionController
     void init() override;
+
+    /// Method called at each timestep. Will check if an action has to be read or write
     void onBeginAnimationStep(const double dt) override;
+
+    /// Method to control the Beam using keyboard and save the actions in @sa d_actions
     void onKeyPressedEvent(core::objectmodel::KeypressedEvent* kev) override;
-    void onMouseEvent(core::objectmodel::MouseEvent*) override;
 
-    Data <bool> d_writeMode;
-    Data <type::vector<int> > d_actions;
-    Data <type::vector<std::string> > d_actionString;
-    Data <type::vector<Real> > d_timeSteps;
+    /// Unused metho for mouse event
+    void onMouseEvent(core::objectmodel::MouseEvent*) override {}
 
+    Data <bool> d_writeMode; ///< If true, will accumulate actions in @sa d_actions for export. Press key E for export.
+    Data <type::vector<int> > d_actions; ///< List of actions to import or export.
+    Data <type::vector<std::string> > d_actionString; ///< List of actions to import or export as string.
+    Data <type::vector<Real> > d_timeSteps; ///< List of key times corresponding to BeamActions in @sa d_actions or @sa d_actionString
+
+    /// Link to the InterventionalRadiologyController, controlling the Beam, to script.
     SingleLink<BeamAdapterActionController<DataTypes>, InterventionalRadiologyController<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interventionController;
 
 private:
-    int m_readStep = 0;
-    sofa::beamadapter::BeamAdapterAction currAction = BeamAdapterAction::NO_ACTION;
-    sofa::beamadapter::BeamAdapterAction lastAction = BeamAdapterAction::NO_ACTION;
+    int m_readStep = 0; ///< counter to the current action to read in @sa d_actions
+    sofa::beamadapter::BeamAdapterAction m_currAction = BeamAdapterAction::NO_ACTION; ///< Current action imported or to export
+    sofa::beamadapter::BeamAdapterAction m_lastAction = BeamAdapterAction::NO_ACTION; ///< Previous action imported or to export
 
-    bool m_exportActions = false;
+    bool m_exportActions = false; ///< Bool to dump actions, will be set to true if key 'E' is pressed
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP)
