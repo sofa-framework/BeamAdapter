@@ -41,6 +41,7 @@
 #include <sofa/component/collision/geometry/PointModel.h>
 #include <sofa/component/collision/geometry/LineModel.h>
 
+#include <BeamAdapter/utils/BeamActions.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
@@ -108,8 +109,11 @@ public:
     const type::vector< type::vector<int> >& get_id_instrument_curvAbs_table()const;
     int getTotalNbEdges()const;
 
+    void applyAction(sofa::beamadapter::BeamAdapterAction action);
+
     /// Getter to the tools curviline abscisses sorted @sa m_nodeCurvAbs at the current timestep.
     [[nodiscard]] const type::vector<Real>& getCurrentCurvAbscisses() const { return m_nodeCurvAbs; }
+
 public:
 
     using Inherit1::f_printLog;
