@@ -637,7 +637,8 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     {
         Real xMaxInstrument = m_instrumentsList[idInstrumentList[i]]->getRestTotalLength();
 
-        if (absCurvPoint[i] < 0.00000001*xMaxInstrument || fabs(absCurvPoint[i] - absCurvPoint[i-1])<0.00000001*xMaxInstrument)
+        if (absCurvPoint[i] < std::numeric_limits<float>::epsilon() * xMaxInstrument
+            || fabs(absCurvPoint[i] - absCurvPoint[i - 1]) < std::numeric_limits<float>::epsilon() * xMaxInstrument)
             m_activatedPointsBuf.push_back(false);
         else
             m_activatedPointsBuf.push_back(true);
@@ -739,10 +740,10 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     /// Some verif of step 1
     // if the totalLength is 0, move the first instrument
-    if(totalLengthCombined<0.0001)
+    if (totalLengthCombined < std::numeric_limits<float>::epsilon())
     {
         auto x = sofa::helper::getWriteOnlyAccessor(d_xTip);
-        x[0]=0.0001;
+        x[0] = std::numeric_limits<float>::epsilon();
         applyInterventionalRadiologyController();
         return;
     }
@@ -784,11 +785,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     {
         const sofa::Index globalNodeId = nbrUnactiveNode + xId;
         const Real xCurvAbs = modifiedCurvAbs[xId];
-
+        
         // 2 cases:  TODO : remove first case
             //1. the abs curv is further than the previous state of the instrument
             //2. this is not the case and the node position can be interpolated using previous step positions
-        if ((xCurvAbs-0.0001) > prev_maxCurvAbs + threshold)
+        if ((xCurvAbs - std::numeric_limits<float>::epsilon()) > prev_maxCurvAbs + threshold)
         {
             msg_error() << "Case 1 should never happen ==> avoid using totalLengthIsChanging! xCurvAbs = " << xCurvAbs 
                 << " > prev_maxCurvAbs = " << prev_maxCurvAbs << " + threshold: " << threshold << "\n"
@@ -832,7 +833,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                     Transform global_H_interpol;
                     const Real L = prev_xCurvAbs - m_nodeCurvAbs[b];
                     Real baryCoef = 1.0;
-                    if (L < 0.0001) {
+                    if (L < std::numeric_limits<float>::epsilon()) {
                         msg_error() << "Two consecutives curvAbs with the same position. Length is null. Using barycenter coefficient: baryCoef = 1";
                     }
                     else {
@@ -916,7 +917,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
         for (unsigned int i=0; i<newCurvAbs.size(); i++)
         {
-            if (newCurvAbs[i] < ((*it)+0.001) && newCurvAbs[i] > ((*it)-0.001)) // node= border of the rigid segment
+            if (newCurvAbs[i] < ((*it)+ std::numeric_limits<float>::epsilon()) && newCurvAbs[i] > ((*it)- std::numeric_limits<float>::epsilon())) // node= border of the rigid segment
             {
                 if (!rigid)
                 {
