@@ -16,6 +16,7 @@ var classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller_
     [ "InterventionalRadiologyController", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a177be25cd18629b1def38ce83a0980f6", null ],
     [ "~InterventionalRadiologyController", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a55406c3fbe0d040963dae4a2a7b733c0", null ],
     [ "activateBeamListForCollision", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aca5f2b3962d12172fd40a7e0ffc9eb76", null ],
+    [ "applyAction", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a551573cd0fd10d5af8c17a531f1c1c0e", null ],
     [ "applyInterventionalRadiologyController", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#ab12737f0d20e9be0285bbc80ec072243", null ],
     [ "bwdInit", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aac70e2eeedc06de9ab4be138cf23fae4", null ],
     [ "fixFirstNodesWithUntil", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a0b1fd708963a2a40b5d02f52b1da9749", null ],

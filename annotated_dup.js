@@ -39,7 +39,8 @@ var annotated_dup =
           ] ],
           [ "_suturecontroller_", null, [
             [ "SutureController", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller" ]
-          ] ]
+          ] ],
+          [ "BeamAdapterActionController", "classsofa_1_1component_1_1controller_1_1_beam_adapter_action_controller.html", "classsofa_1_1component_1_1controller_1_1_beam_adapter_action_controller" ]
         ] ],
         [ "engine", null, [
           [ "_wirerestshape_", null, [

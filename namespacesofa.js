@@ -1,7 +1,20 @@
 var namespacesofa =
 [
     [ "beamadapter", null, [
-      [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ]
+      [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ],
+      [ "BeamAdapterAction", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305", [
+        [ "NO_ACTION", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a24ce802dad4f363a652f77ce888c9b91", null ],
+        [ "MOVE_FORWARD", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a6e67a34d4a4906e6d99684faee4fa38f", null ],
+        [ "MOVE_BACKWARD", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a17761b6e1aa325666792190ae316e3cf", null ],
+        [ "SPIN_RIGHT", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a3e2b0a72fc6129e7e03a07e8b9ad3e8b", null ],
+        [ "SPIN_LEFT", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a7c3b02b10758514d4b25b49562ba453e", null ],
+        [ "SWITCH_NEXT_TOOL", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a87ff5eb4b46cb2bf33a203ec0d346590", null ],
+        [ "SWITCH_PREVIOUS_TOOL", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a55889bf2f729226daedca69133995021", null ],
+        [ "DROP_TOOL", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a892649bee84de385c6309e645a947144", null ],
+        [ "USE_TOOL_0", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305ab61afcf0f79c77959a7adcb1cc9c5e0c", null ],
+        [ "USE_TOOL_1", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305a9950492cd70ef06867089e158d45d70a", null ],
+        [ "USE_TOOL_2", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305ac69bb40704f9ef8b177f7b7d23d03dc2", null ]
+      ] ]
     ] ],
     [ "component", null, [
       [ "collision", null, [

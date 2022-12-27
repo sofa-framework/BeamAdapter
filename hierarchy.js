@@ -41,6 +41,7 @@ var hierarchy =
       [ "AdaptiveBeamForceFieldAndMass< DataTypes >", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html", null ]
     ] ],
     [ "MechanicalStateController", null, [
+      [ "BeamAdapterActionController< DataTypes >", "classsofa_1_1component_1_1controller_1_1_beam_adapter_action_controller.html", null ],
       [ "AdaptiveBeamController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__adaptivebeamcontroller___1_1_adaptive_beam_controller.html", null ],
       [ "InterventionalRadiologyController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html", null ],
       [ "SutureController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html", null ]
