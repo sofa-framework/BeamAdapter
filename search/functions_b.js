@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['sofa_5fdecl_5fclass_297',['SOFA_DECL_CLASS',['../namespacesofa_1_1component_1_1constraintset.html#a6e5c826a9dd9a6a052ff7557f0049365',1,'sofa::component::constraintset']]],
-  ['sortcurvabs_298',['sortCurvAbs',['../classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#af67e602b6b3407115309289385947252',1,'sofa::component::controller::_interventionalradiologycontroller_::InterventionalRadiologyController']]],
-  ['steerablecatheter_299',['SteerableCatheter',['../classsofa_1_1component_1_1engine_1_1_steerable_catheter.html#abe52c4437f45faff0b8bde5052532eca',1,'sofa::component::engine::SteerableCatheter']]],
-  ['storeresetstate_300',['storeResetState',['../classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#aaf09cb1e03ecba4d969c91fd8854cf28',1,'sofa::component::fem::_beaminterpolation_::BeamInterpolation']]]
+  ['rotateframeforalignnormalizedx_299',['RotateFrameForAlignNormalizedX',['../classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ae58c1d82e9c6a7831ae426db1145a797',1,'sofa::component::fem::_beaminterpolation_::BeamInterpolation']]],
+  ['rotateframeforalignx_300',['RotateFrameForAlignX',['../classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a',1,'sofa::component::fem::_beaminterpolation_::BeamInterpolation']]]
 ];

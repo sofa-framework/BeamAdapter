@@ -263,9 +263,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>InterpolateTransformU
 <tr class="memitem:ab8eaeeb7f348323c2ab0ac9395bc09c5"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ab8eaeeb7f348323c2ab0ac9395bc09c5">ComputeTotalBendingRotationAngle</a> (const Real &amp;dx_computation, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L, const Real &amp;baryCoordMin, const Real &amp;baryCoordMax)</td></tr>
 <tr class="memdesc:ab8eaeeb7f348323c2ab0ac9395bc09c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)  <a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ab8eaeeb7f348323c2ab0ac9395bc09c5">More...</a><br /></td></tr>
 <tr class="separator:ab8eaeeb7f348323c2ab0ac9395bc09c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a899a756e92492f60fdf3694b9be0988a"><td class="memItemLeft" align="right" valign="top"><a id="a899a756e92492f60fdf3694b9be0988a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>RotateFrameForAlignX</b> (const Quat &amp;input, Vec3 &amp;x, Quat &amp;output)</td></tr>
+<tr class="memitem:a899a756e92492f60fdf3694b9be0988a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a">RotateFrameForAlignX</a> (const Quat &amp;input, Vec3 &amp;x, Quat &amp;output)</td></tr>
+<tr class="memdesc:a899a756e92492f60fdf3694b9be0988a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to rotate a Frame define by a Quat.  <a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a">More...</a><br /></td></tr>
 <tr class="separator:a899a756e92492f60fdf3694b9be0988a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae58c1d82e9c6a7831ae426db1145a797"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ae58c1d82e9c6a7831ae426db1145a797">RotateFrameForAlignNormalizedX</a> (const Quat &amp;input, const Vec3 &amp;x, Quat &amp;output)</td></tr>
+<tr class="memdesc:ae58c1d82e9c6a7831ae426db1145a797"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to rotate a Frame define by a Quat.  <a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ae58c1d82e9c6a7831ae426db1145a797">More...</a><br /></td></tr>
+<tr class="separator:ae58c1d82e9c6a7831ae426db1145a797"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a266f659f3c1ad18b57be03035150dee8"><td class="memItemLeft" align="right" valign="top"><a id="a266f659f3c1ad18b57be03035150dee8"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getStateSize</b> () const</td></tr>
 <tr class="separator:a266f659f3c1ad18b57be03035150dee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1365,6 +1368,94 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 
 </div>
 </div>
+<a id="ae58c1d82e9c6a7831ae426db1145a797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae58c1d82e9c6a7831ae426db1145a797">&#9670;&nbsp;</a></span>RotateFrameForAlignNormalizedX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RotateFrameForAlignNormalizedX </td>
+          <td>(</td>
+          <td class="paramtype">const Quat &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Vec3 &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Quat &amp;&#160;</td>
+          <td class="paramname"><em>output</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to rotate a Frame define by a Quat. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>around an axis</td></tr>
+    <tr><td class="paramname">x,x</td><td>has to be normalized. Output is return inside</td></tr>
+    <tr><td class="paramname">output</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a899a756e92492f60fdf3694b9be0988a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a899a756e92492f60fdf3694b9be0988a">&#9670;&nbsp;</a></span>RotateFrameForAlignX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RotateFrameForAlignX </td>
+          <td>(</td>
+          <td class="paramtype">const Quat &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vec3 &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Quat &amp;&#160;</td>
+          <td class="paramname"><em>output</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to rotate a Frame define by a Quat. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>around an axis</td></tr>
+    <tr><td class="paramname">x,x</td><td>will be normalized in method. Output is return inside</td></tr>
+    <tr><td class="paramname">output</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ae0fee06c51ee65bedde437016717f908"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae0fee06c51ee65bedde437016717f908">&#9670;&nbsp;</a></span>updateBezierPoints() <span class="overload">[1/2]</span></h2>
 
@@ -1604,7 +1695,7 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1fem.html">fem</a></li><li class="navelem"><b>_beaminterpolation_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation</a></li>
-    <li class="footer">Generated on Tue Dec 27 2022 06:27:25 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Dec 27 2022 06:37:00 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

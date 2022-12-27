@@ -63,6 +63,7 @@ var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolatio
     [ "MapForceOnNodeUsingSpline", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ac216f92163647f47155f4ee557af2039", null ],
     [ "reinit", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ab1094b915e637faa84817a097d8d87be", null ],
     [ "reset", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#aebfcdbbd0fe4efbff10b180be50ca6bc", null ],
+    [ "RotateFrameForAlignNormalizedX", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ae58c1d82e9c6a7831ae426db1145a797", null ],
     [ "RotateFrameForAlignX", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a", null ],
     [ "setControlled", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a8040345131d01151e64a5ce0d1069165", null ],
     [ "setLength", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a84ff3f0c4eba8d2aaf2955a148888e65", null ],
