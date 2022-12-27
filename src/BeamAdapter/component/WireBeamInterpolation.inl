@@ -125,13 +125,14 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
     if (this->isControlled() && this->m_restShape!=nullptr)
     {
         const Vec2 &curvAbs = this->d_curvAbsList.getValue()[edgeInList];
+        auto restShape = this->m_restShape.get();
 
         Real x_middle = (curvAbs.x() + curvAbs.y()) / 2;
         Transform global_H_local_middle, global_H_local_0, global_H_local_1;
 
-        this->m_restShape.get()->getRestTransformOnX(global_H_local_middle, x_middle);
-        this->m_restShape.get()->getRestTransformOnX(global_H_local_0, curvAbs.x());
-        this->m_restShape.get()->getRestTransformOnX(global_H_local_1, curvAbs.y());
+        restShape->getRestTransformOnX(global_H_local_middle, x_middle);
+        restShape->getRestTransformOnX(global_H_local_0, curvAbs.x());
+        restShape->getRestTransformOnX(global_H_local_1, curvAbs.y());
 
         local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
         local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
