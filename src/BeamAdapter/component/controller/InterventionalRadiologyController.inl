@@ -557,8 +557,6 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                     newCurvAbs.push_back(value);
                 }
 
-                // Add j+1 bound point
-                newCurvAbs.push_back(curvAbs_nxP);
                 xSampling = curvAbs_nxP;
             }
         }
