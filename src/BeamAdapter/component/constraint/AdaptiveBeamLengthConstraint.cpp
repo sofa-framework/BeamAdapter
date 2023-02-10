@@ -34,21 +34,21 @@ namespace _adaptivebeamlengthconstraint_
 {
 
 
-void AdaptiveBeamLengthConstraintResolution::init(int line, double** w, double* force)
+void AdaptiveBeamLengthConstraintResolution::init(int line, SReal** w, SReal* force)
 {
     SOFA_UNUSED(w);
 
     if(m_initF)
         force[line] = *m_initF;
 }
-void AdaptiveBeamLengthConstraintResolution::resolution(int line, double** w, double* d, double* force)
+void AdaptiveBeamLengthConstraintResolution::resolution(int line, SReal** w, SReal* d, SReal* force)
 {
     force[line] -= d[line] / w[line][line];
     if(force[line] < 0)
         force[line] = 0;
 }
 
-void AdaptiveBeamLengthConstraintResolution::store(int line, double* force, bool convergence)
+void AdaptiveBeamLengthConstraintResolution::store(int line, SReal* force, bool convergence)
 {
     SOFA_UNUSED(convergence) ;
 

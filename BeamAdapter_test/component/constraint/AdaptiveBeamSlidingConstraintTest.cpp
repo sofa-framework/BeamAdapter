@@ -30,7 +30,7 @@ using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::Data ;
 
 using sofa::helper::WriteAccessor ;
-using sofa::defaulttype::Rigid3dTypes ;
+using sofa::defaulttype::Rigid3Types ;
 
 #include <sofa/simulation/common/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML ;
@@ -82,7 +82,7 @@ struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationT
 };
 
 using ::testing::Types;
-typedef Types<Rigid3dTypes> DataTypes;
+typedef Types<Rigid3Types> DataTypes;
 
 TYPED_TEST_SUITE(AdaptiveBeamSlidingConstraintTest, DataTypes);
 
