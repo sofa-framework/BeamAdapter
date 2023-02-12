@@ -301,7 +301,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeMass(int beam, BeamLoca
 template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx,
                                                                     int bIndex, Index nd0Id, Index nd1Id,
-                                                                    const double &factor )
+                                                                    SReal factor )
 {
     if(nd0Id==nd1Id) /// Return in case of rigidification
         return;
@@ -339,7 +339,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::applyStiffnessLarge( VecDeriv&
 template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::applyMassLarge( VecDeriv& df, const VecDeriv& dx,
                                                                int bIndex, Index nd0Id, Index nd1Id,
-                                                               const double &factor)
+                                                               SReal factor)
 {
     Vec6 A0, A1, a0, a1, f0, f1, F0, F1;
     BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[bIndex];
@@ -377,7 +377,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::applyMassLarge( VecDeriv& df, 
 /////////////////////////////////////
 
 template<class DataTypes>
-void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams* mparams , DataVecDeriv& dataf, const DataVecDeriv& datadx, double factor)
+void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams* mparams , DataVecDeriv& dataf, const DataVecDeriv& datadx, SReal factor)
 {
     SOFA_UNUSED(mparams);
 

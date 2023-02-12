@@ -136,7 +136,7 @@ public:
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
     void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
     void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
@@ -148,7 +148,7 @@ public:
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
+    SReal getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getKineticEnergy not yet implemented";
@@ -172,11 +172,11 @@ public:
     void addDForce(const MechanicalParams* mparams, DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
+    SReal getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"getPotentialEnergy not yet implemented"; 
-        return 0; 
+        return 0_sreal; 
     }
 
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
@@ -196,8 +196,8 @@ protected :
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
-    void applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
-    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
+    void applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, SReal factor);
+    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, SReal factor );
     void computeGravityVector();
 
 private:

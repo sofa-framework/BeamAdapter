@@ -232,7 +232,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beamId, BeamLocal
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx,
                                                                     int bIndex, Index nd0Id, Index nd1Id,
-                                                                    const double &factor )
+                                                                    SReal factor )
 {
     if(nd0Id==nd1Id) /// Return in case of rigidification
         return;
@@ -268,7 +268,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, const double &factor)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, SReal factor)
 {
     const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[bIndex];
 
@@ -299,7 +299,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge( VecDeriv& df, int
 /////////////////////////////////////
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mparams , DataVecDeriv& dataf, const DataVecDeriv& datadx, double factor)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mparams , DataVecDeriv& dataf, const DataVecDeriv& datadx, SReal factor)
 {
     SOFA_UNUSED(mparams);
     SOFA_UNUSED(datadx);
