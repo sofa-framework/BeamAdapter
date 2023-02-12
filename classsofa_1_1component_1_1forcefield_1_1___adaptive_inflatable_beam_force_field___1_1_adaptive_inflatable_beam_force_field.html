@@ -188,10 +188,10 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reinit</b> ()
 <tr class="memitem:a414cc78a2cf3cc3a17d08a66c413a999"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a414cc78a2cf3cc3a17d08a66c413a999">draw</a> (const VisualParams *vparams) override</td></tr>
 <tr class="memdesc:a414cc78a2cf3cc3a17d08a66c413a999"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualization.  <a href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a414cc78a2cf3cc3a17d08a66c413a999">More...</a><br /></td></tr>
 <tr class="separator:a414cc78a2cf3cc3a17d08a66c413a999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3934ee68333ff54a74b47dbaba8f410"><td class="memItemLeft" align="right" valign="top"><a id="ad3934ee68333ff54a74b47dbaba8f410"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#ad3934ee68333ff54a74b47dbaba8f410">addMDx</a> (const MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecDeriv &amp;dx, double factor) override</td></tr>
-<tr class="memdesc:ad3934ee68333ff54a74b47dbaba8f410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass Interface. <br /></td></tr>
-<tr class="separator:ad3934ee68333ff54a74b47dbaba8f410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49f02af0b262a65366a7bf8df05d27d3"><td class="memItemLeft" align="right" valign="top"><a id="a49f02af0b262a65366a7bf8df05d27d3"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a49f02af0b262a65366a7bf8df05d27d3">addMDx</a> (const MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecDeriv &amp;dx, SReal factor) override</td></tr>
+<tr class="memdesc:a49f02af0b262a65366a7bf8df05d27d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass Interface. <br /></td></tr>
+<tr class="separator:a49f02af0b262a65366a7bf8df05d27d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35dde21d79be768329c5d146e6d79fca"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a35dde21d79be768329c5d146e6d79fca">addMToMatrix</a> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
 <tr class="separator:a35dde21d79be768329c5d146e6d79fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad81f5968ab6d5c789c4883ac7c718530"><td class="memItemLeft" align="right" valign="top"><a id="ad81f5968ab6d5c789c4883ac7c718530"></a>
@@ -200,10 +200,10 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addMBKToMatri
 <tr class="memitem:ae2b163bdfe61882b0efde89f0513b265"><td class="memItemLeft" align="right" valign="top"><a id="ae2b163bdfe61882b0efde89f0513b265"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>accFromF</b> (const MechanicalParams *mparams, DataVecDeriv &amp;, const DataVecDeriv &amp;) override</td></tr>
 <tr class="separator:ae2b163bdfe61882b0efde89f0513b265"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a156ac616e735271faf0f215310788c64"><td class="memItemLeft" align="right" valign="top"><a id="a156ac616e735271faf0f215310788c64"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a156ac616e735271faf0f215310788c64">getKineticEnergy</a> (const MechanicalParams *mparams, const DataVecDeriv &amp;) const override</td></tr>
-<tr class="memdesc:a156ac616e735271faf0f215310788c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; vMv/2 using dof-&gt;getV() <br /></td></tr>
-<tr class="separator:a156ac616e735271faf0f215310788c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fc3fb8442ee52ddf492221a934d2f86"><td class="memItemLeft" align="right" valign="top"><a id="a4fc3fb8442ee52ddf492221a934d2f86"></a>
+virtual SReal&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a4fc3fb8442ee52ddf492221a934d2f86">getKineticEnergy</a> (const MechanicalParams *mparams, const DataVecDeriv &amp;) const override</td></tr>
+<tr class="memdesc:a4fc3fb8442ee52ddf492221a934d2f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; vMv/2 using dof-&gt;getV() <br /></td></tr>
+<tr class="separator:a4fc3fb8442ee52ddf492221a934d2f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa21cf78931ecb7b847184371c6fb8295"><td class="memItemLeft" align="right" valign="top"><a id="aa21cf78931ecb7b847184371c6fb8295"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addGravityToV</b> (const MechanicalParams *mparams, DataVecDeriv &amp;) override</td></tr>
 <tr class="separator:aa21cf78931ecb7b847184371c6fb8295"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,9 +216,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isDiagonal</b> () con
 <tr class="memitem:af77f6f07efcdacd4750245541cfd29d0"><td class="memItemLeft" align="right" valign="top"><a id="af77f6f07efcdacd4750245541cfd29d0"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addDForce</b> (const MechanicalParams *mparams, DataVecDeriv &amp;datadF, const DataVecDeriv &amp;datadX) override</td></tr>
 <tr class="separator:af77f6f07efcdacd4750245541cfd29d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7ad31969d8f5ddee2372bea33a1382b"><td class="memItemLeft" align="right" valign="top"><a id="ab7ad31969d8f5ddee2372bea33a1382b"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getPotentialEnergy</b> (const MechanicalParams *mparams, const DataVecCoord &amp;) const override</td></tr>
-<tr class="separator:ab7ad31969d8f5ddee2372bea33a1382b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb18395b39e2c90598ed31386eea13ed"><td class="memItemLeft" align="right" valign="top"><a id="adb18395b39e2c90598ed31386eea13ed"></a>
+virtual SReal&#160;</td><td class="memItemRight" valign="bottom"><b>getPotentialEnergy</b> (const MechanicalParams *mparams, const DataVecCoord &amp;) const override</td></tr>
+<tr class="separator:adb18395b39e2c90598ed31386eea13ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb6b56aa1c24aee67f9fde54f5de721c"><td class="memItemLeft" align="right" valign="top"><a id="acb6b56aa1c24aee67f9fde54f5de721c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addKToMatrix</b> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
 <tr class="separator:acb6b56aa1c24aee67f9fde54f5de721c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -251,10 +251,10 @@ DataVecDeriv&#160;</td><td class="memItemRight" valign="bottom"><b>d_dataG</b></
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ad875f2fcba2e8b7c36f252d1168e01b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#ad875f2fcba2e8b7c36f252d1168e01b5">applyMassLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, int bIndex, Index nd0Id, Index nd1Id, const double &amp;factor)</td></tr>
-<tr class="separator:ad875f2fcba2e8b7c36f252d1168e01b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0949f3c9e141f56754483bfce7911d2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a0949f3c9e141f56754483bfce7911d2a">applyStiffnessLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, int beam, Index nd0Id, Index nd1Id, const double &amp;factor)</td></tr>
-<tr class="separator:a0949f3c9e141f56754483bfce7911d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89bdda636257db3b97ed5ce3a4368b73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a89bdda636257db3b97ed5ce3a4368b73">applyMassLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, int bIndex, Index nd0Id, Index nd1Id, SReal factor)</td></tr>
+<tr class="separator:a89bdda636257db3b97ed5ce3a4368b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b38cbe6228f118a7fb4d51854cd459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a29b38cbe6228f118a7fb4d51854cd459">applyStiffnessLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, int beam, Index nd0Id, Index nd1Id, SReal factor)</td></tr>
+<tr class="separator:a29b38cbe6228f118a7fb4d51854cd459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6151c3afd2ea8395734b42adb91cb6cf"><td class="memItemLeft" align="right" valign="top"><a id="a6151c3afd2ea8395734b42adb91cb6cf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computeGravityVector</b> ()</td></tr>
 <tr class="separator:a6151c3afd2ea8395734b42adb91cb6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -403,8 +403,8 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 
 </div>
 </div>
-<a id="ad875f2fcba2e8b7c36f252d1168e01b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad875f2fcba2e8b7c36f252d1168e01b5">&#9670;&nbsp;</a></span>applyMassLarge()</h2>
+<a id="a89bdda636257db3b97ed5ce3a4368b73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89bdda636257db3b97ed5ce3a4368b73">&#9670;&nbsp;</a></span>applyMassLarge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -445,7 +445,7 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramtype">SReal&#160;</td>
           <td class="paramname"><em>factor</em>&#160;</td>
         </tr>
         <tr>
@@ -467,8 +467,8 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 
 </div>
 </div>
-<a id="a0949f3c9e141f56754483bfce7911d2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0949f3c9e141f56754483bfce7911d2a">&#9670;&nbsp;</a></span>applyStiffnessLarge()</h2>
+<a id="a29b38cbe6228f118a7fb4d51854cd459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29b38cbe6228f118a7fb4d51854cd459">&#9670;&nbsp;</a></span>applyStiffnessLarge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -509,7 +509,7 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramtype">SReal&#160;</td>
           <td class="paramname"><em>factor</em>&#160;</td>
         </tr>
         <tr>
@@ -646,7 +646,7 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field__.html">_AdaptiveInflatableBeamForceField_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField</a></li>
-    <li class="footer">Generated on Wed Dec 28 2022 07:09:09 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Feb 12 2023 18:52:01 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
