@@ -52,6 +52,6 @@ var classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping =
     [ "m_controlerPath", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a27f50b7df272a45bc44d0d132dc8dd45", null ],
     [ "m_instrumentList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#ad4f0ba818d8be0db81902170933ff75b", null ],
     [ "m_ircontroller", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a521551555e6d55a9afd702449c2b747b", null ],
-    [ "m_subMappingList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a2d9297de2183ec9c7a162cbcf5905ad3", null ],
+    [ "m_subMappingList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a8c2805e7523ba220b458e33369021ada", null ],
     [ "useCurvAbs", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a630ccdc1b760d0fe8ef99cb70fcbba9e", null ]
 ];
