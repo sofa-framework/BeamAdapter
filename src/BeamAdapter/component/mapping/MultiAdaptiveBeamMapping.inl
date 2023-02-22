@@ -274,7 +274,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
         m_subMappingList.clear();
         for (unsigned int i=0; i<m_instrumentList.size(); i++)
         {
-                AdaptiveBeamMapping< TIn, TOut>* newMapping = new AdaptiveBeamMapping< TIn, TOut>(this->fromModel, this->toModel,m_instrumentList[i],true);
+                typename AdaptiveBeamMapping< TIn, TOut>::SPtr newMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping< TIn, TOut>>(this->fromModel, this->toModel,m_instrumentList[i],true);
                 m_subMappingList.push_back(newMapping);
         }
 

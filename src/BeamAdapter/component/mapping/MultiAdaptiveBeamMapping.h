@@ -140,7 +140,7 @@ protected:
 
     // for fromSeveralInterpolations option
     sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
-    sofa::type::vector<  AdaptiveBeamMapping<TIn, TOut>* > m_subMappingList;
+    sofa::type::vector<  typename AdaptiveBeamMapping<TIn, TOut>::SPtr > m_subMappingList;
     TInterventionalRadiologyController* m_ircontroller;
     sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod;
     sofa::type::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
