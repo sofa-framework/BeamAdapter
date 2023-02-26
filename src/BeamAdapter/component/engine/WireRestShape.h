@@ -35,7 +35,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/DataEngine.h>
+#include <sofa/core/objectmodel/BaseObject.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 #include <sofa/core/loader/MeshLoader.h>
@@ -58,10 +58,10 @@ using sofa::core::loader::MeshLoader;
  *  Describe the shape functions on multiple segments using curvilinear abscissa
  */
 template <class DataTypes>
-class WireRestShape : public sofa::core::DataEngine
+class WireRestShape : public core::objectmodel::BaseObject
 {
 public:
-    SOFA_CLASS(WireRestShape,sofa::core::DataEngine);
+    SOFA_CLASS(WireRestShape, core::objectmodel::BaseObject);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -84,8 +84,7 @@ public:
      /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
      void parse(core::objectmodel::BaseObjectDescription* arg) override;
      void init() override ;
-     void doUpdate() override {}
-     
+       
      void draw(const core::visual::VisualParams * vparams) override ;
 
 
@@ -104,8 +103,8 @@ public:
      void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
 
      /**
-      * This function provides a type::vector with the curviliar abscissa of the noticeable point(s)
-      * and the minimum density (number of points) between them
+      * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 
+      * and the minimum density (number of points) between them. (Nb. nbP_density.size() == xP_noticeable.size() - 1)
       */
      void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<int>& nbP_density) const ;
 
@@ -117,6 +116,7 @@ public:
      void initFromLoader();
      bool checkTopology();
 
+     [[nodiscard]] bool fillTopology();
      Real getLength() ;
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
@@ -181,12 +181,6 @@ private:
      SingleLink<WireRestShape<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;     
      /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
      MeshLoader* loader{ nullptr };
-
-     /// Link to a Edge2QuadTopologicalMapping, usually used for beam surface rendering to be set to propagate topological changes
-     SingleLink<WireRestShape<DataTypes>, Edge2QuadTopologicalMapping, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_edge2QuadMapping;
-     /// Pointer to a Edge2QuadTopologicalMapping usually used for beam surface rendering. To be set using @sa l_edge2QuadMapping
-     Edge2QuadTopologicalMapping* edge2QuadMap{ nullptr };
-
 };
 
 

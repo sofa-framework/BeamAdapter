@@ -25,7 +25,6 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/type/Vec.h>
 #include <sofa/linearalgebra/BaseVector.h>
-#include <sofa/gl/template.h>
 #include <sofa/helper/visual/DrawTool.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
@@ -47,15 +46,15 @@ using sofa::core::visual::VisualParams;
 class AdaptiveBeamLengthConstraintResolution : public ConstraintResolution
 {
 public:
-    AdaptiveBeamLengthConstraintResolution(double* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
+    AdaptiveBeamLengthConstraintResolution(SReal* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
-    void init(int line, double** w, double* force) override;
-    void resolution(int line, double** w, double* d, double* force);
-    void store(int line, double* force, bool convergence) override;
+    void init(int line, SReal** w, SReal* force) override;
+    void resolution(int line, SReal** w, SReal* d, SReal* force);
+    void store(int line, SReal* force, bool convergence) override;
 
 protected:
-    double*    m_initF;
+    SReal*    m_initF;
     bool*      m_active;
 };
 
@@ -385,7 +384,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->saveLastState();
     vparams->drawTool()->setLightingEnabled(false);
 
-    std::vector< sofa::type::Vector3 > points;
+    std::vector< sofa::type::Vec3 > points;
     std::vector< sofa::type::RGBAColor> colors;
     points.reserve(m_constraintIntervals.size()*2);
     colors.reserve(m_constraintIntervals.size());

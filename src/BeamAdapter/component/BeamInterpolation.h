@@ -82,6 +82,7 @@ public:
 
     using Vec2 = sofa::type::Vec<2, Real>;
     using Vec3 = sofa::type::Vec<3, Real>;
+    using Vec3NoInit = sofa::type::VecNoInit<3, Real>;
     using Quat = sofa::type::Quat<Real>;
     using VectorVec3 = type::vector <Vec3>;
 
@@ -219,7 +220,11 @@ public:
                                           const Transform &global_H_local1,const Real &L,
                                           const Real& baryCoordMin, const Real& baryCoordMax);
 
-    void RotateFrameForAlignX(const Quat &input,  Vec3 &x, Quat &output);
+    /// Method to rotate a Frame define by a Quat @param input around an axis @param x, x will be normalized in method. Output is return inside @param output
+    void RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
+    
+    /// Method to rotate a Frame define by a Quat @param input around an axis @param x , x has to be normalized. Output is return inside @param output
+    void RotateFrameForAlignNormalizedX(const Quat& input, const Vec3& x, Quat& output);
 
     unsigned int getStateSize() const ;
 
@@ -274,7 +279,8 @@ public:
 
 protected :
     /// DATA INPUT (that could change in real-time)
-    MechanicalObject<sofa::defaulttype::Vec3Types>::SPtr m_StateNodes;
+    using StateDataTypes = sofa::defaulttype::StdVectorTypes< sofa::type::Vec<DataTypes::spatial_dimensions, Real>, sofa::type::Vec<DataTypes::spatial_dimensions, Real>, Real >;
+    typename MechanicalObject<StateDataTypes>::SPtr m_StateNodes;
 
     ///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
     Data< VecElementID >        d_edgeList;

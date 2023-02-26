@@ -174,19 +174,19 @@ public:
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, double factor) override;
+    virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
     virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
     virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual  void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
+    virtual void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error() << "accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available";
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
+    virtual SReal getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getKineticEnergy not yet implemented";
@@ -205,11 +205,11 @@ public:
                            DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    virtual double getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& ) const override
+    virtual SReal getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& ) const override
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getPotentialEnergy not yet implemented";
-        return 0;
+        return 0_sreal;
     }
 
     SReal getGravitationalPotentialEnergy(const core::MechanicalParams* mparams, const DataVecCoord& x, const Deriv& gravity) const override
@@ -257,8 +257,8 @@ protected :
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
-    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, const double &factor);
-    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, const double &factor );
+    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, SReal factor);
+    void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, SReal factor );
     void computeGravityVector();
 
     Vec3 m_gravity;

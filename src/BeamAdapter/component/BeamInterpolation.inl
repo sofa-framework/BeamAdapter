@@ -51,9 +51,15 @@ using sofa::helper::ReadAccessor ;
 
 /////////////////////////// TOOL /////////////////////////////////////////////////////////////////
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output)
+void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output)
 {
     x.normalize();
+    return RotateFrameForAlignNormalizedX(input, x, output);
+}
+
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat &input, const Vec3 &x, Quat &output)
+{
     Vec3 x0=input.inverseRotate(x);
 
     Real cTheta=x0[0];
@@ -100,7 +106,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_poissonRatio(initData(&d_poissonRatio, type::vector<Real>(1, m_defaultPoissonRatio), "defaultPoissonRatio",
                                    "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))
-  , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<sofa::defaulttype::Vec3Types> >())
+  , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
   , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
   , d_lengthList(initData(&d_lengthList, "lengthList", "list of the length of each beam"))
   , d_DOF0TransformNode0(initData(&d_DOF0TransformNode0, "DOF0TransformNode0",
@@ -1210,18 +1216,18 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
                                                                    const Transform &global_H_local1,
                                                                    const Real &L)
 {
-    Vec3 P0,P1,P2,P3,dP01, dP12, dP03;
+    Vec3NoInit P0,P1,P2,P3;
 
     /// find the spline points
-     this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
+    this->getControlPointsFromFrame(global_H_local0, global_H_local1,L,P0, P1,P2, P3);
 
-    Real bx=baryCoord;
-    Vec3 posResult;
+    const Real invBx = 1-baryCoord;
+    Vec3NoInit posResult;
     Quat quatResult;
 
-    dP01 = P1-P0;
-    dP12 = P2-P1;
-    dP03 = P3-P0;
+    const Vec3 dP01 = P1-P0;
+    const Vec3 dP12 = P2-P1;
+    const Vec3 dP03 = P3-P0;
 
     if(dP01*dP12<0.0 && dP03.norm()<0.4*L)
     {
@@ -1232,30 +1238,34 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(Transform& gl
         quatResult = global_H_local0.getOrientation();
 
         //quatResult.slerp(global_H_local0.getOrientation(),global_H_local1.getOrientation(),bx,true);
-        posResult = P0 *(1-bx) + P3*bx;
+        posResult = P0 * invBx + P3 * baryCoord;
     }
     else
     {
+        const Real bx2 = baryCoord * baryCoord;
+        const Real invBx2 = invBx * invBx;
+
         /// The position of the frame is computed using the interpolation of the spline
-        posResult = P0*(1-bx)*(1-bx)*(1-bx) + P1*3*bx*(1-bx)*(1-bx) + P2*3*bx*bx*(1-bx) + P3*bx*bx*bx;
+        posResult = P0 * invBx * invBx2 + P1 * 3 * baryCoord * invBx2 + P2 * 3 * bx2 * invBx + P3 * bx2 * baryCoord;
 
         /// the tangent is computed by derivating the spline
-        Vec3 n_x =  P0*(-3*(1-bx)*(1-bx)) + P1*(3-12*bx+9*bx*bx) + P2*(6*bx-9*bx*bx) + P3*(3*bx*bx);
+        Vec3 n_x = P0 * (-3 * invBx2) + P1 * (3 - 12 * baryCoord + 9 * bx2) + P2 * (6 * baryCoord - 9 * bx2) + P3 * (3 * bx2);
+        n_x.normalize();
 
         /// try to interpolate the "orientation" (especially the torsion) the best possible way...
         /// (but other ways should exit...)
         Quat R0, R1, Rslerp;
 
         ///      1. The frame at each node of the beam are rotated to align x along n_x
-        RotateFrameForAlignX(global_H_local0.getOrientation(), n_x, R0);
-        RotateFrameForAlignX(global_H_local1.getOrientation(), n_x, R1);
+        RotateFrameForAlignNormalizedX(global_H_local0.getOrientation(), n_x, R0);
+        RotateFrameForAlignNormalizedX(global_H_local1.getOrientation(), n_x, R1);
 
         ///     2. We use the "slerp" interpolation to find a solution "in between" these 2 solution R0, R1
-        Rslerp.slerp(R0,R1, (float)bx,true);
+        Rslerp.slerp(R0,R1, (float)baryCoord,true);
         Rslerp.normalize();
 
         ///     3. The result is not necessarily alligned with n_x, so we re-aligned Rslerp to obtain a quatResult.
-        RotateFrameForAlignX(Rslerp, n_x,quatResult);
+        RotateFrameForAlignNormalizedX(Rslerp, n_x,quatResult);
     }
 
     global_H_localResult.set(posResult, quatResult);

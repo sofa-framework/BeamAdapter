@@ -41,6 +41,7 @@
 #include <sofa/component/collision/geometry/PointModel.h>
 #include <sofa/component/collision/geometry/LineModel.h>
 
+#include <BeamAdapter/utils/BeamActions.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
@@ -89,8 +90,6 @@ public:
     ////////////////////// Inherited from BaseObject ///////////////////////////////////////////////
     virtual void init() override ;
     virtual void bwdInit() override ;
-    virtual void reinit() override;
-    virtual void draw(const core::visual::VisualParams*) override {}
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -110,6 +109,11 @@ public:
     const type::vector< type::vector<int> >& get_id_instrument_curvAbs_table()const;
     int getTotalNbEdges()const;
 
+    void applyAction(sofa::beamadapter::BeamAdapterAction action);
+
+    /// Getter to the tools curviline abscisses sorted @sa m_nodeCurvAbs at the current timestep.
+    [[nodiscard]] const type::vector<Real>& getCurrentCurvAbscisses() const { return m_nodeCurvAbs; }
+
 public:
 
     using Inherit1::f_printLog;
@@ -126,12 +130,11 @@ public:
 
     /// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
-    virtual void computeVertexT();
 
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     void interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs, type::vector< type::vector<int> > &id_instrument_table, const type::vector<Real> &xBegin, const Real& xEnd);
     /// Sort the curv Abs in the ascending order and avoid doubloon
-    void sortCurvAbs(type::vector<Real> &CurvAbs,  type::vector< type::vector<int> >& id_instrument_table);
+    void sortCurvAbs(type::vector<Real> &CurvAbs, type::vector< type::vector<int> >& id_instrument_table);
     void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( type::vector<Real> &curv_abs, type::vector< type::vector<int> > &id_instrument_table);
@@ -148,7 +151,8 @@ public:
     Data<type::vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
     Data<std::string>    d_motionFilename;
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
-    Data<type::vector<Real>>   d_curvAbs;
+    
+    
 
     bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;

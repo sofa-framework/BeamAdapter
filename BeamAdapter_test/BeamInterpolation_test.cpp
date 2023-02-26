@@ -86,7 +86,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         {
             EXPECT_MSG_NOEMIT(Error, Warning) ;
 
-            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
+            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str());
             ASSERT_NE(root.get(), nullptr);
 
             root->init(core::ExecParams::defaultInstance());
@@ -96,7 +96,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
             EXPECT_MSG_EMIT(Error) ;
             EXPECT_MSG_NOEMIT(Warning) ;
 
-            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str(), scene.size());
+            Node::SPtr root = SceneLoaderXML::loadFromMemory ( "test1", scene.c_str());
             ASSERT_NE(root.get(), nullptr);
 
             root->init(core::ExecParams::defaultInstance());

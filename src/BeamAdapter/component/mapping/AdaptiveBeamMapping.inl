@@ -275,7 +275,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     if(m_isXBufferUsed)
     {
         // TODO : solve this problem during constraint motion propagation !!
-        xBuf2 = x;
+        xBuf2 = x.ref();
         x.wref() = m_xBuffer;
     }
     // should not be necessary if apply() was called first

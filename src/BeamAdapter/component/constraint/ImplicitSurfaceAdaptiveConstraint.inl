@@ -636,58 +636,60 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     unsigned int _nbNodes = x.size();
 #endif
 
-    glDisable(GL_LIGHTING);
-    glPointSize(2);
+    const auto stateLifeCycle = vparams->drawTool()->makeStateLifeCycle();
+    vparams->drawTool()->disableLighting();
 
-    glBegin(GL_POINTS);
-
+    std::vector<sofa::type::Vector3> pointsToDraw;
+    std::vector<type::RGBAColor> colors;
 
     typename sofa::type::vector<potentialContact>::iterator it = m_vecPotentialContact.begin();
     for (unsigned int p=0; p<m_posSample.size(); p++)
     {
-
-
         if(m_vecPotentialContact.size()>0 && (*it).posSampleId==p) // in potiential contact
         {
-            glColor4f(1.0f,0.0f,0.0f,1.0f);
-            sofa::gl::glVertexT(m_posSample[p]);
+            colors.push_back(type::RGBAColor::red());
+            pointsToDraw.push_back(m_posSample[p]);
 
             if (it!=m_vecPotentialContact.end())
                 it++;
         }
         else
         {
-            glColor4f(0.0f,1.0f,1.0f,1.0f);
-            sofa::gl::glVertexT(m_posSample[p]);
+            colors.push_back(type::RGBAColor::cyan());
+            pointsToDraw.push_back(m_posSample[p]);
         }
 
     }
-    glEnd();
-    glPointSize(1);
 
-    glBegin(GL_LINES);
+    vparams->drawTool()->drawPoints(pointsToDraw, 2, colors);
+
+    colors.clear();
+    std::vector<sofa::type::Vector3> linesToDraw;
+
     for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
-        glColor4f(1.0f,0.0f,0.0f,1.0f);
         potentialContact &pt= m_vecPotentialContact[i];
         Vec3 Pos = m_posSample[pt.posSampleId];
-        sofa::gl::glVertexT(Pos);
-        sofa::gl::glVertexT(Pos + pt.n);
+
+        colors.push_back(type::RGBAColor::red());
+        linesToDraw.push_back(Pos);
+        linesToDraw.push_back(Pos + pt.n);
 
         if(m_friction)
         {
-            glColor4f(0.0f,1.0f,0.0f,1.0f);
-            sofa::gl::glVertexT(Pos);
-            sofa::gl::glVertexT(Pos + pt.t);
+            colors.push_back(type::RGBAColor::green());
+            linesToDraw.push_back(Pos);
+            linesToDraw.push_back(Pos + pt.t);
 
-            glColor4f(0.0f,0.0f,1.0f,1.0f);
-            sofa::gl::glVertexT(Pos);
-            sofa::gl::glVertexT(Pos + pt.s);
+            colors.push_back(type::RGBAColor::blue());
+            linesToDraw.push_back(Pos);
+            linesToDraw.push_back(Pos + pt.s);
         }
 
     }
-    glEnd();
-    glEnable(GL_LIGHTING);
+    vparams->drawTool()->drawLines(linesToDraw, 1, colors);
+
+    vparams->drawTool()->enableLighting();
 
     if (d_visualization.getValue() && m_posSample.size()>0)
     {
@@ -734,14 +736,14 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
             z = z+dz;
         }
 
-        glPolygonMode(GL_FRONT, GL_LINE);
-
+        vparams->drawTool()->setPolygonMode(1, true);
 
 #ifdef SOFAEVE
         mc->buildMesh(mc_data, 50, 50, 50, _isoValue);
 #endif
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        vparams->drawTool()->setPolygonMode(0, false);
+
 
         Vec3d Pos(d_posMin.getValue()[0],d_posMin.getValue()[1],d_posMin.getValue()[2]);
         Pos += PosLastPoint;
