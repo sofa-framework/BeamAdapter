@@ -50,9 +50,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >
 : Inherit(from, to)
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
-#if HAS_SUPPORT_STL_PARALLELISM
 , d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation of apply/applyJ in all the submappings"))
-#endif // HAS_SUPPORT_STL_PARALLELISM
 , m_ircontroller(_ircontroller)
 , isBarycentricMapping(false)
 {
@@ -65,9 +63,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
-#if HAS_SUPPORT_STL_PARALLELISM
 , d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation of apply/applyJ in all the submappings"))
-#endif // HAS_SUPPORT_STL_PARALLELISM
 , m_ircontroller(nullptr)
 , isBarycentricMapping(false)
 {

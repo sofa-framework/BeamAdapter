@@ -48,22 +48,6 @@
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
-
-// execution policies only supported by MSVC >=2019 and GCC >=10
-#ifdef _MSC_VER
-#define HAS_SUPPORT_STL_PARALLELISM (_MSC_VER > 1921)
-#elif defined(__GNUC__)
-#define HAS_SUPPORT_STL_PARALLELISM  (__GNUC__ > 9)
-#elif defined(__clang_major__)
-#define HAS_SUPPORT_STL_PARALLELISM  (__clang_major__ > 10)
-#else
-#define HAS_SUPPORT_STL_PARALLELISM  false
-#endif
-
-#if HAS_SUPPORT_STL_PARALLELISM
-#include <execution>
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,9 +152,7 @@ public:
     Data<std::string> d_inputMapName;		  /*!< if contactDuplicate==true, it provides the name of the input mapping */
     Data<double> d_nbPointsPerBeam;		  /*!< if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)*/
     Data<type::vector<Real>> d_segmentsCurvAbs; /*!< (output) the abscissa of each created point on the collision model */
-#if HAS_SUPPORT_STL_PARALLELISM
     Data<bool> d_parallelMapping;           /*!< flag to enable parallel internal computation of apply/applyJ */
-#endif // HAS_SUPPORT_STL_PARALLELISM
 
     SingleLink<AdaptiveBeamMapping<TIn, TOut>,
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;

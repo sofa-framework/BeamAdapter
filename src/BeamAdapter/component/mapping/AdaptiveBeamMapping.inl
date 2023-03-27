@@ -45,6 +45,9 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
+#include <sofa/simulation/ParallelForEach.h>
+#include <sofa/simulation/MainTaskSchedulerFactory.h>
+
 namespace sofa::component::mapping
 {
 
@@ -73,9 +76,7 @@ AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out
     , d_inputMapName(initData(&d_inputMapName,"nameOfInputMap", "if contactDuplicate==true, it provides the name of the input mapping"))
     , d_nbPointsPerBeam(initData(&d_nbPointsPerBeam, 0.0, "nbPointsPerBeam", "if non zero, we will adapt the points depending on the discretization, with this num of points per beam (compatible with useCurvAbs)"))
     , d_segmentsCurvAbs(initData(&d_segmentsCurvAbs, "segmentsCurvAbs", "the abscissa of each point on the collision model", true, true))
-#if HAS_SUPPORT_STL_PARALLELISM
     , d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation of apply/applyJ"))
-#endif // HAS_SUPPORT_STL_PARALLELISM
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
     , m_inputMapping(nullptr)
     , m_isSubMapping(isSubMapping)
@@ -95,6 +96,11 @@ void AdaptiveBeamMapping< TIn, TOut>::init()
         msg_error() <<"No Beam Interpolation found, the component can not work.";
 
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+    }
+
+    if (d_parallelMapping.getValue())
+    {
+        simulation::MainTaskSchedulerFactory::createInRegistry()->init();
     }
 }
 
@@ -246,34 +252,38 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     AdvancedTimer::stepBegin("computeNewInterpolation");
 
     // effective computation for each element in pointBeamDistribution
-    auto apply_impl = [&](const PosPointDefinition& pointBeamDistribution)
+    auto apply_impl = [&](const auto& range)
     {
-        const int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
-
-        Vec<3, InReal> pos;
-        const Vec3 localPos(0., pointBeamDistribution.baryPoint[1], pointBeamDistribution.baryPoint[2]);
-        l_adaptativebeamInterpolation->interpolatePointUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, in, pos, false, xtest);
-
-        if (m_isSubMapping)
+        auto elementID = std::distance(m_pointBeamDistribution.begin(), range.start);
+        for (auto it = range.start; it != range.end; ++it, ++elementID)
         {
-            if (m_idPointSubMap.size() > 0)
-                out[m_idPointSubMap[i]] = pos;
+            const auto& pointBeamDistribution = m_pointBeamDistribution[elementID];
+
+            Vec<3, InReal> pos(sofa::type::NOINIT);
+            const Vec3 localPos(0., pointBeamDistribution.baryPoint[1], pointBeamDistribution.baryPoint[2]);
+            l_adaptativebeamInterpolation->interpolatePointUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, in, pos, false, xtest);
+
+            if (m_isSubMapping)
+            {
+                if (m_idPointSubMap.size() > 0)
+                    out[m_idPointSubMap[elementID]] = pos;
+            }
+            else
+                out[elementID] = pos;
         }
-        else
-            out[i] = pos;
+
     };
 
-#if HAS_SUPPORT_STL_PARALLELISM
-    if (d_parallelMapping.getValue())
-    {
-        std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
-    }
-    else
-#endif // HAS_SUPPORT_STL_PARALLELISM
-    for (const auto& p : m_pointBeamDistribution)
-    {
-        apply_impl(p);
-    }
+    const bool multithreading = d_parallelMapping.getValue();
+
+    const simulation::ForEachExecutionPolicy execution = multithreading ?
+        simulation::ForEachExecutionPolicy::PARALLEL :
+        simulation::ForEachExecutionPolicy::SEQUENTIAL;
+
+    simulation::TaskScheduler* taskScheduler = simulation::MainTaskSchedulerFactory::createInRegistry();
+    assert(taskScheduler);
+
+    simulation::forEachRange(execution , *taskScheduler, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
 
 
     AdvancedTimer::stepEnd("computeNewInterpolation");
@@ -318,48 +328,49 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     }
 
     // effective computation for each element in pointBeamDistribution
-    auto applyJ_impl = [&](const PosPointDefinition& pointBeamDistribution)
+    auto applyJ_impl = [&](const auto& range)
     {
-        const int i = &pointBeamDistribution - &m_pointBeamDistribution[0];
-
-        unsigned int IdxNode0, IdxNode1;
-        l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
-
-        SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
-        SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
-
-        Deriv vResult;
-
-        applyJonPoint(i, vDOF0, vDOF1, vResult, x.ref());
-
-        if (m_isSubMapping)
+        auto elementID = std::distance(m_pointBeamDistribution.begin(), range.start);
+        for (auto it = range.start; it != range.end; ++it, ++elementID)
         {
-            if (m_idPointSubMap.size() > 0)
-                out[m_idPointSubMap[i]] = vResult;
+            const auto& pointBeamDistribution = m_pointBeamDistribution[elementID];
+
+            unsigned int IdxNode0, IdxNode1;
+            l_adaptativebeamInterpolation->getNodeIndices(pointBeamDistribution.beamId, IdxNode0, IdxNode1);
+
+            SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
+            SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
+
+            Deriv vResult;
+
+            applyJonPoint(elementID, vDOF0, vDOF1, vResult, x.ref());
+
+            if (m_isSubMapping)
+            {
+                if (m_idPointSubMap.size() > 0)
+                    out[m_idPointSubMap[elementID]] = vResult;
+            }
+            else
+                out[elementID] = vResult;
         }
-        else
-            out[i] = vResult;
     };
 
-#if HAS_SUPPORT_STL_PARALLELISM
-    if (d_parallelMapping.getValue())
-    {
-        std::for_each(std::execution::par_unseq, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
-    }
-    else
-#endif // HAS_SUPPORT_STL_PARALLELISM
-    for (const auto& p : m_pointBeamDistribution)
-    {
-        applyJ_impl(p);
-    }
+    const bool multithreading = d_parallelMapping.getValue();
+
+    const simulation::ForEachExecutionPolicy execution = multithreading ?
+        simulation::ForEachExecutionPolicy::PARALLEL :
+        simulation::ForEachExecutionPolicy::SEQUENTIAL;
+
+    simulation::TaskScheduler* taskScheduler = simulation::MainTaskSchedulerFactory::createInRegistry();
+    assert(taskScheduler);
+
+    simulation::forEachRange(execution, *taskScheduler, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
 
     if(m_isXBufferUsed)
     {
         x.wref() = xBuf2;
         m_isXBufferUsed = false;
     }
-
-    //dataInX.endEdit();
 }
 
 
