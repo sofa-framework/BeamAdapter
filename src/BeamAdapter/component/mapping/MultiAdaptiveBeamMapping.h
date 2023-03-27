@@ -89,7 +89,9 @@ public:
 public:
     Data<bool> useCurvAbs;
     Data< type::vector< std::string > > m_controlerPath;
-    Data< bool > d_parallelMapping;
+#if HAS_SUPPORT_STL_PARALLELISM
+    Data<bool> d_parallelMapping;           /*!< flag to enable parallel internal computation of apply/applyJ for the submapping(s) AdaptiveBeamMapping */
+#endif // HAS_SUPPORT_STL_PARALLELISM
 
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller);
     MultiAdaptiveBeamMapping();
