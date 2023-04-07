@@ -73,17 +73,23 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat& in
         Vec3 dw(0, -x0[2], x0[1]);
         dw.normalize();
 
-        // computation of the rotation
-        Quat inputRoutput(type::QNOINIT);
+        // optimized axisToQuat with no normalization, using already computed cos(Theta) and x being 0
+        constexpr auto optimAxisToQuat = [](const Vec3& v, Real cosTheta)
+        {
+            Quat q(type::QNOINIT);
 
-        // inputRoutput.axisToQuat(dw, theta);
-        // optimized axisToQuat with no normalization, using cos Theta and x being 0
-        const auto sp = sqrt(0.5 * (1 - cTheta)); //sin(phi/2) = sqrt(0.5*(1+cos(phi)))
-        const auto cp = sqrt(0.5 * (1 + cTheta)); //cos(phi/2) = sqrt(0.5*(1-cos(phi)))
-        inputRoutput[0] = 0.0;
-        inputRoutput[1] = dw.y() * sp;
-        inputRoutput[2] = dw.z() * sp;
-        inputRoutput[3] = cp;
+            const auto sp = std::sqrt(static_cast<Real>(0.5) * (static_cast<Real>(1) - cosTheta)); //sin(phi/2) = sqrt(0.5*(1+cos(phi)))
+            const auto cp = std::sqrt(static_cast<Real>(0.5) * (static_cast<Real>(1) + cosTheta)); //cos(phi/2) = sqrt(0.5*(1-cos(phi)))
+            q[0] = static_cast<Real>(0.0);
+            q[1] = v.y() * sp;
+            q[2] = v.z() * sp;
+            q[3] = cp;
+
+            return q;
+        };
+
+        // computation of the rotation
+        const Quat inputRoutput = optimAxisToQuat(dw, cTheta);
 
         output = input * inputRoutput;
     }
