@@ -86,7 +86,6 @@ public:
     /// Test creation of WireRestShape in a default scene and check created topology 
     void testTopologyInit();
 
-    // TODO test on topology init from MeshLoader
 
     /// Test WireRestShape transform methods 
     void testTransformMethods();
