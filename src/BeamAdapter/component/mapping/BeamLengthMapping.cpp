@@ -32,6 +32,7 @@
 //
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#define BEAMADAPTER_BEAMLENGTHMAPPING_CPP
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/ObjectFactory.h>
 
