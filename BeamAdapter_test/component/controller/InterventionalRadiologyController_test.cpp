@@ -85,13 +85,11 @@ public:
     ///// Test creation of WireRestShape in a default scene and check parameters cohesion 
     void testParameterInit();
 
-    ///// Test creation of WireRestShape in a default scene and check created topology 
-    //void testTopologyInit();
-
-    //// TODO test on topology init from MeshLoader
-
-    ///// Test WireRestShape transform methods 
-    //void testTransformMethods();
+    /** TODO epernod 2023-05-03: 
+     - Test creation of WireRestShape in a default scene and check created topology 
+     - Test WireRestShape topology init from MeshLoader
+     - Test WireRestShape transform methods 
+     */   
 
 private:
     /// Pointer to SOFA simulation
