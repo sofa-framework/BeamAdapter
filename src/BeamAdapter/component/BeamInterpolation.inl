@@ -58,28 +58,40 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignX(const Quat& input, Vec3&
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat &input, const Vec3 &x, Quat &output)
+void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat& input, const Vec3& x, Quat& output)
 {
-    Vec3 x0=input.inverseRotate(x);
+    const Vec3 x0 = input.inverseRotate(x);
 
-    Real cTheta=x0[0];
-    Real theta;
-    if (cTheta>0.9999999999)
+    const Real cTheta = x0[0];
+    if (cTheta > 0.9999999999)
     {
         output = input;
     }
     else
     {
-        theta=acos(cTheta);
         // axis of rotation
-        Vec3 dw(0,-x0[2],x0[1]);
+        Vec3 dw(0, -x0[2], x0[1]);
         dw.normalize();
 
-        // computation of the rotation
-        Quat inputRoutput;
-        inputRoutput.axisToQuat(dw, theta);
+        // optimized axisToQuat with no normalization, using already computed cos(Theta) and x being 0
+        constexpr auto optimAxisToQuat = [](const Vec3& v, Real cosTheta)
+        {
+            Quat q(type::QNOINIT);
 
-        output=input*inputRoutput;
+            const auto sp = std::sqrt(static_cast<Real>(0.5) * (static_cast<Real>(1) - cosTheta)); //sin(phi/2) = sqrt(0.5*(1+cos(phi)))
+            const auto cp = std::sqrt(static_cast<Real>(0.5) * (static_cast<Real>(1) + cosTheta)); //cos(phi/2) = sqrt(0.5*(1-cos(phi)))
+            q[0] = static_cast<Real>(0.0);
+            q[1] = v.y() * sp;
+            q[2] = v.z() * sp;
+            q[3] = cp;
+
+            return q;
+        };
+
+        // computation of the rotation
+        const Quat inputRoutput = optimAxisToQuat(dw, cTheta);
+
+        output = input * inputRoutput;
     }
 }
 
