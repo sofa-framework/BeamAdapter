@@ -528,7 +528,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
 
         // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.
-        for (unsigned int j=0; j<xP_noticeable_I.size()-1; j++)
+        for (auto j=0; j<(int)(xP_noticeable_I.size()-1); j++)
         {
             const Real xP = xP_noticeable_I[j];
             const Real nxP = xP_noticeable_I[j + 1];
