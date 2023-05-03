@@ -87,7 +87,7 @@ void BeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat &in
 template <class DataTypes>
 BeamInterpolation<DataTypes>::BeamInterpolation() :
     crossSectionShape(initData(&crossSectionShape,
-                               OptionsGroup(3,"circular","elliptic (not available)","rectangular"),
+                               {"circular","elliptic (not available)","rectangular"},
                                "crossSectionShape",
                                "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
   , d_radius(initData(&d_radius, Real(1.0), "radius", "radius of the beam (if circular cross-section is considered)"))
@@ -115,7 +115,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
                                   "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
   , d_curvAbsList(initData(&d_curvAbsList, "curvAbsList", ""))
   , d_beamCollision(initData(&d_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
-  , d_vecID(initData(&d_vecID, OptionsGroup(3,"current","free","rest" ), "vecID",
+  , d_vecID(initData(&d_vecID, {"current","free","rest"}, "vecID",
                      "input pos and vel (current, free pos/vel, rest pos)" ))
   , d_InterpolationInputs(initData(&d_InterpolationInputs, "InterpolationInputs", "vector containing (beamID, baryCoord)"))
   , d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
