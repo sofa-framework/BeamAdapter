@@ -200,7 +200,14 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     stPos.getOrientation().normalize();
     d_startingPos.setValue(stPos);
 
-    WriteAccessor<Data<VecCoord> > x = *getMechanicalState()->write(core::VecCoordId::position());
+    auto mecaState = getMechanicalState();
+    if (mecaState == nullptr) {
+        msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
+        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+
+    WriteAccessor<Data<VecCoord> > x = *mecaState->write(core::VecCoordId::position());
     for(unsigned int i=0; i<x.size(); i++)
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
