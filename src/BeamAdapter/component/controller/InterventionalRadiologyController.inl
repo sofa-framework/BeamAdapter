@@ -547,6 +547,10 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
             //compute the corresponding abs curv of this "noticeable point" on the combined intrument
             const Real curvAbs_xP = xBegin[i] + xP;
             const Real curvAbs_nxP = xBegin[i] + nxP;
+
+            // In any case, the key points are added as soon as they are deployed
+            if (curvAbs_xP > 0)
+                newCurvAbs.push_back(curvAbs_xP);
             
             // compute interval between next point and previous one (0 for the first iter)
             const Real curvAbs_interval = (curvAbs_nxP - xSampling);
@@ -564,11 +568,16 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                     newCurvAbs.push_back(value);
                 }
 
-                // Add j+1 bound point
-                newCurvAbs.push_back(curvAbs_nxP);
                 xSampling = curvAbs_nxP;
             }
         }
+
+        // After the end of the for loop above, we just have to process the
+        // instrument last key point
+        const Real lastxP = xP_noticeable_I[xP_noticeable_I.size()-1];
+        const Real curvAbs_lastxP = xBegin[i] + lastxP;
+        if (curvAbs_lastxP > 0)
+            newCurvAbs.push_back(curvAbs_lastxP);
     }
 
 

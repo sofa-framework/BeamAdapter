@@ -32,10 +32,11 @@
 //
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#define BEAMADAPTER_BEAMLENGTHMAPPING_CPP
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/ObjectFactory.h>
 
-#include "BeamLengthMapping.inl"
+#include <BeamAdapter/component/mapping/BeamLengthMapping.inl>
 
 namespace sofa
 {
@@ -67,25 +68,10 @@ int BeamLengthMappingClass = core::RegisterObject("computes the lengths of the b
         //.add< BeamLengthMapping<Rigid3Types, Rigid3Types > >()
 ;
 
-
-//int BeamLengthMappingClass = core::RegisterObject("computes the lengths of the beams")
-//#ifdef SOFA_WITH_DOUBLE
-//.add< BeamLengthMapping<Rigid3dTypes, Vec1dTypes   > >(true) //default template
-//#endif
-
-//#ifdef SOFA_WITH_FLOAT
-//.add< BeamLengthMapping< Rigid3fTypes, Vec1fTypes > >()
-//#endif
-
-
-//#ifdef SOFA_WITH_FLOAT
-//#ifdef SOFA_WITH_DOUBLE
-//.add< BeamLengthMapping< Rigid3dTypes, Vec1fTypes > >()
-//.add< BeamLengthMapping< Rigid3fTypes, Vec1dTypes > >()
-//#endif
-//#endif
-
-//;
+namespace _beamlengthmapping_
+{
+    template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
+}
 
 } // namespace mapping
 
