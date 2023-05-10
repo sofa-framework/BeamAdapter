@@ -195,19 +195,20 @@ void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string fi
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::bwdInit()
 {
-    std::cout << "bwdInit()" << std::endl;
+    msg_warning() << "bwdInit()";
     // assign the starting pos to each point of the Mechanical State
     Coord stPos =d_startingPos.getValue();
     stPos.getOrientation().normalize();
     d_startingPos.setValue(stPos);
     std::cout << "before getMechanicalState()" << std::endl;
-    auto mecaState = getMechanicalState();
+    core::behavior::MechanicalState<DataTypes>* mecaState = nullptr;
+    mecaState = getMechanicalState();
     if (!mecaState) {
         msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
         sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
-    std::cout << "after getMechanicalState()" << std::endl;
+    msg_warning() << "after getMechanicalState()";
     std::cout << "mecaState: " << mecaState->getName() << std::endl;
     std::cout << "after getMechanicalState2()" << std::endl;
     WriteAccessor<Data<VecCoord> > x = *mecaState->write(core::VecCoordId::position());
