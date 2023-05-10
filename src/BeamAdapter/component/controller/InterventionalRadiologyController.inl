@@ -201,7 +201,7 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     d_startingPos.setValue(stPos);
 
     auto mecaState = getMechanicalState();
-    if (mecaState == nullptr) {
+    if (!mecaState) {
         msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
         sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
