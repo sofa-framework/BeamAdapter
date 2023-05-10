@@ -34,7 +34,7 @@
 #define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_INL
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include "BeamLengthMapping.h"
+#include <BeamAdapter/component/mapping/BeamLengthMapping.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <string>
 #include <sofa/core/Mapping.inl>
@@ -42,6 +42,7 @@
 
 #include <sofa/simulation/AnimateBeginEvent.h>
 #include <sofa/helper/AdvancedTimer.h>
+#include <sofa/core/MechanicalParams.h>
 #include <sofa/helper/ScopedAdvancedTimer.h>
 #include <iomanip>
 
@@ -457,13 +458,12 @@ void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, co
     const Data<InVecDeriv>& dataIndX = *this->getFromModel()->read(VecDerivId::dx());
     const InVecDeriv& parentDisplacement = dataIndX.getValue();
 
-    helper::WriteAccessor<Data<InVecDeriv> > parentForce (*parentDfId[this->fromModel.get(mparams)].write());
+    helper::WriteAccessor<Data<InVecDeriv> > parentForce (*parentDfId[this->fromModel.get()].write());
 
     /*    const VecDeriv& childForce = this->getToModel()->readForces().ref();*/
-    helper::ReadAccessor<Data<VecDeriv> > childForce( *childDfId[this->toModel.get(mparams)].read() );
-    if(this->f_printLog.getValue() ){
-        std::cout<<"********applyDJT*********\n childForce="<<childForce<<"\n*************"<<std::endl;
-    }
+    helper::ReadAccessor<Data<VecDeriv> > childForce( *childDfId[this->toModel.get()].read() );
+
+    msg_info() << "********applyDJT*********\n childForce=" << childForce.ref() <<"\n*************";
 
 
     unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
@@ -619,13 +619,12 @@ void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams
     const InVecCoord& x_in = dataInX.getValue();
 
     //const VecDeriv& childForce = this->getToModel()->readForces().ref();
-    helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[this->toModel.get(mparams)].read() );
+    helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[this->toModel.get()].read() );
 
     unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
 
-    if(this->f_printLog.getValue() ){
-        std::cout<<"********updateK*********\n childForce="<<childForce<<"\n*************"<<std::endl;
-    }
+    msg_info() << "********updateK*********\n childForce=" << childForce.ref() <<"\n*************";
+
     K_geom.resize(Nin*x_in.size(), Nin*x_in.size());
     for (unsigned int i=0; i<s; i++)
     {
@@ -991,25 +990,6 @@ void BeamLengthMapping< TIn, TOut>::draw(const VisualParams* vparams)
     if (!vparams->displayFlags().getShowMappings())
         return;
 }
-
-template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
-//template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3fTypes, Vec1fTypes >;
-
-
-
-// #ifndef SOFA_FLOAT
-// template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
-// #endif
-// #ifndef SOFA_DOUBLE
-// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1fTypes >;
-// #endif
-//
-// #ifndef SOFA_FLOAT
-// #ifndef SOFA_DOUBLE
-// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3dTypes, Vec1fTypes >;
-// template class SOFA_BEAMADAPTER_API BeamLengthMapping< Rigid3fTypes, Vec1dTypes >;
-// #endif
-// #endif
 
 
 } /// namespace _beamlengthmapping_

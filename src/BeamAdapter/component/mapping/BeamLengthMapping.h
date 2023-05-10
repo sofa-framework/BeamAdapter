@@ -34,21 +34,21 @@
 #define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
-#include <sofa/helper/vector.h>
+#include <sofa/type/vector.h>
 #include <sofa/defaulttype/RigidTypes.h>
-#include <sofa/defaulttype/Vec.h>
-#include <sofa/defaulttype/Mat.h>
+#include <sofa/type/Vec.h>
+#include <sofa/type/Mat.h>
 #include <sofa/core/Mapping.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 #include <sofa/core/visual/VisualParams.h>
-#include <SofaBaseTopology/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
-#include "../initBeamAdapter.h"
-#include "../BeamInterpolation.h"
-#include "../controller/AdaptiveBeamController.h"
+#include <BeamAdapter/config.h>
+#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
-#include <SofaEigen2Solver/EigenSparseMatrix.h>
+#include <sofa/linearalgebra/EigenSparseMatrix.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
@@ -81,13 +81,13 @@ using namespace sofa::core::objectmodel;
 
 using sofa::core::State ;
 using core::Mapping;
-using sofa::defaulttype::Vec;
-using sofa::defaulttype::Mat;
+using sofa::type::Vec;
+using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
 using std::pair;
 using sofa::component::fem::BeamInterpolation;
-using sofa::helper::vector;
+using sofa::type::vector;
 using std::string;
 using core::MechanicalParams;
 using core::ConstraintParams;
@@ -134,8 +134,8 @@ public:
     typedef typename SolidTypes<InReal>::Transform      Transform       ;
     typedef pair<int, Transform>                        IndexedTransform;
     typedef typename SolidTypes< InReal>::SpatialVector SpatialVector   ;
-    typedef linearsolver::EigenSparseMatrix<TIn,TOut>   SparseMatrixEigen;
-    typedef linearsolver::EigenSparseMatrix<TIn,TIn>    SparseKMatrixEigen;
+    typedef linearalgebra::EigenSparseMatrix<TIn,TOut>   SparseMatrixEigen;
+    typedef linearalgebra::EigenSparseMatrix<TIn,TIn>    SparseKMatrixEigen;
 
     typedef Vec<3, Real>   Vec3;
     typedef Vec<6, Real>   Vec6;
@@ -237,6 +237,10 @@ public:
 } /// _beamlengthmapping_
 
 using _beamlengthmapping_::BeamLengthMapping ;
+
+#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP
+extern template class SOFA_BEAMADAPTER_API BeamLengthMapping<defaulttype::Rigid3dTypes, defaulttype::Vec1dTypes   >;
+#endif
 
 } /// namespace mapping
 

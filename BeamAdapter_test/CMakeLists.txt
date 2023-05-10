@@ -5,18 +5,27 @@ project(BeamAdapter_test VERSION 1.0)
 #find_package(BeamAdapter REQUIRED)
 find_package(Sofa.Testing REQUIRED)
 find_package(Threads REQUIRED)
+find_package(SceneCreator REQUIRED)
 
 set(SOURCE_FILES
     BeamInterpolation_test.cpp
     component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
     component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp
-    )
+)
+
+# Sofa.Component.Mapping.Testing does not have its own package configuration
+if (TARGET Sofa.Component.Mapping.Testing)
+    list(APPEND SOURCE_FILES component/mapping/BeamLengthMappingTest.cpp)
+endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>")
 
-target_link_libraries(${PROJECT_NAME} BeamAdapter Sofa.Testing Threads::Threads)
+target_link_libraries(${PROJECT_NAME} PUBLIC BeamAdapter Sofa.Testing Threads::Threads SceneCreator)
+if (TARGET Sofa.Component.Mapping.Testing)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.Mapping.Testing)
+endif()
 
 add_definitions("-DBEAMADAPTER_TEST_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\"")
 
