@@ -83,6 +83,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::init()
 {
     BaseContext* context = getContext();
+    this->mState = nullptr;
 
     //get the pointers of the WireBeamInterpolations
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
