@@ -30,7 +30,10 @@ jobs:
             rm -f /usr/local/bin/pydoc3.11
             rm -f /usr/local/bin/python3.11
             rm -f /usr/local/bin/python3.11-config
-            
+            rm -f /usr/local/bin/python3.11-config
+            rm -f /usr/local/bin/go
+            rm -f /usr/local/bin/gofmt
+
       - name: Setup SOFA and environment
         id: sofa
         uses: sofa-framework/sofa-setup-action@v4
