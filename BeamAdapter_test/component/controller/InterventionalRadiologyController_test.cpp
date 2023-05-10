@@ -144,8 +144,7 @@ void InterventionalRadiologyController_test::testDefaultInit()
 
     InterventionalRadioCtrlRig3::SPtr IRCtrlPtr = m_root->get< InterventionalRadioCtrlRig3 >(sofa::core::objectmodel::BaseContext::SearchDown);
     EXPECT_NE(IRCtrlPtr.get(), nullptr);
-    //TODO: change component to match behavior expected by tests
-    //EXPECT_EQ(IRCtrlPtr->getComponentState(), ComponentState::Valid);
+    EXPECT_EQ(IRCtrlPtr->getComponentState(), ComponentState::Valid);
 
     EXPECT_EQ(IRCtrlPtr.get()->m_instrumentsList.size(), 1);
 }

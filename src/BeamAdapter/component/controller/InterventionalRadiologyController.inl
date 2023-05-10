@@ -230,6 +230,8 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     }
         
     applyInterventionalRadiologyController();
+
+    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
