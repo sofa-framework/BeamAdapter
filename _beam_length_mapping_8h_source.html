@@ -121,21 +121,21 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;sofa/helper/vector.h&gt;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;sofa/type/vector.h&gt;</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;sofa/defaulttype/RigidTypes.h&gt;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;sofa/defaulttype/Vec.h&gt;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;sofa/defaulttype/Mat.h&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;sofa/type/Vec.h&gt;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;sofa/type/Mat.h&gt;</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &lt;sofa/core/Mapping.h&gt;</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &lt;sofa/core/behavior/MechanicalState.h&gt;</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &lt;sofa/core/topology/BaseMeshTopology.h&gt;</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &lt;sofa/core/visual/VisualParams.h&gt;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &lt;SofaBaseTopology/EdgeSetTopologyModifier.h&gt;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &lt;sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h&gt;</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;../initBeamAdapter.h&quot;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;../BeamInterpolation.h&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;../controller/AdaptiveBeamController.h&quot;</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &lt;BeamAdapter/config.h&gt;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &lt;BeamAdapter/component/BeamInterpolation.h&gt;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &lt;BeamAdapter/component/controller/AdaptiveBeamController.h&gt;</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;SofaEigen2Solver/EigenSparseMatrix.h&gt;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;sofa/linearalgebra/EigenSparseMatrix.h&gt;</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
@@ -149,7 +149,7 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">namespace </span>mapping</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="namespacesofa_1_1component_1_1mapping_1_1__beamlengthmapping__.html">   76</a></span>&#160;<span class="keyword">namespace </span>_beamlengthmapping_</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">namespace </span>_beamlengthmapping_</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespacesofa_1_1component_1_1fem.html">sofa::component::fem</a>;</div>
@@ -157,13 +157,13 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">using</span> sofa::core::State ;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">using</span> core::Mapping;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">using</span> sofa::defaulttype::Vec;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">using</span> sofa::defaulttype::Mat;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">using</span> sofa::type::Vec;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">using</span> sofa::type::Mat;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">using</span> sofa::core::topology::BaseMeshTopology;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">using</span> defaulttype::SolidTypes;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">using</span> std::pair;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">using</span> <a class="code" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">sofa::component::fem::BeamInterpolation</a>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">using</span> sofa::helper::vector;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">using</span> sofa::type::vector;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">using</span> std::string;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">using</span> core::MechanicalParams;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">using</span> core::ConstraintParams;</div>
@@ -203,8 +203,8 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt;InReal&gt;::Transform      Transform       ;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">typedef</span> pair&lt;int, Transform&gt;                        IndexedTransform;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt; InReal&gt;::SpatialVector SpatialVector   ;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">typedef</span> linearsolver::EigenSparseMatrix&lt;TIn,TOut&gt;   SparseMatrixEigen;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">typedef</span> linearsolver::EigenSparseMatrix&lt;TIn,TIn&gt;    SparseKMatrixEigen;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TOut&gt;   SparseMatrixEigen;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TIn&gt;    SparseKMatrixEigen;</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keyword">typedef</span> Vec&lt;3, Real&gt;   Vec3;</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keyword">typedef</span> Vec&lt;6, Real&gt;   Vec6;</div>
@@ -301,13 +301,17 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="keyword">using</span> _beamlengthmapping_::BeamLengthMapping ;</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;} </div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;} </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API BeamLengthMapping&lt;defaulttype::Rigid3dTypes, defaulttype::Vec1dTypes   &gt;;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;} </div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;} </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;} </div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclasssofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation_html"><div class="ttname"><a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">sofa::component::fem::_beaminterpolation_::BeamInterpolation</a></div><div class="ttdef"><b>Definition:</b> BeamInterpolation.h:72</div></div>
 <div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping</a></div><div class="ttdoc">Computes and map the length of the beams.</div><div class="ttdef"><b>Definition:</b> BeamLengthMapping.h:106</div></div>
 <div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_add9626e4297d7f0828aac20f6251ba2c"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::d_geometricStiffness</a></div><div class="ttdeci">Data&lt; unsigned &gt; d_geometricStiffness</div><div class="ttdoc">how to compute geometric stiffness (0-&gt;no GS, 1-&gt;exact GS, 2-&gt;stabilized GS)</div><div class="ttdef"><b>Definition:</b> BeamLengthMapping.h:158</div></div>
@@ -319,7 +323,7 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>BeamLengthMapping.h</b></li>
-    <li class="footer">Generated on Wed May 10 2023 07:54:23 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed May 10 2023 12:39:42 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
