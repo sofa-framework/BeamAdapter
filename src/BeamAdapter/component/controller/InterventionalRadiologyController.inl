@@ -83,6 +83,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::init()
 {
     BaseContext* context = getContext();
+    this->mState = nullptr;
 
     //get the pointers of the WireBeamInterpolations
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
@@ -200,7 +201,13 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     stPos.getOrientation().normalize();
     d_startingPos.setValue(stPos);
 
-    WriteAccessor<Data<VecCoord> > x = *getMechanicalState()->write(core::VecCoordId::position());
+    if (!this->mState) {
+        msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
+        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+
+    WriteAccessor<Data<VecCoord> > x = *this->mState->write(core::VecCoordId::position());
     for(unsigned int i=0; i<x.size(); i++)
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
@@ -223,6 +230,8 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     }
         
     applyInterventionalRadiologyController();
+
+    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 

@@ -52,9 +52,8 @@ using namespace sofa::defaulttype;
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//TODO(damien 2017-05-17): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int WireRestShapeClass = core::RegisterObject("")
-.add< WireRestShape<Rigid3Types> >()
+static int WireRestShapeClass = core::RegisterObject("Describe the shape functions on multiple segments using curvilinear abscissa")
+.add< WireRestShape<Rigid3Types> >(true)
 
 ;
 
