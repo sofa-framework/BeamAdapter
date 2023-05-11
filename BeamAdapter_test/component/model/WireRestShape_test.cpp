@@ -136,8 +136,8 @@ void WireRestShape_test::testDefaultInit()
 
     WireRestShapeRig3::SPtr wireRShape = this->m_root->get< WireRestShapeRig3 >(sofa::core::objectmodel::BaseContext::SearchDown);
     EXPECT_NE(wireRShape.get(), nullptr);
-    //TODO: change component to match behavior expected by tests
-    //EXPECT_EQ(wireRShape->getComponentState(), ComponentState::Valid);
+    
+    EXPECT_EQ(wireRShape->getComponentState(), ComponentState::Valid);
 }
 
 
