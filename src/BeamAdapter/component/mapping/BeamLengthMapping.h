@@ -233,14 +233,15 @@ public:
 
 };
 
+#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP
+extern template class SOFA_BEAMADAPTER_API BeamLengthMapping<defaulttype::Rigid3dTypes, defaulttype::Vec1dTypes   >;
+#endif
 
 } /// _beamlengthmapping_
 
 using _beamlengthmapping_::BeamLengthMapping ;
 
-#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP
-extern template class SOFA_BEAMADAPTER_API BeamLengthMapping<defaulttype::Rigid3dTypes, defaulttype::Vec1dTypes   >;
-#endif
+
 
 } /// namespace mapping
 

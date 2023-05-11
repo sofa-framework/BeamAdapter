@@ -54,7 +54,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
 {
 
     typedef _BeamLengthMapping BeamLengthMapping;
-    typedef Mapping_test<BeamLengthMapping> Inherit;
+    typedef sofa::mapping_test::Mapping_test<BeamLengthMapping> Inherit;
 
     typedef typename BeamLengthMapping::In InDataTypes;
     typedef typename InDataTypes::VecCoord InVecCoord;
@@ -128,7 +128,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
                 "                      <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
                 "               </Node>"
                 "</Node> " ;
-        this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str(), scene.size());
+        this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str());
 
 
 
@@ -195,7 +195,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
                 "                      <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
                 "               </Node>"
                 "</Node> " ;
-        this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str(), scene.size());
+        this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str());
 
 
 
