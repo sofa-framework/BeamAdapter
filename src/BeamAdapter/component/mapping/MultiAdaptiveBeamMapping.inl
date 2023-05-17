@@ -159,9 +159,10 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
     // 1. get the new controls
     m_ircontroller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
-
+    
     if(!isBarycentricMapping)
     {
+        
         //Case if this is not a barycentric mapping
         // 2. assign each value of xPointList to the corresponding "sub Mapping"
         // i.e = each point from xPointList of the collision model is controlled by a given instrument wich id is provided in _id_m_instrumentList
@@ -183,9 +184,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
         }
 
         // handle the possible topological change
-
         sofa::type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edgeToRemove;
-        edgeToRemove.clear();
 
         for (unsigned int i=0; i<removeEdgeAtPoint.size(); i++)
         {
@@ -212,7 +211,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
             }
             else
             {
-                msg_error() << " WARNING !! baseEdge = "<<baseEdge;
+                msg_error() << "Trying to remove baseEdge which is alreay empty. This case is not supposed to happened.";
             }
 
             if (edgeToRemove.size()>0)
@@ -251,32 +250,37 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 {
-        if (m_ircontroller==nullptr) {
-                ///////// get the Adaptive Interpolation component ///////
-                core::objectmodel::BaseContext * c = this->getContext();
+    if (m_ircontroller==nullptr) 
+    {
+        ///////// get the Adaptive Interpolation component ///////
+        core::objectmodel::BaseContext * c = this->getContext();
 
-                const type::vector<std::string>& interpolName = m_controlerPath.getValue();
-                if (interpolName.empty()) {
-                    m_ircontroller = c->get<TInterventionalRadiologyController>(core::objectmodel::BaseContext::Local);
-                } else {
-                    m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
-                }
-
-                if(m_ircontroller==nullptr)
-                    msg_error() << " no Beam Interpolation found !!! the component can not work";
-                else
-                    msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName()<<")";
+        const type::vector<std::string>& interpolName = m_controlerPath.getValue();
+        if (interpolName.empty()) {
+            m_ircontroller = c->get<TInterventionalRadiologyController>(core::objectmodel::BaseContext::Local);
+        } else {
+            m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
         }
 
-        m_ircontroller->getInstrumentList(m_instrumentList);
-
-        // create a mapping for each instrument
-        m_subMappingList.clear();
-        for (unsigned int i=0; i<m_instrumentList.size(); i++)
-        {
-                typename AdaptiveBeamMapping< TIn, TOut>::SPtr newMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping< TIn, TOut>>(this->fromModel, this->toModel,m_instrumentList[i],true);
-                m_subMappingList.push_back(newMapping);
+        if (m_ircontroller == nullptr) {
+            msg_error() << " no Beam Interpolation found !!! the component can not work";
+            sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            return;
         }
+        else {
+            msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName() << ")";
+        }
+    }
+
+    m_ircontroller->getInstrumentList(m_instrumentList);
+
+    // create a mapping for each instrument
+    m_subMappingList.clear();
+    for (unsigned int i=0; i<m_instrumentList.size(); i++)
+    {
+        typename AdaptiveBeamMapping< TIn, TOut>::SPtr newMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping< TIn, TOut>>(this->fromModel, this->toModel,m_instrumentList[i],true);
+        m_subMappingList.push_back(newMapping);
+    }
 
 
     this->f_listening.setValue(true);
@@ -284,8 +288,9 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     ///////// STEP 3 : get the edgeSet topology and fill it with segments
     this->getContext()->get(_topology);
 
-    if(_topology != nullptr && this->f_printLog.getValue() )
+    if (_topology != nullptr && this->f_printLog.getValue()) {
         msg_info() << " FIND topology named " << _topology->getName();
+    }
 
     this->getContext()->get(_edgeMod);
 
@@ -324,13 +329,16 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     {
         _topology->addEdge(i,i+1);
     }
+
+    // create edge around vertex array
+    _topology->init();
+
     // resize Mstate
     this->toModel->resize(numSeg+1);
 
     // resize the internal list of the collision points ( for each point : [x_curv on the global wire , id of the corresponding instrument]
     _xPointList.resize(numSeg+1);
     _idm_instrumentList.resize(numSeg+1);
-
 }
 
 
