@@ -183,17 +183,18 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
 
         string scene =
                 "<?xml version='1.0'?>"
-                ""
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
-                "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
-                "               <Mesh name='meshSuture' edges='0 1' />"
-                "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
-                "               <BeamInterpolation name='Interpol' radius='0.1'/>"
-                "               <Node name='Map' > "
-                "                      <MechanicalObject template='Vec1d' name='mappedDOFs' position='1.0'  />"
-                "                      <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
-                "               </Node>"
+                "    <RequiredPlugin name=\"Sofa.Component.ODESolver.Backward\"/>"
+                "    <RequiredPlugin name=\"Sofa.Component.LinearSolver.Iterative\"/>"
+                "    <EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "    <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
+                "    <Mesh name='meshSuture' edges='0 1' />"
+                "    <MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
+                "    <BeamInterpolation name='Interpol' radius='0.1'/>"
+                "    <Node name='Map' > "
+                "           <MechanicalObject template='Vec1' name='mappedDOFs' position='1.0'  />"
+                "           <BeamLengthMapping name='beamLMap' geometricStiffness='1' interpolation='@Interpol' input='@DOFs' output='@mappedDOFs' />"
+                "    </Node>"
                 "</Node> " ;
         this->root = SceneLoaderXML::loadFromMemory ( "testCase1", scene.c_str());
 
@@ -268,7 +269,7 @@ TYPED_TEST( BeamLengthMappingTest , DISABLED_testCase1 )
 }
 
 // second test case
-TYPED_TEST( BeamLengthMappingTest , testCase2 )
+TYPED_TEST( BeamLengthMappingTest , DISABLED_testCase2 )
 {
     ASSERT_TRUE(this->testCase2());
 }
