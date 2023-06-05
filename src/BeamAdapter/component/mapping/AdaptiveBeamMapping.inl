@@ -265,7 +265,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
 
             if (m_isSubMapping)
             {
-                if (m_idPointSubMap.size() > 0)
+                if (!m_idPointSubMap.empty())
                     out[m_idPointSubMap[elementID]] = pos;
             }
             else
@@ -283,7 +283,7 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     simulation::TaskScheduler* taskScheduler = simulation::MainTaskSchedulerFactory::createInRegistry();
     assert(taskScheduler);
 
-    simulation::forEachRange(execution , *taskScheduler, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
+    simulation::forEachRange(execution, *taskScheduler, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), apply_impl);
 
 
     AdvancedTimer::stepEnd("computeNewInterpolation");
