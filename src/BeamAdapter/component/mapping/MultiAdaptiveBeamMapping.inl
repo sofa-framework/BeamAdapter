@@ -282,6 +282,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     {
         typename AdaptiveBeamMapping< TIn, TOut>::SPtr newMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping< TIn, TOut>>(this->fromModel, this->toModel,m_instrumentList[i],true);
         newMapping->d_parallelMapping.setParent(&d_parallelMapping);
+        newMapping->d_parallelMapping.update();
         m_subMappingList.push_back(newMapping);
     }
 

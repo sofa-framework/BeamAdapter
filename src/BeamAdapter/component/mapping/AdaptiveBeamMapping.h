@@ -205,21 +205,6 @@ public:
     using Mapping<TIn, TOut>::fromModel ;
     ////////////////////////////////////////////////////////////////////////////
 
-    // if this component was built without the support of the STL execution feature
-    // inform the scene user that this is not supported.
-#if not HAS_SUPPORT_STL_PARALLELISM
-    void parse(core::objectmodel::BaseObjectDescription* args) override
-    {
-        const char* arg = args->getAttribute("parallelMapping");
-        if (arg)
-        {
-            msg_warning() << "The attribute 'parallelMapping' was set but this version of AdaptiveBeamMapping does not support it. " << msgendl;
-        }
-
-        Inherit1::parse(args);
-    }
-#endif // HAS_SUPPORT_STL_PARALLELISM
-
  protected:
 
     TopologyContainer* m_topology;

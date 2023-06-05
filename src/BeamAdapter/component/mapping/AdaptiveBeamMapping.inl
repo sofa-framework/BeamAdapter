@@ -341,7 +341,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
             SpatialVector vDOF0{ In::getDRot(in[IdxNode0]), In::getDPos(in[IdxNode0]) };
             SpatialVector vDOF1{ In::getDRot(in[IdxNode1]), In::getDPos(in[IdxNode1]) };
 
-            Deriv vResult;
+            Deriv vResult(sofa::type::NOINIT);
 
             applyJonPoint(elementID, vDOF0, vDOF1, vResult, x.ref());
 
