@@ -89,6 +89,7 @@ public:
 public:
     Data<bool> useCurvAbs;
     Data< type::vector< std::string > > m_controlerPath;
+    Data< bool > d_parallelMapping;
 
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller);
     MultiAdaptiveBeamMapping();
@@ -134,7 +135,7 @@ public:
 
 protected:
 
-    sofa::core::topology::TopologyContainer* _topology;
+    sofa::core::topology::TopologyContainer* _topology{ nullptr };
 
     void assignSubMappingFromControllerInfo();
 
@@ -142,7 +143,7 @@ protected:
     sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
     sofa::type::vector<  typename AdaptiveBeamMapping<TIn, TOut>::SPtr > m_subMappingList;
     TInterventionalRadiologyController* m_ircontroller;
-    sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod;
+    sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod{nullptr};
     sofa::type::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
     sofa::type::vector<int> _idm_instrumentList; //=> for each mapped point provides the interpolation (in m_instrumentList)
     bool isBarycentricMapping;
