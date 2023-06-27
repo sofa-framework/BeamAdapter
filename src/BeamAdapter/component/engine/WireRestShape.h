@@ -156,7 +156,7 @@ public:
      Data<bool>	d_drawRestShape;
      
      /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.
-     MultiLink<WireRestShape<DataTypes>, WireSectionMaterial, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterials;
+     MultiLink<WireRestShape<DataTypes>, WireSectionMaterial<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterials;
 
 private:
      /// Data required for the File loading
