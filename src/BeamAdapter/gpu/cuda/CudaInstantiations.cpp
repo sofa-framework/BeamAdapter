@@ -149,11 +149,11 @@ int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions 
     ;
 
 int CudaWireSectionMaterialClass = core::RegisterObject("Wire Section Material using CUDA.")
-.add< sofa::beamadapter::WireSectionMaterial<CudaRigid3fTypes> >()
+    .add< sofa::beamadapter::WireSectionMaterial<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-.add< sofa::beamadapter::WireSectionMaterialg<CudaRigid3dTypes> >()
+    .add< sofa::beamadapter::WireSectionMaterial<CudaRigid3dTypes> >()
 #endif
-;
+    ;
 
 
 } // namespace sofa::gpu::cuda
