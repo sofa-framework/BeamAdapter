@@ -170,7 +170,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
 
         // Position and frame on the curve
         interpolation->getBeamAtCurvAbs(m_previousPositions[i], beam, baryCoord);
-        interpolation->computeTransform2(beam, Tnode0, Tnode1, x1free.ref());
+        interpolation->computeTransform(beam, Tnode0, Tnode1, x1free.ref());
         interpolation->InterpolateTransformUsingSpline(Tresult, baryCoord, Tnode0, Tnode1, interpolation->getLength(beam));
         Pos p = Tresult.getOrigin();
         Pos dir0, dir1, dir2;
