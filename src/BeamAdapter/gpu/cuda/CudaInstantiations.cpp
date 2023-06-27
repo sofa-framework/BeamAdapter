@@ -28,6 +28,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
+#include <BeamAdapter/component/model/WireSectionMaterial.inl>
 
 #include <sofa/core/behavior/Mass.inl>
 #include <sofa/core/Mapping.inl>
@@ -86,6 +87,14 @@ namespace sofa::component::mapping
 #endif
 } // namespace sofa::component::mapping
 
+namespace sofa::beamadapter
+{
+    template class SOFA_BEAMADAPTER_API WireSectionMaterial<CudaRigid3fTypes>;
+#ifdef SOFA_GPU_CUDA_DOUBLE
+    template class SOFA_BEAMADAPTER_API WireSectionMaterial<CudaRigid3dTypes>;
+#endif
+} // namespace sofa::beamadapter
+
 
 namespace sofa::gpu::cuda
 {
@@ -138,6 +147,13 @@ int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions 
     .add< sofa::component::mapping::MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >()
 #endif
     ;
+
+int CudaWireSectionMaterialClass = core::RegisterObject("Wire Section Material using CUDA.")
+.add< sofa::beamadapter::WireSectionMaterial<CudaRigid3fTypes> >()
+#ifdef SOFA_GPU_CUDA_DOUBLE
+.add< sofa::beamadapter::WireSectionMaterialg<CudaRigid3dTypes> >()
+#endif
+;
 
 
 } // namespace sofa::gpu::cuda

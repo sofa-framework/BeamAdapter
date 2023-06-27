@@ -57,13 +57,14 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.inl
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.inl
-	
-	${BEAMADAPTER_SRC}/component/model/WireSectionMaterial.h
-	
+
+    ${BEAMADAPTER_SRC}/component/model/WireSectionMaterial.h
+    ${BEAMADAPTER_SRC}/component/model/WireSectionMaterial.inl
+
     ${BEAMADAPTER_SRC}/utils/BeamSection.h
     ${BEAMADAPTER_SRC}/utils/BeamActions.h
     ${BEAMADAPTER_SRC}/utils/deprecatedcomponent.h
-    )
+)
 
 set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/initBeamAdapter.cpp
@@ -89,8 +90,8 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.cpp
 	
-	${BEAMADAPTER_SRC}/component/model/WireSectionMaterial.cpp
-    )
+    ${BEAMADAPTER_SRC}/component/model/WireSectionMaterial.cpp
+)
 
 if(SofaImplicitField_FOUND)
     set(HEADER_FILES ${HEADER_FILES}
