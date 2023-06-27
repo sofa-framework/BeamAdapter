@@ -315,7 +315,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
                 // this transforamtion is given by global_H_local0 for node 0 (and dof0)
                 // and global_H_local1 for node 1 (and dof1)
                 Transform global_H_local0, global_H_local1;
-                computeTransform2(i,  global_H_local0,  global_H_local1, statePos.ref()) ;
+                computeTransform(i,  global_H_local0,  global_H_local1, statePos.ref()) ;
                 Vec3 beam_segment = global_H_local1.getOrigin() -  global_H_local0.getOrigin();
                 lengthList.push_back(beam_segment.norm());
 
@@ -639,69 +639,18 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
 }
 
 
-template<class DataTypes>
-int BeamInterpolation<DataTypes>::computeTransform(unsigned int edgeInList,
-                                                   Transform &global_H0_local,
-                                                   Transform &global_H1_local,
-                                                   Transform &local0_H_local1,
-                                                   Quat &local_R_local0,
-                                                   const VecCoord &x)
-{
-    /// 1. Get the indices of element and nodes
-    unsigned int node0Idx, node1Idx;
-    if (getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
-    {
-        dmsg_error() << "[computeTransform2] Error in getNodeIndices(). (Aborting)" ;
-        return -1;
-    }
-
-    /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
-    Transform DOF0_H_local0, DOF1_H_local1;
-    getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
-
-
-    /// 3. Computes the transformation global To local for both nodes
-    Transform global_H_DOF0(x[node0Idx].getCenter(), x[node0Idx].getOrientation());
-    Transform global_H_DOF1(x[node1Idx].getCenter(), x[node1Idx].getOrientation());
-
-    /// - add a optional transformation
-    Transform global_H_local0 = global_H_DOF0*DOF0_H_local0;
-    Transform global_H_local1 = global_H_DOF1*DOF1_H_local1;
-
-
-    /// 4. Compute the local frame
-    /// SIMPLIFICATION: local = local0:
-    local_R_local0.clear();
-
-    global_H_DOF0.set(Vec3(0,0,0), x[node0Idx].getOrientation());
-    global_H_DOF1.set(Vec3(0,0,0), x[node1Idx].getOrientation());
-
-    /// - rotation due to the optional transformation
-    global_H_local0 = global_H_DOF0*DOF0_H_local0;
-    global_H_local1 = global_H_DOF1*DOF1_H_local1;
-
-    global_H0_local = global_H_local0;
-    Quat local0_R_local1 = local0_H_local1.getOrientation();
-    Transform local0_HR_local1(Vec3(0,0,0), local0_R_local1);
-
-    global_H1_local = global_H_local1 * local0_HR_local1.inversed();
-
-    return 1;
-
-}
-
 
 template<class DataTypes>
-int BeamInterpolation<DataTypes>::computeTransform2(unsigned int edgeInList,
-                                                    Transform &global_H_local0,
-                                                    Transform &global_H_local1,
-                                                    const VecCoord &x)
+int BeamInterpolation<DataTypes>::computeTransform(ElementID edgeInList,
+    Transform &global_H_local0,
+    Transform &global_H_local1,
+    const VecCoord &x)
 {
     /// 1. Get the indices of element and nodes
     unsigned int node0Idx, node1Idx;
     if ( getNodeIndices( edgeInList,  node0Idx, node1Idx ) == -1)
     {
-        dmsg_error() << "[computeTransform2] Error in getNodeIndices(). (Aborting)" ;
+        dmsg_error() << "[computeTransform] Error in getNodeIndices(). (Aborting)" ;
         return -1;
     }
 
@@ -839,9 +788,9 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3)
 {
     Transform global_H_local0, global_H_local1;
-    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
+    if (computeTransform(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
     {
-        dmsg_error() << "[getSplinePoints] error with computeTransform2. (Aborting)" ;
+        dmsg_error() << "[getSplinePoints] error with computeTransform. (Aborting)" ;
         return;
     }
 
@@ -1008,9 +957,9 @@ void BeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int edge
         }
         else
         {
-            /// \todo remove call to computeTransform2 => make something faster !
+            /// \todo remove call to computeTransform => make something faster !
             Transform global_H_local0, global_H_local1;
-            computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x);
+            computeTransform(edgeInList,  global_H_local0,  global_H_local1, x);
             Vec3 DP=global_H_local0.getOrigin() - global_H_local1.getOrigin();
 
             if( DP.norm()< _L*0.01 )
@@ -1123,7 +1072,7 @@ void BeamInterpolation<DataTypes>::updateBezierPoints( const VecCoord &x,unsigne
     /// \todo remove call to
     /// nsform2 => make something faster !
     Transform global_H_local0, global_H_local1;
-    computeTransform2(index,  global_H_local0,  global_H_local1, x);
+    computeTransform(index,  global_H_local0,  global_H_local1, x);
 
     ///Mechanical Object to stock Bezier points
     bezierPosVec[index*4] =global_H_local0.getOrigin(); //P0
@@ -1192,7 +1141,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
 
         /// convert position (RigidTypes) in Transform
         Transform global_H_local0, global_H_local1;
-        computeTransform2(numBeam, global_H_local0, global_H_local1, x->getValue() );
+        computeTransform(numBeam, global_H_local0, global_H_local1, x->getValue() );
 
         /// compute the length of the spline
         Vec3 P0,P1,P2,P3;
@@ -1349,9 +1298,9 @@ void BeamInterpolation<DataTypes>::InterpolateTransformUsingSpline(unsigned int 
                                                                    Transform &global_H_localInterpol)
 {
     Transform global_H_local0, global_H_local1;
-    if (computeTransform2(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
+    if (computeTransform(edgeInList,  global_H_local0,  global_H_local1, x) == -1)
     {
-        msg_error() << "[InterpolateTransformUsingSpline] error with computeTransform2. (Aborting). " ;
+        msg_error() << "[InterpolateTransformUsingSpline] error with computeTransform. (Aborting). " ;
         return;
     }
 
