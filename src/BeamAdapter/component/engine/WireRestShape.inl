@@ -35,7 +35,6 @@
 
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/component/topology/container/dynamic/QuadSetTopologyModifier.h>
-#include <sofa/component/topology/mapping/Edge2QuadTopologicalMapping.h>
 
 #include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/visual/VisualParams.h>
