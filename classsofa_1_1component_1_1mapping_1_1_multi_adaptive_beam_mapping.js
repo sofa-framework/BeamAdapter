@@ -48,6 +48,7 @@ var classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping =
     [ "_idm_instrumentList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#ad031b834311303eb20690b87870f9802", null ],
     [ "_topology", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#aaf6db2cfc8cfd8f649ef22fa39a28ce4", null ],
     [ "_xPointList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a5cd2bd2ec589220ad6cf7eb6e69b3dee", null ],
+    [ "d_parallelMapping", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#af5fc6bed4cd286e8336811afcb056f25", null ],
     [ "isBarycentricMapping", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a597dd5016b19b274fdb58fbe06493f96", null ],
     [ "m_controlerPath", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#a27f50b7df272a45bc44d0d132dc8dd45", null ],
     [ "m_instrumentList", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#ad4f0ba818d8be0db81902170933ff75b", null ],

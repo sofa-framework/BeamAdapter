@@ -242,6 +242,8 @@ Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>useCurv
 <tr class="memitem:a27f50b7df272a45bc44d0d132dc8dd45"><td class="memItemLeft" align="right" valign="top"><a id="a27f50b7df272a45bc44d0d132dc8dd45"></a>
 Data&lt; type::vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_controlerPath</b></td></tr>
 <tr class="separator:a27f50b7df272a45bc44d0d132dc8dd45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5fc6bed4cd286e8336811afcb056f25"><td class="memItemLeft" align="right" valign="top">Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html#af5fc6bed4cd286e8336811afcb056f25">d_parallelMapping</a></td></tr>
+<tr class="separator:af5fc6bed4cd286e8336811afcb056f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -251,7 +253,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aaf6db2cfc8cfd8f649ef22fa39a28ce4"><td class="memItemLeft" align="right" valign="top"><a id="aaf6db2cfc8cfd8f649ef22fa39a28ce4"></a>
-sofa::core::topology::TopologyContainer *&#160;</td><td class="memItemRight" valign="bottom"><b>_topology</b></td></tr>
+sofa::core::topology::TopologyContainer *&#160;</td><td class="memItemRight" valign="bottom"><b>_topology</b> { nullptr }</td></tr>
 <tr class="separator:aaf6db2cfc8cfd8f649ef22fa39a28ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4f0ba818d8be0db81902170933ff75b"><td class="memItemLeft" align="right" valign="top"><a id="ad4f0ba818d8be0db81902170933ff75b"></a>
 sofa::type::vector&lt; <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">sofa::component::fem::WireBeamInterpolation</a>&lt; TIn &gt; * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_instrumentList</b></td></tr>
@@ -263,7 +265,7 @@ sofa::type::vector&lt; typename <a class="el" href="classsofa_1_1component_1_1ma
 <a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html">TInterventionalRadiologyController</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_ircontroller</b></td></tr>
 <tr class="separator:a521551555e6d55a9afd702449c2b747b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac195728f4367eebc718425b69d16aac9"><td class="memItemLeft" align="right" valign="top"><a id="ac195728f4367eebc718425b69d16aac9"></a>
-sofa::component::topology::container::dynamic::EdgeSetTopologyModifier *&#160;</td><td class="memItemRight" valign="bottom"><b>_edgeMod</b></td></tr>
+sofa::component::topology::container::dynamic::EdgeSetTopologyModifier *&#160;</td><td class="memItemRight" valign="bottom"><b>_edgeMod</b> {nullptr}</td></tr>
 <tr class="separator:ac195728f4367eebc718425b69d16aac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5cd2bd2ec589220ad6cf7eb6e69b3dee"><td class="memItemLeft" align="right" valign="top"><a id="a5cd2bd2ec589220ad6cf7eb6e69b3dee"></a>
 sofa::type::vector&lt; InReal &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_xPointList</b></td></tr>
@@ -306,13 +308,29 @@ class sofa::component::mapping::MultiAdaptiveBeamMapping&lt; TIn, TOut &gt;</h3>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af5fc6bed4cd286e8336811afcb056f25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5fc6bed4cd286e8336811afcb056f25">&#9670;&nbsp;</a></span>d_parallelMapping</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Data&lt;bool&gt; d_parallelMapping</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>flag to enable parallel internal computation of apply/applyJ for the submapping(s) AdaptiveBeamMapping </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1mapping.html">mapping</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html">MultiAdaptiveBeamMapping</a></li>
-    <li class="footer">Generated on Fri Jun 23 2023 15:44:02 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Jun 28 2023 11:26:55 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
