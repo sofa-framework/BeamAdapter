@@ -50,6 +50,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >
 : Inherit(from, to)
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
+, d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation in all the submappings"))
 , m_ircontroller(_ircontroller)
 , isBarycentricMapping(false)
 {
@@ -62,6 +63,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
 , m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
+, d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation in all the submappings"))
 , m_ircontroller(nullptr)
 , isBarycentricMapping(false)
 {
@@ -279,6 +281,8 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     for (unsigned int i=0; i<m_instrumentList.size(); i++)
     {
         typename AdaptiveBeamMapping< TIn, TOut>::SPtr newMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping< TIn, TOut>>(this->fromModel, this->toModel,m_instrumentList[i],true);
+        newMapping->d_parallelMapping.setParent(&d_parallelMapping);
+        newMapping->d_parallelMapping.update();
         m_subMappingList.push_back(newMapping);
     }
 
