@@ -672,7 +672,7 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
             for (unsigned int i=0; i<points.size(); i++)
             {
                 const unsigned int beamId = (int)floor(points[i][0]);
-                msg_warning_when(printLog && (beamId > numBeams-1)) << "Points[" << i << "][0] = " << beamId << " is defined outside of the beam length";
+                msg_warning_when(beamId > numBeams-1) << "Points[" << i << "][0] = " << beamId << " is defined outside of the beam length";
                 m_pointBeamDistribution.emplace_back( beamId, Vec3{ points[i][0] - floor(points[i][0]), points[i][1], points[i][2]});
             }
         }
