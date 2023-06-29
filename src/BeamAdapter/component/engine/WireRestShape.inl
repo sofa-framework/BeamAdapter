@@ -79,7 +79,6 @@ WireRestShape<DataTypes>::WireRestShape() :
   , d_innerRadius2(initData(&d_innerRadius2,(Real)0.0f,"innerRadiusExtremity","inner radius for beams at the extremity\nonly if not straight"))
   , d_massDensity1(initData(&d_massDensity1,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
   , d_massDensity2(initData(&d_massDensity2,(Real)1.0,"massDensityExtremity", "Density of the mass at the extremity\nonly if not straight" ))
-  , d_brokenIn2(initData(&d_brokenIn2, (bool)false, "brokenIn2", ""))
   , d_drawRestShape(initData(&d_drawRestShape, (bool)false, "draw", "draw rest shape"))
   , l_topology(initLink("topology", "link to the topology container"))
   , l_loader(initLink("loader", "link to the MeshLoader"))
@@ -273,64 +272,11 @@ void WireRestShape<DataTypes>::init()
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::releaseWirePart(){
-
-    d_brokenIn2.setValue(true);
-
-    if ( edgeMod == nullptr )
-    {
-        msg_error() << "no edgeSetModifier in the node -> cannot do the topological change";
-        return;
-    }
-    ///////// remove the edge that is cut //////
-    for ( sofa::Size i=0; i<_topology->getNbPoints(); i++)
-    {
-        if( _topology->getPX(i) > this->getReleaseCurvAbs() + EPSILON )
-        {
-            type::vector<sofa::core::topology::BaseMeshTopology::EdgeID> edge_remove;
-            edge_remove.push_back( i-1 );
-
-            msg_info() << "releaseWirePart()  -> remove edge number "<< i ;
-
-            edgeMod->removeEdges(edge_remove,false); // remove the single edge and do not remove any point...
-
-            msg_info() << "WireRestShape _topology name="<<_topology->getName()<<" - numEdges ="<<_topology->getNbEdges() ;
-            
-            return;
-        }
-    }
-
-    dmsg_info() <<" Wire Part is brokenIn2... should implement a topo change !" ;
-}
-
-
-template <class DataTypes>
 void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noticeable,
                                                      type::vector<int>& nbP_density) const
 {
-
-    xP_noticeable.clear();
-    nbP_density.clear();
-
-    if (d_brokenIn2.getValue())
-    {
-        for (unsigned int i=0; i<d_keyPoints.getValue().size(); i++)
-        {
-            Real x=d_keyPoints.getValue()[i];
-            if( x + EPSILON > getReleaseCurvAbs() )
-                break;
-            xP_noticeable.push_back(x);
-            nbP_density.push_back(d_density.getValue()[i]);
-        }
-        xP_noticeable.push_back( getReleaseCurvAbs());
-
-        dmsg_info() <<"getSamplingParameters brokenIn2 detected - return  xP_noticeable ="<<xP_noticeable<<" and nbP_density ="<<nbP_density ;
-    }
-    else
-    {
-        xP_noticeable = d_keyPoints.getValue();
-        nbP_density = d_density.getValue();
-    }
+    xP_noticeable = d_keyPoints.getValue();
+    nbP_density = d_density.getValue();
 }
 
 template <class DataTypes>

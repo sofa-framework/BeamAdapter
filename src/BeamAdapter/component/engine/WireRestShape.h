@@ -91,7 +91,10 @@ public:
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
 
      /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-     Real getReleaseCurvAbs() const {return d_straightLength.getValue();}
+     Real getReleaseCurvAbs() const {
+         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+         return 0.0;
+     }
 
      /// This function is called by the force field to evaluate the rest position of each beam
      void getRestTransformOnX(Transform &global_H_local, const Real &x);
@@ -121,10 +124,9 @@ public:
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
 
-     //TODO(dmarchal 2017-05-17) Please specify who and when it will be done either a time after wich
-     //we can remove the todo.
-     // todo => topological change !
-     void releaseWirePart();
+     void releaseWirePart() {
+         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+     }
 
      void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
 
@@ -157,7 +159,6 @@ public:
      Data<Real> d_massDensity2;
 
      /// broken in 2 case
-     Data<bool> d_brokenIn2;
      Data<bool>	d_drawRestShape;
 
 private:
