@@ -45,8 +45,14 @@ public:
     /// Default Constructor
     RodSpireSection();
 
+    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
+
 protected:
     void initSection() override;
+
+public:
+    Data<Real> d_spireDiameter;
+    Data<Real> d_spireHeight;
 
 private:   
 };

@@ -35,7 +35,6 @@ BaseRodSectionMaterial<DataTypes>::BaseRodSectionMaterial()
     , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "inner radius if it applies"))
     , d_massDensity(initData(&d_massDensity, (Real)1.0, "massDensity", "Density of the mass (usually in kg/m^3)"))
     , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
-    , d_density(initData(&d_density, 10, "densityOfBeams", "density of beams between key points"))
     , d_nbEdgesVisu(initData(&d_nbEdgesVisu, 10, "nbEdgesVisu", "number of Edges for the visual model"))
     , d_nbEdgesCollis(initData(&d_nbEdgesCollis, 20, "nbEdgesCollis", "number of Edges for the collision model"))
 {

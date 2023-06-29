@@ -48,7 +48,9 @@ public:
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using Vec3 = sofa::type::Vec<3, Real>;
+    using Quat = sofa::type::Quat<Real>;
 
     /// Default Constructor
     BaseRodSectionMaterial();
@@ -61,9 +63,19 @@ public:
     /// This function gives the mass density and the BeamSection data depending on the beam position
     void getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
 
+    /// This function is called by the force field to evaluate the rest position of each beam
+    virtual void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+    {
+        SOFA_UNUSED(global_H_local);
+        SOFA_UNUSED(x_used);
+        SOFA_UNUSED(x_start);
+    }
+
     [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
 
     [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+
+    [[nodiscard]] Real getLength() const { return d_length.getValue(); }
      
 protected:
     virtual void initSection() {}
@@ -78,11 +90,7 @@ public:
     Data<Real> d_innerRadius;
     Data<Real> d_massDensity;
 
-    Data<Real> d_spireDiameter;
-    Data<Real> d_spireHeight;
-
     Data<Real> d_length;
-    Data<int> d_density;
 
     Data< int > d_nbEdgesVisu;
     Data< int > d_nbEdgesCollis;

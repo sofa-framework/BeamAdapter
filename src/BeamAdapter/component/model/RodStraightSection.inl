@@ -43,4 +43,11 @@ void RodStraightSection<DataTypes>::initSection()
 }
 
 
+template <class DataTypes>
+void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+{
+    global_H_local.set(Vec3(x_start + x_used, 0.0, 0.0), Quat());
+}
+
+
 } // namespace sofa::beamadapter
