@@ -49,11 +49,17 @@ public:
 
     /// Default Constructor
     RodMeshSection();
+
+    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
       
 protected:
     void initSection() override;
     void initFromLoader();
+    void initRestConfig();
     bool checkLoaderTopology();
+
+    void rotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output);
+    void getRestPosNonProcedural(Real& abs, Coord& p);
 
 public:
     /// Link to be set to the topology container in the component graph.
@@ -64,7 +70,10 @@ private:
     MeshLoader* loader{ nullptr };
 
     /// Data required for the File loading
-    type::vector<Vec3> m_localRestPositions;
+    type::vector<Vec3> 		m_localRestPositions;
+    type::vector<Transform> m_localRestTransforms;
+    type::vector<Real> 		m_curvAbs;
+    double 					m_absOfGeometry{ 0 };
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_RODMESHSECTION_CPP)

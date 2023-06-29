@@ -25,6 +25,8 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
+#define EPSILON 0.0001
+
 namespace sofa::beamadapter
 {
 
@@ -40,7 +42,39 @@ RodMeshSection<DataTypes>::RodMeshSection()
 template <class DataTypes>
 void RodMeshSection<DataTypes>::initSection()
 {
-    
+    // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
+    loader = l_loader.get();
+
+    if (!loader)
+        this->getContext()->get(loader);
+
+    if (!loader) {
+        msg_error() << "Cannot find a mesh loader. Please insert a MeshObjLoader in the same node or use l_loader to specify the path in the scene graph.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+    else
+    {
+        msg_info() << "Found a mesh with " << loader->d_edges.getValue().size() << " edges";
+        initFromLoader();
+    }
+}
+
+
+template <class DataTypes>
+void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+{
+    Real x_local = x_used - x_start;
+    x_local = x_local /(d_length.getValue()) * m_absOfGeometry;
+
+    Coord p;
+    this->getRestPosNonProcedural(x_local, p);
+
+    Vec3 PosEndCurve = p.getCenter();
+    Quat ExtremityQuat = p.getOrientation();
+    Vec3 ExtremityPos = PosEndCurve + Vec3(x_start, 0, 0);
+
+    global_H_local.set(ExtremityPos, ExtremityQuat);
 }
 
 
@@ -129,12 +163,8 @@ void RodMeshSection<DataTypes>::initFromLoader()
 
     m_localRestPositions = vertices;
 
-    //for (unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
-    //    m_localRestPositions[i] *= d_nonProceduralScale.getValue();
+    initRestConfig();
 
-    //TODO on the WireRestShape
-    //initRestConfig();
-    // TODO epernod 2022-08-05: Init from loader seems quite buggy, need to check if this is still needed and working
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
@@ -166,15 +196,113 @@ bool RodMeshSection<DataTypes>::checkLoaderTopology()
         return false;
     }
 
-    //TODO(dmarchal 2017-05-17) when writing a TODO please specify:
-    // who will do that
-    // when it will be done
-    /// \todo check if the topology is like a wire
-
-
     return true;
 }
 
+
+template <class DataTypes>
+void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output)
+{
+    x.normalize();
+    Vec3 x0 = input.inverseRotate(x);
+
+    Real cTheta = x0[0];
+    Real theta;
+    if (cTheta > (1 - EPSILON))
+    {
+        output = input;
+    }
+    else
+    {
+        theta = acos(cTheta);
+        // axis of rotation
+        Vec3 dw(0, -x0[2], x0[1]);
+        dw.normalize();
+
+        // computation of the rotation
+        Quat inputRoutput;
+        inputRoutput.axisToQuat(dw, theta);
+
+        output = input * inputRoutput;
+    }
+}
+
+
+template <class DataTypes>
+void RodMeshSection<DataTypes>::initRestConfig()
+{
+    m_curvAbs.clear();
+    double tot = 0;
+    m_curvAbs.push_back(0);
+    Quat input, output;
+    input.identity();
+    m_localRestTransforms.resize(m_localRestPositions.size());
+    m_localRestTransforms[0].setOrigin(Vec3(0, 0, 0));
+    m_localRestTransforms[0].setOrientation(input);
+
+    for (unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
+    {
+        Vec3 vec = m_localRestPositions[i + 1] - m_localRestPositions[i];
+        double norm = vec.norm();
+        tot += norm;
+
+        this->rotateFrameForAlignX(input, vec, output);
+
+        input = output;
+
+        m_localRestTransforms[i + 1].setOrientation(output);
+
+        Vec3 localPos = m_localRestPositions[i + 1] - m_localRestPositions[0];
+
+        m_localRestTransforms[i + 1].setOrigin(localPos);
+
+        m_curvAbs.push_back(tot);
+    }
+    m_absOfGeometry = tot;
+
+    d_length.setValue(m_absOfGeometry);
+
+    msg_info() << "Length of the loaded shape = " << m_absOfGeometry;
+}
+
+
+template <class DataTypes>
+void RodMeshSection<DataTypes>::getRestPosNonProcedural(Real& abs, Coord& p)
+{
+    /*** find the range which includes the "requested" abs ***/
+    double startingAbs = 0; unsigned int index = 0;
+
+    while ((startingAbs < abs) && (index < m_localRestPositions.size()))
+    {
+        index++;
+        startingAbs = m_curvAbs[index];
+    }
+
+    /*** OOB ***/
+    if (abs > startingAbs)
+    {
+        msg_error() << "abs = " << abs << " et startingAbs = " << startingAbs << msgendl
+            << "Out of bound position request";
+        return;
+    }
+    else /*** Expected case ***/
+    {
+        Real alpha, one_minus_alpha;
+        Vec3 result;
+
+        alpha = (abs - m_curvAbs[index - 1]) / (m_curvAbs[index] - m_curvAbs[index - 1]);
+        one_minus_alpha = 1 - alpha;
+        result = m_localRestTransforms[index - 1].getOrigin() * one_minus_alpha + m_localRestTransforms[index].getOrigin() * alpha;
+        Quat slerp;
+        slerp.slerp(m_localRestTransforms[index - 1].getOrientation(), m_localRestTransforms[index].getOrientation(), alpha, true);
+
+        slerp.normalize();
+
+        p.getCenter() = result;
+
+        p.getOrientation() = slerp;
+    }
+}
 
 
 } // namespace sofa::beamadapter
