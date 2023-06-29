@@ -104,9 +104,10 @@ protected:
     /// Bring inherited attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
-    using Inherit1::d_spireDiameter;
-    using Inherit1::d_length;
-    using Inherit1::d_straightLength;
+    Data<Real> d_length;
+    Data<Real> d_straightLength;
+    Data<Real> d_spireDiameter;
+    Data<Real> d_spireHeight;
     ///////////////////////////////////////////////////////////////////////////
 
 };
