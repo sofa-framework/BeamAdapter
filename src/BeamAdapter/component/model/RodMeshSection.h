@@ -31,11 +31,13 @@ namespace sofa::beamadapter
 using sofa::core::loader::MeshLoader;
 
 /**
- * \class WireRestShape
- * \brief Describe the shape functions on multiple segments
+ * \class RodMeshSection
+ * \brief Specialization class of @sa BaseRodSectionMaterial describing a rod section created using a Mesh file
  *  
- *  Describe the full shape of a Wire with a given length and radius. The wire is discretized by a set of beams (given by the keyPoints and the relatives Beam density)
- *  This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
+ * This class will describe a rod section defined by a mesh file structure using the link @sa l_loader
+ * Method @sa initFromLoader and @sa initRestConfig will define the beam structure using the geometry of the given mesh
+ * as well as the Length. Mechanical parameters are set using the @sa BaseRodSectionMaterial Data
+ * Method @sa getRestTransformOnX will return the current position of the curviline abscisse along the mesh structure.
  */
 template <class DataTypes>
 class RodMeshSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
@@ -43,23 +45,25 @@ class RodMeshSection : public sofa::beamadapter::BaseRodSectionMaterial<DataType
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodMeshSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
 
-    using Coord = typename DataTypes::Coord;
-    using Real = typename Coord::value_type;
-    using Vec3 = sofa::type::Vec<3, Real>;
-
     /// Default Constructor
     RodMeshSection();
 
+    /// Override method to get the rest position of the beam. In this implementation, it will interpolate along the loaded mesh geometry
     void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
       
 protected:
-    void initSection() override;
-    void initFromLoader();
+    /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
+    bool initSection() override;
+
+    /// Internal method called by initSection to init from a linked MeshLoader @sa l_loader
+    bool initFromLoader();
+    /// Internal method called by initFromLoader to compute @sa m_localRestPositions and @sa m_localRestTransforms given the mesh structure
     void initRestConfig();
+    /// Method to check if the given loader has a edge set structure
     bool checkLoaderTopology();
 
+    /// Tool method to rotate the input frame @param input given an axis @param x. Result is set in @param output
     void rotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output);
-    void getRestPosNonProcedural(Real& abs, Coord& p);
 
 public:
     /// Link to be set to the topology container in the component graph.
@@ -67,13 +71,12 @@ public:
 
 private:
     /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
-    MeshLoader* loader{ nullptr };
+    MeshLoader* p_loader{ nullptr };
 
-    /// Data required for the File loading
-    type::vector<Vec3> 		m_localRestPositions;
-    type::vector<Transform> m_localRestTransforms;
-    type::vector<Real> 		m_curvAbs;
-    double 					m_absOfGeometry{ 0 };
+    type::vector<Vec3> 		m_localRestPositions; ///< rest position of the key points interpolated on the mesh geometry
+    type::vector<Transform> m_localRestTransforms; ///< rest transform of the key points interpolated on the mesh geometry
+    type::vector<Real>      m_curvAbs; ///< set of absciss curviline points
+    Real 					m_absOfGeometry{ 0 }; ///< max curv absciss of this mesh structure
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_RODMESHSECTION_CPP)

@@ -22,21 +22,20 @@
 #pragma once
 
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
-#include <sofa/core/objectmodel/BaseObject.h>
 
 namespace sofa::beamadapter
 {
 
 template <class DataTypes>
 BaseRodSectionMaterial<DataTypes>::BaseRodSectionMaterial()
-    : d_poissonRatio(initData(&d_poissonRatio, (Real)0.49, "poissonRatio", "Poisson Ratio"))
-    , d_youngModulus(initData(&d_youngModulus, (Real)5000, "youngModulus", "Young Modulus"))
-    , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius"))
-    , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "inner radius if it applies"))
+    : d_poissonRatio(initData(&d_poissonRatio, (Real)0.49, "poissonRatio", "Poisson Ratio of this section"))
+    , d_youngModulus(initData(&d_youngModulus, (Real)5000, "youngModulus", "Young Modulus of this section"))
     , d_massDensity(initData(&d_massDensity, (Real)1.0, "massDensity", "Density of the mass (usually in kg/m^3)"))
-    , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
-    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, 10, "nbEdgesVisu", "number of Edges for the visual model"))
-    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, 20, "nbEdgesCollis", "number of Edges for the collision model"))
+    , d_radius(initData(&d_radius, (Real)1.0, "radius", "Full radius of this section"))
+    , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "Inner radius of this section if hollow"))   
+    , d_length(initData(&d_length, (Real)1.0, "length", "Total length of this section"))
+    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, (Size)10, "nbEdgesVisu", "number of Edges for the visual model"))
+    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, (Size)20, "nbEdgesCollis", "number of Edges for the collision model"))
 {
 
 }
@@ -59,31 +58,13 @@ void BaseRodSectionMaterial<DataTypes>::init()
     this->beamSection._Asy = 0.0;
     this->beamSection._Asz = 0.0;
 
-    initSection();
+    // call delegate method to init the section
+    bool res = initSection();
 
-    //if (!l_loader.empty())
-    //{
-    //    // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
-    //    loader = l_loader.get();
-    //    initFromLoader();
-    //}
-    //else
-    //{
-    //    if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
-    //    {
-    //        msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
-    //        d_nbEdgesVisu.setValue(10);
-    //    }
-
-
-    //    if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
-    //    {
-    //        msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-    //        d_nbEdgesCollis.setValue(10);
-    //    }
-    //}
-
-    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+    if (res)
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+    else
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
 }
 
 
@@ -111,7 +92,5 @@ void BaseRodSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& 
         _J = beamSection._J;
     }
 }
-
-
 
 } // namespace sofa::beamadapter

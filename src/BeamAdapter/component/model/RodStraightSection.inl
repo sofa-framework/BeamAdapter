@@ -37,9 +37,29 @@ RodStraightSection<DataTypes>::RodStraightSection()
 
 
 template <class DataTypes>
-void RodStraightSection<DataTypes>::initSection()
+bool RodStraightSection<DataTypes>::initSection()
 {
+    const auto length = this->d_length.getValue();
+    if (length <= Real(0.0))
+    {
+        msg_error() << "Length is 0 (or negative), check if d_length has been given or well computed.";
+        return false;
+    }
 
+    if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
+    {
+        msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
+        d_nbEdgesVisu.setValue(10);
+    }
+
+
+    if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
+    {
+        msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
+        d_nbEdgesCollis.setValue(10);
+    }
+
+    return true;
 }
 
 

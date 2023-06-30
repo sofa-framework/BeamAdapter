@@ -30,11 +30,12 @@ namespace sofa::beamadapter
 using sofa::core::loader::MeshLoader;
 
 /**
- * \class WireRestShape
- * \brief Describe the shape functions on multiple segments
+ * \class RodSpireSection
+ * \brief Specialization class of @sa BaseRodSectionMaterial describing a rod spire section.
  *  
- *  Describe the full shape of a Wire with a given length and radius. The wire is discretized by a set of beams (given by the keyPoints and the relatives Beam density)
- *  This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
+ * This class will describe a rod spire section using spire diameter and height between each spire. Length and mechanical
+ * parameters are the same as @sa BaseRodSectionMaterial Data
+ * Method @sa getRestTransformOnX will return the current position of the curviline abscisse along the spire.
  */
 template <class DataTypes>
 class RodSpireSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
@@ -45,16 +46,16 @@ public:
     /// Default Constructor
     RodSpireSection();
 
+    /// Override method to get the rest position of the beam. In this implementation, it will compute the current position given the spire parameters
     void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
 
 protected:
-    void initSection() override;
+    /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
+    bool initSection() override;
 
 public:
-    Data<Real> d_spireDiameter;
-    Data<Real> d_spireHeight;
-
-private:   
+    Data<Real> d_spireDiameter; ///< Data defining the diameter of the spire
+    Data<Real> d_spireHeight; ///< Data defining the height between each spire
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_RODSPIRESECTION_CPP)

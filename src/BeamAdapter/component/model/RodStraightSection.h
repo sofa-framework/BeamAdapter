@@ -29,9 +29,10 @@ namespace sofa::beamadapter
 
 /**
  * \class RodStraightSection
- * \brief Describe a rod straight section
+ * \brief Specialization class of @sa BaseRodSectionMaterial describing a rod straight section.
  *  
- * 
+ * This class will describe a rod straight section which will parametrized only using the @sa BaseRodSectionMaterial Data
+ * Method @sa getRestTransformOnX will return: Vec3(current_x, 0 0)
  */
 template <class DataTypes>
 class RodStraightSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
@@ -42,10 +43,12 @@ public:
     /// Default Constructor
     RodStraightSection();
 
+    /// Override method to get the rest position of the beam. In this implementation, it will basically returns Vec3(x_start + x_used, 0 0)
     void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
 
 protected:
-    void initSection() override;
+    /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
+    bool initSection() override;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_RODSTRAIGHTSECTION_CPP)
