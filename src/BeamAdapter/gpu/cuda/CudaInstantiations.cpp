@@ -91,9 +91,14 @@ namespace sofa::component::mapping
 
 namespace sofa::beamadapter
 {
-    template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_API RodMeshSection<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_API RodSpireSection<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_API RodStraightSection<CudaRigid3fTypes>;
+
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_API RodMeshSection<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_API RodSpireSection<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_API RodStraightSection<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::beamadapter
 
