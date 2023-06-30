@@ -96,7 +96,6 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.cpp
 	
-    ${BEAMADAPTER_SRC}/component/model/BaseRodSectionMaterial.cpp
     ${BEAMADAPTER_SRC}/component/model/RodMeshSection.cpp
     ${BEAMADAPTER_SRC}/component/model/RodSpireSection.cpp
     ${BEAMADAPTER_SRC}/component/model/RodStraightSection.cpp
