@@ -168,9 +168,12 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
             continue;
         }
 
+        unsigned int node0, node1;
+        interpolation->getNodeIndices(beam, node0, node1);
+
         // Position and frame on the curve
         interpolation->getBeamAtCurvAbs(m_previousPositions[i], beam, baryCoord);
-        interpolation->computeTransform(beam, Tnode0, Tnode1, x1free.ref());
+        interpolation->computeTransform(beam, node0, node1, Tnode0, Tnode1, x1free.ref());
         interpolation->InterpolateTransformUsingSpline(Tresult, baryCoord, Tnode0, Tnode1, interpolation->getLength(beam));
         Pos p = Tresult.getOrigin();
         Pos dir0, dir1, dir2;
@@ -186,10 +189,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
         m_violations.push_back(violation * dir0);
 
         // Define the constraint
-        unsigned int node0, node1;
         SpatialVector sv0, sv1;
         Vec3 nullRot(0,0,0);
-        interpolation->getNodeIndices(beam, node0, node1);
 
         MatrixDerivRowIterator c1_it = c1.wref().writeLine(m_cid + m_nbConstraints);
         MatrixDerivRowIterator c2_it = c2.wref().writeLine(m_cid + m_nbConstraints);

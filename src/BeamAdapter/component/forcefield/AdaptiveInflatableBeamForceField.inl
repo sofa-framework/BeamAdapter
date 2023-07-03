@@ -547,8 +547,8 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
     for (unsigned int b=0; b<numBeams; b++)
     {
         ///find the indices of the nodes
-        unsigned int node0Idx, node1Idx;
-        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+        sofa::Index node0Idx, node1Idx;
+        l_interpolation->getNodeIndices(b, node0Idx, node1Idx);
 
         ///find the beamMatrices:
         BeamLocalMatrices  *beamMatrices = &m_localBeamMatrices[b]  ;//new BeamLocalMatrices();
@@ -558,7 +558,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
 
         /// 1. get the current transform of the beam:
         dmsg_info() << "in addForce";
-        l_interpolation->computeTransform(b, global_H_local0, global_H_local1, x);
+        l_interpolation->computeTransform(b, node0Idx, node1Idx, global_H_local0, global_H_local1, x);
 
         /// 2. Computes the frame of the beam based on the spline interpolation:
         Transform global_H_local;
@@ -768,9 +768,9 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
     {
         Transform globalH0Local,  globalH1Local;
 
-        l_interpolation->computeTransform(b, globalH0Local, globalH1Local, x.ref());
         unsigned int node0Idx, node1Idx;
-        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+        l_interpolation->getNodeIndices(b, node0Idx, node1Idx);
+        l_interpolation->computeTransform(b, node0Idx, node1Idx, globalH0Local, globalH1Local, x.ref());
 
         if (vparams->displayFlags().getShowBehaviorModels() && node0Idx!=node1Idx)
             drawElement(vparams, b, globalH0Local, globalH1Local);
