@@ -128,7 +128,7 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)
     auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xtip);
 
     if (id >= (int)(x_instr_tip.size())){
-        msg_warning() << "The instrument number " << id << " do not exist (size =" << x_instr_tip.size() << ") exiting mouse event.";
+        msg_warning() << "The instrument number " << id << " does not exist (size =" << x_instr_tip.size() << ") exiting mouse event.";
         return;
     }
 
