@@ -52,17 +52,15 @@ public:
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Grid");
         sofa::simpleapi::importPlugin("Sofa.Component.Constraint.Projective");
-        
-        m_simu = sofa::simpleapi::createSimulation("DAG");
-        sofa::simulation::setSimulation(m_simu.get());
-        m_root = sofa::simpleapi::createRootNode(m_simu, "root");
+
+        m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
     }
 
     /// Unload the scene
     void onTearDown() override
     {
-        if (m_simu != nullptr && m_root != nullptr) {
-            m_simu->unload(m_root);
+        if (m_root != nullptr) {
+            sofa::simulation::node::unload(m_root);
         }
     }
 
@@ -92,8 +90,6 @@ public:
      */   
 
 private:
-    /// Pointer to SOFA simulation
-    sofa::simulation::Simulation::SPtr m_simu = nullptr;
     /// Pointer to root Node
     sofa::simulation::Node::SPtr m_root = nullptr;
 

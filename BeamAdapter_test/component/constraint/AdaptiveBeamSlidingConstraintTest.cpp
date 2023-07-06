@@ -57,8 +57,8 @@ template <typename DataTypes>
 struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationTest, AdaptiveBeamSlidingConstraint<DataTypes>
 {
     void normalBehavior(){
-        Simulation* simu;
-        setSimulation(simu = new DAGSimulation());
+        simulation::Simulation* simu = sofa::simulation::getSimulation();
+        assert(simu);
 
         typename AdaptiveBeamSlidingConstraint<DataTypes>::SPtr thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();
         thisObject->setName("myname");
