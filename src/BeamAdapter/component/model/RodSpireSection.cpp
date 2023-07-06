@@ -22,6 +22,7 @@
 #define SOFA_PLUGIN_BEAMADAPTER_RODSPIRESECTION_CPP
 
 #include <BeamAdapter/component/model/RodSpireSection.inl>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>

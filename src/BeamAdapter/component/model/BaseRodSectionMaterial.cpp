@@ -19,44 +19,16 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#pragma once
+#define SOFA_PLUGIN_BEAMADAPTER_BASERODSECTIONMATERIAL_CPP
 
-#include <BeamAdapter/config.h>
-#include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
+#include <sofa/defaulttype/RigidTypes.h>
 
 namespace sofa::beamadapter
 {
 
-/**
- * \class RodStraightSection
- * \brief Specialization class of @sa BaseRodSectionMaterial describing a rod straight section.
- *  
- * This class will describe a rod straight section which will parametrized only using the @sa BaseRodSectionMaterial Data
- * Method @sa getRestTransformOnX will return: Vec3(current_x, 0 0)
- */
-template <class DataTypes>
-class RodStraightSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
-{
-public:
-    SOFA_CLASS(SOFA_TEMPLATE(RodStraightSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
+using namespace sofa::defaulttype;
 
-    using Real = typename DataTypes::Real;
-    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
-    using Quat = sofa::type::Quat<Real>;
+template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<Rigid3Types>;
 
-    /// Default Constructor
-    RodStraightSection();
-
-    /// Override method to get the rest position of the beam. In this implementation, it will basically returns Vec3(x_start + x_used, 0 0)
-    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
-
-protected:
-    /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
-    bool initSection() override;
-};
-
-#if !defined(SOFA_PLUGIN_BEAMADAPTER_RODSTRAIGHTSECTION_CPP)
-extern template class SOFA_BEAMADAPTER_API RodStraightSection<sofa::defaulttype::Rigid3Types>;
-#endif
-
-} // namespace sofa::beamadapter
+}// namespace sofa::beamadapter

@@ -22,8 +22,8 @@
 #define SOFA_PLUGIN_BEAMADAPTER_RODMESHSECTION_CPP
 
 #include <BeamAdapter/component/model/RodMeshSection.inl>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/ObjectFactory.h>
-#include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 namespace sofa::beamadapter

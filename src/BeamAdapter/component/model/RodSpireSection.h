@@ -43,6 +43,10 @@ class RodSpireSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTyp
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodSpireSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
 
+    using Real = typename DataTypes::Real;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using Quat = sofa::type::Quat<Real>;
+
     /// Default Constructor
     RodSpireSection();
 

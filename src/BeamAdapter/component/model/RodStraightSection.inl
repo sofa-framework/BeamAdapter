@@ -22,7 +22,6 @@
 #pragma once
 
 #include <BeamAdapter/component/model/RodStraightSection.h>
-#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
 namespace sofa::beamadapter
@@ -46,17 +45,17 @@ bool RodStraightSection<DataTypes>::initSection()
         return false;
     }
 
-    if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
+    if (int nbrEdgesVisu = this->d_nbEdgesVisu.getValue() <= 0)
     {
         msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
-        d_nbEdgesVisu.setValue(10);
+        this->d_nbEdgesVisu.setValue(10);
     }
 
 
-    if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
+    if (int nbEdgesCollis = this->d_nbEdgesCollis.getValue() <= 0)
     {
         msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-        d_nbEdgesCollis.setValue(10);
+        this->d_nbEdgesCollis.setValue(10);
     }
 
     return true;
@@ -66,7 +65,7 @@ bool RodStraightSection<DataTypes>::initSection()
 template <class DataTypes>
 void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
 {
-    global_H_local.set(Vec3(x_start + x_used, 0.0, 0.0), Quat());
+    global_H_local.set(type::Vec3(x_start + x_used, 0.0, 0.0), Quat());
 }
 
 

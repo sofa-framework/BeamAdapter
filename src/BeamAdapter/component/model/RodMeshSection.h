@@ -45,6 +45,11 @@ class RodMeshSection : public sofa::beamadapter::BaseRodSectionMaterial<DataType
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodMeshSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
 
+    using Real = typename DataTypes::Real;
+    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
+    using Coord = typename DataTypes::Coord;
+    using Quat = sofa::type::Quat<Real>;
+
     /// Default Constructor
     RodMeshSection();
 
@@ -63,7 +68,7 @@ protected:
     bool checkLoaderTopology();
 
     /// Tool method to rotate the input frame @param input given an axis @param x. Result is set in @param output
-    void rotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output);
+    void rotateFrameForAlignX(const type::Quat<Real>& input, type::Vec3& x, type::Quat<Real>& output);
 
 public:
     /// Link to be set to the topology container in the component graph.
@@ -73,7 +78,7 @@ private:
     /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
     MeshLoader* p_loader{ nullptr };
 
-    type::vector<Vec3> 		m_localRestPositions; ///< rest position of the key points interpolated on the mesh geometry
+    type::vector<type::Vec3> 		m_localRestPositions; ///< rest position of the key points interpolated on the mesh geometry
     type::vector<Transform> m_localRestTransforms; ///< rest transform of the key points interpolated on the mesh geometry
     type::vector<Real>      m_curvAbs; ///< set of absciss curviline points
     Real 					m_absOfGeometry{ 0 }; ///< max curv absciss of this mesh structure

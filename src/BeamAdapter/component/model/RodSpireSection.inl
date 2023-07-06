@@ -22,7 +22,6 @@
 #pragma once
 
 #include <BeamAdapter/component/model/RodSpireSection.h>
-#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
 namespace sofa::beamadapter
@@ -48,17 +47,17 @@ bool RodSpireSection<DataTypes>::initSection()
         return false;
     }
 
-    if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
+    if (int nbrEdgesVisu = this->d_nbEdgesVisu.getValue() <= 0)
     {
         msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
-        d_nbEdgesVisu.setValue(10);
+        this->d_nbEdgesVisu.setValue(10);
     }
 
 
-    if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
+    if (int nbEdgesCollis = this->d_nbEdgesCollis.getValue() <= 0)
     {
         msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-        d_nbEdgesCollis.setValue(10);
+        this->d_nbEdgesCollis.setValue(10);
     }
 
     return true;
@@ -74,7 +73,7 @@ void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, 
     Real phi = atan(d_spireHeight.getValue() / projetedLength);
 
     Quat Qphi;
-    Qphi.axisToQuat(Vec3(0, 0, 1), phi);
+    Qphi.axisToQuat(type::Vec3(0, 0, 1), phi);
 
     // spire angle (if theta=2*PI, there is a complete spire between startx and x)
     Real lengthCurve = x_used - x_start;
@@ -83,13 +82,13 @@ void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, 
 
     // computation of the Quat
     Quat Qtheta;
-    Qtheta.axisToQuat(Vec3(0, 1, 0), theta);
+    Qtheta.axisToQuat(type::Vec3(0, 1, 0), theta);
     Quat newSpireQuat = Qtheta * Qphi;
 
     // computation of the position
     Real radius = d_spireDiameter.getValue() / 2.0;
-    Vec3 PosEndCurve(radius * sin(theta), numSpire * d_spireHeight.getValue(), radius * (cos(theta) - 1));
-    Vec3 SpirePos = PosEndCurve + Vec3(x_start, 0, 0);
+    type::Vec3 PosEndCurve(radius * sin(theta), numSpire * d_spireHeight.getValue(), radius * (cos(theta) - 1));
+    type::Vec3 SpirePos = PosEndCurve + type::Vec3(x_start, 0, 0);
 
     global_H_local.set(SpirePos, newSpireQuat);    
 }

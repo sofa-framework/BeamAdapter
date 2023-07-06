@@ -22,7 +22,6 @@
 #pragma once
 
 #include <BeamAdapter/component/model/RodMeshSection.h>
-#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
 #define EPSILON 0.0001
@@ -65,7 +64,7 @@ template <class DataTypes>
 void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
 {
     Real abs_curr = x_used - x_start;
-    abs_curr = abs_curr /(d_length.getValue()) * m_absOfGeometry;
+    abs_curr = abs_curr /(this->d_length.getValue()) * m_absOfGeometry;
 
     Coord p;
 
@@ -88,7 +87,7 @@ void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, c
     {
         const Real alpha = (abs_curr - m_curvAbs[index - 1]) / (m_curvAbs[index] - m_curvAbs[index - 1]);
         const Real one_minus_alpha = 1 - alpha;
-        const Vec3 result = m_localRestTransforms[index - 1].getOrigin() * one_minus_alpha + m_localRestTransforms[index].getOrigin() * alpha;
+        const type::Vec3 result = m_localRestTransforms[index - 1].getOrigin() * one_minus_alpha + m_localRestTransforms[index].getOrigin() * alpha;
         Quat slerp;
         slerp.slerp(m_localRestTransforms[index - 1].getOrientation(), m_localRestTransforms[index].getOrientation(), alpha, true);
         slerp.normalize();
@@ -97,9 +96,9 @@ void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, c
         p.getOrientation() = slerp;
     }
 
-    Vec3 PosEndCurve = p.getCenter();
+    type::Vec3 PosEndCurve = p.getCenter();
     Quat ExtremityQuat = p.getOrientation();
-    Vec3 ExtremityPos = PosEndCurve + Vec3(x_start, 0, 0);
+    type::Vec3 ExtremityPos = PosEndCurve + type::Vec3(x_start, 0, 0);
 
     global_H_local.set(ExtremityPos, ExtremityQuat);
 }
@@ -114,7 +113,7 @@ bool RodMeshSection<DataTypes>::initFromLoader()
         return false;
     }
 
-    type::vector<Vec3> vertices;
+    type::vector<type::Vec3> vertices;
     sofa::core::topology::BaseMeshTopology::SeqEdges edges;
 
     //get the topology position
@@ -205,12 +204,12 @@ void RodMeshSection<DataTypes>::initRestConfig()
     Quat input, output;
     input.identity();
     m_localRestTransforms.resize(m_localRestPositions.size());
-    m_localRestTransforms[0].setOrigin(Vec3(0, 0, 0));
+    m_localRestTransforms[0].setOrigin(type::Vec3(0, 0, 0));
     m_localRestTransforms[0].setOrientation(input);
 
     for (unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
     {
-        Vec3 vec = m_localRestPositions[i + 1] - m_localRestPositions[i];
+        type::Vec3 vec = m_localRestPositions[i + 1] - m_localRestPositions[i];
         Real norm = vec.norm();
         tot += norm;
 
@@ -220,7 +219,7 @@ void RodMeshSection<DataTypes>::initRestConfig()
 
         m_localRestTransforms[i + 1].setOrientation(output);
 
-        Vec3 localPos = m_localRestPositions[i + 1] - m_localRestPositions[0];
+        type::Vec3 localPos = m_localRestPositions[i + 1] - m_localRestPositions[0];
 
         m_localRestTransforms[i + 1].setOrigin(localPos);
 
@@ -228,7 +227,7 @@ void RodMeshSection<DataTypes>::initRestConfig()
     }
     m_absOfGeometry = tot;
 
-    d_length.setValue(m_absOfGeometry);
+    this->d_length.setValue(m_absOfGeometry);
 
     msg_info() << "Length of the loaded shape = " << m_absOfGeometry;
 }
@@ -266,10 +265,10 @@ bool RodMeshSection<DataTypes>::checkLoaderTopology()
 
 
 template <class DataTypes>
-void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, Vec3& x, Quat& output)
+void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, type::Vec3& x, Quat& output)
 {
     x.normalize();
-    Vec3 x0 = input.inverseRotate(x);
+    type::Vec3 x0 = input.inverseRotate(x);
 
     Real cTheta = x0[0];
     Real theta;
@@ -281,7 +280,7 @@ void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, Vec3& x,
     {
         theta = acos(cTheta);
         // axis of rotation
-        Vec3 dw(0, -x0[2], x0[1]);
+        type::Vec3 dw(0, -x0[2], x0[1]);
         dw.normalize();
 
         // computation of the rotation

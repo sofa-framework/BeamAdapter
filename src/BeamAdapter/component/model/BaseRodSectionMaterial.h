@@ -86,8 +86,6 @@ public:
     /// Returns the mass density and the BeamSection of this section
     void getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
 
-
-
     /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter 
     virtual void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
     {
@@ -116,5 +114,9 @@ private:
     /// Internal structure to store physical parameter of the a beam section
     BeamSection beamSection;
 };
+
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_BASERODSECTIONMATERIAL_CPP)
+extern template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<sofa::defaulttype::Rigid3Types>;
+#endif
 
 } // namespace sofa::beamadapter
