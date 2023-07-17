@@ -108,7 +108,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
             "</Node> ";
 
         Node::SPtr root = SceneLoaderXML::loadFromMemory("singleBeam", scene.c_str());
-        sofa::simulation::getSimulation()->init(root.get());
+        sofa::simulation::node::initRoot(root.get());
 
         return root;
     }
@@ -162,7 +162,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         auto simulation = sofa::simulation::getSimulation();
         for (int i = 0; i < nbrStep; i++)
         {
-            simulation->animate(root.get(), 0.01);
+            sofa::simulation::node::animate(root.get(), 0.01);
         }
 
         // Check position after simulation
@@ -182,13 +182,12 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         double timeMin = std::numeric_limits<double>::max();
         double timeMax = std::numeric_limits<double>::min();
 
-        auto simulation = sofa::simulation::getSimulation();
         for (int i = 0; i < nbrTest; ++i)
         {
             ctime_t startTime = sofa::helper::system::thread::CTime::getRefTime();
             for (int i = 0; i < nbrStep; i++)
             {
-                simulation->animate(root.get(), 0.01);
+                sofa::simulation::node::animate(root.get(), 0.01);
             }
 
             ctime_t diffTime = sofa::helper::system::thread::CTime::getRefTime() - startTime;
@@ -199,7 +198,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
             if (timeMax < diffTimed)
                 timeMax = diffTimed;
 
-            simulation->reset(root.get());
+            sofa::simulation::node::reset(root.get());
         }
     }
 };
