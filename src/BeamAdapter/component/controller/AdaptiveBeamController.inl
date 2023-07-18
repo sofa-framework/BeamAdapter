@@ -124,24 +124,21 @@ void AdaptiveBeamController<DataTypes>::onMouseEvent(MouseEvent *mev)
 
     /// Translation input
     Real PosYcorr = 0.0;
-    int idy = d_controlledInstrument.getValue();
+    auto id = d_controlledInstrument.getValue();
     auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xtip);
 
-    if (idy >= (int)x_instr_tip.size()){
-        msg_warning() << "The instrument number "<<idy<<" do not exist (size ="<< x_instr_tip.size() <<") switching to instrument 0 instead.";
-        idy=0;
+    if (id >= (int)(x_instr_tip.size())){
+        msg_warning() << "The instrument number " << id << " does not exist (size =" << x_instr_tip.size() << ") exiting mouse event.";
+        return;
     }
-    PosYcorr = -PosY*0.2;
-    x_instr_tip[idy] += PosYcorr;
+
+    PosYcorr = -PosY * 0.2;
+    x_instr_tip[id] += PosYcorr;
 
     /// Rotation input
-    Real PosXcorr = 0.0;
-
-    //TODO(dmarchal@cduriez) why is this the same as idy but with a different name?
-    int idx = d_controlledInstrument.getValue();
     auto rot_instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
-    PosXcorr = PosX*0.015;
-    rot_instrument[idx] += PosXcorr;
+    Real PosXcorr = PosX * 0.015;
+    rot_instrument[id] += PosXcorr;
 }
 
 //TODO(dmarchal 2017-05-17) Christian & Eulalie, how can user know which key-mouse behavior he
