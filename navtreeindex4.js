@@ -1,6 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"dir_3fa670c68b076b5738d6f48f66697e19.html":[4,0,0,0,0,5],
 "dir_429833ab1b4ac5c228963ef763dbd568.html":[4,0,0,0,0,4],
 "dir_6245286b41514b9fa65243e9fda741ce.html":[4,0,0,0,0,2],
 "dir_68267d1309a1af8e8297ef4c3efbcdba.html":[4,0,0],
@@ -14,8 +13,8 @@ var NAVTREEINDEX4 =
 "functions_type.html":[3,2,3],
 "functions_vars.html":[3,2,2],
 "hierarchy.html":[3,1],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "index.html#autotoc_md2":[0],
 "index.html#autotoc_md3":[0,0],
 "init_beam_adapter_8cpp.html#a0158c37258a17cb7cb58e4460ec395a2":[2,0,1,1,14],
