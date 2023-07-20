@@ -154,12 +154,8 @@ public:
     void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
     void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
 
-
-    int computeTransform(unsigned int edgeInList,  Transform &global_H0_local,  Transform &global_H1_local,
-                         Transform &local0_H_local1,  Quat& local_R_local0, const VecCoord &x);
-
-    int computeTransform2(unsigned int edgeInList,
-                          Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
+    
+    int computeTransform(ElementID edgeInList, Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
 
     void getTangent(Vec3& t, const Real& baryCoord,
                     const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);

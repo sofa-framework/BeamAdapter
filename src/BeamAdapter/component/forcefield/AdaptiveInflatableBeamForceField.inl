@@ -558,7 +558,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
 
         /// 1. get the current transform of the beam:
         dmsg_info() << "in addForce";
-        l_interpolation->computeTransform2(b, global_H_local0, global_H_local1, x);
+        l_interpolation->computeTransform(b, global_H_local0, global_H_local1, x);
 
         /// 2. Computes the frame of the beam based on the spline interpolation:
         Transform global_H_local;
@@ -768,7 +768,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
     {
         Transform globalH0Local,  globalH1Local;
 
-        l_interpolation->computeTransform2(b, globalH0Local, globalH1Local, x.ref());
+        l_interpolation->computeTransform(b, globalH0Local, globalH1Local, x.ref());
         unsigned int node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 

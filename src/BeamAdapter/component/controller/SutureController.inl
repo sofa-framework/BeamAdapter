@@ -554,7 +554,7 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
 
     l_adaptiveInterpolation->getBeamAtCurvAbs(xmin, idBeamMin, baryCoordMin);
     l_adaptiveInterpolation->getBeamAtCurvAbs(xmax, idBeamMax, baryCoordMax);
-    l_adaptiveInterpolation->computeTransform2(idBeamMin,Tnode0,Tnode1, Pos);
+    l_adaptiveInterpolation->computeTransform(idBeamMin,Tnode0,Tnode1, Pos);
 
     if (idBeamMin==idBeamMax)
         return l_adaptiveInterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveInterpolation->getLength(idBeamMin), baryCoordMin, baryCoordMax);
@@ -571,12 +571,12 @@ typename SutureController<DataTypes>::Real SutureController<DataTypes>::computeB
     unsigned int b=idBeamMin+1;
     while(b<idBeamMax)
     {
-        l_adaptiveInterpolation->computeTransform2(b,Tnode0,Tnode1,Pos);
+        l_adaptiveInterpolation->computeTransform(b,Tnode0,Tnode1,Pos);
         angle += l_adaptiveInterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveInterpolation->getLength(b), 0.0, 1.0);
         b++;
     }
 
-    l_adaptiveInterpolation->computeTransform2(idBeamMax,Tnode0,Tnode1,Pos);
+    l_adaptiveInterpolation->computeTransform(idBeamMax,Tnode0,Tnode1,Pos);
     angle += l_adaptiveInterpolation->ComputeTotalBendingRotationAngle(dx_comput, Tnode0, Tnode1, l_adaptiveInterpolation->getLength(idBeamMax), 0.0, baryCoordMax);
 
     return angle;
@@ -596,7 +596,7 @@ void SutureController<DataTypes>::computeTangentOnDiscretePoints(type::vector<Ve
     Real x=dx;
 
     // compute intial tang for the beginning of the wire:
-    l_adaptiveInterpolation->computeTransform2(0,Tnode0,Tnode1, Pos);
+    l_adaptiveInterpolation->computeTransform(0,Tnode0,Tnode1, Pos);
     Vec3 t = Tnode0.getOrientation().rotate(Vec3(1.0,0.0,0.0));
     TangTable.push_back(t);
     xTable.push_back(0.0);
@@ -604,7 +604,7 @@ void SutureController<DataTypes>::computeTangentOnDiscretePoints(type::vector<Ve
     for (unsigned int p=0; p<(numDiscretePoints-1) ; p++)
     {
         l_adaptiveInterpolation->getBeamAtCurvAbs(x, beam, baryCoord);
-        l_adaptiveInterpolation->computeTransform2(beam,Tnode0,Tnode1, Pos);
+        l_adaptiveInterpolation->computeTransform(beam,Tnode0,Tnode1, Pos);
         l_adaptiveInterpolation->getTangent(t, baryCoord, Tnode0,Tnode1,l_adaptiveInterpolation->getLength(beam) );
 
         TangTable.push_back(t);
@@ -954,7 +954,7 @@ void SutureController<DataTypes>::computeSampling(type::vector<Real> &newCurvAbs
         Real beamLength = l_adaptiveInterpolation->getLength(b);
         l_adaptiveInterpolation->getAbsCurvXFromBeam(b, curvatureList[b][0]);
         Transform Tnode0, Tnode1;
-        l_adaptiveInterpolation->computeTransform2(b, Tnode0, Tnode1, x);
+        l_adaptiveInterpolation->computeTransform(b, Tnode0, Tnode1, x);
 
         curvatureList[b][1] = beamsCurvature[b] = l_adaptiveInterpolation->ComputeTotalBendingRotationAngle(beamLength / 5, Tnode0, Tnode1, beamLength, 0.0, 1.0);
     }
@@ -1176,7 +1176,7 @@ void SutureController<DataTypes>::updateControlPointsPositions()
     const VecCoord& x = getMechanicalState()->write(sofa::core::VecCoordId::position())->getValue();
     for (unsigned int b = 0; b < numBeams; b++)
     {
-        l_adaptiveInterpolation->computeTransform2(b, global_H0_local, global_H1_local, x);
+        l_adaptiveInterpolation->computeTransform(b, global_H0_local, global_H1_local, x);
         Coord pt;
         pt.getCenter() = global_H0_local.getOrigin();
         pt.getOrientation() = global_H0_local.getOrientation();
