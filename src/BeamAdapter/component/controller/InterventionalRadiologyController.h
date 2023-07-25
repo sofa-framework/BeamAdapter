@@ -116,6 +116,16 @@ public:
     /// Getter to the tools curviline abscisses sorted @sa m_nodeCurvAbs at the current timestep.
     [[nodiscard]] const type::vector<Real>& getCurrentCurvAbscisses() const { return m_nodeCurvAbs; }
 
+
+    /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
+    void processDrop(unsigned int& previousNumControlledNodes, unsigned int& seg_remove)
+    {
+        SOFA_UNUSED(previousNumControlledNodes);
+        SOFA_UNUSED(seg_remove);
+        msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+    }
+
+
 public:
 
     using Inherit1::f_printLog;
@@ -133,7 +143,6 @@ public:
     /// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
     
-    void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     
 private:
     /** Compute the sambling curv abscisses using each instrument sampling and key points parameters
@@ -170,13 +179,11 @@ public:
     bool m_useBeamActions = false;
     bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;
-    type::vector<int>                     m_droppedInstruments;
     type::vector<Vec3d>                   m_sensorMotionData;
     unsigned int                    m_currentSensorData;
     type::vector<Real>                    m_nodeCurvAbs;
     type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
     unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
-    bool                            m_dropCall;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)

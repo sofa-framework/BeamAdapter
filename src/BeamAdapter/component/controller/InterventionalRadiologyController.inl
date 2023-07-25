@@ -74,7 +74,6 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 {
     m_fixedConstraint = nullptr;
-    m_dropCall = false;
     m_sensored =false;
 }
 
@@ -140,10 +139,6 @@ void InterventionalRadiologyController<DataTypes>::init()
     context->get(m_fixedConstraint);
     if(m_fixedConstraint==nullptr)
         msg_error()<<"No fixedConstraint found.";
-
-    /// List of the instrument for which a "DROPPED" was proceeed TODO
-    m_droppedInstruments.clear();
-
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
     if (!f_listening.isSet())
@@ -446,82 +441,9 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
     }
     case BeamAdapterAction::DROP_TOOL:
     {
-        m_dropCall = true;
+        msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
     }
     }
-}
-
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &previousNumControlledNodes,
-                                                               unsigned int &segRemove)
-{
-    int ci = int(d_controlledInstrument.getValue());
-    Real xMinOutLocal= 0.0;
-
-    Real xBegin=0.0;
-
-    // Quelque soit le resultat du process, le drop call est traite ici
-    m_dropCall = false;
-
-    // Step1 : quel est l'abscisse curviligne ou l'instrument controllé est seul ?
-    for (unsigned int i=0; i<m_nodeCurvAbs.size(); i++)
-    {
-        // on parcourt toutes abscisse curv jusqu'à trouver un endroit où il n'y a qu'un seul instrument
-        if (m_idInstrumentCurvAbsTable[i].size()==1)
-        {
-            // on vérifie qu'il s'agit de celui qui est controle
-            if( ci ==m_idInstrumentCurvAbsTable[i][0])
-            {
-                 xBegin = d_xTip.getValue()[ci] - m_instrumentsList[ci]->getRestTotalLength();
-                 xMinOutLocal = m_nodeCurvAbs[i] - xBegin;
-                 break;
-            }
-            else
-            {
-                msg_error()<<" The control instrument is not out, drop is impossible.";
-                return;
-            }
-        }
-    }
-
-    if(xMinOutLocal<=0.0)
-    {
-         msg_error()<<" x_min_out_local <= 0.0 The control instrument is not out, drop is impossible.";
-         return;
-    }
-
-    // Step2 : on verifie que cette abscisse curviligne est compatible avec celle de l'instrument
-    // (on ne peut pas casser un instrument s'il est à l'intérieur d'un autre instrument)
-    int numBeamsNotUnderControlled = 0;
-    Real xBreak;
-    if( m_instrumentsList[ci]->breaksInTwo(xMinOutLocal, xBreak, numBeamsNotUnderControlled) )
-    {
-        msg_error()<<"Breaks in two process activated.";
-
-        // for now, we simply suppress one more beam !
-        m_numControlledNodes -= (numBeamsNotUnderControlled + 1);
-
-        auto xEnds = sofa::helper::getWriteOnlyAccessor(d_xTip);
-        xEnds[ci] =  xBegin +  xBreak;
-    }
-    else
-        return;
-
-    // Step3 : on remet à jour les abscisse curviligne des noeuds en virant toutes celles qui correspondent à la partie
-    // cassée
-    Real eps=d_threshold.getValue();
-    for (unsigned int i=0; i<m_nodeCurvAbs.size(); i++)
-    {
-        if( m_nodeCurvAbs[i] > (xBegin +  xBreak + eps) )
-        {
-            type::removeIndex(m_nodeCurvAbs,i);
-            type::removeIndex(m_idInstrumentCurvAbsTable, i);
-            i--;
-        }
-    }
-    segRemove = 1;
-    previousNumControlledNodes =m_numControlledNodes;
 }
 
 
