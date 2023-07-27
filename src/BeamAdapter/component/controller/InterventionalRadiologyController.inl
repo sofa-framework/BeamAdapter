@@ -706,18 +706,15 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 {
     const Real& threshold = d_threshold.getValue();
 
-    /// Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
+    
+    // Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
     type::vector<Real> newCurvAbs;
-
-    /// In case of drop:
-    unsigned int previousNumControlledNodes = m_numControlledNodes;
-    unsigned int seg_remove = 0;
+    type::vector<type::vector<int>> idInstrumentTable;
 
     // ## STEP 1: Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
     helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
-    type::vector<Real> tools_xBegin;
-    type::vector<Real> tools_xEnd;
+    type::vector<Real> tools_xBegin, tools_xEnd;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
         const Real& xend= d_xTip.getValue()[i];
@@ -758,10 +755,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     computeInstrumentsCurvAbs(newCurvAbs, tools_xBegin, totalLengthCombined);
 
     //     => id_instrument_table which provides for each simulated node, the id of all instruments which belong this node
-    type::vector<type::vector<int>> idInstrumentTable;
     fillInstrumentCurvAbsTable(newCurvAbs, tools_xBegin, tools_xEnd, idInstrumentTable);
     helper::AdvancedTimer::stepEnd("step2");
-
 
     // ## STEP 3: Re-interpolate the positions and the velocities
     helper::AdvancedTimer::stepBegin("step3");
@@ -774,19 +769,19 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     const sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
     const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
     const Real prev_maxCurvAbs = m_nodeCurvAbs.back();
-           
+
     //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
     type::vector<Real> modifiedCurvAbs;
     totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
 
     sofa::Size nbrUnactiveNode = m_numControlledNodes - nbrCurvAbs; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
-    sofa::Size prev_nbrUnactiveNode = previousNumControlledNodes - prev_nbrCurvAbs;
+    sofa::Size prev_nbrUnactiveNode = m_numControlledNodes - prev_nbrCurvAbs;
 
     for (sofa::Index xId = 0; xId < nbrCurvAbs; xId++)
     {
-        const sofa::Index globalNodeId = nbrUnactiveNode + xId; // fill the end of the dof buffer
+        const sofa::Index globalNodeId = nbrUnactiveNode + xId; // position of the curvAbs in the dof buffer filled by the end
         const Real xCurvAbs = modifiedCurvAbs[xId];
-        
+
         // 2 cases:  TODO : remove first case
             //1. the abs curv is further than the previous state of the instrument
             //2. this is not the case and the node position can be interpolated using previous step positions
@@ -812,7 +807,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 prev_xId++;
             }
 
-            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + seg_remove + prev_xId;
+            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
             const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
 
             if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
@@ -934,9 +929,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 if(rigid)
                     m_fixedConstraint->addConstraint(firstSimulatedNode+i);
             }
-
         }
-
     }
     helper::AdvancedTimer::stepEnd("step5");
 
@@ -947,6 +940,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     m_nodeCurvAbs = newCurvAbs;
     m_idInstrumentCurvAbsTable = idInstrumentTable;
 }
+
 
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs,
