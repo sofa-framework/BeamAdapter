@@ -782,68 +782,63 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         const sofa::Index globalNodeId = nbrUnactiveNode + xId; // position of the curvAbs in the dof buffer filled by the end
         const Real xCurvAbs = modifiedCurvAbs[xId];
 
-        // 2 cases:  TODO : remove first case
-            //1. the abs curv is further than the previous state of the instrument
-            //2. this is not the case and the node position can be interpolated using previous step positions
         if ((xCurvAbs - std::numeric_limits<float>::epsilon()) > prev_maxCurvAbs + threshold)
         {
-            msg_error() << "Case 1 should never happen ==> avoid using totalLengthIsChanging! xCurvAbs = " << xCurvAbs 
+            msg_warning() << "Case 1 should never happen while using totalLengthIsChanging. xCurvAbs = " << xCurvAbs 
                 << " > prev_maxCurvAbs = " << prev_maxCurvAbs << " + threshold: " << threshold << "\n"
                 << "\n | newCurvAbs: " << newCurvAbs                
                 << "\n | modifiedCurvAbs: " << modifiedCurvAbs
                 << "\n | previous nodeCurvAbs: " << m_nodeCurvAbs;
-            // case 1 (the abs curv is further than the previous state of the instrument)
-            // verifier qu'il s'agit bien d'un instrument qu'on est en train de controller
-            // interpoler toutes les positions "sorties" de l'instrument en supprimant l'ajout de dx qu'on vient de faire
+        }
+
+        // The node position is not further than previous state, it can be interpolated straightfully using previous step positions
+        sofa::Index prev_xId = 0;
+        for (prev_xId = 0; prev_xId < m_nodeCurvAbs.size(); prev_xId++)
+        {
+            // if old_curvAbs[id] + threshold > current xabs, use this id to interpolate new curvAbs
+            if ((m_nodeCurvAbs[prev_xId] + threshold) > xCurvAbs)
+                break;
+        }
+
+        sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
+        const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
+
+        if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
+        {
+            x[globalNodeId] = xbuf[prev_globalNodeId]; // xBuf all initialised at start with d_startingPos
         }
         else
         {
-            // case 2 (the node position can be interpolated straightfully using previous step positions)
-            sofa::Index prev_xId = 0;
-            while (prev_xId < m_nodeCurvAbs.size()) // check which prev_curvAbs is above current curvAbs using threshold value
-            {
-                if ((m_nodeCurvAbs[prev_xId] + threshold) > xCurvAbs)
-                    break;
-                prev_xId++;
-            }
+            // the node must be interpolated using beam interpolation
+            //find the instrument
+            int id = m_idInstrumentCurvAbsTable[prev_xId][0];
+            //find the good beam (TODO: do not work if xbegin of one instrument >0)
+            int b = prev_xId - 1;
 
-            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
-            const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
-
-            if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
-            {
-                x[globalNodeId] = xbuf[prev_globalNodeId]; // xBuf all initialised at start with d_startingPos
-            }
+            std::cout << xId << " | else interpolation: prev_xId: " << prev_xId << " | id " << id << std::endl;
+                
+            // test to avoid wrong indices
+            if (b < 0)
+                x[globalNodeId] = d_startingPos.getValue();
             else
             {
-                // the node must be interpolated using beam interpolation
-                //find the instrument
-                int id = m_idInstrumentCurvAbsTable[prev_xId][0];
-                //find the good beam (TODO: do not work if xbegin of one instrument >0)
-                int b = prev_xId - 1;
-                // test to avoid wrong indices
-                if (b < 0)
-                    x[globalNodeId] = d_startingPos.getValue();
-                else
-                {
-                    Transform global_H_interpol;
-                    const Real L = prev_xCurvAbs - m_nodeCurvAbs[b];
-                    Real baryCoef = 1.0;
-                    if (L < std::numeric_limits<float>::epsilon()) {
-                        msg_error() << "Two consecutives curvAbs with the same position. Length is null. Using barycenter coefficient: baryCoef = 1";
-                    }
-                    else {
-                        baryCoef = (xCurvAbs - m_nodeCurvAbs[b]) / L;
-                    }
-
-                    Transform Global_H_local0(xbuf[prev_globalNodeId - 1].getCenter(), xbuf[prev_globalNodeId - 1].getOrientation());
-                    Transform Global_H_local1(xbuf[prev_globalNodeId].getCenter(), xbuf[prev_globalNodeId].getOrientation());
-
-                    m_instrumentsList[id]->InterpolateTransformUsingSpline(global_H_interpol, baryCoef, Global_H_local0, Global_H_local1, L);
-
-                    x[globalNodeId].getCenter() = global_H_interpol.getOrigin();
-                    x[globalNodeId].getOrientation() = global_H_interpol.getOrientation();
+                Transform global_H_interpol;
+                const Real L = prev_xCurvAbs - m_nodeCurvAbs[b];
+                Real baryCoef = 1.0;
+                if (L < std::numeric_limits<float>::epsilon()) {
+                    msg_error() << "Two consecutives curvAbs with the same position. Length is null. Using barycenter coefficient: baryCoef = 1";
                 }
+                else {
+                    baryCoef = (xCurvAbs - m_nodeCurvAbs[b]) / L;
+                }
+
+                Transform Global_H_local0(xbuf[prev_globalNodeId - 1].getCenter(), xbuf[prev_globalNodeId - 1].getOrientation());
+                Transform Global_H_local1(xbuf[prev_globalNodeId].getCenter(), xbuf[prev_globalNodeId].getOrientation());
+
+                m_instrumentsList[id]->InterpolateTransformUsingSpline(global_H_interpol, baryCoef, Global_H_local0, Global_H_local1, L);
+
+                x[globalNodeId].getCenter() = global_H_interpol.getOrigin();
+                x[globalNodeId].getOrientation() = global_H_interpol.getOrientation();
             }
         }
     }
