@@ -808,11 +808,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         // clear the present interpolation of the beams
         m_instrumentsList[i]->clear();
 
-        if( xend > 0.0)
-        {
-            // create the first node (on x=0)
-            newCurvAbs.push_back(0.0);
-        }
+    }
+
+    // create the first node (on x=0)
+    if (totalLengthCombined > 0.0)
+    {        
+        newCurvAbs.push_back(0.0);
     }
 
     /// Some verif of step 1
