@@ -760,6 +760,9 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     // ## STEP 3: Re-interpolate the positions and the velocities
     helper::AdvancedTimer::stepBegin("step3");
+    //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
+    type::vector<Real> modifiedCurvAbs;
+    totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
 
     //    => Get write access to current nodes/dofs
     Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());
@@ -770,9 +773,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
     const Real prev_maxCurvAbs = m_nodeCurvAbs.back();
 
-    //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
-    type::vector<Real> modifiedCurvAbs;
-    totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
 
     sofa::Size nbrUnactiveNode = m_numControlledNodes - nbrCurvAbs; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
     sofa::Size prev_nbrUnactiveNode = m_numControlledNodes - prev_nbrCurvAbs;
@@ -957,21 +957,18 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
     modifiedNodeCurvAbs = newNodeCurvAbs;
 
     // we look for the last value in the CurvAbs
-    if(fabs(dLength) > d_threshold.getValue())
+    if (fabs(dLength) < d_threshold.getValue())
+        return;
+
+    for (unsigned int i = newTable.size() - 1; i > 0; --i)
     {
-        unsigned int i=newTable.size()-1;
-        while (i>0 && newTable[i].size()==1)
+        if (newTable[i].size() == 1)
         {
             modifiedNodeCurvAbs[i] -= dLength;
-
-            if (modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
-            {
-                modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i - 1];
-            }
-
-            i--;
         }
     }
+
+    sortCurvAbs(modifiedNodeCurvAbs);
 }
 
 
