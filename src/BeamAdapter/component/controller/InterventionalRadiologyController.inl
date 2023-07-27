@@ -520,11 +520,9 @@ void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &pre
 
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs,
-                                                                                          type::vector< type::vector<int> > &idInstrumentTable,
-                                                                                          const type::vector<Real> &xBegin,
-                                                                                          const Real& xend)
-
+void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(type::vector<Real> &newCurvAbs,
+    const type::vector<Real>& tools_xBegin,
+    const Real& totalLength)
 {
     // Step 1 => put the noticeable Nodes
     // Step 2 => add the beams given the sampling parameters
@@ -534,7 +532,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
     {
         type::vector<Real> xP_noticeable_I;
         type::vector< int > density_I;
-        m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
+        m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I); // sampling of the different section of this instrument
 
         // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.
         for (int j=0; j<(int)(xP_noticeable_I.size()-1); j++)
@@ -542,13 +540,14 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
             const Real xP = xP_noticeable_I[j];
             const Real nxP = xP_noticeable_I[j + 1];
 
-            //compute the corresponding abs curv of this "noticeable point" on the combined intrument
-            const Real curvAbs_xP = xBegin[i] + xP;
-            const Real curvAbs_nxP = xBegin[i] + nxP;
+            //compute the corresponding abs curv of this "noticeable point" on the combined intrument deployed. 
+            const Real curvAbs_xP = tools_xBegin[i] + xP; // xBegin = xend - instrument Total Length
+            const Real curvAbs_nxP = tools_xBegin[i] + nxP;
 
             // In any case, the key points are added as soon as they are deployed
-            if (curvAbs_xP > 0)
+            if (curvAbs_xP > 0) {
                 newCurvAbs.push_back(curvAbs_xP);
+            }
             
             // compute interval between next point and previous one (0 for the first iter)
             const Real curvAbs_interval = (curvAbs_nxP - xSampling);
@@ -559,7 +558,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
                 Real ratio = Real(density_I[j]) / (nxP - xP);
                 int numNewNodes = int(floor(curvAbs_interval * ratio)); // if density == 0, no sampling (numNewNodes == 0) 
 
-                // Add the new points in reverse order
+                // Add the new points using reverse order iterator as they are computed deduce to next noticeable point
                 for (int k = numNewNodes; k>0; k--)
                 {
                     auto value = curvAbs_nxP - (k / ratio);
@@ -573,9 +572,10 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         // After the end of the for loop above, we just have to process the
         // instrument last key point
         const Real lastxP = xP_noticeable_I[xP_noticeable_I.size()-1];
-        const Real curvAbs_lastxP = xBegin[i] + lastxP;
-        if (curvAbs_lastxP > 0)
+        const Real curvAbs_lastxP = tools_xBegin[i] + lastxP;
+        if (curvAbs_lastxP > 0) {
             newCurvAbs.push_back(curvAbs_lastxP);
+        }
     }
 
 
@@ -592,7 +592,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         {
             Real abs;
             abs = *it++;
-            if (abs<xend) // verify that the rigidified part is not outside the model
+            if (abs < totalLength) // verify that the rigidified part is not outside the model
             {
                 if(begin)
                 {
@@ -609,7 +609,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyComput
         }
     }
 
-    sortCurvAbs(newCurvAbs, idInstrumentTable);
+    sortCurvAbs(newCurvAbs);
 }
 
 
@@ -790,29 +790,29 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     /// STEP 1
     /// Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
-    Real xend;
     helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
-    type::vector<Real> xbegin;
+    type::vector<Real> tools_xBegin;
+    type::vector<Real> tools_xEnd;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
-        xend= d_xTip.getValue()[i];
-        Real xb = xend - m_instrumentsList[i]->getRestTotalLength();
-        xbegin.push_back(xb);
-
+        const Real& xend= d_xTip.getValue()[i];
+        tools_xEnd.push_back(xend);
+        tools_xBegin.push_back(xend - m_instrumentsList[i]->getRestTotalLength());
+        
         if (xend> totalLengthCombined)
         {
-            totalLengthCombined=xend;
+            totalLengthCombined = xend;
         }
-
-        // clear the present interpolation of the beams
-        m_instrumentsList[i]->clear();
 
         if( xend > 0.0)
         {
             // create the first node (on x=0)
             newCurvAbs.push_back(0.0);
         }
+
+        // clear the present interpolation of the beams
+        m_instrumentsList[i]->clear();
     }
 
     /// Some verif of step 1
@@ -827,6 +827,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     helper::AdvancedTimer::stepEnd("step1");
 
 
+    computeInstrumentsCurvAbs(newCurvAbs, tools_xBegin, totalLengthCombined);
     /// STEP 2:
     /// get the noticeable points that need to be simulated
     // Fill=> newCurvAbs which provides a vector with curvilinear abscissa of each simulated node
@@ -834,7 +835,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     //     => xbegin (theoritical curv abs of the beginning point of the instrument (could be negative) xbegin= xtip - intrumentLength)
     helper::AdvancedTimer::stepBegin("step2");
     type::vector<type::vector<int>> idInstrumentTable;
-    interventionalRadiologyComputeSampling(newCurvAbs, idInstrumentTable, xbegin, totalLengthCombined);
+    fillInstrumentCurvAbsMap(newCurvAbs, tools_xBegin, tools_xEnd, idInstrumentTable);
     helper::AdvancedTimer::stepEnd("step2");
 
 
@@ -954,8 +955,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
         Real x1 = newCurvAbs[b+1];
         for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         {
-            Real xmax = d_xTip.getValue()[i];
-            Real xmin = xbegin[i];
+            const Real& xmax = tools_xEnd[i];
+            const Real& xmin = tools_xBegin[i];
 
             if (x0>(xmin- threshold) && x0<(xmax+ threshold) && x1>(xmin- threshold) && x1<(xmax+ threshold))
             {
@@ -1062,13 +1063,12 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
     }
 }
 
+
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real> &curvAbs,
-                                                               type::vector<type::vector<int> >& idInstrumentTable)
+void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real> &curvAbs)
 {
     // here we sort CurvAbs   
     std::sort(curvAbs.begin(), curvAbs.end());
-
 
     // a threshold is used to remove the values that are "too" close...
     const auto threshold = d_threshold.getValue();
@@ -1076,18 +1076,26 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
         return fabs(v1 - v2) < threshold;
     });
     curvAbs.erase(it, curvAbs.end());
+}
 
+
+template <class DataTypes>
+void InterventionalRadiologyController<DataTypes>::fillInstrumentCurvAbsMap(const type::vector<Real>& curvAbs, 
+    const type::vector<Real>& tools_xBegin,
+    const type::vector<Real>& tools_xEnd,
+    type::vector< type::vector<int> >& idInstrumentTable)
+{
     // here we build a table that provides the list of each instrument for each dof in the list of curvAbs
     // dofs can be shared by several instruments
     idInstrumentTable.clear();
     idInstrumentTable.resize(curvAbs.size());
 
-    const auto& xTip = d_xTip.getValue();
+    const auto threshold = d_threshold.getValue();
     for (unsigned int id = 0; id < m_instrumentsList.size(); id++)
     {
         // Get instrument absciss range
-        Real xEnd = xTip[id];
-        Real xBegin = xEnd - m_instrumentsList[id]->getRestTotalLength();
+        Real xEnd = tools_xEnd[id];
+        Real xBegin = tools_xBegin[id];
 
         // enlarge range to ensure to considere borders in absisses comparisons
         xBegin -= threshold;

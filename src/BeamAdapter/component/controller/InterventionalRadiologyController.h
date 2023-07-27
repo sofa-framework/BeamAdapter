@@ -130,11 +130,26 @@ public:
 
     /// Interface for interventionalRadiology instruments:
     virtual void applyInterventionalRadiologyController(void);
-
+    
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
-    void interventionalRadiologyComputeSampling(type::vector<Real> &newCurvAbs, type::vector< type::vector<int> > &id_instrument_table, const type::vector<Real> &xBegin, const Real& xEnd);
-    /// Sort the curv Abs in the ascending order and avoid doubloon
-    void sortCurvAbs(type::vector<Real> &CurvAbs, type::vector< type::vector<int> >& id_instrument_table);
+    
+private:
+    /// <summary>
+    /// Compute the sambling curv abscisses using each instrument sampling and key points parameters
+    /// Will call @sa sortCurvAbs to sort the curv abs and remove doubloon
+    /// </summary>
+    /// <param name="newCurvAbs"></param>
+    /// <param name="id_instrument_table"></param>
+    /// <param name="xBegin"></param>
+    /// <param name="xEnd"></param>
+    void computeInstrumentsCurvAbs(type::vector<Real>& newCurvAbs, const type::vector<Real>& tools_xBegin, const Real& totalLength);
+
+    /// Method to sort the curv Abs in the ascending order and avoid doubloon
+    void sortCurvAbs(type::vector<Real>& curvAbs);
+
+    void fillInstrumentCurvAbsMap(const type::vector<Real>& curvAbs, const type::vector<Real>& tools_xBegin, const type::vector<Real>& tools_xEnd, type::vector< type::vector<int> >& id_instrument_table);
+
+public:
     void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( type::vector<Real> &curv_abs, type::vector< type::vector<int> > &id_instrument_table);
