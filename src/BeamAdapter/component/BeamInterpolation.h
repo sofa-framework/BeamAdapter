@@ -89,6 +89,7 @@ public:
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
+    using PointID = BaseMeshTopology::PointID;
     using ElementID = BaseMeshTopology::EdgeID;
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
