@@ -231,7 +231,7 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
     return projected;
 }
 
-}
+
 
 template<class DataTypes>
 template<class T>
@@ -271,6 +271,7 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     return obj;
 }
 
+}
 
 } // namespace _wirebeaminterpolation_
 

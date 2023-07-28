@@ -366,8 +366,7 @@ void BeamInterpolation<DataTypes>::reset()
     if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
-    bwdInit(); 
-    m_numBeamsNotUnderControl=0;
+    bwdInit();
 }
 
 template<class DataTypes>

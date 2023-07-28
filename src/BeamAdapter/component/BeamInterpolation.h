@@ -276,9 +276,6 @@ public:
     void addCollisionOnBeam(unsigned int b) ;
     void clearCollisionOnBeam() ;
 
-    /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.
-    //Link<BeamInterpolation<DataTypes>, BaseRodSectionMaterial<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterial;
-
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     unsigned int getNumBeamsNotUnderControl() { 
         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
