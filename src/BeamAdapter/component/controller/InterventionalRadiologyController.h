@@ -134,20 +134,17 @@ public:
     void processDrop(unsigned int &previousNumControlledNodes,  unsigned int &seg_remove);
     
 private:
-    /// <summary>
-    /// Compute the sambling curv abscisses using each instrument sampling and key points parameters
-    /// Will call @sa sortCurvAbs to sort the curv abs and remove doubloon
-    /// </summary>
-    /// <param name="newCurvAbs"></param>
-    /// <param name="id_instrument_table"></param>
-    /// <param name="xBegin"></param>
-    /// <param name="xEnd"></param>
+    /** Compute the sambling curv abscisses using each instrument sampling and key points parameters
+    * Will call @sa sortCurvAbs to sort the curv abs and remove doubloon
+    * Need each tool starting position to sample only activated nodes and tool total length (combined deployed tool lengths)
+    **/
     void computeInstrumentsCurvAbs(type::vector<Real>& newCurvAbs, const type::vector<Real>& tools_xBegin, const Real& totalLength);
 
-    /// Method to sort the curv Abs in the ascending order and avoid doubloon
+    /// Method to sort the curv Abs in the ascending order and remove doubloon that are closer than d_threshold
     void sortCurvAbs(type::vector<Real>& curvAbs);
 
-    void fillInstrumentCurvAbsMap(const type::vector<Real>& curvAbs, const type::vector<Real>& tools_xBegin, const type::vector<Real>& tools_xEnd, type::vector< type::vector<int> >& id_instrument_table);
+    /// Method to fill the id_instrument_table based on curvAbs and each tool begin and end. The table as the same size as the curvAbs buffer and store for each curvAbs[i] a vector with the ids of the instruments that are present at this position.
+    void fillInstrumentCurvAbsTable(const type::vector<Real>& curvAbs, const type::vector<Real>& tools_xBegin, const type::vector<Real>& tools_xEnd, type::vector< type::vector<int> >& id_instrument_table);
 
 public:
     void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);

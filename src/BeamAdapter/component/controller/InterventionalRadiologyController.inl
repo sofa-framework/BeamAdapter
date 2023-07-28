@@ -834,7 +834,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     //     => id_instrument_table which provides for each simulated node, the id of all instruments which belong this node
     type::vector<type::vector<int>> idInstrumentTable;
-    fillInstrumentCurvAbsMap(newCurvAbs, tools_xBegin, tools_xEnd, idInstrumentTable);
+    fillInstrumentCurvAbsTable(newCurvAbs, tools_xBegin, tools_xEnd, idInstrumentTable);
     helper::AdvancedTimer::stepEnd("step2");
 
 
@@ -1076,7 +1076,7 @@ void InterventionalRadiologyController<DataTypes>::sortCurvAbs(type::vector<Real
 
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::fillInstrumentCurvAbsMap(const type::vector<Real>& curvAbs, 
+void InterventionalRadiologyController<DataTypes>::fillInstrumentCurvAbsTable(const type::vector<Real>& curvAbs, 
     const type::vector<Real>& tools_xBegin,
     const type::vector<Real>& tools_xEnd,
     type::vector< type::vector<int> >& idInstrumentTable)
