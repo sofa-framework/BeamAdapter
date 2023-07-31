@@ -83,32 +83,16 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
         m_currAction = BeamAdapterAction::USE_TOOL_0;
         break;
     case 20: // droite = 20
-        if (m_currAction == BeamAdapterAction::SPIN_RIGHT)
-            m_currAction = BeamAdapterAction::NO_ACTION;
-        else
-            m_currAction = BeamAdapterAction::SPIN_RIGHT;
-
+        m_currAction = BeamAdapterAction::SPIN_RIGHT;
         break;
     case 18: // gauche = 18
-        if (m_currAction == BeamAdapterAction::SPIN_LEFT)
-            m_currAction = BeamAdapterAction::NO_ACTION;
-        else
-            m_currAction = BeamAdapterAction::SPIN_LEFT;
-
+        m_currAction = BeamAdapterAction::SPIN_LEFT;
         break;
     case 19: // fleche haut = 19
-        if (m_currAction == BeamAdapterAction::MOVE_FORWARD)
-            m_currAction = BeamAdapterAction::NO_ACTION;
-        else
-            m_currAction = BeamAdapterAction::MOVE_FORWARD;
-        
+        m_currAction = BeamAdapterAction::MOVE_FORWARD;
         break;
     case 21: // bas = 21
-        if (m_currAction == BeamAdapterAction::MOVE_BACKWARD)
-            m_currAction = BeamAdapterAction::NO_ACTION;
-        else
-            m_currAction = BeamAdapterAction::MOVE_BACKWARD;
-
+        m_currAction = BeamAdapterAction::MOVE_BACKWARD;
         break;
     default:
         m_currAction = BeamAdapterAction::NO_ACTION;
@@ -121,31 +105,28 @@ template <class DataTypes>
 void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
     const auto currentTime = this->getContext()->getTime();
+
     if (d_writeMode.getValue())
     {
+        if (m_currAction == BeamAdapterAction::NO_ACTION)
+            return;
+
         interventionCtrl* ctrl = l_interventionController.get();
         ctrl->applyAction(m_currAction);
 
-        if (m_lastAction != m_currAction)
+        auto times = sofa::helper::WriteAccessor(d_timeSteps);
+        auto actions = sofa::helper::WriteAccessor(d_actions);
+        times.push_back(currentTime);
+        actions.push_back(int(m_currAction));
+
+        if (m_exportActions)
         {
-            auto times = sofa::helper::WriteAccessor(d_timeSteps);
-            auto actions = sofa::helper::WriteAccessor(d_actions);
-            times.push_back(currentTime);
-            actions.push_back(int(m_currAction));
-
-            if (m_exportActions)
-            {
-                std::cout << "timeSteps='" << times.wref() << "'" << std::endl;
-                std::cout << "actions='" << actions.wref() << "'" << std::endl;
-            }
-
-            m_lastAction = m_currAction;
+            std::cout << "timeSteps='" << times.wref() << "'" << std::endl;
+            std::cout << "actions='" << actions.wref() << "'" << std::endl;
         }
 
-        if (m_currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
-        {
-            m_currAction = BeamAdapterAction::NO_ACTION;
-        }
+        m_lastAction = m_currAction;
+        m_currAction = BeamAdapterAction::NO_ACTION;
     }
     else
     {
