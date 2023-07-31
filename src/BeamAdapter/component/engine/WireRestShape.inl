@@ -297,7 +297,7 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
 
 
 template <class DataTypes>
-const BeamSection& WireRestShape<DataTypes>::getBeamSection(const Real& x_curv) const
+const BeamSection& WireRestShape<DataTypes>::getBeamSectionAtX(const Real& x_curv) const
 {
     const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
@@ -314,6 +314,25 @@ const BeamSection& WireRestShape<DataTypes>::getBeamSection(const Real& x_curv) 
     msg_error() << " problem in getBeamSection : x_curv " << x_curv << " is not between keyPoints" << keyPts;
     static const BeamSection emptySection{};
     return emptySection;
+}
+
+
+template <class DataTypes>
+void WireRestShape<DataTypes>::getMechanicalParamAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const
+{
+    const Real x_used = x_curv - Real(EPSILON);
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+
+    // Check in which section x_used belongs to and get access to this section material
+    for (auto i = 1; i < keyPts.size(); ++i)
+    {
+        if (x_used <= keyPts[i])
+        {
+            return l_sectionMaterials.get(i - 1)->getMechanicalParamAtX(youngModulus, cPoisson, massDensity);
+        }
+    }
+
+    msg_error() << " problem in getMechanicalParamAtX : x_curv " << x_curv << " is not between keyPoints" << keyPts;
 }
 
 

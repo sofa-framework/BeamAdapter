@@ -183,7 +183,7 @@ const BeamSection& WireBeamInterpolation<DataTypes>::getBeamSection(int edgeInde
     this->getAbsCurvXFromBeam(edgeIndex, x_curv);
 
     auto restShape = this->m_restShape.get();
-    return restShape->getBeamSection(x_curv);
+    return restShape->getBeamSectionAtX(x_curv);
 }
 
 template<class DataTypes>

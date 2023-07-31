@@ -49,14 +49,14 @@ void BaseRodSectionMaterial<DataTypes>::init()
     // Prepare beam sections
     double r = this->d_radius.getValue();
     double rInner = this->d_innerRadius.getValue();
-    this->beamSection._r = r;
-    this->beamSection._rInner = rInner;
-    this->beamSection._Iz = M_PI * (r * r * r * r - rInner * rInner * rInner * rInner) / 4.0;
-    this->beamSection._Iy = this->beamSection._Iz;
-    this->beamSection._J = this->beamSection._Iz + this->beamSection._Iy;
-    this->beamSection._A = M_PI * (r * r - rInner * rInner);
-    this->beamSection._Asy = 0.0;
-    this->beamSection._Asz = 0.0;
+    this->m_beamSection._r = r;
+    this->m_beamSection._rInner = rInner;
+    this->m_beamSection._Iz = M_PI * (r * r * r * r - rInner * rInner * rInner * rInner) / 4.0;
+    this->m_beamSection._Iy = this->m_beamSection._Iz;
+    this->m_beamSection._J = this->m_beamSection._Iz + this->m_beamSection._Iy;
+    this->m_beamSection._A = M_PI * (r * r - rInner * rInner);
+    this->m_beamSection._Asy = 0.0;
+    this->m_beamSection._Asz = 0.0;
 
     // call delegate method to init the section
     bool res = initSection();
@@ -79,15 +79,25 @@ void BaseRodSectionMaterial<DataTypes>::getYoungModulusAtX(Real& youngModulus, R
 template <class DataTypes>
 void BaseRodSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const
 {
-    if (d_massDensity.isSet())
+    if (d_massDensity.isSet()) {
         _rho = d_massDensity.getValue();
+    }
 
-    _A = beamSection._A;
-    _Iy = beamSection._Iy;
-    _Iz = beamSection._Iz;
-    _Asy = beamSection._Asy;
-    _Asz = beamSection._Asz;
-    _J = beamSection._J;
+    _A = m_beamSection._A; 
+    _Iy = m_beamSection._Iy;
+    _Iz = m_beamSection._Iz;
+    _Asy = m_beamSection._Asy;
+    _Asz = m_beamSection._Asz;
+    _J = m_beamSection._J;
+}
+
+
+template <class DataTypes>
+void BaseRodSectionMaterial<DataTypes>::getMechanicalParamAtX(Real& youngModulus, Real& cPoisson, Real& massDensity) const
+{
+    youngModulus = this->d_youngModulus.getValue();
+    cPoisson = this->d_poissonRatio.getValue();
+    massDensity = this->d_massDensity.getValue();
 }
 
 } // namespace sofa::beamadapter
