@@ -769,11 +769,17 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     VecCoord xbuf = x.ref();
 
-    const sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
+    sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
+    if (nbrCurvAbs > x.size())
+    {
+        msg_warning() << "Parameters missmatch. There are more curv abscisses '" << nbrCurvAbs << "' than the number of dof: " << x.size();
+        nbrCurvAbs = x.size();
+    }
+
     const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
 
-    const sofa::Size nbrUnactiveNode = m_numControlledNodes - nbrCurvAbs; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
-    const sofa::Size prev_nbrUnactiveNode = m_numControlledNodes - prev_nbrCurvAbs;
+    const sofa::Size nbrUnactiveNode = (m_numControlledNodes > nbrCurvAbs) ? m_numControlledNodes - nbrCurvAbs : 0; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
+    const sofa::Size prev_nbrUnactiveNode = (m_numControlledNodes > prev_nbrCurvAbs) ? m_numControlledNodes - prev_nbrCurvAbs : 0;
 
     for (sofa::Index xId = 0; xId < nbrCurvAbs; xId++)
     {
