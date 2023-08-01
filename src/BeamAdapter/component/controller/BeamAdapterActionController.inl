@@ -131,24 +131,17 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
     else
     {
         const type::vector<Real>& times = d_timeSteps.getValue();
-        if (!times.empty())
-        {            
-            if (m_readStep < times.size())
-            {
-                Real time = times[m_readStep];
-                if (currentTime >= time) // check if another key time has been reached and change action
-                {
-                    m_currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
-                    m_readStep++;
-                }
-            }
+        if (!times.empty() && m_readStep < times.size())
+        {
+            const Real& time = times[m_readStep];
 
-            interventionCtrl* ctrl = l_interventionController.get();
-            ctrl->applyAction(m_currAction);
+            if (currentTime >= time) // check if another key time has been reached and change action
+            {                
+                m_currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
+                m_readStep++;
 
-            if (m_currAction >= BeamAdapterAction::SWITCH_NEXT_TOOL) // action regarding tool needs only to be triggered once
-            {
-                m_currAction = BeamAdapterAction::NO_ACTION;
+                interventionCtrl* ctrl = l_interventionController.get();
+                ctrl->applyAction(m_currAction);
             }
         }
     }
