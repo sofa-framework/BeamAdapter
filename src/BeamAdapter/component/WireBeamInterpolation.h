@@ -138,6 +138,13 @@ public:
     }
 
 
+    void getMechanicalParam(int beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override
+    {
+        Real x_curv = 0;
+        this->getAbsCurvXFromBeam(beamId, x_curv);
+        this->m_restShape->getMechanicalParamAtX(x_curv, youngModulus, cPoisson, massDensity);
+    }
+
     virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
     
     void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override;

@@ -189,6 +189,8 @@ public:
     void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
     void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override;
+    void getMechanicalParam(int beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
+
     void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone );
     void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 

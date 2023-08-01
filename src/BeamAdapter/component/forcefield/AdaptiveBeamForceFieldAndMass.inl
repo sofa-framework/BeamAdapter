@@ -548,20 +548,24 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         /// material parameters
         beamMatrices._rho = d_massDensity.getValue();
 
+        
         /// Temp : we only overide values for which a Data has been set in the WireRestShape
-        if (l_instrumentParameters.get())
+        if (!l_instrumentParameters.empty())
         {
             Real x_curv = 0;
             l_interpolation->getAbsCurvXFromBeam(beamId, x_curv);
 
             /// The length of the beams is only known to the interpolation !
-            l_instrumentParameters->getInterpolationParam(x_curv, beamMatrices._rho, beamMatrices._A, beamMatrices._Iy,
+            l_instrumentParameters.get()->getInterpolationParam(x_curv, beamMatrices._rho, beamMatrices._A, beamMatrices._Iy,
                 beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
         }
         else
         {
             l_interpolation->getInterpolationParam(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
                 beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
+
+            Real youngM, cPoisson;
+            l_interpolation->getMechanicalParam(beamId, youngM, cPoisson, beamMatrices._rho);
         }
 
 
