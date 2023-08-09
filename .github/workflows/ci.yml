@@ -173,7 +173,7 @@ jobs:
         with:
           name: ${{ github.ref_name }}
           tag_name: release-${{ github.ref_name }}
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
           target_commitish: ${{ github.ref_name }}
           files: |
             artifacts/BeamAdapter_*_Linux.zip
