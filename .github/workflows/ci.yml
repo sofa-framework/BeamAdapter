@@ -135,7 +135,7 @@ jobs:
           if [[ "$RUNNER_OS" != "macOS" ]]; then
             # Get regression from github releases
             mkdir -p "${{ runner.temp }}/regression_tmp/install"
-            curl --output "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -L https://github.com/sofa-framework/regression/releases/download/release-master/Regression_test_master_for-SOFA-${{ steps.sofa.outputs.sofa_version }}_${RUNNER_OS}.zip
+            curl --output "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -L https://github.com/sofa-framework/regression/releases/download/release-master/Regression_test_${{ steps.sofa.outputs.sofa_version }}_for-SOFA-${{ steps.sofa.outputs.sofa_version }}_${RUNNER_OS}.zip
             unzip -qq "${{ runner.temp }}/regression_tmp/${RUNNER_OS}.zip" -d "${{ runner.temp }}/regression_tmp/install"
             # Install it in the SOFA bin directory
             $SUDO mv "${{ runner.temp }}"/regression_tmp/install/Regression_*/bin/* "${SOFA_ROOT}/bin"
