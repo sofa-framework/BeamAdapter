@@ -169,7 +169,7 @@ public:
     /// Bring inherited attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
-    using  BeamInterpolation<DataTypes>::m_componentstate ;
+    using  BeamInterpolation<DataTypes>::d_componentState ;
     ////////////////////////////////////////////////////////////////////////////
 
 public:
