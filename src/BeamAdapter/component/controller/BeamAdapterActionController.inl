@@ -48,6 +48,7 @@ void BeamAdapterActionController<DataTypes>::init()
     {
         msg_error() << "No l_interventionController given. Component will be set to Invalid.";
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
     }
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
@@ -57,6 +58,9 @@ void BeamAdapterActionController<DataTypes>::init()
     {
         msg_warning() << "WriteMode is set to on but a list of actions has been set as input. The list will be overwritten.";
     }
+
+    interventionCtrl* ctrl = l_interventionController.get();
+    ctrl->useBeamAction(true);
 
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }

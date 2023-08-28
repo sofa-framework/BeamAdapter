@@ -110,6 +110,8 @@ public:
     int getTotalNbEdges()const;
 
     void applyAction(sofa::beamadapter::BeamAdapterAction action);
+    /// Method to warn this controller that a BeamActionController is controlling the scene. Will bypass the event handling in this component.
+    void useBeamAction(bool value) { m_useBeamActions = value; }
 
     /// Getter to the tools curviline abscisses sorted @sa m_nodeCurvAbs at the current timestep.
     [[nodiscard]] const type::vector<Real>& getCurrentCurvAbscisses() const { return m_nodeCurvAbs; }
@@ -153,7 +155,7 @@ public:
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
     
     
-
+    bool m_useBeamActions = false;
     bool m_FF, m_RW, m_sensored;
     FixedConstraint<DataTypes> *    m_fixedConstraint;
     type::vector<int>                     m_droppedInstruments;
