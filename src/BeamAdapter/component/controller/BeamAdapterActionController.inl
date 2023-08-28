@@ -31,7 +31,7 @@ using namespace sofa::beamadapter;
 
 template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
-    : d_writeMode(initData(&d_writeMode, false, "writeMode", "If true, will accumulate actions from keyboard and dump the actions and times when key 'E' is pressed."))
+    : d_writeMode(initData(&d_writeMode, true, "writeMode", "If true, will accumulate actions from keyboard and dump the actions and times when key 'E' is pressed."))
     , d_actions(initData(&d_actions, "actions", "List of actions to script the BeamAdapter"))
     , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the BeamAdapter"))
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
@@ -52,6 +52,11 @@ void BeamAdapterActionController<DataTypes>::init()
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
     this->f_listening.setValue(true);
+
+    if (d_writeMode.getValue() && (d_actions.isSet() || d_actionString.isSet()))
+    {
+        msg_warning() << "WriteMode is set to on but a list of actions has been set as input. The list will be overwritten.";
+    }
 
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
