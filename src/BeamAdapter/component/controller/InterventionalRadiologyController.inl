@@ -313,7 +313,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     SOFA_UNUSED(dt);
 
     if (m_useBeamActions)
-        return applyInterventionalRadiologyController();
+        return;
 
     BaseContext* context = getContext();
     auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);

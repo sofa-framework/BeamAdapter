@@ -114,13 +114,13 @@ template <class DataTypes>
 void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
     const auto currentTime = this->getContext()->getTime();
+    interventionCtrl* ctrl = l_interventionController.get();
 
     if (d_writeMode.getValue())
     {
         if (m_currAction == BeamAdapterAction::NO_ACTION)
-            return;
+            return ctrl->applyInterventionalRadiologyController();
 
-        interventionCtrl* ctrl = l_interventionController.get();
         ctrl->applyAction(m_currAction);
 
         auto times = sofa::helper::WriteAccessor(d_timeSteps);
@@ -149,11 +149,12 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
                 m_currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
                 m_readStep++;
 
-                interventionCtrl* ctrl = l_interventionController.get();
                 ctrl->applyAction(m_currAction);
             }
         }
     }
+
+    ctrl->applyInterventionalRadiologyController();
 }
 
 
