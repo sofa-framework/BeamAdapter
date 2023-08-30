@@ -955,7 +955,7 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
     modifiedNodeCurvAbs = newNodeCurvAbs;
 
     // we look for the last value in the CurvAbs
-    if (fabs(dLength) < d_threshold.getValue())
+    if (fabs(dLength) <= d_threshold.getValue())
         return;
 
     for (unsigned int i = newTable.size() - 1; i > 0; --i)
@@ -963,10 +963,12 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
         if (newTable[i].size() == 1)
         {
             modifiedNodeCurvAbs[i] -= dLength;
+            if (modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
+            {
+                modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i - 1];
+            }
         }
     }
-
-    sortCurvAbs(modifiedNodeCurvAbs);
 }
 
 
