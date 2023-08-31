@@ -22,6 +22,7 @@
 #pragma once
 
 #include <BeamAdapter/component/model/RodStraightSection.h>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
 namespace sofa::beamadapter
