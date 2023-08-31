@@ -958,12 +958,12 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
     if (fabs(dLength) <= d_threshold.getValue())
         return;
 
-    for (unsigned int i = newTable.size() - 1; i > 0; --i)
+    for (unsigned int i = 0; i < newTable.size(); i++)
     {
         if (newTable[i].size() == 1)
         {
             modifiedNodeCurvAbs[i] -= dLength;
-            if (modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
+            if (i > 1 && modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
             {
                 modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i - 1];
             }
