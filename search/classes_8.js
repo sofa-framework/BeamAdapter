@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['unbuiltgenericconstraintproblem_232',['UnbuiltGenericConstraintProblem',['../classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_problem.html',1,'sofa::component::constraintset']]],
-  ['unbuiltgenericconstraintsolver_233',['UnbuiltGenericConstraintSolver',['../classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_solver.html',1,'sofa::component::constraintset']]]
+  ['wirebeaminterpolation_229',['WireBeamInterpolation',['../classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html',1,'sofa::component::fem::_wirebeaminterpolation_']]],
+  ['wirerestshape_230',['WireRestShape',['../classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html',1,'sofa::component::engine::_wirerestshape_']]]
 ];

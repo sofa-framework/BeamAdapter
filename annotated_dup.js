@@ -26,9 +26,7 @@ var annotated_dup =
           [ "_adaptiveBeamSlidingConstraint_", "namespacesofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint__.html", [
             [ "AdaptiveBeamSlidingConstraint", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint" ],
             [ "AdaptiveBeamSlidingConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution" ]
-          ] ],
-          [ "UnbuiltGenericConstraintProblem", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_problem.html", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_problem" ],
-          [ "UnbuiltGenericConstraintSolver", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_solver.html", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_solver" ]
+          ] ]
         ] ],
         [ "controller", "namespacesofa_1_1component_1_1controller.html", [
           [ "_adaptivebeamcontroller_", "namespacesofa_1_1component_1_1controller_1_1__adaptivebeamcontroller__.html", [

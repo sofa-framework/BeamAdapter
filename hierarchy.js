@@ -27,12 +27,6 @@ var hierarchy =
       [ "ImplicitSurfaceAdaptiveConstraintResolution< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
     ] ],
     [ "ContactMapper", "class_contact_mapper.html", null ],
-    [ "GenericConstraintProblem", null, [
-      [ "UnbuiltGenericConstraintProblem", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_problem.html", null ]
-    ] ],
-    [ "GenericConstraintSolver", null, [
-      [ "UnbuiltGenericConstraintSolver", "classsofa_1_1component_1_1constraintset_1_1_unbuilt_generic_constraint_solver.html", null ]
-    ] ],
     [ "IntervalDefinition< Real >", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition.html", null ],
     [ "Mapping", null, [
       [ "MultiAdaptiveBeamMapping< TIn, TOut >", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html", null ]

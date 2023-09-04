@@ -5,7 +5,6 @@ var dir_084a659d65bb45ff503e6dd609823a8c =
     [ "engine", "dir_6245286b41514b9fa65243e9fda741ce.html", "dir_6245286b41514b9fa65243e9fda741ce" ],
     [ "forcefield", "dir_bbd07e5c89779a759b9b90a5792301a2.html", "dir_bbd07e5c89779a759b9b90a5792301a2" ],
     [ "mapping", "dir_429833ab1b4ac5c228963ef763dbd568.html", "dir_429833ab1b4ac5c228963ef763dbd568" ],
-    [ "solver", "dir_3fa670c68b076b5738d6f48f66697e19.html", "dir_3fa670c68b076b5738d6f48f66697e19" ],
     [ "AdaptiveBeamContactMapper.h", "_adaptive_beam_contact_mapper_8h_source.html", null ],
     [ "BeamInterpolation.h", "_beam_interpolation_8h_source.html", null ],
     [ "MultiAdaptiveBeamContactMapper.h", "_multi_adaptive_beam_contact_mapper_8h_source.html", null ],
