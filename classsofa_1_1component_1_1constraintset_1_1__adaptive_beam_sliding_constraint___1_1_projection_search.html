@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -87,13 +87,13 @@ $(document).ready(function(){initNavTree('classsofa_1_1component_1_1fem_1_1__wir
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search-members.html">List of all members</a>  </div>
+<a href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ProjectionSearch&lt; DataTypes &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="_wire_beam_interpolation_8h_source.html">WireBeamInterpolation.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_adaptive_beam_sliding_constraint_8h_source.html">AdaptiveBeamSlidingConstraint.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -113,7 +113,7 @@ typedef Vec&lt; 3, Real &gt;&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad14279de34c872eea1edbde7b766e777"><td class="memItemLeft" align="right" valign="top"><a id="ad14279de34c872eea1edbde7b766e777"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#ad14279de34c872eea1edbde7b766e777">ProjectionSearch</a> (<a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">WireBeamInterpolation</a>&lt; DataTypes &gt; *inter, const Vec3 &amp;x_input, const VecCoord &amp;vecX, Real &amp;xcurv_output, const Real &amp;tol)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#ad14279de34c872eea1edbde7b766e777">ProjectionSearch</a> (WireBeamInterpolation&lt; DataTypes &gt; *inter, const Vec3 &amp;x_input, const VecCoord &amp;vecX, Real &amp;xcurv_output, const Real &amp;tol)</td></tr>
 <tr class="memdesc:ad14279de34c872eea1edbde7b766e777"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor. <br /></td></tr>
 <tr class="separator:ad14279de34c872eea1edbde7b766e777"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81625b705d5bfdb82267d108aad507ec"><td class="memItemLeft" align="right" valign="top"><a id="a81625b705d5bfdb82267d108aad507ec"></a>
@@ -138,35 +138,35 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>testForProjection</b>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a158c2f2b55e3748355327d2dcfff1fe3"><td class="memItemLeft" align="right" valign="top"><a id="a158c2f2b55e3748355327d2dcfff1fe3"></a>
-<a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html">WireBeamInterpolation</a>&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a158c2f2b55e3748355327d2dcfff1fe3">m_interpolation</a></td></tr>
+WireBeamInterpolation&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a158c2f2b55e3748355327d2dcfff1fe3">m_interpolation</a></td></tr>
 <tr class="memdesc:a158c2f2b55e3748355327d2dcfff1fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interpolation using this class. <br /></td></tr>
 <tr class="separator:a158c2f2b55e3748355327d2dcfff1fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adba75299a571eb8ee5838afd2ef30ddb"><td class="memItemLeft" align="right" valign="top"><a id="adba75299a571eb8ee5838afd2ef30ddb"></a>
-const VecCoord &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#adba75299a571eb8ee5838afd2ef30ddb">m_x</a></td></tr>
+const VecCoord &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#adba75299a571eb8ee5838afd2ef30ddb">m_x</a></td></tr>
 <tr class="memdesc:adba75299a571eb8ee5838afd2ef30ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The positions of the beams we are working on*&zwj;/. <br /></td></tr>
 <tr class="separator:adba75299a571eb8ee5838afd2ef30ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9257ba6bad768efa0a4ab50e77b01dc6"><td class="memItemLeft" align="right" valign="top"><a id="a9257ba6bad768efa0a4ab50e77b01dc6"></a>
-Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a9257ba6bad768efa0a4ab50e77b01dc6">m_target</a></td></tr>
+Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a9257ba6bad768efa0a4ab50e77b01dc6">m_target</a></td></tr>
 <tr class="memdesc:a9257ba6bad768efa0a4ab50e77b01dc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The point to be projected on the curve*&zwj;/. <br /></td></tr>
 <tr class="separator:a9257ba6bad768efa0a4ab50e77b01dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99e762d36503cfca01121661c31ba7aa"><td class="memItemLeft" align="right" valign="top"><a id="a99e762d36503cfca01121661c31ba7aa"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a99e762d36503cfca01121661c31ba7aa">m_found</a></td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a99e762d36503cfca01121661c31ba7aa">m_found</a></td></tr>
 <tr class="memdesc:a99e762d36503cfca01121661c31ba7aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when the estimation is acceptable for the given tolerance*&zwj;/. <br /></td></tr>
 <tr class="separator:a99e762d36503cfca01121661c31ba7aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e6c6ec343912ceec29fb9df41ceaff0"><td class="memItemLeft" align="right" valign="top"><a id="a9e6c6ec343912ceec29fb9df41ceaff0"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a9e6c6ec343912ceec29fb9df41ceaff0">m_tolerance</a></td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a9e6c6ec343912ceec29fb9df41ceaff0">m_tolerance</a></td></tr>
 <tr class="memdesc:a9e6c6ec343912ceec29fb9df41ceaff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tolerance for the end of the search (projection of the estimation on the tangent is &lt; than tolerance)*&zwj;/. <br /></td></tr>
 <tr class="separator:a9e6c6ec343912ceec29fb9df41ceaff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5e24d30088a2690fb7a922f02bc9916"><td class="memItemLeft" align="right" valign="top"><a id="af5e24d30088a2690fb7a922f02bc9916"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#af5e24d30088a2690fb7a922f02bc9916">m_beamIndex</a></td></tr>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#af5e24d30088a2690fb7a922f02bc9916">m_beamIndex</a></td></tr>
 <tr class="memdesc:af5e24d30088a2690fb7a922f02bc9916"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current beam for the search. <br /></td></tr>
 <tr class="separator:af5e24d30088a2690fb7a922f02bc9916"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5765cef73ab2e98b84d56fe08b71a78b"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a5765cef73ab2e98b84d56fe08b71a78b">m_totalIterations</a></td></tr>
+<tr class="memitem:a5765cef73ab2e98b84d56fe08b71a78b"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a5765cef73ab2e98b84d56fe08b71a78b">m_totalIterations</a></td></tr>
 <tr class="separator:a5765cef73ab2e98b84d56fe08b71a78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97483d4f2b4f1ab69d953916d55997fa"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a97483d4f2b4f1ab69d953916d55997fa">m_dichotomicIterations</a></td></tr>
+<tr class="memitem:a97483d4f2b4f1ab69d953916d55997fa"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a97483d4f2b4f1ab69d953916d55997fa">m_dichotomicIterations</a></td></tr>
 <tr class="separator:a97483d4f2b4f1ab69d953916d55997fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3bf4882eded3931d85d2fa7c6647f4b"><td class="memItemLeft" align="right" valign="top"><a id="ab3bf4882eded3931d85d2fa7c6647f4b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#ab3bf4882eded3931d85d2fa7c6647f4b">m_searchDirection</a></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#ab3bf4882eded3931d85d2fa7c6647f4b">m_searchDirection</a></td></tr>
 <tr class="memdesc:ab3bf4882eded3931d85d2fa7c6647f4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">When we change beam, which direction is it ? <br /></td></tr>
 <tr class="separator:ab3bf4882eded3931d85d2fa7c6647f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea34baac78684ea6ff290381a0fd0a2"><td class="memItemLeft" align="right" valign="top"><a id="a1ea34baac78684ea6ff290381a0fd0a2"></a>
@@ -176,28 +176,28 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_e</b></td></tr>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_le</b></td></tr>
 <tr class="separator:a625415bc53d6cc6fae2970c02b17d105"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8989570936cf90e61695def5b6eac818"><td class="memItemLeft" align="right" valign="top"><a id="a8989570936cf90e61695def5b6eac818"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a8989570936cf90e61695def5b6eac818">m_de</a></td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a8989570936cf90e61695def5b6eac818">m_de</a></td></tr>
 <tr class="memdesc:a8989570936cf90e61695def5b6eac818"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current estimation of the projection, its value in the current beam ([0,1]), and its distance to the target. <br /></td></tr>
 <tr class="separator:a8989570936cf90e61695def5b6eac818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5785f0a4e0dc39ae15e760c515f936a0"><td class="memItemLeft" align="right" valign="top"><a id="a5785f0a4e0dc39ae15e760c515f936a0"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_beamStart</b></td></tr>
 <tr class="separator:a5785f0a4e0dc39ae15e760c515f936a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa4bf646aaa5967a6f0fbbf9515e765a"><td class="memItemLeft" align="right" valign="top"><a id="afa4bf646aaa5967a6f0fbbf9515e765a"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#afa4bf646aaa5967a6f0fbbf9515e765a">m_beamEnd</a></td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#afa4bf646aaa5967a6f0fbbf9515e765a">m_beamEnd</a></td></tr>
 <tr class="memdesc:afa4bf646aaa5967a6f0fbbf9515e765a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abscissa of the current beam extremities. <br /></td></tr>
 <tr class="separator:afa4bf646aaa5967a6f0fbbf9515e765a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba8f0f87b960140f5a82f037e58d9380"><td class="memItemLeft" align="right" valign="top"><a id="aba8f0f87b960140f5a82f037e58d9380"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_segStart</b></td></tr>
 <tr class="separator:aba8f0f87b960140f5a82f037e58d9380"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4436d63adf9023cda1f95e71c1eac917"><td class="memItemLeft" align="right" valign="top"><a id="a4436d63adf9023cda1f95e71c1eac917"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a4436d63adf9023cda1f95e71c1eac917">m_segEnd</a></td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a4436d63adf9023cda1f95e71c1eac917">m_segEnd</a></td></tr>
 <tr class="memdesc:a4436d63adf9023cda1f95e71c1eac917"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abscissa of the current search segment extremities. <br /></td></tr>
 <tr class="separator:a4436d63adf9023cda1f95e71c1eac917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d18a60e3c8fecaeafb9560894345a5"><td class="memItemLeft" align="right" valign="top"><a id="a89d18a60e3c8fecaeafb9560894345a5"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>range</b></td></tr>
 <tr class="separator:a89d18a60e3c8fecaeafb9560894345a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb7479c8283bf7c6ab9037c6d5447439"><td class="memItemLeft" align="right" valign="top"><a id="acb7479c8283bf7c6ab9037c6d5447439"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#acb7479c8283bf7c6ab9037c6d5447439">rangeSampling</a></td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#acb7479c8283bf7c6ab9037c6d5447439">rangeSampling</a></td></tr>
 <tr class="memdesc:acb7479c8283bf7c6ab9037c6d5447439"><td class="mdescLeft">&#160;</td><td class="mdescRight">The length of the current search segment, and the distance between 2 sampling points. <br /></td></tr>
 <tr class="separator:acb7479c8283bf7c6ab9037c6d5447439"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22d86e972040f1b9b7a4295143b88ee1"><td class="memItemLeft" align="right" valign="top"><a id="a22d86e972040f1b9b7a4295143b88ee1"></a>
@@ -210,24 +210,24 @@ Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P1</b></td></tr>
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>P2</b></td></tr>
 <tr class="separator:a60913c59ddc0d00ae1843a666ff83480"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22d4756d9864c99b4696874615818e1a"><td class="memItemLeft" align="right" valign="top"><a id="a22d4756d9864c99b4696874615818e1a"></a>
-Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a22d4756d9864c99b4696874615818e1a">P3</a></td></tr>
+Vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a22d4756d9864c99b4696874615818e1a">P3</a></td></tr>
 <tr class="memdesc:a22d4756d9864c99b4696874615818e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current beam control points. <br /></td></tr>
 <tr class="separator:a22d4756d9864c99b4696874615818e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ae5a2caa756c33f2186237908b168a4"><td class="memItemLeft" align="right" valign="top"><a id="a1ae5a2caa756c33f2186237908b168a4"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#a1ae5a2caa756c33f2186237908b168a4">m_distTab</a> [<a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1">s_sampling</a>+1]</td></tr>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#a1ae5a2caa756c33f2186237908b168a4">m_distTab</a> [<a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1">s_sampling</a>+1]</td></tr>
 <tr class="memdesc:a1ae5a2caa756c33f2186237908b168a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of distances. <br /></td></tr>
 <tr class="separator:a1ae5a2caa756c33f2186237908b168a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:ac04573f8ccc05763d0e94365d02f57a1"><td class="memItemLeft" align="right" valign="top"><a id="ac04573f8ccc05763d0e94365d02f57a1"></a>
-static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1">s_sampling</a> {10}</td></tr>
+static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1">s_sampling</a> { 10 }</td></tr>
 <tr class="memdesc:ac04573f8ccc05763d0e94365d02f57a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many points do we consider each step ? (at least &gt; 3 or it will never converge) <br /></td></tr>
 <tr class="separator:ac04573f8ccc05763d0e94365d02f57a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
-class sofa::component::fem::_wirebeaminterpolation_::ProjectionSearch&lt; DataTypes &gt;</h3>
+class sofa::component::constraintset::_adaptiveBeamSlidingConstraint_::ProjectionSearch&lt; DataTypes &gt;</h3>
 
 <p>When the Newton method doesn't converge when searching for the closest projection on the curve, we will start a dichotomic search, for now a unoptimized brute force approach. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
@@ -268,8 +268,8 @@ of iterations (including beam changes)</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1fem.html">fem</a></li><li class="navelem"><b>_wirebeaminterpolation_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html">ProjectionSearch</a></li>
-    <li class="footer">Generated on Mon Sep 4 2023 07:37:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset.html">constraintset</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint__.html">_adaptiveBeamSlidingConstraint_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html">ProjectionSearch</a></li>
+    <li class="footer">Generated on Thu Sep 7 2023 00:17:45 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

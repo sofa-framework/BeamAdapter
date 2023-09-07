@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a348b51b9688821ca8af4885470b3465d":[3,0,0,1,6,0,0,12],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a357d9f9e52aad598a1a2ea4def76b95e":[3,0,0,1,6,0,0,41],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a35dde21d79be768329c5d146e6d79fca":[3,0,0,1,6,0,0,26],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a3840dd179bae8137ed77a52cfc9a5a72":[3,0,0,1,6,0,0,9],
@@ -63,8 +62,8 @@ var NAVTREEINDEX3 =
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a529626910effe5bc39d2aa59d81e5f8f":[3,0,0,1,7,0,0,8],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a5434809f42dc8850ac79010dc2c2f12d":[3,0,0,1,7,0,0,5],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a577ea97098d04ed875d892be73025b37":[3,0,0,1,7,0,0,71],
-"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a65f8326aed936f024c3b6abd92576112":[3,0,0,1,7,0,0,55],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a65f8326aed936f024c3b6abd92576112":[3,0,0,1,7,0,0,54],
+"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a65f8326aed936f024c3b6abd92576112":[3,0,0,1,7,0,0,55],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a6981692b9876a414231756e6001cc6ff":[3,0,0,1,7,0,0,30],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a698d60c97b389c5c8625a79ff0854e1b":[3,0,0,1,7,0,0,7],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a719bac0d0586c97d7aa0168f3a3887a7":[3,0,0,1,7,0,0,31],
@@ -75,8 +74,8 @@ var NAVTREEINDEX3 =
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a8b011e7db2592e828d67c0e947acca4e":[3,0,0,1,7,0,0,13],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a8b5ed8d78e53d879b48dbb7010648bf9":[3,0,0,1,7,0,0,73],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a8d5c710529e84ddc9f8a787f2375cdf8":[3,0,0,1,7,0,0,53],
-"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a90643dae5f68e60959f5ecbcefb710a5":[3,0,0,1,7,0,0,42],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a90643dae5f68e60959f5ecbcefb710a5":[3,0,0,1,7,0,0,40],
+"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a90643dae5f68e60959f5ecbcefb710a5":[3,0,0,1,7,0,0,42],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a92bb00a86877af513282f99073b7b4e1":[3,0,0,1,7,0,0,66],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a95ffdc6539366fe1c350bb5033a2d297":[3,0,0,1,7,0,0,46],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#a9bfe007f4d1d47438dbf85b0322bc131":[3,0,0,1,7,0,0,51],
@@ -246,8 +245,9 @@ var NAVTREEINDEX3 =
 "functions_type.html":[3,2,3],
 "functions_vars.html":[3,2,2],
 "hierarchy.html":[3,1],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "index.html#autotoc_md2":[0],
-"index.html#autotoc_md3":[0,0]
+"index.html#autotoc_md3":[0,0],
+"init_beam_adapter_8cpp.html#a0158c37258a17cb7cb58e4460ec395a2":[2,0,1,1,14]
 };

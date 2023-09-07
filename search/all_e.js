@@ -12,7 +12,7 @@ var searchData=
   ['fem_179',['fem',['../namespacesofa_1_1component_1_1fem.html',1,'sofa::component']]],
   ['forcefield_180',['forcefield',['../namespacesofa_1_1component_1_1forcefield.html',1,'sofa::component']]],
   ['mapping_181',['mapping',['../namespacesofa_1_1component_1_1mapping.html',1,'sofa::component']]],
-  ['s_5fsampling_182',['s_sampling',['../classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1',1,'sofa::component::fem::_wirebeaminterpolation_::ProjectionSearch']]],
+  ['s_5fsampling_182',['s_sampling',['../classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html#ac04573f8ccc05763d0e94365d02f57a1',1,'sofa::component::constraintset::_adaptiveBeamSlidingConstraint_::ProjectionSearch']]],
   ['sofa_183',['sofa',['../namespacesofa.html',1,'']]],
   ['sortcurvabs_184',['sortCurvAbs',['../classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#af67e602b6b3407115309289385947252',1,'sofa::component::controller::_interventionalradiologycontroller_::InterventionalRadiologyController']]],
   ['statedatatypes_185',['StateDataTypes',['../classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#af7240bec65ca3fb869fcecc0b9fe48f5',1,'sofa::component::fem::_beaminterpolation_::BeamInterpolation']]],
