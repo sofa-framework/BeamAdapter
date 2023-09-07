@@ -315,7 +315,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
                 // this transforamtion is given by global_H_local0 for node 0 (and dof0)
                 // and global_H_local1 for node 1 (and dof1)
                 Transform global_H_local0, global_H_local1;
-                computeTransform(i,  global_H_local0,  global_H_local1, statePos.ref()) ;
+                computeTransform(i, nd0Id, nd1Id, global_H_local0, global_H_local1, statePos.ref());
                 Vec3 beam_segment = global_H_local1.getOrigin() -  global_H_local0.getOrigin();
                 lengthList.push_back(beam_segment.norm());
 
@@ -641,7 +641,7 @@ void BeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(unsigned 
 
 
 template<class DataTypes>
-int BeamInterpolation<DataTypes>::computeTransform(ElementID edgeInList,
+int BeamInterpolation<DataTypes>::computeTransform(const ElementID edgeInList,
     Transform &global_H_local0,
     Transform &global_H_local1,
     const VecCoord &x)
@@ -654,16 +654,24 @@ int BeamInterpolation<DataTypes>::computeTransform(ElementID edgeInList,
         return -1;
     }
 
+    return computeTransform(edgeInList, node0Idx, node1Idx, global_H_local0, global_H_local1, x);
+}
+
+
+template<class DataTypes>
+int BeamInterpolation<DataTypes>::computeTransform(const ElementID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x)
+{
+
     /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
     Transform DOF0_H_local0, DOF1_H_local1;
-    getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
+    getDOFtoLocalTransform(edgeInList, DOF0_H_local0, DOF1_H_local1);
 
     /// 3. Computes the transformation global To local for both nodes
-    Transform global_H_DOF0(x[node0Idx].getCenter(),x[node0Idx].getOrientation());
-    Transform global_H_DOF1(x[node1Idx].getCenter(),x[node1Idx].getOrientation());
+    Transform global_H_DOF0(x[node0Idx].getCenter(), x[node0Idx].getOrientation());
+    Transform global_H_DOF1(x[node1Idx].getCenter(), x[node1Idx].getOrientation());
     /// - add a optional transformation
-    global_H_local0 = global_H_DOF0*DOF0_H_local0;
-    global_H_local1 = global_H_DOF1*DOF1_H_local1;
+    global_H_local0 = global_H_DOF0 * DOF0_H_local0;
+    global_H_local1 = global_H_DOF1 * DOF1_H_local1;
 
     return 1; /// no error
 }

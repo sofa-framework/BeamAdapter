@@ -89,6 +89,7 @@ public:
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
+    using PointID = BaseMeshTopology::PointID;
     using ElementID = BaseMeshTopology::EdgeID;
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
@@ -155,7 +156,10 @@ public:
     void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
 
     
-    int computeTransform(ElementID edgeInList, Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
+    int computeTransform(const ElementID edgeInList, Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
+    int computeTransform(const ElementID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);
+
+    
 
     void getTangent(Vec3& t, const Real& baryCoord,
                     const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
