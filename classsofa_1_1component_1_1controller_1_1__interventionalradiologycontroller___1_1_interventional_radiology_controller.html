@@ -188,13 +188,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>applyAction</b> (sofa
 <tr class="memitem:a98a1e72c60c9e5c530cb013fd6813d5a"><td class="memItemLeft" align="right" valign="top"><a id="a98a1e72c60c9e5c530cb013fd6813d5a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>processDrop</b> (unsigned int &amp;previousNumControlledNodes, unsigned int &amp;seg_remove)</td></tr>
 <tr class="separator:a98a1e72c60c9e5c530cb013fd6813d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4971670fd87b61e3ae043dfef7b425ba"><td class="memItemLeft" align="right" valign="top"><a id="a4971670fd87b61e3ae043dfef7b425ba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interventionalRadiologyComputeSampling</b> (type::vector&lt; Real &gt; &amp;newCurvAbs, type::vector&lt; type::vector&lt; int &gt; &gt; &amp;id_instrument_table, const type::vector&lt; Real &gt; &amp;xBegin, const Real &amp;xEnd)</td></tr>
-<tr class="separator:a4971670fd87b61e3ae043dfef7b425ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af67e602b6b3407115309289385947252"><td class="memItemLeft" align="right" valign="top"><a id="af67e602b6b3407115309289385947252"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#af67e602b6b3407115309289385947252">sortCurvAbs</a> (type::vector&lt; Real &gt; &amp;CurvAbs, type::vector&lt; type::vector&lt; int &gt; &gt; &amp;id_instrument_table)</td></tr>
-<tr class="memdesc:af67e602b6b3407115309289385947252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort the curv Abs in the ascending order and avoid doubloon. <br /></td></tr>
-<tr class="separator:af67e602b6b3407115309289385947252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa008a24fee79ec18101e81df4406535"><td class="memItemLeft" align="right" valign="top"><a id="afa008a24fee79ec18101e81df4406535"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>totalLengthIsChanging</b> (const type::vector&lt; Real &gt; &amp;newNodeCurvAbs, type::vector&lt; Real &gt; &amp;modifiedNodeCurvAbs, const type::vector&lt; type::vector&lt; int &gt; &gt; &amp;newTable)</td></tr>
 <tr class="separator:afa008a24fee79ec18101e81df4406535"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,13 +315,7 @@ class sofa::component::controller::_interventionalradiologycontroller_::Interven
 <p>Interface for interventionalRadiology instruments: </p>
 <p>Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument</p>
 <p>In case of drop:</p>
-<p>STEP 1 Find the total length of the COMBINED INSTRUMENTS and the one for which xtip &gt; 0 (so the one which are simulated)</p>
 <p>Some verif of step 1</p>
-<p>STEP 2: get the noticeable points that need to be simulated</p>
-<p>STEP 3 Re-interpolate the positions and the velocities</p>
-<p>STEP 4 Assign the beams</p>
-<p>STEP 5 Fix the not simulated nodes</p>
-<p>STEP 6 Activate Beam List for collision of each instrument</p>
 
 </div>
 </div>
@@ -470,7 +457,7 @@ class sofa::component::controller::_interventionalradiologycontroller_::Interven
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1controller.html">controller</a></li><li class="navelem"><b>_interventionalradiologycontroller_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html">InterventionalRadiologyController</a></li>
-    <li class="footer">Generated on Thu Sep 7 2023 00:38:18 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Sep 7 2023 00:53:57 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

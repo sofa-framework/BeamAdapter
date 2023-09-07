@@ -1,7 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"index.html#autotoc_md3":[0,0],
-"init_beam_adapter_8cpp.html#a0158c37258a17cb7cb58e4460ec395a2":[2,0,1,1,14],
 "init_beam_adapter_8cpp.html#a44ed889b5f8bb76b6bd8ac4f4b50f34c":[2,0,1,1,13],
 "init_beam_adapter_8cpp.html#a46fad1aeab8d4b22de640eb81251b2f9":[2,0,1,1,12],
 "init_beam_adapter_8cpp.html#a89120c5d3a2d8abeb8a06bd97244b1bb":[2,0,1,1,11],
