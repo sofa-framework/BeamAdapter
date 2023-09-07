@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a32cdf24557e0d899d6a8cc4fd5e396b3":[3,0,0,1,6,0,0,3],
+"classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a348b51b9688821ca8af4885470b3465d":[3,0,0,1,6,0,0,12],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a357d9f9e52aad598a1a2ea4def76b95e":[3,0,0,1,6,0,0,41],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a35dde21d79be768329c5d146e6d79fca":[3,0,0,1,6,0,0,26],
 "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a3840dd179bae8137ed77a52cfc9a5a72":[3,0,0,1,6,0,0,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "hierarchy.html":[3,1],
 "index.html":[],
 "index.html":[0],
-"index.html#autotoc_md2":[0],
-"index.html#autotoc_md3":[0,0],
-"init_beam_adapter_8cpp.html#a0158c37258a17cb7cb58e4460ec395a2":[2,0,1,1,14]
+"index.html#autotoc_md2":[0]
 };
