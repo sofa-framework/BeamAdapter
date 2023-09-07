@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 *                              BeamAdapter plugin                             *
 *                  (c) 2006 Inria, University of Lille, CNRS                  *
 *                                                                             *
@@ -128,6 +128,18 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::internalInit()
     }
 }
 
+
+template<class DataTypes>
+bool AdaptiveBeamSlidingConstraint<DataTypes>::getCurvAbsOfProjection(const Vec3& x_input, const VecCoord& vecX, Real& xcurv_output, const Real& tolerance)
+{
+    WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+
+    // We have put all the code in a new class, because it uses a lot of custom functions and data
+    ProjectionSearch<DataTypes> ps(interpolation, x_input, vecX, xcurv_output, tolerance);
+    return ps.doSearch(xcurv_output);
+}
+
+
 template<class DataTypes>
 void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const ConstraintParams * cParams,
                                                               DataMatrixDeriv &c1_d, DataMatrixDeriv &c2_d,
@@ -162,7 +174,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
 
         // Get new projection on the curve
         m_previousPositions[i] += (Real) m_displacements[i];
-        if(!interpolation->getCurvAbsOfProjection(x2[i].getCenter(), x1, m_previousPositions[i], 1e-5))
+        if(!this->getCurvAbsOfProjection(x2[i].getCenter(), x1, m_previousPositions[i], 1e-5))
         {
             m_projected[i] = false;
             continue;
@@ -285,6 +297,255 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
 
     vparams->drawTool()->restoreLastState();
 }
+
+
+template<class DataTypes>
+bool ProjectionSearch<DataTypes>::doSearch(Real& result)
+{
+    initSearch(m_e);
+
+    // Do one pass of the newton method
+    newtonMethod();
+
+    Real dist = computeDistAtCurvAbs(m_e);
+
+    // If the new estimate is good, go with it
+    if (m_found)
+    {
+        result = m_e;
+        return testForProjection(result);
+    }
+
+    // Look if the new estimate is closer to the target than the previous estimate
+    if (dist < m_de)
+    {
+        // If it is, continue with the newton method, it should converge fast
+        while (m_totalIterations < m_interpolation->getNumBeams() + 1)
+        {
+            m_de = dist;
+            newtonMethod();
+            m_totalIterations++;
+
+            if (m_found)
+            {
+                // Go back to global curv abs
+                result = m_beamStart + (m_beamEnd - m_beamStart) * m_le;
+                return testForProjection(result);
+            }
+
+            dist = computeDistAtCurvAbs(m_e);
+            if (dist > m_de)	// Diverging
+                break;
+
+            if (m_le < 0 || m_le > 1)	// We have to change beam, use the dichotomic method instead
+                break;
+        }
+    }
+
+    // If the estimate is outside the beam, or is further than the previous one, change beam
+    //  and use a dichotomic search until we find a solution
+    if (!m_found)
+    {
+        m_totalIterations = 0;
+
+        while (m_totalIterations < m_interpolation->getNumBeams() + 10 && m_dichotomicIterations < 10)
+        {
+            m_totalIterations++;
+            m_dichotomicIterations++;
+
+            // We will compute 10 samples
+            range = m_segEnd - m_segStart;
+            rangeSampling = range / s_sampling;
+            for (unsigned int i = 0; i <= s_sampling; i++)
+            {
+                Real curvAbs = m_segStart + rangeSampling * (Real)i;
+                m_distTab[i] = computeDistAtCurvAbs(curvAbs);
+            }
+            unsigned int minIndex = std::min_element(m_distTab, m_distTab + s_sampling + 1) - m_distTab;	// Where is the minimum
+            m_e = m_segStart + rangeSampling * minIndex;
+            if (testForProjection(m_e))
+            {
+                result = m_e;
+                return true;
+            }
+
+            // If the minium is at one extremity, change beam
+            if (minIndex == 0)
+                changeCurrentBeam(m_beamIndex - 1);
+            else if (minIndex == s_sampling)
+                changeCurrentBeam(m_beamIndex + 1);
+            else
+            {	// We continue the search with a smaller interval (keeping only 3 points)
+                m_segStart = m_e - rangeSampling;
+                m_segEnd = m_e + rangeSampling;
+            }
+        }
+    }
+
+    result = m_e;
+    return testForProjection(result);
+}
+
+template<class DataTypes>
+void ProjectionSearch<DataTypes>::initSearch(Real curvAbs)
+{
+    m_e = curvAbs;
+    if (m_e < 0)
+    {
+        m_beamIndex = 0;
+        m_le = 0;
+    }
+    else if (m_e > m_interpolation->getRestTotalLength())
+    {
+        m_beamIndex = m_interpolation->getNumBeams() - 1;
+        m_le = 1;
+    }
+    else
+        m_interpolation->getBeamAtCurvAbs(m_e, m_beamIndex, m_le);
+
+    m_searchDirection = 0;
+    m_interpolation->getAbsCurvXFromBeam(m_beamIndex, m_beamStart, m_beamEnd);
+    m_segStart = m_beamStart;
+    m_segEnd = m_beamEnd;
+    m_interpolation->getSplinePoints(m_beamIndex, m_x, P0, P1, P2, P3);
+    m_de = computeDistAtCurvAbs(m_e);
+}
+
+template<class DataTypes>
+void ProjectionSearch<DataTypes>::newtonMethod()
+{
+    Real bx = m_le, bx2 = bx * bx, bx3 = bx2 * bx;
+    Real obx = 1 - bx, obx2 = obx * obx, obx3 = obx2 * obx;
+    Vec3 P = P0 * obx3 + P1 * 3 * bx * obx2 + P2 * 3 * bx2 * obx + P3 * bx3;
+    Vec3 dP = P0 * (-3 * obx2) + P1 * (3 - 12 * bx + 9 * bx2) + P2 * (6 * bx - 9 * bx2) + P3 * (3 * bx2);
+    Real f_x = dot((m_target - P), dP);
+
+    if (f_x == 0.0 || fabs(f_x) / dP.norm() < m_tolerance) // reach convergence
+    {
+        m_interpolation->getCurvAbsAtBeam(m_beamIndex, m_le, m_e);
+        m_found = true;
+        return;
+    }
+    Vec3 d2P = P0 * 6 * (1 - bx) + P1 * (-12 + 18 * bx) + P2 * (6 - 18 * bx) + P3 * 6 * bx;
+
+    Real df_x = dot(-dP, dP) + dot((m_target - P), d2P);
+
+    if (fabs(df_x) < 1e-5 * m_tolerance)
+    {
+        return;
+    }
+
+    Real d_bx = -f_x / df_x;
+    m_le += d_bx;
+
+    m_e = m_beamStart + (m_beamEnd - m_beamStart) * m_le;
+
+    // NOTE : bx+d_bx-1.0 ne donne pas une estimation correcte de la position dans l'autre beam, puisque sa longueur peut �tre diff�rente !
+}
+
+template<class DataTypes>
+bool ProjectionSearch<DataTypes>::changeCurrentBeam(int index)
+{
+    // If at the end of the thread
+    if (index < 0)
+    {
+        m_segEnd = m_segStart + rangeSampling;
+        return false;
+    }
+    else if (index > static_cast<int>(m_interpolation->getNumBeams()) - 1)
+    {
+        m_segStart = m_segEnd - rangeSampling;
+        return false;
+    }
+
+    int dir = index - m_beamIndex;
+    if (m_searchDirection * dir < 0)
+    {	// Changing the direction of search means we are looking for a point near an extremity
+        // We know we are looking for a point inside the interval [0.9;1.1]
+        // but the ranges for each beam can be different
+        Real nStart, nEnd;
+        m_interpolation->getAbsCurvXFromBeam(index, nStart, nEnd);
+        Real nRangeSampling = (nEnd - nStart) / s_sampling;
+
+        if (dir < 0)
+        {
+            m_segStart = m_beamStart - nRangeSampling;
+            m_segEnd = m_beamStart + rangeSampling;
+        }
+        else
+        {
+            m_segStart = m_beamEnd - rangeSampling;
+            m_segEnd = m_beamEnd + nRangeSampling;
+        }
+        return false;
+    }
+
+
+    if (dir < 0)
+        m_searchDirection = -1;
+    else if (dir > 0)
+        m_searchDirection = 1;
+
+    // Really changing beam
+    m_beamIndex = index;
+    m_interpolation->getAbsCurvXFromBeam(m_beamIndex, m_beamStart, m_beamEnd);
+    m_segStart = m_beamStart;
+    m_segEnd = m_beamEnd;
+    m_interpolation->getSplinePoints(m_beamIndex, m_x, P0, P1, P2, P3);
+    m_dichotomicIterations = 0;
+
+    return true;
+}
+
+template<class DataTypes>
+typename ProjectionSearch<DataTypes>::Real ProjectionSearch<DataTypes>::computeDistAtCurvAbs(Real curvAbs)
+{
+    if (curvAbs >= m_beamStart && curvAbs <= m_beamEnd)
+    {	// We can use the control points we saved
+        Real bx = (curvAbs - m_beamStart) / (m_beamEnd - m_beamStart), bx2 = bx * bx, bx3 = bx2 * bx;
+        Real obx = 1 - bx, obx2 = obx * obx, obx3 = obx2 * obx;
+        Vec3 P = P0 * obx3 + P1 * 3 * bx * obx2 + P2 * 3 * bx2 * obx + P3 * bx3;
+
+        return (m_target - P).norm();
+    }
+    else
+    {
+        // TODO(dmarchal 2017-05-17) Please specify who/when this will be done
+        // TODO : save all the control points so we don't have to compute them again
+        Real bx;
+        unsigned int index;
+        Vec3 tP0, tP1, tP2, tP3;
+        m_interpolation->getBeamAtCurvAbs(curvAbs, index, bx);
+        m_interpolation->getSplinePoints(index, m_x, tP0, tP1, tP2, tP3);
+        Real bx2 = bx * bx, bx3 = bx2 * bx;
+        Real obx = 1 - bx, obx2 = obx * obx, obx3 = obx2 * obx;
+        Vec3 P = tP0 * obx3 + tP1 * 3 * bx * obx2 + tP2 * 3 * bx2 * obx + tP3 * bx3;
+
+        return (m_target - P).norm();
+    }
+}
+
+template<class DataTypes>
+bool ProjectionSearch<DataTypes>::testForProjection(Real curvAbs)
+{
+    Real bx;
+    unsigned int index;
+    Vec3 tP0, tP1, tP2, tP3;
+    m_interpolation->getBeamAtCurvAbs(curvAbs, index, bx);
+    m_interpolation->getSplinePoints(index, m_x, tP0, tP1, tP2, tP3);
+    Real bx2 = bx * bx, bx3 = bx2 * bx;
+    Real obx = 1 - bx, obx2 = obx * obx, obx3 = obx2 * obx;
+    Vec3 P = tP0 * obx3 + tP1 * 3 * bx * obx2 + tP2 * 3 * bx2 * obx + tP3 * bx3;
+    Vec3 dP = tP0 * (-3 * obx2) + tP1 * (3 - 12 * bx + 9 * bx2) + tP2 * (6 * bx - 9 * bx2) + tP3 * (3 * bx2);
+    Real f_x = dot((m_target - P), dP);
+
+    if (fabs(f_x) / dP.norm() < m_tolerance)
+        return true;
+
+    return false;
+}
+
+
 
 } // namespace _adaptiveBeamSlidingConstraint_
 
