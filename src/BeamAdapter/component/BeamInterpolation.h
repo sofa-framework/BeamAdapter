@@ -277,7 +277,8 @@ public:
     void clearCollisionOnBeam() ;
 
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
-    unsigned int getNumBeamsNotUnderControl() { 
+    [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
+    unsigned int getNumBeamsNotUnderControl() {
         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
         return 0;
     }
