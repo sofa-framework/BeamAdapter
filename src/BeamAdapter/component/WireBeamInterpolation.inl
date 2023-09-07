@@ -271,8 +271,6 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     return obj;
 }
 
-}
-
 } // namespace _wirebeaminterpolation_
 
 } // namespace sofa::component::fem
