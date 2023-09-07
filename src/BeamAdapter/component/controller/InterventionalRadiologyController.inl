@@ -804,14 +804,14 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             totalLengthCombined = xend;
         }
 
-        if( xend > 0.0)
-        {
-            // create the first node (on x=0)
-            newCurvAbs.push_back(0.0);
-        }
-
         // clear the present interpolation of the beams
         m_instrumentsList[i]->clear();
+    }
+
+    // create the first node (on x=0)
+    if (totalLengthCombined > 0.0)
+    {        
+        newCurvAbs.push_back(0.0);
     }
 
     /// Some verif of step 1
@@ -933,15 +933,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     // ## STEP 4: Assign the beams
     helper::AdvancedTimer::stepBegin("step4");
     sofa::Size nbrBeam = newCurvAbs.size() - 1; // number of simulated beams
-    unsigned int numEdges= m_numControlledNodes-1;
-
-    // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
-    if (numEdges<nbrBeam)
+    const sofa::Size numEdges = m_numControlledNodes - 1;
+    
+    if (numEdges < nbrBeam) // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
     {
-        if (f_printLog.getValue())
-        {
-            msg_error()<<"Not enough edges in the topology.";
-        }
+        msg_error() << "Not enough edges in the topology. Only: " << numEdges << " while nbrBeam = " << nbrBeam << ". Will simulate only " << numEdges << " beams.";
         nbrBeam = numEdges;
     }
 
