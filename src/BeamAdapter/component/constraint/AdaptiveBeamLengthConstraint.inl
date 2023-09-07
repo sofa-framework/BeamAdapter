@@ -119,14 +119,15 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
         length=(P0-P3).norm();
         rest_length = interpolation->getLength(b);
 
+        unsigned n0, n1;
+        interpolation->getNodeIndices(b, n0, n1);
+
         /// 2. compute the bending angle
         Transform Tnode0, Tnode1;
-        interpolation->computeTransform(b,Tnode0,Tnode1,x);
+        interpolation->computeTransform(b, n0, n1, Tnode0,Tnode1,x);
         Real angleBeam = interpolation->ComputeTotalBendingRotationAngle(rest_length/10.0, Tnode0, Tnode1,rest_length , 0.0, 1.0);
 
         /// 3. treatment of the different case..
-        unsigned n0, n1;
-        interpolation->getNodeIndices(b, n0, n1);
         bool case1a = (n0==n1);
 
         if(prev_stretch)
@@ -164,7 +165,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
                 interpolation->getSplinePoints(b,xfree,P0,P1,P2,P3);
 
                 Transform global_H_local0_free, global_H_local1_free;
-                interpolation->computeTransform(b,  global_H_local0_free,  global_H_local1_free, xfree);
+                interpolation->computeTransform(b, n0, n1, global_H_local0_free,  global_H_local1_free, xfree);
                 intervalDef.posFreeEnd  = global_H_local0_free.getOrigin(); /// store the free position
 
                 intervalDef.rest_length=rest_length_interval; /// store the rest_length
@@ -231,10 +232,10 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
                 interpolation->getDOFtoLocalTransform(b, DOF0_H_local0,  DOF1_H_local1);
 
                 Transform global_H_local0, global_H_local1;
-                interpolation->computeTransform(b,  global_H_local0,  global_H_local1, x);
+                interpolation->computeTransform(b, n0, n1, global_H_local0,  global_H_local1, x);
 
                 Transform global_H_local0_free, global_H_local1_free;
-                interpolation->computeTransform(b,  global_H_local0_free,  global_H_local1_free, xfree);
+                interpolation->computeTransform(b, n0, n1, global_H_local0_free,  global_H_local1_free, xfree);
 
                 intervalDef.dof_H_begin = DOF0_H_local0;
                 intervalDef.IdxBegin = n0;
@@ -262,11 +263,11 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
 
         Transform global_H_local0, global_H_local1;
 
-        interpolation->computeTransform(b,  global_H_local0,  global_H_local1, x);
+        interpolation->computeTransform(b, n0, n1, global_H_local0,  global_H_local1, x);
 
 
         Transform global_H_local0_free, global_H_local1_free;
-        interpolation->computeTransform(b,  global_H_local0_free,  global_H_local1_free, xfree);
+        interpolation->computeTransform(b, n0, n1, global_H_local0_free,  global_H_local1_free, xfree);
 
 
         intervalDef.dof_H_end = DOF1_H_local1;
