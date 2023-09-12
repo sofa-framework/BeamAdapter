@@ -17,7 +17,6 @@ var classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_int
     [ "breaksInTwo", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#acafdd2cf24955752dc590e9f70246104", null ],
     [ "bwdInit", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#aac70e2eeedc06de9ab4be138cf23fae4", null ],
     [ "getApproximateCurvAbs", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#adf23a2e05d588bf90fa13f51f9becfa6", null ],
-    [ "getBeamAtCurvAbs", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#a0ca0812741e5989c2c71349c130ba022", null ],
     [ "getCollisionSampling", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1", null ],
     [ "getCurvAbsAtBeam", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#ac3bb3f49426797b039a0c7ab664c6fb5", null ],
     [ "getNumberOfCollisionSegment", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#a2f9c68dab8ffa01b8d4d4f2393f8603e", null ],

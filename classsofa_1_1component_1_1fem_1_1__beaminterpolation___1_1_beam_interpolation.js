@@ -97,13 +97,11 @@ var classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolatio
     [ "d_smallRadius", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a7299a1f087d4b04ae7e4d1b007ba29ca", null ],
     [ "d_straight", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a3e70c1b01e667975b8568f804073f343", null ],
     [ "d_vecID", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a47433958250928179cc9edbbe2beac0f", null ],
-    [ "m_brokenInTwo", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a7b124397af23155de44483fdefd60f03", null ],
     [ "m_constantSection", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a82d5fec3282ae49075b9ad7393a0fedd", null ],
     [ "m_defaultPoissonRatio", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a1f745a3f590e7ef795bb9eef88a6ee24", null ],
     [ "m_defaultYoungModulus", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a800d32d7e4cd261206126144c013b988", null ],
     [ "m_isControlled", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a96522858cf8e265feb111b1c6999543c", null ],
     [ "m_mstate", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ac074561fb74cc5e9283867841af8d010", null ],
-    [ "m_numBeamsNotUnderControl", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a8c946e7e087f49364fd7f28bb5980a52", null ],
     [ "m_StateNodes", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#adf66d8eadecd4d086b63929dce719999", null ],
     [ "m_topology", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a861c2f7fc6a0a3f8e4599d835889817b", null ],
     [ "m_topologyEdges", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#aea622cf27a2af6d3a736bd1f5c8c25f6", null ]

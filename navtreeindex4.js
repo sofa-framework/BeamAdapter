@@ -1,8 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"init_beam_adapter_8cpp.html#a44ed889b5f8bb76b6bd8ac4f4b50f34c":[2,0,1,1,13],
-"init_beam_adapter_8cpp.html#a46fad1aeab8d4b22de640eb81251b2f9":[2,0,1,1,12],
-"init_beam_adapter_8cpp.html#a89120c5d3a2d8abeb8a06bd97244b1bb":[2,0,1,1,11],
 "init_beam_adapter_8cpp.html#a925f86586ba8483514c39b8195865172":[2,0,1,1,9],
 "init_beam_adapter_8cpp.html#ab683be1172f7e066d5afa4dc629dfca8":[2,0,1,1,15],
 "init_beam_adapter_8cpp.html#ae97f7737e707fc56a505aad155cad50f":[2,0,1,1,10],

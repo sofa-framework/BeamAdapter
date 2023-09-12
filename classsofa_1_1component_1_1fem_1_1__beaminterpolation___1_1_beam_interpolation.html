@@ -190,9 +190,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a8cfa8bc5069d81b5711987638b82f64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3101c3c3c681477d34ff653774166bc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0">computeCrossSectionInertiaMatrix</a> ()</td></tr>
 <tr class="separator:a3101c3c3c681477d34ff653774166bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memItemLeft" align="right" valign="top"><a id="acbc2f34cae83fa625a6cc3c57b1d4ace"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeamsNotUnderControl</b> ()</td></tr>
-<tr class="separator:acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e52e32d5ad4e3895de3b7017a979277"><td class="memItemLeft" align="right" valign="top"><a id="a4e52e32d5ad4e3895de3b7017a979277"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeams</b> ()</td></tr>
 <tr class="separator:a4e52e32d5ad4e3895de3b7017a979277"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -318,6 +315,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setControlled</b> (bo
 <tr class="memitem:af73022443394ed8a7955beb4d350af8b"><td class="memItemLeft" align="right" valign="top"><a id="af73022443394ed8a7955beb4d350af8b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearCollisionOnBeam</b> ()</td></tr>
 <tr class="separator:af73022443394ed8a7955beb4d350af8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memItemLeft" align="right" valign="top"><a id="acbc2f34cae83fa625a6cc3c57b1d4ace"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeamsNotUnderControl</b> ()</td></tr>
+<tr class="separator:acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -437,12 +437,6 @@ MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a96522858cf8e265feb111b1c6999543c">m_isControlled</a> {false}</td></tr>
 <tr class="memdesc:a96522858cf8e265feb111b1c6999543c"><td class="mdescLeft">&#160;</td><td class="mdescRight">this-&gt;brokenInTwo = if true, the wire is in two separate parts <br /></td></tr>
 <tr class="separator:a96522858cf8e265feb111b1c6999543c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b124397af23155de44483fdefd60f03"><td class="memItemLeft" align="right" valign="top"><a id="a7b124397af23155de44483fdefd60f03"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_brokenInTwo</b> {false}</td></tr>
-<tr class="separator:a7b124397af23155de44483fdefd60f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c946e7e087f49364fd7f28bb5980a52"><td class="memItemLeft" align="right" valign="top"><a id="a8c946e7e087f49364fd7f28bb5980a52"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_numBeamsNotUnderControl</b> {0}</td></tr>
-<tr class="separator:a8c946e7e087f49364fd7f28bb5980a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
@@ -866,8 +860,6 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 <p>we find the length of the beam that is "out"</p>
 <p>x_i = abs_curv from the begining of the instrument</p>
 <p>we compute the x value of each node :the topology (stored in Edge_list) is supposed to be a regular seq of segment</p>
-
-<p>Reimplemented in <a class="el" href="classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html#a0ca0812741e5989c2c71349c130ba022">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -1686,7 +1678,7 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1fem.html">fem</a></li><li class="navelem"><b>_beaminterpolation_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation</a></li>
-    <li class="footer">Generated on Thu Sep 7 2023 07:29:11 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Sep 12 2023 06:46:37 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
