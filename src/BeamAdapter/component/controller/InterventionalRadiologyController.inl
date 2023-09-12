@@ -785,9 +785,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     unsigned int previousNumControlledNodes = m_numControlledNodes;
     unsigned int seg_remove = 0;
 
-    if (m_dropCall)
-        processDrop(previousNumControlledNodes, seg_remove);
-
     // ## STEP 1: Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
     helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;

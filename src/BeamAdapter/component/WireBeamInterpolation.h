@@ -137,12 +137,11 @@ public:
 
     virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
     void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
-    void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0) override;
 
     void getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output);
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 
-    bool breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled );
+    
 
     void setPathToRestShape(const std::string &o){m_restShape.setPath(o);}
 
@@ -181,6 +180,17 @@ public:
 
     template<class T>
     static typename T::SPtr  create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg) ;
+
+    /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
+    /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+    [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
+    bool breaksInTwo(const Real& x_min_out, Real& x_break, int& numBeamsNotUnderControlled) {
+        SOFA_UNUSED(x_min_out);
+        SOFA_UNUSED(x_break);
+        SOFA_UNUSED(numBeamsNotUnderControlled);
+        msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+        return 0.0;
+    }
 };
 
 

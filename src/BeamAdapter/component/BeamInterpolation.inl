@@ -135,9 +135,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , m_topology(nullptr)
   , m_mstate(nullptr)
 {
-    m_brokenInTwo=false;
     m_isControlled=false;
-    m_numBeamsNotUnderControl = 0;
     m_StateNodes->setName("bezierNodes");
     addSlave(m_StateNodes);
 }
@@ -368,8 +366,7 @@ void BeamInterpolation<DataTypes>::reset()
     if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
-    bwdInit(); 
-    m_numBeamsNotUnderControl=0;
+    bwdInit();
 }
 
 template<class DataTypes>
@@ -426,22 +423,11 @@ void BeamInterpolation<DataTypes>::clear()
     auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
     auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
 
-    if(m_brokenInTwo)
-    {
-        edgeList.resize(m_numBeamsNotUnderControl);
-        lengthList.resize(m_numBeamsNotUnderControl);
-        DOF0TransformNode0.resize(m_numBeamsNotUnderControl);
-        DOF1TransformNode1.resize(m_numBeamsNotUnderControl);
-        curvAbsList.resize(m_numBeamsNotUnderControl);
-    }
-    else
-    {
-        edgeList.clear();
-        lengthList.clear();
-        DOF0TransformNode0.clear();
-        DOF1TransformNode1.clear();
-        curvAbsList.clear();
-    }
+    edgeList.clear();
+    lengthList.clear();
+    DOF0TransformNode0.clear();
+    DOF1TransformNode1.clear();
+    curvAbsList.clear();
 }
 
 

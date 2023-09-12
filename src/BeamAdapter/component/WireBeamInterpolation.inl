@@ -62,7 +62,7 @@ void WireBeamInterpolation<DataTypes>::init()
     if( m_restShape.get() == nullptr )
     {
         msg_error() << "Missing WireRestShape. The component is thus de-activated" ;
-        this->d_componentState = sofa::core::objectmodel::ComponentState::Invalid ;
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
 
@@ -70,6 +70,8 @@ void WireBeamInterpolation<DataTypes>::init()
     type::vector< int> nbP_density;
 
     m_restShape.get()->getSamplingParameters(xP_noticeable, nbP_density);
+
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
@@ -152,50 +154,6 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 }
 
 
-
-template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output,
-                                                        Real& baryCoord_output, unsigned int start)
-{
-    if(this->m_brokenInTwo )
-    {
-        Real x_abs_broken = this->m_restShape.get()->getReleaseCurvAbs();
-
-        ////////// case 1.a : broken part !!
-        if (x_input > x_abs_broken)
-        {
-
-            /// x_i = curv_abs from the begining of the broken part
-            Real x_i = x_input-x_abs_broken;
-            Real x=0.0;
-
-            for (unsigned int e=0; e<this->m_numBeamsNotUnderControl; e++)
-            {
-                x += this->getLength(e);
-                if(x > x_i)
-                {
-                    edgeInList_output = e;
-                    Real x0 = x - this->getLength(e);
-                    baryCoord_output =(x_i-x0) / this->getLength(e);
-                    return;
-                }
-            }
-
-            edgeInList_output = this->m_numBeamsNotUnderControl-1;
-            baryCoord_output = 1.0;
-            return;
-
-        }
-        ////////// case 1.b : controlled part !!
-        else
-        {
-            start = this->m_numBeamsNotUnderControl;
-        }
-    }
-
-    Inherited::getBeamAtCurvAbs(x_input, edgeInList_output, baryCoord_output, start);
-}
-
 template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output)
 {
@@ -274,80 +232,6 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
 }
 
 
-template<class DataTypes>
-bool WireBeamInterpolation<DataTypes>::breaksInTwo(const Real &x_min_out,  Real &x_break, int &numBeamsNotUnderControlled )
-{
-    const Real eps = 0.0000000001;
-
-    if (this->m_brokenInTwo)
-    {
-        msg_error() << "Already broken" ;
-        return false;
-    }
-
-    if (!this->isControlled() || this->m_restShape == nullptr || x_min_out <= eps)
-    {
-        msg_error() << "Problem with function breaksInTwo ";
-        return false;
-    }
-
-    // if the release point is not "out" (x_min_out> x_break), then the break is not possible
-    x_break = m_restShape.get()->getReleaseCurvAbs();
-    if (x_min_out > x_break)
-        return false;
-
-    // put the info of the "released" part of the beam in the beginning of the beams;
-    this->m_numBeamsNotUnderControl=0;
-    unsigned int duplicatePoint=0;
-
-    // browse the curvilinear abscissa to find the point that needs to be duplicate
-    // put the info of the second part of the wire at the begining
-    unsigned int i=0;
-
-    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
-    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
-    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
-    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
-    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
-
-    const unsigned int curvAbsListSize = curvAbsList.size();
-
-    for (unsigned int e = 1; e < curvAbsListSize; e++)
-    {
-        if (fabs(curvAbsList[e].x() - x_break) < eps)
-        {
-            duplicatePoint = e;
-            this->m_numBeamsNotUnderControl = curvAbsListSize - e;
-        }
-
-        if (curvAbsList[e].x() > (x_break - eps))
-        {
-            edgeList[i] = edgeList[e];
-            lengthList[i] = lengthList[e];
-            curvAbsList[i] = curvAbsList[e];
-
-            // When the instrument are rotated we apply a transformation between DOF and beam node
-            // (should always be the case and dofsAndBeamsAligned should be false)
-            if (!this->d_dofsAndBeamsAligned.getValue())
-            {
-                DOF0TransformNode0[i] = DOF0TransformNode0[e];
-                DOF1TransformNode1[i] = DOF1TransformNode1[e];
-            }
-
-            i++;
-        }
-    }
-
-    if (duplicatePoint == 0)
-        msg_error() << " Problem no point were found at the x_break position ! getReleaseCurvAbs() should provide a <<notable>> point" ;
-
-    m_restShape.get()->releaseWirePart();
-    numBeamsNotUnderControlled = this->m_numBeamsNotUnderControl;
-
-    this->m_brokenInTwo = true;
-
-    return true;
-}
 
 template<class DataTypes>
 template<class T>
@@ -386,7 +270,6 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     if (arg) obj->parse(arg);
     return obj;
 }
-
 
 } // namespace _wirebeaminterpolation_
 

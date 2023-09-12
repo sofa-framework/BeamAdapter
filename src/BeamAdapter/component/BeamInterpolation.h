@@ -139,7 +139,6 @@ public:
     bool verifyTopology();
     void computeCrossSectionInertiaMatrix();
 
-    unsigned int getNumBeamsNotUnderControl(){return this->m_numBeamsNotUnderControl;}
     unsigned int getNumBeams(){return this->d_edgeList.getValue().size();}
 
     void getAbsCurvXFromBeam(int beam, Real& x_curv);
@@ -277,6 +276,13 @@ public:
     void addCollisionOnBeam(unsigned int b) ;
     void clearCollisionOnBeam() ;
 
+    /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
+    [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
+    unsigned int getNumBeamsNotUnderControl() {
+        msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+        return 0;
+    }
+
 protected :
     /// DATA INPUT (that could change in real-time)
     using StateDataTypes = sofa::defaulttype::StdVectorTypes< sofa::type::Vec<DataTypes::spatial_dimensions, Real>, sofa::type::Vec<DataTypes::spatial_dimensions, Real>, Real >;
@@ -324,8 +330,6 @@ protected :
 
     /// this->brokenInTwo = if true, the wire is in two separate parts
     bool  m_isControlled            {false} ;
-    bool  m_brokenInTwo              {false} ;
-    unsigned int m_numBeamsNotUnderControl {0} ;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
