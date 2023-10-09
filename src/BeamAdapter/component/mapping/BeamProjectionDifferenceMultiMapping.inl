@@ -1,6 +1,6 @@
 /******************************************************************************
-*                 SOFA, Simulation Open-Framework Architecture                *
-*                    (c) 2006 INRIA, USTL, UJF, CNRS, MGH                     *
+*                              BeamAdapter plugin                             *
+*                  (c) 2006 Inria, University of Lille, CNRS                  *
 *                                                                             *
 * This program is free software; you can redistribute it and/or modify it     *
 * under the terms of the GNU Lesser General Public License as published by    *
@@ -15,11 +15,15 @@
 * You should have received a copy of the GNU Lesser General Public License    *
 * along with this program. If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************
-*                         ComplianceRobotics plugin                           *
-* Authors: Eulalie Coevoet                                                    *
+* Authors: see Authors.md                                                     *
 *                                                                             *
-* Contact information: contact@compliance-robotics.com                        *
+* Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
+//
+// Author: Eulalie Coevoet
+//
+// Copyright: See COPYING file that comes with this distribution
+
 #pragma once
 
 #include <BeamAdapter/component/mapping/BeamProjectionDifferenceMultiMapping.h>
