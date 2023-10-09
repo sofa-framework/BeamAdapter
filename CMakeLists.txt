@@ -55,6 +55,8 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.inl
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.inl
+    ${BEAMADAPTER_SRC}/component/mapping/BeamProjectionDifferenceMultiMapping.h
+    ${BEAMADAPTER_SRC}/component/mapping/BeamProjectionDifferenceMultiMapping.inl
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.inl
 
@@ -85,6 +87,7 @@ set(SOURCE_FILES
 
     ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.cpp
+    ${BEAMADAPTER_SRC}/component/mapping/BeamProjectionDifferenceMultiMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.cpp
     )
 
