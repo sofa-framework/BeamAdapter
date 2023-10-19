@@ -25,9 +25,12 @@
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa::beamadapter
 {
+
+using sofa::core::loader::MeshLoader;
 
 /**
  * \class WireRestShape
@@ -60,8 +63,10 @@ public:
 
     [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
      
+protected:
+    void initFromLoader();
 
-   
+public:
     /// User Data about the Young modulus
     Data<Real> d_poissonRatio;
     Data<Real> d_youngModulus;
@@ -71,11 +76,20 @@ public:
     Data<Real> d_innerRadius;
     Data<Real> d_massDensity;
 
+    Data<Real> d_length;
+    Data<int> d_density;
+
     Data< int > d_nbEdgesVisu;
     Data< int > d_nbEdgesCollis;
 
+    /// Link to be set to the topology container in the component graph.
+    SingleLink<WireSectionMaterial<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;
+
 private:
     BeamSection beamSection;
+
+    /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
+    MeshLoader* loader{ nullptr };
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRESECTIONMATERIAL_CPP)
