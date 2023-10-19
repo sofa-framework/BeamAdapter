@@ -36,7 +36,7 @@
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/objectmodel/BaseObject.h>
-#include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
+#include <sofa/component/topology/container/dynamic/EdgeSetTopologyContainer.h>
 #include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa::component::engine
@@ -46,7 +46,6 @@ namespace _wirerestshape_
 {
 
 using sofa::core::topology::TopologyContainer;
-using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier;
 using sofa::core::loader::MeshLoader;
 
 /**
@@ -88,12 +87,6 @@ public:
 
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////
 
-     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-     Real getReleaseCurvAbs() const {
-         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
-         return 0.0;
-     }
-
      /// This function is called by the force field to evaluate the rest position of each beam
      void getRestTransformOnX(Transform &global_H_local, const Real &x);
 
@@ -122,12 +115,20 @@ public:
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
 
+     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
+
+
+     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
+
+     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+     Real getReleaseCurvAbs() const {
+         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+         return 0.0;
+     }
+
      void releaseWirePart() {
          msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
      }
-
-     void rotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
-
 
 public:
      /// Analitical creation of wire shape...
@@ -173,8 +174,6 @@ private:
      SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
      /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
      TopologyContainer* _topology{ nullptr }; 
-     /// Pointer to the topology modifier. Will be set at init by searching one in @sa _topology context.
-     EdgeSetTopologyModifier* edgeMod{ nullptr };
 
      /// Link to be set to the topology container in the component graph.
      SingleLink<WireRestShape<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;     

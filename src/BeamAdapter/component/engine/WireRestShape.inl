@@ -34,7 +34,6 @@
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/component/topology/container/dynamic/QuadSetTopologyModifier.h>
 
 #include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/visual/VisualParams.h>
@@ -187,16 +186,7 @@ void WireRestShape<DataTypes>::init()
             return;
         }
     }
-
-    // Get pointer to the topology Modifier (for topological changes)
-    _topology->getContext()->get(edgeMod);
-
-    if (edgeMod == nullptr)
-    {
-        msg_warning() << "No EdgeSetTopologyModifier found in the same node as the topology container: " << _topology->getName() << ". This wire won't support topological changes.";
-    }
-
-    
+  
 
     ////////////////////////////////////////////////////////
     ////////// keyPoint list and Density Assignement ///////
@@ -720,10 +710,7 @@ void WireRestShape<DataTypes>::getRestPosNonProcedural(Real& abs, Coord &p)
 template <class DataTypes>
 typename WireRestShape<DataTypes>::Real WireRestShape<DataTypes>::getLength()
 {
-    if(d_brokenIn2.getValue())
-        return d_straightLength.getValue();
-    else
-        return d_length.getValue();
+    return d_length.getValue();
 }
 
 template <class DataTypes>
