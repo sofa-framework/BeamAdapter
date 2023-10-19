@@ -121,24 +121,16 @@ public:
          return 0.0;
      }
 
+     void releaseWirePart() {
+         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
+     }
+
 protected:
     /// Internal method to init Lengths vector @sa d_keyPoints using the length of each materials @sa l_sectionMaterials.
     void initLengths();
     /// Internal method to init Edge Topology @sa _topology using the list of materials @sa l_sectionMaterials. Returns false if init can't be performed.
     bool initTopology();
 
-
-     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
-
-     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
-     Real getReleaseCurvAbs() const {
-         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
-         return 0.0;
-     }
-
-     void releaseWirePart() {
-         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
-     }
 
 public:
      Data<type::vector<int> > d_density;
