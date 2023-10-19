@@ -19,9 +19,9 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#define SOFA_PLUGIN_BEAMADAPTER_WIRESECTIONMATERIAL_CPP
+#define SOFA_PLUGIN_BEAMADAPTER_RODSPIRESECTION_CPP
 
-#include <BeamAdapter/component/model/WireSectionMaterial.inl>
+#include <BeamAdapter/component/model/RodSpireSection.inl>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
@@ -31,9 +31,9 @@ namespace sofa::beamadapter
 
 using namespace sofa::defaulttype;
 
-const int WireSectionMaterialClass = core::RegisterObject("Wire Section Material.")
-.add< WireSectionMaterial<Rigid3Types> >(true);
+const int RodSpireSectionClass = core::RegisterObject("Class defining a rod spire section, defining material and geometry parameters.")
+    .add< RodSpireSection<Rigid3Types> >(true);
 
-template class SOFA_BEAMADAPTER_API WireSectionMaterial<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API RodSpireSection<Rigid3Types>;
 
 }// namespace sofa::beamadapter

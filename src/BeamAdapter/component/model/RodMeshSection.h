@@ -22,9 +22,7 @@
 #pragma once
 
 #include <BeamAdapter/config.h>
-#include <BeamAdapter/utils/BeamSection.h>
-#include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 #include <sofa/core/loader/MeshLoader.h>
 
 namespace sofa::beamadapter
@@ -40,60 +38,37 @@ using sofa::core::loader::MeshLoader;
  *  This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
  */
 template <class DataTypes>
-class WireSectionMaterial : public core::objectmodel::BaseObject
+class RodMeshSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
 {
 public:
-    SOFA_CLASS(WireSectionMaterial, core::objectmodel::BaseObject);
+    SOFA_CLASS(SOFA_TEMPLATE(RodMeshSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
+    using Vec3 = sofa::type::Vec<3, Real>;
 
     /// Default Constructor
-    WireSectionMaterial();
-
-    void init() override;
-
-    /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-    void getYoungModulusAtX(Real& youngModulus, Real& cPoisson) const;
-
-    /// This function gives the mass density and the BeamSection data depending on the beam position
-    void getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
-
-    [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
-
-    [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
-     
+    RodMeshSection();
+      
 protected:
+    void initSection() override;
     void initFromLoader();
+    bool checkLoaderTopology();
 
 public:
-    /// User Data about the Young modulus
-    Data<Real> d_poissonRatio;
-    Data<Real> d_youngModulus;
-
-    /// Radius
-    Data<Real> d_radius;
-    Data<Real> d_innerRadius;
-    Data<Real> d_massDensity;
-
-    Data<Real> d_length;
-    Data<int> d_density;
-
-    Data< int > d_nbEdgesVisu;
-    Data< int > d_nbEdgesCollis;
-
     /// Link to be set to the topology container in the component graph.
-    SingleLink<WireSectionMaterial<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;
+    SingleLink<RodMeshSection<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;
 
 private:
-    BeamSection beamSection;
-
     /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
     MeshLoader* loader{ nullptr };
+
+    /// Data required for the File loading
+    type::vector<Vec3> m_localRestPositions;
 };
 
-#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRESECTIONMATERIAL_CPP)
-extern template class SOFA_BEAMADAPTER_API WireSectionMaterial<sofa::defaulttype::Rigid3Types>;
+#if !defined(SOFA_PLUGIN_BEAMADAPTER_RODMESHSECTION_CPP)
+extern template class SOFA_BEAMADAPTER_API RodMeshSection<sofa::defaulttype::Rigid3Types>;
 #endif
 
 } // namespace sofa::beamadapter

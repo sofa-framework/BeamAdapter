@@ -28,7 +28,9 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
-#include <BeamAdapter/component/model/WireSectionMaterial.inl>
+#include <BeamAdapter/component/model/RodMeshSection.inl>
+#include <BeamAdapter/component/model/RodSpireSection.inl>
+#include <BeamAdapter/component/model/RodStraightSection.inl>
 
 #include <sofa/core/behavior/Mass.inl>
 #include <sofa/core/Mapping.inl>
@@ -89,9 +91,9 @@ namespace sofa::component::mapping
 
 namespace sofa::beamadapter
 {
-    template class SOFA_BEAMADAPTER_API WireSectionMaterial<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<CudaRigid3fTypes>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API WireSectionMaterial<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::beamadapter
 
@@ -148,12 +150,28 @@ int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions 
 #endif
     ;
 
-int CudaWireSectionMaterialClass = core::RegisterObject("Wire Section Material using CUDA.")
-    .add< sofa::beamadapter::WireSectionMaterial<CudaRigid3fTypes> >()
+const int CudaRodMeshSectionClass = core::RegisterObject("Class defining a Rod Section using a MeshLoader and material parameters using CUDA.")
+    .add< sofa::beamadapter::RodMeshSection<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::beamadapter::WireSectionMaterial<CudaRigid3dTypes> >()
+    .add< sofa::beamadapter::RodMeshSection<CudaRigid3dTypes> >()
 #endif
     ;
+
+const int CudaRodSpireSectionClass = core::RegisterObject("Class defining a rod spire section, defining material and geometry parameters using CUDA.")
+    .add< sofa::beamadapter::RodSpireSection<CudaRigid3fTypes> >()
+#ifdef SOFA_GPU_CUDA_DOUBLE
+    .add< sofa::beamadapter::RodSpireSection<CudaRigid3dTypes> >()
+#endif
+;
+
+const int CudaRodStraightSectionClass = core::RegisterObject("Class defining a rod straight section Material, defining material and geometry parameters using CUDA.")
+    .add< sofa::beamadapter::RodStraightSection<CudaRigid3fTypes> >()
+#ifdef SOFA_GPU_CUDA_DOUBLE
+    .add< sofa::beamadapter::RodStraightSection<CudaRigid3dTypes> >()
+#endif
+;
+
+
 
 
 } // namespace sofa::gpu::cuda

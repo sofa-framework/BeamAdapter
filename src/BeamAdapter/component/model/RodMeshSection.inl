@@ -21,23 +21,16 @@
 ******************************************************************************/
 #pragma once
 
-#include <BeamAdapter/component/model/WireSectionMaterial.h>
+#include <BeamAdapter/component/model/RodMeshSection.h>
+#include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
 namespace sofa::beamadapter
 {
 
 template <class DataTypes>
-WireSectionMaterial<DataTypes>::WireSectionMaterial()
-    : d_poissonRatio(initData(&d_poissonRatio, (Real)0.49, "poissonRatio", "Poisson Ratio"))
-    , d_youngModulus(initData(&d_youngModulus, (Real)5000, "youngModulus", "Young Modulus"))
-    , d_radius(initData(&d_radius, (Real)1.0, "radius", "radius"))
-    , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "inner radius if it applies"))
-    , d_massDensity(initData(&d_massDensity, (Real)1.0, "massDensity", "Density of the mass (usually in kg/m^3)"))
-    , d_length(initData(&d_length, (Real)1.0, "length", "total length of the wire instrument"))
-    , d_density(initData(&d_density, 10, "densityOfBeams", "density of beams between key points"))
-    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, 10, "nbEdgesVisu", "number of Edges for the visual model"))
-    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, 20, "nbEdgesCollis", "number of Edges for the collision model"))
+RodMeshSection<DataTypes>::RodMeshSection()
+    : BaseRodSectionMaterial<DataTypes>()
     , l_loader(initLink("loader", "link to the MeshLoader"))
 {
 
@@ -45,89 +38,19 @@ WireSectionMaterial<DataTypes>::WireSectionMaterial()
 
 
 template <class DataTypes>
-void WireSectionMaterial<DataTypes>::init()
+void RodMeshSection<DataTypes>::initSection()
 {
-    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
-
-    // Prepare beam sections
-    double r = this->d_radius.getValue();
-    double rInner = this->d_innerRadius.getValue();
-    this->beamSection._r = r;
-    this->beamSection._rInner = rInner;
-    this->beamSection._Iz = M_PI * (r * r * r * r - rInner * rInner * rInner * rInner) / 4.0;
-    this->beamSection._Iy = this->beamSection._Iz;
-    this->beamSection._J = this->beamSection._Iz + this->beamSection._Iy;
-    this->beamSection._A = M_PI * (r * r - rInner * rInner);
-    this->beamSection._Asy = 0.0;
-    this->beamSection._Asz = 0.0;
-
-    if (!l_loader.empty())
-    {
-        // Get meshLoader, check first if loader has been set using link. Otherwise will search in current context.
-        loader = l_loader.get();
-        initFromLoader();
-    }
-    else
-    {
-        if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
-        {
-            msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
-            d_nbEdgesVisu.setValue(10);
-        }
-
-
-        if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
-        {
-            msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-            d_nbEdgesCollis.setValue(10);
-        }
-    }
-
-    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+    
 }
 
 
 template <class DataTypes>
-void WireSectionMaterial<DataTypes>::getYoungModulusAtX(Real& youngModulus, Real& cPoisson) const
+void RodMeshSection<DataTypes>::initFromLoader()
 {
-    youngModulus = this->d_youngModulus.getValue();
-    cPoisson = this->d_poissonRatio.getValue();
-}
-
-
-template <class DataTypes>
-void WireSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const
-{
-    if (d_massDensity.isSet())
-        _rho = d_massDensity.getValue();
-
-    if (d_radius.isSet())
-    {
-        _A = beamSection._A;
-        _Iy = beamSection._Iy;
-        _Iz = beamSection._Iz;
-        _Asy = beamSection._Asy;
-        _Asz = beamSection._Asz;
-        _J = beamSection._J;
-    }
-}
-
-
-template <class DataTypes>
-void WireSectionMaterial<DataTypes>::initFromLoader()
-{
-    if (!checkTopology())
+    if (!checkLoaderTopology())
     {
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
-    }
-
-    // this is... dirty but d_straightLength itself is not relevant for loader-created wire
-    // but the code uses it actively and expects it to not be zero.
-    if (d_straightLength.getValue() <= 0.0)
-    {
-        msg_warning() << "straightLength cannot be 0 (or negative...). Setting a minimum value.";
-        d_straightLength.setValue(0.0001);
     }
 
     type::vector<Vec3> vertices;
@@ -206,13 +129,52 @@ void WireSectionMaterial<DataTypes>::initFromLoader()
 
     m_localRestPositions = vertices;
 
-    for (unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
-        m_localRestPositions[i] *= d_nonProceduralScale.getValue();
+    //for (unsigned int i = 0; i < m_localRestPositions.size() - 1; i++)
+    //    m_localRestPositions[i] *= d_nonProceduralScale.getValue();
 
-    initRestConfig();
+    //TODO on the WireRestShape
+    //initRestConfig();
     // TODO epernod 2022-08-05: Init from loader seems quite buggy, need to check if this is still needed and working
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
+
+
+template <class DataTypes>
+bool RodMeshSection<DataTypes>::checkLoaderTopology()
+{
+    if (!loader->d_edges.getValue().size())
+    {
+        msg_error() << "There is no edges in the topology loaded by " << loader->getName();
+        return false;
+    }
+
+    if (loader->d_triangles.getValue().size())
+    {
+        msg_error() << "There are triangles in the topology loaded by " << loader->getName();
+        return false;
+    }
+
+    if (loader->d_quads.getValue().size())
+    {
+        msg_error() << "There are quads in the topology loaded by " << loader->getName();
+        return false;
+    }
+
+    if (loader->d_polygons.getValue().size())
+    {
+        msg_error() << "There are polygons in the topology loaded by " << loader->getName();
+        return false;
+    }
+
+    //TODO(dmarchal 2017-05-17) when writing a TODO please specify:
+    // who will do that
+    // when it will be done
+    /// \todo check if the topology is like a wire
+
+
+    return true;
+}
+
 
 
 } // namespace sofa::beamadapter
