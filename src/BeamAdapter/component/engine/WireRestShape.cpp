@@ -52,7 +52,7 @@ using namespace sofa::defaulttype;
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int WireRestShapeClass = core::RegisterObject("Describe the shape functions on multiple segments using curvilinear abscissa")
+const int WireRestShapeClass = core::RegisterObject("Describe the shape functions on multiple segments using curvilinear abscissa")
 .add< WireRestShape<Rigid3Types> >(true)
 
 ;

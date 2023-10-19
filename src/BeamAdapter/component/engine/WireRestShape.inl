@@ -185,15 +185,15 @@ void WireRestShape<DataTypes>::init()
         return;
     }
 
-    else
-    {
-        if (!fillTopology())
-        {
-            msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
-            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-            return;
-        }
-    }
+    //else
+    //{
+    //    if (!fillTopology())
+    //    {
+    //        msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
+    //        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+    //        return;
+    //    }
+    //}
   
     initTopology();
 
@@ -474,45 +474,45 @@ bool WireRestShape<DataTypes>::checkTopology()
 }
 
 
-template <class DataTypes>
-bool WireRestShape<DataTypes>::fillTopology()
-{
-    if (!_topology)
-    {
-        msg_error() << "Topology is null";
-        return false;
-    }
-
-    const auto length = this->d_length.getValue();
-    if (length <= Real(0.0))
-    {
-        msg_error() << "Length is 0 (or negative), check if d_length has been given or computed.";
-        return false;
-    }
-
-    int nbrEdges = d_numEdges.getValue();
-    if (nbrEdges <= 0)
-    {
-        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
-        nbrEdges = 10;
-    }
-
-    /// fill topology :
-    _topology->clear();
-    _topology->cleanup();
-
-    Real dx = this->d_length.getValue() / nbrEdges;
-
-    /// add points
-    for (int i = 0; i < d_numEdges.getValue() + 1; i++)
-        _topology->addPoint(i * dx, 0, 0);
-
-    /// add segments
-    for (int i = 0; i < d_numEdges.getValue(); i++)
-        _topology->addEdge(i, i + 1);
-
-    return true;
-}
+//template <class DataTypes>
+//bool WireRestShape<DataTypes>::fillTopology()
+//{
+//    if (!_topology)
+//    {
+//        msg_error() << "Topology is null";
+//        return false;
+//    }
+//
+//    const auto length = this->d_length.getValue();
+//    if (length <= Real(0.0))
+//    {
+//        msg_error() << "Length is 0 (or negative), check if d_length has been given or computed.";
+//        return false;
+//    }
+//
+//    int nbrEdges = d_numEdges.getValue();
+//    if (nbrEdges <= 0)
+//    {
+//        msg_warning() << "Number of edges has been set to an invalid value: " << nbrEdges << ". Value should be a positive integer. Setting to default value: 10";
+//        nbrEdges = 10;
+//    }
+//
+//    /// fill topology :
+//    _topology->clear();
+//    _topology->cleanup();
+//
+//    Real dx = this->d_length.getValue() / nbrEdges;
+//
+//    /// add points
+//    for (int i = 0; i < d_numEdges.getValue() + 1; i++)
+//        _topology->addPoint(i * dx, 0, 0);
+//
+//    /// add segments
+//    for (int i = 0; i < d_numEdges.getValue(); i++)
+//        _topology->addEdge(i, i + 1);
+//
+//    return true;
+//}
 
 
 
@@ -655,12 +655,12 @@ void WireRestShape<DataTypes>::initRestConfig()
 
     msg_info() <<"Length of the loaded shape = "<< m_absOfGeometry << ", total length with straight length = " << newLength ;
 
-    if (!fillTopology())
-    {
-        msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
-        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-        return;
-    }
+    //if (!fillTopology())
+    //{
+    //    msg_error() << "Error while trying to fill the associated topology, setting the state to Invalid";
+    //    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+    //    return;
+    //}
 }
 
 

@@ -115,7 +115,7 @@ public:
      void initFromLoader();
      bool checkTopology();
 
-     [[nodiscard]] bool fillTopology();
+     //[[nodiscard]] bool fillTopology();
      Real getLength() ;
      void getCollisionSampling(Real &dx, const Real &x_curv) ;
      void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
@@ -163,17 +163,12 @@ private:
      type::vector<Vec3> 		m_localRestPositions;
      type::vector<Transform> 	m_localRestTransforms;
      type::vector<Real> 		m_curvAbs ;
-     double 							m_absOfGeometry {0};
+     double 					m_absOfGeometry {0};
      
      /// Link to be set to the topology container in the component graph.
      SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
      /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
      TopologyContainer* _topology{ nullptr }; 
-
-     /// Link to be set to the topology container in the component graph.
-     SingleLink<WireRestShape<DataTypes>, MeshLoader, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_loader;     
-     /// Pointer to the MeshLoader, should be set using @sa l_loader, otherwise will search for one in current Node.
-     MeshLoader* loader{ nullptr };
 };
 
 
