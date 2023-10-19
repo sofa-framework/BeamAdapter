@@ -38,24 +38,33 @@
 <!-- ------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  ------------------------------ -->
 
 	<Node name='topoLines_cath'>
-		<WireRestShape template='Rigid3d' printLog='0' name='catheterRestShape' length='1000.0'  straightLength='600' spireDiameter='4000.0' spireHeight='0.0'
-					    densityOfBeams='40 10' numEdges='200' numEdgesCollis='40 20'  youngModulus='10000' youngModulusExtremity='10000'/> <!-- silicone -->		
+        <RodStraightSection name="StraightSection" youngModulus="10000" nbEdgesCollis="40" nbEdgesVisu="220" length="600.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="10000" nbEdgesCollis="10" nbEdgesVisu="80" length="400.0" spireDiameter="4000.0" spireHeight="0.0"/>        
+        
+        <WireRestShape template="Rigid3d" name="catheterRestShape" wireMaterials="@StraightSection @SpireSection"/> <!-- silicone -->		
+    
 		<EdgeSetTopologyContainer name='meshLinesCath' />
 		<EdgeSetTopologyModifier   name='Modifier' />
 		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
 		<MechanicalObject template='Rigid3d' name='dofTopo1' />
 	</Node>
 	<Node name='topoLines_guide'>
-		<WireRestShape template='Rigid3d' printLog='0' name='GuideRestShape' length='1000.0'  straightLength='980.0' spireDiameter='25' spireHeight='0.0'
-						densityOfBeams='30 5' numEdges='200' numEdgesCollis='50 10'  youngModulus='10000' youngModulusExtremity='10000'/>
+        <RodStraightSection name="StraightSection" youngModulus="10000" nbEdgesCollis="50" nbEdgesVisu="196" length="980.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="10000" nbEdgesCollis="10" nbEdgesVisu="4" length="20.0" spireDiameter="25" spireHeight="0.0"/>        
+		
+        <WireRestShape template="Rigid3d" name="GuideRestShape" wireMaterials="@StraightSection @SpireSection"/>
+    
 		<EdgeSetTopologyContainer name='meshLinesGuide' />
 		<EdgeSetTopologyModifier   name='Modifier' />
 		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
 		<MechanicalObject template='Rigid3d' name='dofTopo2' />
 	</Node>
 	<Node name='topoLines_coils'>
-		<WireRestShape template='Rigid3d' printLog='0' name='CoilRestShape' length='600.0'  straightLength='540.0' spireDiameter='7' spireHeight='5.0'
-						densityOfBeams='40 20' numEdges='400' numEdgesCollis='30 30'  youngModulus='168000' youngModulusExtremity='168000'/>
+        <RodStraightSection name="StraightSection" youngModulus="168000" nbEdgesCollis="30" nbEdgesVisu="360" length="540.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="168000" nbEdgesCollis="30" nbEdgesVisu="40" length="60.0" spireDiameter="7" spireHeight="5.0"/>        
+		
+        <WireRestShape template="Rigid3d" name="CoilRestShape" wireMaterials="@StraightSection @SpireSection"/>
+        
 		<EdgeSetTopologyContainer name='meshLinesCoils' />
 		<EdgeSetTopologyModifier   name='Modifier' />
 		<EdgeSetGeometryAlgorithms name='GeomAlgo'   template='Rigid3d' />
