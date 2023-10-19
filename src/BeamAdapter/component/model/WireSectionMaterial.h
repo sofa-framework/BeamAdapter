@@ -52,6 +52,11 @@ public:
     /// This function gives the mass density and the BeamSection data depending on the beam position
     void getInterpolationParam(SReal& _rho, SReal& _A, SReal& _Iy, SReal& _Iz, SReal& _Asy, SReal& _Asz, SReal& _J);
 
+    [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
+
+    [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+     
+
    
     /// User Data about the Young modulus
     Data<SReal> d_poissonRatio;
@@ -61,6 +66,9 @@ public:
     Data<SReal> d_radius;
     Data<SReal> d_innerRadius;
     Data<SReal> d_massDensity;
+
+    Data< int > d_nbEdgesVisu;
+    Data< int > d_nbEdgesCollis;
 protected:
     BeamSection beamSection;
 };

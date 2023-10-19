@@ -40,6 +40,8 @@ WireSectionMaterial::WireSectionMaterial()
     , d_radius(initData(&d_radius, (SReal)1.0f, "radius", "radius"))
     , d_innerRadius(initData(&d_innerRadius, (SReal)0.0f, "innerRadius", "inner radius if it applies"))
     , d_massDensity(initData(&d_massDensity, (SReal)1.0, "massDensity", "Density of the mass (usually in kg/m^3)"))
+    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, 10, "nbEdgesVisu", "number of Edges for the visual model"))
+    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, 20, "nbEdgesCollis", "number of Edges for the collision model"))
 {
 
 }
@@ -58,6 +60,19 @@ void WireSectionMaterial::init()
     this->beamSection._A = M_PI * (r * r - rInner * rInner);
     this->beamSection._Asy = 0.0;
     this->beamSection._Asz = 0.0;
+
+    if (int nbrEdgesVisu = d_nbEdgesVisu.getValue() <= 0)
+    {
+        msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
+        d_nbEdgesVisu.setValue(10);
+    }
+
+
+    if (int nbEdgesCollis = d_nbEdgesCollis.getValue() <= 0)
+    {
+        msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
+        d_nbEdgesVisu.setValue(10);
+    }
 }
 
 
