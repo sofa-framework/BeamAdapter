@@ -47,12 +47,12 @@ public:
     void init();
 
     /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-    void getYoungModulusAtX(float& youngModulus, float& cPoisson);
-    void getYoungModulusAtX(double& youngModulus, double& cPoisson);
+    void getYoungModulusAtX(float& youngModulus, float& cPoisson) const;
+    void getYoungModulusAtX(double& youngModulus, double& cPoisson) const;
 
     /// This function gives the mass density and the BeamSection data depending on the beam position
-    void getInterpolationParam(float& _rho, float& _A, float& _Iy, float& _Iz, float& _Asy, float& _Asz, float& _J);
-    void getInterpolationParam(double& _rho, double& _A, double& _Iy, double& _Iz, double& _Asy, double& _Asz, double& _J);
+    void getInterpolationParam(float& _rho, float& _A, float& _Iy, float& _Iz, float& _Asy, float& _Asz, float& _J) const;
+    void getInterpolationParam(double& _rho, double& _A, double& _Iy, double& _Iz, double& _Asy, double& _Asz, double& _J) const;
 
     [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
 
@@ -71,7 +71,8 @@ public:
 
     Data< int > d_nbEdgesVisu;
     Data< int > d_nbEdgesCollis;
-protected:
+
+private:
     BeamSection beamSection;
 };
 

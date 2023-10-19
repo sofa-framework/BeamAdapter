@@ -77,7 +77,7 @@ void WireSectionMaterial::init()
 
 
 /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-void WireSectionMaterial::getYoungModulusAtX(float& youngModulus, float& cPoisson)
+void WireSectionMaterial::getYoungModulusAtX(float& youngModulus, float& cPoisson) const
 {
     youngModulus = float(this->d_youngModulus.getValue());
     cPoisson = float(this->d_poissonRatio.getValue());
@@ -85,7 +85,7 @@ void WireSectionMaterial::getYoungModulusAtX(float& youngModulus, float& cPoisso
 
 
 /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-void WireSectionMaterial::getYoungModulusAtX(double& youngModulus, double& cPoisson)
+void WireSectionMaterial::getYoungModulusAtX(double& youngModulus, double& cPoisson) const
 {
     youngModulus = double(this->d_youngModulus.getValue());
     cPoisson = double(this->d_poissonRatio.getValue());
@@ -93,7 +93,7 @@ void WireSectionMaterial::getYoungModulusAtX(double& youngModulus, double& cPois
 
 
 /// This function gives the mass density and the BeamSection data depending on the beam position
-void WireSectionMaterial::getInterpolationParam(float& _rho, float& _A, float& _Iy, float& _Iz, float& _Asy, float& _Asz, float& _J)
+void WireSectionMaterial::getInterpolationParam(float& _rho, float& _A, float& _Iy, float& _Iz, float& _Asy, float& _Asz, float& _J) const
 {
     if (d_massDensity.isSet())
         _rho = float(d_massDensity.getValue());
@@ -110,7 +110,7 @@ void WireSectionMaterial::getInterpolationParam(float& _rho, float& _A, float& _
 }
 
 
-void WireSectionMaterial::getInterpolationParam(double& _rho, double& _A, double& _Iy, double& _Iz, double& _Asy, double& _Asz, double& _J)
+void WireSectionMaterial::getInterpolationParam(double& _rho, double& _A, double& _Iy, double& _Iz, double& _Asy, double& _Asz, double& _J) const
 {
     if (d_massDensity.isSet())
         _rho = d_massDensity.getValue();
