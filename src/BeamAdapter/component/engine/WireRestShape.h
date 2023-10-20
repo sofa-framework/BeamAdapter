@@ -97,10 +97,10 @@ public:
      void getRestTransformOnX(Transform &global_H_local, const Real &x);
 
      /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson);
+     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const;
 
      /// This function gives the mass density and the BeamSection data depending on the beam position
-     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J);
+     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
 
      /**
       * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 
