@@ -2,6 +2,10 @@ var annotated_dup =
 [
     [ "sofa", "namespacesofa.html", [
       [ "beamadapter", null, [
+        [ "BaseRodSectionMaterial", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html", "classsofa_1_1beamadapter_1_1_base_rod_section_material" ],
+        [ "RodMeshSection", "classsofa_1_1beamadapter_1_1_rod_mesh_section.html", "classsofa_1_1beamadapter_1_1_rod_mesh_section" ],
+        [ "RodSpireSection", "classsofa_1_1beamadapter_1_1_rod_spire_section.html", "classsofa_1_1beamadapter_1_1_rod_spire_section" ],
+        [ "RodStraightSection", "classsofa_1_1beamadapter_1_1_rod_straight_section.html", "classsofa_1_1beamadapter_1_1_rod_straight_section" ],
         [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ]
       ] ],
       [ "component", null, [

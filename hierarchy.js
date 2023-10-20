@@ -11,6 +11,11 @@ var hierarchy =
       [ "MultiAdaptiveBeamContactMapper< TCollisionModel, DataTypes >", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", null ]
     ] ],
     [ "BaseObject", null, [
+      [ "BaseRodSectionMaterial< DataTypes >", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html", [
+        [ "RodMeshSection< DataTypes >", "classsofa_1_1beamadapter_1_1_rod_mesh_section.html", null ],
+        [ "RodSpireSection< DataTypes >", "classsofa_1_1beamadapter_1_1_rod_spire_section.html", null ],
+        [ "RodStraightSection< DataTypes >", "classsofa_1_1beamadapter_1_1_rod_straight_section.html", null ]
+      ] ],
       [ "WireRestShape< DataTypes >", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", [
         [ "SteerableCatheter< DataTypes >", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", null ]
       ] ]
