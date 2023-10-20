@@ -722,7 +722,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalPara
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
 {
-    unsigned int numBeams = l_interpolation->getNumBeams();
+    const unsigned int numBeams = l_interpolation->getNumBeams();
+
 
     auto dfdx = matrix->getForceDerivativeIn(this->mstate)
                        .withRespectToPositionsIn(this->mstate);
