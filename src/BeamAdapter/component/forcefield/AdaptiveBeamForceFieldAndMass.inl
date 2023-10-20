@@ -376,10 +376,11 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::buildMassMatrix(sofa::core::behav
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
         /// matrices in global frame
-        const Matrix6x6 M00 = bLM.m_A0Ref.multTranspose((bLM.m_M00 * bLM.m_A0Ref));
-        const Matrix6x6 M01 = bLM.m_A0Ref.multTranspose((bLM.m_M01 * bLM.m_A1Ref));
-        const Matrix6x6 M10 = bLM.m_A1Ref.multTranspose((bLM.m_M10 * bLM.m_A0Ref));
-        const Matrix6x6 M11 = bLM.m_A1Ref.multTranspose((bLM.m_M11 * bLM.m_A1Ref));
+        const Matrix6x6 M00 = bLM.m_A0Ref.multTranspose(bLM.m_M00 * bLM.m_A0Ref);
+        const Matrix6x6 M01 = bLM.m_A0Ref.multTranspose(bLM.m_M01 * bLM.m_A1Ref);
+        const Matrix6x6 M10 = bLM.m_A1Ref.multTranspose(bLM.m_M10 * bLM.m_A0Ref);
+        const Matrix6x6 M11 = bLM.m_A1Ref.multTranspose(bLM.m_M11 * bLM.m_A1Ref);
+
 
         matrices->add(node0Idx * 6, node0Idx * 6,  M00);
         matrices->add(node0Idx * 6, node1Idx * 6,  M01);
