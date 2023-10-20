@@ -38,7 +38,7 @@
 #include <sofa/simulation/TopologyChangeVisitor.h>
 #include <sofa/core/visual/VisualParams.h>
 
-#define EPSILON 0.0001
+#define EPSILON 0.0000000001
 #define VERIF 1
 
 namespace sofa::component::engine
