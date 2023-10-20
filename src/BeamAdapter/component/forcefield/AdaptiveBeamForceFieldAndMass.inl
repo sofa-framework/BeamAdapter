@@ -32,8 +32,9 @@
 //
 #pragma once
 
-#include "sofa/core/behavior/BaseLocalForceFieldMatrix.h"
-#include "sofa/core/behavior/BaseLocalMassMatrix.h"
+#include <sofa/core/behavior/BaseLocalForceFieldMatrix.h>
+#include <sofa/core/behavior/BaseLocalMassMatrix.h>
+
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 #include <sofa/core/behavior/MultiMatrixAccessor.h>
 #include <sofa/core/MechanicalParams.h>
