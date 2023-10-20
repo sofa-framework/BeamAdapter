@@ -736,10 +736,11 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::buildStiffnessMatrix(core::behavi
             continue;
 
         // matrices in global frame
-        Matrix6x6 K00 = beamLocalMatrix.m_A0Ref.multTranspose((beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref));
-        Matrix6x6 K01 = beamLocalMatrix.m_A0Ref.multTranspose((beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref));
-        Matrix6x6 K10 = beamLocalMatrix.m_A1Ref.multTranspose((beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref));
-        Matrix6x6 K11 = beamLocalMatrix.m_A1Ref.multTranspose((beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref));
+        Matrix6x6 K00 = beamLocalMatrix.m_A0Ref.multTranspose(beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref);
+        Matrix6x6 K01 = beamLocalMatrix.m_A0Ref.multTranspose(beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref);
+        Matrix6x6 K10 = beamLocalMatrix.m_A1Ref.multTranspose(beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref);
+        Matrix6x6 K11 = beamLocalMatrix.m_A1Ref.multTranspose(beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref);
+
 
         dfdx(node0Idx*6, node0Idx*6) += - K00;
         dfdx(node0Idx*6, node1Idx*6) += - K01;
