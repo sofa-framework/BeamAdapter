@@ -121,11 +121,13 @@ public:
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
      /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
      Real getReleaseCurvAbs() const {
          msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
          return 0.0;
      }
 
+     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
      void releaseWirePart() {
          msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
      }
