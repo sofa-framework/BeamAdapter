@@ -45,6 +45,9 @@ var hierarchy =
       [ "InterventionalRadiologyController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html", null ],
       [ "SutureController< DataTypes >", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html", null ]
     ] ],
+    [ "Multi2Mapping", null, [
+      [ "BeamProjectionDifferenceMultiMapping< TIn1, TIn2, TOut >", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping.html", null ]
+    ] ],
     [ "PairInteractionConstraint", null, [
       [ "ImplicitSurfaceAdaptiveConstraint< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", null ]
     ] ],
