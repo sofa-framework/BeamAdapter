@@ -159,9 +159,7 @@ void WireRestShape_test::testParameterInit()
     Real fullLength = wire->getLength();
     EXPECT_EQ(fullLength, 100.0);
 
-    Real straightLength = wire->getReleaseCurvAbs();
-    EXPECT_EQ(straightLength, 95.0);
-    
+    Real straightLength = 95.0;   
     vector<Real> keysPoints, keysPoints_ref = { 0, straightLength, fullLength };
     Real ratio = straightLength / fullLength;
     vector<int> nbP_density, nbP_density_ref = { int(floor(5.0 * ratio)), int(floor(20.0 * (1 - ratio))) };
@@ -243,7 +241,7 @@ void WireRestShape_test::testTransformMethods()
     EXPECT_NE(wire, nullptr);
 
     Real fullLength = wire->getLength();
-    Real straightLength = wire->getReleaseCurvAbs();
+    Real straightLength = 95.0;
     Real middHook = (fullLength + straightLength) / 2;
 
     Transform transfo_0, transfo_1, transfo_2, transfo_3;
