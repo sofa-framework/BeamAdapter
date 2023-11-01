@@ -28,7 +28,6 @@ var classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape =
     [ "releaseWirePart", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4d00cca8813dc2570df6b59138b0ad32", null ],
     [ "rotateFrameForAlignX", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4565d43751c2d3c6a2f036d3754b1016", null ],
     [ "SOFA_CLASS", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ae9f45e48c5400919507bfe0ea10def9e", null ],
-    [ "d_brokenIn2", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#af9776cc599414e157abef2a2cf7f39a8", null ],
     [ "d_density", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a102a1dec5f70249c0654664906816ab5", null ],
     [ "d_drawRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ae8f764f74de6d3d16fedc2a90eaf48b8", null ],
     [ "d_innerRadius1", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#aae37f3182b28fdd91f394c654ba21bd2", null ],
