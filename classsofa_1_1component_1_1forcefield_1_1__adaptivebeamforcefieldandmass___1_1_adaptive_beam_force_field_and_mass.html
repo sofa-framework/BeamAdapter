@@ -187,6 +187,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ad81f5968ab6d5c789c4883ac7c718530"><td class="memItemLeft" align="right" valign="top"><a id="ad81f5968ab6d5c789c4883ac7c718530"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addMBKToMatrix</b> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
 <tr class="separator:ad81f5968ab6d5c789c4883ac7c718530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4403d6c569b58f8f49d91b5a935f6256"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a4403d6c569b58f8f49d91b5a935f6256">buildMassMatrix</a> (sofa::core::behavior::MassMatrixAccumulator *matrices) override</td></tr>
+<tr class="separator:a4403d6c569b58f8f49d91b5a935f6256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4664359913203179d7ef20dc66d53b30"><td class="memItemLeft" align="right" valign="top"><a id="a4664359913203179d7ef20dc66d53b30"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildStiffnessMatrix</b> (core::behavior::StiffnessMatrix *matrix) override</td></tr>
+<tr class="separator:a4664359913203179d7ef20dc66d53b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a628fa2699fe929127fc9a19c87174499"><td class="memItemLeft" align="right" valign="top"><a id="a628fa2699fe929127fc9a19c87174499"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDampingMatrix</b> (core::behavior::DampingMatrix *matrices) override</td></tr>
+<tr class="separator:a628fa2699fe929127fc9a19c87174499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f1fa55b1f04b3fab16bc3b658d497db"><td class="memItemLeft" align="right" valign="top"><a id="a4f1fa55b1f04b3fab16bc3b658d497db"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>accFromF</b> (const MechanicalParams *mparams, DataVecDeriv &amp;, const DataVecDeriv &amp;) override</td></tr>
 <tr class="separator:a4f1fa55b1f04b3fab16bc3b658d497db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -510,6 +518,33 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 
 </div>
 </div>
+<a id="a4403d6c569b58f8f49d91b5a935f6256"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4403d6c569b58f8f49d91b5a935f6256">&#9670;&nbsp;</a></span>buildMassMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void buildMassMatrix </td>
+          <td>(</td>
+          <td class="paramtype">sofa::core::behavior::MassMatrixAccumulator *&#160;</td>
+          <td class="paramname"><em>matrices</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>matrices in global frame</p>
+
+</div>
+</div>
 <a id="a3e98b141d7aa180d1c1fa8a78c9849c8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e98b141d7aa180d1c1fa8a78c9849c8">&#9670;&nbsp;</a></span>computeMass()</h2>
 
@@ -614,7 +649,7 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html">_adaptivebeamforcefieldandmass_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Wed Nov 1 2023 06:39:48 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Nov 1 2023 07:06:01 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#af84237003e4b9e4fe10796e1f23b74a7":[3,0,1,1,7,0,0,63],
+"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#afb26f4d299cfbaa92b1b0dc5432699cf":[3,0,1,1,7,0,0,35],
+"classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#afdc79de49fb881155087180753055101":[3,0,1,1,7,0,0,11],
 "classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#aff577954700cdcb4d9c326cf84d30c82":[3,0,1,1,7,0,0,69],
 "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html":[3,0,1,1,7,1,0],
 "classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a02a6190a43e2a6e2bd633f9090698f08":[3,0,1,1,7,1,0,8],
