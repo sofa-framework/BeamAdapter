@@ -140,6 +140,10 @@ public:
     void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
     void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
+    void buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
+    void buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
+    void buildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
+
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
     {
