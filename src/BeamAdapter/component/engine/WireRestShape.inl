@@ -119,10 +119,8 @@ void WireRestShape<DataTypes>::initLengths()
 {
     auto keyPointList = sofa::helper::getWriteOnlyAccessor(d_keyPoints);
     auto densityList = sofa::helper::getWriteOnlyAccessor(d_density);
-
     keyPointList.resize(l_sectionMaterials.size() + 1);
     keyPointList[0] = Real(0.0);
-
     densityList.resize(l_sectionMaterials.size());
     
     for (unsigned int i = 0; i < l_sectionMaterials.size(); ++i)

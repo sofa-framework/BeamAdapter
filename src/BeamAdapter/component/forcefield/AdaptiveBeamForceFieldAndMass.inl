@@ -32,6 +32,9 @@
 //
 #pragma once
 
+#include <sofa/core/behavior/BaseLocalForceFieldMatrix.h>
+#include <sofa/core/behavior/BaseLocalMassMatrix.h>
+
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 #include <sofa/core/behavior/MultiMatrixAccessor.h>
 #include <sofa/core/MechanicalParams.h>
@@ -362,6 +365,32 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalPara
     }
 }
 
+template<class DataTypes>
+void AdaptiveBeamForceFieldAndMass<DataTypes>::buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
+{
+    const unsigned int numBeams = l_interpolation->getNumBeams();
+
+
+    for (unsigned int b=0; b<numBeams; b++)
+    {
+        unsigned int node0Idx, node1Idx;
+        BeamLocalMatrices &bLM = m_localBeamMatrices[b];
+        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+        /// matrices in global frame
+        const Matrix6x6 M00 = bLM.m_A0Ref.multTranspose(bLM.m_M00 * bLM.m_A0Ref);
+        const Matrix6x6 M01 = bLM.m_A0Ref.multTranspose(bLM.m_M01 * bLM.m_A1Ref);
+        const Matrix6x6 M10 = bLM.m_A1Ref.multTranspose(bLM.m_M10 * bLM.m_A0Ref);
+        const Matrix6x6 M11 = bLM.m_A1Ref.multTranspose(bLM.m_M11 * bLM.m_A1Ref);
+
+
+        matrices->add(node0Idx * 6, node0Idx * 6,  M00);
+        matrices->add(node0Idx * 6, node1Idx * 6,  M01);
+        matrices->add(node1Idx * 6, node0Idx * 6,  M10);
+        matrices->add(node1Idx * 6, node1Idx * 6,  M11);
+    }
+}
+
 
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalParams* mparams,
@@ -424,6 +453,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
             }
         }
     }
+}
+
+template <class DataTypes>
+void AdaptiveBeamForceFieldAndMass<DataTypes>::buildDampingMatrix(core::behavior::DampingMatrix*)
+{
+    // No damping in this ForceField
 }
 
 
@@ -685,6 +720,37 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalPara
     }
 }
 
+template<class DataTypes>
+void AdaptiveBeamForceFieldAndMass<DataTypes>::buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
+{
+    const unsigned int numBeams = l_interpolation->getNumBeams();
+
+
+    auto dfdx = matrix->getForceDerivativeIn(this->mstate)
+                       .withRespectToPositionsIn(this->mstate);
+
+    for (unsigned int b=0; b<numBeams; b++)
+    {
+        unsigned int node0Idx, node1Idx;
+        const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[b];
+        l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
+
+        if(node0Idx==node1Idx)
+            continue;
+
+        // matrices in global frame
+        Matrix6x6 K00 = beamLocalMatrix.m_A0Ref.multTranspose(beamLocalMatrix.m_K00 * beamLocalMatrix.m_A0Ref);
+        Matrix6x6 K01 = beamLocalMatrix.m_A0Ref.multTranspose(beamLocalMatrix.m_K01 * beamLocalMatrix.m_A1Ref);
+        Matrix6x6 K10 = beamLocalMatrix.m_A1Ref.multTranspose(beamLocalMatrix.m_K10 * beamLocalMatrix.m_A0Ref);
+        Matrix6x6 K11 = beamLocalMatrix.m_A1Ref.multTranspose(beamLocalMatrix.m_K11 * beamLocalMatrix.m_A1Ref);
+
+
+        dfdx(node0Idx*6, node0Idx*6) += - K00;
+        dfdx(node0Idx*6, node1Idx*6) += - K01;
+        dfdx(node1Idx*6, node0Idx*6) += - K10;
+        dfdx(node1Idx*6, node1Idx*6) += - K11;
+    }
+}
 
 
 /////////////////////////////////////

@@ -116,11 +116,13 @@ public:
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
      /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
+     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
      Real getReleaseCurvAbs() const {
          msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
          return 0.0;
      }
 
+     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
      void releaseWirePart() {
          msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
      }
@@ -139,7 +141,7 @@ public:
      /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.
      MultiLink<WireRestShape<DataTypes>, BaseRodSectionMaterial<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_sectionMaterials;
 
-private:    
+private:
      /// Link to be set to the topology container in the component graph.
      SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
      /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.

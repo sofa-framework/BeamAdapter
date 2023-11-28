@@ -248,6 +248,9 @@ void InterventionalRadiologyController<DataTypes>::onMouseEvent(MouseEvent * mev
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedEvent *kev)
 {
+    if (m_useBeamActions)
+        return;
+
     /// Control keys for interventonal Radiology simulations:
     switch(kev->getKey())
     {
@@ -308,6 +311,9 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const double dt)
 {
     SOFA_UNUSED(dt);
+
+    if (m_useBeamActions)
+        return;
 
     BaseContext* context = getContext();
     auto xInstrTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
