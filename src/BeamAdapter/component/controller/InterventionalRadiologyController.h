@@ -118,6 +118,7 @@ public:
 
 
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
+    [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
     void processDrop(unsigned int& previousNumControlledNodes, unsigned int& seg_remove)
     {
         SOFA_UNUSED(previousNumControlledNodes);
