@@ -23,12 +23,12 @@
     <FreeMotionAnimationLoop />
     <DefaultVisualManagerLoop />
 
-    <LCPConstraintSolver mu='0.1' tolerance='1e-10' maxIt='1000' build_lcp='false' />
-    <DefaultPipeline draw='0' depth='6' verbose='1' />
-    <BruteForceBroadPhase name='N2' />
+    <LCPConstraintSolver mu="0.1" tolerance="1e-4" maxIt="1000" build_lcp="false" />
+    <CollisionPipeline draw="0" depth="6" />
+    <BruteForceBroadPhase name="N2" />
     <BVHNarrowPhase />
-    <LocalMinDistance contactDistance='1' alarmDistance='5' name='localmindistance' angleCone='0.02' />
-    <DefaultContactManager name='Response' response='FrictionContactConstraint' />
+    <LocalMinDistance name="localmindistance" contactDistance="0.1" alarmDistance="2" angleCone="0.2" />
+    <CollisionResponse name="Response" response="FrictionContactConstraint" />
 
 
     <Node name="EdgeTopology">
@@ -57,24 +57,24 @@
                                     startingPos="0 0 0 0 0 0 1" xtip="0 0 0" printLog="1" 
                                     rotationInstrument="0 0 0" step="5" speed="5" 
                                     listening="1" controlledInstrument="0"/>
-        <LinearSolverConstraintCorrection wire_optimization='true' printLog="0" />
+        <LinearSolverConstraintCorrection wire_optimization="true" printLog="0" />
         <FixedConstraint name="FixedConstraint" indices="0" />
         <RestShapeSpringsForceField name="RestSPForceField" points="@DeployController.indexFirstNode" angularStiffness="1e8" stiffness="1e8"/> 
 
         <Node name="CollisionModel">
-            <EdgeSetTopologyContainer name='collisEdgeSet' />
-            <EdgeSetTopologyModifier name='colliseEdgeModifier' />
-            <MechanicalObject name='CollisionDOFs' />
-            <MultiAdaptiveBeamMapping controller='../DeployController' useCurvAbs="1" printLog="0" name='collisMap' />
+            <EdgeSetTopologyContainer name="collisEdgeSet" />
+            <EdgeSetTopologyModifier name="colliseEdgeModifier" />
+            <MechanicalObject name="CollisionDOFs" />
+            <MultiAdaptiveBeamMapping controller="../DeployController" useCurvAbs="1" printLog="0" name="collisMap" />
             <LineCollisionModel proximity="0.0" />
             <PointCollisionModel proximity="0.0" />
         </Node>
     </Node>  
     
     <Node name="Carotids">
-        <MeshSTLLoader filename='mesh/carotids.stl' flipNormals="0" triangulate="1" name='meshLoader' rotation="10.0 0.0 -90.0" />
-        <MeshTopology position='@meshLoader.position' triangles='@meshLoader.triangles' />
-        <MechanicalObject position="0 0 400" scale="3" name='DOFs1' ry="90" />
+        <MeshSTLLoader filename="mesh/carotids.stl" flipNormals="0" triangulate="1" name="meshLoader" rotation="10.0 0.0 -90.0" />
+        <MeshTopology position="@meshLoader.position" triangles="@meshLoader.triangles" />
+        <MechanicalObject position="0 0 400" scale="3" name="DOFs1" ry="90" />
         <TriangleCollisionModel moving="0" simulated="0" />
         <LineCollisionModel moving="0" simulated="0" />
     </Node>
