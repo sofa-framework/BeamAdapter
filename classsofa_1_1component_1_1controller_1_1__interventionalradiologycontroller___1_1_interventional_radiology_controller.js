@@ -49,8 +49,6 @@ var classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller_
     [ "d_xTip", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a56d40385ca097a816092aafe8b07fa53", null ],
     [ "m_activatedPointsBuf", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aa57cca3ded28b9c310eccbc079d04462", null ],
     [ "m_currentSensorData", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#adcf3dadc7d1fbb6504894156dc47b56d", null ],
-    [ "m_dropCall", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aca31e52aa864b2fdde887da33ef17015", null ],
-    [ "m_droppedInstruments", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a50c056d1f8978624fb432fd1ae1d88e3", null ],
     [ "m_FF", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#a052d2f15f1c72796c27d7024ee614224", null ],
     [ "m_fixedConstraint", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#aa2b1c8bf8024be526c03d57bbc050798", null ],
     [ "m_idInstrumentCurvAbsTable", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html#ad1b5988d25510ba24eab9ddb3c77a726", null ],
