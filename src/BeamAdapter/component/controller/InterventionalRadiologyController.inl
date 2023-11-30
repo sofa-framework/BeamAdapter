@@ -760,90 +760,87 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     // ## STEP 3: Re-interpolate the positions and the velocities
     helper::AdvancedTimer::stepBegin("step3");
+    //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
+    type::vector<Real> modifiedCurvAbs; // This buffer will contain all deployed curvAbs minus current motion to mimic previous curvAbs (with 2 points with nearly the same abs at start) 
+    totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable); 
 
     //    => Get write access to current nodes/dofs
     Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     VecCoord xbuf = x.ref();
 
-    const sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
+    sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
+    if (nbrCurvAbs > x.size())
+    {
+        msg_warning() << "Parameters missmatch. There are more curv abscisses '" << nbrCurvAbs << "' than the number of dof: " << x.size();
+        nbrCurvAbs = x.size();
+    }
+
     const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
-    const Real prev_maxCurvAbs = m_nodeCurvAbs.back();
 
-    //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
-    type::vector<Real> modifiedCurvAbs;
-    totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
-
-    sofa::Size nbrUnactiveNode = m_numControlledNodes - nbrCurvAbs; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
-    sofa::Size prev_nbrUnactiveNode = m_numControlledNodes - prev_nbrCurvAbs;
+    const sofa::Size nbrUnactiveNode = (m_numControlledNodes > nbrCurvAbs) ? m_numControlledNodes - nbrCurvAbs : 0; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
+    const sofa::Size prev_nbrUnactiveNode = (m_numControlledNodes > prev_nbrCurvAbs) ? m_numControlledNodes - prev_nbrCurvAbs : 0;
 
     for (sofa::Index xId = 0; xId < nbrCurvAbs; xId++)
     {
         const sofa::Index globalNodeId = nbrUnactiveNode + xId; // position of the curvAbs in the dof buffer filled by the end
         const Real xCurvAbs = modifiedCurvAbs[xId];
 
-        // 2 cases:  TODO : remove first case
-            //1. the abs curv is further than the previous state of the instrument
-            //2. this is not the case and the node position can be interpolated using previous step positions
-        if ((xCurvAbs - std::numeric_limits<float>::epsilon()) > prev_maxCurvAbs + threshold)
+        if ((xCurvAbs - std::numeric_limits<float>::epsilon()) > m_nodeCurvAbs.back() + threshold)
         {
-            msg_error() << "Case 1 should never happen ==> avoid using totalLengthIsChanging! xCurvAbs = " << xCurvAbs 
-                << " > prev_maxCurvAbs = " << prev_maxCurvAbs << " + threshold: " << threshold << "\n"
+            msg_warning() << "Case 1 should never happen while using totalLengthIsChanging. xCurvAbs = " << xCurvAbs 
+                << " > m_nodeCurvAbs.back() = " << m_nodeCurvAbs.back() << " + threshold: " << threshold << "\n"
                 << "\n | newCurvAbs: " << newCurvAbs                
                 << "\n | modifiedCurvAbs: " << modifiedCurvAbs
                 << "\n | previous nodeCurvAbs: " << m_nodeCurvAbs;
-            // case 1 (the abs curv is further than the previous state of the instrument)
-            // verifier qu'il s'agit bien d'un instrument qu'on est en train de controller
-            // interpoler toutes les positions "sorties" de l'instrument en supprimant l'ajout de dx qu'on vient de faire
+        }
+
+        // The node position is not further than previous state, it can be interpolated straightfully using previous step positions
+        sofa::Index prev_xId = 0;
+        for (prev_xId = 0; prev_xId < m_nodeCurvAbs.size(); prev_xId++)
+        {
+            // if old_curvAbs[id] + threshold > current xabs, use this id to interpolate new curvAbs
+            if ((m_nodeCurvAbs[prev_xId] + threshold) > xCurvAbs)
+                break;
+        }
+
+        sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
+        const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
+
+        if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
+        {
+            x[globalNodeId] = xbuf[prev_globalNodeId]; // xBuf all initialised at start with d_startingPos
         }
         else
         {
-            // case 2 (the node position can be interpolated straightfully using previous step positions)
-            sofa::Index prev_xId = 0;
-            while (prev_xId < m_nodeCurvAbs.size()) // check which prev_curvAbs is above current curvAbs using threshold value
-            {
-                if ((m_nodeCurvAbs[prev_xId] + threshold) > xCurvAbs)
-                    break;
-                prev_xId++;
-            }
-
-            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
-            const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
-
-            if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
-            {
-                x[globalNodeId] = xbuf[prev_globalNodeId]; // xBuf all initialised at start with d_startingPos
-            }
+            // the node must be interpolated using beam interpolation
+            //find the instrument
+            int id = m_idInstrumentCurvAbsTable[prev_xId][0];
+            //find the good beam (TODO: do not work if xbegin of one instrument >0)
+            int b = prev_xId - 1;
+               
+            // test to avoid wrong indices
+            if (b < 0)
+                x[globalNodeId] = d_startingPos.getValue();
             else
             {
-                // the node must be interpolated using beam interpolation
-                //find the instrument
-                int id = m_idInstrumentCurvAbsTable[prev_xId][0];
-                //find the good beam (TODO: do not work if xbegin of one instrument >0)
-                int b = prev_xId - 1;
-                // test to avoid wrong indices
-                if (b < 0)
-                    x[globalNodeId] = d_startingPos.getValue();
-                else
-                {
-                    Transform global_H_interpol;
-                    const Real L = prev_xCurvAbs - m_nodeCurvAbs[b];
-                    Real baryCoef = 1.0;
-                    if (L < std::numeric_limits<float>::epsilon()) {
-                        msg_error() << "Two consecutives curvAbs with the same position. Length is null. Using barycenter coefficient: baryCoef = 1";
-                    }
-                    else {
-                        baryCoef = (xCurvAbs - m_nodeCurvAbs[b]) / L;
-                    }
-
-                    Transform Global_H_local0(xbuf[prev_globalNodeId - 1].getCenter(), xbuf[prev_globalNodeId - 1].getOrientation());
-                    Transform Global_H_local1(xbuf[prev_globalNodeId].getCenter(), xbuf[prev_globalNodeId].getOrientation());
-
-                    m_instrumentsList[id]->InterpolateTransformUsingSpline(global_H_interpol, baryCoef, Global_H_local0, Global_H_local1, L);
-
-                    x[globalNodeId].getCenter() = global_H_interpol.getOrigin();
-                    x[globalNodeId].getOrientation() = global_H_interpol.getOrientation();
+                Transform global_H_interpol;
+                const Real L = prev_xCurvAbs - m_nodeCurvAbs[b];
+                Real baryCoef = 1.0;
+                if (L < std::numeric_limits<float>::epsilon()) {
+                    msg_error() << "Two consecutives curvAbs with the same position. Length is null. Using barycenter coefficient: baryCoef = 1";
                 }
+                else {
+                    baryCoef = (xCurvAbs - m_nodeCurvAbs[b]) / L;
+                }
+
+                Transform Global_H_local0(xbuf[prev_globalNodeId - 1].getCenter(), xbuf[prev_globalNodeId - 1].getOrientation());
+                Transform Global_H_local1(xbuf[prev_globalNodeId].getCenter(), xbuf[prev_globalNodeId].getOrientation());
+
+                m_instrumentsList[id]->InterpolateTransformUsingSpline(global_H_interpol, baryCoef, Global_H_local0, Global_H_local1, L);
+
+                x[globalNodeId].getCenter() = global_H_interpol.getOrigin();
+                x[globalNodeId].getOrientation() = global_H_interpol.getOrientation();
             }
         }
     }
@@ -862,10 +859,12 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     }
 
 
+    const type::vector<Real>& rotInstruments = d_rotationInstrument.getValue();
     for (unsigned int b=0; b< nbrBeam; b++)
     {
-        Real x0 = newCurvAbs[b];
-        Real x1 = newCurvAbs[b+1];
+        const Real& x0 = newCurvAbs[b];
+        const Real& x1 = newCurvAbs[b+1];
+
         for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         {
             const Real& xmax = tools_xEnd[i];
@@ -873,16 +872,15 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
             if (x0>(xmin- threshold) && x0<(xmax+ threshold) && x1>(xmin- threshold) && x1<(xmax+ threshold))
             {
-                BaseMeshTopology::EdgeID eID = (BaseMeshTopology::EdgeID)(numEdges- nbrBeam + b );
+                BaseMeshTopology::EdgeID eID = (BaseMeshTopology::EdgeID)(numEdges - nbrBeam + b);
 
                 Real length = x1 - x0;
                 Real x0_local = x0-xmin;
                 Real x1_local = x1-xmin;
 
-                Real theta = d_rotationInstrument.getValue()[i];
+                Real theta = rotInstruments[i];
 
                 m_instrumentsList[i]->addBeam(eID, length, x0_local, x1_local,theta );
-
             }
         }
     }
@@ -942,6 +940,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 }
 
 
+
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs,
                                                                          type::vector<Real>& modifiedNodeCurvAbs,
@@ -957,19 +956,18 @@ void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const t
     modifiedNodeCurvAbs = newNodeCurvAbs;
 
     // we look for the last value in the CurvAbs
-    if(fabs(dLength) > d_threshold.getValue())
+    if (fabs(dLength) <= d_threshold.getValue())
+        return;
+
+    for (unsigned int i = 0; i < newTable.size(); i++)
     {
-        unsigned int i=newTable.size()-1;
-        while (i>0 && newTable[i].size()==1)
+        if (newTable[i].size() == 1)
         {
             modifiedNodeCurvAbs[i] -= dLength;
-
-            if (modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
+            if (i > 1 && modifiedNodeCurvAbs[i] < modifiedNodeCurvAbs[i - 1])
             {
                 modifiedNodeCurvAbs[i] = modifiedNodeCurvAbs[i - 1];
             }
-
-            i--;
         }
     }
 }
