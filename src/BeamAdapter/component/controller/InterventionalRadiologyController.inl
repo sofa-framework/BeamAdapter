@@ -74,7 +74,6 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 {
     m_fixedConstraint = nullptr;
-    m_dropCall = false;
     m_sensored =false;
 }
 
@@ -140,10 +139,6 @@ void InterventionalRadiologyController<DataTypes>::init()
     context->get(m_fixedConstraint);
     if(m_fixedConstraint==nullptr)
         msg_error()<<"No fixedConstraint found.";
-
-    /// List of the instrument for which a "DROPPED" was proceeed TODO
-    m_droppedInstruments.clear();
-
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
     if (!f_listening.isSet())
@@ -446,82 +441,9 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
     }
     case BeamAdapterAction::DROP_TOOL:
     {
-        m_dropCall = true;
+        msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
     }
     }
-}
-
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::processDrop(unsigned int &previousNumControlledNodes,
-                                                               unsigned int &segRemove)
-{
-    int ci = int(d_controlledInstrument.getValue());
-    Real xMinOutLocal= 0.0;
-
-    Real xBegin=0.0;
-
-    // Quelque soit le resultat du process, le drop call est traite ici
-    m_dropCall = false;
-
-    // Step1 : quel est l'abscisse curviligne ou l'instrument controllé est seul ?
-    for (unsigned int i=0; i<m_nodeCurvAbs.size(); i++)
-    {
-        // on parcourt toutes abscisse curv jusqu'à trouver un endroit où il n'y a qu'un seul instrument
-        if (m_idInstrumentCurvAbsTable[i].size()==1)
-        {
-            // on vérifie qu'il s'agit de celui qui est controle
-            if( ci ==m_idInstrumentCurvAbsTable[i][0])
-            {
-                 xBegin = d_xTip.getValue()[ci] - m_instrumentsList[ci]->getRestTotalLength();
-                 xMinOutLocal = m_nodeCurvAbs[i] - xBegin;
-                 break;
-            }
-            else
-            {
-                msg_error()<<" The control instrument is not out, drop is impossible.";
-                return;
-            }
-        }
-    }
-
-    if(xMinOutLocal<=0.0)
-    {
-         msg_error()<<" x_min_out_local <= 0.0 The control instrument is not out, drop is impossible.";
-         return;
-    }
-
-    // Step2 : on verifie que cette abscisse curviligne est compatible avec celle de l'instrument
-    // (on ne peut pas casser un instrument s'il est à l'intérieur d'un autre instrument)
-    int numBeamsNotUnderControlled = 0;
-    Real xBreak;
-    if( m_instrumentsList[ci]->breaksInTwo(xMinOutLocal, xBreak, numBeamsNotUnderControlled) )
-    {
-        msg_error()<<"Breaks in two process activated.";
-
-        // for now, we simply suppress one more beam !
-        m_numControlledNodes -= (numBeamsNotUnderControlled + 1);
-
-        auto xEnds = sofa::helper::getWriteOnlyAccessor(d_xTip);
-        xEnds[ci] =  xBegin +  xBreak;
-    }
-    else
-        return;
-
-    // Step3 : on remet à jour les abscisse curviligne des noeuds en virant toutes celles qui correspondent à la partie
-    // cassée
-    Real eps=d_threshold.getValue();
-    for (unsigned int i=0; i<m_nodeCurvAbs.size(); i++)
-    {
-        if( m_nodeCurvAbs[i] > (xBegin +  xBreak + eps) )
-        {
-            type::removeIndex(m_nodeCurvAbs,i);
-            type::removeIndex(m_idInstrumentCurvAbsTable, i);
-            i--;
-        }
-    }
-    segRemove = 1;
-    previousNumControlledNodes =m_numControlledNodes;
 }
 
 
@@ -784,18 +706,15 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 {
     const Real& threshold = d_threshold.getValue();
 
-    /// Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
+    
+    // Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
     type::vector<Real> newCurvAbs;
-
-    /// In case of drop:
-    unsigned int previousNumControlledNodes = m_numControlledNodes;
-    unsigned int seg_remove = 0;
+    type::vector<type::vector<int>> idInstrumentTable;
 
     // ## STEP 1: Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
     helper::AdvancedTimer::stepBegin("step1");
     Real totalLengthCombined=0.0;
-    type::vector<Real> tools_xBegin;
-    type::vector<Real> tools_xEnd;
+    type::vector<Real> tools_xBegin, tools_xEnd;
     for (unsigned int i=0; i<m_instrumentsList.size(); i++)
     {
         const Real& xend= d_xTip.getValue()[i];
@@ -836,10 +755,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     computeInstrumentsCurvAbs(newCurvAbs, tools_xBegin, totalLengthCombined);
 
     //     => id_instrument_table which provides for each simulated node, the id of all instruments which belong this node
-    type::vector<type::vector<int>> idInstrumentTable;
     fillInstrumentCurvAbsTable(newCurvAbs, tools_xBegin, tools_xEnd, idInstrumentTable);
     helper::AdvancedTimer::stepEnd("step2");
-
 
     // ## STEP 3: Re-interpolate the positions and the velocities
     helper::AdvancedTimer::stepBegin("step3");
@@ -852,19 +769,19 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     const sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
     const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
     const Real prev_maxCurvAbs = m_nodeCurvAbs.back();
-           
+
     //    => Change curv if totalLength has changed: modifiedCurvAbs = newCurvAbs - current motion (Length between new and old tip curvAbs)
     type::vector<Real> modifiedCurvAbs;
     totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable);
 
     sofa::Size nbrUnactiveNode = m_numControlledNodes - nbrCurvAbs; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
-    sofa::Size prev_nbrUnactiveNode = previousNumControlledNodes - prev_nbrCurvAbs;
+    sofa::Size prev_nbrUnactiveNode = m_numControlledNodes - prev_nbrCurvAbs;
 
     for (sofa::Index xId = 0; xId < nbrCurvAbs; xId++)
     {
-        const sofa::Index globalNodeId = nbrUnactiveNode + xId; // fill the end of the dof buffer
+        const sofa::Index globalNodeId = nbrUnactiveNode + xId; // position of the curvAbs in the dof buffer filled by the end
         const Real xCurvAbs = modifiedCurvAbs[xId];
-        
+
         // 2 cases:  TODO : remove first case
             //1. the abs curv is further than the previous state of the instrument
             //2. this is not the case and the node position can be interpolated using previous step positions
@@ -890,7 +807,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 prev_xId++;
             }
 
-            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + seg_remove + prev_xId;
+            sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
             const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
 
             if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
@@ -1012,9 +929,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 if(rigid)
                     m_fixedConstraint->addConstraint(firstSimulatedNode+i);
             }
-
         }
-
     }
     helper::AdvancedTimer::stepEnd("step5");
 
@@ -1025,6 +940,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     m_nodeCurvAbs = newCurvAbs;
     m_idInstrumentCurvAbsTable = idInstrumentTable;
 }
+
 
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs,
