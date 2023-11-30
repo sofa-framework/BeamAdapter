@@ -940,6 +940,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 }
 
 
+
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs,
                                                                          type::vector<Real>& modifiedNodeCurvAbs,
