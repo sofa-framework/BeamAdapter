@@ -23,11 +23,12 @@
     <DefaultAnimationLoop />
 
     <Node name="GuideCatheter">
-        <MeshObjLoader name="loader" filename="mesh/key_tip.obj" />
-        <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" isAProceduralShape="false" 
-            radius="10" massDensity="0.1" poissonRatio="0.3"
-            densityOfBeams="300" numEdgesCollis="300" numEdges='300'
-            youngModulus="1000000" youngModulusExtremity="1000000" />
+        <MeshOBJLoader name="loader" filename="mesh/key_tip.obj" />
+        
+        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" radius="10" massDensity="0.1" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
+        <RodMeshSection name="MeshTipSection" loader="@loader" nbEdgesCollis="300" nbEdgesVisu="300"  radius="10" massDensity="0.1"  youngModulus="1000000" poissonRatio="0.3"/>
+        
+        <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" wireMaterials="@StraightSection @MeshTipSection" />
 
         <EdgeSetTopologyContainer name="GC_mesh" />
         <EdgeSetTopologyModifier />

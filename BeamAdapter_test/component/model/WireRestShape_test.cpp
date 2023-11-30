@@ -119,13 +119,14 @@ void WireRestShape_test::testDefaultInit()
 {
     std::string scene =
         "<?xml version='1.0'?>"
-        "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>             "
-        "   <Node name='BeamTopology'>                                "
-        "       <WireRestShape name='BeamRestShape'/>                 "
-        "       <EdgeSetTopologyContainer name='meshLinesBeam'/>      "
-        "       <EdgeSetTopologyModifier />                           "
-        "   </Node>                                                   "
-        "</Node>                                                      ";
+        "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>                               "
+        "   <Node name='BeamTopology'>                                                  "
+        "       <RodStraightSection name='StraightSection'/>                            "
+        "       <WireRestShape name='BeamRestShape' wireMaterials='@StraightSection' /> "
+        "       <EdgeSetTopologyContainer name='meshLinesBeam'/>                        "
+        "       <EdgeSetTopologyModifier />                                             "
+        "   </Node>                                                                     "
+        "</Node>                                                                        ";
 
     loadScene(scene);
 
@@ -141,15 +142,17 @@ void WireRestShape_test::testParameterInit()
 {
     std::string scene =
         "<?xml version='1.0'?>"
-        "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>             "
-        "   <Node name='BeamTopology'>                                "
-        "       <WireRestShape name='BeamRestShape' length='100.0'    "
-        "        straightLength='95.0'/>                              "
-        "       <EdgeSetTopologyContainer name='meshLinesBeam'/>      "
-        "       <EdgeSetTopologyModifier />                           "
-        "   </Node>                                                   "
-        "</Node>                                                      ";
-
+        "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>                           "
+        "   <Node name='BeamTopology'>                                              "
+        "       <RodStraightSection name='StraightSection' length='95.0' nbEdgesCollis='50' />         "
+        "       <RodStraightSection name='StraightSection2' length='5.0' nbEdgesCollis='10' />         "
+        "       <WireRestShape name='BeamRestShape' wireMaterials='@StraightSection "
+        "         @StraightSection2'/>                                              "
+        "       <EdgeSetTopologyContainer name='meshLinesBeam'/>                    "
+        "       <EdgeSetTopologyModifier />                                         "
+        "   </Node>                                                                 "
+        "</Node>                                                                    ";
+    
     loadScene(scene);
 
     WireRestShapeRig3::SPtr wireRShape = this->m_root->get< WireRestShapeRig3 >(sofa::core::objectmodel::BaseContext::SearchDown);
@@ -157,12 +160,13 @@ void WireRestShape_test::testParameterInit()
     EXPECT_NE(wire, nullptr);
 
     Real fullLength = wire->getLength();
+    Real straightLength = 95.0;
     EXPECT_EQ(fullLength, 100.0);
 
-    Real straightLength = 95.0;   
+    int nbrE0 = 50;
+    int nbrE1 = 10;
     vector<Real> keysPoints, keysPoints_ref = { 0, straightLength, fullLength };
-    Real ratio = straightLength / fullLength;
-    vector<int> nbP_density, nbP_density_ref = { int(floor(5.0 * ratio)), int(floor(20.0 * (1 - ratio))) };
+    vector<int> nbP_density, nbP_density_ref = { nbrE0, nbrE1 };
     
     wire->getSamplingParameters(keysPoints, nbP_density);
     EXPECT_EQ(keysPoints.size(), 3);
@@ -175,9 +179,9 @@ void WireRestShape_test::testParameterInit()
     wire->getCollisionSampling(dx1, 0.0);
     wire->getCollisionSampling(dx2, fullLength);
     wire->getCollisionSampling(dx3, 90.0);
-    EXPECT_EQ(dx1, straightLength / nbEdgesCol_ref);
-    EXPECT_EQ(dx2, (fullLength - straightLength) / nbEdgesCol_ref);
-    EXPECT_EQ(dx3, straightLength / nbEdgesCol_ref);
+    EXPECT_EQ(dx1, straightLength / nbrE0);
+    EXPECT_EQ(dx2, (fullLength - straightLength) / nbrE1);
+    EXPECT_EQ(dx3, straightLength / nbrE0);
 }
 
 
@@ -187,8 +191,10 @@ void WireRestShape_test::testTopologyInit()
         "<?xml version='1.0'?>"
         "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>             "
         "   <Node name='BeamTopology'>                                "
-        "       <WireRestShape name='BeamRestShape' length='100.0'    "
-        "        straightLength='95.0' numEdges='30'/>        "
+        "       <RodStraightSection name='StraightSection' length='95.0' nbEdgesVisu='20' />         "
+        "       <RodStraightSection name='StraightSection2' length='5.0' nbEdgesVisu='10' />         "
+        "       <WireRestShape name='BeamRestShape' wireMaterials='@StraightSection "
+        "         @StraightSection2'/>                                "
         "       <EdgeSetTopologyContainer name='meshLinesBeam'/>      "
         "       <EdgeSetTopologyModifier />                           "
         "   </Node>                                                   "
@@ -205,11 +211,12 @@ void WireRestShape_test::testTopologyInit()
     EXPECT_NE(topo, nullptr);
 
     // checking topo created by WireRestShape
-    int numbEdgesVisu = 30;
-    EXPECT_EQ(topo->getNbPoints(), numbEdgesVisu + 1);
-    EXPECT_EQ(topo->getNbEdges(), numbEdgesVisu);
+    int numbEdgesVisu0 = 20;
+    int numbEdgesVisu1 = 10;
+    EXPECT_EQ(topo->getNbPoints(), numbEdgesVisu0 + numbEdgesVisu1 + 1);
+    EXPECT_EQ(topo->getNbEdges(), numbEdgesVisu0 + numbEdgesVisu1);
 
-    Real dx = 100.0 / Real(numbEdgesVisu);
+    Real dx = 95.0 / Real(numbEdgesVisu0);
 
     EXPECT_EQ(topo->getPX(0), 0.0);
     EXPECT_EQ(topo->getPX(1), dx);
@@ -227,8 +234,10 @@ void WireRestShape_test::testTransformMethods()
         "<?xml version='1.0'?>"
         "<Node name='Root' gravity='0 -9.81 0' dt='0.01'>             "
         "   <Node name='BeamTopology'>                                "
-        "       <WireRestShape name='BeamRestShape' length='100.0'    "
-        "        straightLength='95.0' numEdges='30'/>        "
+        "       <RodStraightSection name='StraightSection' length='95.0'  />         "
+        "       <RodSpireSection name='StraightSection2' length='5.0'  />         "
+        "       <WireRestShape name='BeamRestShape' wireMaterials='@StraightSection "
+        "         @StraightSection2'/>                                "
         "       <EdgeSetTopologyContainer name='meshLinesBeam'/>      "
         "       <EdgeSetTopologyModifier />                           "
         "   </Node>                                                   "
