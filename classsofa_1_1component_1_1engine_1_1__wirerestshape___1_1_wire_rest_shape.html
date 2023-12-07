@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('classsofa_1_1component_1_1engine_1_1__
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">WireRestShape&lt; DataTypes &gt; Class Template Reference</div>  </div>
@@ -123,9 +124,6 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Vec3</b> = sofa::typ
 <tr class="memitem:a1aaa5dae624b2cfab7c34e10d728312d"><td class="memItemLeft" align="right" valign="top"><a id="a1aaa5dae624b2cfab7c34e10d728312d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Quat</b> = sofa::type::Quat&lt; Real &gt;</td></tr>
 <tr class="separator:a1aaa5dae624b2cfab7c34e10d728312d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a537e2fc02a77557e8e2a12cd94489ce1"><td class="memItemLeft" align="right" valign="top"><a id="a537e2fc02a77557e8e2a12cd94489ce1"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>BeamSection</b> = <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">sofa::beamadapter::BeamSection</a></td></tr>
-<tr class="separator:a537e2fc02a77557e8e2a12cd94489ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -140,14 +138,9 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4121d4720627c76671afb19f95e5d2b4">~WireRestShape</a> ()=default</td></tr>
 <tr class="memdesc:a4121d4720627c76671afb19f95e5d2b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Destructor. <br /></td></tr>
 <tr class="separator:a4121d4720627c76671afb19f95e5d2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46ecae0173eda77b82df7bd0902c8e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46ecae0173eda77b82df7bd0902c8e45">parse</a> (core::objectmodel::BaseObjectDescription *arg) override</td></tr>
-<tr class="separator:a46ecae0173eda77b82df7bd0902c8e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8673433953792026ae9baf91b348d7da"><td class="memItemLeft" align="right" valign="top"><a id="a8673433953792026ae9baf91b348d7da"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (const core::visual::VisualParams *vparams) override</td></tr>
-<tr class="separator:a8673433953792026ae9baf91b348d7da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0876fdbe3161c709e4dfa6512c63f251"><td class="memItemLeft" align="right" valign="top"><a id="a0876fdbe3161c709e4dfa6512c63f251"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a> (Transform &amp;global_H_local, const Real &amp;x)</td></tr>
 <tr class="memdesc:a0876fdbe3161c709e4dfa6512c63f251"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called by the force field to evaluate the rest position of each beam. <br /></td></tr>
@@ -162,22 +155,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a0b49d12fd6e210a948189f10055de0b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e625023539d89b1e77b8ee91ac7502f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a6e625023539d89b1e77b8ee91ac7502f">getSamplingParameters</a> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; int &gt; &amp;nbP_density) const</td></tr>
 <tr class="separator:a6e625023539d89b1e77b8ee91ac7502f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5315fa2d621ceeb814a27950ef05a126"><td class="memItemLeft" align="right" valign="top"><a id="a5315fa2d621ceeb814a27950ef05a126"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a5315fa2d621ceeb814a27950ef05a126">initRestConfig</a> ()</td></tr>
-<tr class="memdesc:a5315fa2d621ceeb814a27950ef05a126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions enabling to load and use a geometry given from OBJ external file. <br /></td></tr>
-<tr class="separator:a5315fa2d621ceeb814a27950ef05a126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39125871d0f44f0abfbb3c047d6e98fc"><td class="memItemLeft" align="right" valign="top"><a id="a39125871d0f44f0abfbb3c047d6e98fc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getRestPosNonProcedural</b> (Real &amp;abs, Coord &amp;p)</td></tr>
-<tr class="separator:a39125871d0f44f0abfbb3c047d6e98fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a661c2437a36a6efde7807189a0a2f709"><td class="memItemLeft" align="right" valign="top"><a id="a661c2437a36a6efde7807189a0a2f709"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeOrientation</b> (const Vec3 &amp;AB, const Quat &amp;Q, Quat &amp;result)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a661c2437a36a6efde7807189a0a2f709">computeOrientation</a> (const Vec3 &amp;AB, const Quat &amp;Q, Quat &amp;result)</td></tr>
+<tr class="memdesc:a661c2437a36a6efde7807189a0a2f709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions enabling to load and use a geometry given from OBJ external file. <br /></td></tr>
 <tr class="separator:a661c2437a36a6efde7807189a0a2f709"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08cc998ac80700515707e68edc9d0a76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a08cc998ac80700515707e68edc9d0a76">initFromLoader</a> ()</td></tr>
-<tr class="separator:a08cc998ac80700515707e68edc9d0a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b8890729fb2495abcdf8f2d7b293961"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a1b8890729fb2495abcdf8f2d7b293961">checkTopology</a> ()</td></tr>
-<tr class="separator:a1b8890729fb2495abcdf8f2d7b293961"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08706b51ea2803326ea353a06f21b4fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a08706b51ea2803326ea353a06f21b4fe">fillTopology</a> ()</td></tr>
-<tr class="separator:a08706b51ea2803326ea353a06f21b4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46c7834e4b3792318e83d1521c1e1d16"><td class="memItemLeft" align="right" valign="top"><a id="a46c7834e4b3792318e83d1521c1e1d16"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> ()</td></tr>
 <tr class="separator:a46c7834e4b3792318e83d1521c1e1d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,9 +168,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>getCollisionSampling<
 <tr class="memitem:a30a624a010c2230365e3d4d206d32237"><td class="memItemLeft" align="right" valign="top"><a id="a30a624a010c2230365e3d4d206d32237"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, unsigned int &amp;numLines)</td></tr>
 <tr class="separator:a30a624a010c2230365e3d4d206d32237"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4565d43751c2d3c6a2f036d3754b1016"><td class="memItemLeft" align="right" valign="top"><a id="a4565d43751c2d3c6a2f036d3754b1016"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateFrameForAlignX</b> (const Quat &amp;input, Vec3 &amp;x, Quat &amp;output)</td></tr>
-<tr class="separator:a4565d43751c2d3c6a2f036d3754b1016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ca76ea162e106b600b154bbf6da7a76"><td class="memItemLeft" align="right" valign="top"><a id="a3ca76ea162e106b600b154bbf6da7a76"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">getReleaseCurvAbs</a> () const</td></tr>
 <tr class="memdesc:a3ca76ea162e106b600b154bbf6da7a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">For coils: a part of the coil instrument can be brokenIn2 (by default the point of release is the end of the straight length) <br /></td></tr>
@@ -200,110 +178,37 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseWirePart</b> (
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a9cd0114dedc15d95c12f82bb9557cf51"><td class="memItemLeft" align="right" valign="top"><a id="a9cd0114dedc15d95c12f82bb9557cf51"></a>
-Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a9cd0114dedc15d95c12f82bb9557cf51">d_isAProceduralShape</a></td></tr>
-<tr class="memdesc:a9cd0114dedc15d95c12f82bb9557cf51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analitical creation of wire shape... <br /></td></tr>
-<tr class="separator:a9cd0114dedc15d95c12f82bb9557cf51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af94a93a83a5455ecaf421d8b4cd9435b"><td class="memItemLeft" align="right" valign="top"><a id="af94a93a83a5455ecaf421d8b4cd9435b"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_nonProceduralScale</b></td></tr>
-<tr class="separator:af94a93a83a5455ecaf421d8b4cd9435b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a851ed4808916847729e483da733bf9a7"><td class="memItemLeft" align="right" valign="top"><a id="a851ed4808916847729e483da733bf9a7"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_length</b></td></tr>
-<tr class="separator:a851ed4808916847729e483da733bf9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5256c9afb86c5b1c7173e843ee2d298"><td class="memItemLeft" align="right" valign="top"><a id="ac5256c9afb86c5b1c7173e843ee2d298"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_straightLength</b></td></tr>
-<tr class="separator:ac5256c9afb86c5b1c7173e843ee2d298"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adca0eee2c6179579b6c93d394697aecd"><td class="memItemLeft" align="right" valign="top"><a id="adca0eee2c6179579b6c93d394697aecd"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_spireDiameter</b></td></tr>
-<tr class="separator:adca0eee2c6179579b6c93d394697aecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd0bb0b2f567fccae8032fe1a3dc3071"><td class="memItemLeft" align="right" valign="top"><a id="abd0bb0b2f567fccae8032fe1a3dc3071"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_spireHeight</b></td></tr>
-<tr class="separator:abd0bb0b2f567fccae8032fe1a3dc3071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a102a1dec5f70249c0654664906816ab5"><td class="memItemLeft" align="right" valign="top"><a id="a102a1dec5f70249c0654664906816ab5"></a>
 Data&lt; type::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_density</b></td></tr>
 <tr class="separator:a102a1dec5f70249c0654664906816ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b8035786e5b83a2b6f077c6deb49e2"><td class="memItemLeft" align="right" valign="top"><a id="a51b8035786e5b83a2b6f077c6deb49e2"></a>
 Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_keyPoints</b></td></tr>
 <tr class="separator:a51b8035786e5b83a2b6f077c6deb49e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac33ae5001b86ed1790f4a78bf953afd7"><td class="memItemLeft" align="right" valign="top"><a id="ac33ae5001b86ed1790f4a78bf953afd7"></a>
-Data&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_numEdges</b></td></tr>
-<tr class="separator:ac33ae5001b86ed1790f4a78bf953afd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d8b87f905488e04806f8871da3af123"><td class="memItemLeft" align="right" valign="top"><a id="a8d8b87f905488e04806f8871da3af123"></a>
-Data&lt; type::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_numEdgesCollis</b></td></tr>
-<tr class="separator:a8d8b87f905488e04806f8871da3af123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a078b2bc8950809cbb0117dc93faafdac"><td class="memItemLeft" align="right" valign="top"><a id="a078b2bc8950809cbb0117dc93faafdac"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a078b2bc8950809cbb0117dc93faafdac">d_poissonRatio</a></td></tr>
-<tr class="memdesc:a078b2bc8950809cbb0117dc93faafdac"><td class="mdescLeft">&#160;</td><td class="mdescRight">User Data about the Young modulus. <br /></td></tr>
-<tr class="separator:a078b2bc8950809cbb0117dc93faafdac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa424916ee55d96c64dbfed07cf08afc5"><td class="memItemLeft" align="right" valign="top"><a id="aa424916ee55d96c64dbfed07cf08afc5"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_youngModulus1</b></td></tr>
-<tr class="separator:aa424916ee55d96c64dbfed07cf08afc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b57a8557d4c9f2c0f802a21e5572082"><td class="memItemLeft" align="right" valign="top"><a id="a9b57a8557d4c9f2c0f802a21e5572082"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_youngModulus2</b></td></tr>
-<tr class="separator:a9b57a8557d4c9f2c0f802a21e5572082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a116503c2ad4358394cf358cf547b226d"><td class="memItemLeft" align="right" valign="top"><a id="a116503c2ad4358394cf358cf547b226d"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a116503c2ad4358394cf358cf547b226d">d_radius1</a></td></tr>
-<tr class="memdesc:a116503c2ad4358394cf358cf547b226d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Radius. <br /></td></tr>
-<tr class="separator:a116503c2ad4358394cf358cf547b226d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96946af7ebcef59af58a5a0bc7877b36"><td class="memItemLeft" align="right" valign="top"><a id="a96946af7ebcef59af58a5a0bc7877b36"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_radius2</b></td></tr>
-<tr class="separator:a96946af7ebcef59af58a5a0bc7877b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae37f3182b28fdd91f394c654ba21bd2"><td class="memItemLeft" align="right" valign="top"><a id="aae37f3182b28fdd91f394c654ba21bd2"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_innerRadius1</b></td></tr>
-<tr class="separator:aae37f3182b28fdd91f394c654ba21bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a247826d0c8a07771191239c7b3806722"><td class="memItemLeft" align="right" valign="top"><a id="a247826d0c8a07771191239c7b3806722"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_innerRadius2</b></td></tr>
-<tr class="separator:a247826d0c8a07771191239c7b3806722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8049d00902ec31da90c6fbd55220183e"><td class="memItemLeft" align="right" valign="top"><a id="a8049d00902ec31da90c6fbd55220183e"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_massDensity1</b></td></tr>
-<tr class="separator:a8049d00902ec31da90c6fbd55220183e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39cc5bf1c07b8e4d0ffabc0d3d58e22d"><td class="memItemLeft" align="right" valign="top"><a id="a39cc5bf1c07b8e4d0ffabc0d3d58e22d"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_massDensity2</b></td></tr>
-<tr class="separator:a39cc5bf1c07b8e4d0ffabc0d3d58e22d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8f764f74de6d3d16fedc2a90eaf48b8"><td class="memItemLeft" align="right" valign="top"><a id="ae8f764f74de6d3d16fedc2a90eaf48b8"></a>
-Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ae8f764f74de6d3d16fedc2a90eaf48b8">d_drawRestShape</a></td></tr>
-<tr class="memdesc:ae8f764f74de6d3d16fedc2a90eaf48b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">broken in 2 case <br /></td></tr>
-<tr class="separator:ae8f764f74de6d3d16fedc2a90eaf48b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7293515ade2b3aa4581c054e88d1953a"><td class="memItemLeft" align="right" valign="top"><a id="a7293515ade2b3aa4581c054e88d1953a"></a>
+MultiLink&lt; <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html">BaseRodSectionMaterial</a>&lt; DataTypes &gt;, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">l_sectionMaterials</a></td></tr>
+<tr class="memdesc:a7293515ade2b3aa4581c054e88d1953a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector or links to the Wire section material. The order of the linked material will define the WireShape structure. <br /></td></tr>
+<tr class="separator:a7293515ade2b3aa4581c054e88d1953a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:acbd8d9f6e3bcaf6f2115a657e7ce12cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf">initLengths</a> ()</td></tr>
+<tr class="memdesc:acbd8d9f6e3bcaf6f2115a657e7ce12cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal method to init Lengths vector.  <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf">More...</a><br /></td></tr>
+<tr class="separator:acbd8d9f6e3bcaf6f2115a657e7ce12cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31df0e6586ed1fac58c6b2f19494c3b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a31df0e6586ed1fac58c6b2f19494c3b6">initTopology</a> ()</td></tr>
+<tr class="memdesc:a31df0e6586ed1fac58c6b2f19494c3b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal method to init Edge Topology.  <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a31df0e6586ed1fac58c6b2f19494c3b6">More...</a><br /></td></tr>
+<tr class="separator:a31df0e6586ed1fac58c6b2f19494c3b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
 class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;</h3>
 
 <p>Describe the shape functions on multiple segments. </p>
-<p>Describe the shape functions on multiple segments using curvilinear abscissa </p>
+<p>Describe the full shape of a Wire with a given set of </p><dl class="section see"><dt>See also</dt><dd>BaseRodSectionMaterial. The wire is discretized by a set of beams (given by the keyPoints and the relatives Beam density) </dd>
+<dd>
+d_keyPoints and @d_density are computed by method </dd>
+<dd>
+<a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf" title="Internal method to init Lengths vector.">initLengths</a> using the set of rod sections description. This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1b8890729fb2495abcdf8f2d7b293961"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b8890729fb2495abcdf8f2d7b293961">&#9670;&nbsp;</a></span>checkTopology()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool checkTopology</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>check if the topology is like a wire </dd></dl>
-
-</div>
-</div>
-<a id="a08706b51ea2803326ea353a06f21b4fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08706b51ea2803326ea353a06f21b4fe">&#9670;&nbsp;</a></span>fillTopology()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool fillTopology</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>fill topology :</p>
-<p>add points</p>
-<p>add segments</p>
-
-</div>
-</div>
 <a id="a6e625023539d89b1e77b8ee91ac7502f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e625023539d89b1e77b8ee91ac7502f">&#9670;&nbsp;</a></span>getSamplingParameters()</h2>
 
@@ -333,24 +238,8 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
 
 </div>
 </div>
-<a id="a08cc998ac80700515707e68edc9d0a76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08cc998ac80700515707e68edc9d0a76">&#9670;&nbsp;</a></span>initFromLoader()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void initFromLoader</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>renumber the vertices <br  />
-</p>
-
-</div>
-</div>
-<a id="a46ecae0173eda77b82df7bd0902c8e45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46ecae0173eda77b82df7bd0902c8e45">&#9670;&nbsp;</a></span>parse()</h2>
+<a id="acbd8d9f6e3bcaf6f2115a657e7ce12cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd8d9f6e3bcaf6f2115a657e7ce12cf">&#9670;&nbsp;</a></span>initLengths()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,20 +248,48 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void parse </td>
-          <td>(</td>
-          <td class="paramtype">core::objectmodel::BaseObjectDescription *&#160;</td>
-          <td class="paramname"><em>arg</em></td><td>)</td>
-          <td></td>
+          <td class="memname">void initLengths</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>As arg is owned by the "procedural" attribute it cannot be removed before being copied in the "isAProceduralShape". So please keep the ordering of the two following functions.</p>
+
+<p>Internal method to init Lengths vector. </p>
+<dl class="section see"><dt>See also</dt><dd>d_keyPoints using the length of each materials </dd>
+<dd>
+<a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a" title="Vector or links to the Wire section material. The order of the linked material will define the WireSh...">l_sectionMaterials</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a31df0e6586ed1fac58c6b2f19494c3b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31df0e6586ed1fac58c6b2f19494c3b6">&#9670;&nbsp;</a></span>initTopology()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool initTopology</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Internal method to init Edge Topology. </p>
+<dl class="section see"><dt>See also</dt><dd>_topology using the list of materials </dd>
+<dd>
+<a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a" title="Vector or links to the Wire section material. The order of the linked material will define the WireSh...">l_sectionMaterials</a>. Returns false if init can't be performed. </dd></dl>
+<p>fill topology :</p>
 
 </div>
 </div>
@@ -382,7 +299,7 @@ class sofa::component::engine::_wirerestshape_::WireRestShape&lt; DataTypes &gt;
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><b>engine</b></li><li class="navelem"><b>_wirerestshape_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a></li>
-    <li class="footer">Generated on Thu Nov 30 2023 08:11:29 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Dec 7 2023 07:58:33 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

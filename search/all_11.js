@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vec6_216',['Vec6',['../classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#aa961756097797dd9cc9c3f3ba95f4ca6',1,'sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField']]],
-  ['verifytopology_217',['verifyTopology',['../classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a8cfa8bc5069d81b5711987638b82f64c',1,'sofa::component::fem::_beaminterpolation_::BeamInterpolation']]]
+  ['wirebeaminterpolation_216',['WireBeamInterpolation',['../classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html',1,'sofa::component::fem::_wirebeaminterpolation_']]],
+  ['wirerestshape_217',['WireRestShape',['../classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html',1,'WireRestShape&lt; DataTypes &gt;'],['../classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0',1,'sofa::component::engine::_wirerestshape_::WireRestShape::WireRestShape()']]]
 ];

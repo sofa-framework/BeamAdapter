@@ -54,7 +54,8 @@ var namespacesofa =
         [ "_wirerestshape_", null, [
           [ "WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape" ],
           [ "WireRestShape< CudaRigid3fTypes >", "_cuda_instantiations_8cpp.html#aa7eb13466b36641910e3adca0207f058", null ],
-          [ "WireRestShape< Rigid3Types >", "_wire_rest_shape_8cpp.html#a1ae525708bac1de88178c679cc24f59c", null ]
+          [ "WireRestShape< Rigid3Types >", "_wire_rest_shape_8cpp.html#a1ae525708bac1de88178c679cc24f59c", null ],
+          [ "WireRestShapeClass", "_wire_rest_shape_8cpp.html#a2496f1c7ba127d97d3866bd89d96fc6e", null ]
         ] ],
         [ "SteerableCatheter", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", "classsofa_1_1component_1_1engine_1_1_steerable_catheter" ],
         [ "SteerableCatheter< Rigid3Types >", "_steerable_catheter_8cpp.html#a3cc508b691c8fe519978fab0bda4ba05", null ]
