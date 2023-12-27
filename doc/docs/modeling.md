@@ -10,6 +10,7 @@ The approach that is used in the plugin is initially based on a linear beam anal
 By using a Corotational approach, our model can handle the important geometric non-linearity due to large changes in the shape of the object.
 
 <br>
+
 ## 1. Corotational beam model
 To model the deformation of any solid body whose geometry and mechanical characteristics are similar to a wire, 
 rod or beam, we use a representation based on three-dimensional beam theory *see Przemieniecki (1985) [2]*, where the 
@@ -59,6 +60,7 @@ One important feature of this model is that the interpolation is performed segme
 Additionally, these frames are the independent Degrees of Freedom (DoFs) of the system.
 
 <br>
+
 ## 2. B-splines , Bézier Splines
 
 B-splines in general and Bézier splines in particulary can see in *[1]* or more detail in *[3]*. A
