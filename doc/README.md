@@ -14,7 +14,17 @@ It also presents some examples of use and lists the current limitations.
 
 #### This Documentation covers:
 - [Mechanical basis](docs/modeling.md)
-- [Implementation](docs/implementation.md)
-- [Examples](docs/examples.md)
-- [Limitation](docs/limitation.md)
 
+## Limitation and ongoing work on the plugin
+
+
+## Implementation
+#Shape function: BeamInterpolation#
+In the following, we describe the main components of the implementation of BeamAdapter Plugin
+One of the central component of the beams is the shape function. 
+The description of the shape function relies on:
+- One topology of edges
+- A set of frames with Dofs (3 translations, 3 rotations) that corresponds to the points of the topology
+- A spline (3d order) support for each edge
+
+## Examples

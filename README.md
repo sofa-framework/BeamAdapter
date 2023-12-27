@@ -1,4 +1,4 @@
-BeamAdapter plugin
+# BeamAdapter plugin
 ------------------
 
 [![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://www.sofa-framework.org/community/doc/)

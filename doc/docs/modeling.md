@@ -16,12 +16,12 @@ rod or beam, we use a representation based on three-dimensional beam theory *see
 elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end 
 of a beam element to the forces and torques applied to them:
 
-<img src="../doc/docs/Matrix.jpg" align="left" width="700"/> 
+<img src="./Matrix.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 parameters:
 
-<img src="../doc/docs/Matrix_param.jpg" align="left" width="700"/> <br/>
+<img src="./Matrix_param.jpg" align="left" width="700"/> <br/>
 <br/><br/><br/><br/><br/>
 
 The assumption of the corotational model is that the deformations remain ”small” at the level of each element. 
@@ -40,7 +40,7 @@ We need a matrix relationship between the variation of the position δ **u** in 
 δ **q** in the global coordinates.
 
 
-<img src="../doc/docs/BeamFrames.jpg" align="left" width="700"/> 
+<img src="./BeamFrames.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 This relationship is expressed by the matrix equation:
