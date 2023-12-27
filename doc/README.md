@@ -2,7 +2,7 @@ Beam Adapter Documentation
 =======================
 Contributors: See https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md
 
-## Introduction
+## 1. Introduction
 
 The plugin Beam Adpater allows to have a dynamic implementation of the FEM beam elements.
 The underlying mechanical fundations are based on beam theory (https://en.wikipedia.org/wiki/Euler–Bernoulli_beam_theory), that have been extended to large transformation using corotational formualation.
@@ -12,32 +12,32 @@ These elements are particularly useful for modeling 1D like deformable structure
 This tutorial presents the mechanical and implementation basis of the plugin Beam Adpater.
 It also presents some examples of use and lists the current limitations.
 
-## This Documentation covers:
+## 2. Documentation cover:
 - [Modeling theory](modeling/theory.md)
 - [Modeling scene implementation](modeling/implementation.md)
 
 
-## Limitation and ongoing work on the plugin
-[] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
-[] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
-[] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
-[x] create alias for **AdaptiveBeamInterpolation** => **BeamInterpolation** ou **WireBeamInterpolation**
-[] TODO ** BeamParam* ** and accesseur depuis **BeamInterpolation**
-[] Change x_curv representation (in case cable is cut in 2)
-[] **AdaptiveBeamController** => **WireAdaptiveBeamController** (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE)
+## 3. Limitation and ongoing work on the plugin
+- [] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
+- [] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
+- [] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
+- [x] create alias for **AdaptiveBeamInterpolation** => **BeamInterpolation** ou **WireBeamInterpolation**
+- [] TODO ** BeamParam* ** and accesseur depuis **BeamInterpolation**
+- [] Change x_curv representation (in case cable is cut in 2)
+- [] **AdaptiveBeamController** => **WireAdaptiveBeamController** (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE)
 ### AdaptiveBeamMapping 
-[] Split specific case SOFAEVE (case "fromSeveralInterpolations")-> InterventionalRadiologyMapping
-[] Mapping "global"  (pointeur =  inteporlation ) use barycentric coordinates + id beam for each "mapped" point
-[] Specific case for mapped model on a wireInterpolation (with x_curv) => Todo a method that recompute the distribution (bary + id beam) on each point0
+- [] Split specific case SOFAEVE (case "fromSeveralInterpolations")-> InterventionalRadiologyMapping
+- [] Mapping "global"  (pointeur =  inteporlation ) use barycentric coordinates + id beam for each "mapped" point
+- [] Specific case for mapped model on a wireInterpolation (with x_curv) => Todo a method that recompute the distribution (bary + id beam) on each point0
 
-TO ADD List:
-[] TreeInterpolation
-[] Représentation arbre "continue"
-[] Représentation arbre "discrète" => Lien avec topo SOFA
-[] TreeAdaptiveBeamController
+### TO ADD List:
+- [] TreeInterpolation
+- [] Représentation arbre "continue"
+- [] Représentation arbre "discrète" => Lien avec topo SOFA
+- [] TreeAdaptiveBeamController
 
 
-## Examples list:
+## 4. Examples list:
 ### Simple scenario
 - [examples/SingleBeam.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/SingleBeam.scn) -> Simulation of a single wire with a fixed number of beams.
 - [examples/SingleBeamDeployment.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/SingleBeamDeployment.scn) -> Simulation of a single wire deployment in free environment.
