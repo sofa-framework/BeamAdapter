@@ -65,6 +65,7 @@ spline tool can see at *[4]*. Here assumed several general formula. In general, 
 n is determined by n + 1 control points (characteristic polygone) $P_{i, 0 \le i \le n}$ ,06i6n. Its trajectory is:
 
 $B(t)$=$\sum_{i = 0}^{n} \widehat{B}_{i,n}(t).P_i$
+$\sum_{x = a}^{b} f(x)$
 
 Where $\widehat{B}_{i,n}(t)$ are Bernstein polynomial given by:
 
@@ -77,4 +78,8 @@ $(1 − t)^3.P_0 + 3.(1 − t)^2.t.P_1 + 3.t^2.(1 − t).P_3 + t^3.P_3$
 
 
 ## References
-*Przemieniecki (1985) J. Przemieniecki. Theory of matrix structural analysis. McGraw-Hill, 1985.*
+1. F. Andersson, *Bézier and B-spline Technology*, PhD thesis, Juin 2003
+2. J. Przemieniecki. *Theory of matrix structural analysis. McGraw-Hill*, 1985.
+4. T. W. Sederberg, *Computer Aided Geometric Design*, 2011 ed.
+5. T-Spline, http://www.tsplines.com/
+6. T.Belytschko, W. K. Liu, and B. Moran, *Nonlinear Finite Elements for continua and structures*, 2000.
