@@ -11,7 +11,7 @@
 This SOFA plugin implements a 1-dimensional Finite Element Method (FEM) based on the Kirchhoff rod theory and allows to simulate any 1D flexible structure, like catheters, guidewires or coils in a medical context.
 This plugin proposes an adaptive implementation allowing for the interactive deployment of one or several concentric tools. This approach is therefore especially well designed for interventional radiology interventions, more especially the simulation of a catheter deployment. 
 
-<img align="center" width="80%" height="auto" src="https://github.com/sofa-framework/BeamAdapter/tree/master/doc/screenshots/WireSections.png">
+<img align="center" width="80%" height="auto" src="./doc/screenshots/WireSections.png">
 
 
 
