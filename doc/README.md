@@ -18,23 +18,23 @@ It also presents some examples of use and lists the current limitations.
 
 
 ## 3. Limitation and ongoing work on the plugin
-- [] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
-- [] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
-- [] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
+- [ ] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
+- [ ] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
+- [ ] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
 - [x] create alias for **AdaptiveBeamInterpolation** => **BeamInterpolation** ou **WireBeamInterpolation**
-- [] TODO ** BeamParam* ** and accesseur depuis **BeamInterpolation**
-- [] Change x_curv representation (in case cable is cut in 2)
-- [] **AdaptiveBeamController** => **WireAdaptiveBeamController** (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE)
+- [ ] TODO ** BeamParam* ** and accesseur depuis **BeamInterpolation**
+- [ ] Change x_curv representation (in case cable is cut in 2)
+- [ ] **AdaptiveBeamController** => **WireAdaptiveBeamController** (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE)
 ### AdaptiveBeamMapping 
-- [] Split specific case SOFAEVE (case "fromSeveralInterpolations")-> InterventionalRadiologyMapping
-- [] Mapping "global"  (pointeur =  inteporlation ) use barycentric coordinates + id beam for each "mapped" point
-- [] Specific case for mapped model on a wireInterpolation (with x_curv) => Todo a method that recompute the distribution (bary + id beam) on each point0
+- [ ] Split specific case SOFAEVE (case "fromSeveralInterpolations")-> InterventionalRadiologyMapping
+- [ ] Mapping "global"  (pointeur =  inteporlation ) use barycentric coordinates + id beam for each "mapped" point
+- [ ] Specific case for mapped model on a wireInterpolation (with x_curv) => Todo a method that recompute the distribution (bary + id beam) on each point0
 
 ### TO ADD List:
-- [] TreeInterpolation
-- [] Représentation arbre "continue"
-- [] Représentation arbre "discrète" => Lien avec topo SOFA
-- [] TreeAdaptiveBeamController
+- [ ] TreeInterpolation
+- [ ] Représentation arbre "continue"
+- [ ] Représentation arbre "discrète" => Lien avec topo SOFA
+- [ ] TreeAdaptiveBeamController
 
 
 ## 4. Examples list:
