@@ -1,9 +1,15 @@
 BeamAdapter plugin
 ------------------
 
+[![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://www.sofa-framework.org/community/doc/)
+[![API Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](./doc/)
+[![Support](https://img.shields.io/badge/support-on_GitHub_Discussions-blue.svg)](https://github.com/sofa-framework/sofa/discussions/categories/beamadapter)
+[![Gitter](https://img.shields.io/badge/chat-on_Gitter-ff69b4.svg)](https://app.gitter.im/#/room/#sofa-framework:gitter.im)
+[![Contact](https://img.shields.io/badge/contact-on_website-orange.svg)](https://www.sofa-framework.org/consortium/contact/)  
+
 This SOFA plugin implements a 1-dimensional Finite Element Method (FEM) in the context of coil embolization in neurology. The method is based on Kirchhoff rod theory, and allows to simulate any 1D flexible structure, like catheters or guidewires. Moreover, an adaptive formulation is proposed to model the insertion of such medical devices.
 
-
+https://github.com/sofa-framework/BeamAdapter/doc
 
 # Related publications
 

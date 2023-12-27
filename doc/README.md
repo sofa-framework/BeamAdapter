@@ -1,6 +1,6 @@
 Beam Adapter Documentation
 =======================
-Contributors: ...
+Contributors: See https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md
 
 ### Introduction
 
