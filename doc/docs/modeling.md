@@ -77,7 +77,47 @@ The most usually used is the cubic Bézier , where trajectory is given by
 
 $(1 − t)^3.P_0 + 3.(1 − t)^2.t.P_1 + 3.t^2.(1 − t).P_3 + t^3.P_3$
 
+<br>
 
+# Implementation
+In the following, we describe the main components of the implementation of BeamAdapter Plugin. 
+For a full description of a BeamAdapter scene, check the [implementation documentation](docs/implementation.md) and here is the documentation of the [API C++ code](https://sofa-framework.github.io/BeamAdapter/)
+
+One of the central component of the beams is the shape function. 
+The description of the shape function relies on:
+- One topology of edges
+- A set of frames with Dofs (3 translations, 3 rotations) that corresponds to the points of the topology
+- A spline (3d order) support for each edge
+
+## WireRestShape
+This component allows to define the rest shape of Wire instrument such as a catheter (modeled with a set of beams), the numerical parameters used in the simulation, and the topology used for the visualisation.
+
+<img src="./CatheterModeling.jpg" align="left" width="700"/> 
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+Several physical and geometry parameters can be defined using SOFA Data such as the **densityOfBeams**, **straightLength**, **youngModulus**, **numEdges**, etc. See [implementation documentation](docs/implementation.md) for the full list.
+
+## WireBeamInterpolation
+
+This component is one of the most important in the modeling of catheter devices: It contains the interpolation functions that are dynamically updated when the catheter is deployed. Inside the component, the geometric support of each beams is a cubic spline. From the two frames at the extremities of the beam, we define the 4 control points of the cubic splines. The construction is made to guaranty a C1 continuity between splines.
+
+## AdaptiveBeamForceFieldAndMass
+
+This component computes the Force and the mass using a beam formulation. The computation is based on a « corotational approach ». 
+
+<img src="./BeamModeling.jpg" align="left" width="700"/>
+
+From the two 6DOF position of the nodes of the beam, we extract 4 points for defining a spline. Using this spline, we can find one central frame for the beam (in red in the figure). There is only one rotation that is not determined (along the axis of the spline). To find this twiting orientation, we use a slerp. The computation of the deformations of the beams are done in this frame and suppose linear deformations using beam elements (Timoshenko beams) .
+
+## AdaptiveBeamMapping
+
+This mapping allows to drive the Mechanical Object of the collision object thanks to the position and velocity of the Mechanical Object of the parent node. In the opposite direction, the Mapping also allows to transfer the forces and the constraints from the collision model to the DOFs (the nodes of the beam). 
+The hypothesis of beam FEM is based on interpolation function. This why this MultiAdpativeBeamMapping will rely on the interpolation defined in the WireBeamInterpolations. However, for the specific case of catheter instruments, several concentric instruments can be inserted. Then the mapping has to be done with the good interpolation functions
+
+<img src="./BeamMapping.jpg" align="left" width="700"/> 
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+<br>
 
 # References
 1. F. Andersson, *Bézier and B-spline Technology*, PhD thesis, Juin 2003
