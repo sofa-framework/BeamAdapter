@@ -93,7 +93,7 @@ The description of the shape function relies on:
 This component allows to define the rest shape of Wire instrument such as a catheter (modeled with a set of beams), the numerical parameters used in the simulation, and the topology used for the visualisation.
 
 <img src="./CatheterModeling.jpg" align="left" width="700"/> 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Several physical and geometry parameters can be defined using SOFA Data such as the **densityOfBeams**, **straightLength**, **youngModulus**, **numEdges**, etc. See [implementation documentation](docs/implementation.md) for the full list.
 
@@ -106,6 +106,7 @@ This component is one of the most important in the modeling of catheter devices:
 This component computes the Force and the mass using a beam formulation. The computation is based on a « corotational approach ». 
 
 <img src="./BeamModeling.jpg" align="left" width="700"/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 From the two 6DOF position of the nodes of the beam, we extract 4 points for defining a spline. Using this spline, we can find one central frame for the beam (in red in the figure). There is only one rotation that is not determined (along the axis of the spline). To find this twiting orientation, we use a slerp. The computation of the deformations of the beams are done in this frame and suppose linear deformations using beam elements (Timoshenko beams) .
 
@@ -115,7 +116,7 @@ This mapping allows to drive the Mechanical Object of the collision object thank
 The hypothesis of beam FEM is based on interpolation function. This why this MultiAdpativeBeamMapping will rely on the interpolation defined in the WireBeamInterpolations. However, for the specific case of catheter instruments, several concentric instruments can be inserted. Then the mapping has to be done with the good interpolation functions
 
 <img src="./BeamMapping.jpg" align="left" width="700"/> 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 <br>
 
