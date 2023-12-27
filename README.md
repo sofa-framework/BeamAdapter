@@ -1,7 +1,7 @@
 # BeamAdapter plugin
 ------------------
 
-[![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://www.sofa-framework.org/community/doc/)
+[![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://sofa-framework.github.io/BeamAdapter/)
 [![Support](https://img.shields.io/badge/support-on_GitHub_Discussions-blue.svg)](https://github.com/sofa-framework/sofa/discussions/categories/beamadapter)
 [![Gitter](https://img.shields.io/badge/chat-on_Gitter-ff69b4.svg)](https://app.gitter.im/#/room/#sofa-framework:gitter.im)
 [![Contact](https://img.shields.io/badge/contact-on_website-orange.svg)](https://www.sofa-framework.org/consortium/contact/)  
@@ -9,9 +9,10 @@
 # Description
 
 This SOFA plugin implements a 1-dimensional Finite Element Method (FEM) based on the Kirchhoff rod theory and allows to simulate any 1D flexible structure, like catheters, guidewires or coils in a medical context.
+
 This plugin proposes an adaptive implementation allowing for the interactive deployment of one or several concentric tools. This approach is therefore especially well designed for interventional radiology interventions, more especially the simulation of a catheter deployment. 
 
-<img align="center" width="80%" height="auto" src="./doc/screenshots/WireSections.png">
+<img align="center" width="50%" height="auto" src="./doc/screenshots/WireSections.png">
 
 
 
@@ -35,4 +36,4 @@ If you are using this code in your research work, please cite us!
 If this work is useful for your industrial application, your [support](https://www.sofa-framework.org/consortium/support-us/) would be most welcome.
 
 
-<img align="center" width="80%" height="auto" src="https://www.sofa-framework.org/wp-content/uploads/2016/08/coils.jpg">
+<img align="center" width="50%" height="auto" src="https://www.sofa-framework.org/wp-content/uploads/2016/08/coils.jpg">
