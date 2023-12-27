@@ -1,18 +1,17 @@
 This page presents the mechanical basis of the beam model and how the internal forces are computed.
 
-# Modeling
-Beam elements are used to model instruments (or anatomical structures) for which the length is greater than the other transverse dimensions. 
-Examples of objects with this geometry are abundant in medical simulation. 
-The particular nature of such objects generally leads to large geometric deformations, 
-which is notorious for being computationally demanding. 
+# Modeling Theory
+Beam elements are used to model instruments (or anatomical structures) for which the length is greater than the other transverse dimensions. For the general introduction of beam theory and equations, see p.509 [5] . 
 
-The approach that is used in the plugin is initially based on a linear beam analysis. 
-But it extends this representation by a series of optimizations particularly suited for real-time animation. 
-By using a corotational approach, our model can handle the important geometric non-linearity due to large changes in the shape of the object.
+The particular nature of such objects generally leads to large geometric deformations, which is notorious for being computationally demanding. 
+Examples of objects with this geometry are abundant in medical simulation.  
 
-## Corotational beam model
+The approach that is used in the plugin is initially based on a linear beam analysis. But it extends this representation by a series of optimizations particularly suited for real-time animation. 
+By using a Corotational approach, our model can handle the important geometric non-linearity due to large changes in the shape of the object.
+
+## 1. Corotational beam model
 To model the deformation of any solid body whose geometry and mechanical characteristics are similar to a wire, 
-rod or beam, we use a representation based on three-dimensional beam theory *see Przemieniecki (1985)*, where the 
+rod or beam, we use a representation based on three-dimensional beam theory *see Przemieniecki (1985) [2]*, where the 
 elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end 
 of a beam element to the forces and torques applied to them:
 
@@ -59,6 +58,21 @@ One important feature of this model is that the interpolation is performed segme
 Additionally, these frames are the independent Degrees of Freedom (DoFs) of the system.
 
 
+## 2. B-splines , Bézier Splines
+
+B-splines in general and Bézier splines in particulary can see in *[1]* or more detail in *[3]*. A
+spline tool can see at *[4]*. Here assumed several general formula. In general, a Bézier curve order
+n is determined by n + 1 control points (characteristic polygone) $P_{i, 0 \le i \le n}$ ,06i6n. Its trajectory is:
+
+$B(t)$=$\sum_{i = 0}^{n} \widehat{B}_{i,n}(t).P_i$
+
+Where $\widehat{B}_{i,n}(t)$ are Bernstein polynomial given by:
+
+$\widehat{B}_{i,n}(t)=\binom{n}{i}.t^{i}.(1-t)^{n-i}$
+
+The most usually used is the cubic Bézier , where trajectory is given by
+
+$(1 − t)^3.P_0 + 3.(1 − t)^2.t.P_1 + 3.t^2.(1 − t).P_3 + t^3.P_3$
 
 
 
