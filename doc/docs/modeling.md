@@ -9,6 +9,7 @@ Examples of objects with this geometry are abundant in medical simulation.
 The approach that is used in the plugin is initially based on a linear beam analysis. But it extends this representation by a series of optimizations particularly suited for real-time animation. 
 By using a Corotational approach, our model can handle the important geometric non-linearity due to large changes in the shape of the object.
 
+<br>
 ## 1. Corotational beam model
 To model the deformation of any solid body whose geometry and mechanical characteristics are similar to a wire, 
 rod or beam, we use a representation based on three-dimensional beam theory *see Przemieniecki (1985) [2]*, where the 
@@ -57,7 +58,7 @@ We then use the equation 3 to compute the system.
 One important feature of this model is that the interpolation is performed segment by segment between only two frames. 
 Additionally, these frames are the independent Degrees of Freedom (DoFs) of the system.
 
-
+<br>
 ## 2. B-splines , Bézier Splines
 
 B-splines in general and Bézier splines in particulary can see in *[1]* or more detail in *[3]*. A
@@ -65,7 +66,6 @@ spline tool can see at *[4]*. Here assumed several general formula. In general, 
 n is determined by n + 1 control points (characteristic polygone) $P_{i, 0 \le i \le n}$ ,06i6n. Its trajectory is:
 
 $B(t)$=$\sum_{i = 0}^{n} \widehat{B}_{i,n}(t).P_i$
-$\sum_{x = a}^{b} f(x)$
 
 Where $\widehat{B}_{i,n}(t)$ are Bernstein polynomial given by:
 
@@ -77,7 +77,7 @@ $(1 − t)^3.P_0 + 3.(1 − t)^2.t.P_1 + 3.t^2.(1 − t).P_3 + t^3.P_3$
 
 
 
-## References
+# References
 1. F. Andersson, *Bézier and B-spline Technology*, PhD thesis, Juin 2003
 2. J. Przemieniecki. *Theory of matrix structural analysis. McGraw-Hill*, 1985.
 4. T. W. Sederberg, *Computer Aided Geometric Design*, 2011 ed.
