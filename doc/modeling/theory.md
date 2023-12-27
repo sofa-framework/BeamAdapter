@@ -81,7 +81,7 @@ $(1 − t)^3.P_0 + 3.(1 − t)^2.t.P_1 + 3.t^2.(1 − t).P_3 + t^3.P_3$
 
 # Implementation
 In the following, we describe the main components of the implementation of BeamAdapter Plugin. 
-For a full description of a BeamAdapter scene, check the [implementation documentation](docs/implementation.md) and here is the documentation of the [API C++ code](https://sofa-framework.github.io/BeamAdapter/)
+For a full description of a BeamAdapter scene, check the [implementation documentation](./implementation.md) and here is the documentation of the [API C++ code](https://sofa-framework.github.io/BeamAdapter/)
 
 One of the central component of the beams is the shape function. 
 The description of the shape function relies on:
@@ -95,7 +95,7 @@ This component allows to define the rest shape of Wire instrument such as a cath
 <img src="./CatheterModeling.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
-Several physical and geometry parameters can be defined using SOFA Data such as the **densityOfBeams**, **straightLength**, **youngModulus**, **numEdges**, etc. See [implementation documentation](docs/implementation.md) for the full list.
+Several physical and geometry parameters can be defined using SOFA Data such as the **densityOfBeams**, **straightLength**, **youngModulus**, **numEdges**, etc. See [implementation documentation](./implementation.md) for the full list.
 
 ## WireBeamInterpolation
 
