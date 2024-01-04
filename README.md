@@ -5,7 +5,7 @@
 [![Gitter](https://img.shields.io/badge/chat-on_Gitter-ff69b4.svg)](https://app.gitter.im/#/room/#sofa-framework:gitter.im)
 [![Contact](https://img.shields.io/badge/contact-on_website-orange.svg)](https://www.sofa-framework.org/consortium/contact/)  
 
-# Description
+## Description
 
 This SOFA plugin implements a 1-dimensional Finite Element Method (FEM) based on the Kirchhoff rod theory and allows to simulate any 1D flexible structure, like catheters, guidewires or coils in a medical context.
 
