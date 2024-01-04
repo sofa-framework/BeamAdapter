@@ -1,6 +1,6 @@
 Beam Adapter Documentation
 =======================
-Contributors: See https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md
+All contributors are listed in the [Author.md](https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md) file.
 
 ## 1. Introduction
 
@@ -17,7 +17,7 @@ It also presents some examples of use and lists the current limitations.
 - [Modeling scene implementation](modeling/implementation.md)
 
 
-## 3. Limitation and ongoing work on the plugin
+## 3. Technical roadmap
 - [ ] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
 - [ ] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
 - [ ] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
@@ -48,6 +48,6 @@ It also presents some examples of use and lists the current limitations.
 - [examples/AdaptiveBeamController.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/AdaptiveBeamController.scn) -> Example showing the difference of 2 modeling with and without AdaptiveBeamController component.
 - [examples/AdaptiveBeamMapping.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/AdaptiveBeamMapping.scn) -> Simple example showing the behavior of AdaptiveBeamMapping component.
 
-### Complexe scenario
+### Complex scenario
 - [examples/3instruments.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/3instruments.scn) -> Simulation of 3 instruments interventional radiology free deployment in space.
 - [examples/3instruments_collis.scn](https://github.com/sofa-framework/BeamAdapter/blob/master/examples/3instruments_collis.scn) -> Simulation of 3 instruments interventional radiology deployment in a vessel triangulation structure with collisions.

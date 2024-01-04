@@ -1,5 +1,4 @@
 # BeamAdapter plugin
-------------------
 
 [![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://sofa-framework.github.io/BeamAdapter/)
 [![Support](https://img.shields.io/badge/support-on_GitHub_Discussions-blue.svg)](https://github.com/sofa-framework/sofa/discussions/categories/beamadapter)
@@ -16,16 +15,16 @@ This plugin proposes an adaptive implementation allowing for the interactive dep
 
 
 
-# Build instructions
+## Build instructions
 
 This plugin relies on the open-source project SOFA. To build the sources of this plugin, you can follow the associated "[Build a plugin from sources](https://www.sofa-framework.org/community/doc/plugins/build-a-plugin-from-sources/)" documentation page.
 
-# Documentation
+## Documentation
 
 - [API Documentation](https://sofa-framework.github.io/BeamAdapter/)
 - [Full readme documentation](./doc)
 
-# Related publications
+## Related publications
 
 If you are using this code in your research work, please cite us!
 
