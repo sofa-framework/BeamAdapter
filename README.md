@@ -3,7 +3,6 @@
 [![Documentation](https://img.shields.io/badge/doc-on_website-green.svg)](https://sofa-framework.github.io/BeamAdapter/)
 [![Support](https://img.shields.io/badge/support-on_GitHub_Discussions-blue.svg)](https://github.com/sofa-framework/sofa/discussions/categories/beamadapter)
 [![Gitter](https://img.shields.io/badge/chat-on_Gitter-ff69b4.svg)](https://app.gitter.im/#/room/#sofa-framework:gitter.im)
-[![Contact](https://img.shields.io/badge/contact-on_website-orange.svg)](https://www.sofa-framework.org/consortium/contact/)  
 
 ## Description
 
