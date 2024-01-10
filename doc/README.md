@@ -1,16 +1,17 @@
 Beam Adapter Documentation
 =======================
+
 All contributors are listed in the [Author.md](https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md) file.
 
 ## 1. Introduction
 
 The plugin Beam Adpater allows to have a dynamic implementation of the FEM beam elements.
-The underlying mechanical fundations are based on beam theory (https://en.wikipedia.org/wiki/Euler–Bernoulli_beam_theory), that have been extended to large transformation using corotational formualation.
+The underlying mechanical fundations are based on Timoshenko beam theory (https://en.wikipedia.org/wiki/Timoshenko%E2%80%93Ehrenfest_beam_theory), that have been extended to large transformation using corotational formulation.
 These elements are particularly useful for modeling 1D like deformable structures (cables, threads, flexible needles, catheters, etc...).
-
 
 This tutorial presents the mechanical and implementation basis of the plugin Beam Adpater.
 It also presents some examples of use and lists the current limitations.
+
 
 ## 2. Documentation cover:
 - [Modeling theory](modeling/theory.md)
@@ -18,11 +19,11 @@ It also presents some examples of use and lists the current limitations.
 
 
 ## 3. Technical roadmap
+- [x] Create alias for **AdaptiveBeamInterpolation** => **BeamInterpolation** ou **WireBeamInterpolation**
 - [ ] Change name **AdaptiveBeamInterpolation** into **WireBeamInterpolation**
 - [ ] Split **WireBeamInterpolation** into **BeamInterpolation** and **WireBeamInterpolation** (add file and move methods)
 - [ ] Split interpolation into 2 classes : **BeamInterpolation** / **WireBeamInterpolatio**n (pointer = WireShape)
-- [x] create alias for **AdaptiveBeamInterpolation** => **BeamInterpolation** ou **WireBeamInterpolation**
-- [ ] TODO ** BeamParam* ** and accesseur depuis **BeamInterpolation**
+- [ ] ** BeamParam* ** and accessor from **BeamInterpolation**
 - [ ] Change x_curv representation (in case cable is cut in 2)
 - [ ] **AdaptiveBeamController** => **WireAdaptiveBeamController** (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE)
 ### AdaptiveBeamMapping 
