@@ -1,8 +1,5 @@
 var namespaces_dup =
 [
-    [ "Introduction", "index.html#autotoc_md2", [
-      [ "This Documentation covers:", "index.html#autotoc_md3", null ]
-    ] ],
     [ "beamadapter", null, [
       [ "mapping", null, [
         [ "BeamProjectionDifferenceMultiMapping", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping.html", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping" ],

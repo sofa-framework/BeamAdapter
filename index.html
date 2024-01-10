@@ -86,18 +86,65 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">Beam Adapter Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_doc_README"></a> Contributors: ...</p>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Introduction</h2>
-<p>The plugin Beam Adpater allows to have a dynamic implementation of the FEM beam elements. The underlying mechanical fundations are based on beam theory (<a href="https://en.wikipedia.org/wiki/Euler–Bernoulli_beam_theory">https://en.wikipedia.org/wiki/Euler–Bernoulli_beam_theory</a>), that have been extended to large transformation using corotational formualation. These elements are particularly useful for modeling 1D like deformable structures (cables, threads, flexible needles, catheters, etc...).</p>
+<div class="textblock"><p><a class="anchor" id="md_doc_README"></a></p>
+<p>All contributors are listed in the <a href="https://github.com/sofa-framework/BeamAdapter/blob/master/Authors.md">Author.md</a> file.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+1. Introduction</h1>
+<p>The plugin Beam Adpater allows to have a dynamic implementation of the FEM beam elements. The underlying mechanical fundations are based on Timoshenko beam theory (<a href="https://en.wikipedia.org/wiki/Timoshenko%E2%80%93Ehrenfest_beam_theory">https://en.wikipedia.org/wiki/Timoshenko%E2%80%93Ehrenfest_beam_theory</a>), that have been extended to large transformation using corotational formulation. These elements are particularly useful for modeling 1D like deformable structures (cables, threads, flexible needles, catheters, etc...).</p>
 <p>This tutorial presents the mechanical and implementation basis of the plugin Beam Adpater. It also presents some examples of use and lists the current limitations.</p>
-<h3><a class="anchor" id="autotoc_md3"></a>
-This Documentation covers:</h3>
+<h1><a class="anchor" id="autotoc_md3"></a>
+2. Documentation cover:</h1>
 <ul>
-<li>Mechanical basis</li>
-<li>Implementation</li>
-<li>Examples</li>
-<li>Limitation </li>
+<li>Modeling theory</li>
+<li>Modeling scene implementation</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
+3. Technical roadmap</h1>
+<ul>
+<li>[x] Create alias for <b>AdaptiveBeamInterpolation</b> =&gt; <b>BeamInterpolation</b> ou <b>WireBeamInterpolation</b></li>
+<li>[ ] Change name <b>AdaptiveBeamInterpolation</b> into <b>WireBeamInterpolation</b></li>
+<li>[ ] Split <b>WireBeamInterpolation</b> into <b>BeamInterpolation</b> and <b>WireBeamInterpolation</b> (add file and move methods)</li>
+<li>[ ] Split interpolation into 2 classes : <b>BeamInterpolation</b> / <b>WireBeamInterpolatio**n (pointer = WireShape)</b></li>
+<li><b>[ ] ** BeamParam* ** and accessor from **BeamInterpolation</b></li>
+<li>[ ] Change x_curv representation (in case cable is cut in 2)</li>
+<li>[ ] <b>AdaptiveBeamController</b> =&gt; <b>WireAdaptiveBeamController</b> (pointers= WireInterpolation) + InterventionalRadiologyController (for SOFAEVE) </li>
+</ul>
+<h2><a class="anchor" id="autotoc_md5"></a>
+AdaptiveBeamMapping</h2>
+<ul>
+<li>[ ] Split specific case SOFAEVE (case "fromSeveralInterpolations")-&gt; InterventionalRadiologyMapping</li>
+<li>[ ] Mapping "global" (pointeur = inteporlation ) use barycentric coordinates + id beam for each "mapped" point</li>
+<li>[ ] Specific case for mapped model on a wireInterpolation (with x_curv) =&gt; Todo a method that recompute the distribution (bary + id beam) on each point0</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md6"></a>
+TO ADD List:</h2>
+<ul>
+<li>[ ] TreeInterpolation</li>
+<li>[ ] Représentation arbre "continue"</li>
+<li>[ ] Représentation arbre "discrète" =&gt; Lien avec topo SOFA</li>
+<li>[ ] TreeAdaptiveBeamController</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md7"></a>
+4. Examples list:</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Simple scenario</h2>
+<ul>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/SingleBeam.scn">examples/SingleBeam.scn</a> -&gt; Simulation of a single wire with a fixed number of beams.</li>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/SingleBeamDeployment.scn">examples/SingleBeamDeployment.scn</a> -&gt; Simulation of a single wire deployment in free environment.</li>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/SingleBeamDeploymentCollision.scn">examples/SingleBeamDeploymentCollision.scn</a> -&gt; Simulation of a single wire deployment in a vessel mesh.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Component examples</h2>
+<ul>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/Tool_from_loader.scn">examples/Tool_from_loader.scn</a> -&gt; Simulation of a tool with a geometry loaded from a mesh file.</li>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/AdaptiveBeamController.scn">examples/AdaptiveBeamController.scn</a> -&gt; Example showing the difference of 2 modeling with and without AdaptiveBeamController component.</li>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/AdaptiveBeamMapping.scn">examples/AdaptiveBeamMapping.scn</a> -&gt; Simple example showing the behavior of AdaptiveBeamMapping component.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Complex scenario</h2>
+<ul>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/3instruments.scn">examples/3instruments.scn</a> -&gt; Simulation of 3 instruments interventional radiology free deployment in space.</li>
+<li><a href="https://github.com/sofa-framework/BeamAdapter/blob/master/examples/3instruments_collis.scn">examples/3instruments_collis.scn</a> -&gt; Simulation of 3 instruments interventional radiology deployment in a vessel triangulation structure with collisions. </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
@@ -105,7 +152,7 @@ This Documentation covers:</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Dec 7 2023 07:58:41 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Jan 10 2024 09:49:30 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
