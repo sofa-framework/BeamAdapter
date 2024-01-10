@@ -3,30 +3,39 @@ import Sofa
 
 def createScene(rootNode):
 
-    rootNode.addObject('RequiredPlugin', pluginName='BeamAdapter SofaMeshCollision SofaBoundaryCondition SofaConstraint SofaMiscCollision SofaDeformable SofaGeneralLinearSolver SofaImplicitOdeSolver')
+    rootNode.addObject('RequiredPlugin', name="plug1", pluginName='BeamAdapter Sofa.Component.Constraint.Projective Sofa.Component.LinearSolver.Direct Sofa.Component.ODESolver.Backward Sofa.Component.StateContainer Sofa.Component.Topology.Container.Constant Sofa.Component.Topology.Container.Grid Sofa.Component.Visual Sofa.Component.SolidMechanics.Spring Sofa.Component.Topology.Container.Dynamic')
+    rootNode.addObject('RequiredPlugin', name="plug2", pluginName='Sofa.Component.AnimationLoop Sofa.Component.Collision.Detection.Algorithm Sofa.Component.Collision.Detection.Intersection Sofa.Component.Collision.Geometry Sofa.Component.Collision.Response.Contact Sofa.Component.Constraint.Lagrangian.Correction Sofa.Component.Constraint.Lagrangian.Solver Sofa.Component.IO.Mesh')
     rootNode.addObject('VisualStyle', displayFlags='hideVisualModels hideBehaviorModels showCollisionModels hideMappings showInteractionForceFields')
 
     rootNode.addObject('FreeMotionAnimationLoop')
     rootNode.addObject('DefaultVisualManagerLoop')
 
     rootNode.addObject('LCPConstraintSolver', mu='0.1', tolerance='1e-10', maxIt='1000', build_lcp='false')
-    rootNode.addObject('DefaultPipeline', draw='0', depth='6', verbose='1')
+    rootNode.addObject('CollisionPipeline', draw='0', depth='6', verbose='1')
     rootNode.addObject('BruteForceBroadPhase', name='N2')
     rootNode.addObject('BVHNarrowPhase')
-    rootNode.addObject('LocalMinDistance', contactDistance='1', alarmDistance='5', name='localmindistance', angleCone='0.02')
-    rootNode.addObject('DefaultContactManager', name='Response', response='FrictionContactConstraint')
+    rootNode.addObject('LocalMinDistance', contactDistance='0.1', alarmDistance='2', name='localmindistance', angleCone='0.2')
+    rootNode.addObject('CollisionResponse', name='Response', response='FrictionContactConstraint')
 
     topoLines = rootNode.addChild('EdgeTopology')
-    topoLines.addObject('WireRestShape', name='BeamRestShape', 
-                                 straightLength=980.0, length=1000.0, 
-                                 numEdges=200, youngModulus=20000, 
-                                 spireDiameter=25, numEdgesCollis=[50,10], 
-                                 printLog=True, template='Rigid3d', spireHeight=0.0, 
-                                 densityOfBeams=[30,5], youngModulusExtremity=20000)
+    topoLines.addObject('RodStraightSection', name='StraightSection', 
+                                 length=980.0, radius=1, 
+                                 nbEdgesCollis=50, nbEdgesVisu=200, 
+                                 youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
+
+    topoLines.addObject('RodSpireSection', name='SpireSection', 
+                                 length=20.0, radius=1, 
+                                 nbEdgesCollis=10, nbEdgesVisu=200,
+                                 spireDiameter=25, spireHeight=0,
+                                 youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
+    topoLines.addObject('WireRestShape', name='BeamRestShape', template="Rigid3d",
+                                 wireMaterials="@StraightSection @SpireSection")
+                                 
     topoLines.addObject('EdgeSetTopologyContainer', name='meshLines')
     topoLines.addObject('EdgeSetTopologyModifier', name='Modifier')
     topoLines.addObject('EdgeSetGeometryAlgorithms', name='GeomAlgo', template='Rigid3d')
     topoLines.addObject('MechanicalObject', name='dofTopo2', template='Rigid3d')
+
 
 
     BeamMechanics = rootNode.addChild('BeamModel')
@@ -45,7 +54,7 @@ def createScene(rootNode):
                                     rotationInstrument=[0, 0, 0], step=5., speed=5., 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
-    BeamMechanics.addObject('FixedConstraint', indices=0, name='FixedConstraint')
+    BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
     BeamMechanics.addObject('RestShapeSpringsForceField', points='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
     
 
