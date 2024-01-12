@@ -83,7 +83,7 @@ This components are placed under the node named « topoLines_cath » and allow t
 
 This component is one of the main important to simulate interventional radiology instruments. It inherits from the class adapt the parameters of the simulation.
 
-<img src="./CatheterModeling.jpg" align="left" width="700"/> 
+<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/CatheterModeling.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 -   angleMax: gives the maximum angle of bending of the catheter
@@ -163,7 +163,7 @@ Inside the component, the geometric support of each beams is a cubic spline. Fro
 
 ### AdaptiveBeamForceFieldAndMass
 This component computes the Force and the mass using a beam formulation. The computation is based on a « corotational approach ».
-<img src="./BeamModeling.jpg" align="left" width="700"/>
+<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamModeling.jpg" align="left" width="700"/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 From the two 6DOF position of the nodes of the beam, we extract 4 points for defining a spline. Using this spline, we can find one central frame for the beam (in red in the figure). There is only one rotation that is not determined (along the axis of the spline). To find this twiting orientation, we use a slerp.
@@ -229,7 +229,7 @@ In the opposite direction, the Mapping also allows to transfer the forces and th
 
 The hypothesis of beam FEM is based on interpolation function. This why this MultiAdpativeBeamMapping will rely on the interpolation defined in the WireBeamInterpolations. However, for the specific case of catheter instruments, several concentric instruments can be inserted. Then the mapping has to be done with the good interpolation functions
 
-<img src="./BeamMapping.jpg" align="left" width="700"/> 
+<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamMapping.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Consequently the MultiAdaptiveBeamMapping is directly « controlled » by the InterventionalRadiologyController and has to be linked to this component
