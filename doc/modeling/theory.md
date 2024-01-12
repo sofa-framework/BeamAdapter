@@ -17,12 +17,12 @@ rod or beam, we use a representation based on three-dimensional beam theory *see
 elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end 
 of a beam element to the forces and torques applied to them:
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/Matrix.jpg" align="left" width="700"/> 
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/Matrix.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 parameters:
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/Matrix_param.jpg" align="left" width="700"/> <br/>
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/Matrix_param.jpg" align="left" width="700"/> <br/>
 <br/><br/><br/><br/><br/>
 
 The assumption of the corotational model is that the deformations remain ”small” at the level of each element. 
@@ -41,7 +41,7 @@ We need a matrix relationship between the variation of the position δ **u** in 
 δ **q** in the global coordinates.
 
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamFrames.jpg" align="left" width="700"/> 
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/BeamFrames.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 This relationship is expressed by the matrix equation:
@@ -92,7 +92,7 @@ The description of the shape function relies on:
 ## WireRestShape
 This component allows to define the rest shape of Wire instrument such as a catheter (modeled with a set of beams), the numerical parameters used in the simulation, and the topology used for the visualisation.
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/CatheterModeling.jpg" align="left" width="700"/> 
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/CatheterModeling.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Several physical and geometry parameters can be defined using SOFA Data such as the **densityOfBeams**, **straightLength**, **youngModulus**, **numEdges**, etc. See [implementation documentation](https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/implementation.md) for the full list.
@@ -105,7 +105,7 @@ This component is one of the most important in the modeling of catheter devices:
 
 This component computes the Force and the mass using a beam formulation. The computation is based on a « corotational approach ». 
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamModeling.jpg" align="left" width="700"/>
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/BeamModeling.jpg" align="left" width="700"/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 From the two 6DOF position of the nodes of the beam, we extract 4 points for defining a spline. Using this spline, we can find one central frame for the beam (in red in the figure). There is only one rotation that is not determined (along the axis of the spline). To find this twiting orientation, we use a slerp. The computation of the deformations of the beams are done in this frame and suppose linear deformations using beam elements (Timoshenko beams) .
@@ -115,7 +115,7 @@ From the two 6DOF position of the nodes of the beam, we extract 4 points for def
 This mapping allows to drive the Mechanical Object of the collision object thanks to the position and velocity of the Mechanical Object of the parent node. In the opposite direction, the Mapping also allows to transfer the forces and the constraints from the collision model to the DOFs (the nodes of the beam). 
 The hypothesis of beam FEM is based on interpolation function. This why this MultiAdpativeBeamMapping will rely on the interpolation defined in the WireBeamInterpolations. However, for the specific case of catheter instruments, several concentric instruments can be inserted. Then the mapping has to be done with the good interpolation functions
 
-<img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamMapping.jpg" align="left" width="700"/> 
+<img src="https://raw.githubusercontent.com/sofa-framework/BeamAdapter/master/doc/modeling/BeamMapping.jpg" align="left" width="700"/> 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 <br>
