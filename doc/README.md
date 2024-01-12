@@ -14,8 +14,8 @@ It also presents some examples of use and lists the current limitations.
 
 
 ## 2. Documentation cover:
-- [Modeling theory](modeling/theory.md)
-- [Modeling scene implementation](modeling/implementation.md)
+- [Modeling theory](https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/theory.md)
+- [Modeling scene implementation](https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/implementation.md)
 
 
 ## 3. Technical roadmap

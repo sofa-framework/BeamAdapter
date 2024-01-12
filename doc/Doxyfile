@@ -1602,4 +1602,7 @@ DOT_CLEANUP            = YES
 HTML_EXTRA_STYLESHEET = .github/doxygen-awesome-css/doxygen-awesome.css
 
 INPUT += doc/README.md
+INPUT += doc/modeling/theory.md
+INPUT += doc/modeling/implementation.md
+
 USE_MDFILE_AS_MAINPAGE = doc/README.md
