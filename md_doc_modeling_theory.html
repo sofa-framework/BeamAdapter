@@ -98,7 +98,7 @@ Modeling Theory</h1>
 <h2><a class="anchor" id="autotoc_md12"></a>
 1. Corotational beam model</h2>
 <p>To model the deformation of any solid body whose geometry and mechanical characteristics are similar to a wire, rod or beam, we use a representation based on three-dimensional beam theory <em>see Przemieniecki (1985) [2]</em>, where the elementary stiffness matrix Ke is a 12 × 12 symmetric matrix that relates angular and spacial positions of each end of a beam element to the forces and torques applied to them:</p>
-<p><img src="./Matrix.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/Matrix.jpg" alt="" align="left" width="700" class="inline"/> <br  />
 <br  />
 <br  />
 <br  />
@@ -112,7 +112,7 @@ Modeling Theory</h1>
 <br  />
 </p>
 <p>parameters:</p>
-<p><img src="./Matrix_param.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/Matrix_param.jpg" alt="" align="left" width="700" class="inline"/> <br  />
  <br  />
 <br  />
 <br  />
@@ -122,7 +122,7 @@ Modeling Theory</h1>
 <p>The assumption of the corotational model is that the deformations remain ”small” at the level of each element. Thus, a local frame is defined for each beam. Thus, the force **f<sub>e</sub>** at the level of the element is equal to:</p>
 <p>**f<sub>e</sub> = K<sub>e</sub> (u - u<sub>0</sub>)** (1)</p>
 <p>where <b>u</b> and **u<sub>0</sub>** reflect respectively the actual and the initial configuration of the beam, in the local frame of the beam. Since the stiffness matrix **K<sub>e</sub>** is initially calculated in local coordinates, it is necessary to introduce transformation matrices changing the reference frame from a local to a global coordinate system. In order to determine the stiffness property of the complete structure, a common reference frame must be established for all unassembled structural elements so that all the displacements and their corresponding forces will be referred to a common (global) coordinate system. We need a matrix relationship between the variation of the position δ <b>u</b> in the local coordinate system and the variation of the node position δ <b>q</b> in the global coordinates.</p>
-<p><img src="./BeamFrames.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamFrames.jpg" alt="" align="left" width="700" class="inline"/> <br  />
 <br  />
 <br  />
 <br  />
@@ -158,7 +158,7 @@ Modeling Theory</h1>
 </p>
 <h1><a class="anchor" id="autotoc_md14"></a>
 Implementation</h1>
-<p>In the following, we describe the main components of the implementation of BeamAdapter Plugin. For a full description of a BeamAdapter scene, check the <a class="el" href="md_doc_modeling_implementation.html">implementation documentation</a> and here is the documentation of the <a href="https://sofa-framework.github.io/BeamAdapter/">API C++ code</a></p>
+<p>In the following, we describe the main components of the implementation of BeamAdapter Plugin. For a full description of a BeamAdapter scene, check the <a href="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/implementation.md">implementation documentation</a> and here is the documentation of the <a href="https://sofa-framework.github.io/BeamAdapter/">API C++ code</a></p>
 <p>One of the central component of the beams is the shape function. The description of the shape function relies on:</p><ul>
 <li>One topology of edges</li>
 <li>A set of frames with Dofs (3 translations, 3 rotations) that corresponds to the points of the topology</li>
@@ -167,7 +167,7 @@ Implementation</h1>
 <h2><a class="anchor" id="autotoc_md15"></a>
 WireRestShape</h2>
 <p>This component allows to define the rest shape of Wire instrument such as a catheter (modeled with a set of beams), the numerical parameters used in the simulation, and the topology used for the visualisation.</p>
-<p><img src="./CatheterModeling.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/CatheterModeling.jpg" alt="" align="left" width="700" class="inline"/> <br  />
 <br  />
 <br  />
 <br  />
@@ -182,14 +182,14 @@ WireRestShape</h2>
 <br  />
 <br  />
 </p>
-<p>Several physical and geometry parameters can be defined using SOFA Data such as the <b>densityOfBeams</b>, <b>straightLength</b>, <b>youngModulus</b>, <b>numEdges</b>, etc. See <a class="el" href="md_doc_modeling_implementation.html">implementation documentation</a> for the full list.</p>
+<p>Several physical and geometry parameters can be defined using SOFA Data such as the <b>densityOfBeams</b>, <b>straightLength</b>, <b>youngModulus</b>, <b>numEdges</b>, etc. See <a href="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/implementation.md">implementation documentation</a> for the full list.</p>
 <h2><a class="anchor" id="autotoc_md16"></a>
 WireBeamInterpolation</h2>
 <p>This component is one of the most important in the modeling of catheter devices: It contains the interpolation functions that are dynamically updated when the catheter is deployed. Inside the component, the geometric support of each beams is a cubic spline. From the two frames at the extremities of the beam, we define the 4 control points of the cubic splines. The construction is made to guaranty a C1 continuity between splines.</p>
 <h2><a class="anchor" id="autotoc_md17"></a>
 AdaptiveBeamForceFieldAndMass</h2>
 <p>This component computes the Force and the mass using a beam formulation. The computation is based on a « corotational approach ».</p>
-<p><img src="./BeamModeling.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamModeling.jpg" alt="" align="left" width="700" class="inline"/> <br  />
 <br  />
 <br  />
 <br  />
@@ -208,7 +208,7 @@ AdaptiveBeamForceFieldAndMass</h2>
 <h2><a class="anchor" id="autotoc_md18"></a>
 AdaptiveBeamMapping</h2>
 <p>This mapping allows to drive the Mechanical Object of the collision object thanks to the position and velocity of the Mechanical Object of the parent node. In the opposite direction, the Mapping also allows to transfer the forces and the constraints from the collision model to the DOFs (the nodes of the beam). The hypothesis of beam FEM is based on interpolation function. This why this MultiAdpativeBeamMapping will rely on the interpolation defined in the WireBeamInterpolations. However, for the specific case of catheter instruments, several concentric instruments can be inserted. Then the mapping has to be done with the good interpolation functions</p>
-<p><img src="./BeamMapping.jpg" alt="" align="left" width="700" class="inline"/> <br  />
+<p><img src="https://github.com/sofa-framework/BeamAdapter/blob/master/doc/modeling/BeamMapping.jpg" alt="" align="left" width="700" class="inline"/> <br  />
 <br  />
 <br  />
 <br  />
@@ -244,7 +244,7 @@ References</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Jan 12 2024 11:03:24 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 12 2024 11:27:31 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
