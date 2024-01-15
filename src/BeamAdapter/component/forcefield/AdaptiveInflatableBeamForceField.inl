@@ -671,8 +671,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
         }
     }
 
-    //std::cout<<"F beam = "<<f<<std::endl;
-
     if(d_computeMass.getValue())
     {
         /// add gravity:

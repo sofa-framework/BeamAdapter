@@ -788,7 +788,6 @@ void BeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, cons
         return;
     }
 
-    //std::cout << " getSplinePoints  : global_H_local0 ="<<global_H_local0<<"    global_H_local1 ="<<global_H_local1<<std::endl;
     const Real& _L = d_lengthList.getValue()[edgeInList];
     this->getControlPointsFromFrame(global_H_local0, global_H_local1,_L,P0, P1,P2, P3);
 
