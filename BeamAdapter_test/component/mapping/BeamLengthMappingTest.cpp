@@ -20,6 +20,7 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 #include <string>
+#include <sofa/simulation/graph/SimpleApi.h>
 using std::string ;
 #include <sofa/component/mapping/testing/MappingTestCreation.h>
 #include <sofa/simulation/graph/DAGSimulation.h>
@@ -114,6 +115,9 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         const int Nout=2; // WARNING this number has to be changed to test with more than one beam !!
         const int Nin=3;
 
+        sofa::simpleapi::importPlugin("Sofa.Component.ODESolver.Backward");
+        sofa::simpleapi::importPlugin("Sofa.Component.LinearSolver.Iterative");
+
         string scene =
                 "<?xml version='1.0'?>"
                 ""
@@ -121,7 +125,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
                 "   			<EulerImplicit rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               <Mesh name='meshSuture' edges='0 1 1 2' />"
-                "               <MechanicalObject template='Rigid' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1   2 0 0 0 0 0 1' showObject='1'/>"
+                "               <MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1   2 0 0 0 0 0 1' showObject='1'/>"
                 "                <BeamInterpolation name='Interpol' radius='0.3' defaultYoungModulus='1e7'  DOF0TransformNode0='0.2 0.3 0.1 0 0 0 1   0.12 0.3 0.1 0 0 0.3826834 0.9238795 '  DOF1TransformNode1='-0.3 0.3 0.1 0 0 0 1  -0.2 0.25 0 0 0 0 1' dofsAndBeamsAligned='0' straight='0'/>"
                 "               <Node name='Map' > "
                 "                      <MechanicalObject template='Vec1d' name='mappedDOFs' position='0.5  0.8'  />"
