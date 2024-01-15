@@ -74,7 +74,7 @@ MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
-    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_apply");
+    SCOPED_TIMER("MultiAdaptiveBeamMapping_apply");
 
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     if(!isBarycentricMapping)
@@ -96,7 +96,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* m
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecDeriv>& dOut, const Data<InVecDeriv>& dIn)
 {
-    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJ");
+    SCOPED_TIMER("MultiAdaptiveBeamMapping_applyJ");
 
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
@@ -110,7 +110,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* 
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<InVecDeriv>& dOut, const Data<VecDeriv>& dIn)
 {
-    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJT");
+    SCOPED_TIMER("MultiAdaptiveBeamMapping_applyJT");
 
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {
@@ -131,7 +131,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams*
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& dOut, const Data<OutMatrixDeriv>& dIn)
 {
-    ScopedAdvancedTimer timer("MultiAdaptiveBeamMapping_applyJT");
+    SCOPED_TIMER("MultiAdaptiveBeamMapping_applyJT");
 
     for (unsigned int subMap=0; subMap<m_subMappingList.size(); subMap++)
     {

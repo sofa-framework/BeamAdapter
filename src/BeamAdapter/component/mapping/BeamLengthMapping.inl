@@ -41,7 +41,6 @@
 #include <sofa/core/visual/VisualParams.h>
 
 #include <sofa/simulation/AnimateBeginEvent.h>
-#include <sofa/helper/AdvancedTimer.h>
 #include <sofa/core/MechanicalParams.h>
 #include <sofa/helper/ScopedAdvancedTimer.h>
 #include <iomanip>
@@ -64,7 +63,6 @@ using sofa::core::State;
 using helper::ReadAccessor;
 using helper::WriteAccessor;
 using sofa::core::ConstVecCoordId;
-using sofa::helper::AdvancedTimer;
 using sofa::core::MultiVecCoordId;
 using sofa::core::VecCoordId;
 using sofa::core::VecDerivId;
@@ -124,7 +122,7 @@ void BeamLengthMapping< TIn, TOut>::reset()
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
-    sofa::helper::ScopedAdvancedTimer timer("AdaptiveBeamMappingApply");
+    SCOPED_TIMER("AdaptiveBeamMappingApply");
 
     VecCoord& out = *dOut.beginEdit();
     const InVecCoord& in = dIn.getValue();
@@ -157,7 +155,7 @@ void BeamLengthMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams
 {
     SOFA_UNUSED(mparams);
 
-    sofa::helper::ScopedAdvancedTimer timer("AdaptiveBeamMappingApplyJ");
+    SCOPED_TIMER("AdaptiveBeamMappingApplyJ");
 
     VecDeriv& out = *dOut.beginEdit();
     const InVecDeriv& in= dIn.getValue();
@@ -235,7 +233,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
 
     SOFA_UNUSED(mparams);
 
-    sofa::helper::ScopedAdvancedTimer timer("AdaptiveBeamMappingMechanicalApplyJT");
+    SCOPED_TIMER("AdaptiveBeamMappingMechanicalApplyJT");
     InVecDeriv& out = *dOut.beginEdit();
     const VecDeriv& in= dIn.getValue();
 
@@ -355,7 +353,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparam
 {
     SOFA_UNUSED(cparams);
 
-    sofa::helper::ScopedAdvancedTimer timer("AdaptiveBeamMappingConstrainApplyJT");
+    SCOPED_TIMER("AdaptiveBeamMappingConstrainApplyJT");
 
     InMatrixDeriv& out = *dOut.beginEdit();
     const OutMatrixDeriv& in = dIn.getValue();

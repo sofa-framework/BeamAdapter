@@ -472,7 +472,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
                                                          const DataVecCoord& datax,
                                                          const DataVecDeriv& v)
 {
-    ScopedAdvancedTimer timer("AdaptiveBeamForceFieldAndMass_addForce");
+    SCOPED_TIMER("AdaptiveBeamForceFieldAndMass_addForce");
     SOFA_UNUSED(v);
 
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
