@@ -177,7 +177,6 @@ void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string fi
     {
         if (line.empty())
             continue;
-        std::cout << line << std::endl;
         std::istringstream values(line);
         values >> result[0] >> result[1] >> result[2];
         result[0] /= 1000;

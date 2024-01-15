@@ -166,11 +166,6 @@ public:
     void setInterpolation(BeamInterpolation< TIn >* interpolation)
     {
         l_adaptativebeamInterpolation.set(interpolation);
-
-        std::cout<<"l_adaptativebeamInterpolation set "<<l_adaptativebeamInterpolation.getName()<<std::endl;
-        std::cout<<"l_adaptativebeamInterpolation num Beam "<<l_adaptativebeamInterpolation->getNumBeams()<<std::endl;
-
-
     }
 
     virtual ~BeamLengthMapping(){}
