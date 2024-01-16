@@ -31,7 +31,6 @@
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/core/visual/VisualParams.h>
-#include <sofa/helper/AdvancedTimer.h>
 #include <sofa/core/objectmodel/BaseContext.h>
 #include <sofa/helper/logging/Message.h>
 #include <sofa/type/RGBAColor.h>
@@ -43,7 +42,6 @@
 namespace beamadapter::mapping
 {
 using sofa::core::objectmodel::BaseContext ;
-using sofa::helper::AdvancedTimer;
 using sofa::helper::WriteAccessor;
 using sofa::type::RGBAColor ;
 using sofa::core::objectmodel::ComponentState;
