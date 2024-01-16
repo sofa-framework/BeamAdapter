@@ -52,6 +52,7 @@ public:
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Grid");
         sofa::simpleapi::importPlugin("Sofa.Component.Constraint.Projective");
+        sofa::simpleapi::importPlugin("Sofa.Component.StateContainer");
 
         m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
     }
