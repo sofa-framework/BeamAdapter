@@ -8,6 +8,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
     src/BeamAdapter.CUDA/init.cpp
+    src/BeamAdapter.CUDA/CudaInstantiations.cpp
 )
 
 sofa_find_package(BeamAdapter REQUIRED)

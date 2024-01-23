@@ -20,6 +20,7 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 #include <BeamAdapter.CUDA/init.h>
+#include <BeamAdapter/initBeamAdapter.h>
 #include <sofa/core/ObjectFactory.h>
 namespace beamadapter::cuda
 {
@@ -51,6 +52,7 @@ void init()
     static bool first = true;
     if (first)
     {
+        sofa::component::initBeamAdapter();
         first = false;
     }
 }

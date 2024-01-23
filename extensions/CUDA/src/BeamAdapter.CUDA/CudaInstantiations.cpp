@@ -19,6 +19,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
+#include <BeamAdapter.CUDA/config.h>
 #include <SofaCUDA/sofa/gpu/cuda/CudaTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.inl>
@@ -43,62 +44,62 @@ using namespace sofa::gpu::cuda;
 
 namespace sofa::component::fem::_beaminterpolation_
 {
-    // template class SOFA_BEAMADAPTER_API BeamInterpolation<CudaRigid3fTypes>;
+    // template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3fTypes>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API BeamInterpolation<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::component::fem::_beaminterpolation_
 
 namespace sofa::component::fem::_wirebeaminterpolation_
 {
-    // template class SOFA_BEAMADAPTER_API WireBeamInterpolation<CudaRigid3fTypes>;
+    // template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3fTypes>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API WireBeamInterpolation<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::component::fem::_beaminterpolation_
 
 namespace sofa::component::engine::_wirerestshape_
 {
-    template class SOFA_BEAMADAPTER_API WireRestShape<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API WireRestShape<CudaRigid3fTypes>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API WireRestShape<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API WireRestShape<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::component::engine::_wirerestshape_
 
 namespace sofa::component::controller::_interventionalradiologycontroller_
 {
-    template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API InterventionalRadiologyController<CudaRigid3fTypes>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API InterventionalRadiologyController<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::component::controller::_interventionalradiologycontroller_
 
 namespace sofa::component::mapping::_adaptivebeammapping_
 {
-    template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
+    template class SOFA_BEAMADAPTER_CUDA_API AdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
+    template class SOFA_BEAMADAPTER_CUDA_API AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
 #endif
 } // namespace sofa::component::mapping::_adaptivebeammapping_
 
 namespace sofa::component::mapping
 {
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
+    template class SOFA_BEAMADAPTER_CUDA_API MultiAdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
+    template class SOFA_BEAMADAPTER_CUDA_API MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
 #endif
 } // namespace sofa::component::mapping
 
 namespace sofa::beamadapter
 {
-    template class SOFA_BEAMADAPTER_API RodMeshSection<CudaRigid3fTypes>;
-    template class SOFA_BEAMADAPTER_API RodSpireSection<CudaRigid3fTypes>;
-    template class SOFA_BEAMADAPTER_API RodStraightSection<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodMeshSection<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodSpireSection<CudaRigid3fTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodStraightSection<CudaRigid3fTypes>;
 
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_API RodMeshSection<CudaRigid3dTypes>;
-    template class SOFA_BEAMADAPTER_API RodSpireSection<CudaRigid3dTypes>;
-    template class SOFA_BEAMADAPTER_API RodStraightSection<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodMeshSection<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodSpireSection<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API RodStraightSection<CudaRigid3dTypes>;
 #endif
 } // namespace sofa::beamadapter
 
