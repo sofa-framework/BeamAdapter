@@ -196,4 +196,6 @@ SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")
 # Config files and install rules for pythons scripts
 sofa_install_pythonscripts(PLUGIN_NAME ${PROJECT_NAME} PYTHONSCRIPTS_SOURCE_DIR "python")
 
+sofa_add_subdirectory(plugin extensions/CUDA BeamAdapter.CUDA)
+
 include(cmake/packaging.cmake)

@@ -1,0 +1,9 @@
+# CMake package configuration file for the BeamAdapter.CUDA library
+
+@PACKAGE_GUARD@
+@PACKAGE_INIT@
+
+find_package(BeamAdapter QUIET REQUIRED)
+find_package(SofaCUDA QUIET REQUIRED)
+
+check_required_components(BeamAdapter.CUDA)
