@@ -19,7 +19,7 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#include <BeamAdapter.CUDA/config.h>
+#include <BeamAdapter/CUDA/config.h>
 #include <SofaCUDA/sofa/gpu/cuda/CudaTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.inl>

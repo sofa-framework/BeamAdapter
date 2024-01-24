@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.12)
 project(BeamAdapter.CUDA)
 
 set(HEADER_FILES
-    src/BeamAdapter.CUDA/init.h
-    src/BeamAdapter.CUDA/config.h.in
+    src/BeamAdapter/CUDA/init.h
+    src/BeamAdapter/CUDA/config.h.in
 )
 
 set(SOURCE_FILES
-    src/BeamAdapter.CUDA/init.cpp
-    src/BeamAdapter.CUDA/CudaInstantiations.cpp
+    src/BeamAdapter/CUDA/init.cpp
+    src/BeamAdapter/CUDA/CudaInstantiations.cpp
 )
 
 sofa_find_package(BeamAdapter REQUIRED)
