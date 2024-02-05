@@ -47,6 +47,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
+#include <sofa/component/mapping/nonlinear/NonLinearMappingData.h>
 
 #include <sofa/linearalgebra/EigenSparseMatrix.h>
 
@@ -102,7 +103,7 @@ using sofa::core::topology::TopologyContainer ;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
  */
 template <class TIn, class TOut>
-class BeamLengthMapping : public Mapping<TIn, TOut>
+class BeamLengthMapping : public Mapping<TIn, TOut>, public nonlinear::NonLinearMappingData<true>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE2(BeamLengthMapping,TIn,TOut),
@@ -155,9 +156,6 @@ public:
     SingleLink<BeamLengthMapping<TIn, TOut>,
                BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_adaptativebeamInterpolation;
 
-    Data< unsigned >       d_geometricStiffness; ///< how to compute geometric stiffness (0->no GS, 1->exact GS, 2->stabilized GS)
-
-
     BeamLengthMapping(State< In >* from=NULL,
                         State< Out >* to=NULL,
                         BeamInterpolation< TIn >* interpolation=NULL) ;
@@ -187,7 +185,7 @@ public:
     // interface of baseMapping.h
     virtual void updateK( const MechanicalParams* /*mparams*/, core::ConstMultiVecDerivId /*outForce*/ ) override;
     const linearalgebra::BaseMatrix* getK() override;
-
+    void buildGeometricStiffnessMatrix(sofa::core::GeometricStiffnessMatrix* matrices) override;
 
 
 

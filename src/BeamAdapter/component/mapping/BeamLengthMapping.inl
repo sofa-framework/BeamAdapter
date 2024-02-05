@@ -44,6 +44,7 @@
 #include <sofa/core/MechanicalParams.h>
 #include <sofa/helper/ScopedAdvancedTimer.h>
 #include <iomanip>
+#include <sofa/core/BaseLocalMappingMatrix.h>
 
 
 namespace sofa
@@ -74,8 +75,6 @@ BeamLengthMapping<TIn,TOut>::BeamLengthMapping(State< In >* from, State< Out >* 
                                                    BeamInterpolation< TIn >* interpolation)
     : Inherit(from, to)
     , l_adaptativebeamInterpolation(initLink("interpolation", "Path to the Interpolation component on scene"), interpolation)
-    , d_geometricStiffness(initData(&d_geometricStiffness, 2u, "geometricStiffness", "0 -> no GS, 1 -> exact GS, 2 -> stabilized GS (default)"))
-
 {
 
 
@@ -431,7 +430,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparam
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId)
 {
-    const unsigned& geometricStiffness = d_geometricStiffness.getValue();
+    const unsigned& geometricStiffness = this->d_geometricStiffness.getValue().getSelectedId();
     if( !geometricStiffness ) return;
 
     const SReal kfactor = mparams->kFactor();
@@ -591,7 +590,7 @@ void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, co
 template <class TIn, class TOut>
 void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams, core::ConstMultiVecDerivId childForceId )
 {
-    const unsigned& geometricStiffness = d_geometricStiffness.getValue();
+    const unsigned& geometricStiffness = this->d_geometricStiffness.getValue().getSelectedId();
     if( !geometricStiffness ) { K_geom.resize(0,0); return; }
     //helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[(const core::State<TOut>*)this->getToModels()[0]].read() );
 
@@ -773,6 +772,132 @@ template <class TIn, class TOut>
 const sofa::linearalgebra::BaseMatrix* BeamLengthMapping<TIn, TOut>::getK()
 {
     return &K_geom;
+}
+
+template <class TIn, class TOut>
+void BeamLengthMapping<TIn, TOut>::buildGeometricStiffnessMatrix(
+    sofa::core::GeometricStiffnessMatrix* matrices)
+{
+    const unsigned& geometricStiffness = d_geometricStiffness.getValue().getSelectedId();
+    if( !geometricStiffness )
+    {
+        return;
+    }
+
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const InVecCoord& x_in = dataInX.getValue();
+
+    const auto childForce = this->toModel->readTotalForces();
+    const auto dJdx = matrices->getMappingDerivativeIn(this->fromModel).withRespectToPositionsIn(this->fromModel);
+
+    const unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
+
+    for (unsigned int i = 0; i < s; i++)
+    {
+        const Deriv& force_i = childForce[i];
+
+        // force in compression (>0) can lead to negative eigen values in geometric stiffness
+        // this results in a undefinite implicit matrix that causes instabilies
+        // if stabilized GS (geometricStiffness==2) -> keep only force in extension
+        if (force_i[0] < 0 || geometricStiffness == 1)
+        {
+            //1. get the indices of the Dofs of the beam a
+            unsigned int IdxNode[2];
+            l_adaptativebeamInterpolation->getNodeIndices(i,IdxNode[0],IdxNode[1]);
+
+            //2. get the force on the mapped dof
+            Real childF = force_i[0];
+
+            //3. get the spline points
+            Vec<3, InReal> P0,P1,P2,P3;
+            l_adaptativebeamInterpolation->getSplinePoints(i, x_in , P0,  P1, P2, P3);
+
+            ////////////////////////////
+            //4. compute the equivalent stiffness on the spline control point (apply DJt on spline map)
+            Mat<4,4,Mat3> K;
+            computeDJtSpline(childF, P0,P1,P2,P3, K);
+
+            //- K must be transfered from the control points to the DOFs
+            //  - get the transformation of the DOFs
+            Transform DOF0Global_H_local0, DOF1Global_H_local1;
+            l_adaptativebeamInterpolation->getDOFtoLocalTransformInGlobalFrame(i, DOF0Global_H_local0, DOF1Global_H_local1, x_in);
+
+            // - create a matrix of the lever in the global frame
+            Real L = l_adaptativebeamInterpolation->getLength(i);
+            // - rotate the levers in the global frame
+            Vec3 lev(-L/3.0,0.0,0.0);
+            Vec3 Lev00_global = -DOF0Global_H_local0.getOrigin();
+            Vec3 Lev01_global = DOF0Global_H_local0.getOrientation().rotate(lev) - DOF0Global_H_local0.getOrigin();
+            lev[0]=L/3;
+            Vec3 Lev12_global = DOF1Global_H_local1.getOrientation().rotate(lev) - DOF1Global_H_local1.getOrigin();
+            Vec3 Lev13_global = -DOF1Global_H_local1.getOrigin();
+
+            // create matrices:
+            Mat3 Lev00_mat, Lev01_mat, Lev12_mat,Lev13_mat ;
+            createCrossMatrix(Lev01_global, Lev01_mat);
+            createCrossMatrix(Lev12_global, Lev12_mat);
+            createCrossMatrix(Lev00_global, Lev00_mat);
+            createCrossMatrix(Lev13_global, Lev13_mat);
+
+            Mat<4,4,Mat3> SplineP_J_DOFs;
+            SplineP_J_DOFs[0][0].identity(); SplineP_J_DOFs[0][1] = Lev00_mat; SplineP_J_DOFs[0][2].clear(); SplineP_J_DOFs[0][3].clear();
+            SplineP_J_DOFs[1][0].identity(); SplineP_J_DOFs[1][1] = Lev01_mat; SplineP_J_DOFs[1][2].clear(); SplineP_J_DOFs[1][3].clear();
+            SplineP_J_DOFs[2][0].clear(); SplineP_J_DOFs[2][1].clear(); SplineP_J_DOFs[2][2].identity(); SplineP_J_DOFs[2][3] = Lev12_mat;
+            SplineP_J_DOFs[3][0].clear(); SplineP_J_DOFs[3][1].clear(); SplineP_J_DOFs[3][2].identity(); SplineP_J_DOFs[3][3] = Lev13_mat;
+
+            Mat<4,4,Mat3> Result;
+            for (unsigned int l=0; l<4;l++)// block lines
+            {
+                for (unsigned int c=0; c<4;c++) // block columns
+                {
+                    Result[l][c].clear();
+                    for (unsigned int j=0; j<4;j++)
+                    {
+                        for (unsigned int k=0; k<4;k++)
+                        {
+                            Result[l][c] += SplineP_J_DOFs[j][l].transposed() * K[j][k] * SplineP_J_DOFs[k][c];
+                        }
+                    }
+
+                }
+            }
+
+            // 5. compute the equivalent stiffness on the rigid rotation of control point (apply DJt on rigid at fixed forces on spline)
+            // -compute the equivalent forces on the spline control point (apply Jt on spline map)
+
+            Vec3 F0, F1, F2, F3;
+            computeJtSpline(childF, P0,P1,P2,P3, F0, F1, F2, F3);
+            Mat3 F0_mat, F1_mat, F2_mat, F3_mat;
+            createCrossMatrix(F0, F0_mat);
+            createCrossMatrix(F1, F1_mat);
+            createCrossMatrix(F2, F2_mat);
+            createCrossMatrix(F3, F3_mat);
+
+            // 6. assembly
+            for (unsigned j = 0; j < 2; j++)
+            {
+                for (unsigned int k = 0; k < 2; k++)
+                {
+                    for (unsigned int l = 0; l < 3; l++)
+                    {
+                        for (unsigned int c = 0; c < 3; c++)
+                        {
+                            // translation translation
+                            dJdx(Nin*IdxNode[j]+l, Nin*IdxNode[k]+c ) += Result[2*j  ][2*k  ][l][c];
+                            // translation rotation
+                            dJdx(Nin*IdxNode[j]+l  , Nin*IdxNode[k]+c+3 ) += Result[2*j  ][2*k+1][l][c];
+                            // rotation translation
+                            dJdx(Nin*IdxNode[j]+l+3, Nin*IdxNode[k]+c ) += Result[2*j+1][2*k  ][l][c];
+                            // rotation rotation
+                            dJdx(Nin*IdxNode[j]+l+3, Nin*IdxNode[k]+c+3 ) += Result[2*j+1][2*k+1][l][c];
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
 }
 
 
