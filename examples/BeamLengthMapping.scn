@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.05"  gravity="0 -9.81 0">
+    <Node name="Plugins">
+        <RequiredPlugin name="BeamAdapter"/>
+        <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [GenericConstraintCorrection] -->
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Model"/> <!-- Needed to use components [UniformLagrangianConstraint] -->
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [GenericConstraintSolver] -->
+        <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->
+        <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [SparseLDLSolver] -->
+        <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->
+        <RequiredPlugin name="Sofa.Component.Mapping.NonLinear"/> <!-- Needed to use components [RigidMapping] -->
+        <RequiredPlugin name="Sofa.Component.Mass"/> <!-- Needed to use components [UniformMass] -->
+        <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
+        <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->
+        <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [EdgeSetTopologyContainer] -->
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [CylinderGridTopology] -->
+        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
+    </Node>
+
+    <FreeMotionAnimationLoop/>
+    <GenericConstraintSolver maxIterations="1000" tolerance="1e-10"/>
+
+    <EulerImplicitSolver firstOrder="0" rayleighStiffness="0.0"/>
+    <SparseLDLSolver name="solver" template="CompressedRowSparseMatrix"/>
+    <GenericConstraintCorrection linearSolver="@solver"/>
+
+    <EdgeSetTopologyContainer edges="0 1 1 2 2 3 3 4" position="0 0 0   0.1 0 0   0.2 0 0   0.3 0 0   0.5 0 0"/>
+    <MechanicalObject template="Rigid3d" name="frames" showObject="1" showObjectScale="0.02"/>
+
+    <BeamInterpolation name="BeamInterpolation" printLog = "1" defaultYoungModulus="3e9" dofsAndBeamsAligned="false" straight="1" crossSectionShape="circular" radius="0.001" DOF0TransformNode0="0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1 " DOF1TransformNode1=" 0 0 0 0 0 0 1  0 0 0 0 0 0 1  0 0 0 0 0 0 1   -0.1 0 0 0 0 0 1 "/>
+    <AdaptiveBeamForceFieldAndMass name="BeamForceField" computeMass="true" massDensity="1.24e3"/>
+    <RestShapeSpringsForceField name="anchor" points="0" stiffness="1e6" angularStiffness="1e5"/>
+
+    <UniformMass indices="4" totalMass="0.5" showAxisSizeFactor="0.2" vertexMass="0.5 0.008 0.0133 0.005 0.0050.005 0.0133 0.005 0.005 0.005 0.0133"/>
+
+    <Node name="lengthConstraint">
+        <MechanicalObject template="Vec1d" name="mappedDOFs" position="0.1 0.1 0.1 0.1"/>
+        <BeamLengthMapping name="beamLMap" geometricStiffness="Exact"/>
+        <UniformLagrangianConstraint template="Vec1d" iterative="false"/>
+    </Node>
+
+    <Node name="beamVisual">
+        <CylinderGridTopology name='topo' center='0 0 0' axis='1 0 0' radius="0.001" length="0.4"  n='3 3 16' computeHexaList='0' computeQuadList='0' drawHexahedra='0'/>
+        <MechanicalObject template='Vec3' name='visual'/>
+
+        <AdaptiveBeamMapping interpolation='@../BeamInterpolation' input='@../frames' output='@./visual' useCurvAbs='1'/>
+        <Node name="ogl">
+            <OglModel color='0 0 1 0.2'/>
+            <IdentityMapping/>
+        </Node>
+    </Node>
+
+    <Node name="cubeVisual">
+        <MeshOBJLoader filename='mesh/cube.obj' scale='0.1' name='loader'/>
+        <OglModel src='@loader'/>
+        <RigidMapping index='4'/>
+    </Node>
+</Node>
