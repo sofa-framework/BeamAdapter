@@ -20,13 +20,10 @@ var namespacesofa =
         [ "USE_TOOL_2", "_beam_actions_8h.html#a8f1473d10d6aa803639b0ddf45b82305ac69bb40704f9ef8b177f7b7d23d03dc2", null ]
       ] ],
       [ "BaseRodSectionMaterial< Rigid3Types >", "_base_rod_section_material_8cpp.html#ae07e7fa23751d379e6feb4bc9e9b5eb5", null ],
-      [ "RodMeshSection< CudaRigid3fTypes >", "_cuda_instantiations_8cpp.html#a2de9c634c58fce92e4230e65efb19b42", null ],
       [ "RodMeshSection< Rigid3Types >", "_rod_mesh_section_8cpp.html#a5aff4b07ef154f78f5ec2adf14fe3248", null ],
       [ "RodMeshSectionClass", "_rod_mesh_section_8cpp.html#aa85ec61ceca1f69b67893ca65cab1fa7", null ],
-      [ "RodSpireSection< CudaRigid3fTypes >", "_cuda_instantiations_8cpp.html#a3e6b058fc2e4e74e03c873687b074195", null ],
       [ "RodSpireSection< Rigid3Types >", "_rod_spire_section_8cpp.html#a432e7d400438221834b4b16a0f725ab5", null ],
       [ "RodSpireSectionClass", "_rod_spire_section_8cpp.html#a4a18914bdcd6f9828004adbb5b2db043", null ],
-      [ "RodStraightSection< CudaRigid3fTypes >", "_cuda_instantiations_8cpp.html#a40065565c8a2ef1ea79ac5a3587b9878", null ],
       [ "RodStraightSection< Rigid3Types >", "_rod_straight_section_8cpp.html#a496d9ce89469365044c76c3673f6584f", null ],
       [ "RodStraightSectionClass", "_rod_straight_section_8cpp.html#a70ba257f585559dc5fbdb8a9ae494b9d", null ]
     ] ],
@@ -53,7 +50,6 @@ var namespacesofa =
       [ "engine", null, [
         [ "_wirerestshape_", null, [
           [ "WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape" ],
-          [ "WireRestShape< CudaRigid3fTypes >", "_cuda_instantiations_8cpp.html#aa7eb13466b36641910e3adca0207f058", null ],
           [ "WireRestShape< Rigid3Types >", "_wire_rest_shape_8cpp.html#a1ae525708bac1de88178c679cc24f59c", null ],
           [ "WireRestShapeClass", "_wire_rest_shape_8cpp.html#a2496f1c7ba127d97d3866bd89d96fc6e", null ]
         ] ],
