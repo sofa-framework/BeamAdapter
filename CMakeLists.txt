@@ -14,7 +14,6 @@ sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
 sofa_find_package(SofaImplicitField QUIET)
 sofa_find_package(SofaAdvancedConstraint QUIET)
-sofa_find_package(SofaCUDA QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
@@ -138,14 +137,6 @@ if(SofaAdvancedConstraint_FOUND)
     #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
 endif()
 
-
-if(SofaCUDA_FOUND)
-    list (APPEND SOURCE_FILES
-        ${BEAMADAPTER_SRC}/gpu/cuda/CudaInstantiations.cpp
-    )
-    message(STATUS "BeamAdapter: SofaCUDA has been enabled, instantiations for CudaTypes will be enabled.")
-endif()
-
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core)
@@ -157,9 +148,6 @@ if(SofaImplicitField_FOUND)
 endif()
 if(SofaAdvancedConstraint_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
-endif()
-if(SofaCUDA_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SofaCUDA)
 endif()
 
 sofa_create_package_with_targets(
@@ -195,5 +183,7 @@ SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")
 
 # Config files and install rules for pythons scripts
 sofa_install_pythonscripts(PLUGIN_NAME ${PROJECT_NAME} PYTHONSCRIPTS_SOURCE_DIR "python")
+
+sofa_add_subdirectory(plugin extensions/CUDA BeamAdapter.CUDA)
 
 include(cmake/packaging.cmake)
