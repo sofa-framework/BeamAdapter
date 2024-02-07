@@ -44,10 +44,8 @@
 
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 
-namespace sofa::component::controller
-{
 
-namespace _interventionalradiologycontroller_
+namespace sofa::component::controller::_interventionalradiologycontroller_
 {
 
 using type::vector;
@@ -1067,6 +1065,6 @@ int InterventionalRadiologyController<DataTypes>::getTotalNbEdges() const
 }
 
 
-} // namespace _interventionalradiologycontroller_
+} // namespace sofa::component::controller::_interventionalradiologycontroller_
 
-} // namespace sofa::component::controller
+

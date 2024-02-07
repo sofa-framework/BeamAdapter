@@ -39,10 +39,7 @@ using sofa::defaulttype::Rigid3Types;
 using sofa::core::RegisterObject;
 
 
-namespace sofa::component::constraintset
-{
-
-namespace _adaptiveBeamSlidingConstraint_
+namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
 {
 
 AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
@@ -101,10 +98,7 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3Types>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-} // namespace _adaptiveBeamSlidingConstraint_
-
-} // namespace sofa::component::constraintset
-
+} // namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
 
 
 ///////////////////////////////// DEPRECATION MANAGEMENT FOR BACKWARD COMPATIBILITY ///////////////////

@@ -37,10 +37,8 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-namespace sofa::component::engine
-{
 
-namespace _wirerestshape_
+namespace sofa::component::engine::_wirerestshape_
 {
 using namespace sofa::defaulttype;
 
@@ -60,6 +58,6 @@ const int WireRestShapeClass = core::RegisterObject("Describe the shape function
 template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3Types>;
 
 
-} // namespace _wirerestshape_
+} // namespace sofa::component::engine::_wirerestshape_
 
-}// namespace sofa::component::engine
+

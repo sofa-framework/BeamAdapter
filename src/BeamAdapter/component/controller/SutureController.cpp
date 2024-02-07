@@ -37,10 +37,8 @@
 
 #include <BeamAdapter/component/controller/SutureController.inl>
 
-namespace sofa::component::controller
-{
 
-namespace _suturecontroller_
+namespace sofa::component::controller::_suturecontroller_
 {
 
 using namespace sofa::defaulttype;
@@ -62,4 +60,4 @@ template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
 
 } /// _suturecontroller_
 
-} /// namespace sofa::component::controller
+/// namespace sofa::component::controller

@@ -29,10 +29,8 @@
 #include <sofa/core/behavior/ConstraintResolution.h>
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
 
-namespace sofa::component::constraintset
-{
 
-namespace _adaptivebeamlengthconstraint_
+namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
 {
 
 using helper::ReadAccessor;
@@ -408,4 +406,4 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
 
 } /// namespace _adaptivebeamlengthconstraint_
 
-} /// namespace sofa::component::constraintset
+/// namespace sofa::component::constraintset
