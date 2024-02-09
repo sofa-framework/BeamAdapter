@@ -21,6 +21,7 @@
 ******************************************************************************/
 #include <BeamAdapter/CUDA/init.h>
 #include <BeamAdapter/initBeamAdapter.h>
+#include <SofaCUDA/init.h>
 #include <sofa/core/ObjectFactory.h>
 namespace beamadapter::cuda
 {
@@ -53,6 +54,7 @@ void init()
     if (first)
     {
         sofa::component::initBeamAdapter();
+        sofa::gpu::cuda::init();
         first = false;
     }
 }
