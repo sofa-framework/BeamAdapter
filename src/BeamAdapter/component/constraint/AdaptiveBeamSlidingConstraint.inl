@@ -154,7 +154,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
 
     Transform Tnode0, Tnode1, Tresult;
     Real baryCoord;
-    unsigned int beam;
+    unsigned int beam = 0;
 
     ReadAccessor<Data<VecCoord> > x1free=mstate1->read(ConstVecCoordId::freePosition()) ;
     ReadAccessor<Data<VecCoord> > x2free=mstate2->read(ConstVecCoordId::freePosition()) ;

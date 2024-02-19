@@ -36,7 +36,7 @@
 #include <sofa/component/controller/MechanicalStateController.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/component/constraint/projective/FixedConstraint.h>
+#include <sofa/component/constraint/projective/FixedProjectiveConstraint.h>
 #include <sofa/core/DataEngine.h>
 #include <sofa/component/collision/geometry/PointModel.h>
 #include <sofa/component/collision/geometry/LineModel.h>
@@ -55,7 +55,7 @@ namespace _interventionalradiologycontroller_
 using sofa::type::Vec;
 using sofa::type::Vec3d;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::component::constraint::projective::FixedConstraint;
+using sofa::component::constraint::projective::FixedProjectiveConstraint;
 
 /*!
  * \class InterventionalRadiologyController
@@ -179,7 +179,7 @@ public:
     
     bool m_useBeamActions = false;
     bool m_FF, m_RW, m_sensored;
-    FixedConstraint<DataTypes> *    m_fixedConstraint;
+    FixedProjectiveConstraint<DataTypes> *    m_fixedConstraint;
     type::vector<Vec3d>                   m_sensorMotionData;
     unsigned int                    m_currentSensorData;
     type::vector<Real>                    m_nodeCurvAbs;
