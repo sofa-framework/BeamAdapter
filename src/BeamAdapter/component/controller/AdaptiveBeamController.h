@@ -36,7 +36,7 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/constraint/projective/FixedConstraint.h>
+#include <sofa/component/constraint/projective/FixedProjectiveConstraint.h>
 #include <sofa/component/collision/geometry/PointModel.h>
 #include <sofa/component/collision/geometry/LineModel.h>
 
@@ -58,7 +58,7 @@ namespace sofa::component::controller
 namespace _adaptivebeamcontroller_
 {
 
-using sofa::component::constraint::projective::FixedConstraint ;
+using sofa::component::constraint::projective::FixedProjectiveConstraint;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
 using sofa::component::fem::BeamInterpolation ;
