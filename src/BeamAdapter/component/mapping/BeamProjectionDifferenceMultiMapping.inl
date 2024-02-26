@@ -62,7 +62,7 @@ BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::BeamProjectionDifference
     , m_updateJ(false)
 {
     auto directions = sofa::helper::getWriteAccessor(d_directions);
-    directions.resize(OutDeriv::total_size, true);
+    directions.resize(OutDeriv::total_size);
 }
 
 

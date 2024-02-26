@@ -284,7 +284,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
     points.reserve(x.size());
     colors.reserve(x.size());
 
-    for (auto i = 0; i < x.size(); i++)
+    for (sofa::Size i = 0; i < x.size(); i++)
     {
         point = DataTypes::getCPos(x[i]);
         points.push_back(point);

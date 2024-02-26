@@ -245,7 +245,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
     }
    
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (sofa::Size i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -306,7 +306,7 @@ template <class DataTypes>
 void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
     numLines = 0;
-    for (auto i = 0; i < l_sectionMaterials.size(); ++i)
+    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
     {
         numLines += l_sectionMaterials.get(i)->getNbCollisionEdges();
     }

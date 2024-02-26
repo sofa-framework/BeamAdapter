@@ -140,7 +140,7 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
     else
     {
         const type::vector<Real>& times = d_timeSteps.getValue();
-        if (!times.empty() && m_readStep < times.size())
+        if (!times.empty() && m_readStep < (int)times.size())
         {
             const Real& time = times[m_readStep];
 
