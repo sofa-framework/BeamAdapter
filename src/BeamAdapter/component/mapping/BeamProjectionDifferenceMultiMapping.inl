@@ -145,7 +145,7 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::computeProjection(c
         Real distMin = std::numeric_limits<Real>::max();
 
         // find the min distance between P and its projection on each edge of xTo
-        for (int e=0; e<edges.size(); e++)
+        for (sofa::Size e=0; e<edges.size(); e++)
         {
             const auto& edge = edges[e];
             In2Coord Q1 = xTo[edge[0]];

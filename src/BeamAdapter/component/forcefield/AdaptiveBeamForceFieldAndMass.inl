@@ -178,6 +178,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, Beam
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeMass(int beamId, BeamLocalMatrices& beamLocalMatrix)
 {
+    SOFA_UNUSED(beamId);
     Real L2 = (Real) (beamLocalMatrix._L * beamLocalMatrix._L);
     beamLocalMatrix.m_M00.clear(); beamLocalMatrix.m_M01.clear(); beamLocalMatrix.m_M10.clear(); beamLocalMatrix.m_M11.clear();
 
