@@ -367,7 +367,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter::BeamAdapterAction action)
 {
     int id = d_controlledInstrument.getValue();
-    if (id >= (int)m_instrumentsList.size())
+    if (id >= int(m_instrumentsList.size()))
     {
         msg_warning() << "Controlled Instrument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
         return;
@@ -403,7 +403,7 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
     }
     case BeamAdapterAction::SWITCH_NEXT_TOOL:
     {
-        if (id + 1 >= (int)m_instrumentsList.size())
+        if (id + 1 >= int(m_instrumentsList.size()))
             msg_warning() << "Switching to next tool is not possible, no more instrument in list.";
         else
             d_controlledInstrument.setValue(id + 1);

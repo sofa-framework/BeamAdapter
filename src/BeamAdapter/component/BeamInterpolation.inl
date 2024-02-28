@@ -538,14 +538,16 @@ template <class DataTypes>
 void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId, Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
 {
     const auto& defaultYoungModuli = d_defaultYoungModulus.getValue();
-    if (beamId < (int)defaultYoungModuli.size()) {
+    if (beamId < int(defaultYoungModuli.size())) {
+
         youngModulus = defaultYoungModuli[beamId];
     } else {
         youngModulus = m_defaultYoungModulus;
     }
     
     const auto& poissonRatios = d_poissonRatio.getValue();
-    if (beamId < (int)poissonRatios.size()) {
+    if (beamId < int(poissonRatios.size())) {
+
         cPoisson     = poissonRatios[beamId];
     } else {
         cPoisson     = m_defaultPoissonRatio;
