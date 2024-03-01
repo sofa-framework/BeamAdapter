@@ -20,7 +20,7 @@
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
 #include <string>
-#include <sofa/simulation/graph/SimpleApi.h>
+#include <sofa/simpleapi/SimpleApi.h>
 using std::string ;
 #include <sofa/component/mapping/testing/MappingTestCreation.h>
 #include <sofa/simulation/graph/DAGSimulation.h>
