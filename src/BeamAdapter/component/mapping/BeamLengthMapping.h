@@ -234,10 +234,5 @@ using _beamlengthmapping_::BeamLengthMapping ;
 
 
 
-} /// namespace mapping
-
-/// namespace component
-
-/// namespace sofa
-
+}
 #endif  /* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */

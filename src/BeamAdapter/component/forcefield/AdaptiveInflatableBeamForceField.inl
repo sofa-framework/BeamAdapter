@@ -831,6 +831,4 @@ void AdaptiveInflatableBeamForceField<DataTypes>::drawElement(const VisualParams
 }
 
 
-} /// namespace _AdaptiveInflatableBeamForceField_
-
-/// namespace sofa::component::forcefield
+}

@@ -64,6 +64,4 @@ static int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpol
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 
-} /// namespace _beaminterpolation_
-
-/// sofa::component::fem
+}

@@ -58,6 +58,4 @@ static int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyb
 
 template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
 
-} /// _suturecontroller_
-
-/// namespace sofa::component::controller
+}
