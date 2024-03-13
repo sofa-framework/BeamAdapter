@@ -103,14 +103,14 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>AdaptiveBeamLengthConstraintResolution</b> (SReal *initF=nullptr, bool *active=nullptr)</td></tr>
 <tr class="separator:ae7951dc19ecf573e0b3a50639429ecea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93c529238998b0c296fd2fa341770ae1"><td class="memItemLeft" align="right" valign="top"><a id="a93c529238998b0c296fd2fa341770ae1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (int line, SReal **w, SReal *force) override</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (int line, SReal **w, SReal *force) override</td></tr>
 <tr class="separator:a93c529238998b0c296fd2fa341770ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07612197cc97ee843bba669673bbc136"><td class="memItemLeft" align="right" valign="top"><a id="a07612197cc97ee843bba669673bbc136"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>store</b> (int line, SReal *force, bool convergence) override</td></tr>
+<tr class="separator:a07612197cc97ee843bba669673bbc136"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace8a66eab08b6d8833d3dbba034bc578"><td class="memItemLeft" align="right" valign="top"><a id="ace8a66eab08b6d8833d3dbba034bc578"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resolution</b> (int line, SReal **w, SReal *d, SReal *force)</td></tr>
 <tr class="separator:ace8a66eab08b6d8833d3dbba034bc578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07612197cc97ee843bba669673bbc136"><td class="memItemLeft" align="right" valign="top"><a id="a07612197cc97ee843bba669673bbc136"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>store</b> (int line, SReal *force, bool convergence) override</td></tr>
-<tr class="separator:a07612197cc97ee843bba669673bbc136"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -127,7 +127,7 @@ bool *&#160;</td><td class="memItemRight" valign="bottom"><b>m_active</b></td></
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacesofa.html">sofa</a></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset.html">constraintset</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint__.html">_adaptivebeamlengthconstraint_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html">AdaptiveBeamLengthConstraintResolution</a></li>
-    <li class="footer">Generated on Fri Mar 8 2024 11:33:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Mar 13 2024 09:40:44 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
