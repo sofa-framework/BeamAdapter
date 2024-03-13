@@ -666,7 +666,6 @@ void AdaptiveBeamMapping< TIn, TOut>::computeDistribution()
         else
         {
             m_pointBeamDistribution.reserve(points.size());
-            const bool printLog = this->f_printLog.getValue();
             for (unsigned int i=0; i<points.size(); i++)
             {
                 const unsigned int beamId = (int)floor(points[i][0]);

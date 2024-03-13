@@ -49,10 +49,12 @@ public:
     AdaptiveBeamLengthConstraintResolution(SReal* initF=nullptr, bool* active=nullptr) : ConstraintResolution(1) ,m_initF(initF), m_active(active)
     {
     }
-    void init(int line, SReal** w, SReal* force) override;
-    void resolution(int line, SReal** w, SReal* d, SReal* force);
-    void store(int line, SReal* force, bool convergence) override;
+    virtual void init(int line, SReal** w, SReal* force) override;
+    virtual void store(int line, SReal* force, bool convergence) override;
 
+    using sofa::core::behavior::ConstraintResolution::resolution;
+    void resolution(int line, SReal** w, SReal* d, SReal* force);
+    
 protected:
     SReal*    m_initF;
     bool*      m_active;

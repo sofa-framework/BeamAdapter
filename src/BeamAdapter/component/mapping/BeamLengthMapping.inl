@@ -122,6 +122,7 @@ void BeamLengthMapping< TIn, TOut>::reset()
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
 {
+    SOFA_UNUSED(mparams);
     SCOPED_TIMER("AdaptiveBeamMappingApply");
 
     VecCoord& out = *dOut.beginEdit();
@@ -591,6 +592,7 @@ void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, co
 template <class TIn, class TOut>
 void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams, core::ConstMultiVecDerivId childForceId )
 {
+    SOFA_UNUSED(mparams);
     const unsigned& geometricStiffness = d_geometricStiffness.getValue();
     if( !geometricStiffness ) { K_geom.resize(0,0); return; }
     //helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[(const core::State<TOut>*)this->getToModels()[0]].read() );

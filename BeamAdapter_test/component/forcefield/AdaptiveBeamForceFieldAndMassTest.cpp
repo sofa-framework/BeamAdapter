@@ -159,7 +159,6 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         EXPECT_NEAR(positions[id][2], 0, 1e-4);
 
         // run some simulation steps
-        auto simulation = sofa::simulation::getSimulation();
         for (int i = 0; i < nbrStep; i++)
         {
             sofa::simulation::node::animate(root.get(), 0.01);

@@ -149,7 +149,7 @@ bool WireRestShape<DataTypes>::initTopology()
     Real prev_length = 0.0;
     int prev_edges = 0;
     int startPtId = 0; 
-    for (auto i = 0; i < l_sectionMaterials.size(); ++i)
+    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
     {
         // Add topology of the material 
         int nbrVisuEdges = l_sectionMaterials.get(i)->getNbVisualEdges();
@@ -212,7 +212,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
     }
     
     // Check in which section x_used belongs to and get access to this section material
-    for (auto i = 1; i< keyPts.size(); ++i)
+    for (sofa::Size i = 1; i< keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -245,7 +245,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
     }
    
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (sofa::Size i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -264,7 +264,7 @@ void WireRestShape<DataTypes>::getYoungModulusAtX(const Real& x_curv, Real& youn
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
 
     // Depending on the position of the beam, determine the corresponding section material and returning its Young modulus
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (sofa::Size i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -283,7 +283,7 @@ void WireRestShape<DataTypes>::getInterpolationParam(const Real& x_curv, Real &_
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
 
     // Check in which section x_used belongs to and get access to this section material
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (sofa::Size i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -306,7 +306,7 @@ template <class DataTypes>
 void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
     numLines = 0;
-    for (auto i = 0; i < l_sectionMaterials.size(); ++i)
+    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
     {
         numLines += l_sectionMaterials.get(i)->getNbCollisionEdges();
     }

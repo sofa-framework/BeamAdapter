@@ -366,10 +366,10 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter::BeamAdapterAction action)
 {
-    int id = d_controlledInstrument.getValue();    
-    if (id >= m_instrumentsList.size())
+    int id = d_controlledInstrument.getValue();
+    if (id >= int(m_instrumentsList.size()))
     {
-        msg_warning() << "Controlled Instument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
+        msg_warning() << "Controlled Instrument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
         return;
     }
 
@@ -403,7 +403,7 @@ void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter
     }
     case BeamAdapterAction::SWITCH_NEXT_TOOL:
     {
-        if (id + 1 >= m_instrumentsList.size())
+        if (id + 1 >= int(m_instrumentsList.size()))
             msg_warning() << "Switching to next tool is not possible, no more instrument in list.";
         else
             d_controlledInstrument.setValue(id + 1);
@@ -455,7 +455,7 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
     // Step 2 => add the beams given the sampling parameters
     double maxAbsLength=0.0;
     Real xSampling = 0.0;
-    for (auto i=0; i<m_instrumentsList.size(); i++)
+    for (sofa::Size i=0; i<m_instrumentsList.size(); i++)
     {
         type::vector<Real> xP_noticeable_I;
         type::vector< int > density_I;

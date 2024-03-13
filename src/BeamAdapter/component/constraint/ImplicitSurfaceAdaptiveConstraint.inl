@@ -639,7 +639,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     const auto stateLifeCycle = vparams->drawTool()->makeStateLifeCycle();
     vparams->drawTool()->disableLighting();
 
-    std::vector<sofa::type::Vector3> pointsToDraw;
+    std::vector<sofa::type::Vec3> pointsToDraw;
     std::vector<type::RGBAColor> colors;
 
     typename sofa::type::vector<potentialContact>::iterator it = m_vecPotentialContact.begin();
@@ -664,7 +664,7 @@ void ImplicitSurfaceAdaptiveConstraint<DataTypes>::draw(const core::visual::Visu
     vparams->drawTool()->drawPoints(pointsToDraw, 2, colors);
 
     colors.clear();
-    std::vector<sofa::type::Vector3> linesToDraw;
+    std::vector<sofa::type::Vec3> linesToDraw;
 
     for (unsigned int i=0; i<m_vecPotentialContact.size(); i++)
     {
