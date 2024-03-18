@@ -114,44 +114,31 @@
 		</Node>	
 
 		<Node name="VisuCatheter" activated="true">
-			<MechanicalObject name="Quads" />
+			<OglModel name="Visual" color="0.7 0.7 0.7"  quads="@../ContainerCath.quads" material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
 			<QuadSetTopologyContainer  name="ContainerCath" />
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="2" input="@../../topoLines_cath/meshLinesCath" output="@ContainerCath" flipNormals="true"/>
 
-			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolCatheter" input="@../DOFs" output="@Quads" isMechanical="false"  />
-
-			<Node name="VisuOgl" activated="true">
-				<OglModel name="Visual" color="0.7 0.7 0.7"  quads="@../ContainerCath.quads" material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20"/>
-				<IdentityMapping input="@../Quads" output="@Visual"/>
-			</Node>	
+			<AdaptiveBeamMapping  name="VisuMapCath" useCurvAbs="1" printLog="0" interpolation="@../InterpolCatheter" input="@../DOFs" output="@Visual"  />
 		</Node>
 	
 		<Node name="VisuGuide" activated="true">
-			<MechanicalObject name="Quads" />
+			<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>
 			<QuadSetTopologyContainer  name="ContainerGuide" />
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="1" input="@../../topoLines_guide/meshLinesGuide" output="@ContainerGuide"  flipNormals="true" listening="true"/> 
-			<AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="@../InterpolGuide" input="@../DOFs" output="@Quads" isMechanical="false" />
-			<Node name="VisuOgl">
-				<OglModel name="Visual" color="0.2 0.2 0.8"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerGuide.quads"/>
-				<IdentityMapping input="@../Quads" output="@Visual"/>
-			</Node>		
+			<AdaptiveBeamMapping  name="visuMapGuide" useCurvAbs="1" printLog="0" interpolation="@../InterpolGuide" input="@../DOFs" output="@Visual" />
 		</Node> 
 	   
 		<Node name="VisuCoils" activated="true">
-			<MechanicalObject name="Quads"/>
+			<OglModel name="Visual" color="0.2 0.8 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
 			<QuadSetTopologyContainer  name="ContainerCoils" />
 			<QuadSetTopologyModifier   name="Modifier" />
 			<QuadSetGeometryAlgorithms name="GeomAlgo"  template="Vec3d" />
 			<Edge2QuadTopologicalMapping nbPointsOnEachCircle="10" radius="0.3"  input="@../../topoLines_coils/meshLinesCoils" output="@ContainerCoils"  flipNormals="true" listening="true" /> 
-			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="@../InterpolCoils" input="@../DOFs" output="@Quads" isMechanical="false" />
-			<Node name="VisuOgl">
-				<OglModel name="Visual" color="0.2 0.8 0.2"  material="texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20" quads="@../ContainerCoils.quads"/>
-				<IdentityMapping input="@../Quads" output="@Visual"/>
-			</Node>		
+			<AdaptiveBeamMapping  name="visuMapCoils" useCurvAbs="1" printLog="0" interpolation="@../InterpolCoils" input="@../DOFs" output="@Visual" />
 		</Node>   
 	</Node>
 
