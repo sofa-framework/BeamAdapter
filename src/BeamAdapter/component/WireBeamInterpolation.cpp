@@ -39,10 +39,7 @@
 #include <sofa/core/ObjectFactory.h>
 
 
-namespace sofa::component::fem
-{
-
-namespace _wirebeaminterpolation_
+namespace sofa::component::fem::_wirebeaminterpolation_
 {
 using namespace sofa::defaulttype;
 
@@ -60,6 +57,6 @@ static int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Inte
 
 template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;
 
-} // namespace _wirebeaminterpolation_
+} // namespace sofa::component::fem::_wirebeaminterpolation_
 
-} // namespace sofa::component::fem
+

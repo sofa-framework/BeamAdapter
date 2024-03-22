@@ -40,10 +40,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 
-namespace sofa::component::controller
-{
-
-namespace _interventionalradiologycontroller_
+namespace sofa::component::controller::_interventionalradiologycontroller_
 {
 
 using namespace sofa::defaulttype;
@@ -63,6 +60,6 @@ static int InterventionalRadiologyControllerClass = core::RegisterObject("Provid
 
 template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
 
-} // namespace _interventionalradiologycontroller_
+} // namespace sofa::component::controller::_interventionalradiologycontroller_
 
-} // namespace sofa::component::controller
+

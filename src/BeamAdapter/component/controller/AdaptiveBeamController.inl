@@ -43,10 +43,7 @@
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
 
-namespace sofa::component::controller
-{
-
-namespace _adaptivebeamcontroller_
+namespace sofa::component::controller::_adaptivebeamcontroller_
 {
 
 using sofa::core::objectmodel::BaseContext ;
@@ -324,6 +321,6 @@ void AdaptiveBeamController<DataTypes>::applyController()
     m_adaptiveinterpolation->setLength(newCurvAbs.size()-2,L);
 }
 
-} // namespace _adaptivebeamcontroller_
+} // namespace sofa::component::controller::_adaptivebeamcontroller_
 
-} // namespace sofa::component::controller
+

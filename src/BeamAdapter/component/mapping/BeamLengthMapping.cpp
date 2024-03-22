@@ -38,13 +38,8 @@
 
 #include <BeamAdapter/component/mapping/BeamLengthMapping.inl>
 
-namespace sofa
-{
 
-namespace component
-{
-
-namespace mapping
+namespace sofa::component::mapping
 {
 
 //using namespace defaulttype;
@@ -73,8 +68,8 @@ namespace _beamlengthmapping_
     template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
 }
 
-} // namespace mapping
+} // namespace sofa::component::mapping
 
-} // namespace component
 
-} // namespace sofa
+
+
