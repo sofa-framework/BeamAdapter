@@ -12,13 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-12, windows-2019]
+        os: [ubuntu-22.04, macos-12, windows-2022]
         sofa_branch: [v23.12]
 
     steps:
       - name: Setup SOFA and environment
         id: sofa
-        uses: sofa-framework/sofa-setup-action@v4
+        uses: sofa-framework/sofa-setup-action@v5
         with:
           sofa_root: ${{ github.workspace }}/sofa
           sofa_version: ${{ matrix.sofa_branch }}
@@ -75,17 +75,18 @@ jobs:
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             echo "$WORKSPACE_ARTIFACT_PATH/lib" >> $GITHUB_PATH
             echo "$WORKSPACE_ARTIFACT_PATH/bin" >> $GITHUB_PATH
+            echo "$SOFA_ROOT/plugins/SofaPython3/bin" >> $GITHUB_PATH
             echo "SOFA_PLUGIN_PATH=$WORKSPACE_ARTIFACT_PATH/bin" | tee -a $GITHUB_ENV
           else
             echo "SOFA_PLUGIN_PATH=$WORKSPACE_ARTIFACT_PATH/lib" | tee -a $GITHUB_ENV
           fi
 
           if [[ "$RUNNER_OS" == "macOS" ]]; then
-            echo "DYLD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$DYLD_LIBRARY_PATH" | tee -a $GITHUB_ENV
+            echo "DYLD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$SOFA_ROOT/plugins/SofaPython3/lib:$DYLD_LIBRARY_PATH" | tee -a $GITHUB_ENV
           fi
 
           if [[ "$RUNNER_OS" == "Linux" ]]; then
-            echo "LD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$LD_LIBRARY_PATH" | tee -a $GITHUB_ENV
+            echo "LD_LIBRARY_PATH=$WORKSPACE_ARTIFACT_PATH/lib:$SOFA_ROOT/lib:$SOFA_ROOT/plugins/SofaPython3/lib:$LD_LIBRARY_PATH" | tee -a $GITHUB_ENV
           fi
 
       # - name: Check environment for tests
