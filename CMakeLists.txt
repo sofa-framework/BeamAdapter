@@ -14,7 +14,11 @@ sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
 sofa_find_package(SofaImplicitField QUIET)
 sofa_find_package(SofaAdvancedConstraint QUIET)
-sofa_find_package(SofaCUDA QUIET)
+
+find_package(CUDAToolkit QUIET) # necessary if the shipped SOFA has CUDA but the current setup does not
+if(CUDAToolkit_FOUND)
+    sofa_find_package(SofaCUDA QUIET)
+endif()
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
