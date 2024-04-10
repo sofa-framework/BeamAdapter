@@ -23,10 +23,8 @@
 
 #include <sofa/core/objectmodel/BaseObject.h>
 
-namespace sofa
-{
 
-namespace component
+namespace sofa::component
 {
 using sofa::core::objectmodel::BaseObject ;
 using sofa::core::objectmodel::BaseContext ;
@@ -47,6 +45,6 @@ public:
 private:
 } ;
 
-} // namespace component
+} // namespace sofa::component
 
-} // namespace sofa
+

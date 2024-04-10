@@ -39,10 +39,8 @@
 /// Have a look a the end of BeamInterpolation.h
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
-namespace sofa::component::fem
-{
 
-namespace _beaminterpolation_
+namespace sofa::component::fem::_beaminterpolation_
 {
 
 using namespace sofa::defaulttype;
@@ -66,6 +64,4 @@ static int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpol
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
 
-} /// namespace _beaminterpolation_
-
-} /// sofa::component::fem
+} // namespace sofa::component::fem::_beaminterpolation_

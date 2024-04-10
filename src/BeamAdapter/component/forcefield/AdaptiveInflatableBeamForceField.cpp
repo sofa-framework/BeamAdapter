@@ -37,10 +37,8 @@
 #include <sofa/core/ObjectFactory.h>
 #include <BeamAdapter/component/forcefield/AdaptiveInflatableBeamForceField.inl>
 
-namespace sofa::component::forcefield
-{
 
-namespace _AdaptiveInflatableBeamForceField_
+namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
 {
 
 using sofa::core::RegisterObject ;
@@ -64,6 +62,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-} /// _adaptivebeamforcefiedlandmass_
-
-} /// namespace sofa::component::forcefield
+} // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_

@@ -48,12 +48,7 @@
 #include <sofa/core/visual/VisualParams.h>
 
 
-
-
-namespace sofa::component::forcefield
-{
-
-namespace _AdaptiveInflatableBeamForceField_
+namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
 {
 
 /* ************* ADAPTIVE FORCEFIELD_AND_MASS ************** */
@@ -836,6 +831,5 @@ void AdaptiveInflatableBeamForceField<DataTypes>::drawElement(const VisualParams
 }
 
 
-} /// namespace _AdaptiveInflatableBeamForceField_
+} // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
 
-} /// namespace sofa::component::forcefield

@@ -35,10 +35,8 @@
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
-namespace sofa::component::fem
-{
 
-namespace _wirebeaminterpolation_
+namespace sofa::component::fem::_wirebeaminterpolation_
 {
 
 using sofa::component::engine::WireRestShape ;
@@ -271,6 +269,6 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     return obj;
 }
 
-} // namespace _wirebeaminterpolation_
+} // namespace sofa::component::fem::_wirebeaminterpolation_
 
-} // namespace sofa::component::fem
+

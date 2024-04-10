@@ -38,10 +38,8 @@
 
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
 
-namespace sofa::component::forcefield
-{
 
-namespace _adaptivebeamforcefieldandmass_
+namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_
 {
 
 /////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
@@ -61,6 +59,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaultt
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-} /// _adaptivebeamforcefiedlandmass_
-
-} /// namespace sofa::component::forcefield
+} // namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_

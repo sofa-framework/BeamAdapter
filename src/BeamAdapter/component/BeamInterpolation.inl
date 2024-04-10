@@ -34,10 +34,8 @@
 
 #include <BeamAdapter/component/BeamInterpolation.h>
 
-namespace sofa::component::fem
-{
 
-namespace _beaminterpolation_
+namespace sofa::component::fem::_beaminterpolation_
 {
 
 #define BEAMADAPTER_WITH_VERIFICATION false
@@ -1502,6 +1500,5 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
 }
 
 
-} /// namespace _beaminterpolation_
+} // namespace sofa::component::fem::_beaminterpolation_
 
-} /// namespace sofa::component::fem

@@ -39,10 +39,8 @@
 #include <BeamAdapter/component/controller/SutureController.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
-namespace sofa::component::controller
-{
 
-namespace _suturecontroller_
+namespace sofa::component::controller::_suturecontroller_
 {
 
 using sofa::core::objectmodel::BaseContext ;
@@ -1214,6 +1212,5 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
     }
 }
 
-} /// namespace _suturecontroller_
+} // namespace sofa::component::controller::_suturecontroller_
 
-} /// namespace sofa::component::controller

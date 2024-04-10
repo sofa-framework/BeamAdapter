@@ -27,10 +27,8 @@
 #include <sofa/component/statecontainer/MechanicalObject.h>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa::component::constraintset
-{
 
-namespace _adaptivebeamlengthconstraint_
+namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
 {
 
 
@@ -78,6 +76,5 @@ static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the len
 template class AdaptiveBeamLengthConstraint<Rigid3Types>;
 
 
-} /// namespace _adaptivebeamlengthconstraint_
+} // namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
 
-} /// namespace sofa::component::constraintset
