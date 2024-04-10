@@ -5,7 +5,7 @@ var annotated_dup =
         [ "BeamProjectionDifferenceMultiMapping", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping.html", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping" ]
       ] ]
     ] ],
-    [ "sofa", "namespacesofa.html", [
+    [ "sofa", null, [
       [ "beamadapter", null, [
         [ "BaseRodSectionMaterial", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html", "classsofa_1_1beamadapter_1_1_base_rod_section_material" ],
         [ "RodMeshSection", "classsofa_1_1beamadapter_1_1_rod_mesh_section.html", "classsofa_1_1beamadapter_1_1_rod_mesh_section" ],
@@ -56,8 +56,8 @@ var annotated_dup =
           ] ],
           [ "SteerableCatheter", "classsofa_1_1component_1_1engine_1_1_steerable_catheter.html", "classsofa_1_1component_1_1engine_1_1_steerable_catheter" ]
         ] ],
-        [ "fem", "namespacesofa_1_1component_1_1fem.html", [
-          [ "_beaminterpolation_", null, [
+        [ "fem", null, [
+          [ "_beaminterpolation_", "namespacesofa_1_1component_1_1fem_1_1__beaminterpolation__.html", [
             [ "BeamInterpolation", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation" ]
           ] ],
           [ "_wirebeaminterpolation_", null, [
