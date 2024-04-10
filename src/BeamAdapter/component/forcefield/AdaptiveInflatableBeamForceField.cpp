@@ -62,4 +62,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}
+} // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_

@@ -59,4 +59,4 @@ template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaultt
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}
+} // namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_

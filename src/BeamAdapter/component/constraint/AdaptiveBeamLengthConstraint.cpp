@@ -76,4 +76,5 @@ static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the len
 template class AdaptiveBeamLengthConstraint<Rigid3Types>;
 
 
-}
+} // namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
+

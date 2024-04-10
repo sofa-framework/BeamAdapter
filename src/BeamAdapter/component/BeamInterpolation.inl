@@ -1498,4 +1498,5 @@ void BeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int edgeIn
 }
 
 
-}
+} // namespace sofa::component::fem::_beaminterpolation_
+

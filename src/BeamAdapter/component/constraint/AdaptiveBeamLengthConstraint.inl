@@ -404,4 +404,4 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->restoreLastState();
 }
 
-}
+} // namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_

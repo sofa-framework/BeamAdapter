@@ -1212,4 +1212,5 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
     }
 }
 
-}
+} // namespace sofa::component::controller::_suturecontroller_
+
