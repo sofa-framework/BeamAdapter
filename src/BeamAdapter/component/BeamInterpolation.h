@@ -190,10 +190,6 @@ public:
     void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone ) ;
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 
-    ///////// for AdaptiveControllers
-    bool isControlled(){return m_isControlled;}
-    void setControlled(bool value){m_isControlled=value;}
-
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
     unsigned int getNumBeamsNotUnderControl() {
@@ -202,29 +198,6 @@ public:
     }
 
 protected :
-    /// DATA INPUT (that could change in real-time)
-    using StateDataTypes = sofa::defaulttype::StdVectorTypes< sofa::type::Vec<DataTypes::spatial_dimensions, Real>, sofa::type::Vec<DataTypes::spatial_dimensions, Real>, Real >;
-    typename MechanicalObject<StateDataTypes>::SPtr m_StateNodes;
-
-    ///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
-    //Data< VecElementID >        d_edgeList;
-    //const VecEdges*             m_topologyEdges {nullptr};
-
-    ///2.m_lengthList: list of the length of each beam
-    //Data< type::vector< double > >    d_lengthList;
-
-    ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
-    /// Indexation based on the num of Edge
-    //Data< type::vector< Transform > > d_DOF0TransformNode0;
-
-    ///4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
-    //Data< type::vector< Transform > > d_DOF1TransformNode1;
-
-    //Data< type::vector< Vec2 > >      d_curvAbsList;
-
-    ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
-    //Data< sofa::type::vector<int> > d_beamCollision;
-
     /// INPUT / OUTPUT FOR DOING EXTERNAL COMPUTATION OF Beam Interpolation (use it as a kind of data engine)
     ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
     Data< OptionsGroup > d_vecID;
@@ -237,17 +210,6 @@ protected :
 
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
     BeamSection      m_constantSection;
-
-    /// Topology
-
-    /// pointer to the topology
-    //BaseMeshTopology* m_topology {nullptr};
-
-    /// pointer on mechanical state
-    //MechanicalState<DataTypes>* m_mstate {nullptr} ;
-
-    /// this->brokenInTwo = if true, the wire is in two separate parts
-    bool  m_isControlled            {false} ;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)

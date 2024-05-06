@@ -76,7 +76,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
   , d_InterpolatedVel(initData(&d_InterpolatedVel, "InterpolatedVel", "output Interpolated Velocity")) 
 {
-    m_isControlled = false;
+    
 }
 
 
