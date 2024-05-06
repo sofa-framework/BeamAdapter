@@ -171,7 +171,6 @@ void BaseBeamInterpolation<DataTypes>::clear()
 template<class DataTypes>
 void BaseBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID& eID, const Real& length, const Real& x0, const Real& x1, const Real& angle)
 {
-    std::cout << "BeamInterpolation<DataTypes>::addBeam" << std::endl;
     auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
     auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
     auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
@@ -228,7 +227,6 @@ void BaseBeamInterpolation<DataTypes>::setLength(unsigned int edgeInList, Real& 
 template<class DataTypes>
 void BaseBeamInterpolation<DataTypes>::addCollisionOnBeam(unsigned int b)
 {
-    std::cout << "BeamInterpolation<DataTypes>::addCollisionOnBeam" << std::endl;
     auto beamCollisList = sofa::helper::getWriteOnlyAccessor(d_beamCollision);
     beamCollisList.push_back(b);
 }
@@ -262,7 +260,6 @@ int BaseBeamInterpolation<DataTypes>::computeTransform(const EdgeID edgeInList,
 template<class DataTypes>
 int BaseBeamInterpolation<DataTypes>::computeTransform(const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x)
 {
-    //std::cout << "BeamInterpolation<DataTypes>::computeTransform" << std::endl;
     /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
     Transform DOF0_H_local0, DOF1_H_local1;
     getDOFtoLocalTransform(edgeInList, DOF0_H_local0, DOF1_H_local1);
@@ -358,7 +355,6 @@ int BaseBeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
     unsigned int& node0Idx,
     unsigned int& node1Idx)
 {
-    //std::cout << "BeamInterpolation<DataTypes>::getNodeIndices" << std::endl;
     if (m_topologyEdges == nullptr)
     {
         msg_error() << "This object does not have edge topology defined (computation halted). ";
@@ -389,6 +385,152 @@ void BaseBeamInterpolation<DataTypes>::getSplinePoints(unsigned int edgeInList, 
     this->getControlPointsFromFrame(global_H_local0, global_H_local1, _L, P0, P1, P2, P3);
 
 }
+
+
+template<class DataTypes>
+unsigned int BaseBeamInterpolation<DataTypes>::getStateSize() const
+{
+    if (m_mstate == nullptr)
+    {
+        msg_error() << "No _mstate found (Aborting)";
+        return 0;
+    }
+    else
+    {
+        return m_mstate->getSize();
+    }
+}
+
+
+template<class DataTypes>
+void BaseBeamInterpolation<DataTypes>::computeActualLength(Real& length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3)
+{
+    /// the computation of integral Int[0,1]_||dP(x)||_ dx = length
+    /// is done using Gauss Points
+
+    /// definition of the Gauss points
+    Real x1, x2, x3, x4;
+    Real A = 2 * sqrt(6.0 / 5.0);
+    x1 = -sqrt((3.0 - A) / 7.0) / 2.0 + 0.5;
+    x2 = sqrt((3.0 - A) / 7.0) / 2.0 + 0.5;
+    x3 = -sqrt((3.0 + A) / 7.0) / 2.0 + 0.5;
+    x4 = sqrt((3.0 + A) / 7.0) / 2.0 + 0.5;
+
+    Vec3 dP1, dP2, dP3, dP4;
+
+    dP1 = P0 * (-3 * (1 - x1) * (1 - x1)) + P1 * (3 - 12 * x1 + 9 * x1 * x1) + P2 * (6 * x1 - 9 * x1 * x1) + P3 * (3 * x1 * x1);
+    dP2 = P0 * (-3 * (1 - x2) * (1 - x2)) + P1 * (3 - 12 * x2 + 9 * x2 * x2) + P2 * (6 * x2 - 9 * x2 * x2) + P3 * (3 * x2 * x2);
+    dP3 = P0 * (-3 * (1 - x3) * (1 - x3)) + P1 * (3 - 12 * x3 + 9 * x3 * x3) + P2 * (6 * x3 - 9 * x3 * x3) + P3 * (3 * x3 * x3);
+    dP4 = P0 * (-3 * (1 - x4) * (1 - x4)) + P1 * (3 - 12 * x4 + 9 * x4 * x4) + P2 * (6 * x4 - 9 * x4 * x4) + P3 * (3 * x4 * x4);
+
+    /// formula with 4 Gauss Points
+    Real B = sqrt(30.0);
+    length = ((18.0 + B) / 72.0) * dP1.norm() + ((18.0 + B) / 72.0) * dP2.norm() + ((18.0 - B) / 72.0) * dP3.norm() + ((18.0 - B) / 72.0) * dP4.norm();
+
+    //if (BEAMADAPTER_WITH_VERIFICATION) {
+    //    Real length_verif = 0.0;
+    //    Vec3 seg, pos;
+    //    pos = P0;
+    //    for (Real bx = 0.02; bx < 1.00001; bx += 0.02)
+    //    {
+    //        /// compute length
+    //        seg = -pos;
+    //        pos = P0 * (1 - bx) * (1 - bx) * (1 - bx) + P1 * 3 * bx * (1 - bx) * (1 - bx) + P2 * 3 * bx * bx * (1 - bx) + P3 * bx * bx * bx;
+    //        seg += pos;
+    //        length_verif += seg.norm();
+    //    }
+
+    //    dmsg_info() << "computeActualLength length=" << length << "  length_verif=" << length_verif;
+    //}
+}
+
+
+template<class DataTypes>
+void BaseBeamInterpolation<DataTypes>::computeStrechAndTwist(unsigned int edgeInList, const VecCoord& x, Vec3& ResultNodeO, Vec3& ResultNode1)
+{
+
+    /// ResultNode = [half length of the beam (m), geometrical Twist angle (rad), additional mechanical Twist angle (rad)]
+
+    /// spline:
+    Vec3 P0, P1, P2, P3;
+    getSplinePoints(edgeInList, x, P0, P1, P2, P3);
+
+    ///////// TODO :
+    unsigned int node0Idx, node1Idx;
+    dmsg_info() << "in computeStrechAndTwist";
+    getNodeIndices(edgeInList, node0Idx, node1Idx);
+
+    Real length0, length1;
+    length0 = 0.0;
+    length1 = 0.0;
+
+    Vec3 seg;
+    Vec3 pos = P0;
+    Vec3 n_x, n_y, n_z, x_b, y_b, z_b;
+    Quat R0 = x[node0Idx].getOrientation(); ///// carreful !!! not necessary true !!
+    R0.normalize();
+    n_x = R0.rotate(Vec3(1.0, 0.0, 0.0));
+    n_y = R0.rotate(Vec3(0.0, 1.0, 0.0));
+    n_z = R0.rotate(Vec3(0.0, 0.0, 1.0));
+
+    for (Real bx = 0.02; bx < 1.00001; bx += 0.02)
+    {
+        /// compute length
+        seg = -pos;
+        pos = P0 * (1 - bx) * (1 - bx) * (1 - bx) + P1 * 3 * bx * (1 - bx) * (1 - bx) + P2 * 3 * bx * bx * (1 - bx) + P3 * bx * bx * bx;
+        seg += pos;
+        if (bx < 0.50001)
+            length0 += seg.norm();
+        else
+            length1 += seg.norm();
+
+        /// compute frame => Kenneth method
+        n_x = P0 * (-3 * (1 - bx) * (1 - bx)) + P1 * (3 - 12 * bx + 9 * bx * bx) + P2 * (6 * bx - 9 * bx * bx) + P3 * (3 * bx * bx);
+        n_x.normalize();
+        n_z = n_x.cross(n_y);
+        n_z.normalize();
+        n_y = n_z.cross(n_x);
+        n_y.normalize();
+
+        if (bx > 0.49999 && bx < 0.50001)
+        {
+            ///bx == 0.5 => frame of the beam (without mechanical twist)
+            x_b = n_x;
+            y_b = n_y;
+            z_b = n_z;
+        }
+    }
+
+    /// computation of twist angle:
+    Quat globalRgeom1;
+    globalRgeom1 = globalRgeom1.createQuaterFromFrame(n_x, n_y, n_z);
+    Vec3 y_geom1 = globalRgeom1.rotate(Vec3(0.0, 1.0, 0.0));
+    Vec3 z_geom1 = globalRgeom1.rotate(Vec3(0.0, 0.0, 1.0));
+
+    Vec3 x_1, y_1;
+    Quat R1 = x[node1Idx].getOrientation();
+    R1.normalize();
+    x_1 = R1.rotate(Vec3(1.0, 0.0, 0.0));
+    y_1 = R1.rotate(Vec3(0.0, 1.0, 0.0));
+
+
+    ///<<" Test : x_1 = "<<x_1<< "  should be equal to ="<< globalRgeom1.rotate(Vec3(1.0,0.0,0.0))<<std::endl;
+    Real cosTheta = y_1 * y_geom1;
+    Real theta;
+    if (cosTheta > 1.0)
+        theta = 0.0;
+    else
+    {
+        if (y_1 * z_geom1 < 0.0)
+            theta = -acos(cosTheta);
+        else
+            theta = acos(cosTheta);
+    }
+
+    ResultNodeO[0] = length0;    ResultNodeO[1] = 0.0;  ResultNodeO[2] = theta / 2.0;
+    ResultNode1[0] = length1;    ResultNode1[1] = 0.0;  ResultNode1[2] = theta / 2.0;
+}
+
 
 
 ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
@@ -433,7 +575,6 @@ void BaseBeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int 
     bool recompute,
     const ConstVecCoordId& vecXId)
 {
-    //std::cout << "BeamInterpolation<DataTypes>::interpolatePointUsingSpline" << std::endl;
     if (recompute)
     {
         /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;

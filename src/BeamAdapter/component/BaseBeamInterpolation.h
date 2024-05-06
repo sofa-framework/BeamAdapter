@@ -130,6 +130,8 @@ public:
 
     virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) {}
+    virtual void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
+        Real& _Asy, Real& _Asz, Real& J){}
 
 
     int computeTransform(const EdgeID edgeInList, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);
@@ -145,6 +147,13 @@ public:
     int getNodeIndices(unsigned int edgeInList, unsigned int& node0Idx, unsigned int& node1Idx);
 
     void getSplinePoints(unsigned int edgeInList, const VecCoord& x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3& P3);
+    unsigned int getStateSize() const;
+
+    void computeActualLength(Real& length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3);
+
+    void computeStrechAndTwist(unsigned int edgeInList, const VecCoord& x, Vec3& ResultNodeO, Vec3& ResultNode1);
+
+
     
     ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
     void updateBezierPoints(const VecCoord& x, sofa::core::VecCoordId& vId_Out);

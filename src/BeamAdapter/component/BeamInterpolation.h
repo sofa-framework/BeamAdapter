@@ -141,18 +141,14 @@ public:
     void computeCrossSectionInertiaMatrix();
 
     void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
-                               Real &_Asy, Real &_Asz, Real &J);
+                               Real &_Asy, Real &_Asz, Real &J) override;
 
 
     void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
 
   
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
-    void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
-
-    void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
-
-    unsigned int getStateSize() const ;
+   
 
     BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
 
