@@ -86,6 +86,9 @@ public:
     /// Returns the mass density and the BeamSection of this section
     void getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
 
+    /// Returns the BeamSection data structure of this section
+    const BeamSection& getBeamSection() const { return beamSection; };
+
     /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter 
     virtual void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
     {

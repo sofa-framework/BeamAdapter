@@ -85,6 +85,8 @@ public:
     using VecEdgeID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
 
+    using BeamSection = sofa::beamadapter::BeamSection;
+
     BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr*/);
 
     virtual ~BaseBeamInterpolation() = default;
@@ -132,6 +134,7 @@ public:
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) = 0;
     virtual void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
         Real& _Asy, Real& _Asz, Real& J) = 0;
+    virtual const BeamSection& getBeamSection(int edgeIndex) = 0;
 
 
     int computeTransform(const EdgeID edgeInList, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);

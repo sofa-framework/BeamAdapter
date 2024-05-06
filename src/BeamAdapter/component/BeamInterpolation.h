@@ -93,9 +93,7 @@ public:
     using PointID = BaseMeshTopology::PointID;
     using ElementID = BaseMeshTopology::EdgeID;
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
-    using VecEdges = type::vector<BaseMeshTopology::Edge>;
-    
-    using BeamSection = sofa::beamadapter::BeamSection;
+    using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
 public:
     BeamInterpolation() ;
@@ -150,7 +148,7 @@ public:
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
 
-    BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
+    const BeamSection &getBeamSection(int /*edgeIndex*/ ) override {return this->m_constantSection;}
 
     virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}

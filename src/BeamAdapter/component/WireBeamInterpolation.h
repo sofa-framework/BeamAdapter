@@ -142,6 +142,7 @@ public:
     void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
     void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
         Real& _Asy, Real& _Asz, Real& _J) override;
+    const BeamSection& getBeamSection(int edgeIndex) override;
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 
     

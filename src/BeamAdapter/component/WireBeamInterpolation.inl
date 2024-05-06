@@ -40,7 +40,7 @@ namespace sofa::component::fem::_wirebeaminterpolation_
 {
 
 using sofa::component::engine::WireRestShape ;
-
+using namespace sofa::beamadapter;
 
 template <class DataTypes>
 WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape)
@@ -173,6 +173,17 @@ void WireBeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeIn
 
     auto restShape = this->m_restShape.get();
     restShape->getInterpolationParam(x_curv, _rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
+}
+
+
+template<class DataTypes>
+const BeamSection& WireBeamInterpolation<DataTypes>::getBeamSection(int edgeIndex)
+{
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(edgeIndex, x_curv);
+
+    auto restShape = this->m_restShape.get();
+    return restShape->getBeamSection(x_curv);
 }
 
 template<class DataTypes>
