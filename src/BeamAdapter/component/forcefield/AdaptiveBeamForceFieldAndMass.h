@@ -36,7 +36,7 @@
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <BeamAdapter/config.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
 
@@ -97,7 +97,7 @@ public:
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
-    using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
+    using BInterpolation = sofa::component::fem::BaseBeamInterpolation<DataTypes>;
     using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
     using core::behavior::Mass<DataTypes>::mstate;
 
