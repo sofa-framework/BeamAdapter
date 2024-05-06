@@ -34,7 +34,7 @@
 #include <BeamAdapter/config.h>
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
@@ -54,7 +54,7 @@ namespace sofa::component::fem
 
 namespace _wirebeaminterpolation_
 {
-using sofa::component::fem::BeamInterpolation ;
+using sofa::component::fem::BaseBeamInterpolation;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
 using sofa::type::Vec ;
@@ -73,13 +73,13 @@ using sofa::type::vector;
  * TODO : put in a separate class what is specific to wire shape !
  */
 template<class DataTypes>
-class WireBeamInterpolation : public virtual BeamInterpolation<DataTypes>
+class WireBeamInterpolation : public virtual BaseBeamInterpolation<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(WireBeamInterpolation, DataTypes) ,
-               SOFA_TEMPLATE(BeamInterpolation, DataTypes) );
+               SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes) );
 
-    typedef BeamInterpolation<DataTypes> Inherited;
+    typedef BaseBeamInterpolation<DataTypes> Inherited;
 
     typedef typename Inherited::VecCoord VecCoord;
     typedef typename Inherited::VecDeriv VecDeriv;
@@ -103,7 +103,7 @@ public:
     void bwdInit() override;
     void reinit() override { init(); bwdInit(); }
 
-    using BeamInterpolation<DataTypes>::addBeam;
+    using BaseBeamInterpolation<DataTypes>::addBeam;
 
     void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
@@ -135,10 +135,13 @@ public:
         this->m_restShape->getYoungModulusAtX(x_curv, youngModulus, cPoisson);
     }
 
-    virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
-    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 
-    void getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output);
+    virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
+    
+    void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override;
+    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
+    void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
+        Real& _Asy, Real& _Asz, Real& _J) override;
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 
     
@@ -158,6 +161,14 @@ public:
         }
     }
 
+    ///////// for AdaptiveControllers
+    bool isControlled() { return m_isControlled; }
+    void setControlled(bool value) { m_isControlled = value; }
+
+    //TODO(dmarchal@cduriez) strange name... seems to be wire based...shouldn't it go to WireBeamInterpolation.
+    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0);
+
+
     SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>,
     BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
@@ -167,7 +178,7 @@ public:
     /// Bring inherited attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
-    using  BeamInterpolation<DataTypes>::d_componentState ;
+    using  BaseBeamInterpolation<DataTypes>::d_componentState ;
     ////////////////////////////////////////////////////////////////////////////
 
 public:
@@ -191,6 +202,9 @@ public:
         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
         return 0.0;
     }
+
+protected:
+    bool  m_isControlled{ false };
 };
 
 

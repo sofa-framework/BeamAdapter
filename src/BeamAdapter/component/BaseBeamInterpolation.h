@@ -118,20 +118,20 @@ public:
     void setLength(unsigned int edgeInList, Real& length);
     
     /// Collision information using @sa d_beamCollision
-    virtual void getCollisionSampling(Real& dx, const Real& x_localcurv_abs) {}
+    virtual void getCollisionSampling(Real& dx, const Real& x_localcurv_abs) = 0;
     void addCollisionOnBeam(unsigned int b);
     void clearCollisionOnBeam();
 
-    virtual void getYoungModulusAtX(int beamId, Real& x_curv, Real& youngModulus, Real& cPoisson) {}
+    virtual void getYoungModulusAtX(int beamId, Real& x_curv, Real& youngModulus, Real& cPoisson) = 0;
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
-        type::vector<int>& nbP_density) {}
-    virtual void getNumberOfCollisionSegment(Real& dx, unsigned int& numLines) {}
+        type::vector<int>& nbP_density) = 0;
+    virtual void getNumberOfCollisionSegment(Real& dx, unsigned int& numLines) = 0;
 
 
-    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
-    virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) {}
+    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) = 0;
+    virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) = 0;
     virtual void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
-        Real& _Asy, Real& _Asz, Real& J){}
+        Real& _Asy, Real& _Asz, Real& J) = 0;
 
 
     int computeTransform(const EdgeID edgeInList, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);

@@ -33,7 +33,7 @@
 #pragma once
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-#include <BeamAdapter/component/BeamInterpolation.inl>
+#include <BeamAdapter/component/BaseBeamInterpolation.inl>
 
 
 namespace sofa::component::fem::_wirebeaminterpolation_
@@ -44,8 +44,7 @@ using sofa::component::engine::WireRestShape ;
 
 template <class DataTypes>
 WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape)
-: Inherited()
-, m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
+    : m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
 {
 
 
@@ -55,8 +54,6 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine:
 template <class DataTypes>
 void WireBeamInterpolation<DataTypes>::init()
 {
-    Inherited::init();
-
     if( m_restShape.get() == nullptr )
     {
         msg_error() << "Missing WireRestShape. The component is thus de-activated" ;
@@ -164,6 +161,20 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edge
     x_output += this->getLength(edgeInList_input) * baryCoord_input;
 }
 
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
+    Real& _Asy, Real& _Asz, Real& _J)
+{
+    _L = d_lengthList.getValue()[edgeInList];
+    Real _rho;
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(edgeInList, x_curv);
+
+    auto restShape = this->m_restShape.get();
+    restShape->getInterpolationParam(x_curv, _rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
+}
+
 template<class DataTypes>
 bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x, Real& x_output)
 {
@@ -267,6 +278,52 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     if (context) context->addObject(obj);
     if (arg) obj->parse(arg);
     return obj;
+}
+
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start)
+{
+    /// lTotalRest = total length of the
+    Real lTotalRest = getRestTotalLength();
+    /// LTotal =  length sum of the beams that are "out"
+    Real LTotal = 0.0;
+
+    const unsigned int edgeListSize = d_edgeList.getValue().size();
+
+    /// we find the length of the beam that is "out"
+    for (unsigned int e = start; e < edgeListSize; e++)
+    {
+        LTotal += getLength(e);
+    }
+
+    /// x_i = abs_curv from the begining of the instrument
+    Real  x_i = x_input + LTotal - lTotalRest;
+
+    if (x_i < 0.0)
+    {
+        edgeInList_output = start;
+        baryCoord_output = 0;
+        return;
+    }
+
+    /// we compute the x value of each node :the topology (stored in Edge_list) is supposed to be a regular seq of segment
+    Real x = 0;
+
+    for (unsigned int e = start; e < edgeListSize; e++)
+    {
+        x += getLength(e);
+        if (x > x_i)
+        {
+            edgeInList_output = e;
+            Real x0 = x - getLength(e);
+            baryCoord_output = (x_i - x0) / getLength(e);
+            return;
+        }
+    }
+
+    edgeInList_output = edgeListSize - 1;
+    baryCoord_output = 1.0;
 }
 
 } // namespace sofa::component::fem::_wirebeaminterpolation_
