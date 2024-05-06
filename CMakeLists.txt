@@ -21,6 +21,8 @@ set(HEADER_FILES
     ${BEAMADAPTER_SRC}/config.h.in
     ${BEAMADAPTER_SRC}/initBeamAdapter.h
 
+    ${BEAMADAPTER_SRC}/component/BaseBeamInterpolation.h
+    ${BEAMADAPTER_SRC}/component/BaseBeamInterpolation.inl
     ${BEAMADAPTER_SRC}/component/BeamInterpolation.h
     ${BEAMADAPTER_SRC}/component/BeamInterpolation.inl
     ${BEAMADAPTER_SRC}/component/WireBeamInterpolation.h
@@ -76,6 +78,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/initBeamAdapter.cpp
 
+    ${BEAMADAPTER_SRC}/component/BaseBeamInterpolation.cpp
     ${BEAMADAPTER_SRC}/component/BeamInterpolation.cpp
     ${BEAMADAPTER_SRC}/component/WireBeamInterpolation.cpp
 

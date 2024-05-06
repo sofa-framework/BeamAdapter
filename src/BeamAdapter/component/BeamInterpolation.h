@@ -34,6 +34,7 @@
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/helper/OptionsGroup.h>
 #include <sofa/component/statecontainer/MechanicalObject.h>
@@ -43,7 +44,7 @@ namespace sofa::component::fem
 
 namespace _beaminterpolation_
 {
-
+using sofa::component::fem::BaseBeamInterpolation;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::core::ConstVecCoordId;
@@ -68,10 +69,10 @@ using sofa::component::statecontainer::MechanicalObject;
  *
  */
 template<class DataTypes>
-class BeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
+class BeamInterpolation : public virtual BaseBeamInterpolation<DataTypes>
 {
 public:
-    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , sofa::core::objectmodel::BaseObject);
+    SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes));
 
     using Coord = typename DataTypes::Coord;
     using VecCoord = typename DataTypes::VecCoord;
@@ -139,95 +140,25 @@ public:
     bool verifyTopology();
     void computeCrossSectionInertiaMatrix();
 
-    unsigned int getNumBeams(){return this->d_edgeList.getValue().size();}
-
-    void getAbsCurvXFromBeam(int beam, Real& x_curv);
-    void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
-
-    static void getControlPointsFromFrame(
-                                const Transform& global_H_local0, const Transform& global_H_local1,
-                                const Real& L,
-                                Vec3& P0, Vec3& P1,
-                                Vec3& P2, Vec3& P3);
-
-
-    void getDOFtoLocalTransform(unsigned int edgeInList,Transform &DOF0_H_local0, Transform &DOF1_H_local1);
-    void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform &DOF0Global_H_local0, Transform &DOF1Global_H_local1, const VecCoord &x);
-
-    
-    int computeTransform(const ElementID edgeInList, Transform &global_H_local0,  Transform &global_H_local1, const VecCoord &x);
-    int computeTransform(const ElementID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);
-
-    
-
-    void getTangent(Vec3& t, const Real& baryCoord,
-                    const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
-
-    int getNodeIndices(unsigned int edgeInList, unsigned int &node0Idx, unsigned int &node1Idx );
-
     void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
                                Real &_Asy, Real &_Asz, Real &J);
-
-    /// spline base interpolation of points and transformation
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord &x, Vec3& posResult) {
-        interpolatePointUsingSpline(edgeInList,baryCoord,localPos,x,posResult,true, ConstVecCoordId::position());
-    }
-
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-                                     const VecCoord &x, Vec3& posResult, bool recompute, const ConstVecCoordId &vecXId);
 
 
     void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
 
-    void getSplinePoints(unsigned int edgeInList, const VecCoord &x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3 &P3);
-
-    ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
-    void updateBezierPoints( const VecCoord &x, sofa::core::VecCoordId &vId_Out);
-    void updateBezierPoints( const VecCoord &x, unsigned int index, VectorVec3& v);
-
-    /// getLength / setLength => provides the rest length of each spline
-    Real getLength(unsigned int edgeInList) ;
-    void setLength(unsigned int edgeInList, Real &length) ;
-
+  
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
     void computeActualLength(Real &length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3 &P3);
 
     void computeStrechAndTwist(unsigned int edgeInList, const VecCoord &x, Vec3 &ResultNodeO, Vec3 &ResultNode1);
-    void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-                                         const VecCoord &x, Transform &global_H_localInterpol);
-
-    /// generic implementation of the interpolation =>TODO?  could:migrate to Solidtypes files ?
-    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real &baryCoord,
-                                         const Transform &global_H_local0, const Transform &global_H_local1,const Real &L);
-
-    void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-                                               const VecCoord &x, const VecDeriv &v,
-                                               Transform &global_H_localInterpol, Deriv &v_interpol);
-
-    /// 3DOF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-                                   const VecCoord& x, const Vec3& finput,
-                                   SpatialVector& FNode0output, SpatialVector& FNode1output );
-
-    /// 6DoF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-                                   const VecCoord& x, const SpatialVector& f6DofInput,
-                                   SpatialVector& FNode0output, SpatialVector& FNode1output );
-
-    /// compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
-    Real ComputeTotalBendingRotationAngle(const Real& dx_computation, const Transform &global_H_local0,
-                                          const Transform &global_H_local1,const Real &L,
-                                          const Real& baryCoordMin, const Real& baryCoordMax);
-
-    /// Method to rotate a Frame define by a Quat @param input around an axis @param x, x will be normalized in method. Output is return inside @param output
-    void RotateFrameForAlignX(const Quat &input, Vec3 &x, Quat &output);
-    
-    /// Method to rotate a Frame define by a Quat @param input around an axis @param x , x has to be normalized. Output is return inside @param output
-    void RotateFrameForAlignNormalizedX(const Quat& input, const Vec3& x, Quat& output);
 
     unsigned int getStateSize() const ;
 
     BeamSection &getBeamSection(int /*edgeIndex*/ ){return this->m_constantSection;}
+
+    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
+    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}
+
 
     Data<helper::OptionsGroup>   crossSectionShape;
 
@@ -265,16 +196,9 @@ public:
     void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone ) ;
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
 
-    //TODO(dmarchal@cduriez) strange name... seems to be wire based...shouldn't it go to WireBeamInterpolation.
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int &edgeInList_output, Real& baryCoord_output, unsigned int start=0);
-
     ///////// for AdaptiveControllers
     bool isControlled(){return m_isControlled;}
     void setControlled(bool value){m_isControlled=value;}
-
-    /// Collision information
-    void addCollisionOnBeam(unsigned int b) ;
-    void clearCollisionOnBeam() ;
 
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
@@ -289,23 +213,23 @@ protected :
     typename MechanicalObject<StateDataTypes>::SPtr m_StateNodes;
 
     ///1.m_edgeList : list of the edge in the topology that are concerned by the Interpolation
-    Data< VecElementID >        d_edgeList;
-    const VecEdges*             m_topologyEdges {nullptr};
+    //Data< VecElementID >        d_edgeList;
+    //const VecEdges*             m_topologyEdges {nullptr};
 
     ///2.m_lengthList: list of the length of each beam
-    Data< type::vector< double > >    d_lengthList;
+    //Data< type::vector< double > >    d_lengthList;
 
     ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam
     /// Indexation based on the num of Edge
-    Data< type::vector< Transform > > d_DOF0TransformNode0;
+    //Data< type::vector< Transform > > d_DOF0TransformNode0;
 
     ///4. (optional) apply a rigid Transform between the degree of Freedom and the second node of the beam
-    Data< type::vector< Transform > > d_DOF1TransformNode1;
+    //Data< type::vector< Transform > > d_DOF1TransformNode1;
 
-    Data< type::vector< Vec2 > >      d_curvAbsList;
+    //Data< type::vector< Vec2 > >      d_curvAbsList;
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
-    Data< sofa::type::vector<int> > d_beamCollision;
+    //Data< sofa::type::vector<int> > d_beamCollision;
 
     /// INPUT / OUTPUT FOR DOING EXTERNAL COMPUTATION OF Beam Interpolation (use it as a kind of data engine)
     ///Input 1. VecID => (1) "current" Pos, Vel    (2) "free" PosFree, VelFree   (3) "rest" PosRest, V=0
@@ -323,10 +247,10 @@ protected :
     /// Topology
 
     /// pointer to the topology
-    BaseMeshTopology* m_topology {nullptr};
+    //BaseMeshTopology* m_topology {nullptr};
 
     /// pointer on mechanical state
-    MechanicalState<DataTypes>* m_mstate {nullptr} ;
+    //MechanicalState<DataTypes>* m_mstate {nullptr} ;
 
     /// this->brokenInTwo = if true, the wire is in two separate parts
     bool  m_isControlled            {false} ;
