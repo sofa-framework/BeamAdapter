@@ -110,7 +110,9 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engin
     , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
 {
 
-
+    
+    m_StateNodes->setName("bezierNodes");
+    addSlave(m_StateNodes);
 }
 
 
@@ -260,7 +262,7 @@ int BaseBeamInterpolation<DataTypes>::computeTransform(const EdgeID edgeInList,
 template<class DataTypes>
 int BaseBeamInterpolation<DataTypes>::computeTransform(const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x)
 {
-    std::cout << "BeamInterpolation<DataTypes>::computeTransform" << std::endl;
+    //std::cout << "BeamInterpolation<DataTypes>::computeTransform" << std::endl;
     /// 2. Computes the optional rigid transformation of DOF0_Transform_node0 and DOF1_Transform_node1
     Transform DOF0_H_local0, DOF1_H_local1;
     getDOFtoLocalTransform(edgeInList, DOF0_H_local0, DOF1_H_local1);
@@ -356,7 +358,7 @@ int BaseBeamInterpolation<DataTypes>::getNodeIndices(unsigned int edgeInList,
     unsigned int& node0Idx,
     unsigned int& node1Idx)
 {
-    std::cout << "BeamInterpolation<DataTypes>::getNodeIndices" << std::endl;
+    //std::cout << "BeamInterpolation<DataTypes>::getNodeIndices" << std::endl;
     if (m_topologyEdges == nullptr)
     {
         msg_error() << "This object does not have edge topology defined (computation halted). ";
@@ -431,7 +433,7 @@ void BaseBeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int 
     bool recompute,
     const ConstVecCoordId& vecXId)
 {
-    std::cout << "BeamInterpolation<DataTypes>::interpolatePointUsingSpline" << std::endl;
+    //std::cout << "BeamInterpolation<DataTypes>::interpolatePointUsingSpline" << std::endl;
     if (recompute)
     {
         /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;

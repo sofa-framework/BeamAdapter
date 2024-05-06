@@ -76,9 +76,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , d_InterpolatedPos(initData(&d_InterpolatedPos, "InterpolatedPos", "output Interpolated Position"))
   , d_InterpolatedVel(initData(&d_InterpolatedVel, "InterpolatedVel", "output Interpolated Velocity")) 
 {
-    m_isControlled=false;
-    m_StateNodes->setName("bezierNodes");
-    addSlave(m_StateNodes);
+    m_isControlled = false;
 }
 
 
