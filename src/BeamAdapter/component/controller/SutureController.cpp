@@ -32,6 +32,7 @@
 //
 #define SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP
 
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
