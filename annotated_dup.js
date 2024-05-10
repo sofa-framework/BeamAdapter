@@ -84,6 +84,5 @@ var annotated_dup =
         [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", "classsofa_1_1component_1_1_deprecated_component" ]
       ] ]
     ] ],
-    [ "AdaptiveBeamConstraint", "class_adaptive_beam_constraint.html", null ],
     [ "ContactMapper", "class_contact_mapper.html", null ]
 ];

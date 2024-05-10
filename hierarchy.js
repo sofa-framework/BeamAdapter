@@ -54,9 +54,7 @@ var hierarchy =
     [ "AdaptiveBeamMapping< TIn, TOut >::PosPointDefinition", "structsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping_1_1_pos_point_definition.html", null ],
     [ "ProjectionSearch< DataTypes >", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html", null ],
     [ "BaseObject", null, [
-      [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", [
-        [ "AdaptiveBeamConstraint", "class_adaptive_beam_constraint.html", null ]
-      ] ]
+      [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
     ] ],
     [ "Constraint", null, [
       [ "AdaptiveBeamLengthConstraint< DataTypes >", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint.html", null ]
