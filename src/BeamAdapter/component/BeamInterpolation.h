@@ -95,6 +95,7 @@ public:
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
+    using  BaseBeamInterpolation<DataTypes>::d_componentState;
 public:
     BeamInterpolation() ;
     virtual ~BeamInterpolation() override = default;
@@ -183,12 +184,12 @@ public:
     virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
                                        type::vector<int>& nbP_density) ;
-    virtual Real getRestTotalLength() ;
-    virtual void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) ;
-    virtual void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
-    virtual void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) ;
-    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone ) ;
-    virtual void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest);
+    Real getRestTotalLength() override;
+    void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
+    void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
+    void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override;
+    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone );
+    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]

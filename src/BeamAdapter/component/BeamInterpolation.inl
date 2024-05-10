@@ -184,9 +184,9 @@ void BeamInterpolation<DataTypes>::bwdInit()
             DOF1TransformNode1.resize(edgeList.size());
         }
 
-        ReadAccessor<Data<VecCoord> > statePos = m_mstate->read(ConstVecCoordId::position()) ;
+        ReadAccessor<Data<VecCoord> > statePos = this->m_mstate->read(ConstVecCoordId::position()) ;
 
-        auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
+        auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
 
         const unsigned int edgeListSize = d_edgeList.getValue().size();
