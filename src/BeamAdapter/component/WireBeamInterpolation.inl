@@ -247,12 +247,12 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
             context->findLinkDest(_restShape, _restShapePath, nullptr);
 
             if(_restShape == nullptr)
-              msg_warning(context) << " ("<< tObj->getClassName() <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+              msg_warning(context) << " ("<< WireBeamInterpolation<DataTypes>::GetClass()->className <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;
         }
         else
-            msg_error(context) << " (" << tObj->getClassName() <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+            msg_error(context) << " (" << WireBeamInterpolation<DataTypes>::GetClass()->className <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
 
 
         if (!pathOK)
