@@ -41,7 +41,7 @@
 
 #include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
-namespace sofa::component::controller
+namespace sofa::component::controller::_adaptivebeamcontroller_
 {
 
 using sofa::defaulttype::Rigid3Types;
@@ -63,6 +63,6 @@ int AdaptiveBeamControllerClass = RegisterObject("Adaptive beam controller")
 template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
 
 
-} // namespace sofa::component::controller
+} // namespace sofa::component::controller::_adaptivebeamcontroller_
 
 
