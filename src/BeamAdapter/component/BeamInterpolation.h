@@ -69,7 +69,7 @@ using sofa::component::statecontainer::MechanicalObject;
  *
  */
 template<class DataTypes>
-class BeamInterpolation : public virtual BaseBeamInterpolation<DataTypes>
+class BeamInterpolation : public BaseBeamInterpolation<DataTypes>
 {
 public:
     SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes));
