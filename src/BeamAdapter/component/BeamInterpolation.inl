@@ -131,7 +131,11 @@ void BeamInterpolation<DataTypes>::init()
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::bwdInit()
 {
+    this->d_componentState.setValue(ComponentState::Loading);
     BaseBeamInterpolation<DataTypes>::bwdInit();
+
+    if (this->d_componentState.getValue() == ComponentState::Invalid)
+        return;
 
     Size nbEdges = this->m_topology->getNbEdges();
     auto youngModulus = sofa::helper::getWriteOnlyAccessor(d_defaultYoungModulus);
