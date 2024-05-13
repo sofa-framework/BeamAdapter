@@ -95,6 +95,8 @@ public:
     typedef typename Inherited::Vec3 Vec3;
     typedef typename Inherited::Quat Quat;
 
+    using BeamSection = sofa::beamadapter::BeamSection;
+
     WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
 
     virtual ~WireBeamInterpolation() = default;

@@ -166,7 +166,7 @@ template<class DataTypes>
 void WireBeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
     Real& _Asy, Real& _Asz, Real& _J)
 {
-    _L = d_lengthList.getValue()[edgeInList];
+    _L = this->d_lengthList.getValue()[edgeInList];
     Real _rho;
     Real x_curv = 0;
     this->getAbsCurvXFromBeam(edgeInList, x_curv);
@@ -300,12 +300,12 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
     /// LTotal =  length sum of the beams that are "out"
     Real LTotal = 0.0;
 
-    const unsigned int edgeListSize = d_edgeList.getValue().size();
+    const unsigned int edgeListSize = this->d_edgeList.getValue().size();
 
     /// we find the length of the beam that is "out"
     for (unsigned int e = start; e < edgeListSize; e++)
     {
-        LTotal += getLength(e);
+        LTotal += this->getLength(e);
     }
 
     /// x_i = abs_curv from the begining of the instrument
@@ -323,12 +323,12 @@ void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, uns
 
     for (unsigned int e = start; e < edgeListSize; e++)
     {
-        x += getLength(e);
+        x += this->getLength(e);
         if (x > x_i)
         {
             edgeInList_output = e;
-            Real x0 = x - getLength(e);
-            baryCoord_output = (x_i - x0) / getLength(e);
+            Real x0 = x - this->getLength(e);
+            baryCoord_output = (x_i - x0) / this->getLength(e);
             return;
         }
     }

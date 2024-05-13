@@ -95,7 +95,8 @@ public:
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
-    using  BaseBeamInterpolation<DataTypes>::d_componentState;
+    using BeamSection = sofa::beamadapter::BeamSection;
+    using BaseBeamInterpolation<DataTypes>::d_componentState;
 public:
     BeamInterpolation() ;
     virtual ~BeamInterpolation() override = default;
@@ -112,7 +113,7 @@ public:
                 "' found in the context node.");
             return false;
         }
-        return BaseObject::canCreate(obj, context, arg);
+        return sofa::core::objectmodel::BaseObject::canCreate(obj, context, arg);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

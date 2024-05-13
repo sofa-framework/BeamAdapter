@@ -131,9 +131,9 @@ void BeamInterpolation<DataTypes>::init()
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::bwdInit()
 {
-    BaseBeamInterpolation::bwdInit();
+    BaseBeamInterpolation<DataTypes>::bwdInit();
 
-    Size nbEdges = m_topology->getNbEdges();
+    Size nbEdges = this->m_topology->getNbEdges();
     auto youngModulus = sofa::helper::getWriteOnlyAccessor(d_defaultYoungModulus);
     if (youngModulus.size() != nbEdges)
     {
@@ -167,16 +167,16 @@ void BeamInterpolation<DataTypes>::bwdInit()
 
     if (!interpolationIsAlreadyInitialized())
     {
-        auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
+        auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
         edgeList.clear();
 
-        for (unsigned int i=0; i<m_topology->getNbEdges(); i++)
+        for (unsigned int i=0; i<this->m_topology->getNbEdges(); i++)
         {
             edgeList.push_back(i);
         }
 
-        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
-        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
+        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
 
         if (!d_dofsAndBeamsAligned.getValue())
         {
@@ -189,7 +189,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
         auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
 
-        const unsigned int edgeListSize = d_edgeList.getValue().size();
+        const unsigned int edgeListSize = this->d_edgeList.getValue().size();
         unsigned int nd0Id=0, nd1Id=0;
 
 
@@ -199,7 +199,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
             //// Copute the distance between beam nodes to obtain a first value for the beam length
             // Indeed the function "computeActualLength" needs a first approximation of this length
 
-            getNodeIndices(i, nd0Id, nd1Id);
+            this->getNodeIndices(i, nd0Id, nd1Id);
 
             if(this->d_dofsAndBeamsAligned.getValue())
             {
@@ -213,7 +213,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
                 // this transforamtion is given by global_H_local0 for node 0 (and dof0)
                 // and global_H_local1 for node 1 (and dof1)
                 Transform global_H_local0, global_H_local1;
-                computeTransform(i, nd0Id, nd1Id, global_H_local0, global_H_local1, statePos.ref());
+                this->computeTransform(i, nd0Id, nd1Id, global_H_local0, global_H_local1, statePos.ref());
                 Vec3 beam_segment = global_H_local1.getOrigin() -  global_H_local0.getOrigin();
                 lengthList.push_back(beam_segment.norm());
 
@@ -225,11 +225,11 @@ void BeamInterpolation<DataTypes>::bwdInit()
             for (unsigned it=0; it<3; it++){
                  // now that we have an approximation of the length, we can estimate the position of the spline control point;
                  Vec3 P0,P1,P2,P3;
-                getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
+                this->getSplinePoints(i, statePos.ref(), P0, P1, P2, P3);
 
                 // and we can compute more precisely the length
                 Real ActualLength;
-                computeActualLength(ActualLength,P0,P1,P2,P3);
+                this->computeActualLength(ActualLength,P0,P1,P2,P3);
                 lengthList[i]=ActualLength;
             }
 
@@ -272,18 +272,18 @@ void BeamInterpolation<DataTypes>::reset()
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
 {
-    if (d_edgeList.getValue().size() == 0)
+    if (this->d_edgeList.getValue().size() == 0)
         return false;
 
-    const unsigned int nbEdges = d_edgeList.getValue().size();
+    const unsigned int nbEdges = this->d_edgeList.getValue().size();
 
-    if (d_DOF0TransformNode0.getValue().size() != nbEdges)
+    if (this->d_DOF0TransformNode0.getValue().size() != nbEdges)
         return false;
 
-    if (d_DOF1TransformNode1.getValue().size() != nbEdges)
+    if (this->d_DOF1TransformNode1.getValue().size() != nbEdges)
         return false;
 
-    if (d_lengthList.getValue().size() != nbEdges)
+    if (this->d_lengthList.getValue().size() != nbEdges)
         return false;
 
     return true;
@@ -296,16 +296,16 @@ template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
     //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
-    dmsg_info() << "The vector _topologyEdges is now set with " << m_topologyEdges->size() << " edges" ;
+    dmsg_info() << "The vector _topologyEdges is now set with " << this->m_topologyEdges->size() << " edges" ;
 
 
-    const VecElementID &edgeList = d_edgeList.getValue();
+    const VecElementID &edgeList = this->d_edgeList.getValue();
     for (unsigned int j = 0; j < edgeList.size(); j++)
     {
-        if(edgeList[j] > m_topologyEdges->size())
+        if(edgeList[j] > this->m_topologyEdges->size())
         {
             msg_error() << "The provided edge index '" << edgeList[j] << "'is larger than '"
-                        << m_topologyEdges->size() << "' the amount of edges in the topology. " ;
+                        << this->m_topologyEdges->size() << "' the amount of edges in the topology. " ;
             return false;
         }
     }
@@ -317,11 +317,11 @@ bool BeamInterpolation<DataTypes>::verifyTopology()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::clear()
 {
-    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
-    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
-    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
-    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
-    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     edgeList.clear();
     lengthList.clear();
@@ -334,11 +334,11 @@ void BeamInterpolation<DataTypes>::clear()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
 {
-    auto edgeList = sofa::helper::getWriteOnlyAccessor(d_edgeList);
-    auto lengthList = sofa::helper::getWriteOnlyAccessor(d_lengthList);
-    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
-    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
-    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(d_curvAbsList);
+    auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
+    auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
+    auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
+    auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
+    auto curvAbsList = sofa::helper::getWriteOnlyAccessor(this->d_curvAbsList);
 
     curvAbsList.push_back(Vec2(x0, x1));
 
@@ -369,7 +369,7 @@ template <class DataTypes>
 typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRestTotalLength()
 {
     Real le(0.0);
-    const type::vector< double > &lengthList = d_lengthList.getValue();
+    const type::vector< double > &lengthList = this->d_lengthList.getValue();
 
     for (unsigned int i = 0; i < lengthList.size(); i++)
         le += lengthList[i];
@@ -415,7 +415,7 @@ void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId, Real& /*x_curv
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
 {
-    if (beam > int(d_DOF0TransformNode0.getValue().size()-1) || beam > int(d_DOF1TransformNode1.getValue().size()-1))
+    if (beam > int(this->d_DOF0TransformNode0.getValue().size()-1) || beam > int(this->d_DOF1TransformNode1.getValue().size()-1))
     {
         msg_error()<<"WARNING setTransformBetweenDofAndNode on non existing beam";
         return;
@@ -423,12 +423,12 @@ void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const
 
     if (!zeroORone)
     {
-        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(d_DOF0TransformNode0);
+        auto DOF0TransformNode0 = sofa::helper::getWriteOnlyAccessor(this->d_DOF0TransformNode0);
         DOF0TransformNode0[beam] = DOF_H_Node;
     }
     else
     {
-        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(d_DOF1TransformNode1);
+        auto DOF1TransformNode1 = sofa::helper::getWriteOnlyAccessor(this->d_DOF1TransformNode1);
         DOF1TransformNode1[beam] = DOF_H_Node;
     }
 }
@@ -441,17 +441,17 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
     {
         /// the beam is straight: local is in the middle of local0 and local1
         /// the transformation between local0 and local1 is provided by the length of the beam
-        local_H_local0_rest.set(-Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
-        local_H_local1_rest.set(Vec3(d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local0_rest.set(-Vec3(this->d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
+        local_H_local1_rest.set(Vec3(this->d_lengthList.getValue()[edgeInList]/2,0,0), Quat());
     }
     else
     {
-        MechanicalState<DataTypes>* state = dynamic_cast<MechanicalState<DataTypes>*>(getContext()->getMechanicalState());
+        MechanicalState<DataTypes>* state = dynamic_cast<MechanicalState<DataTypes>*>(this->getContext()->getMechanicalState());
 
         if(state)
         {
             unsigned int node0Id, node1Id;
-            getNodeIndices(edgeInList,node0Id,node1Id);
+            this->getNodeIndices(edgeInList,node0Id,node1Id);
 
             Coord global_0 = state->read(core::VecCoordId::restPosition())->getValue()[node0Id];
             Coord global_1 = state->read(core::VecCoordId::restPosition())->getValue()[node1Id];
@@ -460,7 +460,7 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
             Transform global_H_DOF1 = Transform(global_1.getCenter(),global_1.getOrientation());
 
             Transform DOF0_H_local0, DOF1_H_local1;
-            getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
+            this->getDOFtoLocalTransform(edgeInList, DOF0_H_local0,  DOF1_H_local1);
 
             Transform global_H_local_0 = global_H_DOF0*DOF0_H_local0;
             Transform global_H_local_1 = global_H_DOF1*DOF1_H_local1;
@@ -468,9 +468,9 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 
             Transform global_H_local_middle;
             Real baryX = 0.5;
-            Real L = getLength(edgeInList);
+            Real L = this->getLength(edgeInList);
 
-            InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
+            this->InterpolateTransformUsingSpline(global_H_local_middle, baryX,  global_H_local_0, global_H_local_1, L);
 
             local_H_local0_rest = global_H_local_middle.inversed() * global_H_local_0;
             local_H_local1_rest = global_H_local_middle.inversed() * global_H_local_1;
@@ -486,7 +486,7 @@ void BeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList
                                                          Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
 {
     /// get the length of the beam:
-    _L = d_lengthList.getValue()[edgeInList];
+    _L = this->d_lengthList.getValue()[edgeInList];
 
     BeamSection bS = getBeamSection(edgeInList);
     _A=bS._A;
@@ -506,7 +506,7 @@ void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edge
                                                                const ConstVecCoordId &vecXId, Vec3& t )
 {
 
-    const VectorVec3& splinePos = m_StateNodes->read(vecXId)->getValue();
+    const VectorVec3& splinePos = this->m_StateNodes->read(vecXId)->getValue();
     Vec3 P0,P1,P2,P3;
 
     P0=splinePos[edgeInList*4];
@@ -558,16 +558,16 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
         dmsg_info() <<" position " << msgendl
-                   << "      ="<< m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
-        x=m_mstate->read( core::ConstVecCoordId::position() );
+                   << "      ="<< this->m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
+        x=this->m_mstate->read( core::ConstVecCoordId::position() );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
     {
-        x=m_mstate->read( core::ConstVecCoordId::freePosition() ) ;
+        x=this->m_mstate->read( core::ConstVecCoordId::freePosition() ) ;
     }
     else /// rest position
     {
-        x=m_mstate->read( core::ConstVecCoordId::restPosition() ) ;
+        x=this->m_mstate->read( core::ConstVecCoordId::restPosition() ) ;
         computeVel = false;
     }
 
@@ -581,20 +581,20 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
 
         /// convert position (RigidTypes) in Transform
         Transform global_H_local0, global_H_local1;
-        computeTransform(numBeam, global_H_local0, global_H_local1, x->getValue() );
+        this->computeTransform(numBeam, global_H_local0, global_H_local1, x->getValue() );
 
         /// compute the length of the spline
         Vec3 P0,P1,P2,P3;
-        getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
+        this->getSplinePoints(numBeam, x->getValue() , P0,  P1, P2, P3);
         Real length;
-        computeActualLength(length,P0,P1,P2,P3);
+        this->computeActualLength(length,P0,P1,P2,P3);
 
         /// get the result of the transform:
         Transform global_H_localResult;
 
         if(computeVel)
         {
-            InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
+            this->InterpolateTransformUsingSpline(global_H_localResult,baryCoord,global_H_local0,global_H_local1,length);
         }
 //        else
 //        {
