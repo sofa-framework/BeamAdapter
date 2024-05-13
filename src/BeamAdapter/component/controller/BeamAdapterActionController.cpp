@@ -21,11 +21,11 @@
 ******************************************************************************/
 #define SOFA_PLUGIN_BEAMADAPTER_ACTIONCONTROLLER_CPP
 
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/BeamAdapterActionController.inl>
 
 namespace sofa::component::controller

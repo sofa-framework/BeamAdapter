@@ -34,6 +34,7 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>

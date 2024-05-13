@@ -33,6 +33,7 @@
 #define SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP
 
 #include <sofa/defaulttype/RigidTypes.h>
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 
 /// This define is here to prevent the declaration of the template instances as "extern".
