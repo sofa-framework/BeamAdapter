@@ -82,15 +82,12 @@ void BaseRodSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& 
     if (d_massDensity.isSet())
         _rho = d_massDensity.getValue();
 
-    if (d_radius.isSet())
-    {
-        _A = beamSection._A;
-        _Iy = beamSection._Iy;
-        _Iz = beamSection._Iz;
-        _Asy = beamSection._Asy;
-        _Asz = beamSection._Asz;
-        _J = beamSection._J;
-    }
+    _A = beamSection._A;
+    _Iy = beamSection._Iy;
+    _Iz = beamSection._Iz;
+    _Asy = beamSection._Asy;
+    _Asz = beamSection._Asz;
+    _J = beamSection._J;
 }
 
 } // namespace sofa::beamadapter
