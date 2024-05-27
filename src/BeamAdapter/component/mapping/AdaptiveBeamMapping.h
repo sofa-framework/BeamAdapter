@@ -45,7 +45,7 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 #include <BeamAdapter/config.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/WireBeamInterpolation.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ using sofa::type::Vec;
 using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
-using sofa::component::fem::BeamInterpolation;
+using sofa::component::fem::WireBeamInterpolation;
 using core::MechanicalParams;
 using core::ConstraintParams;
 using core::visual::VisualParams;
@@ -126,7 +126,7 @@ public:
     typedef Mat<12,3,Real> Mat12x3;
     typedef Mat<6,12,Real> Mat6x12;
     typedef Mat<12,6,Real> Mat12x6;
-    typedef BeamInterpolation<TIn> BInterpolation;
+    typedef WireBeamInterpolation<TIn> BInterpolation;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
     struct PosPointDefinition
@@ -160,7 +160,7 @@ public:
 
     AdaptiveBeamMapping(State< In >* from=nullptr,
                         State< Out >* to=nullptr,
-                        BeamInterpolation< TIn >* interpolation=nullptr,
+                        WireBeamInterpolation< TIn >* interpolation=nullptr,
                         bool isSubMapping=false) ;
 
     virtual ~AdaptiveBeamMapping() = default;

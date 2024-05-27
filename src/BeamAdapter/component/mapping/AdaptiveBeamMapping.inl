@@ -66,7 +66,7 @@ using core::MechanicalParams;
 
 template <class TIn, class TOut>
 AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out >* to,
-                                                   BeamInterpolation< TIn >* interpolation, bool isSubMapping)
+    WireBeamInterpolation< TIn >* interpolation, bool isSubMapping)
     : Inherit(from, to)
     , d_useCurvAbs(initData(&d_useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
     , d_points(initData(&d_points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
