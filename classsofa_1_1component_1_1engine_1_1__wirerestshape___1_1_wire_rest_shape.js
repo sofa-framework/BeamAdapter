@@ -8,6 +8,7 @@ var classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape =
     [ "WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0", null ],
     [ "~WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4121d4720627c76671afb19f95e5d2b4", null ],
     [ "computeOrientation", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a661c2437a36a6efde7807189a0a2f709", null ],
+    [ "getBeamSection", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46b8eaf9cd28100b1548e4e05074d57f", null ],
     [ "getCollisionSampling", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a442b303e271b4496a20ad609d662fbdb", null ],
     [ "getInterpolationParam", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a0b49d12fd6e210a948189f10055de0b9", null ],
     [ "getLength", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46c7834e4b3792318e83d1521c1e1d16", null ],

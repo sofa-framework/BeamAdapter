@@ -64,6 +64,10 @@ var namespaces_dup =
           [ "SteerableCatheter< Rigid3Types >", "_steerable_catheter_8cpp.html#a3cc508b691c8fe519978fab0bda4ba05", null ]
         ] ],
         [ "fem", null, [
+          [ "_basebeaminterpolation_", null, [
+            [ "BaseBeamInterpolation", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation" ],
+            [ "BaseBeamInterpolation< Rigid3Types >", "_base_beam_interpolation_8cpp.html#ab4dc75873f18210842e2b8cfc478f87a", null ]
+          ] ],
           [ "_beaminterpolation_", "namespacesofa_1_1component_1_1fem_1_1__beaminterpolation__.html", "namespacesofa_1_1component_1_1fem_1_1__beaminterpolation__" ],
           [ "_wirebeaminterpolation_", null, [
             [ "WireBeamInterpolation", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation" ],

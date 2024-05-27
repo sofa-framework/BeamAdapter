@@ -7,6 +7,7 @@ var classsofa_1_1beamadapter_1_1_base_rod_section_material =
     [ "Transform", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#af8d5dcfb2d169bae40623419200bee70", null ],
     [ "Vec3", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a85de9d8e42751f59bd4e91bdf806e557", null ],
     [ "BaseRodSectionMaterial", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#aead00731a1094daa0206d6bc2a5e6153", null ],
+    [ "getBeamSection", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ade0bc2f78472b0c534f62930f0ffaf1f", null ],
     [ "getInterpolationParam", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a216eb92e26271c7b82eaf7362ff41438", null ],
     [ "getLength", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ad4f8e284f5c1b3d74816d8a965376019", null ],
     [ "getNbCollisionEdges", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a3ef17d9853268208752b7969c977a60e", null ],

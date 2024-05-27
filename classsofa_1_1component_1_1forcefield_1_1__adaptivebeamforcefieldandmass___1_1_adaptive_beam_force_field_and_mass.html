@@ -156,9 +156,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b> = type
 <tr class="memitem:a3840dd179bae8137ed77a52cfc9a5a72"><td class="memItemLeft" align="right" valign="top"><a id="a3840dd179bae8137ed77a52cfc9a5a72"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>SpatialVector</b> = typename sofa::defaulttype::SolidTypes&lt; Real &gt;::SpatialVector</td></tr>
 <tr class="separator:a3840dd179bae8137ed77a52cfc9a5a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a462cfe7c47f84f29b0a29fcbc3d3bb5d"><td class="memItemLeft" align="right" valign="top"><a id="a462cfe7c47f84f29b0a29fcbc3d3bb5d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>BInterpolation</b> = <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">sofa::component::fem::BeamInterpolation</a>&lt; DataTypes &gt;</td></tr>
-<tr class="separator:a462cfe7c47f84f29b0a29fcbc3d3bb5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad89255a3263b4952b42a140a8cf9639c"><td class="memItemLeft" align="right" valign="top"><a id="ad89255a3263b4952b42a140a8cf9639c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>BInterpolation</b> = <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html">sofa::component::fem::BaseBeamInterpolation</a>&lt; DataTypes &gt;</td></tr>
+<tr class="separator:ad89255a3263b4952b42a140a8cf9639c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a80a65b397450703f94021c82f7e62c"><td class="memItemLeft" align="right" valign="top"><a id="a4a80a65b397450703f94021c82f7e62c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>WireRestShape</b> = <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">sofa::component::engine::WireRestShape</a>&lt; DataTypes &gt;</td></tr>
 <tr class="separator:a4a80a65b397450703f94021c82f7e62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,7 +257,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>computeGravityVector<
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a41543a9ddb40e6886d98f3ecff39abd4"><td class="memItemLeft" align="right" valign="top"><a id="a41543a9ddb40e6886d98f3ecff39abd4"></a>
-SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BInterpolation</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_interpolation</b></td></tr>
+SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html">BInterpolation</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_interpolation</b></td></tr>
 <tr class="separator:a41543a9ddb40e6886d98f3ecff39abd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a866e6b84ba4228231554087419b48a30"><td class="memItemLeft" align="right" valign="top"><a id="a866e6b84ba4228231554087419b48a30"></a>
 SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_instrumentParameters</b></td></tr>
@@ -649,7 +649,7 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html">_adaptivebeamforcefieldandmass_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Mon May 13 2024 20:25:10 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon May 27 2024 04:17:33 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

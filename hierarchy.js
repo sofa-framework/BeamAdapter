@@ -21,7 +21,8 @@ var hierarchy =
       ] ]
     ] ],
     [ "BaseObject", null, [
-      [ "BeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html", [
+      [ "BaseBeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html", [
+        [ "BeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html", null ],
         [ "WireBeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html", null ]
       ] ]
     ] ],

@@ -194,9 +194,9 @@ typedef Mat&lt; 6, 12, Real &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="memitem:a46151a99afc038d4234a2f9ff3d3f7ee"><td class="memItemLeft" align="right" valign="top"><a id="a46151a99afc038d4234a2f9ff3d3f7ee"></a>
 typedef Mat&lt; 12, 6, Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Mat12x6</b></td></tr>
 <tr class="separator:a46151a99afc038d4234a2f9ff3d3f7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a412773cd724986156d824fdb536d8d1c"><td class="memItemLeft" align="right" valign="top"><a id="a412773cd724986156d824fdb536d8d1c"></a>
-typedef <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation</a>&lt; TIn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BInterpolation</b></td></tr>
-<tr class="separator:a412773cd724986156d824fdb536d8d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59fee2caf8f2290c81137b71249d1c59"><td class="memItemLeft" align="right" valign="top"><a id="a59fee2caf8f2290c81137b71249d1c59"></a>
+typedef WireBeamInterpolation&lt; TIn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BInterpolation</b></td></tr>
+<tr class="separator:a59fee2caf8f2290c81137b71249d1c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a101f97eb3366da5e3ea5c6fc674123cd"><td class="memItemLeft" align="right" valign="top"><a id="a101f97eb3366da5e3ea5c6fc674123cd"></a>
 typedef std::pair&lt; unsigned int, Vec3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BeamIdAndBaryCoord</b></td></tr>
 <tr class="separator:a101f97eb3366da5e3ea5c6fc674123cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,9 +206,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a16a24994e21c48cf16762fc90a439de2"><td class="memItemLeft" align="right" valign="top"><a id="a16a24994e21c48cf16762fc90a439de2"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SOFA_CLASS</b> (SOFA_TEMPLATE2(<a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a>, TIn, TOut), SOFA_TEMPLATE2(Mapping, TIn, TOut))</td></tr>
 <tr class="separator:a16a24994e21c48cf16762fc90a439de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6981692b9876a414231756e6001cc6ff"><td class="memItemLeft" align="right" valign="top"><a id="a6981692b9876a414231756e6001cc6ff"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AdaptiveBeamMapping</b> (State&lt; In &gt; *from=nullptr, State&lt; Out &gt; *to=nullptr, <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation</a>&lt; TIn &gt; *interpolation=nullptr, bool isSubMapping=false)</td></tr>
-<tr class="separator:a6981692b9876a414231756e6001cc6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c0010992a02c07bfd6e884c1eb273f"><td class="memItemLeft" align="right" valign="top"><a id="ad4c0010992a02c07bfd6e884c1eb273f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AdaptiveBeamMapping</b> (State&lt; In &gt; *from=nullptr, State&lt; Out &gt; *to=nullptr, WireBeamInterpolation&lt; TIn &gt; *interpolation=nullptr, bool isSubMapping=false)</td></tr>
+<tr class="separator:ad4c0010992a02c07bfd6e884c1eb273f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -295,7 +295,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af5fc6bed4cd286e8336811afcb056f25"><td class="memItemLeft" align="right" valign="top">Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html#af5fc6bed4cd286e8336811afcb056f25">d_parallelMapping</a></td></tr>
 <tr class="separator:af5fc6bed4cd286e8336811afcb056f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b5ed8d78e53d879b48dbb7010648bf9"><td class="memItemLeft" align="right" valign="top"><a id="a8b5ed8d78e53d879b48dbb7010648bf9"></a>
-SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a>&lt; TIn, TOut &gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BInterpolation</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_adaptativebeamInterpolation</b></td></tr>
+SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a>&lt; TIn, TOut &gt;, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_adaptativebeamInterpolation</b></td></tr>
 <tr class="separator:a8b5ed8d78e53d879b48dbb7010648bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -492,7 +492,7 @@ class sofa::component::mapping::_adaptivebeammapping_::AdaptiveBeamMapping&lt; T
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1mapping.html">mapping</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1mapping_1_1__adaptivebeammapping__.html">_adaptivebeammapping_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a></li>
-    <li class="footer">Generated on Mon May 13 2024 20:25:10 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon May 27 2024 04:17:33 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
