@@ -292,51 +292,6 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
 }
 
 
-template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start)
-{
-    /// lTotalRest = total length of the
-    Real lTotalRest = getRestTotalLength();
-    /// LTotal =  length sum of the beams that are "out"
-    Real LTotal = 0.0;
-
-    const unsigned int edgeListSize = this->d_edgeList.getValue().size();
-
-    /// we find the length of the beam that is "out"
-    for (unsigned int e = start; e < edgeListSize; e++)
-    {
-        LTotal += this->getLength(e);
-    }
-
-    /// x_i = abs_curv from the begining of the instrument
-    Real  x_i = x_input + LTotal - lTotalRest;
-
-    if (x_i < 0.0)
-    {
-        edgeInList_output = start;
-        baryCoord_output = 0;
-        return;
-    }
-
-    /// we compute the x value of each node :the topology (stored in Edge_list) is supposed to be a regular seq of segment
-    Real x = 0;
-
-    for (unsigned int e = start; e < edgeListSize; e++)
-    {
-        x += this->getLength(e);
-        if (x > x_i)
-        {
-            edgeInList_output = e;
-            Real x0 = x - this->getLength(e);
-            baryCoord_output = (x_i - x0) / this->getLength(e);
-            return;
-        }
-    }
-
-    edgeInList_output = edgeListSize - 1;
-    baryCoord_output = 1.0;
-}
-
 } // namespace sofa::component::fem::_wirebeaminterpolation_
 
 

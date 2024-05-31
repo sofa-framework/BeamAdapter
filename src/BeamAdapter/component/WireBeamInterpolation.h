@@ -168,9 +168,6 @@ public:
     bool isControlled() { return m_isControlled; }
     void setControlled(bool value) { m_isControlled = value; }
 
-    //TODO(dmarchal@cduriez) strange name... seems to be wire based...shouldn't it go to WireBeamInterpolation.
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0);
-
 
     SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>,
     BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/

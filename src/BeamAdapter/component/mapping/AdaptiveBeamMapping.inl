@@ -66,7 +66,7 @@ using core::MechanicalParams;
 
 template <class TIn, class TOut>
 AdaptiveBeamMapping<TIn,TOut>::AdaptiveBeamMapping(State< In >* from, State< Out >* to,
-    WireBeamInterpolation< TIn >* interpolation, bool isSubMapping)
+    BaseBeamInterpolation< TIn >* interpolation, bool isSubMapping)
     : Inherit(from, to)
     , d_useCurvAbs(initData(&d_useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
     , d_points(initData(&d_points, "points", "defines the mapped points along the beam axis (in beam frame local coordinates)"))
@@ -95,6 +95,7 @@ void AdaptiveBeamMapping< TIn, TOut>::init()
         msg_error() <<"No Beam Interpolation found, the component can not work.";
 
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
     }
 
     if (d_parallelMapping.getValue())
@@ -493,6 +494,9 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
 template <class TIn, class TOut>
 void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 {
+    if (!this->isComponentStateValid())
+        return;
+
     const auto& pts = d_points.getValue();
     const auto ptsSize = pts.size();
 
