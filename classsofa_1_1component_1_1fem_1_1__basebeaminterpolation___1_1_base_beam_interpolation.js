@@ -32,6 +32,7 @@ var classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_int
     [ "computeTransform", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#adb4b982b824f76847732a672b51fece4", null ],
     [ "getAbsCurvXFromBeam", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a010a2e017f177d751a9c70d238fd2f09", null ],
     [ "getAbsCurvXFromBeam", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#ae7d3343a52a9fbb920d5e0dbcd7523f7", null ],
+    [ "getBeamAtCurvAbs", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a98561e310fba9668249f081272b52115", null ],
     [ "getBeamSection", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a4ff20645367e25a85bd41ea3d182fafe", null ],
     [ "getCollisionSampling", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#af1e82c29be1a7350a1554662278adacb", null ],
     [ "getCurvAbsAtBeam", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a1f3ad863fd8466ebf54b3817a9004d07", null ],

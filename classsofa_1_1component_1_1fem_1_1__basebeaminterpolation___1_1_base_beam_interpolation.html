@@ -223,6 +223,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getInterpolat
 <tr class="memitem:a4ff20645367e25a85bd41ea3d182fafe"><td class="memItemLeft" align="right" valign="top"><a id="a4ff20645367e25a85bd41ea3d182fafe"></a>
 virtual const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getBeamSection</b> (int edgeIndex)=0</td></tr>
 <tr class="separator:a4ff20645367e25a85bd41ea3d182fafe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98561e310fba9668249f081272b52115"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a98561e310fba9668249f081272b52115">getBeamAtCurvAbs</a> (const Real &amp;x_input, unsigned int &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0)</td></tr>
+<tr class="separator:a98561e310fba9668249f081272b52115"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb4b982b824f76847732a672b51fece4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#adb4b982b824f76847732a672b51fece4">computeTransform</a> (const EdgeID edgeInList, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
 <tr class="separator:adb4b982b824f76847732a672b51fece4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d183d74d69b54c564653c4bfdde93f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a8d183d74d69b54c564653c4bfdde93f1">computeTransform</a> (const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
@@ -603,6 +605,59 @@ MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="
 <ol type="1">
 <li>Get the indices of element and nodes</li>
 </ol>
+
+</div>
+</div>
+<a id="a98561e310fba9668249f081272b52115"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98561e310fba9668249f081272b52115">&#9670;&nbsp;</a></span>getBeamAtCurvAbs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void getBeamAtCurvAbs </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>edgeInList_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>baryCoord_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>start</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>lTotalRest = total length of the</p>
+<p>LTotal = length sum of the beams that are "out"</p>
+<p>we find the length of the beam that is "out"</p>
+<p>x_i = abs_curv from the begining of the instrument</p>
+<p>we compute the x value of each node :the topology (stored in Edge_list) is supposed to be a regular seq of segment</p>
 
 </div>
 </div>
@@ -1301,7 +1356,7 @@ MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><b>fem</b></li><li class="navelem"><b>_basebeaminterpolation_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html">BaseBeamInterpolation</a></li>
-    <li class="footer">Generated on Mon May 27 2024 04:17:33 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Jun 3 2024 20:44:20 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
