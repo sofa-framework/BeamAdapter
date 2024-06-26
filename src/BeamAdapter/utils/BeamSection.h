@@ -25,14 +25,14 @@
 namespace sofa::beamadapter
 {
     struct BeamSection {
-        double _r; 			///< Radius of the beam section
-        double _rInner; 	///< Inner radius of the section if beam is hollow
-        double _Iy;         ///< Iy is the cross-section moment of inertia (assuming mass ratio = 1) about the y axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
-        double _Iz; 		///< Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
-        double _J;  		///< Polar moment of inertia (J = Iy + Iz)
-        double _A; 			///< A is the cross-sectional area
-        double _Asy; 		///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
-        double _Asz; 		///< _Asz is the z-direction effective shear area
+        double _r{}; 			///< Radius of the beam section
+        double _rInner{}; 	    ///< Inner radius of the section if beam is hollow
+        double _Iy{};           ///< Iy is the cross-section moment of inertia (assuming mass ratio = 1) about the y axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
+        double _Iz{}; 		    ///< Iz is the cross-section moment of inertia (assuming mass ratio = 1) about the z axis, see https ://en.wikipedia.org/wiki/Second_moment_of_area
+        double _J{};  		    ///< Polar moment of inertia (J = Iy + Iz)
+        double _A{}; 			///< A is the cross-sectional area
+        double _Asy{}; 		    ///< _Asy is the y-direction effective shear area =  10/9 (for solid circular section) or 0 for a non-Timoshenko beam
+        double _Asz{}; 		    ///< _Asz is the z-direction effective shear area
     };
 
 } // namespace sofa::beamAdapter
