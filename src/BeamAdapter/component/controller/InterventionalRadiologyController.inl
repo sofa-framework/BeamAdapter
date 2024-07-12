@@ -70,7 +70,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
-, l_fixedConstraint(initLink("fixedConstraint", "Path to the FixedConstraint"))
+, l_fixedConstraint(initLink("fixedConstraint", "Path to the FixedProjectiveConstraint"))
 {
     m_sensored =false;
 }
@@ -144,7 +144,7 @@ void InterventionalRadiologyController<DataTypes>::init()
         }
         else
         {
-            msg_error() << "No FixedConstraint found. One will be created on the spot but most likely it will not behave as attended.";
+            msg_error() << "No FixedProjectiveConstraint found. One will be created on the spot but most likely it will not behave as attended.";
 
             fixedConstraint = sofa::core::objectmodel::New<FixedProjectiveConstraint<DataTypes>>();
             context->addObject(fixedConstraint);
