@@ -312,6 +312,8 @@ const BeamSection& WireRestShape<DataTypes>::getBeamSection(const Real& x_curv) 
     }
 
     msg_error() << " problem in getBeamSection : x_curv " << x_curv << " is not between keyPoints" << keyPts;
+    static const BeamSection emptySection{};
+    return emptySection;
 }
 
 
