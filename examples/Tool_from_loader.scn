@@ -13,7 +13,7 @@
         <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->  
         <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->  
         <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->  
-        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->  
+        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
         <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->  
         <RequiredPlugin name="BeamAdapter" />
     </Node>
@@ -25,8 +25,8 @@
     <Node name="GuideCatheter">
         <MeshOBJLoader name="loader" filename="mesh/key_tip.obj" />
         
-        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" radius="10" massDensity="0.1" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
-        <RodMeshSection name="MeshTipSection" loader="@loader" nbEdgesCollis="300" nbEdgesVisu="300"  radius="10" massDensity="0.1"  youngModulus="1000000" poissonRatio="0.3"/>
+        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" radius="0.05" massDensity="0.1" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
+        <RodMeshSection name="MeshTipSection" loader="@loader" nbEdgesCollis="300" nbEdgesVisu="300"  radius="0.05" massDensity="0.1"  youngModulus="1000000" poissonRatio="0.3"/>
         
         <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" wireMaterials="@StraightSection @MeshTipSection" />
 
@@ -39,13 +39,13 @@
     <Node name="Instrument">
         <EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" />
         <BTDLinearSolver />
-        <RegularGridTopology name="MeshLines" nx="300" ny="1" nz="1"
+        <RegularGridTopology name="MeshLines" nx="330" ny="1" nz="1"
             xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
             p0="0 0 0" drawEdges="0"/>
                                 
         <MechanicalObject name="Instrument_DOFs" template="Rigid3d" /> 
         
-        <WireBeamInterpolation name="Interpol_GCatheter" WireRestShape="@../GuideCatheter/GC_RestShape" radius="0.05" printLog="0"/> 
+        <WireBeamInterpolation name="Interpol_GCatheter" WireRestShape="@../GuideCatheter/GC_RestShape" printLog="0"/> 
         <AdaptiveBeamForceFieldAndMass name="FF_GCatheter" interpolation="@Interpol_GCatheter" massDensity="0.00000155"/>
 
         <InterventionalRadiologyController name="IRController" template="Rigid3d" listening="true" controlledInstrument="0" 
@@ -55,7 +55,7 @@
             mainDirection="1 0 0"
         />
         
-        <FixedConstraint name="FixedConstraint" indices="0" />
+        <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
         <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8" />
 
         <Node name='VisuGuideCatheter'>

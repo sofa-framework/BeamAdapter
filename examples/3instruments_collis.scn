@@ -9,7 +9,7 @@
 	    <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/> <!-- Needed to use components [DefaultContactManager] -->
 	    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [LinearSolverConstraintCorrection] -->
 	    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [LCPConstraintSolver] -->
-	    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
+	    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->
 	    <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->
 	    <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->
 	    <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->
@@ -101,7 +101,7 @@
 
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 
-		<FixedConstraint name="FixedConstraint" indices="0" />
+		<FixedProjectiveConstraint name="FixedConstraint" indices="0" />
         <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8"   />
 
 		<Node name="Collis" activated="true">
