@@ -19,12 +19,12 @@ def createScene(rootNode):
 
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('RodStraightSection', name='StraightSection', 
-                                 length=980.0, radius=1, 
+                                 length=980.0, radius=0.9, 
                                  nbEdgesCollis=50, nbEdgesVisu=200, 
                                  youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
-                                 length=20.0, radius=1, 
+                                 length=20.0, radius=0.9, 
                                  nbEdgesCollis=10, nbEdgesVisu=200,
                                  spireDiameter=25, spireHeight=0,
                                  youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
@@ -46,8 +46,7 @@ def createScene(rootNode):
                                     xmax=0.0, xmin=0.0, ymin=0, ymax=0, zmax=0, zmin=0,
                                     p0=[0,0,0])
     BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d', ry=-90)
-    BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', 
-                                    radius=0.9, printLog=False)
+    BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', printLog=False)
     BeamMechanics.addObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', massDensity=0.00000155, interpolation='@BeamInterpolation')
     BeamMechanics.addObject('InterventionalRadiologyController', name='DeployController', template='Rigid3d', instruments='BeamInterpolation', 
                                     startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0, 0, 0], printLog=True, 

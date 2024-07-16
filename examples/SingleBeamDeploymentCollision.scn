@@ -8,7 +8,7 @@
     <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/> <!-- Needed to use components [DefaultContactManager] -->
     <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [LinearSolverConstraintCorrection] -->
     <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [LCPConstraintSolver] -->
-    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->
     <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshSTLLoader] -->
     <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->
     <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
@@ -32,8 +32,8 @@
 
 
     <Node name="EdgeTopology">
-        <RodStraightSection name="StraightSection" youngModulus="20000" radius="1" massDensity="0.1" poissonRatio="0.3" nbEdgesCollis="50" nbEdgesVisu="200" length="980.0"/>
-        <RodSpireSection name="SpireSection" youngModulus="20000" radius="1" massDensity="0.1" poissonRatio="0.3" nbEdgesCollis="10" nbEdgesVisu="200" length="20.0" spireDiameter="25" spireHeight="0.0"/>        
+        <RodStraightSection name="StraightSection" youngModulus="20000" radius="0.9" massDensity="0.1" poissonRatio="0.3" nbEdgesCollis="50" nbEdgesVisu="200" length="980.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="20000" radius="0.9" massDensity="0.1" poissonRatio="0.3" nbEdgesCollis="10" nbEdgesVisu="200" length="20.0" spireDiameter="25" spireHeight="0.0"/>        
         
         <WireRestShape template="Rigid3d" name="BeamRestShape" wireMaterials="@StraightSection @SpireSection"/>
     
@@ -51,14 +51,14 @@
                                     p0="0 0 0" drawEdges="1"/>
         <MechanicalObject template="Rigid3d" name="DOFs Container" ry="-90" /> 
 
-        <WireBeamInterpolation name="BeamInterpolation" WireRestShape="@../EdgeTopology/BeamRestShape" radius="0.9"/>
+        <WireBeamInterpolation name="BeamInterpolation" WireRestShape="@../EdgeTopology/BeamRestShape"/>
         <AdaptiveBeamForceFieldAndMass name="BeamForceField"  massDensity="0.00000155" interpolation="@BeamInterpolation"/>
         <InterventionalRadiologyController name="DeployController" template="Rigid3d" instruments="BeamInterpolation"
                                     startingPos="0 0 0 0 0 0 1" xtip="0 0 0" printLog="1" 
                                     rotationInstrument="0 0 0" step="5" speed="5" 
                                     listening="1" controlledInstrument="0"/>
         <LinearSolverConstraintCorrection wire_optimization="true" printLog="0" />
-        <FixedConstraint name="FixedConstraint" indices="0" />
+        <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
         <RestShapeSpringsForceField name="RestSPForceField" points="@DeployController.indexFirstNode" angularStiffness="1e8" stiffness="1e8"/> 
 
         <Node name="CollisionModel">
