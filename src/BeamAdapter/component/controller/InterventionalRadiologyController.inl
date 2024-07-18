@@ -144,17 +144,9 @@ void InterventionalRadiologyController<DataTypes>::init()
         }
         else
         {
-            msg_error() << "No FixedProjectiveConstraint found. One will be created on the spot but most likely it will not behave as attended.";
+            msg_error() << "No FixedProjectiveConstraint found or set. It will most likely lead to a crash.";
 
-            fixedConstraint = sofa::core::objectmodel::New<FixedProjectiveConstraint<DataTypes>>();
-            context->addObject(fixedConstraint);
-            fixedConstraint->addConstraint(0);
-
-            l_fixedConstraint.set(fixedConstraint);
-
-            //Instead of create one, it may be more correct to set this component to Invalid
-            //but the component state is almost never tested....
-            //this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         }
     }
 
