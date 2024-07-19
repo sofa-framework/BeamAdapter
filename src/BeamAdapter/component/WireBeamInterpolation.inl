@@ -163,28 +163,38 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edge
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
-    Real& _Asy, Real& _Asz, Real& _J)
-{
-    _L = this->d_lengthList.getValue()[edgeInList];
-    Real _rho;
-    Real x_curv = 0;
-    this->getAbsCurvXFromBeam(edgeInList, x_curv);
-
-    auto restShape = this->m_restShape.get();
-    restShape->getInterpolationParam(x_curv, _rho, _A, _Iy, _Iz, _Asy, _Asz, _J);
-}
-
-
-template<class DataTypes>
-const BeamSection& WireBeamInterpolation<DataTypes>::getBeamSection(int edgeIndex)
+const BeamSection& WireBeamInterpolation<DataTypes>::getBeamSection(sofa::Index beamId)
 {
     Real x_curv = 0;
-    this->getAbsCurvXFromBeam(edgeIndex, x_curv);
+    this->getAbsCurvXFromBeam(beamId, x_curv);
 
     auto restShape = this->m_restShape.get();
     return restShape->getBeamSectionAtX(x_curv);
 }
+
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
+    Real& _Asy, Real& _Asz, Real& _J)
+{
+    _L = this->d_lengthList.getValue()[beamId];
+    Real _rho;
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(beamId, x_curv);
+
+    auto restShape = this->m_restShape.get();
+    restShape->getInterpolationParametersAtX(x_curv, _A, _Iy, _Iz, _Asy, _Asz, _J);
+}
+
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity)
+{
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(beamId, x_curv);
+    this->m_restShape->getMechanicalParametersAtX(x_curv, youngModulus, cPoisson, massDensity);
+}
+
 
 template<class DataTypes>
 bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x, Real& x_output)

@@ -234,9 +234,7 @@ public:
     DataVecDeriv d_dataG;
 
 protected :
-
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, SReal factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, SReal factor );

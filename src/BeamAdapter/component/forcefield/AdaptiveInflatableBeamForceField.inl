@@ -67,9 +67,7 @@ AdaptiveInflatableBeamForceField<DataTypes>::AdaptiveInflatableBeamForceField()
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , d_pressure(initData(&d_pressure, (Real)0.0, "pressure", "pressure inside the inflatable Beam"))
     , d_dataG(initData(&d_dataG,"dataG","Gravity 3d vector"))
-
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-    , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
 }
 
@@ -126,11 +124,12 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
 {
     Real x_curv = 0.0 ;
+    Real _rho = 0.0 ;
     Real _nu = 0.0 ;
     Real _E = 0.0 ;
 
     ///Get the curvilinear abscissa of the extremity of the beam
-    l_interpolation->getYoungModulusAtX(beam,x_curv, _E, _nu);
+    l_interpolation->getMechanicalParameters(beam, _E, _nu, _rho);
 
     /// material parameters
     Real _G;
@@ -138,17 +137,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeStiffness(int beam, Bea
 
     /// interpolation & geometrical parameters
     Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
-    l_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
-
-
-
-    /// Temp : we only overide values for which a Data has been set in the WireRestShape
-    if(l_instrumentParameters.get())
-    {
-        Real x_curv = 0, _rho;
-        l_interpolation->getAbsCurvXFromBeam(beam, x_curv);
-        l_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);	// The length of the beams is only known to the interpolation !
-    }
+    l_interpolation->getInterpolationParameters(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
 
     /// correction for inflated beam (effective shear area for circular tubes with thin walls
     _Asy = 0.5;
@@ -156,8 +145,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeStiffness(int beam, Bea
 
     /// pressure
     Real P = this->d_pressure.getValue();
-
-
 
     Real phiy, phiz;
     Real L2 = (Real) (_L * _L);
@@ -231,17 +218,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeMass(int beam, BeamLoca
 
     /// interpolation & geometrical parameters
     Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J;
-    l_interpolation->getInterpolationParam(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
-
-    /// Temp : we only overide values for which a Data has been set in the WireRestShape
-    if(l_instrumentParameters.get())
-    {
-        Real x_curv = 0;
-        l_interpolation->getAbsCurvXFromBeam(beam, x_curv);
-
-        /// The length of the beams is only known to the interpolation !
-        l_instrumentParameters->getInterpolationParam(x_curv, _rho, _A, _Iy , _Iz, _Asy, _Asz, _J);
-    }
+    l_interpolation->getInterpolationParameters(beam, _L, _A, _Iy , _Iz, _Asy, _Asz, _J);
 
     Real L2 = (Real) (_L * _L);
     beamLocalMatrix.m_M00.clear(); beamLocalMatrix.m_M01.clear(); beamLocalMatrix.m_M10.clear(); beamLocalMatrix.m_M11.clear();

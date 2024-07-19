@@ -69,20 +69,8 @@ void BaseRodSectionMaterial<DataTypes>::init()
 
 
 template <class DataTypes>
-void BaseRodSectionMaterial<DataTypes>::getYoungModulusAtX(Real& youngModulus, Real& cPoisson) const
+void BaseRodSectionMaterial<DataTypes>::getInterpolationParameters(Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const
 {
-    youngModulus = this->d_youngModulus.getValue();
-    cPoisson = this->d_poissonRatio.getValue();
-}
-
-
-template <class DataTypes>
-void BaseRodSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const
-{
-    if (d_massDensity.isSet()) {
-        _rho = d_massDensity.getValue();
-    }
-
     _A = m_beamSection._A; 
     _Iy = m_beamSection._Iy;
     _Iz = m_beamSection._Iz;
@@ -93,7 +81,7 @@ void BaseRodSectionMaterial<DataTypes>::getInterpolationParam(Real& _rho, Real& 
 
 
 template <class DataTypes>
-void BaseRodSectionMaterial<DataTypes>::getMechanicalParamAtX(Real& youngModulus, Real& cPoisson, Real& massDensity) const
+void BaseRodSectionMaterial<DataTypes>::getMechanicalParameters(Real& youngModulus, Real& cPoisson, Real& massDensity) const
 {
     youngModulus = this->d_youngModulus.getValue();
     cPoisson = this->d_poissonRatio.getValue();
