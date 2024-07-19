@@ -21,9 +21,9 @@
 
 <!-- ------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  ------------------------------ -->
 
-	<Node name='topoLines_cath'>
-        <RodStraightSection name="StraightSection" youngModulus="10000" nbEdgesCollis="40" nbEdgesVisu="120" length="600.0" radius='1'/>
-        <RodSpireSection name="SpireSection" youngModulus="10000" nbEdgesCollis="20" nbEdgesVisu="80" length="400.0" spireDiameter="4000.0" spireHeight="0.0" radius='1'/>
+	<Node name='topoLines_cath'> 
+        <RodStraightSection name="StraightSection" youngModulus="10000" massDensity='0.00000155' nbEdgesCollis="40" nbEdgesVisu="120" length="600.0" radius='1'/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+        <RodSpireSection name="SpireSection" youngModulus="10000" massDensity='0.00000155' nbEdgesCollis="20" nbEdgesVisu="80" length="400.0" spireDiameter="4000.0" spireHeight="0.0" radius='1'/>
         
         <WireRestShape template="Rigid3d" name="catheterRestShape" wireMaterials="@StraightSection @SpireSection"/>
     
@@ -33,8 +33,8 @@
 		<MechanicalObject template='Rigid3d' name='dofTopo1' />
 	</Node>
 	<Node name='topoLines_guide'>
-        <RodStraightSection name="StraightSection" youngModulus="10000" nbEdgesCollis="50" nbEdgesVisu="196" length="980.0" radius='0.9'/>
-        <RodSpireSection name="SpireSection" youngModulus="10000" nbEdgesCollis="10" nbEdgesVisu="4" length="20.0" spireDiameter="25" spireHeight="0.0" radius='0.9'/>
+        <RodStraightSection name="StraightSection" youngModulus="10000" massDensity='0.00000155' nbEdgesCollis="50" nbEdgesVisu="196" length="980.0" radius='0.9'/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->
+        <RodSpireSection name="SpireSection" youngModulus="10000" massDensity='0.00000155' nbEdgesCollis="10" nbEdgesVisu="4" length="20.0" spireDiameter="25" spireHeight="0.0" radius='0.9'/>
 		
         <WireRestShape template="Rigid3d" name="GuideRestShape" wireMaterials="@StraightSection @SpireSection"/>
         
@@ -44,8 +44,8 @@
 		<MechanicalObject template='Rigid3d' name='dofTopo2' />
 	</Node>
 	<Node name='topoLines_coils'>
-        <RodStraightSection name="StraightSection" youngModulus="168000" nbEdgesCollis="30" nbEdgesVisu="360" length="540.0" radius='0.1'/>
-        <RodSpireSection name="SpireSection" youngModulus="168000" nbEdgesCollis="30" nbEdgesVisu="40" length="60.0" spireDiameter="7" spireHeight="5.0" radius='0.1'/>
+        <RodStraightSection name="StraightSection" youngModulus="168000" massDensity='0.000021' nbEdgesCollis="30" nbEdgesVisu="360" length="540.0" radius='0.1'/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+        <RodSpireSection name="SpireSection" youngModulus="168000" massDensity='0.000021' nbEdgesCollis="30" nbEdgesVisu="40" length="60.0" spireDiameter="7" spireHeight="5.0" radius='0.1'/>
 		
         <WireRestShape template="Rigid3d" name="CoilRestShape" wireMaterials="@StraightSection @SpireSection"/>
     
@@ -67,14 +67,14 @@
 		/>
 		<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' ry='-90'/> 
 
-		<WireBeamInterpolation name='InterpolCatheter' WireRestShape='@../topoLines_cath/catheterRestShape' printLog='0'/> 
-		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter' massDensity='0.00000155'/> <!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
+		<WireBeamInterpolation name='InterpolCatheter' WireRestShape='@../topoLines_cath/catheterRestShape'/> 
+		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter'/> 
 
-		<WireBeamInterpolation name='InterpolGuide' WireRestShape='@../topoLines_guide/GuideRestShape' printLog='0'/> 
-		<AdaptiveBeamForceFieldAndMass name='GuideForceField' interpolation='@InterpolGuide' massDensity='0.00000155'/>
+		<WireBeamInterpolation name='InterpolGuide' WireRestShape='@../topoLines_guide/GuideRestShape'/> 
+		<AdaptiveBeamForceFieldAndMass name='GuideForceField' interpolation='@InterpolGuide'/>
 
-		<WireBeamInterpolation name='InterpolCoils' WireRestShape='@../topoLines_coils/CoilRestShape' printLog='0'/> 
-		<AdaptiveBeamForceFieldAndMass name='CoilsForceField' interpolation='@InterpolCoils' massDensity='0.000021'/> <!-- platine E = 168000 MPa // 21000 Kg/m3-->	
+		<WireBeamInterpolation name='InterpolCoils' WireRestShape='@../topoLines_coils/CoilRestShape'/> 
+		<AdaptiveBeamForceFieldAndMass name='CoilsForceField' interpolation='@InterpolCoils'/> 
 
         <BeamAdapterActionController name="AController" interventionController="@IRController" writeMode="0"
             timeSteps="9.1 17.1 17.55 18.05 18.6 19.05 19.55 20.05 20.5 21 21.45 21.9 22.65 23.1 23.55 24.05 24.55 25 25.45 25.95 26.4 27.1 27.55 28.05 28.55 29 29.5 29.95 30.4 30.9 31.4 31.85 32.35 33.05 33.5 34 34.45 34.9 35.4 35.85 36.35 36.8 37.25 37.7 38.2 38.65 39.4 39.85 40.3 40.7 41.2 41.65 42.1 42.55 43 43.4 44.1 44.55 45 45.45 45.9 46.3 46.75 47.2 47.65 48.1 48.55 49 49.65 50.1 50.5 50.9 51.35 51.75 52.2 52.6 53.05 53.5 53.95 54.4 54.85 55.5 55.9 59.1 66.15 66.6 67.05 67.45 67.9 68.35 68.8 69.25 69.65 70.1 70.55 71.2 71.6 72.05 72.5 72.95 73.4 77.6 81.9 87.4 87.75 88.1 88.45 88.75 89.1 89.45 89.75 90.1 90.6 90.9 91.25 91.6 91.95 92.3 92.6 92.95 93.25 93.6 93.95 94.25 94.6 94.95 95.4 95.75 96.1 96.4 96.75 97.05 97.35 97.7 98.05 98.4 98.7 99.15 99.5 99.8 100.15 100.45 100.75 101.1 101.4 101.75 102.05 102.55 102.85 103.2 103.5 103.8 104.1 104.4 104.75 105.05 105.4 105.7 106 106.45 106.75 107.1 107.4 107.7 108 108.35 108.65 108.95 109.25 109.55 110 110.3 110.6 110.9 111.2 111.45 111.75 112.05 112.35 112.65 113.1 113.35 113.65 113.95 114.2 114.5 114.8 115.1 115.35 115.65 116.1 116.35 125.8 128.2 131.6 131.8 132 132.25 132.45 132.65 132.85 133.05 133.3 133.5 133.8 134 134.2 134.4 134.6 134.8 135 135.2 135.4 135.6 135.8 136 136.3 136.5 136.75 136.95 137.15 137.35 137.5 137.7 137.9 138.15 138.3 138.6 138.85 139 139.2 139.4 139.6 139.8 140 140.15 140.35 140.55 140.75 140.95 141.25 141.45 141.65 141.85 142.05 142.25 142.45 142.65 142.85 143.05 143.25 143.45 143.65 143.85 144.15 144.3 144.5 144.7 144.9 145.1 145.3 145.45 145.65 145.95 146.1 146.3 146.5 146.7 146.9 147.1 147.25 147.45 147.65 147.85 148.05 148.25 148.4 148.7 148.9 149.1 149.25 149.45 149.65 149.85 150 150.2 150.35 150.55 150.75 150.9 151.05 151.3 151.45 151.6 151.8 151.95 152.1 152.25 152.4 152.65 152.8 153 153.15 153.3 153.45 153.6 153.75 153.9 154.1 154.25 154.4 154.6 154.75 154.9 155.1 155.25 155.4 155.55 155.7 155.85 156 156.15 156.4 156.55 156.7 156.85 157 157.15 157.3 157.45 157.6 157.75 157.9 158.05 159 160.9 163.4 163.55 163.7 163.85 164.1 164.25 164.4 164.55 164.75 164.9 165.05 165.2 165.35 165.5 165.65 165.8 165.95 166.15 166.35 166.5 166.7 166.85 167 167.15 167.3 167.45 167.65 167.8 167.95 168.1 168.25 168.45 168.6 168.8 169 169.15 169.3 169.45 169.6 169.8 169.95 170.1 170.25 170.4 170.55 170.7 170.95 171.1 171.25 171.4 171.55 171.75 171.9 172.05 172.2 172.45 172.6 172.75 172.9 173.1 173.25 185.8"
