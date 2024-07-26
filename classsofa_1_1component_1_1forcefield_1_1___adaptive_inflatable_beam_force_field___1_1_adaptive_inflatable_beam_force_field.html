@@ -264,9 +264,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a2996aadf04dc0b3af71719dc1ce47252"><td class="memItemLeft" align="right" valign="top"><a id="a2996aadf04dc0b3af71719dc1ce47252"></a>
 SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BInterpolation</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_interpolation</b></td></tr>
 <tr class="separator:a2996aadf04dc0b3af71719dc1ce47252"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bd4859c029462ec76dd22ac57b35e9e"><td class="memItemLeft" align="right" valign="top"><a id="a3bd4859c029462ec76dd22ac57b35e9e"></a>
-SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a>&lt; DataTypes &gt;, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_instrumentParameters</b></td></tr>
-<tr class="separator:a3bd4859c029462ec76dd22ac57b35e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22e393868f95d615e3785ebfa39a1da8"><td class="memItemLeft" align="right" valign="top"><a id="a22e393868f95d615e3785ebfa39a1da8"></a>
 Vec3&#160;</td><td class="memItemRight" valign="bottom"><b>m_gravity</b></td></tr>
 <tr class="separator:a22e393868f95d615e3785ebfa39a1da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -559,8 +556,6 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 </div><div class="memdoc">
 <p>material parameters</p>
 <p>interpolation &amp; geometrical parameters</p>
-<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
-<p>The length of the beams is only known to the interpolation !</p>
 <p>diagonal values</p>
 <p>diagonal blocks</p>
 <p>lower non-diagonal blocks</p>
@@ -597,7 +592,6 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 <p>Get the curvilinear abscissa of the extremity of the beam</p>
 <p>material parameters</p>
 <p>interpolation &amp; geometrical parameters</p>
-<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
 <p>correction for inflated beam (effective shear area for circular tubes with thin walls</p>
 <p>pressure</p>
 <p>Find shear-deformation parameters</p>
@@ -646,7 +640,7 @@ class sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveI
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field__.html">_AdaptiveInflatableBeamForceField_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField</a></li>
-    <li class="footer">Generated on Fri Jul 26 2024 08:47:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jul 26 2024 08:48:30 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

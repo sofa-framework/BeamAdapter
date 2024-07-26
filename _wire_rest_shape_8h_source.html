@@ -161,67 +161,68 @@ $(document).ready(function(){initNavTree('_wire_rest_shape_8h_source.html',''); 
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;     <span class="keywordtype">void</span> getRestTransformOnX(Transform &amp;global_H_local, <span class="keyword">const</span> Real &amp;x);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;     <span class="keywordtype">void</span> getYoungModulusAtX(<span class="keyword">const</span> Real&amp; x_curv, Real&amp; youngModulus, Real&amp; cPoisson) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;     [[nodiscard]] <span class="keyword">const</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a>&amp; getBeamSectionAtX(<span class="keyword">const</span> Real&amp; x_curv) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;     <span class="keywordtype">void</span> getInterpolationParam(<span class="keyword">const</span> Real&amp; x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy , Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;     <span class="keywordtype">void</span> getInterpolationParametersAtX(<span class="keyword">const</span> Real&amp; x_curv, Real &amp;_A, Real &amp;_Iy , Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;     <span class="keyword">const</span> <a class="code" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a>&amp; getBeamSection(<span class="keyword">const</span> Real&amp; x_curv) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;     <span class="keywordtype">void</span> getMechanicalParametersAtX(<span class="keyword">const</span> Real&amp; x_curv, Real&amp; youngModulus, Real&amp; cPoisson, Real&amp; massDensity) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;     <span class="keywordtype">void</span> getSamplingParameters(type::vector&lt;Real&gt;&amp; xP_noticeable, type::vector&lt;int&gt;&amp; nbP_density) <span class="keyword">const</span> ;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;     <span class="keywordtype">void</span> getSamplingParameters(type::vector&lt;Real&gt;&amp; xP_noticeable, type::vector&lt;int&gt;&amp; nbP_density) <span class="keyword">const</span> ;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;     <span class="keywordtype">void</span> computeOrientation(<span class="keyword">const</span> Vec3&amp; AB, <span class="keyword">const</span> Quat&amp; Q, Quat &amp;result);     </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;     </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;     <span class="keywordtype">void</span> computeOrientation(<span class="keyword">const</span> Vec3&amp; AB, <span class="keyword">const</span> Quat&amp; Q, Quat &amp;result);     </div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;     </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;     Real getLength() ;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;     <span class="keywordtype">void</span> getCollisionSampling(Real &amp;dx, <span class="keyword">const</span> Real &amp;x_curv);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;     <span class="keywordtype">void</span> getNumberOfCollisionSegment(Real &amp;dx, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;numLines) ;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;     </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;     Real getLength() ;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;     <span class="keywordtype">void</span> getCollisionSampling(Real &amp;dx, <span class="keyword">const</span> Real &amp;x_curv);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;     <span class="keywordtype">void</span> getNumberOfCollisionSegment(Real &amp;dx, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;numLines) ;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;     [[deprecated(<span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>)]]</div>
-<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">  123</a></span>&#160;     Real <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">getReleaseCurvAbs</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;         msg_warning() &lt;&lt; <span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;         <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;     }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;     [[deprecated(<span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>)]]</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;     <span class="keywordtype">void</span> releaseWirePart() {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;         msg_warning() &lt;&lt; <span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;     }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">void</span> initLengths();</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordtype">bool</span> initTopology();</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;     [[deprecated(<span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>)]]</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">  124</a></span>&#160;     Real <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">getReleaseCurvAbs</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;         msg_warning() &lt;&lt; <span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;         <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;     }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;     [[deprecated(<span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>)]]</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;     <span class="keywordtype">void</span> releaseWirePart() {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;         msg_warning() &lt;&lt; <span class="stringliteral">&quot;Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06&quot;</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;     }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordtype">void</span> initLengths();</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">bool</span> initTopology();</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;     Data&lt;type::vector&lt;int&gt; &gt; d_density;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;     Data&lt;type::vector&lt;Real&gt; &gt; d_keyPoints;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;     </div>
-<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">  145</a></span>&#160;     MultiLink&lt;WireRestShape&lt;DataTypes&gt;, <a class="code" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html">BaseRodSectionMaterial&lt;DataTypes&gt;</a>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK&gt; <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">l_sectionMaterials</a>;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;     SingleLink&lt;WireRestShape&lt;DataTypes&gt;, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK&gt; l_topology;     </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;     TopologyContainer* _topology{ <span class="keyword">nullptr</span> }; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;};</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;     Data&lt;type::vector&lt;int&gt; &gt; d_density;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;     Data&lt;type::vector&lt;Real&gt; &gt; d_keyPoints;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;     </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">  146</a></span>&#160;     MultiLink&lt;WireRestShape&lt;DataTypes&gt;, <a class="code" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html">BaseRodSectionMaterial&lt;DataTypes&gt;</a>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK&gt; <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">l_sectionMaterials</a>;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;     SingleLink&lt;WireRestShape&lt;DataTypes&gt;, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK&gt; l_topology;     </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;     TopologyContainer* _topology{ <span class="keyword">nullptr</span> }; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;};</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="preprocessor">#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP)</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape&lt;sofa::defaulttype::Rigid3Types&gt;</a>;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;} <span class="comment">// namespace _wirerestshape_</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="keyword">using</span> _wirerestshape_::WireRestShape;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;} <span class="comment">// namespace sofa::component::engine</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#if !defined(SOFA_PLUGIN_BEAMADAPTER_WIRERESTSHAPE_CPP)</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API <a class="code" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape&lt;sofa::defaulttype::Rigid3Types&gt;</a>;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;} <span class="comment">// namespace _wirerestshape_</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="keyword">using</span> _wirerestshape_::WireRestShape;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;} <span class="comment">// namespace sofa::component::engine</span></div>
 <div class="ttc" id="aclasssofa_1_1beamadapter_1_1_base_rod_section_material_html"><div class="ttname"><a href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html">sofa::beamadapter::BaseRodSectionMaterial</a></div><div class="ttdoc">Base class describing a Rod section which will define a set of beam elements.</div><div class="ttdef"><b>Definition:</b> BaseRodSectionMaterial.h:52</div></div>
 <div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">sofa::component::engine::_wirerestshape_::WireRestShape</a></div><div class="ttdoc">Describe the shape functions on multiple segments.</div><div class="ttdef"><b>Definition:</b> WireRestShape.h:64</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html_a3ca76ea162e106b600b154bbf6da7a76"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">sofa::component::engine::_wirerestshape_::WireRestShape::getReleaseCurvAbs</a></div><div class="ttdeci">Real getReleaseCurvAbs() const</div><div class="ttdoc">For coils: a part of the coil instrument can be brokenIn2 (by default the point of release is the end...</div><div class="ttdef"><b>Definition:</b> WireRestShape.h:123</div></div>
+<div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html_a3ca76ea162e106b600b154bbf6da7a76"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76">sofa::component::engine::_wirerestshape_::WireRestShape::getReleaseCurvAbs</a></div><div class="ttdeci">Real getReleaseCurvAbs() const</div><div class="ttdoc">For coils: a part of the coil instrument can be brokenIn2 (by default the point of release is the end...</div><div class="ttdef"><b>Definition:</b> WireRestShape.h:124</div></div>
 <div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html_a4121d4720627c76671afb19f95e5d2b4"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4121d4720627c76671afb19f95e5d2b4">sofa::component::engine::_wirerestshape_::WireRestShape::~WireRestShape</a></div><div class="ttdeci">virtual ~WireRestShape()=default</div><div class="ttdoc">Default Destructor.</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html_a7293515ade2b3aa4581c054e88d1953a"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">sofa::component::engine::_wirerestshape_::WireRestShape::l_sectionMaterials</a></div><div class="ttdeci">MultiLink&lt; WireRestShape&lt; DataTypes &gt;, BaseRodSectionMaterial&lt; DataTypes &gt;, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt; l_sectionMaterials</div><div class="ttdoc">Vector or links to the Wire section material. The order of the linked material will define the WireSh...</div><div class="ttdef"><b>Definition:</b> WireRestShape.h:145</div></div>
+<div class="ttc" id="aclasssofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape_html_a7293515ade2b3aa4581c054e88d1953a"><div class="ttname"><a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a">sofa::component::engine::_wirerestshape_::WireRestShape::l_sectionMaterials</a></div><div class="ttdeci">MultiLink&lt; WireRestShape&lt; DataTypes &gt;, BaseRodSectionMaterial&lt; DataTypes &gt;, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt; l_sectionMaterials</div><div class="ttdoc">Vector or links to the Wire section material. The order of the linked material will define the WireSh...</div><div class="ttdef"><b>Definition:</b> WireRestShape.h:146</div></div>
 <div class="ttc" id="astructsofa_1_1beamadapter_1_1_beam_section_html"><div class="ttname"><a href="structsofa_1_1beamadapter_1_1_beam_section.html">sofa::beamadapter::BeamSection</a></div><div class="ttdef"><b>Definition:</b> BeamSection.h:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -229,7 +230,7 @@ $(document).ready(function(){initNavTree('_wire_rest_shape_8h_source.html',''); 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_6245286b41514b9fa65243e9fda741ce.html">engine</a></li><li class="navelem"><b>WireRestShape.h</b></li>
-    <li class="footer">Generated on Fri Jul 26 2024 08:47:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jul 26 2024 08:48:29 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

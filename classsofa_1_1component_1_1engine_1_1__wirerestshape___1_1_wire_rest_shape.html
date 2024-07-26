@@ -145,18 +145,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override<
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251">getRestTransformOnX</a> (Transform &amp;global_H_local, const Real &amp;x)</td></tr>
 <tr class="memdesc:a0876fdbe3161c709e4dfa6512c63f251"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called by the force field to evaluate the rest position of each beam. <br /></td></tr>
 <tr class="separator:a0876fdbe3161c709e4dfa6512c63f251"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cba1fec0110620d3c4925caa0d4e742"><td class="memItemLeft" align="right" valign="top"><a id="a6cba1fec0110620d3c4925caa0d4e742"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a6cba1fec0110620d3c4925caa0d4e742">getYoungModulusAtX</a> (const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson) const</td></tr>
-<tr class="memdesc:a6cba1fec0110620d3c4925caa0d4e742"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position. <br /></td></tr>
-<tr class="separator:a6cba1fec0110620d3c4925caa0d4e742"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b49d12fd6e210a948189f10055de0b9"><td class="memItemLeft" align="right" valign="top"><a id="a0b49d12fd6e210a948189f10055de0b9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a0b49d12fd6e210a948189f10055de0b9">getInterpolationParam</a> (const Real &amp;x_curv, Real &amp;_rho, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) const</td></tr>
-<tr class="memdesc:a0b49d12fd6e210a948189f10055de0b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function gives the mass density and the BeamSection data depending on the beam position. <br /></td></tr>
-<tr class="separator:a0b49d12fd6e210a948189f10055de0b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46b8eaf9cd28100b1548e4e05074d57f"><td class="memItemLeft" align="right" valign="top"><a id="a46b8eaf9cd28100b1548e4e05074d57f"></a>
-const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46b8eaf9cd28100b1548e4e05074d57f">getBeamSection</a> (const Real &amp;x_curv) const</td></tr>
-<tr class="memdesc:a46b8eaf9cd28100b1548e4e05074d57f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the BeamSection data depending on the beam position. <br /></td></tr>
-<tr class="separator:a46b8eaf9cd28100b1548e4e05074d57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a045d02732d075f194f6726336c744574"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a045d02732d075f194f6726336c744574">getBeamSectionAtX</a> (const Real &amp;x_curv) const</td></tr>
+<tr class="memdesc:a045d02732d075f194f6726336c744574"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the BeamSection.  <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a045d02732d075f194f6726336c744574">More...</a><br /></td></tr>
+<tr class="separator:a045d02732d075f194f6726336c744574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f7c30cb4c046ace462ee7b86acbebca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a2f7c30cb4c046ace462ee7b86acbebca">getInterpolationParametersAtX</a> (const Real &amp;x_curv, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) const</td></tr>
+<tr class="memdesc:a2f7c30cb4c046ace462ee7b86acbebca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the BeamSection data depending on the beam position at the given curvilinear abscissa, will call.  <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a2f7c30cb4c046ace462ee7b86acbebca">More...</a><br /></td></tr>
+<tr class="separator:a2f7c30cb4c046ace462ee7b86acbebca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16e024382f6655d0cfd08ba483ada261"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a16e024382f6655d0cfd08ba483ada261">getMechanicalParametersAtX</a> (const Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity) const</td></tr>
+<tr class="memdesc:a16e024382f6655d0cfd08ba483ada261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa, will call.  <a href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a16e024382f6655d0cfd08ba483ada261">More...</a><br /></td></tr>
+<tr class="separator:a16e024382f6655d0cfd08ba483ada261"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e625023539d89b1e77b8ee91ac7502f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a6e625023539d89b1e77b8ee91ac7502f">getSamplingParameters</a> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; int &gt; &amp;nbP_density) const</td></tr>
 <tr class="separator:a6e625023539d89b1e77b8ee91ac7502f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a661c2437a36a6efde7807189a0a2f709"><td class="memItemLeft" align="right" valign="top"><a id="a661c2437a36a6efde7807189a0a2f709"></a>
@@ -213,6 +210,133 @@ d_keyPoints and @d_density are computed by method </dd>
 <dd>
 <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf" title="Internal method to init Lengths vector.">initLengths</a> using the set of rod sections description. This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a045d02732d075f194f6726336c744574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a045d02732d075f194f6726336c744574">&#9670;&nbsp;</a></span>getBeamSectionAtX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp; getBeamSectionAtX </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_curv</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the BeamSection. </p>
+<dl class="section see"><dt>See also</dt><dd>m_beamSection corresponding to the given curvilinear abscissa, will call </dd>
+<dd>
+<a class="el" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ade0bc2f78472b0c534f62930f0ffaf1f" title="Returns the BeamSection.">BaseRodSectionMaterial::getBeamSection</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2f7c30cb4c046ace462ee7b86acbebca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f7c30cb4c046ace462ee7b86acbebca">&#9670;&nbsp;</a></span>getInterpolationParametersAtX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void getInterpolationParametersAtX </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_curv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Iy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Iz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Asy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_Asz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>_J</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the BeamSection data depending on the beam position at the given curvilinear abscissa, will call. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718" title="Returns the mass density and the BeamSection of this section.">BaseRodSectionMaterial::getInterpolationParameters</a> </dd></dl>
+
+</div>
+</div>
+<a id="a16e024382f6655d0cfd08ba483ada261"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16e024382f6655d0cfd08ba483ada261">&#9670;&nbsp;</a></span>getMechanicalParametersAtX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void getMechanicalParametersAtX </td>
+          <td>(</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>x_curv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>youngModulus</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>cPoisson</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real &amp;&#160;</td>
+          <td class="paramname"><em>massDensity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa, will call. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3" title="Returns the Young modulus, Poisson&#39;s and massDensity coefficient of this section.">BaseRodSectionMaterial::getMechanicalParameters</a> </dd></dl>
+
+</div>
+</div>
 <a id="a6e625023539d89b1e77b8ee91ac7502f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e625023539d89b1e77b8ee91ac7502f">&#9670;&nbsp;</a></span>getSamplingParameters()</h2>
 
@@ -303,7 +427,7 @@ d_keyPoints and @d_density are computed by method </dd>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><b>engine</b></li><li class="navelem"><b>_wirerestshape_</b></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a></li>
-    <li class="footer">Generated on Fri Jul 26 2024 08:47:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jul 26 2024 08:48:30 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

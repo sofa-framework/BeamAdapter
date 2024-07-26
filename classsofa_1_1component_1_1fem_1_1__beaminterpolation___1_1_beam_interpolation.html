@@ -246,17 +246,22 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a8cfa8bc5069d81b5711987638b82f64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3101c3c3c681477d34ff653774166bc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0">computeCrossSectionInertiaMatrix</a> ()</td></tr>
 <tr class="separator:a3101c3c3c681477d34ff653774166bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9f3cdcc7afdfeb988325772152bd254"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#ab9f3cdcc7afdfeb988325772152bd254">getInterpolationParam</a> (unsigned int edgeInList, Real &amp;_L, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;J) override</td></tr>
-<tr class="separator:ab9f3cdcc7afdfeb988325772152bd254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0666d672de9d2d4ddef18e05d7082feb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a0666d672de9d2d4ddef18e05d7082feb">getBeamSection</a> (sofa::Index beamId) override</td></tr>
+<tr class="memdesc:a0666d672de9d2d4ddef18e05d7082feb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the BeamSection.  <a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a0666d672de9d2d4ddef18e05d7082feb">More...</a><br /></td></tr>
+<tr class="separator:a0666d672de9d2d4ddef18e05d7082feb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd0a5a145cf50d8ef16c414e658a68ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#afd0a5a145cf50d8ef16c414e658a68ee">getInterpolationParameters</a> (sofa::Index beamId, Real &amp;_L, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;J) override</td></tr>
+<tr class="memdesc:afd0a5a145cf50d8ef16c414e658a68ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the BeamSection data depending on the beam position at the given beam, similar to @getBeamSection.  <a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#afd0a5a145cf50d8ef16c414e658a68ee">More...</a><br /></td></tr>
+<tr class="separator:afd0a5a145cf50d8ef16c414e658a68ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="memItemLeft" align="right" valign="top"><a id="a8376b33859cf7cf2b0e72d6e87ebe60e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a8376b33859cf7cf2b0e72d6e87ebe60e">getMechanicalParameters</a> (sofa::Index beamId, Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity) override</td></tr>
+<tr class="memdesc:a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa. <br /></td></tr>
+<tr class="separator:a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a36a5a372a6056163902a6f9f0d3891"><td class="memItemLeft" align="right" valign="top"><a id="a6a36a5a372a6056163902a6f9f0d3891"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangentUsingSplinePoints</b> (unsigned int edgeInList, const Real &amp;baryCoord, const ConstVecCoordId &amp;vecXId, Vec3 &amp;t)</td></tr>
 <tr class="separator:a6a36a5a372a6056163902a6f9f0d3891"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5492e70ca5b1a57a69cc533e1b51f27e"><td class="memItemLeft" align="right" valign="top"><a id="a5492e70ca5b1a57a69cc533e1b51f27e"></a>
-const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a5492e70ca5b1a57a69cc533e1b51f27e">getBeamSection</a> (int) override</td></tr>
-<tr class="memdesc:a5492e70ca5b1a57a69cc533e1b51f27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeActualLength =&gt; given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration) <br /></td></tr>
-<tr class="separator:a5492e70ca5b1a57a69cc533e1b51f27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69d91b5016a811fcdff44413a426c6b5"><td class="memItemLeft" align="right" valign="top"><a id="a69d91b5016a811fcdff44413a426c6b5"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getCurvAbsAtBeam</b> (const unsigned int &amp;edgeInList_input, const Real &amp;baryCoord_input, Real &amp;x_output)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html#a69d91b5016a811fcdff44413a426c6b5">getCurvAbsAtBeam</a> (const unsigned int &amp;edgeInList_input, const Real &amp;baryCoord_input, Real &amp;x_output)</td></tr>
+<tr class="memdesc:a69d91b5016a811fcdff44413a426c6b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeActualLength =&gt; given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration) <br /></td></tr>
 <tr class="separator:a69d91b5016a811fcdff44413a426c6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe1bc0ca94ebfb65a14b8e8543ddc3e9"><td class="memItemLeft" align="right" valign="top"><a id="afe1bc0ca94ebfb65a14b8e8543ddc3e9"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getBeamAtCurvAbs</b> (const Real &amp;x_input, unsigned int &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0)</td></tr>
@@ -279,9 +284,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getSamplingPa
 <tr class="memitem:a2f9c68dab8ffa01b8d4d4f2393f8603e"><td class="memItemLeft" align="right" valign="top"><a id="a2f9c68dab8ffa01b8d4d4f2393f8603e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, unsigned int &amp;numLines) override</td></tr>
 <tr class="separator:a2f9c68dab8ffa01b8d4d4f2393f8603e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54818d7d98b09299c39f952e6f5600b5"><td class="memItemLeft" align="right" valign="top"><a id="a54818d7d98b09299c39f952e6f5600b5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getYoungModulusAtX</b> (int beamId, Real &amp;x_curv, Real &amp;youngModulus, Real &amp;cPoisson) override</td></tr>
-<tr class="separator:a54818d7d98b09299c39f952e6f5600b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a08515ec2052804401f5edbe5a5731f"><td class="memItemLeft" align="right" valign="top"><a id="a0a08515ec2052804401f5edbe5a5731f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (int beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
 <tr class="separator:a0a08515ec2052804401f5edbe5a5731f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -563,6 +565,37 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 
 </div>
 </div>
+<a id="a0666d672de9d2d4ddef18e05d7082feb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0666d672de9d2d4ddef18e05d7082feb">&#9670;&nbsp;</a></span>getBeamSection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structsofa_1_1beamadapter_1_1_beam_section.html">BeamSection</a>&amp; getBeamSection </td>
+          <td>(</td>
+          <td class="paramtype">sofa::Index&#160;</td>
+          <td class="paramname"><em>beamId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the BeamSection. </p>
+<dl class="section see"><dt>See also</dt><dd>m_beamSection corresponding to the given beam </dd></dl>
+
+<p>Implements <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a25d08bda9e722d149849343d17683979">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+
+</div>
+</div>
 <a id="a26c84542c1e907732bf85fa505d676c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a26c84542c1e907732bf85fa505d676c1">&#9670;&nbsp;</a></span>getCollisionSampling()</h2>
 
@@ -604,8 +637,8 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 
 </div>
 </div>
-<a id="ab9f3cdcc7afdfeb988325772152bd254"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9f3cdcc7afdfeb988325772152bd254">&#9670;&nbsp;</a></span>getInterpolationParam()</h2>
+<a id="afd0a5a145cf50d8ef16c414e658a68ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd0a5a145cf50d8ef16c414e658a68ee">&#9670;&nbsp;</a></span>getInterpolationParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -614,10 +647,10 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void getInterpolationParam </td>
+          <td class="memname">void getInterpolationParameters </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>edgeInList</em>, </td>
+          <td class="paramtype">sofa::Index&#160;</td>
+          <td class="paramname"><em>beamId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -673,9 +706,11 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the BeamSection data depending on the beam position at the given beam, similar to @getBeamSection. </p>
 <p>get the length of the beam:</p>
 
-<p>Implements <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implements <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a1b3af6570cde8f780072d318d8772305">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -825,7 +860,7 @@ class sofa::component::fem::_beaminterpolation_::BeamInterpolation&lt; DataTypes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><b>fem</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1fem_1_1__beaminterpolation__.html">_beaminterpolation_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation</a></li>
-    <li class="footer">Generated on Fri Jul 26 2024 08:47:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jul 26 2024 08:48:30 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

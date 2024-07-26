@@ -259,9 +259,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a41543a9ddb40e6886d98f3ecff39abd4"><td class="memItemLeft" align="right" valign="top"><a id="a41543a9ddb40e6886d98f3ecff39abd4"></a>
 SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html">BInterpolation</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_interpolation</b></td></tr>
 <tr class="separator:a41543a9ddb40e6886d98f3ecff39abd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a866e6b84ba4228231554087419b48a30"><td class="memItemLeft" align="right" valign="top"><a id="a866e6b84ba4228231554087419b48a30"></a>
-SingleLink&lt; <a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a>&lt; DataTypes &gt;, <a class="el" href="classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html">WireRestShape</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_instrumentParameters</b></td></tr>
-<tr class="separator:a866e6b84ba4228231554087419b48a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class DataTypes&gt;<br />
@@ -338,8 +335,6 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <p>compute Adjoint Matrices:</p>
 <p>Update Interpolation &amp; geometrical parameters with current positions</p>
 <p>material parameters</p>
-<p>Temp : we only overide values for which a Data has been set in the WireRestShape</p>
-<p>The length of the beams is only known to the interpolation !</p>
 <p>compute the local mass matrices</p>
 <p>IF RIGIDIFICATION: no stiffness forces:</p>
 <p>compute the local stiffness matrices</p>
@@ -603,7 +598,6 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get the curvilinear abscissa of the extremity of the beam</p>
 <p>material parameters</p>
 <p>Find shear-deformation parameters</p>
 <p>diagonal values</p>
@@ -649,7 +643,7 @@ class sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeam
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sofa</b></li><li class="navelem"><b>component</b></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield.html">forcefield</a></li><li class="navelem"><a class="el" href="namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__.html">_adaptivebeamforcefieldandmass_</a></li><li class="navelem"><a class="el" href="classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Fri Jul 26 2024 08:47:59 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jul 26 2024 08:48:30 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

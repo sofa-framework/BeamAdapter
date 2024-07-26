@@ -46,6 +46,5 @@ var classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_
     [ "d_massDensity", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#acf2f1a9ca7c25924faf4a7559b45b93b", null ],
     [ "d_reinforceLength", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a357d9f9e52aad598a1a2ea4def76b95e", null ],
     [ "d_useShearStressComputation", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#af7b53903dfad09f20bf0633a18bc0063", null ],
-    [ "l_instrumentParameters", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a866e6b84ba4228231554087419b48a30", null ],
     [ "l_interpolation", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html#a41543a9ddb40e6886d98f3ecff39abd4", null ]
 ];
