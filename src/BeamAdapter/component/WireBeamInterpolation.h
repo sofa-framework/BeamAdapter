@@ -131,20 +131,15 @@ public:
     }
 
 
-    void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override
-    {
-        this->getAbsCurvXFromBeam(beamId, x_curv);
-        this->m_restShape->getYoungModulusAtX(x_curv, youngModulus, cPoisson);
-    }
-
-
     virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
     
     void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override;
     void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
-    void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
-        Real& _Asy, Real& _Asz, Real& _J) override;
-    const BeamSection& getBeamSection(int edgeIndex) override;
+    
+    const BeamSection& getBeamSection(sofa::Index beamId) override;
+    void getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) override;
+    void getMechanicalParameters(sofa::Index, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
+    
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 
     

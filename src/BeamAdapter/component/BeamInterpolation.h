@@ -140,9 +140,13 @@ public:
     bool verifyTopology();
     void computeCrossSectionInertiaMatrix();
 
-    void getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
+    const BeamSection& getBeamSection(sofa::Index beamId) override { 
+        SOFA_UNUSED(beamId);
+        return this->m_constantSection; 
+    }
+    void getInterpolationParameters(sofa::Index beamId, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
                                Real &_Asy, Real &_Asz, Real &J) override;
-
+    void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
 
     void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
 
@@ -150,7 +154,7 @@ public:
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
 
-    const BeamSection &getBeamSection(int /*edgeIndex*/ ) override {return this->m_constantSection;}
+    
 
     virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}
@@ -188,7 +192,7 @@ public:
     Real getRestTotalLength() override;
     void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
-    void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override;
+
     void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone );
     void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 

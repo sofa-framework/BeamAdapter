@@ -124,7 +124,6 @@ public:
     void addCollisionOnBeam(unsigned int b);
     void clearCollisionOnBeam();
 
-    virtual void getYoungModulusAtX(int beamId, Real& x_curv, Real& youngModulus, Real& cPoisson) = 0;
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
         type::vector<int>& nbP_density) = 0;
     virtual void getNumberOfCollisionSegment(Real& dx, unsigned int& numLines) = 0;
@@ -132,9 +131,15 @@ public:
 
     virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) = 0;
     virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) = 0;
-    virtual void getInterpolationParam(unsigned int edgeInList, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
-        Real& _Asy, Real& _Asz, Real& J) = 0;
-    virtual const BeamSection& getBeamSection(int edgeIndex) = 0;
+    
+    /// Returns the BeamSection @sa m_beamSection corresponding to the given beam
+    virtual const BeamSection& getBeamSection(sofa::Index beamId) = 0;
+    /// Returns the BeamSection data depending on the beam position at the given beam, similar to @getBeamSection
+    virtual void getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& J) = 0;
+    /// Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa
+    virtual void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) = 0;
+
+
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0);
 
     int computeTransform(const EdgeID edgeInList, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);

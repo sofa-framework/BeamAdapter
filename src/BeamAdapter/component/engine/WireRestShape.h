@@ -90,14 +90,15 @@ public:
      /// This function is called by the force field to evaluate the rest position of each beam
      void getRestTransformOnX(Transform &global_H_local, const Real &x);
 
-     /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const;
+     /// Returns the BeamSection @sa m_beamSection corresponding to the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getBeamSection
+     [[nodiscard]] const BeamSection& getBeamSectionAtX(const Real& x_curv) const;
 
-     /// This function gives the mass density and the BeamSection data depending on the beam position
-     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
+     /// Returns the BeamSection data depending on the beam position at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getInterpolationParameters
+     void getInterpolationParametersAtX(const Real& x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
 
-     /// This function returns the BeamSection data depending on the beam position
-     const BeamSection& getBeamSection(const Real& x_curv) const;
+     /// Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getMechanicalParameters
+     void getMechanicalParametersAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const;
+
 
      /**
       * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 

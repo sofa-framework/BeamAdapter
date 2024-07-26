@@ -65,7 +65,6 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
-    , l_instrumentParameters(initLink("instrumentParameters", "link to an object specifying physical parameters based on abscissa"))
 {
 }
 
@@ -105,37 +104,30 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, BeamLocalMatrices& beamLocalMatrices)
 {
-    Real x_curv = 0.0 ;
-    Real _nu = 0.0 ;
-    Real _E = 0.0 ;
-
-    ///Get the curvilinear abscissa of the extremity of the beam
-    l_interpolation->getYoungModulusAtX(beamId, x_curv, _E, _nu);
-
     /// material parameters
-    Real _G = _E / (2.0 * (1.0 + _nu));
+    Real _G = beamLocalMatrices._youngM / (2.0 * (1.0 + beamLocalMatrices._cPoisson));
 
     Real phiy, phiz;
     Real L2 = (Real) (beamLocalMatrices._L * beamLocalMatrices._L);
     Real L3 = (Real) (L2 * beamLocalMatrices._L);
-    Real EIy = (Real)(_E * beamLocalMatrices._Iy);
-    Real EIz = (Real)(_E * beamLocalMatrices._Iz);
+    Real EIy = (Real)(beamLocalMatrices._youngM * beamLocalMatrices._Iy);
+    Real EIz = (Real)(beamLocalMatrices._youngM * beamLocalMatrices._Iz);
 
     /// Find shear-deformation parameters
     if (beamLocalMatrices._Asy == 0)
         phiy = 0.0;
     else
-        phiy =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)* beamLocalMatrices._Iz/(beamLocalMatrices._Asy*L2));
+        phiy = (L2 == 0) ? 0.0 : (Real)(24.0 * (1.0 + beamLocalMatrices._cPoisson) * beamLocalMatrices._Iz / (beamLocalMatrices._Asy * L2));
 
     if (beamLocalMatrices._Asz == 0)
         phiz = 0.0;
     else
-        phiz =(L2 ==0)? 0.0: (Real)(24.0*(1.0+_nu)* beamLocalMatrices._Iy/(beamLocalMatrices._Asz*L2));
+        phiz = (L2 == 0) ? 0.0 : (Real)(24.0 * (1.0 + beamLocalMatrices._cPoisson) * beamLocalMatrices._Iy / (beamLocalMatrices._Asz * L2));
 
     beamLocalMatrices.m_K00.clear(); beamLocalMatrices.m_K01.clear(); beamLocalMatrices.m_K10.clear(); beamLocalMatrices.m_K11.clear();
 
     /// diagonal values
-    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = (beamLocalMatrices._L == 0.0)? 0.0 :_E* beamLocalMatrices._A/ beamLocalMatrices._L;
+    beamLocalMatrices.m_K00[0][0] = beamLocalMatrices.m_K11[0][0] = (beamLocalMatrices._L == 0.0)? 0.0 : beamLocalMatrices._youngM * beamLocalMatrices._A/ beamLocalMatrices._L;
     beamLocalMatrices.m_K00[1][1] = beamLocalMatrices.m_K11[1][1] = (L3 == 0.0)? 0.0 :(Real)(12.0*EIz/(L3*(1.0+phiy)));
     beamLocalMatrices.m_K00[2][2] = beamLocalMatrices.m_K11[2][2] = (L3 == 0.0)? 0.0 : (Real)(12.0*EIy/(L3*(1.0+phiz)));
     beamLocalMatrices.m_K00[3][3] = beamLocalMatrices.m_K11[3][3] = (beamLocalMatrices._L == 0.0)? 0.0 : _G* beamLocalMatrices._J/ beamLocalMatrices._L;
@@ -546,24 +538,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         /// Update Interpolation & geometrical parameters with current positions
 
         /// material parameters
-        beamMatrices._rho = d_massDensity.getValue();
+        auto beamInterpolation = l_interpolation.get();
+        beamInterpolation->getInterpolationParameters(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
+            beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
 
-        /// Temp : we only overide values for which a Data has been set in the WireRestShape
-        if (l_instrumentParameters.get())
-        {
-            Real x_curv = 0;
-            l_interpolation->getAbsCurvXFromBeam(beamId, x_curv);
-
-            /// The length of the beams is only known to the interpolation !
-            l_instrumentParameters->getInterpolationParam(x_curv, beamMatrices._rho, beamMatrices._A, beamMatrices._Iy,
-                beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
-        }
-        else
-        {
-            l_interpolation->getInterpolationParam(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
-                beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
-        }
-
+        beamMatrices._rho = d_massDensity.getValue(); // for BeamInterpolation which is not overidding the _rho
+        beamInterpolation->getMechanicalParameters(beamId, beamMatrices._youngM, beamMatrices._cPoisson, beamMatrices._rho);
 
         /// compute the local mass matrices
         if(d_computeMass.getValue())

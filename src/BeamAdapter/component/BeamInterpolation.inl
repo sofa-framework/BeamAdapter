@@ -395,25 +395,46 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
     dx = getRestTotalLength()/numLines;
 }
 
-template <class DataTypes>
-void BeamInterpolation<DataTypes>::getYoungModulusAtX(int beamId, Real& /*x_curv*/, Real& youngModulus, Real& cPoisson)
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy,
+    Real& _Iz, Real& _Asy, Real& _Asz, Real& _J)
+{
+    /// get the length of the beam:
+    _L = this->d_lengthList.getValue()[beamId];
+    _A = m_constantSection._A;
+    _Iy = m_constantSection._Iy;
+    _Iz = m_constantSection._Iz;
+    _Asy = m_constantSection._Asy;
+    _Asz = m_constantSection._Asz;
+    _J = m_constantSection._J;
+}
+
+
+template<class DataTypes>
+void BeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity)
 {
     const auto& defaultYoungModuli = d_defaultYoungModulus.getValue();
     if (beamId < int(defaultYoungModuli.size())) {
 
         youngModulus = defaultYoungModuli[beamId];
-    } else {
+    }
+    else {
         youngModulus = m_defaultYoungModulus;
     }
-    
+
     const auto& poissonRatios = d_poissonRatio.getValue();
     if (beamId < int(poissonRatios.size())) {
 
-        cPoisson     = poissonRatios[beamId];
-    } else {
-        cPoisson     = m_defaultPoissonRatio;
+        cPoisson = poissonRatios[beamId];
     }
+    else {
+        cPoisson = m_defaultPoissonRatio;
+    }
+
+    //TODO: massDensity??
 }
+
 
 
 template <class DataTypes>
@@ -483,26 +504,6 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
             msg_error() <<"This component needs a context mechanical state if the 'straight' parameter is set to false." ;
     }
 }
-
-
-template<class DataTypes>
-void BeamInterpolation<DataTypes>::getInterpolationParam(unsigned int edgeInList, Real &_L, Real &_A, Real &_Iy ,
-                                                         Real &_Iz, Real &_Asy, Real &_Asz, Real &_J)
-{
-    /// get the length of the beam:
-    _L = this->d_lengthList.getValue()[edgeInList];
-
-    BeamSection bS = getBeamSection(edgeInList);
-    _A=bS._A;
-    _Iy=bS._Iy;
-    _Iz=bS._Iz;
-    _Asy=bS._Asy;
-    _Asz=bS._Asz;
-    _J=bS._J;
-}
-
-
-
 
 
 template<class DataTypes>
