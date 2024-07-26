@@ -102,6 +102,8 @@ void AdaptiveBeamMapping< TIn, TOut>::init()
     {
         simulation::MainTaskSchedulerFactory::createInRegistry()->init();
     }
+
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
@@ -272,6 +274,14 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
         }
 
     };
+
+    
+    // HACK for init: In case the number of output points is bigger to the number of distribution, set all points to 0
+    for (int i = m_pointBeamDistribution.size(); i < d_points.getValue().size(); i++)
+    {
+        out[i] = Vec<3, InReal>(0.0, 0.0, 0.0);
+    }
+
 
     const bool multithreading = d_parallelMapping.getValue();
 
