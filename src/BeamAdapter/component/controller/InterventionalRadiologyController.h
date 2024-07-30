@@ -179,7 +179,12 @@ public:
     
     bool m_useBeamActions = false;
     bool m_FF, m_RW, m_sensored;
-    FixedProjectiveConstraint<DataTypes> *    m_fixedConstraint;
+
+    SingleLink<
+        InterventionalRadiologyController, FixedProjectiveConstraint<DataTypes>,
+        BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_fixedConstraint;
+    DeprecatedAndRemoved m_fixedConstraint;
+
     type::vector<Vec3d>                   m_sensorMotionData;
     unsigned int                    m_currentSensorData;
     type::vector<Real>                    m_nodeCurvAbs;
