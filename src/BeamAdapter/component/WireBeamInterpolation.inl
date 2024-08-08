@@ -269,10 +269,10 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
 {
     WireRestShape<DataTypes>* _restShape = nullptr;
     std::string _restShapePath;
-    bool pathOK = false;
 
-    if(arg)
+    if(arg && context)
     {
+        bool pathOK = false;
         if (arg->getAttribute("WireRestShape",nullptr) != nullptr)
         {
             _restShapePath = arg->getAttribute("WireRestShape");
