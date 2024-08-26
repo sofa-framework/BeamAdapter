@@ -70,8 +70,8 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
 , d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
+, l_fixedConstraint(initLink("fixedConstraint", "Path to the FixedProjectiveConstraint"))
 {
-    m_fixedConstraint = nullptr;
     m_sensored =false;
 }
 
@@ -134,9 +134,21 @@ void InterventionalRadiologyController<DataTypes>::init()
     for(unsigned int i=0; i<m_instrumentsList.size(); i++)
         m_instrumentsList[i]->setControlled(true);
 
-    context->get(m_fixedConstraint);
-    if(m_fixedConstraint==nullptr)
-        msg_error()<<"No fixedConstraint found.";
+    if (!l_fixedConstraint)
+    {
+        typename FixedProjectiveConstraint<DataTypes>::SPtr fixedConstraint{};
+        context->get(fixedConstraint);
+        if (fixedConstraint)
+        {
+            l_fixedConstraint.set(fixedConstraint);
+        }
+        else
+        {
+            msg_error() << "No FixedProjectiveConstraint found or set. It will most likely lead to a crash.";
+
+            this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        }
+    }
 
     // the controller must listen to the event (in particular BeginAnimationStep event)
     if (!f_listening.isSet())
@@ -703,7 +715,6 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 {
     const Real& threshold = d_threshold.getValue();
 
-    
     // Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
     type::vector<Real> newCurvAbs;
     type::vector<type::vector<int>> idInstrumentTable;
@@ -907,11 +918,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 if (!rigid)
                 {
                     rigid=true;
-                    m_fixedConstraint->addConstraint(firstSimulatedNode+i);
+                    l_fixedConstraint->addConstraint(firstSimulatedNode+i);
                 }
                 else
                 {
-                    m_fixedConstraint->addConstraint(firstSimulatedNode+i);
+                    l_fixedConstraint->addConstraint(firstSimulatedNode+i);
                     rigid=false;
                 }
                 it++;
@@ -922,7 +933,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
             else
             {
                 if(rigid)
-                    m_fixedConstraint->addConstraint(firstSimulatedNode+i);
+                    l_fixedConstraint->addConstraint(firstSimulatedNode+i);
             }
         }
     }
@@ -1030,12 +1041,12 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
 
     // set the position to startingPos for all the nodes that are not simulated
     // and add a fixedConstraint
-    m_fixedConstraint->clearConstraints();
+    l_fixedConstraint->clearConstraints();
     for(unsigned int i=0; i<firstSimulatedNode-1 ; i++)
     {
         xMstate[i]=d_startingPos.getValue();
         vMstate[i].clear();
-        m_fixedConstraint->addConstraint(i);
+        l_fixedConstraint->addConstraint(i);
     }
     d_indexFirstNode = firstSimulatedNode-1 ;
 }
