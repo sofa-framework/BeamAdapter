@@ -48,6 +48,8 @@ using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::statecontainer::MechanicalObject ;
 
+#include <sofa/simpleapi/SimpleApi.h>
+
 #include <regex>
 #include <vector>
 #include <string>
@@ -61,17 +63,21 @@ namespace sofa
 struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         public ::testing::WithParamInterface<std::vector<std::string>>
 {
+    void SetUp() override
+    {
+        sofa::simpleapi::importPlugin("Sofa.Component.ODESolver.Backward");
+        sofa::simpleapi::importPlugin("Sofa.Component.LinearSolver.Iterative");
+        sofa::simpleapi::importPlugin("Sofa.Component.StateContainer");
+        sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Constant");
+        sofa::simpleapi::importPlugin("BeamAdapter");
+    }
+    
     void simpleScene(const std::vector<std::string>& lines)
     {
         assert(lines.size()==3);
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "               <RequiredPlugin name='Sofa.Component.ODESolver.Backward' />"
-                "               <RequiredPlugin name='Sofa.Component.LinearSolver.Iterative' />"
-                "               <RequiredPlugin name='Sofa.Component.StateContainer' />"
-                "               <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
-                "               <RequiredPlugin name='BeamAdapter' />"
                 "   		    <EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
