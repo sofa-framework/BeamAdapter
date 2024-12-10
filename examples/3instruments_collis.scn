@@ -102,7 +102,7 @@
 		<LinearSolverConstraintCorrection printLog="false" wire_optimization="true"/>
 
 		<FixedProjectiveConstraint name="FixedConstraint" indices="0" />
-        <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8"   />
+        <RestShapeSpringsForceField  indices="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8"   />
 
 		<Node name="Collis" activated="true">
 				<EdgeSetTopologyContainer name="collisEdgeSet" />
