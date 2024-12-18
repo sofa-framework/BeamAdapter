@@ -1,4 +1,0 @@
-var namespacesofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass__ =
-[
-    [ "AdaptiveBeamForceFieldAndMass", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass.html", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_force_field_and_mass" ]
-];

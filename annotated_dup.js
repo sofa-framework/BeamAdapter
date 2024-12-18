@@ -8,34 +8,34 @@ var annotated_dup =
     [ "sofa", null, [
       [ "beamadapter", null, [
         [ "BaseRodSectionMaterial", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html", "classsofa_1_1beamadapter_1_1_base_rod_section_material" ],
+        [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ],
         [ "RodMeshSection", "classsofa_1_1beamadapter_1_1_rod_mesh_section.html", "classsofa_1_1beamadapter_1_1_rod_mesh_section" ],
         [ "RodSpireSection", "classsofa_1_1beamadapter_1_1_rod_spire_section.html", "classsofa_1_1beamadapter_1_1_rod_spire_section" ],
-        [ "RodStraightSection", "classsofa_1_1beamadapter_1_1_rod_straight_section.html", "classsofa_1_1beamadapter_1_1_rod_straight_section" ],
-        [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", "structsofa_1_1beamadapter_1_1_beam_section" ]
+        [ "RodStraightSection", "classsofa_1_1beamadapter_1_1_rod_straight_section.html", "classsofa_1_1beamadapter_1_1_rod_straight_section" ]
       ] ],
       [ "component", null, [
         [ "collision", null, [
           [ "AdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper" ],
-          [ "ContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4.html", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4" ],
-          [ "MultiAdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper" ],
-          [ "ContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4" ]
+          [ "ContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4.html", null ],
+          [ "ContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html", null ],
+          [ "MultiAdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", null ]
         ] ],
         [ "constraint", null, [
           [ "_implicitsurfaceadaptiveconstraint_", null, [
-            [ "ImplicitSurfaceAdaptiveConstraintResolution", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571" ],
-            [ "ImplicitSurfaceAdaptiveConstraint", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint" ]
+            [ "ImplicitSurfaceAdaptiveConstraint", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint" ],
+            [ "ImplicitSurfaceAdaptiveConstraintResolution", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
           ] ]
         ] ],
         [ "constraintset", "namespacesofa_1_1component_1_1constraintset.html", [
           [ "_adaptivebeamlengthconstraint_", "namespacesofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint__.html", [
-            [ "IntervalDefinition", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition.html", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition" ],
             [ "AdaptiveBeamLengthConstraint", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint.html", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint" ],
-            [ "AdaptiveBeamLengthConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution" ]
+            [ "AdaptiveBeamLengthConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint_resolution.html", null ],
+            [ "IntervalDefinition", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition.html", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition" ]
           ] ],
           [ "_adaptiveBeamSlidingConstraint_", "namespacesofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint__.html", [
-            [ "AdaptiveBeamSlidingConstraint", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint" ],
-            [ "ProjectionSearch", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search" ],
-            [ "AdaptiveBeamSlidingConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution" ]
+            [ "AdaptiveBeamSlidingConstraint", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint.html", null ],
+            [ "AdaptiveBeamSlidingConstraintResolution", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_adaptive_beam_sliding_constraint_resolution.html", null ],
+            [ "ProjectionSearch", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search" ]
           ] ]
         ] ],
         [ "controller", "namespacesofa_1_1component_1_1controller.html", [
@@ -46,7 +46,7 @@ var annotated_dup =
             [ "InterventionalRadiologyController", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller.html", "classsofa_1_1component_1_1controller_1_1__interventionalradiologycontroller___1_1_interventional_radiology_controller" ]
           ] ],
           [ "_suturecontroller_", null, [
-            [ "SutureController", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller" ]
+            [ "SutureController", "classsofa_1_1component_1_1controller_1_1__suturecontroller___1_1_suture_controller.html", null ]
           ] ],
           [ "BeamAdapterActionController", "classsofa_1_1component_1_1controller_1_1_beam_adapter_action_controller.html", "classsofa_1_1component_1_1controller_1_1_beam_adapter_action_controller" ]
         ] ],
@@ -84,7 +84,7 @@ var annotated_dup =
           ] ],
           [ "MultiAdaptiveBeamMapping", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping" ]
         ] ],
-        [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", "classsofa_1_1component_1_1_deprecated_component" ]
+        [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
       ] ]
     ] ],
     [ "ContactMapper", "class_contact_mapper.html", null ]

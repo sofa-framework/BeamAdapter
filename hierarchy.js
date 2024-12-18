@@ -26,8 +26,8 @@ var hierarchy =
         [ "WireBeamInterpolation< DataTypes >", "classsofa_1_1component_1_1fem_1_1__wirebeaminterpolation___1_1_wire_beam_interpolation.html", null ]
       ] ]
     ] ],
-    [ "AdaptiveBeamForceFieldAndMass< DataTypes >::BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html", null ],
-    [ "AdaptiveInflatableBeamForceField< DataTypes >::BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_ia5c9c0085fb1a64db4499a843dafea79.html", null ],
+    [ "BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html", null ],
+    [ "BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_ia5c9c0085fb1a64db4499a843dafea79.html", null ],
     [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", null ],
     [ "ConstraintResolution", null, [
       [ "ImplicitSurfaceAdaptiveConstraintResolution< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
@@ -52,7 +52,7 @@ var hierarchy =
     [ "PairInteractionConstraint", null, [
       [ "ImplicitSurfaceAdaptiveConstraint< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", null ]
     ] ],
-    [ "AdaptiveBeamMapping< TIn, TOut >::PosPointDefinition", "structsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping_1_1_pos_point_definition.html", null ],
+    [ "PosPointDefinition", "structsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping_1_1_pos_point_definition.html", null ],
     [ "ProjectionSearch< DataTypes >", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html", null ],
     [ "BaseObject", null, [
       [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]

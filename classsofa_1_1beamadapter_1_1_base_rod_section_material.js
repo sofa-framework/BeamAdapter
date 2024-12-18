@@ -1,13 +1,7 @@
 var classsofa_1_1beamadapter_1_1_base_rod_section_material =
 [
-    [ "Coord", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ac4c44b651a62b9c2bd610fda43f76dfd", null ],
-    [ "Quat", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a1aaa5dae624b2cfab7c34e10d728312d", null ],
-    [ "Real", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a5dea320ebe517d73c4186acd09162cd0", null ],
-    [ "Size", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a10370b92bde00025355309634445af72", null ],
-    [ "Transform", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#af8d5dcfb2d169bae40623419200bee70", null ],
-    [ "Vec3", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a85de9d8e42751f59bd4e91bdf806e557", null ],
     [ "BaseRodSectionMaterial", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#aead00731a1094daa0206d6bc2a5e6153", null ],
-    [ "getBeamSection", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ade0bc2f78472b0c534f62930f0ffaf1f", null ],
+    [ "getBeamSection", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a3adad3395c71147d90fb1c299307a7fe", null ],
     [ "getInterpolationParameters", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718", null ],
     [ "getLength", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ad4f8e284f5c1b3d74816d8a965376019", null ],
     [ "getMechanicalParameters", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3", null ],
@@ -16,7 +10,6 @@ var classsofa_1_1beamadapter_1_1_base_rod_section_material =
     [ "getRestTransformOnX", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#aed13d9bf88aa5b753fe07e311ce2f5e1", null ],
     [ "init", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "initSection", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a28bfdfb34747b0c2ee6516865bcf22e2", null ],
-    [ "SOFA_CLASS", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a8f2ecd85318df28122fcae45d8ea7c58", null ],
     [ "d_innerRadius", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a2f4231275fcbfc1d8e5cd6ef5d7ed4c9", null ],
     [ "d_length", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#a851ed4808916847729e483da733bf9a7", null ],
     [ "d_massDensity", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html#acf2f1a9ca7c25924faf4a7559b45b93b", null ],

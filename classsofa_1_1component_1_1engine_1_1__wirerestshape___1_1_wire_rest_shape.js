@@ -1,28 +1,15 @@
 var classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape =
 [
-    [ "Coord", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ac4c44b651a62b9c2bd610fda43f76dfd", null ],
-    [ "Quat", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a1aaa5dae624b2cfab7c34e10d728312d", null ],
-    [ "Real", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a5dea320ebe517d73c4186acd09162cd0", null ],
-    [ "Transform", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#af8d5dcfb2d169bae40623419200bee70", null ],
-    [ "Vec3", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a85de9d8e42751f59bd4e91bdf806e557", null ],
     [ "WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0", null ],
     [ "~WireRestShape", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4121d4720627c76671afb19f95e5d2b4", null ],
     [ "computeOrientation", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a661c2437a36a6efde7807189a0a2f709", null ],
     [ "getBeamSectionAtX", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a045d02732d075f194f6726336c744574", null ],
-    [ "getCollisionSampling", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a442b303e271b4496a20ad609d662fbdb", null ],
     [ "getInterpolationParametersAtX", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a2f7c30cb4c046ace462ee7b86acbebca", null ],
-    [ "getLength", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a46c7834e4b3792318e83d1521c1e1d16", null ],
     [ "getMechanicalParametersAtX", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a16e024382f6655d0cfd08ba483ada261", null ],
-    [ "getNumberOfCollisionSegment", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a30a624a010c2230365e3d4d206d32237", null ],
     [ "getReleaseCurvAbs", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76", null ],
     [ "getRestTransformOnX", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a0876fdbe3161c709e4dfa6512c63f251", null ],
     [ "getSamplingParameters", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a6e625023539d89b1e77b8ee91ac7502f", null ],
-    [ "init", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "initLengths", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf", null ],
     [ "initTopology", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a31df0e6586ed1fac58c6b2f19494c3b6", null ],
-    [ "releaseWirePart", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a4d00cca8813dc2570df6b59138b0ad32", null ],
-    [ "SOFA_CLASS", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#ae9f45e48c5400919507bfe0ea10def9e", null ],
-    [ "d_density", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a102a1dec5f70249c0654664906816ab5", null ],
-    [ "d_keyPoints", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a51b8035786e5b83a2b6f077c6deb49e2", null ],
     [ "l_sectionMaterials", "classsofa_1_1component_1_1engine_1_1__wirerestshape___1_1_wire_rest_shape.html#a7293515ade2b3aa4581c054e88d1953a", null ]
 ];
