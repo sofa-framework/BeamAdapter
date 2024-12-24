@@ -37,7 +37,6 @@ using sofa::core::objectmodel::BaseObjectDescription ;
 using sofa::component::DeprecatedComponent;
 using sofa::defaulttype::Rigid3Types;
 using sofa::defaulttype::Rigid3Types;
-using sofa::core::RegisterObject;
 
 
 namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
@@ -78,25 +77,20 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
         *m_slidingDisp = force[line+2] * m_slidingW;
 }
 
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-SOFA_DECL_CLASS(AdaptiveBeamSlidingConstraint)
-
-int AdaptiveBeamSlidingConstraintClass = RegisterObject("Constrain a rigid to be attached to a beam (only in position, not the orientation)")
-                .add< AdaptiveBeamSlidingConstraint<Rigid3Types> >()
-        
-        ;
-
 template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3Types>;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
+
+namespace beamadapter
+{
+
+void registerAdaptiveBeamSlidingConstraint(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Constrain a rigid to be attached to a beam (only in position, not the orientation).")
+                             .add< sofa::component::constraintset::_adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint<Rigid3Types> >());
+}
+
+} // namespace beamadapter

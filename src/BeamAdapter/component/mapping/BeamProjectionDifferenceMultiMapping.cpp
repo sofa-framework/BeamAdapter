@@ -34,10 +34,12 @@
 namespace beamadapter::mapping
 {
 
-using namespace sofa::defaulttype;
+void registerBeamProjectionDifferenceMultiMapping(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Computes the difference between given points and their projection on a beam.")
+                             .add< BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types > >());
+}
 
-// Register in the Factory
-int BeamProjectionDifferenceMultiMappingClass = sofa::core::RegisterObject("Computes the difference between given points and their projection on a beam.")
-        .add< BeamProjectionDifferenceMultiMapping< Rigid3Types, Rigid3Types, Rigid3Types > >();
+template class SOFA_BEAMADAPTER_API BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types >;
 
-} // namespace
+} // namespace beamadapter::mapping

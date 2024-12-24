@@ -32,7 +32,6 @@
 //
 #define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMFORCEFIELD_CPP
 
-//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/defaulttype/RigidTypes.h>
 #include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
@@ -43,21 +42,17 @@
 namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_
 {
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-const static int AdaptiveBeamForceFieldAndMassClass = sofa::core::RegisterObject("Adaptive Beam finite elements")
-.add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >()
-;
-
 template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types>;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+} // namespace
 
-} // namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_
+namespace beamadapter
+{
+
+void registerAdaptiveBeamForceFieldAndMass(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam finite elements")
+                             .add< sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

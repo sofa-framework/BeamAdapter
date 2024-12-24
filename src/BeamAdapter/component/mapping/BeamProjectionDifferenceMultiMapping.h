@@ -199,7 +199,6 @@ private:
 // Declares template as extern to avoid the code generation of the template for
 // each compilation unit. see: http://www.stroustrup.com/C++11FAQ.html#extern-templates
 #if !defined(BEAMADAPTER_MAPPING_BEAMPROJECTIONDIFFERENCEMULTIMAPPING_CPP)
-//extern template class BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Vec3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types >;
 extern template class SOFA_BEAMADAPTER_API BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types >;
 #endif
 

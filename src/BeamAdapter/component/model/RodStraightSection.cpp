@@ -31,11 +31,17 @@
 namespace sofa::beamadapter
 {
 
-using namespace sofa::defaulttype;
-
-const int RodStraightSectionClass = core::RegisterObject("Class defining a rod straight section Material, defining material and geometry parameters.")
-    .add< RodStraightSection<Rigid3Types> >(true);
-
-template class SOFA_BEAMADAPTER_API RodStraightSection<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API RodStraightSection<sofa::defaulttype::Rigid3Types>;
 
 }// namespace sofa::beamadapter
+
+namespace beamadapter
+{
+
+void registerRodStraightSection(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Class defining a rod straight section Material, defining material and geometry parameters.")
+                             .add< sofa::beamadapter::RodStraightSection<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

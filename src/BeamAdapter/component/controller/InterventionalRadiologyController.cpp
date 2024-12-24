@@ -43,23 +43,17 @@
 namespace sofa::component::controller::_interventionalradiologycontroller_
 {
 
-using namespace sofa::defaulttype;
-
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static int InterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-.add< InterventionalRadiologyController<Rigid3Types> >(true)
-;
-
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
 
 } // namespace sofa::component::controller::_interventionalradiologycontroller_
 
+namespace beamadapter
+{
 
+void registerInterventionalRadiologyController(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+                             .add< sofa::component::controller::_interventionalradiologycontroller_::InterventionalRadiologyController<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter
