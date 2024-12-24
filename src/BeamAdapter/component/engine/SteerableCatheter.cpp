@@ -41,22 +41,17 @@
 namespace sofa::component::engine
 {
 
-using namespace sofa::defaulttype;
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int SteerableCatheterClass = core::RegisterObject("")
-.add< SteerableCatheter<Rigid3Types> >()
-
-;
-
-template class SOFA_BEAMADAPTER_API SteerableCatheter<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API SteerableCatheter<sofa::defaulttype::Rigid3Types>;
 
 }// namespace sofa::component::engine
+
+namespace beamadapter
+{
+
+void registerSteerableCatheter(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("")
+                             .add< sofa::component::engine::SteerableCatheter<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

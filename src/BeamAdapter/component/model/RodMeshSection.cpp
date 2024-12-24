@@ -29,11 +29,17 @@
 namespace sofa::beamadapter
 {
 
-using namespace sofa::defaulttype;
-
-const int RodMeshSectionClass = core::RegisterObject("Class defining a Rod Section using a MeshLoader and material parameters.")
-    .add< RodMeshSection<Rigid3Types> >(true);
-
-template class SOFA_BEAMADAPTER_API RodMeshSection<Rigid3Types>;
+template class SOFA_BEAMADAPTER_API RodMeshSection<sofa::defaulttype::Rigid3Types>;
 
 }// namespace sofa::beamadapter
+
+namespace beamadapter
+{
+
+void registerRodMeshSection(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Class defining a Rod Section using a MeshLoader and material parameters.")
+                             .add< sofa::beamadapter::RodMeshSection<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

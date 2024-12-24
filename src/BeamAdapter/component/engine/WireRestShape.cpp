@@ -40,24 +40,18 @@
 
 namespace sofa::component::engine::_wirerestshape_
 {
-using namespace sofa::defaulttype;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const int WireRestShapeClass = core::RegisterObject("Describe the shape functions on multiple segments using curvilinear abscissa")
-.add< WireRestShape<Rigid3Types> >(true)
-
-;
-
-template class SOFA_BEAMADAPTER_API WireRestShape<Rigid3Types>;
-
+template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
 
 } // namespace sofa::component::engine::_wirerestshape_
 
+namespace beamadapter
+{
 
+void registerWireRestShape(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Describe the shape functions on multiple segments using curvilinear abscissa")
+                             .add< sofa::component::engine::_wirerestshape_::WireRestShape<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

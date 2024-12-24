@@ -42,21 +42,17 @@
 namespace sofa::component::controller::_suturecontroller_
 {
 
-using namespace sofa::defaulttype;
+template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+} // namespace
 
-static int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-.add< SutureController<Rigid3Types> >(true)
+namespace beamadapter
+{
 
-;
+void registerSutureController(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+                             .add< sofa::component::controller::_suturecontroller_::SutureController<sofa::defaulttype::Rigid3Types> >());
+}
 
-template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
-
-} // namespace sofa::component::controller::_suturecontroller_
+} // namespace beamadapter

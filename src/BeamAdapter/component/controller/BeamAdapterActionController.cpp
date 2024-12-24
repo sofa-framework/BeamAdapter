@@ -31,10 +31,17 @@
 namespace sofa::component::controller
 {
 
-const static int BeamAdapterActionControllerClass = core::RegisterObject("BeamAdapterActionController")
-    .add< BeamAdapterActionController<sofa::defaulttype::Rigid3Types> >()
-    ;
-
 template class SOFA_BEAMADAPTER_API BeamAdapterActionController<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::controller
+} // namespace
+
+namespace beamadapter
+{
+
+void registerBeamAdapterActionController(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("BeamAdapterActionController")
+                                            .add< sofa::component::controller::BeamAdapterActionController<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter
