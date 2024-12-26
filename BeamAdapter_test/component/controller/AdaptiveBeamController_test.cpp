@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
 *                              BeamAdapter plugin                             *
 *                  (c) 2006 Inria, University of Lille, CNRS                  *
 *                                                                             *
@@ -26,6 +26,8 @@
 
 TEST(AdaptiveBeamController, target)
 {
+    sofa::simpleapi::importPlugin("BeamAdapter");
+    
     const auto node = sofa::simpleapi::createNode("node");
     const auto controller = sofa::simpleapi::createObject(node, "AdaptiveBeamController");
 
