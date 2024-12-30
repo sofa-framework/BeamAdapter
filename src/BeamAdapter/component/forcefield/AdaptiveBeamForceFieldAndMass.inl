@@ -54,7 +54,6 @@ using sofa::core::objectmodel::BaseContext ;
 using sofa::type::Vec3 ;
 using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
-using sofa::core::ConstVecCoordId ;
 using std::set ;
 using sofa::helper::ScopedAdvancedTimer;
 
@@ -746,7 +745,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::draw(const VisualParams *vparams)
 
     vparams->drawTool()->saveLastState();
 
-    ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = mstate->read(sofa::core::vec_id::read_access::position) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

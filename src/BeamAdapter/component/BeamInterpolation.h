@@ -47,7 +47,6 @@ namespace _beaminterpolation_
 using sofa::component::fem::BaseBeamInterpolation;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::core::ConstVecCoordId;
 using sofa::core::behavior::MechanicalState;
 using sofa::component::statecontainer::MechanicalObject;
 
@@ -148,7 +147,7 @@ public:
                                Real &_Asy, Real &_Asz, Real &J) override;
     void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
 
-    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
+    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
 
   
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)

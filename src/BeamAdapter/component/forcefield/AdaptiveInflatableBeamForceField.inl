@@ -57,7 +57,6 @@ using sofa::core::objectmodel::BaseContext ;
 using sofa::type::Vec3 ;
 using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
-using sofa::core::ConstVecCoordId ;
 using std::set ;
 
 template <class DataTypes>
@@ -730,7 +729,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
     if (!mstate) return;
 
-    ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = mstate->read(sofa::core::vec_id::read_access::position) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 

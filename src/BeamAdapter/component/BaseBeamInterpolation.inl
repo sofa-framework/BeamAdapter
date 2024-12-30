@@ -619,7 +619,7 @@ void BaseBeamInterpolation<DataTypes>::interpolatePointUsingSpline(unsigned int 
     const VecCoord& x,
     Vec3& posResult,
     bool recompute,
-    const ConstVecCoordId& vecXId)
+    const sofa::core::ConstVecCoordId& vecXId)
 {
     if (recompute)
     {

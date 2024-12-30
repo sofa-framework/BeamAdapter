@@ -62,7 +62,6 @@ using namespace sofa::defaulttype;
 using sofa::core::State;
 using helper::ReadAccessor;
 using helper::WriteAccessor;
-using sofa::core::ConstVecCoordId;
 using sofa::core::MultiVecCoordId;
 using sofa::core::VecCoordId;
 using sofa::core::VecDerivId;
@@ -161,7 +160,7 @@ void BeamLengthMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mparams
     VecDeriv& out = *dOut.beginEdit();
     const InVecDeriv& in= dIn.getValue();
 
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x_in = dataInX.getValue();
 
     unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
@@ -233,7 +232,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mparam
     InVecDeriv& out = *dOut.beginEdit();
     const VecDeriv& in= dIn.getValue();
 
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x_in = dataInX.getValue();
 
     unsigned int s = l_adaptativebeamInterpolation->getNumBeams();
@@ -347,7 +346,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparam
 
     InMatrixDeriv& out = *dOut.beginEdit();
     const OutMatrixDeriv& in = dIn.getValue();
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(ConstVecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x_in = dataInX.getValue();
 
 
@@ -437,10 +436,10 @@ void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, co
 
     const SReal kfactor = mparams->kFactor();
 
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x_in = dataInX.getValue();
 
-    const Data<InVecDeriv>& dataIndX = *this->getFromModel()->read(VecDerivId::dx());
+    const Data<InVecDeriv>& dataIndX = *this->getFromModel()->read(sofa::core::vec_id::read_access::dx);
     const InVecDeriv& parentDisplacement = dataIndX.getValue();
 
     helper::WriteAccessor<Data<InVecDeriv> > parentForce (*parentDfId[this->fromModel.get()].write());
@@ -597,7 +596,7 @@ void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams
     if( !geometricStiffness ) { K_geom.resize(0,0); return; }
     //helper::ReadAccessor<Data<VecDeriv> > childForce( *childForceId[(const core::State<TOut>*)this->getToModels()[0]].read() );
 
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(VecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x_in = dataInX.getValue();
 
     //const VecDeriv& childForce = this->getToModel()->readForces().ref();

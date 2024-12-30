@@ -34,7 +34,6 @@ namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
 {
 
 using helper::ReadAccessor;
-using sofa::core::ConstVecCoordId;
 using std::stringstream;
 using sofa::core::ConstraintParams;
 using sofa::linearalgebra::BaseVector;
@@ -295,8 +294,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
     m_nbConstraints = 0;
     m_cid = constraintId;
 
-    ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
-    ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
+    ReadAccessor<Data<VecCoord> > x = this->mstate->read(sofa::core::vec_id::read_access::position) ;
+    ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(sofa::core::vec_id::read_access::freePosition) ;
 
     auto c = sofa::helper::getWriteOnlyAccessor(c_d);
 
