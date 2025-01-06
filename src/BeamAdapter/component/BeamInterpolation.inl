@@ -44,7 +44,6 @@ namespace sofa::component::fem::_beaminterpolation_
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::core::objectmodel::ComponentState ;
 using sofa::core::behavior::MechanicalState;
-using sofa::core::ConstVecCoordId ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::helper::ReadAccessor ;
 
@@ -188,7 +187,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
             DOF1TransformNode1.resize(edgeList.size());
         }
 
-        ReadAccessor<Data<VecCoord> > statePos = this->m_mstate->read(ConstVecCoordId::position()) ;
+        ReadAccessor<Data<VecCoord> > statePos = this->m_mstate->read(sofa::core::vec_id::read_access::position) ;
 
         auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
@@ -478,8 +477,8 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
             unsigned int node0Id, node1Id;
             this->getNodeIndices(edgeInList,node0Id,node1Id);
 
-            Coord global_0 = state->read(core::VecCoordId::restPosition())->getValue()[node0Id];
-            Coord global_1 = state->read(core::VecCoordId::restPosition())->getValue()[node1Id];
+            Coord global_0 = state->read(sofa::core::vec_id::read_access::restPosition)->getValue()[node0Id];
+            Coord global_1 = state->read(sofa::core::vec_id::read_access::restPosition)->getValue()[node1Id];
 
             Transform global_H_DOF0 = Transform(global_0.getCenter(),global_0.getOrientation());
             Transform global_H_DOF1 = Transform(global_1.getCenter(),global_1.getOrientation());
@@ -508,7 +507,7 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord,
-                                                               const ConstVecCoordId &vecXId, Vec3& t )
+                                                               const sofa::core::ConstVecCoordId &vecXId, Vec3& t )
 {
 
     const VectorVec3& splinePos = this->m_StateNodes->read(vecXId)->getValue();
@@ -563,16 +562,16 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
         dmsg_info() <<" position " << msgendl
-                   << "      ="<< this->m_mstate->read( core::ConstVecCoordId::position() )->getValue( ) ;
-        x=this->m_mstate->read( core::ConstVecCoordId::position() );
+                   << "      ="<< this->m_mstate->read( sofa::core::vec_id::read_access::position )->getValue( ) ;
+        x=this->m_mstate->read( sofa::core::vec_id::read_access::position );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
     {
-        x=this->m_mstate->read( core::ConstVecCoordId::freePosition() ) ;
+        x=this->m_mstate->read( sofa::core::vec_id::read_access::freePosition ) ;
     }
     else /// rest position
     {
-        x=this->m_mstate->read( core::ConstVecCoordId::restPosition() ) ;
+        x=this->m_mstate->read( sofa::core::vec_id::read_access::restPosition ) ;
         computeVel = false;
     }
 

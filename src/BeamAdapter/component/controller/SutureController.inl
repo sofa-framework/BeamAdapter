@@ -137,8 +137,8 @@ void SutureController<DataTypes>::initWireModel()
 
     Real x_curv = 0.0;
 
-    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
-    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
+    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     auto v = sofa::helper::getWriteOnlyAccessor(*datav);
 
@@ -323,8 +323,8 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double dt)
         applyController();
 
     // Propagate modifications
-    MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()); // apply projective constraints
-    MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()).execute( getContext() );
+    MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::vec_id::write_access::position,sofa::core::vec_id::write_access::velocity); // apply projective constraints
+    MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::vec_id::write_access::position,sofa::core::vec_id::write_access::velocity).execute( getContext() );
     simulation::UpdateMappingVisitor(core::ExecParams::defaultInstance()).execute(getContext());
 }
 
@@ -503,8 +503,8 @@ void SutureController<DataTypes>::addImposedCurvAbs(type::vector<Real> &newCurvA
 template <class DataTypes>
 void SutureController<DataTypes>::applyController()
 {
-    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
-    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
+    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     auto v = sofa::helper::getWriteOnlyAccessor(*datav);
     type::vector<Real> newCurvAbs;
@@ -1171,7 +1171,7 @@ void SutureController<DataTypes>::updateControlPointsPositions()
 
     unsigned int numBeams = l_adaptiveInterpolation->getNumBeams();
     Transform global_H0_local, global_H1_local;
-    const VecCoord& x = getMechanicalState()->write(sofa::core::VecCoordId::position())->getValue();
+    const VecCoord& x = getMechanicalState()->read(sofa::core::vec_id::read_access::position)->getValue();
     for (unsigned int b = 0; b < numBeams; b++)
     {
         l_adaptiveInterpolation->computeTransform(b, global_H0_local, global_H1_local, x);

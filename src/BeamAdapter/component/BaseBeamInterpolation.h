@@ -49,7 +49,6 @@ using sofa::type::Quat ;
 using sofa::type::Vec ;
 using sofa::type::Vec3d ;
 using sofa::type::vector;
-using sofa::core::ConstVecCoordId;
 using sofa::core::behavior::MechanicalState;
 using sofa::component::statecontainer::MechanicalObject;
 
@@ -170,11 +169,11 @@ public:
 
     /// spline base interpolation of points and transformation
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, Vec3& posResult) {
-        interpolatePointUsingSpline(edgeInList, baryCoord, localPos, x, posResult, true, ConstVecCoordId::position());
+        interpolatePointUsingSpline(edgeInList, baryCoord, localPos, x, posResult, true, sofa::core::vec_id::read_access::position);
     }
 
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-        const VecCoord& x, Vec3& posResult, bool recompute, const ConstVecCoordId& vecXId);
+        const VecCoord& x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId& vecXId);
 
 
     void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,

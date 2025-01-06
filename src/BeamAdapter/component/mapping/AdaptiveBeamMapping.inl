@@ -56,7 +56,6 @@ namespace _adaptivebeammapping_
 using sofa::core::State;
 using helper::ReadAccessor;
 using helper::WriteAccessor;
-using sofa::core::ConstVecCoordId;
 using sofa::helper::AdvancedTimer;
 using sofa::helper::ScopedAdvancedTimer;
 using sofa::core::MultiVecCoordId;
@@ -233,20 +232,20 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
         }
     }
 
-    MultiVecCoordId x = VecCoordId::position();
-    MultiVecCoordId xfree = VecCoordId::freePosition();
+    MultiVecCoordId x = sofa::core::vec_id::write_access::position;
+    MultiVecCoordId xfree = sofa::core::vec_id::write_access::freePosition;
 
     const ConstMultiVecCoordId &xId = mparams->x();
-    ConstVecCoordId xtest = xId.getId(this->fromModel);
+    sofa::core::ConstVecCoordId xtest = xId.getId(this->fromModel);
 
     if(xtest == xfree.getId(this->fromModel))
     {
-        VecCoordId xfreeIn = VecCoordId::freePosition();
+        VecCoordId xfreeIn = sofa::core::vec_id::write_access::freePosition;
         l_adaptativebeamInterpolation->updateBezierPoints(in, xfreeIn);
     }
     else if(xtest == x.getId(this->fromModel))
     {
-        VecCoordId positionIn = VecCoordId::position();
+        VecCoordId positionIn = sofa::core::vec_id::write_access::position;
         l_adaptativebeamInterpolation->updateBezierPoints(in, positionIn);
     }
 
@@ -307,7 +306,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecDeriv& in= dIn.getValue();
     
-    Data<InVecCoord>& dataInX = *this->getFromModel()->write(VecCoordId::position());
+    Data<InVecCoord>& dataInX = *this->getFromModel()->write(sofa::core::vec_id::write_access::position);
     auto x = sofa::helper::getWriteOnlyAccessor(dataInX);
 
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
@@ -392,7 +391,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::MechanicalParams* mpar
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const VecDeriv& in= dIn.getValue();
 
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(ConstVecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x = dataInX.getValue();
 
     for (unsigned int i=0; i<m_pointBeamDistribution.size(); i++)
@@ -434,7 +433,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     SCOPED_TIMER("AdaptiveBeamMapping_ApplyJT");
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const OutMatrixDeriv& in = dIn.getValue();
-    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(ConstVecCoordId::position());
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x = dataInX.getValue();
 
     m_isXBufferUsed = false;
@@ -512,7 +511,7 @@ void AdaptiveBeamMapping< TIn, TOut>::bwdInit()
 
     if (ptsSize == 0)
     {
-        helper::ReadAccessor<Data<VecCoord> > xTo = this->toModel->read(sofa::core::ConstVecCoordId::position()) ;
+        helper::ReadAccessor<Data<VecCoord> > xTo = this->toModel->read(sofa::core::vec_id::read_access::position) ;
 
         if(xTo.size()==0)
         {

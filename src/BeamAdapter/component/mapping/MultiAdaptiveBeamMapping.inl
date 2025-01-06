@@ -226,24 +226,24 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
     const core::MechanicalParams* _mparams = core::MechanicalParams::defaultInstance();
 
-    this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::VecCoordId::position()),*this->getFromModel()->read(sofa::core::ConstVecCoordId::position()));
+    this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::vec_id::write_access::position),*this->getFromModel()->read(sofa::core::vec_id::read_access::position));
 
-    const Data<InVecCoord>& xfree_in = *this->getFromModel()->read(sofa::core::ConstVecCoordId::freePosition());
+    const Data<InVecCoord>& xfree_in = *this->getFromModel()->read(sofa::core::vec_id::read_access::freePosition);
 
-    const Data<VecCoord>&     x_out = *this->getToModel()->read(sofa::core::VecCoordId::position());
-    const Data<VecCoord>& xfree_out = *this->getToModel()->read(sofa::core::VecCoordId::freePosition());
+    const Data<VecCoord>&     x_out = *this->getToModel()->read(sofa::core::vec_id::read_access::position);
+    const Data<VecCoord>& xfree_out = *this->getToModel()->read(sofa::core::vec_id::read_access::freePosition);
 
     core::behavior::MechanicalState<TOut>* ms_out =	dynamic_cast<core::behavior::MechanicalState<TOut> *> (this->getToModel());
 
     if (x_out.getValue().size() != xfree_out.getValue().size())
     {
-        ms_out->vInit(_mparams,sofa::core::VecCoordId::freePosition(),sofa::core::ConstVecCoordId::position());
-        ms_out->vInit(_mparams,sofa::core::VecDerivId::freeVelocity(),sofa::core::ConstVecDerivId::velocity());
+        ms_out->vInit(_mparams,sofa::core::vec_id::write_access::freePosition,sofa::core::vec_id::read_access::position);
+        ms_out->vInit(_mparams,sofa::core::vec_id::write_access::freeVelocity,sofa::core::vec_id::read_access::velocity);
     }
 
     if (xfree_in.getValue().size() > 0)
     {
-        this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::VecCoordId::freePosition()),	*this->getFromModel()->read(sofa::core::ConstVecCoordId::freePosition()));
+        this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::vec_id::write_access::freePosition),	*this->getFromModel()->read(sofa::core::vec_id::read_access::freePosition));
     }
 }
 
