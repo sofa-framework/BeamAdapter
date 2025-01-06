@@ -17,7 +17,7 @@ var classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_int
     [ "getRestTotalLength", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a1917eafe58fc4edd3a9270082c593f4d", null ],
     [ "getTangent", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a68ecd1db013b890451d924df55b6efe0", null ],
     [ "interpolatePointUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#af4535a8dba9ea2462c30b9dc4014d607", null ],
-    [ "interpolatePointUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a89625147437df2638a1d06b4f8baf61f", null ],
+    [ "interpolatePointUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#aa6ff6a59b5c298c239f30d436a4f4560", null ],
     [ "InterpolateTransformAndVelUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a8cace9a9dcbdd84e386b41d8b900a4e2", null ],
     [ "InterpolateTransformUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#afa932d480a4b7def4c8b3b1bc6dc31e3", null ],
     [ "MapForceOnNodeUsingSpline", "classsofa_1_1component_1_1fem_1_1__basebeaminterpolation___1_1_base_beam_interpolation.html#a27a8c6e393881cd74682e12f519491a3", null ],

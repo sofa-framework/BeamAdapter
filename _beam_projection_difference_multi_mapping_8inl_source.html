@@ -554,9 +554,9 @@ $(document).ready(function(){initNavTree('_beam_projection_difference_multi_mapp
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn1, <span class="keyword">class</span> TIn2, <span class="keyword">class</span> TOut&gt;</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span><span class="keyword">const</span> sofa::type::vector&lt;sofa::linearalgebra::BaseMatrix*&gt;* BeamProjectionDifferenceMultiMapping&lt;TIn1, TIn2, TOut&gt;::getJs()</div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>{</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    <span class="keyword">const</span> OutVecCoord&amp; out = m_toModel-&gt;read(sofa::core::ConstVecCoordId::position())-&gt;getValue();</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>    <span class="keyword">const</span> In1VecCoord&amp; in1 = m_fromModel1-&gt;read(sofa::core::ConstVecCoordId::position())-&gt;getValue();</div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    <span class="keyword">const</span> In2VecCoord&amp; in2 = m_fromModel2-&gt;read(sofa::core::ConstVecCoordId::position())-&gt;getValue();</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    <span class="keyword">const</span> OutVecCoord&amp; out = m_toModel-&gt;read(sofa::core::vec_id::read_access::position)-&gt;getValue();</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>    <span class="keyword">const</span> In1VecCoord&amp; in1 = m_fromModel1-&gt;read(sofa::core::vec_id::read_access::position)-&gt;getValue();</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    <span class="keyword">const</span> In2VecCoord&amp; in2 = m_fromModel2-&gt;read(sofa::core::vec_id::read_access::position)-&gt;getValue();</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>    <span class="keyword">typename</span> SparseMatrixEigen1::CompressedMatrix&amp; J1 = m_eigenJacobian1.compressedMatrix;</div>
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>    <span class="keyword">typename</span> SparseMatrixEigen1::CompressedMatrix&amp; J2 = m_eigenJacobian2.compressedMatrix;</div>
@@ -667,7 +667,7 @@ $(document).ready(function(){initNavTree('_beam_projection_difference_multi_mapp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>BeamProjectionDifferenceMultiMapping.inl</b></li>
-    <li class="footer">Generated on Tue Dec 24 2024 02:07:10 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Jan 6 2025 07:29:12 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

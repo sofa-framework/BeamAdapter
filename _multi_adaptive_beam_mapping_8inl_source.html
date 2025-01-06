@@ -324,24 +324,24 @@ $(document).ready(function(){initNavTree('_multi_adaptive_beam_mapping_8inl_sour
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keyword">const</span> core::MechanicalParams* _mparams = core::MechanicalParams::defaultInstance();</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    this-&gt;apply(_mparams <span class="comment">/* PARAMS FIRST */</span>, *this-&gt;getToModel()-&gt;write(sofa::core::VecCoordId::position()),*this-&gt;getFromModel()-&gt;read(sofa::core::ConstVecCoordId::position()));</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    this-&gt;apply(_mparams <span class="comment">/* PARAMS FIRST */</span>, *this-&gt;getToModel()-&gt;write(sofa::core::vec_id::write_access::position),*this-&gt;getFromModel()-&gt;read(sofa::core::vec_id::read_access::position));</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keyword">const</span> Data&lt;InVecCoord&gt;&amp; xfree_in = *this-&gt;getFromModel()-&gt;read(sofa::core::ConstVecCoordId::freePosition());</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keyword">const</span> Data&lt;InVecCoord&gt;&amp; xfree_in = *this-&gt;getFromModel()-&gt;read(sofa::core::vec_id::read_access::freePosition);</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keyword">const</span> Data&lt;VecCoord&gt;&amp;     x_out = *this-&gt;getToModel()-&gt;read(sofa::core::VecCoordId::position());</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keyword">const</span> Data&lt;VecCoord&gt;&amp; xfree_out = *this-&gt;getToModel()-&gt;read(sofa::core::VecCoordId::freePosition());</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keyword">const</span> Data&lt;VecCoord&gt;&amp;     x_out = *this-&gt;getToModel()-&gt;read(sofa::core::vec_id::read_access::position);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keyword">const</span> Data&lt;VecCoord&gt;&amp; xfree_out = *this-&gt;getToModel()-&gt;read(sofa::core::vec_id::read_access::freePosition);</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    core::behavior::MechanicalState&lt;TOut&gt;* ms_out =     <span class="keyword">dynamic_cast&lt;</span>core::behavior::MechanicalState&lt;TOut&gt; *<span class="keyword">&gt;</span> (this-&gt;getToModel());</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">if</span> (x_out.getValue().size() != xfree_out.getValue().size())</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        ms_out-&gt;vInit(_mparams,sofa::core::VecCoordId::freePosition(),sofa::core::ConstVecCoordId::position());</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        ms_out-&gt;vInit(_mparams,sofa::core::VecDerivId::freeVelocity(),sofa::core::ConstVecDerivId::velocity());</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        ms_out-&gt;vInit(_mparams,sofa::core::vec_id::write_access::freePosition,sofa::core::vec_id::read_access::position);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        ms_out-&gt;vInit(_mparams,sofa::core::vec_id::write_access::freeVelocity,sofa::core::vec_id::read_access::velocity);</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    }</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordflow">if</span> (xfree_in.getValue().size() &gt; 0)</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    {</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        this-&gt;apply(_mparams <span class="comment">/* PARAMS FIRST */</span>, *this-&gt;getToModel()-&gt;write(sofa::core::VecCoordId::freePosition()),    *this-&gt;getFromModel()-&gt;read(sofa::core::ConstVecCoordId::freePosition()));</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        this-&gt;apply(_mparams <span class="comment">/* PARAMS FIRST */</span>, *this-&gt;getToModel()-&gt;write(sofa::core::vec_id::write_access::freePosition),    *this-&gt;getFromModel()-&gt;read(sofa::core::vec_id::read_access::freePosition));</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    }</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>}</div>
 </div>
@@ -525,7 +525,7 @@ $(document).ready(function(){initNavTree('_multi_adaptive_beam_mapping_8inl_sour
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>MultiAdaptiveBeamMapping.inl</b></li>
-    <li class="footer">Generated on Tue Dec 24 2024 02:07:10 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Jan 6 2025 07:29:12 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
