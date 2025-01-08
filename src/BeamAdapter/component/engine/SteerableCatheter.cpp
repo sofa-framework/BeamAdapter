@@ -50,7 +50,7 @@ namespace beamadapter
 
 void registerSteerableCatheter(sofa::core::ObjectFactory* factory)
 {
-    factory->registerObjects(sofa::core::ObjectRegistrationData("")
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Catheter object with a flexible tip based on WireRestShape")
                              .add< sofa::component::engine::SteerableCatheter<sofa::defaulttype::Rigid3Types> >());
 }
 
