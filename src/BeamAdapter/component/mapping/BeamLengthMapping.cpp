@@ -43,34 +43,20 @@
 namespace sofa::component::mapping
 {
 
-//using namespace defaulttype;
-using namespace core;
-using namespace core::behavior;
-using namespace sofa::defaulttype;
-
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//SOFA_DECL_CLASS(BeamLengthMapping)
-
-// Register in the Factory
-int BeamLengthMappingClass = core::RegisterObject("computes the lengths of the beams")
-        .add< BeamLengthMapping<Rigid3Types, Vec1dTypes   > >(true) //default template
-        //.add< BeamLengthMapping<Rigid3Types, Rigid3Types > >()
-;
-
 namespace _beamlengthmapping_
 {
-    template class SOFA_BEAMADAPTER_API BeamLengthMapping<Rigid3dTypes, Vec1dTypes   >;
+    template class SOFA_BEAMADAPTER_API BeamLengthMapping<sofa::defaulttype::Rigid3dTypes, sofa::defaulttype::Vec1dTypes>;
 }
 
 } // namespace sofa::component::mapping
 
+namespace beamadapter
+{
 
+void registerBeamLengthMapping(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Compute the lengths of the beams.")
+                             .add< sofa::component::mapping::BeamLengthMapping<sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec1dTypes> >());
+}
 
-
+} // namespace beamadapter

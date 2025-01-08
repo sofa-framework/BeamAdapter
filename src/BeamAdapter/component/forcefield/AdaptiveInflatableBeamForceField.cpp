@@ -42,25 +42,17 @@
 namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
 {
 
-using sofa::core::RegisterObject ;
-using sofa::defaulttype::Rigid3fTypes;
-using sofa::defaulttype::Rigid3dTypes;
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int AdaptiveInflatableBeamForceFieldClass = RegisterObject("Adaptive Beam finite elements")
-.add< AdaptiveInflatableBeamForceField<Rigid3Types> >()
-;
-
-template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types>;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
+template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<sofa::defaulttype::Rigid3Types>;
 
 } // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
+
+namespace beamadapter
+{
+
+void registerAdaptiveInflatableBeamForceField(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam finite elements")
+                             .add< sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter
