@@ -46,13 +46,13 @@ public:
     typedef typename Coord::value_type   Real;
     //typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 
-    void onSetUp() override
+    void doSetUp() override
     {
         sofa::simpleapi::importPlugin("BeamAdapter");
-        sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
-        sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Grid");
-        sofa::simpleapi::importPlugin("Sofa.Component.Constraint.Projective");
-        sofa::simpleapi::importPlugin("Sofa.Component.StateContainer");
+        sofa::simpleapi::importPlugin(Sofa.Component.Topology.Container.Dynamic);
+        sofa::simpleapi::importPlugin(Sofa.Component.Topology.Container.Grid);
+        sofa::simpleapi::importPlugin(Sofa.Component.Constraint.Projective);
+        sofa::simpleapi::importPlugin(Sofa.Component.StateContainer);
 
         m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
     }
