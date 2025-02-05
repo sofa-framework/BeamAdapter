@@ -151,10 +151,10 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         this->root->getTreeObject(ToModel);
         this->outDofs= ToModel;
 
-        const Data<InVecCoord>& dataInX = *FromModel->read(VecCoordId::position());
+        const Data<InVecCoord>& dataInX = *FromModel->read(core::vec_id::read_access::position);
         const InVecCoord& xin = dataInX.getValue();
 
-        const Data<OutVecCoord>& dataOutX = *ToModel->read(VecCoordId::position());
+        const Data<OutVecCoord>& dataOutX = *ToModel->read(core::vec_id::read_access::position);
         const OutVecCoord& xout = dataOutX.getValue();
 
         std::cout<<" x in  = "<<xin<<std::endl;
@@ -220,10 +220,10 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         this->root->getTreeObject(ToModel);
         this->outDofs= ToModel;
 
-        const Data<InVecCoord>& dataInX = *FromModel->read(VecCoordId::position());
+        const Data<InVecCoord>& dataInX = *FromModel->read(core::vec_id::read_access::position);
         const InVecCoord& xin = dataInX.getValue();
 
-        const Data<OutVecCoord>& dataOutX = *ToModel->read(VecCoordId::position());
+        const Data<OutVecCoord>& dataOutX = *ToModel->read(core::vec_id::read_access::position);
         const OutVecCoord& xout = dataOutX.getValue();
 
         std::cout<<" x in  = "<<xin<<std::endl;
