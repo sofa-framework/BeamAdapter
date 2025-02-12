@@ -43,7 +43,6 @@ using sofa::simulation::SceneLoaderXML;
 using sofa::simulation::graph::DAGSimulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
-using sofa::simulation::setSimulation ;
 using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::statecontainer::MechanicalObject ;
