@@ -192,9 +192,9 @@ public:
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
 
-
     Data<bool> d_computeMass;               ///< if false, only compute the stiff elastic model
-    Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
+    Real m_defaultMassDensity;
+    Data<type::vector<Real>> d_massDensity; ///< Density of the mass
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
 

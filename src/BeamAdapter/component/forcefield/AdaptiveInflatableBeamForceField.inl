@@ -618,7 +618,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
 
         /// ADD the effect of the pressure in the axial direction
         // inner radius of the tube
-        Real r = l_interpolation->d_innerRadius.getValue();
+        Real r = l_interpolation->m_defaultInnerRadius;
 
         if (r==(Real)0){
             msg_warning()<<" Inflatable Beam Force Field suppose that the interpolation is a tube ";
