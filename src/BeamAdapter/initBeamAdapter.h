@@ -22,9 +22,9 @@
 #pragma once
 #include <BeamAdapter/config.h>
 
-namespace sofa::component
+namespace beamadapter
 {
 
 void SOFA_BEAMADAPTER_API initBeamAdapter();
 
-} // namespace sofa::component
+} // namespace beamadapter

@@ -39,7 +39,7 @@ using sofa::defaulttype::Rigid3Types;
 using sofa::defaulttype::Rigid3Types;
 
 
-namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
+namespace beamadapter
 {
 
 AdaptiveBeamSlidingConstraintResolution::AdaptiveBeamSlidingConstraintResolution(double* sliding)
@@ -79,18 +79,10 @@ void AdaptiveBeamSlidingConstraintResolution::store(int line, double* force, boo
 
 template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<Rigid3Types>;
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-} // namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
-
-namespace beamadapter
-{
-
 void registerAdaptiveBeamSlidingConstraint(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Constrain a rigid to be attached to a beam (only in position, not the orientation).")
-                             .add< sofa::component::constraintset::_adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint<Rigid3Types> >());
+                             .add< AdaptiveBeamSlidingConstraint<Rigid3Types> >());
 }
 
 } // namespace beamadapter

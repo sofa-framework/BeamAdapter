@@ -39,8 +39,9 @@
 
 #include <string>
 
-namespace beamadapter::mapping
+namespace beamadapter
 {
+
 using sofa::core::objectmodel::BaseContext ;
 using sofa::helper::WriteAccessor;
 using sofa::type::RGBAColor ;
@@ -560,4 +561,4 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::draw(const sofa::co
     }
 }
 
-} // namespace
+} // namespace beamadapter

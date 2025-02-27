@@ -46,10 +46,7 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
-namespace sofa::component::controller
-{
-
-namespace _interventionalradiologycontroller_
+namespace beamadapter
 {
 
 using sofa::type::Vec;
@@ -64,10 +61,10 @@ using sofa::component::constraint::projective::FixedProjectiveConstraint;
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class InterventionalRadiologyController : public MechanicalStateController<DataTypes>
+class InterventionalRadiologyController : public sofa::component::controller::MechanicalStateController<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(InterventionalRadiologyController,DataTypes),SOFA_TEMPLATE(sofa::component::controller::MechanicalStateController,DataTypes));
     typedef typename DataTypes::VecCoord                            VecCoord;
     typedef typename DataTypes::VecDeriv                            VecDeriv;
     typedef typename DataTypes::Coord                               Coord   ;
@@ -80,8 +77,8 @@ public:
     typedef Vec<3, Real>                            Vec3;
     typedef BaseMeshTopology::EdgeID                ElementID;
     typedef type::vector<BaseMeshTopology::EdgeID>        VecElementID;
-    typedef MechanicalStateController<DataTypes>    Inherit;
-    typedef fem::WireBeamInterpolation<DataTypes>   WBeamInterpolation;
+    typedef sofa::component::controller::MechanicalStateController<DataTypes>    Inherit;
+    typedef WireBeamInterpolation<DataTypes>   WBeamInterpolation;
 
 public:
     InterventionalRadiologyController();
@@ -105,11 +102,11 @@ public:
     void interventionalRadiologyCollisionControls(type::vector<Real> &x_point_list,
                                                   type::vector<int> &id_instrument_list,
                                                   type::vector<int> &removeEdge);
-    void getInstrumentList(type::vector<sofa::component::fem::WireBeamInterpolation<DataTypes>*>& list);
+    void getInstrumentList(type::vector<WireBeamInterpolation<DataTypes>*>& list);
     const type::vector< type::vector<int> >& get_id_instrument_curvAbs_table()const;
     int getTotalNbEdges()const;
 
-    void applyAction(sofa::beamadapter::BeamAdapterAction action);
+    void applyAction(BeamAdapterAction action);
     /// Method to warn this controller that a BeamActionController is controlling the scene. Will bypass the event handling in this component.
     void useBeamAction(bool value) { m_useBeamActions = value; }
 
@@ -196,8 +193,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _interventionalradiologycontroller_
-
-using _interventionalradiologycontroller_::InterventionalRadiologyController;
-
-} // namespace sofa::component::controller
+} // namespace beamadapter

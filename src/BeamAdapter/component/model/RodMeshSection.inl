@@ -27,7 +27,7 @@
 
 #define EPSILON 0.0001
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template <class DataTypes>
@@ -295,4 +295,4 @@ void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, type::Ve
 
 
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

@@ -31,7 +31,7 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
-namespace beamadapter::mapping
+namespace beamadapter
 {
 
 void registerBeamProjectionDifferenceMultiMapping(sofa::core::ObjectFactory* factory)
@@ -42,4 +42,4 @@ void registerBeamProjectionDifferenceMultiMapping(sofa::core::ObjectFactory* fac
 
 template class SOFA_BEAMADAPTER_API BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types >;
 
-} // namespace beamadapter::mapping
+} // namespace beamadapter

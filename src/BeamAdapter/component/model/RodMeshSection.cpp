@@ -26,20 +26,15 @@
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API RodMeshSection<sofa::defaulttype::Rigid3Types>;
 
-}// namespace sofa::beamadapter
-
-namespace beamadapter
-{
-
 void registerRodMeshSection(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Class defining a Rod Section using a MeshLoader and material parameters.")
-                             .add< sofa::beamadapter::RodMeshSection<sofa::defaulttype::Rigid3Types> >());
+                             .add< RodMeshSection<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

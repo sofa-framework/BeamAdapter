@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_INL
-#define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_INL
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <BeamAdapter/component/mapping/BeamLengthMapping.h>
@@ -46,16 +45,7 @@
 #include <iomanip>
 
 
-namespace sofa
-{
-
-namespace component
-{
-
-namespace mapping
-{
-
-namespace _beamlengthmapping_
+namespace beamadapter
 {
 
 using namespace sofa::defaulttype;
@@ -946,9 +936,6 @@ void BeamLengthMapping<TIn, TOut>::computeDJtSpline(const Real &f_input, const V
     }
 }
 
-
-
-
 template <class TIn, class TOut>
 void BeamLengthMapping< TIn, TOut>::draw(const VisualParams* vparams)
 {
@@ -956,13 +943,4 @@ void BeamLengthMapping< TIn, TOut>::draw(const VisualParams* vparams)
         return;
 }
 
-
-} /// namespace _beamlengthmapping_
-
-} /// namespace mapping
-
-} /// namespace component
-
-} /// namespace sofa
-
-#endif  /* SOFA_COMPONENT_MAPPING_ADAPTIVEBEAMMAPPING_INL */
+} // namespace beamadapter

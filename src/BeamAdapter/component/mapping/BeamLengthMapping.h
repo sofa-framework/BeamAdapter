@@ -30,8 +30,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H
-#define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H
+#pragma once
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/type/vector.h>
@@ -50,29 +49,9 @@
 
 #include <sofa/linearalgebra/EigenSparseMatrix.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _beamlengthmapping_
-{
-
-using namespace sofa::component::fem;
 using namespace sofa::core::objectmodel;
 
 using sofa::core::State ;
@@ -82,7 +61,6 @@ using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
 using std::pair;
-using sofa::component::fem::BeamInterpolation;
 using sofa::type::vector;
 using std::string;
 using core::MechanicalParams;
@@ -228,11 +206,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API BeamLengthMapping<defaulttype::Rigid3Types, defaulttype::Vec1Types   >;
 #endif
 
-} /// _beamlengthmapping_
-
-using _beamlengthmapping_::BeamLengthMapping ;
-
-
-
-} // namespace sofa::component::mapping
-#endif  /* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */
+} // namespace beamadapter

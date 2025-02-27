@@ -39,12 +39,9 @@
 #include <sofa/helper/OptionsGroup.h>
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _beaminterpolation_
-{
-using sofa::component::fem::BaseBeamInterpolation;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
 using sofa::core::behavior::MechanicalState;
@@ -94,7 +91,6 @@ public:
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
-    using BeamSection = sofa::beamadapter::BeamSection;
     using BaseBeamInterpolation<DataTypes>::d_componentState;
 public:
     BeamInterpolation() ;
@@ -221,8 +217,4 @@ protected :
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace _beaminterpolation_
-
-using _beaminterpolation_::BeamInterpolation ;
-
-} /// namespace sofa::component::fem
+} // namespace beamadapter

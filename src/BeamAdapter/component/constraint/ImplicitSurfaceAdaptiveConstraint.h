@@ -41,10 +41,7 @@
 #endif
 
 
-namespace sofa::component::constraint
-{
-
-namespace _implicitsurfaceadaptiveconstraint_
+namespace beamadapter
 {
 
 /*!
@@ -55,7 +52,7 @@ template<class DataTypes>
 class ImplicitSurfaceAdaptiveConstraintResolution : public sofa::core::behavior::ConstraintResolution
 {
 public:
-    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, sofa::component::fem::WireBeamInterpolation<DataTypes>* wireInterpol)
+    ImplicitSurfaceAdaptiveConstraintResolution(double frictionCoef, int line, WireBeamInterpolation<DataTypes>* wireInterpol)
         : ConstraintResolution(3)
         , m_wireInterpolation(wireInterpol)
         , m_mu(frictionCoef)
@@ -66,7 +63,7 @@ public:
     virtual void resolution(int line, double** w, double* d, double* force);
 
 private:
-    sofa::component::fem::WireBeamInterpolation<DataTypes>* m_wireInterpolation;
+    WireBeamInterpolation<DataTypes>* m_wireInterpolation;
     double m_mu;
     int m_line;
 };
@@ -96,7 +93,7 @@ public:
     typedef type::Vec<3,Real> Vec3;
     typedef type::Vec<3,double> Vec3d;
     typedef typename core::behavior::MechanicalState<DataTypes> MechanicalState;
-    typedef typename component::fem::WireBeamInterpolation<DataTypes> WBInterpolation;
+    typedef WireBeamInterpolation<DataTypes> WBInterpolation;
 
     typedef Data<VecCoord>		 DataVecCoord;
     typedef Data<VecDeriv>		 DataVecDeriv;
@@ -188,9 +185,4 @@ private:
 
 };
 
-} // namespace _implicitsurfaceadaptiveconstraint_
-
-using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraint;
-using _implicitsurfaceadaptiveconstraint_::ImplicitSurfaceAdaptiveConstraintResolution;
-
-} // namespace sofa::component::constraint
+} // namespace beamadapter

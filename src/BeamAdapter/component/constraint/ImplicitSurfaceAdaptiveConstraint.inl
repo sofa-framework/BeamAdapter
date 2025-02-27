@@ -45,7 +45,7 @@ double TimeProjection2= 0.0;
 //#define DEBUG_DFREE_COMPUTATION
 
 
-namespace sofa::component::constraint
+namespace beamadapter
 {
 
 using sofa::core::VecCoordId;
@@ -770,4 +770,4 @@ void ImplicitSurfaceAdaptiveConstraintResolution<DataTypes>::resolution(int line
     force[line]=0.0;
 }
 
-} // namespace sofa::component::constraint
+} // namespace beamadapter

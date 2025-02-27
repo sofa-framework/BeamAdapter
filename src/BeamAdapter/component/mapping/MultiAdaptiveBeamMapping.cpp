@@ -35,20 +35,15 @@
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types >;
 
-} // namespace sofa::component::mapping
-
-namespace beamadapter
-{
-
 void registerMultiAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs.")
-                             .add< sofa::component::mapping::MultiAdaptiveBeamMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types > >());
+                             .add< MultiAdaptiveBeamMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types > >());
 }
 
 } // namespace beamadapter
