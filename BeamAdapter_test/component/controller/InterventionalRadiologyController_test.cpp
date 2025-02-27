@@ -29,13 +29,12 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 
-namespace beamadapter_test
+namespace beamadapter
 {
 using namespace sofa::testing;
 using namespace sofa::defaulttype;
 using namespace sofa::type;
 using namespace sofa::core::objectmodel;
-using namespace sofa::component::controller::_interventionalradiologycontroller_;
 
 class InterventionalRadiologyController_test : public BaseTest
 {
@@ -157,4 +156,4 @@ TEST_F(InterventionalRadiologyController_test, test_init_default) {
     testDefaultInit();
 }
 
-} // namespace beamadapter_test
+} // namespace beamadapter

@@ -42,138 +42,105 @@
 
 using namespace sofa::gpu::cuda;
 
-namespace sofa::component::fem::_beaminterpolation_
-{
-    // template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3fTypes>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3dTypes>;
-#endif
-} // namespace sofa::component::fem::_beaminterpolation_
-
-namespace sofa::component::fem::_wirebeaminterpolation_
+namespace beamadapter
 {
     // template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3fTypes>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3dTypes>;
-#endif
-} // namespace sofa::component::fem::_beaminterpolation_
-
-namespace sofa::component::engine::_wirerestshape_
-{
+    // template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3fTypes>;
     template class SOFA_BEAMADAPTER_CUDA_API WireRestShape<CudaRigid3fTypes>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API WireRestShape<CudaRigid3dTypes>;
-#endif
-} // namespace sofa::component::engine::_wirerestshape_
-
-namespace sofa::component::controller::_interventionalradiologycontroller_
-{
     template class SOFA_BEAMADAPTER_CUDA_API InterventionalRadiologyController<CudaRigid3fTypes>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API InterventionalRadiologyController<CudaRigid3dTypes>;
-#endif
-} // namespace sofa::component::controller::_interventionalradiologycontroller_
-
-namespace sofa::component::mapping::_adaptivebeammapping_
-{
     template class SOFA_BEAMADAPTER_CUDA_API AdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
-#endif
-} // namespace sofa::component::mapping::_adaptivebeammapping_
-
-namespace sofa::component::mapping
-{
     template class SOFA_BEAMADAPTER_CUDA_API MultiAdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types>;
-#ifdef SOFA_GPU_CUDA_DOUBLE
-    template class SOFA_BEAMADAPTER_CUDA_API MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
-#endif
-} // namespace sofa::component::mapping
-
-namespace sofa::beamadapter
-{
     template class SOFA_BEAMADAPTER_CUDA_API RodMeshSection<CudaRigid3fTypes>;
     template class SOFA_BEAMADAPTER_CUDA_API RodSpireSection<CudaRigid3fTypes>;
     template class SOFA_BEAMADAPTER_CUDA_API RodStraightSection<CudaRigid3fTypes>;
-
 #ifdef SOFA_GPU_CUDA_DOUBLE
+    template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API WireRestShape<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API InterventionalRadiologyController<CudaRigid3dTypes>;
+    template class SOFA_BEAMADAPTER_CUDA_API AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
+    template class SOFA_BEAMADAPTER_CUDA_API MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types>;
     template class SOFA_BEAMADAPTER_CUDA_API RodMeshSection<CudaRigid3dTypes>;
     template class SOFA_BEAMADAPTER_CUDA_API RodSpireSection<CudaRigid3dTypes>;
     template class SOFA_BEAMADAPTER_CUDA_API RodStraightSection<CudaRigid3dTypes>;
 #endif
-} // namespace sofa::beamadapter
+#ifdef SOFA_GPU_CUDA_DOUBLE
+#endif
+} // namespace beamadapter
 
 
 namespace sofa::gpu::cuda
 {
 
+using namespace beamadapter;
+
 #ifdef SOFA_GPU_CUDA_DOUBLE
 int CudaBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation - Supports GPU-side computations using CUDA")
     // .add< sofa::component::fem::BeamInterpolation<CudaRigid3fTypes> >()
-    .add< sofa::component::fem::BeamInterpolation<CudaRigid3dTypes> >()
+    .add< BeamInterpolation<CudaRigid3dTypes> >()
     ;
 #endif
 
 #ifdef SOFA_GPU_CUDA_DOUBLE
 int CudaWireBeamInterpolationClass = core::RegisterObject("Adaptive Wire Beam Interpolation - Supports GPU-side computations using CUDA")
     // .add< sofa::component::fem::WireBeamInterpolation<CudaRigid3fTypes> >()
-    .add< sofa::component::fem::WireBeamInterpolation<CudaRigid3dTypes> >()
+    .add< WireBeamInterpolation<CudaRigid3dTypes> >()
     ;
 #endif
 
 int CudaWireRestShapenClass = core::RegisterObject("Wire Shape - Supports GPU-side computations using CUDA")
-    .add< sofa::component::engine::WireRestShape<CudaRigid3fTypes> >()
+    .add< WireRestShape<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::component::engine::WireRestShape<CudaRigid3dTypes> >()
+    .add< WireRestShape<CudaRigid3dTypes> >()
 #endif
     ;
 
 int CudaAdaptiveBeamForceFieldAndMassClass = core::RegisterObject("Adaptive Beam finite elements - Supports GPU-side computations using CUDA")
-    .add< sofa::component::forcefield::AdaptiveBeamForceFieldAndMass<CudaRigid3fTypes> >()
+    .add< AdaptiveBeamForceFieldAndMass<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::component::forcefield::AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes> >()
+    .add< AdaptiveBeamForceFieldAndMass<CudaRigid3dTypes> >()
 #endif
     ;
 
 int CudaInterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology - Supports GPU-side computations using CUDA")
-    .add< sofa::component::controller::InterventionalRadiologyController<CudaRigid3fTypes> >()
+    .add< InterventionalRadiologyController<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::component::controller::InterventionalRadiologyController<CudaRigid3dTypes> >()
+    .add< InterventionalRadiologyController<CudaRigid3dTypes> >()
 #endif
     ;
 
 int CudaAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs - Supports GPU-side computations using CUDA")
-    .add< sofa::component::mapping::AdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types> >()
+    .add< AdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::component::mapping::AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >()
+    .add< AdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >()
 #endif
     ;
 
 int CudaMultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs - Supports GPU-side computations using CUDA")
-    .add< sofa::component::mapping::MultiAdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types> >()
+    .add< MultiAdaptiveBeamMapping<CudaRigid3fTypes, defaulttype::Vec3Types> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::component::mapping::MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >()
+    .add< MultiAdaptiveBeamMapping<CudaRigid3dTypes, defaulttype::Vec3Types> >()
 #endif
     ;
 
 const int CudaRodMeshSectionClass = core::RegisterObject("Class defining a Rod Section using a MeshLoader and material parameters using CUDA.")
-    .add< sofa::beamadapter::RodMeshSection<CudaRigid3fTypes> >()
+    .add< RodMeshSection<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::beamadapter::RodMeshSection<CudaRigid3dTypes> >()
+    .add< RodMeshSection<CudaRigid3dTypes> >()
 #endif
     ;
 
 const int CudaRodSpireSectionClass = core::RegisterObject("Class defining a rod spire section, defining material and geometry parameters using CUDA.")
-    .add< sofa::beamadapter::RodSpireSection<CudaRigid3fTypes> >()
+    .add< RodSpireSection<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::beamadapter::RodSpireSection<CudaRigid3dTypes> >()
+    .add< RodSpireSection<CudaRigid3dTypes> >()
 #endif
 ;
 
 const int CudaRodStraightSectionClass = core::RegisterObject("Class defining a rod straight section Material, defining material and geometry parameters using CUDA.")
-    .add< sofa::beamadapter::RodStraightSection<CudaRigid3fTypes> >()
+    .add< RodStraightSection<CudaRigid3fTypes> >()
 #ifdef SOFA_GPU_CUDA_DOUBLE
-    .add< sofa::beamadapter::RodStraightSection<CudaRigid3dTypes> >()
+    .add< RodStraightSection<CudaRigid3dTypes> >()
 #endif
 ;
 
