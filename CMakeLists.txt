@@ -12,7 +12,6 @@ sofa_find_package(Sofa.Component.Topology.Mapping REQUIRED)
 sofa_find_package(Sofa.Component.Collision.Geometry REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
-sofa_find_package(SofaImplicitField QUIET)
 sofa_find_package(SofaAdvancedConstraint QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
@@ -107,17 +106,6 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/model/RodStraightSection.cpp
 )
 
-if(SofaImplicitField_FOUND)
-    set(HEADER_FILES ${HEADER_FILES}
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.h
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
-        )
-
-    set(SOURCE_FILES ${SOURCE_FILES}
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
-        )
-endif()
-
 if(SofaAdvancedConstraint_FOUND)
     set(HEADER_FILES ${HEADER_FILES}
         ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.h
@@ -146,9 +134,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core)
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.StateContainer Sofa.Component.Controller Sofa.Component.Topology.Container.Dynamic Sofa.Component.Topology.Mapping)
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.Collision.Geometry Sofa.Component.Constraint.Lagrangian Sofa.Component.Constraint.Projective)
 
-if(SofaImplicitField_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SofaImplicitField)
-endif()
 if(SofaAdvancedConstraint_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
 endif()

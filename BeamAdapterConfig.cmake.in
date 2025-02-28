@@ -2,7 +2,6 @@
 
 @PACKAGE_INIT@
 
-set(BEAMADAPTER_HAVE_SOFAIMPLICITFIELD @BEAMADAPTER_HAVE_SOFAIMPLICITFIELD@)
 set(BEAMADAPTER_HAVE_SOFADVANCEDCONSTRAINT @BEAMADAPTER_HAVE_SOFADVANCEDCONSTRAINT@)
 set(BEAMADAPTER_HAVE_SOFACUDA @BEAMADAPTER_HAVE_SOFACUDA@)
 
@@ -14,10 +13,6 @@ find_package(Sofa.Component.Topology.Mapping QUIET REQUIRED)
 find_package(Sofa.Component.Collision.Geometry QUIET  REQUIRED)
 find_package(Sofa.Component.Constraint.Projective QUIET REQUIRED)
 find_package(Sofa.Component.Constraint.Lagrangian QUIET REQUIRED)
-
-if(BEAMADAPTER_HAVE_SOFAIMPLICITFIELD)
-    find_package(SofaImplicitField QUIET REQUIRED)
-endif()
 
 if(BEAMADAPTER_HAVE_SOFADVANCEDCONSTRAINT)
     find_package(SofaAdvancedConstraint QUIET REQUIRED)
