@@ -45,11 +45,9 @@ using sofa::component::statecontainer::MechanicalObject ;
 
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
-using sofa::component::fem::WireBeamInterpolation ;
 
 
-namespace sofa
+namespace beamadapter
 {
 
 template <typename DataTypes>
@@ -59,14 +57,14 @@ struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationT
         simulation::Simulation* simu = sofa::simulation::getSimulation();
         assert(simu);
 
-        typename AdaptiveBeamSlidingConstraint<DataTypes>::SPtr thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();
+        auto thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();
         thisObject->setName("myname");
         EXPECT_TRUE(thisObject->getName() == "myname");
         EXPECT_TRUE(thisObject->findLink("interpolation") != nullptr );
 
         Node::SPtr node = simu->createNewGraph("root");
-        typename MechanicalObject<DataTypes>::SPtr mecaobject = New<MechanicalObject<DataTypes> >();
-        typename WireBeamInterpolation<DataTypes>::SPtr interpolation = New<WireBeamInterpolation<DataTypes> >();
+        auto mecaobject = New<MechanicalObject<DataTypes> >();
+        auto interpolation = New<WireBeamInterpolation<DataTypes> >();
 
         interpolation->findData("name")->read("wireInterpolation");
         node->addObject(mecaobject);

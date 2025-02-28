@@ -26,15 +26,7 @@
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
 
-namespace sofa::component::constraintset
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptiveBeamSlidingConstraint_
+namespace beamadapter
 {
 
 using sofa::core::behavior::PairInteractionConstraint ;
@@ -45,19 +37,7 @@ using sofa::defaulttype::SolidTypes ;
 using sofa::linearalgebra::BaseVector ;
 using sofa::core::objectmodel::Data ;
 using sofa::type::Vec ;
-using sofa::component::fem::WireBeamInterpolation ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*!
- * \class AdaptiveBeamSlidingConstraint
- * @brief AdaptiveBeamSlidingConstraint Class constrain a rigid to be attached to a beam (only in position, not the orientation)
- *
- * More informations about SOFA components:
- * https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/
- * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
- */
 template<class DataTypes>
 class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint : public PairInteractionConstraint<DataTypes>
 {
@@ -204,10 +184,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamSlidingConstraint<defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _adaptiveBeamSlidingConstraint_
-
-/// 'Export' the objects defined in the private namespace into the 'public' one so that
-/// we can use them instead as sofa::component::constraintset::AdaptiveBeamSlidingConstraint.
-using _adaptiveBeamSlidingConstraint_::AdaptiveBeamSlidingConstraint ;
-
-} // namespace sofa::component::constraintset
+} // namespace beamadapter

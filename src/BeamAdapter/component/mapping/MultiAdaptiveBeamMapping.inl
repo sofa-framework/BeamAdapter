@@ -39,7 +39,7 @@
 #include <sofa/helper/ScopedAdvancedTimer.h>
 
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
 using sofa::helper::ScopedAdvancedTimer;
@@ -392,7 +392,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     {
         int controledEdgeId = edgeId-nbUnControlledEdges;
         const sofa::type::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
-        sofa::type::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
+        sofa::type::vector< WireBeamInterpolation<In>  *> m_instrumentsList;
         m_ircontroller->getInstrumentList(m_instrumentsList);
         Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
         int idInstrument  = id_instrument_table_on_node[0];
@@ -419,4 +419,4 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::clear(int size)
 }
 
 
-} // namespace sofa::component::mapping
+} // namespace beamadapter

@@ -25,7 +25,7 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template <class DataTypes>
@@ -70,4 +70,4 @@ void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_loca
 }
 
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

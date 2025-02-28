@@ -36,14 +36,11 @@
 #include <BeamAdapter/component/BaseBeamInterpolation.inl>
 
 
-namespace sofa::component::fem::_wirebeaminterpolation_
+namespace beamadapter
 {
 
-using sofa::component::engine::WireRestShape ;
-using namespace sofa::beamadapter;
-
 template <class DataTypes>
-WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape)
+WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes> *_restShape)
     : m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
 {
 
@@ -302,6 +299,4 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
 }
 
 
-} // namespace sofa::component::fem::_wirebeaminterpolation_
-
-
+} // namespace beamadapter

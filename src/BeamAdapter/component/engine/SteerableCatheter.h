@@ -43,7 +43,7 @@
 #include <sofa/core/objectmodel/KeyreleasedEvent.h>
 #include <sofa/simulation/AnimateBeginEvent.h>
 
-namespace sofa::component::engine
+namespace beamadapter
 {
 
 /*!
@@ -116,4 +116,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API SteerableCatheter<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::component::engine
+} // namespace beamadapter

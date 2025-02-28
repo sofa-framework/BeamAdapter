@@ -23,7 +23,7 @@
 
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template <class DataTypes>
@@ -88,4 +88,4 @@ void BaseRodSectionMaterial<DataTypes>::getMechanicalParameters(Real& youngModul
     massDensity = this->d_massDensity.getValue();
 }
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

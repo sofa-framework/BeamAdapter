@@ -24,10 +24,8 @@
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
 
-namespace sofa::component::controller
+namespace beamadapter
 {
-
-using namespace sofa::beamadapter;
 
 template <class DataTypes>
 BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
@@ -158,4 +156,4 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 }
 
 
-} // namespace sofa::component::controller
+} // namespace beamadapter

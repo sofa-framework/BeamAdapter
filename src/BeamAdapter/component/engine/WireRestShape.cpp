@@ -38,20 +38,15 @@
 #include <sofa/defaulttype/RigidTypes.h>
 
 
-namespace sofa::component::engine::_wirerestshape_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::engine::_wirerestshape_
-
-namespace beamadapter
-{
-
 void registerWireRestShape(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Describe the shape functions on multiple segments using curvilinear abscissa")
-                             .add< sofa::component::engine::_wirerestshape_::WireRestShape<sofa::defaulttype::Rigid3Types> >());
+                             .add< WireRestShape<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

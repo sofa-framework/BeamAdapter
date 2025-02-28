@@ -24,7 +24,7 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa::component::constraint
+namespace beamadapter
 {
 
 using namespace sofa::defaulttype;
@@ -42,4 +42,4 @@ template class ImplicitSurfaceAdaptiveConstraint<Rigid3Types>;
 
 #endif  // SOFAEVE
 
-} // namespace sofa::component::constraint
+} // namespace beamadapter

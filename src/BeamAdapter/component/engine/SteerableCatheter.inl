@@ -35,7 +35,7 @@
 
 #include <math.h>
 
-namespace sofa::component::engine
+namespace beamadapter
 {
 
 template <class DataTypes>
