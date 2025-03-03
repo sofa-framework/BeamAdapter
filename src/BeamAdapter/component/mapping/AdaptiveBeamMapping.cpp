@@ -41,7 +41,7 @@
 
 using namespace sofa::defaulttype;
 
-namespace sofa::component::mapping::_adaptivebeammapping_
+namespace beamadapter
 {
 
 using namespace core;
@@ -200,16 +200,11 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::comput
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types>;
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types>;
 
-} // namespace sofa::component::mapping::_adaptivebeammapping_
-
-namespace beamadapter
-{
-
 void registerAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs.")
-                             .add< sofa::component::mapping::_adaptivebeammapping_::AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
-                             .add< sofa::component::mapping::_adaptivebeammapping_::AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >());
+                             .add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
+                             .add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >());
 }
 
 } // namespace beamadapter

@@ -41,10 +41,7 @@
 #define EPSILON 0.0000000001
 #define VERIF 1
 
-namespace sofa::component::engine
-{
-
-namespace _wirerestshape_
+namespace beamadapter
 {
 
 using sofa::type::vector ;
@@ -368,7 +365,4 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q,
 }
 
 
-} // namespace _wirerestshape_
-using _wirerestshape_::WireRestShape;
-
-} // namespace sofa::component::engine
+} // namespace beamadapter

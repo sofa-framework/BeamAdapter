@@ -45,20 +45,7 @@ extern void registerMultiAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
 extern void registerRodMeshSection(sofa::core::ObjectFactory* factory);
 extern void registerRodSpireSection(sofa::core::ObjectFactory* factory);
 extern void registerRodStraightSection(sofa::core::ObjectFactory* factory);
-
-namespace mapping
-{
-
 extern void registerBeamProjectionDifferenceMultiMapping(sofa::core::ObjectFactory* factory);
-
-} // namespace mapping
-
-} // namespace beamadapter
-
-namespace sofa::component
-{
-
-using namespace beamadapter;
 
 extern "C" {
     SOFA_BEAMADAPTER_API void initExternalModule();
@@ -128,7 +115,7 @@ void registerObjects(sofa::core::ObjectFactory* factory)
     registerRodMeshSection(factory);
     registerRodSpireSection(factory);
     registerRodStraightSection(factory);
-    mapping::registerBeamProjectionDifferenceMultiMapping(factory);
+    registerBeamProjectionDifferenceMultiMapping(factory);
 }
 
-} // namespace sofa::component
+} // namespace beamadapter

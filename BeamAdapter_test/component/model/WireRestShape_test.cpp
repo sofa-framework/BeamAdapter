@@ -29,13 +29,12 @@
 #include <BeamAdapter/component/engine/WireRestShape.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
 
-namespace beamadapter_test
+namespace beamadapter
 {
 using namespace sofa::testing;
 using namespace sofa::defaulttype;
 using namespace sofa::type;
 using namespace sofa::core::objectmodel;
-using namespace sofa::component::engine::_wirerestshape_;
 
 class WireRestShape_test : public BaseTest
 {
@@ -305,4 +304,4 @@ TEST_F(WireRestShape_test, test_Transform_methods) {
     testTransformMethods();
 }
 
-} // namespace beamadapter_test
+} // namespace beamadapter

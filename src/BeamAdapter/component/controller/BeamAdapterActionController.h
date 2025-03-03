@@ -29,7 +29,7 @@
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
 
-namespace sofa::component::controller
+namespace beamadapter
 {
 
 /***
@@ -39,12 +39,11 @@ namespace sofa::component::controller
 * Otherwise, it will load a list of @sa BeamActions with their corresponding key times to replay a navigation. 
 */
 template<class DataTypes>
-class BeamAdapterActionController : public MechanicalStateController<DataTypes>
+class BeamAdapterActionController : public sofa::component::controller::MechanicalStateController<DataTypes>
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(BeamAdapterActionController, DataTypes), SOFA_TEMPLATE(MechanicalStateController, DataTypes));
+    SOFA_CLASS(SOFA_TEMPLATE(BeamAdapterActionController, DataTypes), SOFA_TEMPLATE(sofa::component::controller::MechanicalStateController, DataTypes));
 
-    using BeamAdapterAction = sofa::beamadapter::BeamAdapterAction;
     using interventionCtrl = InterventionalRadiologyController<DataTypes>;
     using Real = typename DataTypes::Real;
 
@@ -83,4 +82,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API BeamAdapterActionController<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace sofa::component::controller
+} // namespace beamadapter

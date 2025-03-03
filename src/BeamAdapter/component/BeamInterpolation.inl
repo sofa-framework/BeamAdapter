@@ -36,7 +36,7 @@
 #include <BeamAdapter/component/BaseBeamInterpolation.inl>
 
 
-namespace sofa::component::fem::_beaminterpolation_
+namespace beamadapter
 {
 
 #define BEAMADAPTER_WITH_VERIFICATION false
@@ -612,5 +612,4 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
 }
 
 
-} // namespace sofa::component::fem::_beaminterpolation_
-
+} // namespace beamadapter

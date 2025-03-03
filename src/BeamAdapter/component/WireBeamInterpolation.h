@@ -49,12 +49,9 @@
 #include <sofa/core/objectmodel/BaseObject.h>
 
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _wirebeaminterpolation_
-{
-using sofa::component::fem::BaseBeamInterpolation;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
 using sofa::type::Vec ;
@@ -95,9 +92,7 @@ public:
     typedef typename Inherited::Vec3 Vec3;
     typedef typename Inherited::Quat Quat;
 
-    using BeamSection = sofa::beamadapter::BeamSection;
-
-    WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
+    WireBeamInterpolation(WireRestShape<DataTypes> *_restShape = nullptr);
 
     virtual ~WireBeamInterpolation() = default;
 
@@ -164,7 +159,7 @@ public:
     void setControlled(bool value) { m_isControlled = value; }
 
 
-    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>,
+    SingleLink<WireBeamInterpolation<DataTypes>, WireRestShape<DataTypes>,
     BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
 
@@ -207,9 +202,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API WireBeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _wirebeaminterpolation_
-
-/// Import the privately defined into the expected sofa namespace.
-using _wirebeaminterpolation_::WireBeamInterpolation ;
-
-} // namespace sofa::component::fem
+} // namespace beamadapter
