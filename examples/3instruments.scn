@@ -85,7 +85,7 @@
             controlledInstrument='0' startingPos='0 0 0 0 -0.7071068 0 0.7071068' speed='2' instruments='InterpolCatheter InterpolGuide InterpolCoils' />
 
 		<FixedProjectiveConstraint name='FixedConstraint' indices='0' />
-        <RestShapeSpringsForceField  indices='@IRController.indexFirstNode' stiffness='1e8' angularStiffness='1e8'   />
+        <FixedWeakConstraint  indices='@IRController.indexFirstNode' stiffness='1e8' angularStiffness='1e8'   />
 
 		<Node name='VisuCatheter' activated='true'>
 			<MechanicalObject name='Quads' />

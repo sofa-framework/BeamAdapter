@@ -45,7 +45,7 @@ def createScene(rootNode):
                                     rotationInstrument=[0, 0, 0], step=0.5, speed=0.5, 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
-    BeamMechanics.addObject('RestShapeSpringsForceField', name="RestSPForceField", indices='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
+    BeamMechanics.addObject('FixedWeakConstraint', name="RestSPForceField", indices='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
     
 
 def main():

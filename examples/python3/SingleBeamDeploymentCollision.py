@@ -54,7 +54,7 @@ def createScene(rootNode):
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
     BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
-    BeamMechanics.addObject('RestShapeSpringsForceField', indices='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
+    BeamMechanics.addObject('FixedWeakConstraint', indices='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
     
 
     BeamCollis = BeamMechanics.addChild('CollisionModel')
