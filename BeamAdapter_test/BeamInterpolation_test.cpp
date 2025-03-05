@@ -55,6 +55,8 @@ using sofa::component::statecontainer::MechanicalObject ;
 using std::string;
 
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
+#include <BeamAdapter/component/BeamInterpolation.h>
+using sofa::component::fem::_beaminterpolation_::BeamInterpolation;
 
 namespace sofa
 {
@@ -71,6 +73,68 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         sofa::simpleapi::importPlugin("BeamAdapter");
     }
     
+    Node::SPtr createSingleBeam()
+    {
+        string scene =
+            "<?xml version='1.0'?>"
+            "<Node 	name='Root' gravity='0 -9.81 0' dt='0.01'>"
+            "    <RequiredPlugin name='Sofa.Component.ODESolver.Backward' />"
+            "    <RequiredPlugin name='Sofa.Component.LinearSolver.Direct' />"
+            "    <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
+            "    <RequiredPlugin name='Sofa.Component.StateContainer' />"
+            "    <RequiredPlugin name='Sofa.Component.Topology.Container.Constant' />"
+            "    <RequiredPlugin name='Sofa.Component.Topology.Container.Grid' />"
+            "    <RequiredPlugin name='BeamAdapter' />"
+            "    <DefaultAnimationLoop />"
+            "    <DefaultVisualManagerLoop />"
+            "    <Node name='BeamModel'/>"
+            "        <EulerImplicitSolver rayleighStiffness='0.0' rayleighMass='0.0' />"
+            "        <BTDLinearSolver />"
+            "        <RegularGridTopology name='MeshLines' nx='200' ny='1' nz='1' xmax='100' xmin='0' ymin='0' ymax='0' zmax='0' zmin='0'/>"
+            "        <MechanicalObject template='Rigid3d' name='DOFs' />"
+            "        <FixedConstraint indices='0' />"
+            "        <BeamInterpolation name='Interpol' radius='0.1'/>"
+            "    </Node> "
+            "</Node> ";
+
+        Node::SPtr root = SceneLoaderXML::loadFromMemory("singleBeam", scene.c_str());
+        sofa::simulation::node::initRoot(root.get());
+
+        return root;
+    }
+
+    void checkDataInitialization(const Data<type::vector<SReal>>& data,
+                                 const SReal& defaultValue,
+                                 const sofa::Size& nbBeam,
+                                 const SReal& value)
+    {
+        const auto& vector = helper::getReadAccessor(data);
+        ASSERT_EQ(vector.size(), nbBeam);
+        for (const auto& v: vector)
+            ASSERT_FLOAT_EQ(v, value);
+        ASSERT_FLOAT_EQ(defaultValue, value);
+    }
+
+    void checkCreation()
+    {
+        Node::SPtr root = createSingleBeam();
+
+        // Search for Beam FF
+        BeamInterpolation<Rigid3dTypes>* beamInterpolation = nullptr;
+        root->getTreeObject(beamInterpolation);
+        ASSERT_NE(beamInterpolation, nullptr);
+
+        sofa::Size nbBeam = 199;
+
+        // Check component state and Data default values
+        checkDataInitialization(beamInterpolation->d_radius, beamInterpolation->m_defaultRadius, nbBeam, 0.1);
+        checkDataInitialization(beamInterpolation->d_innerRadius, beamInterpolation->m_defaultInnerRadius, nbBeam, 0.0);
+        checkDataInitialization(beamInterpolation->d_lengthY, beamInterpolation->m_defaultLengthY, nbBeam, 1.0);
+        checkDataInitialization(beamInterpolation->d_lengthZ, beamInterpolation->m_defaultLengthZ, nbBeam, 1.0);
+        checkDataInitialization(beamInterpolation->d_defaultYoungModulus, beamInterpolation->m_defaultYoungModulus, nbBeam, 1e5);
+        checkDataInitialization(beamInterpolation->d_poissonRatio, beamInterpolation->m_defaultPoissonRatio, nbBeam, 0.4);
+    }
+
     void simpleScene(const std::vector<std::string>& lines)
     {
         assert(lines.size()==3);
@@ -96,7 +160,8 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 
             root->init(core::ExecParams::defaultInstance());
             root->reinit(core::ExecParams::defaultInstance()) ;
-        }else if(lines[2]=="W")
+        }
+        else if(lines[2]=="W")
         {
             EXPECT_MSG_EMIT(Error) ;
             EXPECT_MSG_NOEMIT(Warning) ;
@@ -109,6 +174,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         }
     }
 };
+
 
 static std::vector<std::vector<std::string>> teststrings ={
     {
@@ -141,6 +207,10 @@ static std::vector<std::vector<std::string>> teststrings ={
 
 TEST_P(BeamInterpolationTest, checkMinimalScene) {
     ASSERT_NO_THROW(this->simpleScene(GetParam())) ;
+}
+
+TEST_F(BeamInterpolationTest, checkCreation) {
+    ASSERT_NO_THROW(this->checkCreation());
 }
 
 INSTANTIATE_TEST_SUITE_P(checkMinimalScene,

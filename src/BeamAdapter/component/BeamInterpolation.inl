@@ -58,7 +58,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
   , m_defaultRadius(Real(1.0))
   , d_radius(initData(&d_radius, type::vector<Real>(1, m_defaultRadius), "radius", "radius of the beam (if circular cross-section is considered)"))
 
-  , m_defaultInnerRadius(Real(1.0))
+  , m_defaultInnerRadius(Real(0.0))
   , d_innerRadius(initData(&d_innerRadius, type::vector<Real>(1, m_defaultInnerRadius), "innerRadius", "inner radius of the beam if it applies"))
 
   , d_sideLength(initData(&d_sideLength, Real(1.0), "sideLength", "side length of the beam (if square cross-section is considered)"))
