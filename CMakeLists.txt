@@ -12,8 +12,6 @@ sofa_find_package(Sofa.Component.Topology.Mapping REQUIRED)
 sofa_find_package(Sofa.Component.Collision.Geometry REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Projective REQUIRED)
 sofa_find_package(Sofa.Component.Constraint.Lagrangian REQUIRED)
-sofa_find_package(SofaImplicitField QUIET)
-sofa_find_package(SofaAdvancedConstraint QUIET)
 
 set(BEAMADAPTER_SRC "src/${PROJECT_NAME}")
 
@@ -107,51 +105,11 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/model/RodStraightSection.cpp
 )
 
-if(SofaImplicitField_FOUND)
-    set(HEADER_FILES ${HEADER_FILES}
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.h
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.inl
-        )
-
-    set(SOURCE_FILES ${SOURCE_FILES}
-        ${BEAMADAPTER_SRC}/component/constraint/ImplicitSurfaceAdaptiveConstraint.cpp
-        )
-endif()
-
-if(SofaAdvancedConstraint_FOUND)
-    set(HEADER_FILES ${HEADER_FILES}
-        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.h
-        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.inl
-#        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.h
-#        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.inl
-        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.h
-        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.inl
-        )
-
-    set(SOURCE_FILES ${SOURCE_FILES}
-        ${BEAMADAPTER_SRC}/component/AdaptiveBeamContactMapper.cpp
-        ${BEAMADAPTER_SRC}/component/AdaptiveBeamFrictionContact.cpp
-        ${BEAMADAPTER_SRC}/component/MultiAdaptiveBeamContactMapper.cpp
-        )
-
-    #find_package(CUDA REQUIRED)
-    #cuda_include_directories(${SOFA_CUDA_DIR})
-    #cuda_include_directories(${SOFA_FRAMEWORK_DIR})
-    #cuda_add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${CUDA_SOURCES})
-endif()
-
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Simulation.Core)
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.StateContainer Sofa.Component.Controller Sofa.Component.Topology.Container.Dynamic Sofa.Component.Topology.Mapping)
 target_link_libraries(${PROJECT_NAME} PUBLIC Sofa.Component.Collision.Geometry Sofa.Component.Constraint.Lagrangian Sofa.Component.Constraint.Projective)
-
-if(SofaImplicitField_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SofaImplicitField)
-endif()
-if(SofaAdvancedConstraint_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SofaAdvancedConstraint)
-endif()
 
 sofa_create_package_with_targets(
     PACKAGE_NAME ${PROJECT_NAME}
@@ -170,19 +128,6 @@ if(BEAMADAPTER_BUILD_TESTS)
     enable_testing()
     add_subdirectory(${PROJECT_NAME}_test)
 endif()
-
-
-# this paragraph has not been ported to the new build system yet...
-#if(SOFA-PLUGIN_SOFAADVANCEDCONSTRAINT)
-    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
-    #list(APPEND LINKER_DEPENDENCIES SofaCUDA)
-    #list(APPEND LINKER_DEPENDENCIES SofaCUDADev)
-    #set(LINKER_DEPENDENCIES SofaAdvancedConstraint)
-#endif()
-
-# Organize projects into folders
-SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER "plugins")
 
 # Config files and install rules for pythons scripts
 sofa_install_pythonscripts(PLUGIN_NAME ${PROJECT_NAME} PYTHONSCRIPTS_SOURCE_DIR "examples/python3")
