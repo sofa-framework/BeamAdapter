@@ -1,15 +1,5 @@
 var hierarchy =
 [
-    [ "BaseContactMapper", null, [
-      [ "AdaptiveBeamContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html", [
-        [ "ContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4.html", null ]
-      ] ],
-      [ "MultiAdaptiveBeamContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", [
-        [ "ContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html", null ]
-      ] ],
-      [ "AdaptiveBeamContactMapper< TCollisionModel, DataTypes >", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html", null ],
-      [ "MultiAdaptiveBeamContactMapper< TCollisionModel, DataTypes >", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", null ]
-    ] ],
     [ "BaseObject", null, [
       [ "BaseRodSectionMaterial< DataTypes >", "classsofa_1_1beamadapter_1_1_base_rod_section_material.html", [
         [ "RodMeshSection< DataTypes >", "classsofa_1_1beamadapter_1_1_rod_mesh_section.html", null ],
@@ -29,10 +19,6 @@ var hierarchy =
     [ "BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html", null ],
     [ "BeamLocalMatrices", "classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_ia5c9c0085fb1a64db4499a843dafea79.html", null ],
     [ "BeamSection", "structsofa_1_1beamadapter_1_1_beam_section.html", null ],
-    [ "ConstraintResolution", null, [
-      [ "ImplicitSurfaceAdaptiveConstraintResolution< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
-    ] ],
-    [ "ContactMapper", "class_contact_mapper.html", null ],
     [ "IntervalDefinition< Real >", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_interval_definition.html", null ],
     [ "Mapping", null, [
       [ "MultiAdaptiveBeamMapping< TIn, TOut >", "classsofa_1_1component_1_1mapping_1_1_multi_adaptive_beam_mapping.html", null ]
@@ -48,9 +34,6 @@ var hierarchy =
     ] ],
     [ "Multi2Mapping", null, [
       [ "BeamProjectionDifferenceMultiMapping< TIn1, TIn2, TOut >", "classbeamadapter_1_1mapping_1_1_beam_projection_difference_multi_mapping.html", null ]
-    ] ],
-    [ "PairInteractionConstraint", null, [
-      [ "ImplicitSurfaceAdaptiveConstraint< DataTypes >", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", null ]
     ] ],
     [ "PosPointDefinition", "structsofa_1_1component_1_1mapping_1_1__adaptivebeammapping___1_1_adaptive_beam_mapping_1_1_pos_point_definition.html", null ],
     [ "ProjectionSearch< DataTypes >", "classsofa_1_1component_1_1constraintset_1_1__adaptive_beam_sliding_constraint___1_1_projection_search.html", null ],

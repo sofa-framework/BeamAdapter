@@ -1,5 +1,0 @@
-var classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint =
-[
-    [ "ImplicitSurfaceAdaptiveConstraint", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html#a3c99d3eb200944c9f9d5dd569bfde612", null ],
-    [ "m_contactSurface", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html#a85cda153533a7f2b6afda362c1f7d090", null ]
-];

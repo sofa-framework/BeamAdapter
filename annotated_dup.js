@@ -14,18 +14,6 @@ var annotated_dup =
         [ "RodStraightSection", "classsofa_1_1beamadapter_1_1_rod_straight_section.html", "classsofa_1_1beamadapter_1_1_rod_straight_section" ]
       ] ],
       [ "component", null, [
-        [ "collision", null, [
-          [ "AdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper.html", "classsofa_1_1component_1_1collision_1_1_adaptive_beam_contact_mapper" ],
-          [ "ContactMapper< BSplineModel< 1 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_011_01_4_00_01_data_types_01_4.html", null ],
-          [ "ContactMapper< BSplineModel< 2 >, DataTypes >", "classsofa_1_1component_1_1collision_1_1_contact_mapper_3_01_b_spline_model_3_012_01_4_00_01_data_types_01_4.html", null ],
-          [ "MultiAdaptiveBeamContactMapper", "classsofa_1_1component_1_1collision_1_1_multi_adaptive_beam_contact_mapper.html", null ]
-        ] ],
-        [ "constraint", null, [
-          [ "_implicitsurfaceadaptiveconstraint_", null, [
-            [ "ImplicitSurfaceAdaptiveConstraint", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint.html", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surface_adaptive_constraint" ],
-            [ "ImplicitSurfaceAdaptiveConstraintResolution", "classsofa_1_1component_1_1constraint_1_1__implicitsurfaceadaptiveconstraint___1_1_implicit_surfa1356ca7fd440062f64bc429b52b78571.html", null ]
-          ] ]
-        ] ],
         [ "constraintset", "namespacesofa_1_1component_1_1constraintset.html", [
           [ "_adaptivebeamlengthconstraint_", "namespacesofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint__.html", [
             [ "AdaptiveBeamLengthConstraint", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint.html", "classsofa_1_1component_1_1constraintset_1_1__adaptivebeamlengthconstraint___1_1_adaptive_beam_length_constraint" ],
@@ -86,6 +74,5 @@ var annotated_dup =
         ] ],
         [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
       ] ]
-    ] ],
-    [ "ContactMapper", "class_contact_mapper.html", null ]
+    ] ]
 ];

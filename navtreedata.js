@@ -111,8 +111,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_adaptive_beam_contact_mapper_8h_source.html",
-"classsofa_1_1component_1_1forcefield_1_1___adaptive_inflatable_beam_force_field___1_1_adaptive_inflatable_beam_force_field.html#a29b38cbe6228f118a7fb4d51854cd459"
+"_adaptive_beam_controller_8h_source.html",
+"classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#acb1eb5dcea202f5698034b75e86aaff3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
