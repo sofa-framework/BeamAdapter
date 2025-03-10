@@ -40,21 +40,15 @@
 /// Have a look a the end of BeamInterpolation.h
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
-
-namespace sofa::component::fem::_beaminterpolation_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API BeamInterpolation<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::fem::_beaminterpolation_
-
-namespace beamadapter
-{
-
 void registerBeamInterpolation(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam Interpolation")
-                             .add< sofa::component::fem::_beaminterpolation_::BeamInterpolation<sofa::defaulttype::Rigid3Types> >());
+                             .add< BeamInterpolation<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

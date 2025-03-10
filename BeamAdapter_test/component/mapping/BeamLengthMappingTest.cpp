@@ -39,8 +39,11 @@ using sofa::simulation::SceneLoaderXML ;
 using sofa::simulation::Node ;
 using sofa::component::statecontainer::MechanicalObject ;
 
-namespace sofa {
-  namespace { // anonymous namespace
+
+namespace beamadapter_test
+{
+
+using namespace beamadapter;
 using namespace core;
 using namespace component;
 using type::Vec;
@@ -256,7 +259,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
 // Define the list of types to instanciate. We do not necessarily need to test all combinations.
 using ::testing::Types;
 typedef Types<
-mapping::_beamlengthmapping_::BeamLengthMapping<defaulttype::Rigid3dTypes,defaulttype::Vec1dTypes>
+BeamLengthMapping<defaulttype::Rigid3dTypes,defaulttype::Vec1dTypes>
 //,mapping::_beamlengthmapping_::BeamLengthMapping<defaulttype::Rigid3fTypes,defaulttype::Vec1fTypes>
 > DataTypes; // the types to instanciate.
 
@@ -278,5 +281,4 @@ TYPED_TEST( BeamLengthMappingTest , DISABLED_testCase2 )
     ASSERT_TRUE(this->testCase2());
 }
 
-  }// anonymous namespace
-  }//sofa
+}

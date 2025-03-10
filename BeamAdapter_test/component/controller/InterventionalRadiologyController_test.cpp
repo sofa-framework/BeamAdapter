@@ -35,7 +35,7 @@ using namespace sofa::testing;
 using namespace sofa::defaulttype;
 using namespace sofa::type;
 using namespace sofa::core::objectmodel;
-using namespace sofa::component::controller::_interventionalradiologycontroller_;
+using namespace beamadapter;
 
 class InterventionalRadiologyController_test : public BaseTest
 {

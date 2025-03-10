@@ -38,20 +38,15 @@
 #include <sofa/defaulttype/RigidTypes.h>
 
 
-namespace sofa::component::engine
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API SteerableCatheter<sofa::defaulttype::Rigid3Types>;
 
-}// namespace sofa::component::engine
-
-namespace beamadapter
-{
-
 void registerSteerableCatheter(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Catheter object with a flexible tip based on WireRestShape")
-                             .add< sofa::component::engine::SteerableCatheter<sofa::defaulttype::Rigid3Types> >());
+                             .add< SteerableCatheter<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

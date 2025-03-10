@@ -50,13 +50,7 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////DECLARATIONS /////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::controller
-{
-
-namespace _suturecontroller_
+namespace beamadapter
 {
 
 using std::set ;
@@ -68,7 +62,6 @@ using sofa::defaulttype::SolidTypes ;
 using sofa::core::topology::TopologyContainer ;
 using sofa::core::CollisionModel ;
 using sofa::core::topology::BaseMeshTopology ;
-using sofa::component::fem::WireBeamInterpolation;
 using sofa::simulation::mechanicalvisitor::MechanicalProjectPositionAndVelocityVisitor;
 using sofa::simulation::mechanicalvisitor::MechanicalPropagateOnlyPositionAndVelocityVisitor;
 
@@ -79,11 +72,11 @@ using sofa::simulation::mechanicalvisitor::MechanicalPropagateOnlyPositionAndVel
  * Provides a Mouse & Keyboard user control on an EdgeSet Topology.
  */
 template<class DataTypes>
-class SutureController : public MechanicalStateController<DataTypes>
+class SutureController : public sofa::component::controller::MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(SutureController, DataTypes),
-               SOFA_TEMPLATE(MechanicalStateController, DataTypes));
+               SOFA_TEMPLATE(sofa::component::controller::MechanicalStateController, DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -247,8 +240,4 @@ private:
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP)
 extern template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 #endif
-} /// namespace _suturecontroller_
-
-using _suturecontroller_::SutureController ;
-
-} /// namespace sofa::component::controller
+} // namespace beamadapter

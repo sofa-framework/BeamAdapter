@@ -38,3 +38,5 @@ namespace beamadapter
     constexpr const char* MODULE_NAME = "@PROJECT_NAME@";
     constexpr const char* MODULE_VERSION = "@PROJECT_VERSION@";
 } // namespace beamadapter
+
+using namespace sofa;
