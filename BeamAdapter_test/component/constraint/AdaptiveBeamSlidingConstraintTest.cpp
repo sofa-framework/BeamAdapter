@@ -45,11 +45,10 @@ using sofa::component::statecontainer::MechanicalObject ;
 
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
-using sofa::component::fem::WireBeamInterpolation ;
 
+using namespace beamadapter;
 
-namespace sofa
+namespace beamadapter_test
 {
 
 template <typename DataTypes>

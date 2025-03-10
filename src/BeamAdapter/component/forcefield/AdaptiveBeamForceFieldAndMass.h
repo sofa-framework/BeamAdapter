@@ -81,7 +81,6 @@ public:
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
     using BInterpolation = BaseBeamInterpolation<DataTypes>;
-    using WireRestShape = WireRestShape<DataTypes>;
     using core::behavior::Mass<DataTypes>::mstate;
 
 protected:
