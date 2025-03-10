@@ -50,30 +50,10 @@
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::forcefield
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _AdaptiveInflatableBeamForceField_
+namespace beamadapter
 {
 
 using sofa::type::vector;
-using sofa::component::engine::WireRestShape ;
-using sofa::component::fem::BeamInterpolation ;
 using sofa::core::behavior::MultiMatrixAccessor ;
 using sofa::core::visual::VisualParams ;
 using sofa::core::behavior::Mass ;
@@ -257,13 +237,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types> ;
 #endif
 
-} /// namespace _AdaptiveInflatableBeamForceField_
-
-
-////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
-/// 'Export' the objects defined in the private namespace into the 'public' one.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-using _AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField ;
-
-
-} /// namespace sofa::component::forcefield
+} // namespace beamadapter

@@ -47,10 +47,7 @@
 #include <sofa/simulation/ParallelForEach.h>
 #include <sofa/simulation/MainTaskSchedulerFactory.h>
 
-namespace sofa::component::mapping
-{
-
-namespace _adaptivebeammapping_
+namespace beamadapter
 {
 
 using sofa::core::State;
@@ -812,6 +809,4 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJTonPoint(unsigned int i, const Deriv
     l_adaptativebeamInterpolation->MapForceOnNodeUsingSpline(pointBeamDistribution.beamId, pointBeamDistribution.baryPoint[0], localPos, x, Fin, FNode0output, FNode1output );
 }
 
-} /// namespace _adaptivebeammapping_
-
-} /// namespace sofa::component::mapping
+} // namespace beamadapter

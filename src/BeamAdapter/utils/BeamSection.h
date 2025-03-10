@@ -22,7 +22,7 @@
 #pragma once
 
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
     struct BeamSection {
         double _r{}; 			///< Radius of the beam section
@@ -35,4 +35,4 @@ namespace sofa::beamadapter
         double _Asz{}; 		    ///< _Asz is the z-direction effective shear area
     };
 
-} // namespace sofa::beamAdapter
+} // namespace beamadapter

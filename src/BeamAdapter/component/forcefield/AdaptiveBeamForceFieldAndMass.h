@@ -40,24 +40,7 @@
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::forcefield
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamforcefieldandmass_
+namespace beamadapter
 {
 
 using sofa::core::behavior::MultiMatrixAccessor;
@@ -97,8 +80,8 @@ public:
     using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
     using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
 
-    using BInterpolation = sofa::component::fem::BaseBeamInterpolation<DataTypes>;
-    using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
+    using BInterpolation = BaseBeamInterpolation<DataTypes>;
+    using WireRestShape = WireRestShape<DataTypes>;
     using core::behavior::Mass<DataTypes>::mstate;
 
 protected:
@@ -218,13 +201,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> ;
 #endif
 
-} /// namespace _adaptivebeamforcefieldandmass_
-
-
-////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
-/// 'Export' the objects defined in the private namespace into the 'public' one.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
-
-
-} /// namespace sofa::component::forcefield
+} // namespace beamadapter

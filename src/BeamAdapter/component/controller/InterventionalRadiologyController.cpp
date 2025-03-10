@@ -40,20 +40,15 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 
-namespace sofa::component::controller::_interventionalradiologycontroller_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::controller::_interventionalradiologycontroller_
-
-namespace beamadapter
-{
-
 void registerInterventionalRadiologyController(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-                             .add< sofa::component::controller::_interventionalradiologycontroller_::InterventionalRadiologyController<sofa::defaulttype::Rigid3Types> >());
+                             .add< InterventionalRadiologyController<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

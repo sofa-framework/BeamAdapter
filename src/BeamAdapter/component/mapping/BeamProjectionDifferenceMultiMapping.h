@@ -38,8 +38,9 @@
 #include <BeamAdapter/config.h>
 
 
-namespace beamadapter::mapping
+namespace beamadapter
 {
+
 using sofa::defaulttype::SolidTypes ;
 using sofa::type::Matrix3;
 using sofa::type::Matrix4;
@@ -165,7 +166,7 @@ public:
     sofa::Data<Real> d_drawSize;
 
     sofa::SingleLink<BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>, sofa::core::topology::BaseMeshTopology, sofa::BaseLink::FLAG_STOREPATH | sofa::BaseLink::FLAG_STRONGLINK> l_in2Topology;
-    sofa::SingleLink<BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>, sofa::component::fem::BeamInterpolation<TIn2>, sofa::BaseLink::FLAG_STOREPATH | sofa::BaseLink::FLAG_STRONGLINK> l_interpolation;
+    sofa::SingleLink<BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>, BeamInterpolation<TIn2>, sofa::BaseLink::FLAG_STOREPATH | sofa::BaseLink::FLAG_STRONGLINK> l_interpolation;
 
     using sofa::core::Multi2Mapping<TIn1, TIn2, TOut>::d_componentState ;
 
@@ -202,4 +203,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API BeamProjectionDifferenceMultiMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types, sofa::defaulttype::Rigid3Types >;
 #endif
 
-} // namespace
+} // namespace beamadapter

@@ -25,7 +25,7 @@
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
 
-namespace sofa::component::fem::_basebeaminterpolation_
+namespace beamadapter
 {
 
 //using sofa::component::engine::WireRestShape ;
@@ -1018,5 +1018,4 @@ void BaseBeamInterpolation<DataTypes>::MapForceOnNodeUsingSpline(unsigned int ed
     FNode1output = DOF1Global_H_local1 * (f2 + f3);
 }
 
-} // namespace sofa::component::fem::_basebeaminterpolation_
-
+} // namespace beamadapter

@@ -39,20 +39,15 @@
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.inl>
 
 
-namespace sofa::component::forcefield::_adaptivebeamforcefieldandmass_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types>;
 
-} // namespace
-
-namespace beamadapter
-{
-
 void registerAdaptiveBeamForceFieldAndMass(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam finite elements")
-                             .add< sofa::component::forcefield::_adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >());
+                             .add< AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

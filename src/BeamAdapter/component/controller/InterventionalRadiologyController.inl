@@ -45,7 +45,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 
 
-namespace sofa::component::controller::_interventionalradiologycontroller_
+namespace beamadapter
 {
 
 using type::vector;
@@ -53,7 +53,6 @@ using core::objectmodel::BaseContext;
 using helper::WriteAccessor;
 using core::objectmodel::KeypressedEvent;
 using core::objectmodel::MouseEvent;
-using namespace sofa::beamadapter;
 
 
 template <class DataTypes>
@@ -374,7 +373,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
 
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter::BeamAdapterAction action)
+void InterventionalRadiologyController<DataTypes>::applyAction(BeamAdapterAction action)
 {
     int id = d_controlledInstrument.getValue();
     if (id >= int(m_instrumentsList.size()))
@@ -1058,7 +1057,7 @@ bool InterventionalRadiologyController<DataTypes>::modifyTopology(void)
 }
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::getInstrumentList(type::vector<fem::WireBeamInterpolation<DataTypes>*>& list)
+void InterventionalRadiologyController<DataTypes>::getInstrumentList(type::vector<WireBeamInterpolation<DataTypes>*>& list)
 {
     list = m_instrumentsList;
 }
@@ -1076,6 +1075,6 @@ int InterventionalRadiologyController<DataTypes>::getTotalNbEdges() const
 }
 
 
-} // namespace sofa::component::controller::_interventionalradiologycontroller_
+} // namespace beamadapter
 
 

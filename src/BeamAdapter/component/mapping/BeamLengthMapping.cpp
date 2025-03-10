@@ -40,23 +40,15 @@
 #include <BeamAdapter/component/mapping/BeamLengthMapping.inl>
 
 
-namespace sofa::component::mapping
-{
-
-namespace _beamlengthmapping_
-{
-    template class SOFA_BEAMADAPTER_API BeamLengthMapping<sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec1Types>;
-}
-
-} // namespace sofa::component::mapping
-
 namespace beamadapter
 {
+
+template class SOFA_BEAMADAPTER_API BeamLengthMapping<sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec1Types>;
 
 void registerBeamLengthMapping(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Compute the lengths of the beams.")
-                             .add< sofa::component::mapping::BeamLengthMapping<sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec1Types> >());
+                             .add< BeamLengthMapping<sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec1Types> >());
 }
 
 } // namespace beamadapter

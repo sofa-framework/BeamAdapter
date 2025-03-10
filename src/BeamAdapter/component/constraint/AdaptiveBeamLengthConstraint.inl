@@ -30,7 +30,7 @@
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
 
 
-namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
+namespace beamadapter
 {
 
 using helper::ReadAccessor;
@@ -98,7 +98,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
     Real alarmLength = m_alarmLength.getValue();
     bool prev_stretch = false;
 
-    fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+    auto* interpolation = m_interpolation.get();
 
     /// storage of the length (and the rest_length)  of the interval being stretched
     ///	length_interval=0.0; //commented to remove compilation warning
@@ -405,4 +405,4 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->restoreLastState();
 }
 
-} // namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
+} // namespace beamadapter

@@ -21,7 +21,7 @@
 ******************************************************************************/
 #pragma once
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
     
     /// \brief Enum class listing all possible actions during Beam navigation
@@ -65,4 +65,4 @@ namespace sofa::beamadapter
             return BeamAdapterAction::NO_ACTION;
     }
 
-} // namespace sofa::beamAdapter
+} // namespace beamadapter

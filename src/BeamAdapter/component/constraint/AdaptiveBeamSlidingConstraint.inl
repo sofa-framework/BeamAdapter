@@ -28,7 +28,7 @@
 #include <sofa/core/behavior/ConstraintResolution.h>
 
 
-namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
+namespace beamadapter
 {
 
 using sofa::core::behavior::ConstraintResolution ;
@@ -544,6 +544,6 @@ bool ProjectionSearch<DataTypes>::testForProjection(Real curvAbs)
 }
 
 
-} // namespace sofa::component::constraintset::_adaptiveBeamSlidingConstraint_
+} // namespace beamadapter
 
 
