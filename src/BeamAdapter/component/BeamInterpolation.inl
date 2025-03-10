@@ -55,17 +55,28 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
                                {"circular","elliptic (not available)","rectangular"},
                                "crossSectionShape",
                                "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
-  , d_radius(initData(&d_radius, Real(1.0), "radius", "radius of the beam (if circular cross-section is considered)"))
-  , d_innerRadius(initData(&d_innerRadius, Real(0.0), "innerRadius", "inner radius of the beam if it applies"))
+  , m_defaultRadius(Real(1.0))
+  , d_radius(initData(&d_radius, type::vector<Real>(1, m_defaultRadius), "radius", "radius of the beam (if circular cross-section is considered)"))
+
+  , m_defaultInnerRadius(Real(0.0))
+  , d_innerRadius(initData(&d_innerRadius, type::vector<Real>(1, m_defaultInnerRadius), "innerRadius", "inner radius of the beam if it applies"))
+
   , d_sideLength(initData(&d_sideLength, Real(1.0), "sideLength", "side length of the beam (if square cross-section is considered)"))
+
   , d_smallRadius(initData(&d_smallRadius, Real(1.0), "smallRadius", "small radius of the beam (if elliptic cross-section is considered)"))
   , d_largeRadius(initData(&d_largeRadius, Real(1.0), "largeRadius", "large radius of the beam (if elliptic cross-section is considered)"))
-  , d_lengthY(initData(&d_lengthY, Real(1.0), "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
-  , d_lengthZ(initData(&d_lengthZ, Real(1.0), "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
+
+  , m_defaultLengthY(Real(1.0))
+  , d_lengthY(initData(&d_lengthY, type::vector<Real>(1, m_defaultLengthY), "lengthY", "length of the beam section along Y (if rectangular cross-section is considered)"))
+
+  , m_defaultLengthZ(Real(1.0))
+  , d_lengthZ(initData(&d_lengthZ, type::vector<Real>(1, m_defaultLengthZ), "lengthZ", "length of the beam section along Z (if rectangular cross-section is considered)"))
+
   , m_defaultYoungModulus(Real(1e5))
-  , m_defaultPoissonRatio(Real(0.4))
   , d_defaultYoungModulus(initData(&d_defaultYoungModulus, type::vector<Real>(1, m_defaultYoungModulus), "defaultYoungModulus",
                                    "value of the young modulus if not defined in an other component"))
+
+  , m_defaultPoissonRatio(Real(0.4))
   , d_poissonRatio(initData(&d_poissonRatio, type::vector<Real>(1, m_defaultPoissonRatio), "defaultPoissonRatio",
                                    "value of the poisson ratio if not defined in an other component"))
   , d_straight(initData(&d_straight,true,"straight","If true, will consider straight beams for the rest position"))  
@@ -78,44 +89,75 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
     
 }
 
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::computeRectangularCrossSectionInertiaMatrix(const Real& Ly, const Real& Lz, BeamSection& section)
+{
+    section._Iy=Ly*Lz*Lz*Lz/12.0;
+    section._Iz=Lz*Ly*Ly*Ly/12.0;
+    section._J=section._Iy + section._Iz;
+    section._A = Ly*Lz;
+
+    section._Asy = 0.0;
+    section._Asz = 0.0;
+}
+
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::computeCircularCrossSectionInertiaMatrix(const Real &r, const Real &rInner, BeamSection &section)
+{
+    section._r = r;
+    section._rInner = rInner;
+
+    section._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
+
+    ///_Iz = M_PI*(r*r*r*r)/4.0;
+    section._Iy = section._Iz ;
+    section._J = section._Iz + section._Iy;
+    section._A = M_PI*(r*r - rInner*rInner);
+
+    section._Asy = 0.0;
+    section._Asz = 0.0;
+}
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 {
-    if ( crossSectionShape.getValue().getSelectedItem() == "elliptic")
+    msg_info() << "Cross section shape:" << crossSectionShape.getValue().getSelectedItem() ;
+    if (m_constantBeam)
     {
-        /* code */
-    }
-    else if ( crossSectionShape.getValue().getSelectedItem() == "rectangular" )
-    {
-        Real Ly = d_lengthY.getValue();
-        Real Lz = d_lengthZ.getValue();
-
-        m_constantSection._Iy=Ly*Lz*Lz*Lz/12.0;
-        m_constantSection._Iz=Lz*Ly*Ly*Ly/12.0;
-        m_constantSection._J=m_constantSection._Iy + m_constantSection._Iz;
-        m_constantSection._A = Ly*Lz;
-
-        m_constantSection._Asy = 0.0;
-        m_constantSection._Asz = 0.0;
+        if ( crossSectionShape.getValue().getSelectedItem() == "elliptic")
+        {
+            /* code */
+        }
+        else if ( crossSectionShape.getValue().getSelectedItem() == "rectangular" )
+        {
+            computeRectangularCrossSectionInertiaMatrix(m_defaultLengthY, m_defaultLengthZ, m_constantSection);
+        }
+        else
+        {
+            computeCircularCrossSectionInertiaMatrix(m_defaultRadius, m_defaultInnerRadius, m_constantSection);
+        }
     }
     else
     {
-        msg_info() << "Cross section shape." << crossSectionShape.getValue().getSelectedItem() ;
-        m_constantSection._r = d_radius.getValue();
-        m_constantSection._rInner = d_innerRadius.getValue();
-
-        double r = d_radius.getValue();
-        double rInner = d_innerRadius.getValue();
-        m_constantSection._Iz = M_PI*(r*r*r*r - rInner*rInner*rInner*rInner)/4.0;
-
-        ///_Iz = M_PI*(r*r*r*r)/4.0;
-        m_constantSection._Iy = m_constantSection._Iz ;
-        m_constantSection._J = m_constantSection._Iz + m_constantSection._Iy;
-        m_constantSection._A = M_PI*(r*r - rInner*rInner);
-
-        m_constantSection._Asy = 0.0;
-        m_constantSection._Asz = 0.0;
+        Size nbEdges = this->m_topology->getNbEdges();
+        m_section.resize(nbEdges);
+        if ( crossSectionShape.getValue().getSelectedItem() == "elliptic")
+        {
+            /* code */
+        }
+        else if ( crossSectionShape.getValue().getSelectedItem() == "rectangular" )
+        {
+            const auto& lengthY = helper::getReadAccessor(d_lengthY);
+            const auto& lengthZ = helper::getReadAccessor(d_lengthZ);
+            for (int beamId=0; beamId<nbEdges; beamId++)
+                computeRectangularCrossSectionInertiaMatrix(lengthY[beamId], lengthZ[beamId], m_section[beamId]);
+        }
+        else
+        {   const auto& radius = helper::getReadAccessor(d_radius);
+            const auto& innerRadius = helper::getReadAccessor(d_innerRadius);
+            for (int beamId=0; beamId<nbEdges; beamId++)
+                computeCircularCrossSectionInertiaMatrix(radius[beamId], innerRadius[beamId], m_section[beamId]);
+        }
     }
 }
 
@@ -124,7 +166,31 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::init()
 {
-    computeCrossSectionInertiaMatrix();
+}
+
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::checkDataSize(Real& defaultValue, Data<type::vector<Real>>& dataList, const size_t& nbEdges)
+{
+    auto values = sofa::helper::getWriteOnlyAccessor(dataList);
+    if (values.size() != nbEdges)
+    {
+        Real value = defaultValue;
+        if (values.size() == 0)
+        {
+            msg_warning() << "Empty data field for " << dataList.getName() <<". Set default " << value;
+        } else
+        {
+            value = values[0];
+        }
+        values.resize(nbEdges);
+        for (auto& _value: values)
+            _value = value;
+    }
+    else
+    {
+        m_constantBeam = false;
+    }
+    defaultValue = values[0]; // if the sizes mismatch again at runtime, will use this default value
 }
 
 template <class DataTypes>
@@ -137,36 +203,13 @@ void BeamInterpolation<DataTypes>::bwdInit()
         return;
 
     Size nbEdges = this->m_topology->getNbEdges();
-    auto youngModulus = sofa::helper::getWriteOnlyAccessor(d_defaultYoungModulus);
-    if (youngModulus.size() != nbEdges)
-    {
-        Real value = m_defaultYoungModulus;
-        if (youngModulus.size() == 0){
-            msg_warning() << "Empty data field for " << d_defaultYoungModulus.getName() <<". Set default " << value;
-        } else {
-            value = youngModulus[0];
-        }
-        youngModulus.resize(nbEdges);
-        for (auto& beamYoungModulus: youngModulus)
-            beamYoungModulus = value;
-    }
-    m_defaultYoungModulus = youngModulus[0]; // if the sizes mismatch again at runtime, will use this default value
-
-    auto poissonRatio = sofa::helper::getWriteOnlyAccessor(d_poissonRatio);
-    if (poissonRatio.size() != nbEdges)
-    {
-        Real value = m_defaultPoissonRatio;
-        if (poissonRatio.size() == 0){
-            msg_warning() << "Empty data field for " << d_poissonRatio.getName() << ". Set default " << value;
-        } else {
-            value = poissonRatio[0];
-        }
-        poissonRatio.resize(nbEdges);
-        for (auto& beamPoissonRatio: poissonRatio)
-            beamPoissonRatio = value;
-    }
-    m_defaultPoissonRatio = poissonRatio[0]; // if the sizes mismatch again at runtime, will use this default value
-
+    checkDataSize(m_defaultRadius, d_radius, nbEdges);
+    checkDataSize(m_defaultInnerRadius, d_innerRadius, nbEdges);
+    checkDataSize(m_defaultLengthY, d_lengthY, nbEdges);
+    checkDataSize(m_defaultLengthZ, d_lengthZ, nbEdges);
+    checkDataSize(m_defaultYoungModulus, d_defaultYoungModulus, nbEdges);
+    checkDataSize(m_defaultPoissonRatio, d_poissonRatio, nbEdges);
+    computeCrossSectionInertiaMatrix();
 
     if (!interpolationIsAlreadyInitialized())
     {
@@ -359,9 +402,6 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
 }
 
 
-
-
-
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getSamplingParameters(type::vector<Real>& /*xP_noticeable*/, type::vector< int>& /*nbP_density*/)
 {
@@ -401,12 +441,14 @@ void BeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId
 {
     /// get the length of the beam:
     _L = this->d_lengthList.getValue()[beamId];
-    _A = m_constantSection._A;
-    _Iy = m_constantSection._Iy;
-    _Iz = m_constantSection._Iz;
-    _Asy = m_constantSection._Asy;
-    _Asz = m_constantSection._Asz;
-    _J = m_constantSection._J;
+
+    const auto& section = getBeamSection(beamId);
+    _A = section._A;
+    _Iy = section._Iy;
+    _Iz = section._Iz;
+    _Asy = section._Asy;
+    _Asz = section._Asz;
+    _J = section._J;
 }
 
 
@@ -414,22 +456,10 @@ template<class DataTypes>
 void BeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity)
 {
     const auto& defaultYoungModuli = d_defaultYoungModulus.getValue();
-    if (beamId < int(defaultYoungModuli.size())) {
-
-        youngModulus = defaultYoungModuli[beamId];
-    }
-    else {
-        youngModulus = m_defaultYoungModulus;
-    }
+    youngModulus = (beamId < int(defaultYoungModuli.size()))? defaultYoungModuli[beamId]: m_defaultYoungModulus;
 
     const auto& poissonRatios = d_poissonRatio.getValue();
-    if (beamId < int(poissonRatios.size())) {
-
-        cPoisson = poissonRatios[beamId];
-    }
-    else {
-        cPoisson = m_defaultPoissonRatio;
-    }
+    cPoisson = (beamId < int(defaultYoungModuli.size()))? poissonRatios[beamId]: m_defaultPoissonRatio;
 
     //TODO: massDensity??
 }

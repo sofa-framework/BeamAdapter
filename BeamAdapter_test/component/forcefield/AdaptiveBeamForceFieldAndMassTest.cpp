@@ -126,7 +126,12 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         // Check component state and Data default values
         ASSERT_EQ(beamForceFieldMass->d_componentState.getValue(), sofa::core::objectmodel::ComponentState::Valid);
         ASSERT_EQ(beamForceFieldMass->d_computeMass.getValue(), true);
-        ASSERT_FLOAT_EQ(beamForceFieldMass->d_massDensity.getValue(), 10.0);
+
+        const auto& massDensity = helper::getReadAccessor(beamForceFieldMass->d_massDensity);
+        ASSERT_EQ(massDensity.size(), 199);
+        for (const auto& m: massDensity)
+            ASSERT_FLOAT_EQ(m, 10.0);
+        ASSERT_FLOAT_EQ(beamForceFieldMass->m_defaultMassDensity, 10.0);
         ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighMass.getValue(), 0.0);
         ASSERT_FLOAT_EQ(beamForceFieldMass->rayleighStiffness.getValue(), 0.0);
     }
