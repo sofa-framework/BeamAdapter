@@ -31,24 +31,7 @@
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::constraintset
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamlengthconstraint_
+namespace beamadapter
 {
 using sofa::core::behavior::ConstraintResolution ;
 using sofa::core::behavior::Constraint ;
@@ -153,7 +136,7 @@ protected:
     Data<Real>             m_constrainedLength ;
     Data<Real>             m_maxBendingAngle ;
     SingleLink<AdaptiveBeamLengthConstraint<DataTypes>,
-               fem::WireBeamInterpolation<DataTypes>,
+               WireBeamInterpolation<DataTypes>,
                BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 private:
@@ -165,8 +148,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamLengthConstraint<defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace _adaptivebeamlengthconstraint_
-
-using _adaptivebeamlengthconstraint_::AdaptiveBeamLengthConstraint ;
-
-} /// namespace sofa::component::constraintset
+} // namespace beamadapter

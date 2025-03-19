@@ -39,20 +39,15 @@
 #include <BeamAdapter/component/forcefield/AdaptiveInflatableBeamForceField.inl>
 
 
-namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
-
-namespace beamadapter
-{
-
 void registerAdaptiveInflatableBeamForceField(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam finite elements")
-                             .add< sofa::component::forcefield::_AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField<sofa::defaulttype::Rigid3Types> >());
+                             .add< AdaptiveInflatableBeamForceField<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

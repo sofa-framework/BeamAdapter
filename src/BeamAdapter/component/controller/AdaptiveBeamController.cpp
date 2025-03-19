@@ -41,22 +41,15 @@
 
 #include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
-namespace sofa::component::controller::_adaptivebeamcontroller_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::controller::_adaptivebeamcontroller_
-
-namespace beamadapter
-{
-
 void registerAdaptiveBeamController(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive beam controller.")
-                             .add< sofa::component::controller::_adaptivebeamcontroller_::AdaptiveBeamController<sofa::defaulttype::Rigid3Types> >());
+                             .add< AdaptiveBeamController<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter
-
-

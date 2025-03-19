@@ -39,20 +39,15 @@
 #include <BeamAdapter/component/controller/SutureController.inl>
 
 
-namespace sofa::component::controller::_suturecontroller_
+namespace beamadapter
 {
 
 template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
 
-} // namespace
-
-namespace beamadapter
-{
-
 void registerSutureController(sofa::core::ObjectFactory* factory)
 {
     factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-                             .add< sofa::component::controller::_suturecontroller_::SutureController<sofa::defaulttype::Rigid3Types> >());
+                             .add< SutureController<sofa::defaulttype::Rigid3Types> >());
 }
 
 } // namespace beamadapter

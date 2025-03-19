@@ -39,11 +39,9 @@
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _basebeaminterpolation_
-{
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
 using sofa::type::Vec ;
@@ -83,8 +81,6 @@ public:
     using EdgeID = BaseMeshTopology::EdgeID;
     using VecEdgeID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
-
-    using BeamSection = sofa::beamadapter::BeamSection;
 
     BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr*/);
 
@@ -245,9 +241,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API BaseBeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _basebeaminterpolation_
-
-/// Import the privately defined into the expected sofa namespace.
-using _basebeaminterpolation_::BaseBeamInterpolation ;
-
-} // namespace sofa::component::fem
+} // namespace beamadapter

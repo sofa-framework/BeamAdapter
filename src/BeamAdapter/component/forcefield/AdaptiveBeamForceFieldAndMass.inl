@@ -42,10 +42,7 @@
 #include <sofa/helper/ScopedAdvancedTimer.h>
 
 
-namespace sofa::component::forcefield
-{
-
-namespace _adaptivebeamforcefieldandmass_
+namespace beamadapter
 {
 
 /* ************* ADAPTIVE FORCEFIELD_AND_MASS ************** */
@@ -823,6 +820,4 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::drawElement(const VisualParams *v
 }
 
 
-} /// namespace _adaptivebeamforcefieldandmass_
-
-} /// namespace sofa::component::forcefield
+} // namespace beamadapter

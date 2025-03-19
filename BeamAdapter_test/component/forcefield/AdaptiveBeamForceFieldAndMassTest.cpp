@@ -30,9 +30,9 @@
 #include <string>
 using std::string;
 
-namespace sofa
+namespace beamadapter_test
 {
-using sofa::component::forcefield::AdaptiveBeamForceFieldAndMass;
+using namespace beamadapter;
 using sofa::component::statecontainer::MechanicalObject;
 using sofa::helper::system::thread::ctime_t;
 

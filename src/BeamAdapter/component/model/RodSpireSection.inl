@@ -25,7 +25,7 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/core/objectmodel/BaseObject.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template <class DataTypes>
@@ -94,4 +94,4 @@ void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, 
     global_H_local.set(SpirePos, newSpireQuat);    
 }
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter
