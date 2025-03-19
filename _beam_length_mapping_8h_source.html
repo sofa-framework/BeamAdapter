@@ -130,204 +130,186 @@ $(document).ready(function(){initNavTree('_beam_length_mapping_8h_source.html','
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// Copyright: See COPYING file that comes with this distribution</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">//</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">//</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#ifndef SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#define SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;sofa/type/vector.h&gt;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;sofa/defaulttype/RigidTypes.h&gt;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;sofa/type/Vec.h&gt;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;sofa/type/Mat.h&gt;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;sofa/core/Mapping.h&gt;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;sofa/core/behavior/MechanicalState.h&gt;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &lt;sofa/core/topology/BaseMeshTopology.h&gt;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;sofa/core/visual/VisualParams.h&gt;</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &lt;sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h&gt;</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &lt;BeamAdapter/config.h&gt;</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &lt;BeamAdapter/component/BeamInterpolation.h&gt;</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#include &lt;BeamAdapter/component/controller/AdaptiveBeamController.h&gt;</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &lt;sofa/linearalgebra/EigenSparseMatrix.h&gt;</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;sofa/type/vector.h&gt;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;sofa/defaulttype/RigidTypes.h&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;sofa/type/Vec.h&gt;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;sofa/type/Mat.h&gt;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;sofa/core/Mapping.h&gt;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;sofa/core/behavior/MechanicalState.h&gt;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;sofa/core/topology/BaseMeshTopology.h&gt;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &lt;sofa/core/visual/VisualParams.h&gt;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h&gt;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &lt;BeamAdapter/config.h&gt;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &lt;BeamAdapter/component/BeamInterpolation.h&gt;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &lt;BeamAdapter/component/controller/AdaptiveBeamController.h&gt;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &lt;sofa/linearalgebra/EigenSparseMatrix.h&gt;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeamadapter.html">beamadapter</a></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>{</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">using namespace </span>sofa::core::objectmodel;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacesofa_1_1component_1_1mapping.html">sofa::component::mapping</a></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>{</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">namespace </span>_beamlengthmapping_</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>{</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">using namespace </span>sofa::component::fem;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">using namespace </span>sofa::core::objectmodel;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">using </span>sofa::core::State ;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">using </span>core::Mapping;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">using </span>sofa::type::Vec;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">using </span>sofa::type::Mat;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keyword">using </span>sofa::core::topology::BaseMeshTopology;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">using </span>defaulttype::SolidTypes;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">using </span>std::pair;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">using </span><a class="code hl_class" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">sofa::component::fem::BeamInterpolation</a>;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">using </span>sofa::type::vector;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">using </span>std::string;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">using </span>core::MechanicalParams;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">using </span>core::ConstraintParams;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">using </span>core::visual::VisualParams;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">using </span>sofa::core::topology::TopologyContainer ;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
-<div class="foldopen" id="foldopen00101" data-start="{" data-end="};">
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">  101</a></span><span class="keyword">class </span><a class="code hl_class" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">BeamLengthMapping</a> : <span class="keyword">public</span> Mapping&lt;TIn, TOut&gt;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    SOFA_CLASS(SOFA_TEMPLATE2(<a class="code hl_class" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">BeamLengthMapping</a>,TIn,TOut),</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>               SOFA_TEMPLATE2(Mapping,TIn,TOut));</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">typedef</span> Mapping&lt;TIn, TOut&gt; Inherit;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keyword">typedef</span> TIn In;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">typedef</span> TOut Out;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Coord::value_type Real          ;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Coord             Coord         ;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Deriv             Deriv         ;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::VecCoord          VecCoord      ;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::VecDeriv          VecDeriv      ;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::MatrixDeriv       OutMatrixDeriv;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::Coord::value_type  InReal       ;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::Deriv              InDeriv      ;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::VecCoord           InVecCoord   ;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::VecDeriv           InVecDeriv   ;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::MatrixDeriv        InMatrixDeriv;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">enum</span> {Nin = In::deriv_total_size, Nout = Out::deriv_total_size };</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">using </span>sofa::core::State ;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">using </span>core::Mapping;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">using </span>sofa::type::Vec;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">using </span>sofa::type::Mat;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">using </span>sofa::core::topology::BaseMeshTopology;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">using </span>defaulttype::SolidTypes;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">using </span>std::pair;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">using </span>sofa::type::vector;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">using </span>std::string;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">using </span>core::MechanicalParams;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">using </span>core::ConstraintParams;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">using </span>core::visual::VisualParams;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">using </span>sofa::core::topology::TopologyContainer ;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
+<div class="foldopen" id="foldopen00079" data-start="{" data-end="};">
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_length_mapping.html">   79</a></span><span class="keyword">class </span><a class="code hl_class" href="classbeamadapter_1_1_beam_length_mapping.html">BeamLengthMapping</a> : <span class="keyword">public</span> Mapping&lt;TIn, TOut&gt;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>{</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    SOFA_CLASS(SOFA_TEMPLATE2(<a class="code hl_class" href="classbeamadapter_1_1_beam_length_mapping.html">BeamLengthMapping</a>,TIn,TOut),</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>               SOFA_TEMPLATE2(Mapping,TIn,TOut));</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">typedef</span> Mapping&lt;TIn, TOut&gt; Inherit;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">typedef</span> TIn In;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">typedef</span> TOut Out;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Coord::value_type Real          ;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Coord             Coord         ;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::Deriv             Deriv         ;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::VecCoord          VecCoord      ;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::VecDeriv          VecDeriv      ;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Out::MatrixDeriv       OutMatrixDeriv;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::Coord::value_type  InReal       ;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::Deriv              InDeriv      ;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::VecCoord           InVecCoord   ;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::VecDeriv           InVecDeriv   ;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> In::MatrixDeriv        InMatrixDeriv;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">enum</span> {Nin = In::deriv_total_size, Nout = Out::deriv_total_size };</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">typedef</span> vector&lt;unsigned int&gt;             VecIndex;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">typedef</span> BaseMeshTopology::EdgeID         ElementID;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">typedef</span> vector&lt;BaseMeshTopology::Edge&gt;   VecEdges    ;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keyword">typedef</span> vector&lt;BaseMeshTopology::EdgeID&gt; VecElementID;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt;InReal&gt;::Transform      Transform       ;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">typedef</span> pair&lt;int, Transform&gt;                        IndexedTransform;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt; InReal&gt;::SpatialVector SpatialVector   ;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TOut&gt;   SparseMatrixEigen;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TIn&gt;    SparseKMatrixEigen;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">typedef</span> Vec&lt;3, Real&gt;   Vec3;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">typedef</span> Vec&lt;6, Real&gt;   Vec6;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">typedef</span> Mat&lt;3,3,Real&gt;  Mat3;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">typedef</span> Mat&lt;3,6,Real&gt;  Mat3x6;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">typedef</span> Mat&lt;3,12,Real&gt; Mat3x12;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keyword">typedef</span> Mat&lt;12,3,Real&gt; Mat12x3;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">typedef</span> Mat&lt;6,12,Real&gt; Mat6x12;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">typedef</span> Mat&lt;12,6,Real&gt; Mat12x6;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">typedef</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;TIn&gt;</a> BInterpolation;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">typedef</span> vector&lt;unsigned int&gt;             VecIndex;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">typedef</span> BaseMeshTopology::EdgeID         ElementID;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keyword">typedef</span> vector&lt;BaseMeshTopology::Edge&gt;   VecEdges    ;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">typedef</span> vector&lt;BaseMeshTopology::EdgeID&gt; VecElementID;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt;InReal&gt;::Transform      Transform       ;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keyword">typedef</span> pair&lt;int, Transform&gt;                        IndexedTransform;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> SolidTypes&lt; InReal&gt;::SpatialVector SpatialVector   ;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TOut&gt;   SparseMatrixEigen;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">typedef</span> linearalgebra::EigenSparseMatrix&lt;TIn,TIn&gt;    SparseKMatrixEigen;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keyword">typedef</span> Vec&lt;3, Real&gt;   Vec3;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="keyword">typedef</span> Vec&lt;6, Real&gt;   Vec6;</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">typedef</span> Mat&lt;3,3,Real&gt;  Mat3;</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">typedef</span> Mat&lt;3,6,Real&gt;  Mat3x6;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">typedef</span> Mat&lt;3,12,Real&gt; Mat3x12;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keyword">typedef</span> Mat&lt;12,3,Real&gt; Mat12x3;</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">typedef</span> Mat&lt;6,12,Real&gt; Mat6x12;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keyword">typedef</span> Mat&lt;12,6,Real&gt; Mat12x6;</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keyword">typedef</span> <a class="code hl_class" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation&lt;TIn&gt;</a> BInterpolation;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    SingleLink&lt;BeamLengthMapping&lt;TIn, TOut&gt;,</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>               BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK&gt; l_adaptativebeamInterpolation;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">  132</a></span>    Data&lt; unsigned &gt;       <a class="code hl_variable" href="classbeamadapter_1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">d_geometricStiffness</a>; </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_class" href="classbeamadapter_1_1_beam_length_mapping.html">BeamLengthMapping</a>(State&lt; In &gt;* from=NULL,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                        State&lt; Out &gt;* to=NULL,</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                        <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt; TIn &gt;</a>* interpolation=NULL) ;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordtype">void</span> setInterpolation(<a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt; TIn &gt;</a>* interpolation)</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        l_adaptativebeamInterpolation.set(interpolation);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_length_mapping.html">~BeamLengthMapping</a>(){}</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    SingleLink&lt;BeamLengthMapping&lt;TIn, TOut&gt;,</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>               BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK&gt; l_adaptativebeamInterpolation;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> init() <span class="keyword">override</span>;     <span class="comment">// get the interpolation</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> bwdInit() <span class="keyword">override</span>;  <span class="comment">// get the points</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> reset() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> reinit() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw(<span class="keyword">const</span> VisualParams*) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">  154</a></span>    Data&lt; unsigned &gt;       <a class="code hl_variable" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">d_geometricStiffness</a>; </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <a class="code hl_class" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">BeamLengthMapping</a>(State&lt; In &gt;* from=NULL,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                        State&lt; Out &gt;* to=NULL,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                        <a class="code hl_class" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation&lt; TIn &gt;</a>* interpolation=NULL) ;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="comment">// interface of mapping.h</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> apply(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;VecCoord&gt;&amp; out, <span class="keyword">const</span> Data&lt;InVecCoord&gt;&amp; in) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJ(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;VecDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;InVecDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJT(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;InVecDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;VecDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJT(<span class="keyword">const</span> ConstraintParams *cparams, Data&lt;InMatrixDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;OutMatrixDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_beam_length_mapping.html#aa694d26ed99e6bb24f70ba28616cf419">applyDJT</a>(<span class="keyword">const</span> MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">void</span> setInterpolation(<a class="code hl_class" href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">BeamInterpolation&lt; TIn &gt;</a>* interpolation)</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        l_adaptativebeamInterpolation.set(interpolation);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    }</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="comment">// interface of baseMapping.h</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateK( <span class="keyword">const</span> MechanicalParams* <span class="comment">/*mparams*/</span>, core::ConstMultiVecDerivId <span class="comment">/*outForce*/</span> ) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">const</span> linearalgebra::BaseMatrix* getK() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">~BeamLengthMapping</a>(){}</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> init() <span class="keyword">override</span>;     <span class="comment">// get the interpolation</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> bwdInit() <span class="keyword">override</span>;  <span class="comment">// get the points</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> reset() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> reinit() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw(<span class="keyword">const</span> VisualParams*) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">// interface of mapping.h</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> apply(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;VecCoord&gt;&amp; out, <span class="keyword">const</span> Data&lt;InVecCoord&gt;&amp; in) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJ(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;VecDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;InVecDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJT(<span class="keyword">const</span> MechanicalParams *mparams, Data&lt;InVecDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;VecDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyJT(<span class="keyword">const</span> ConstraintParams *cparams, Data&lt;InMatrixDeriv&gt;&amp; out, <span class="keyword">const</span> Data&lt;OutMatrixDeriv&gt;&amp; in) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#aa694d26ed99e6bb24f70ba28616cf419">applyDJT</a>(<span class="keyword">const</span> MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="comment">// interface of baseMapping.h</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateK( <span class="keyword">const</span> MechanicalParams* <span class="comment">/*mparams*/</span>, core::ConstMultiVecDerivId <span class="comment">/*outForce*/</span> ) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keyword">const</span> linearalgebra::BaseMatrix* getK() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">using </span>Mapping&lt;TIn, TOut&gt;::toModel ;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">using </span>Mapping&lt;TIn, TOut&gt;::fromModel ;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>   <span class="comment">/* Vec3 F0_buf, F1_buf, F2_buf, F3_buf; // Used for debug */</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    SparseKMatrixEigen K_geom;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="comment">// used for applyJ on one beam</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7">computeJSpline</a>(Real &amp;dlength, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                                       <span class="keyword">const</span> Vec3&amp; dP0, <span class="keyword">const</span> Vec3&amp; dP1, <span class="keyword">const</span> Vec3&amp; dP2, <span class="keyword">const</span> Vec3&amp; dP3);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment">// used for applyJt on one beam</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6">computeJtSpline</a>(<span class="keyword">const</span> Real &amp;f_input, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                                                     Vec3&amp; F0,  Vec3&amp; F1,  Vec3&amp; F2, Vec3&amp; F3);</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keyword">using </span>Mapping&lt;TIn, TOut&gt;::toModel ;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keyword">using </span>Mapping&lt;TIn, TOut&gt;::fromModel ;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>   <span class="comment">/* Vec3 F0_buf, F1_buf, F2_buf, F3_buf; // Used for debug */</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    SparseKMatrixEigen K_geom;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="comment">// used for applyJ on one beam</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7">computeJSpline</a>(Real &amp;dlength, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                                       <span class="keyword">const</span> Vec3&amp; dP0, <span class="keyword">const</span> Vec3&amp; dP1, <span class="keyword">const</span> Vec3&amp; dP2, <span class="keyword">const</span> Vec3&amp; dP3);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="comment">// used for applyJt on one beam</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6">computeJtSpline</a>(<span class="keyword">const</span> Real &amp;f_input, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                                                     Vec3&amp; F0,  Vec3&amp; F1,  Vec3&amp; F2, Vec3&amp; F3);</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="comment">// compute stiffness of forces for applyJt on one beam</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9">computeDJtSpline</a>(<span class="keyword">const</span> Real &amp;f_input, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                                                        Mat&lt;4,4,Mat3&gt; &amp;Mat);</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="comment">// useful: create a cross matrix (to produce the cross product)</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordtype">void</span> createCrossMatrix(<span class="keyword">const</span> Vec3&amp; v, Mat3&amp; result){ ; result.clear();</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                                     result[0][1]=-v[2]; result[0][2]=v[1];</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                                     result[1][0]=v[2]; result[1][2]=-v[0];</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                                     result[2][0]=-v[1]; result[2][1]=v[0];}</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>};</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="comment">// compute stiffness of forces for applyJt on one beam</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9">computeDJtSpline</a>(<span class="keyword">const</span> Real &amp;f_input, <span class="keyword">const</span> Vec3&amp; P0, <span class="keyword">const</span> Vec3&amp; P1, <span class="keyword">const</span> Vec3&amp; P2, <span class="keyword">const</span> Vec3&amp; P3,</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                                                        Mat&lt;4,4,Mat3&gt; &amp;Mat);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="comment">// useful: create a cross matrix (to produce the cross product)</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordtype">void</span> createCrossMatrix(<span class="keyword">const</span> Vec3&amp; v, Mat3&amp; result){ ; result.clear();</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                                     result[0][1]=-v[2]; result[0][2]=v[1];</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                                     result[1][0]=v[2]; result[1][2]=-v[0];</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                                     result[2][0]=-v[1]; result[2][1]=v[0];}</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>};</div>
 </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="preprocessor">#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP</span></div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API BeamLengthMapping&lt;defaulttype::Rigid3Types, defaulttype::Vec1Types   &gt;;</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>} </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="keyword">using </span>_beamlengthmapping_::BeamLengthMapping ;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>} <span class="comment">// namespace sofa::component::mapping</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="preprocessor">#endif  </span><span class="comment">/* SOFA_COMPONENT_MAPPING_BEAMLENGTHMAPPING_H */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation_html"><div class="ttname"><a href="classsofa_1_1component_1_1fem_1_1__beaminterpolation___1_1_beam_interpolation.html">sofa::component::fem::_beaminterpolation_::BeamInterpolation</a></div><div class="ttdef"><b>Definition</b> BeamInterpolation.h:72</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping</a></div><div class="ttdoc">Computes and map the length of the beams.</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.h:102</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_a34f0a066873a1bd5d0ead51aa6c9ddd6"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::computeJtSpline</a></div><div class="ttdeci">void computeJtSpline(const Real &amp;f_input, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, Vec3 &amp;F0, Vec3 &amp;F1, Vec3 &amp;F2, Vec3 &amp;F3)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:819</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_a779e6ad29fc9312a3712b4ac277683f9"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::computeDJtSpline</a></div><div class="ttdeci">void computeDJtSpline(const Real &amp;f_input, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, Mat&lt; 4, 4, Mat3 &gt; &amp;Mat)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:877</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_a9ce0f8349503574172d0c911128499d7"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::computeJSpline</a></div><div class="ttdeci">void computeJSpline(Real &amp;dlength, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, const Vec3 &amp;dP0, const Vec3 &amp;dP1, const Vec3 &amp;dP2, const Vec3 &amp;dP3)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:781</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_aa694d26ed99e6bb24f70ba28616cf419"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#aa694d26ed99e6bb24f70ba28616cf419">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::applyDJT</a></div><div class="ttdeci">virtual void applyDJT(const MechanicalParams *mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) override</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:432</div></div>
-<div class="ttc" id="aclasssofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping_html_add9626e4297d7f0828aac20f6251ba2c"><div class="ttname"><a href="classsofa_1_1component_1_1mapping_1_1__beamlengthmapping___1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">sofa::component::mapping::_beamlengthmapping_::BeamLengthMapping::d_geometricStiffness</a></div><div class="ttdeci">Data&lt; unsigned &gt; d_geometricStiffness</div><div class="ttdoc">how to compute geometric stiffness (0-&gt;no GS, 1-&gt;exact GS, 2-&gt;stabilized GS)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.h:154</div></div>
-<div class="ttc" id="anamespacesofa_1_1component_1_1mapping_html"><div class="ttname"><a href="namespacesofa_1_1component_1_1mapping.html">sofa::component::mapping</a></div><div class="ttdoc">Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration.</div><div class="ttdef"><b>Definition</b> AdaptiveBeamMapping.cpp:45</div></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="preprocessor">#ifndef BEAMADAPTER_BEAMLENGTHMAPPING_CPP</span></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class </span>SOFA_BEAMADAPTER_API BeamLengthMapping&lt;defaulttype::Rigid3Types, defaulttype::Vec1Types   &gt;;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_interpolation_html"><div class="ttname"><a href="classbeamadapter_1_1_beam_interpolation.html">beamadapter::BeamInterpolation</a></div><div class="ttdef"><b>Definition</b> BeamInterpolation.h:69</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html">beamadapter::BeamLengthMapping</a></div><div class="ttdoc">Computes and map the length of the beams.</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.h:80</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html_a34f0a066873a1bd5d0ead51aa6c9ddd6"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6">beamadapter::BeamLengthMapping::computeJtSpline</a></div><div class="ttdeci">void computeJtSpline(const Real &amp;f_input, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, Vec3 &amp;F0, Vec3 &amp;F1, Vec3 &amp;F2, Vec3 &amp;F3)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:809</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html_a779e6ad29fc9312a3712b4ac277683f9"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9">beamadapter::BeamLengthMapping::computeDJtSpline</a></div><div class="ttdeci">void computeDJtSpline(const Real &amp;f_input, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, Mat&lt; 4, 4, Mat3 &gt; &amp;Mat)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:867</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html_a9ce0f8349503574172d0c911128499d7"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7">beamadapter::BeamLengthMapping::computeJSpline</a></div><div class="ttdeci">void computeJSpline(Real &amp;dlength, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3, const Vec3 &amp;dP0, const Vec3 &amp;dP1, const Vec3 &amp;dP2, const Vec3 &amp;dP3)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:771</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html_aa694d26ed99e6bb24f70ba28616cf419"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html#aa694d26ed99e6bb24f70ba28616cf419">beamadapter::BeamLengthMapping::applyDJT</a></div><div class="ttdeci">virtual void applyDJT(const MechanicalParams *mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) override</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.inl:422</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_beam_length_mapping_html_add9626e4297d7f0828aac20f6251ba2c"><div class="ttname"><a href="classbeamadapter_1_1_beam_length_mapping.html#add9626e4297d7f0828aac20f6251ba2c">beamadapter::BeamLengthMapping::d_geometricStiffness</a></div><div class="ttdeci">Data&lt; unsigned &gt; d_geometricStiffness</div><div class="ttdoc">how to compute geometric stiffness (0-&gt;no GS, 1-&gt;exact GS, 2-&gt;stabilized GS)</div><div class="ttdef"><b>Definition</b> BeamLengthMapping.h:132</div></div>
+<div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>BeamLengthMapping.h</b></li>
-    <li class="footer">Generated on Thu Mar 6 2025 17:12:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Mar 19 2025 09:24:20 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -87,10 +87,11 @@ var NAVTREE =
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", null ],
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ]
+        [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -112,7 +113,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_adaptive_beam_controller_8h_source.html",
-"classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#acb1eb5dcea202f5698034b75e86aaff3"
+"classbeamadapter_1_1_base_rod_section_material.html#a9bb9cdb3eab47cbfac9bc8df70d4bca2",
+"classbeamadapter_1_1_wire_beam_interpolation.html#adbc21099d33a53c7bfded27d5ded43a3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

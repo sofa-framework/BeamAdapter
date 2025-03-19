@@ -1,7 +1,0 @@
-var classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87 =
-[
-    [ "_A", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#af7eeb2a1c1e589fded9f02a7f9f398ef", null ],
-    [ "_J", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#ad966c68398bc50da43fece06cbc2508d", null ],
-    [ "m_A0Ref", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#acb1eb5dcea202f5698034b75e86aaff3", null ],
-    [ "m_M00", "classsofa_1_1component_1_1forcefield_1_1__adaptivebeamforcefieldandmass___1_1_adaptive_beam_forcab7fe5ba476da6d212613576bd99dc87.html#a48957b9bb6d7032b63f3d44eead953d9", null ]
-];

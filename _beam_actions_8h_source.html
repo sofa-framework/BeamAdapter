@@ -121,10 +121,11 @@ $(document).ready(function(){initNavTree('_beam_actions_8h_source.html',''); ini
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">******************************************************************************/</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span>sofa::beamadapter</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeamadapter.html">beamadapter</a></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>{</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">enum class</span> BeamAdapterAction</div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305">   28</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305">BeamAdapterAction</a></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        NO_ACTION = 0,</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        MOVE_FORWARD,</div>
@@ -138,6 +139,7 @@ $(document).ready(function(){initNavTree('_beam_actions_8h_source.html',''); ini
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        USE_TOOL_1,</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        USE_TOOL_2,</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    };</div>
+</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> <span class="keyword">static</span> std::map&lt;std::string, BeamAdapterAction&gt; beamActionNames = {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        {<span class="stringliteral">&quot;stop&quot;</span>, BeamAdapterAction::NO_ACTION},</div>
@@ -152,7 +154,7 @@ $(document).ready(function(){initNavTree('_beam_actions_8h_source.html',''); ini
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        {<span class="stringliteral">&quot;tool2&quot;</span>, BeamAdapterAction::USE_TOOL_2}</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    };</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">static</span> BeamAdapterAction convertBeamAdapterAction(<span class="keyword">const</span> std::string&amp; sAction)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">static</span> <a class="code hl_enumeration" href="namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305">BeamAdapterAction</a> convertBeamAdapterAction(<span class="keyword">const</span> std::string&amp; sAction)</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">auto</span> bAction = beamActionNames.find(sAction);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
@@ -162,14 +164,16 @@ $(document).ready(function(){initNavTree('_beam_actions_8h_source.html',''); ini
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keywordflow">return</span> BeamAdapterAction::NO_ACTION;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    }</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace sofa::beamAdapter</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
+<div class="ttc" id="anamespacebeamadapter_html_a8f1473d10d6aa803639b0ddf45b82305"><div class="ttname"><a href="namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305">beamadapter::BeamAdapterAction</a></div><div class="ttdeci">BeamAdapterAction</div><div class="ttdoc">Enum class listing all possible actions during Beam navigation.</div><div class="ttdef"><b>Definition</b> BeamActions.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_e2258b459b79d7bbb629dde38740b555.html">utils</a></li><li class="navelem"><b>BeamActions.h</b></li>
-    <li class="footer">Generated on Thu Mar 6 2025 17:12:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Mar 19 2025 09:24:20 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
