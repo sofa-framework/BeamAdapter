@@ -35,7 +35,6 @@ extern void registerAdaptiveBeamController(sofa::core::ObjectFactory* factory);
 extern void registerBeamAdapterActionController(sofa::core::ObjectFactory* factory);
 extern void registerInterventionalRadiologyController(sofa::core::ObjectFactory* factory);
 extern void registerSutureController(sofa::core::ObjectFactory* factory);
-extern void registerSteerableCatheter(sofa::core::ObjectFactory* factory);
 extern void registerWireRestShape(sofa::core::ObjectFactory* factory);
 extern void registerAdaptiveBeamForceFieldAndMass(sofa::core::ObjectFactory* factory);
 extern void registerAdaptiveInflatableBeamForceField(sofa::core::ObjectFactory* factory);
@@ -105,7 +104,6 @@ void registerObjects(sofa::core::ObjectFactory* factory)
     registerBeamAdapterActionController(factory);
     registerInterventionalRadiologyController(factory);
     registerSutureController(factory);
-    registerSteerableCatheter(factory);
     registerWireRestShape(factory);
     registerAdaptiveBeamForceFieldAndMass(factory);
     registerAdaptiveInflatableBeamForceField(factory);

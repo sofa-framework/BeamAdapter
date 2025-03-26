@@ -42,8 +42,6 @@ set(HEADER_FILES
 
     ${BEAMADAPTER_SRC}/component/engine/WireRestShape.h
     ${BEAMADAPTER_SRC}/component/engine/WireRestShape.inl
-    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.h
-    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.inl
 
     ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.h
     ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.inl
@@ -89,7 +87,6 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/controller/SutureController.cpp
 
     ${BEAMADAPTER_SRC}/component/engine/WireRestShape.cpp
-    ${BEAMADAPTER_SRC}/component/engine/SteerableCatheter.cpp
 
     ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveBeamForceFieldAndMass.cpp
     ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveInflatableBeamForceField.cpp
