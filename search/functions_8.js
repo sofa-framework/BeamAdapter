@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['onbeginanimationstep_0',['onbeginanimationstep',['../classbeamadapter_1_1_beam_adapter_action_controller.html#a48a6b5fc8981006bbf7b84b78696c40e',1,'beamadapter::BeamAdapterActionController::onBeginAnimationStep()'],['../classbeamadapter_1_1_interventional_radiology_controller.html#a48a6b5fc8981006bbf7b84b78696c40e',1,'beamadapter::InterventionalRadiologyController::onBeginAnimationStep()']]],
-  ['onkeypressedevent_1',['onkeypressedevent',['../classbeamadapter_1_1_beam_adapter_action_controller.html#a21880ed254327e8a25991c54c872d967',1,'beamadapter::BeamAdapterActionController::onKeyPressedEvent()'],['../classbeamadapter_1_1_interventional_radiology_controller.html#a1e2cd5ebe1cd6ce6e019fd2543fcdd37',1,'beamadapter::InterventionalRadiologyController::onKeyPressedEvent()']]],
-  ['onmouseevent_2',['onmouseevent',['../classbeamadapter_1_1_adaptive_beam_controller.html#af31002f2353cd2a4f93d614b237bab05',1,'beamadapter::AdaptiveBeamController::onMouseEvent()'],['../classbeamadapter_1_1_beam_adapter_action_controller.html#a8b21b9996ce5e8e64bcfc8ac052a94de',1,'beamadapter::BeamAdapterActionController::onMouseEvent()'],['../classbeamadapter_1_1_interventional_radiology_controller.html#a09b156aa7b37b61bd03d45d19f40213c',1,'beamadapter::InterventionalRadiologyController::onMouseEvent()']]]
+  ['projectionsearch_0',['ProjectionSearch',['../classbeamadapter_1_1_projection_search.html#ad14279de34c872eea1edbde7b766e777',1,'beamadapter::ProjectionSearch']]]
 ];

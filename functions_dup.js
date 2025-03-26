@@ -6,7 +6,6 @@ var functions_dup =
     [ "c", "functions_c.html", null ],
     [ "d", "functions_d.html", null ],
     [ "g", "functions_g.html", null ],
-    [ "h", "functions_h.html", null ],
     [ "i", "functions_i.html", null ],
     [ "l", "functions_l.html", null ],
     [ "m", "functions_m.html", null ],

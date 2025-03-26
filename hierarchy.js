@@ -6,9 +6,7 @@ var hierarchy =
         [ "RodSpireSection< DataTypes >", "classbeamadapter_1_1_rod_spire_section.html", null ],
         [ "RodStraightSection< DataTypes >", "classbeamadapter_1_1_rod_straight_section.html", null ]
       ] ],
-      [ "WireRestShape< DataTypes >", "classbeamadapter_1_1_wire_rest_shape.html", [
-        [ "SteerableCatheter< DataTypes >", "classbeamadapter_1_1_steerable_catheter.html", null ]
-      ] ]
+      [ "WireRestShape< DataTypes >", "classbeamadapter_1_1_wire_rest_shape.html", null ]
     ] ],
     [ "BaseObject", null, [
       [ "BaseBeamInterpolation< DataTypes >", "classbeamadapter_1_1_base_beam_interpolation.html", [

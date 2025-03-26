@@ -23,7 +23,6 @@ var annotated_dup =
       [ "RodMeshSection", "classbeamadapter_1_1_rod_mesh_section.html", "classbeamadapter_1_1_rod_mesh_section" ],
       [ "RodSpireSection", "classbeamadapter_1_1_rod_spire_section.html", "classbeamadapter_1_1_rod_spire_section" ],
       [ "RodStraightSection", "classbeamadapter_1_1_rod_straight_section.html", "classbeamadapter_1_1_rod_straight_section" ],
-      [ "SteerableCatheter", "classbeamadapter_1_1_steerable_catheter.html", "classbeamadapter_1_1_steerable_catheter" ],
       [ "SutureController", "classbeamadapter_1_1_suture_controller.html", null ],
       [ "WireBeamInterpolation", "classbeamadapter_1_1_wire_beam_interpolation.html", "classbeamadapter_1_1_wire_beam_interpolation" ],
       [ "WireRestShape", "classbeamadapter_1_1_wire_rest_shape.html", "classbeamadapter_1_1_wire_rest_shape" ]
