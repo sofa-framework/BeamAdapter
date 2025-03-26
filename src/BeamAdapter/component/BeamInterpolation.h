@@ -137,7 +137,9 @@ public:
 
     const BeamSection& getBeamSection(sofa::Index beamId) override { 
         SOFA_UNUSED(beamId);
-        return this->m_constantSection; 
+        if (m_constantBeam)
+            return this->m_constantSection;
+        return this->m_section[beamId];
     }
     void getInterpolationParameters(sofa::Index beamId, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
                                Real &_Asy, Real &_Asz, Real &J) override;
@@ -145,21 +147,18 @@ public:
 
     void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
 
-  
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
-
-    
-
     virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
     virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}
-
 
     Data<helper::OptionsGroup>   crossSectionShape;
 
     /// Circular Cross Section
-    Data<Real>          d_radius;
-    Data<Real>          d_innerRadius;
+    Real                         m_defaultRadius;
+    Data<type::vector<Real>>     d_radius;
+    Real                         m_defaultInnerRadius;
+    Data<type::vector<Real>>     d_innerRadius;
 
     /// Square Cross Section
     Data<Real>          d_sideLength;
@@ -169,14 +168,17 @@ public:
     Data<Real>          d_largeRadius;
 
     /// Rectangular Cross Section
-    Data<Real>          d_lengthY;
-    Data<Real>          d_lengthZ;
+    Real                         m_defaultLengthY;
+    Data<type::vector<Real>>     d_lengthY;
+    Real                         m_defaultLengthZ;
+    Data<type::vector<Real>>     d_lengthZ;
     Data<bool>          d_dofsAndBeamsAligned;
 
-    Real          m_defaultYoungModulus;
-    Real          m_defaultPoissonRatio;
-    Data<type::vector<Real>>          d_defaultYoungModulus;
-    Data<type::vector<Real>>          d_poissonRatio;
+    Real                        m_defaultYoungModulus;
+    Data<type::vector<Real>>    d_defaultYoungModulus;
+
+    Real                        m_defaultPoissonRatio;
+    Data<type::vector<Real>>    d_poissonRatio;
 
     Data<bool>          d_straight;
 
@@ -210,7 +212,14 @@ protected :
     Data< VecDeriv > d_InterpolatedVel;
 
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
+    bool m_constantBeam{true};
     BeamSection      m_constantSection;
+    type::vector<BeamSection> m_section;
+
+    void checkDataSize(Real& defaultValue, Data<type::vector<Real>>& dataList, const size_t& nbEdges);
+
+    void computeRectangularCrossSectionInertiaMatrix(const Real &Ly, const Real &Lz, BeamSection &section);
+    void computeCircularCrossSectionInertiaMatrix(const Real &r, const Real &rInner, BeamSection &section);
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)

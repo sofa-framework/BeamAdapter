@@ -57,10 +57,12 @@ using sofa::helper::ScopedAdvancedTimer;
 template <class DataTypes>
 AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     : d_computeMass(initData(&d_computeMass,true,"computeMass","if false, only compute the stiff elastic model"))
-    , d_massDensity(initData(&d_massDensity,(Real)1.0,"massDensity", "Density of the mass (usually in kg/m^3)" ))
+    , m_defaultMassDensity(Real(1.))
+    , d_massDensity(initData(&d_massDensity,type::vector<Real>(1, m_defaultMassDensity),"massDensity", "Density of the mass" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
     , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
+
 {
 }
 
@@ -75,6 +77,29 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::init()
     if (!l_interpolation) {
         msg_error() << "No Beam Interpolation found, the component can not work.";
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+    }
+    else
+    {
+        BaseContext* context = this->getContext();
+        core::topology::BaseMeshTopology* topology = context->getMeshTopology();
+        auto massDensity = sofa::helper::getWriteOnlyAccessor(d_massDensity);
+        if (topology)
+        {
+            const auto& nbEdges = topology->getNbEdges();
+            if (massDensity.size() != nbEdges)
+            {
+                Real value = m_defaultMassDensity;
+                if (massDensity.size() == 0){
+                    msg_warning() << "Empty data field for " << d_massDensity.getName() <<". Set default " << value;
+                } else {
+                    value = massDensity[0];
+                }
+                massDensity.resize(nbEdges);
+                for (auto& beammassDensity: massDensity)
+                    beammassDensity = value;
+            }
+        }
+        m_defaultMassDensity = massDensity[0]; // if the sizes mismatch again at runtime, will use this default value
     }
 
     ForceField<DataTypes>::init();
@@ -538,7 +563,16 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
         beamInterpolation->getInterpolationParameters(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
             beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
 
-        beamMatrices._rho = d_massDensity.getValue(); // for BeamInterpolation which is not overidding the _rho
+        const auto& massDensity = helper::getReadAccessor(d_massDensity);
+        // for BeamInterpolation which is not overidding the _rho
+        if (beamId < int(massDensity.size()))
+        {
+            beamMatrices._rho = massDensity[beamId];
+        }
+        else
+        {
+            beamMatrices._rho = m_defaultMassDensity;
+        }
         beamInterpolation->getMechanicalParameters(beamId, beamMatrices._youngM, beamMatrices._cPoisson, beamMatrices._rho);
 
         /// compute the local mass matrices
