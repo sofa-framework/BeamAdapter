@@ -1,6 +1,6 @@
 var classbeamadapter_1_1_beam_interpolation =
 [
-    [ "computeCrossSectionInertiaMatrix", "classbeamadapter_1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0", null ],
+    [ "computeCircularCrossSectionInertiaMatrix", "classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47", null ],
     [ "getBeamSection", "classbeamadapter_1_1_beam_interpolation.html#a1a3fe779a5a03afb12f2eec831b376fe", null ],
     [ "getCollisionSampling", "classbeamadapter_1_1_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1", null ],
     [ "getCurvAbsAtBeam", "classbeamadapter_1_1_beam_interpolation.html#a69d91b5016a811fcdff44413a426c6b5", null ],
@@ -14,10 +14,10 @@ var classbeamadapter_1_1_beam_interpolation =
     [ "verifyTopology", "classbeamadapter_1_1_beam_interpolation.html#a8cfa8bc5069d81b5711987638b82f64c", null ],
     [ "d_InterpolatedPos", "classbeamadapter_1_1_beam_interpolation.html#a44ac36911f288c7710ca2be8bc15f781", null ],
     [ "d_InterpolationInputs", "classbeamadapter_1_1_beam_interpolation.html#ad3beab527e09c94b5d7b2a62ca36fa09", null ],
-    [ "d_lengthY", "classbeamadapter_1_1_beam_interpolation.html#a4affc8861ff35ac507c2b8f378e3d7f1", null ],
-    [ "d_radius", "classbeamadapter_1_1_beam_interpolation.html#aa8b8ebbadfa7096fa530603efc8fdf36", null ],
     [ "d_sideLength", "classbeamadapter_1_1_beam_interpolation.html#a9fee8ce9860d399336c7315ae2b25d40", null ],
     [ "d_smallRadius", "classbeamadapter_1_1_beam_interpolation.html#a7299a1f087d4b04ae7e4d1b007ba29ca", null ],
     [ "d_vecID", "classbeamadapter_1_1_beam_interpolation.html#a47433958250928179cc9edbbe2beac0f", null ],
-    [ "m_constantSection", "classbeamadapter_1_1_beam_interpolation.html#a82d5fec3282ae49075b9ad7393a0fedd", null ]
+    [ "m_constantBeam", "classbeamadapter_1_1_beam_interpolation.html#aef1b801b5885035b1dd82563b9fb5e0c", null ],
+    [ "m_defaultLengthY", "classbeamadapter_1_1_beam_interpolation.html#ac36bfa773b0855a611690a854d3d0776", null ],
+    [ "m_defaultRadius", "classbeamadapter_1_1_beam_interpolation.html#a3225f8600717fe548079be2071165f57", null ]
 ];

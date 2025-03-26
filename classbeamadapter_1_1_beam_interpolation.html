@@ -95,6 +95,7 @@ $(document).ready(function(){initNavTree('classbeamadapter_1_1_beam_interpolatio
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classbeamadapter_1_1_beam_interpolation-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">BeamInterpolation&lt; DataTypes &gt; Class Template Reference</div></div>
@@ -245,7 +246,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>interpolationIsAlread
 <tr class="separator:a690b4d68c0517a05ccf9fb9c41c7ac9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cfa8bc5069d81b5711987638b82f64c" id="r_a8cfa8bc5069d81b5711987638b82f64c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a8cfa8bc5069d81b5711987638b82f64c">verifyTopology</a> ()</td></tr>
 <tr class="separator:a8cfa8bc5069d81b5711987638b82f64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3101c3c3c681477d34ff653774166bc0" id="r_a3101c3c3c681477d34ff653774166bc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0">computeCrossSectionInertiaMatrix</a> ()</td></tr>
+<tr class="memitem:a3101c3c3c681477d34ff653774166bc0" id="r_a3101c3c3c681477d34ff653774166bc0"><td class="memItemLeft" align="right" valign="top"><a id="a3101c3c3c681477d34ff653774166bc0" name="a3101c3c3c681477d34ff653774166bc0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>computeCrossSectionInertiaMatrix</b> ()</td></tr>
 <tr class="separator:a3101c3c3c681477d34ff653774166bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a3fe779a5a03afb12f2eec831b376fe" id="r_a1a3fe779a5a03afb12f2eec831b376fe"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a1a3fe779a5a03afb12f2eec831b376fe">getBeamSection</a> (sofa::Index beamId) override</td></tr>
 <tr class="memdesc:a1a3fe779a5a03afb12f2eec831b376fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a>.  <br /></td></tr>
@@ -392,13 +394,19 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a7b7d744bf543bb2ceab12d5e8696b911" id="r_a7b7d744bf543bb2ceab12d5e8696b911"><td class="memItemLeft" align="right" valign="top"><a id="a7b7d744bf543bb2ceab12d5e8696b911" name="a7b7d744bf543bb2ceab12d5e8696b911"></a>
 Data&lt; helper::OptionsGroup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>crossSectionShape</b></td></tr>
 <tr class="separator:a7b7d744bf543bb2ceab12d5e8696b911"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8b8ebbadfa7096fa530603efc8fdf36" id="r_aa8b8ebbadfa7096fa530603efc8fdf36"><td class="memItemLeft" align="right" valign="top"><a id="aa8b8ebbadfa7096fa530603efc8fdf36" name="aa8b8ebbadfa7096fa530603efc8fdf36"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_radius</b></td></tr>
-<tr class="memdesc:aa8b8ebbadfa7096fa530603efc8fdf36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Circular Cross Section. <br /></td></tr>
-<tr class="separator:aa8b8ebbadfa7096fa530603efc8fdf36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f4231275fcbfc1d8e5cd6ef5d7ed4c9" id="r_a2f4231275fcbfc1d8e5cd6ef5d7ed4c9"><td class="memItemLeft" align="right" valign="top"><a id="a2f4231275fcbfc1d8e5cd6ef5d7ed4c9" name="a2f4231275fcbfc1d8e5cd6ef5d7ed4c9"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_innerRadius</b></td></tr>
-<tr class="separator:a2f4231275fcbfc1d8e5cd6ef5d7ed4c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3225f8600717fe548079be2071165f57" id="r_a3225f8600717fe548079be2071165f57"><td class="memItemLeft" align="right" valign="top"><a id="a3225f8600717fe548079be2071165f57" name="a3225f8600717fe548079be2071165f57"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultRadius</b></td></tr>
+<tr class="memdesc:a3225f8600717fe548079be2071165f57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Circular Cross Section. <br /></td></tr>
+<tr class="separator:a3225f8600717fe548079be2071165f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c1123540a99613be3fdb2b29c3c3b84" id="r_a9c1123540a99613be3fdb2b29c3c3b84"><td class="memItemLeft" align="right" valign="top"><a id="a9c1123540a99613be3fdb2b29c3c3b84" name="a9c1123540a99613be3fdb2b29c3c3b84"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_radius</b></td></tr>
+<tr class="separator:a9c1123540a99613be3fdb2b29c3c3b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8aecc99ae646d90feb7e388f2f709c0" id="r_ae8aecc99ae646d90feb7e388f2f709c0"><td class="memItemLeft" align="right" valign="top"><a id="ae8aecc99ae646d90feb7e388f2f709c0" name="ae8aecc99ae646d90feb7e388f2f709c0"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultInnerRadius</b></td></tr>
+<tr class="separator:ae8aecc99ae646d90feb7e388f2f709c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a076645b742b307ebefbc92ec9be0de08" id="r_a076645b742b307ebefbc92ec9be0de08"><td class="memItemLeft" align="right" valign="top"><a id="a076645b742b307ebefbc92ec9be0de08" name="a076645b742b307ebefbc92ec9be0de08"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_innerRadius</b></td></tr>
+<tr class="separator:a076645b742b307ebefbc92ec9be0de08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fee8ce9860d399336c7315ae2b25d40" id="r_a9fee8ce9860d399336c7315ae2b25d40"><td class="memItemLeft" align="right" valign="top"><a id="a9fee8ce9860d399336c7315ae2b25d40" name="a9fee8ce9860d399336c7315ae2b25d40"></a>
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_sideLength</b></td></tr>
 <tr class="memdesc:a9fee8ce9860d399336c7315ae2b25d40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Square Cross Section. <br /></td></tr>
@@ -410,25 +418,31 @@ Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_small
 <tr class="memitem:acd38ab9c6988de84e548e9ac3604b5af" id="r_acd38ab9c6988de84e548e9ac3604b5af"><td class="memItemLeft" align="right" valign="top"><a id="acd38ab9c6988de84e548e9ac3604b5af" name="acd38ab9c6988de84e548e9ac3604b5af"></a>
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_largeRadius</b></td></tr>
 <tr class="separator:acd38ab9c6988de84e548e9ac3604b5af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4affc8861ff35ac507c2b8f378e3d7f1" id="r_a4affc8861ff35ac507c2b8f378e3d7f1"><td class="memItemLeft" align="right" valign="top"><a id="a4affc8861ff35ac507c2b8f378e3d7f1" name="a4affc8861ff35ac507c2b8f378e3d7f1"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_lengthY</b></td></tr>
-<tr class="memdesc:a4affc8861ff35ac507c2b8f378e3d7f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rectangular Cross Section. <br /></td></tr>
-<tr class="separator:a4affc8861ff35ac507c2b8f378e3d7f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29f82a34d0b994e17a6ebbdfb8780894" id="r_a29f82a34d0b994e17a6ebbdfb8780894"><td class="memItemLeft" align="right" valign="top"><a id="a29f82a34d0b994e17a6ebbdfb8780894" name="a29f82a34d0b994e17a6ebbdfb8780894"></a>
-Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_lengthZ</b></td></tr>
-<tr class="separator:a29f82a34d0b994e17a6ebbdfb8780894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac36bfa773b0855a611690a854d3d0776" id="r_ac36bfa773b0855a611690a854d3d0776"><td class="memItemLeft" align="right" valign="top"><a id="ac36bfa773b0855a611690a854d3d0776" name="ac36bfa773b0855a611690a854d3d0776"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultLengthY</b></td></tr>
+<tr class="memdesc:ac36bfa773b0855a611690a854d3d0776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rectangular Cross Section. <br /></td></tr>
+<tr class="separator:ac36bfa773b0855a611690a854d3d0776"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3da21c398e1aae60d16e14d45c882e" id="r_acf3da21c398e1aae60d16e14d45c882e"><td class="memItemLeft" align="right" valign="top"><a id="acf3da21c398e1aae60d16e14d45c882e" name="acf3da21c398e1aae60d16e14d45c882e"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_lengthY</b></td></tr>
+<tr class="separator:acf3da21c398e1aae60d16e14d45c882e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac9af44e6d7c9c114b6cf566422419e3" id="r_aac9af44e6d7c9c114b6cf566422419e3"><td class="memItemLeft" align="right" valign="top"><a id="aac9af44e6d7c9c114b6cf566422419e3" name="aac9af44e6d7c9c114b6cf566422419e3"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultLengthZ</b></td></tr>
+<tr class="separator:aac9af44e6d7c9c114b6cf566422419e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6378c1e79cabf6003318f8873ee6007c" id="r_a6378c1e79cabf6003318f8873ee6007c"><td class="memItemLeft" align="right" valign="top"><a id="a6378c1e79cabf6003318f8873ee6007c" name="a6378c1e79cabf6003318f8873ee6007c"></a>
+Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_lengthZ</b></td></tr>
+<tr class="separator:a6378c1e79cabf6003318f8873ee6007c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56d2f664fc6fe9d3b3d112bdb7a6fb33" id="r_a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memItemLeft" align="right" valign="top"><a id="a56d2f664fc6fe9d3b3d112bdb7a6fb33" name="a56d2f664fc6fe9d3b3d112bdb7a6fb33"></a>
 Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_dofsAndBeamsAligned</b></td></tr>
 <tr class="separator:a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a800d32d7e4cd261206126144c013b988" id="r_a800d32d7e4cd261206126144c013b988"><td class="memItemLeft" align="right" valign="top"><a id="a800d32d7e4cd261206126144c013b988" name="a800d32d7e4cd261206126144c013b988"></a>
 Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultYoungModulus</b></td></tr>
 <tr class="separator:a800d32d7e4cd261206126144c013b988"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f745a3f590e7ef795bb9eef88a6ee24" id="r_a1f745a3f590e7ef795bb9eef88a6ee24"><td class="memItemLeft" align="right" valign="top"><a id="a1f745a3f590e7ef795bb9eef88a6ee24" name="a1f745a3f590e7ef795bb9eef88a6ee24"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultPoissonRatio</b></td></tr>
-<tr class="separator:a1f745a3f590e7ef795bb9eef88a6ee24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57c58647e6f010a918b4bdd3c922230f" id="r_a57c58647e6f010a918b4bdd3c922230f"><td class="memItemLeft" align="right" valign="top"><a id="a57c58647e6f010a918b4bdd3c922230f" name="a57c58647e6f010a918b4bdd3c922230f"></a>
 Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_defaultYoungModulus</b></td></tr>
 <tr class="separator:a57c58647e6f010a918b4bdd3c922230f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f745a3f590e7ef795bb9eef88a6ee24" id="r_a1f745a3f590e7ef795bb9eef88a6ee24"><td class="memItemLeft" align="right" valign="top"><a id="a1f745a3f590e7ef795bb9eef88a6ee24" name="a1f745a3f590e7ef795bb9eef88a6ee24"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>m_defaultPoissonRatio</b></td></tr>
+<tr class="separator:a1f745a3f590e7ef795bb9eef88a6ee24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54281e2b616d3e511cc8a2d1096bcf50" id="r_a54281e2b616d3e511cc8a2d1096bcf50"><td class="memItemLeft" align="right" valign="top"><a id="a54281e2b616d3e511cc8a2d1096bcf50" name="a54281e2b616d3e511cc8a2d1096bcf50"></a>
 Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_poissonRatio</b></td></tr>
 <tr class="separator:a54281e2b616d3e511cc8a2d1096bcf50"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -469,6 +483,17 @@ MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="
 <tr class="memdesc:ac074561fb74cc5e9283867841af8d010 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">pointer on mechanical state <br /></td></tr>
 <tr class="separator:ac074561fb74cc5e9283867841af8d010 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a833e245bef1f7f041a7e6b009532075c" id="r_a833e245bef1f7f041a7e6b009532075c"><td class="memItemLeft" align="right" valign="top"><a id="a833e245bef1f7f041a7e6b009532075c" name="a833e245bef1f7f041a7e6b009532075c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>checkDataSize</b> (Real &amp;defaultValue, Data&lt; type::vector&lt; Real &gt; &gt; &amp;dataList, const size_t &amp;nbEdges)</td></tr>
+<tr class="separator:a833e245bef1f7f041a7e6b009532075c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a947996ea02e43e70fb316ca014714172" id="r_a947996ea02e43e70fb316ca014714172"><td class="memItemLeft" align="right" valign="top"><a id="a947996ea02e43e70fb316ca014714172" name="a947996ea02e43e70fb316ca014714172"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>computeRectangularCrossSectionInertiaMatrix</b> (const Real &amp;Ly, const Real &amp;Lz, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
+<tr class="separator:a947996ea02e43e70fb316ca014714172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a027a9cc5c146f55e153d2ff0a852ba47" id="r_a027a9cc5c146f55e153d2ff0a852ba47"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47">computeCircularCrossSectionInertiaMatrix</a> (const Real &amp;r, const Real &amp;rInner, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
+<tr class="separator:a027a9cc5c146f55e153d2ff0a852ba47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a47433958250928179cc9edbbe2beac0f" id="r_a47433958250928179cc9edbbe2beac0f"><td class="memItemLeft" align="right" valign="top">Data&lt; OptionsGroup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a47433958250928179cc9edbbe2beac0f">d_vecID</a></td></tr>
@@ -484,10 +509,16 @@ Data&lt; VecCoord &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_I
 <tr class="memitem:a2cd3a9121bffc66213bf9f056fad8ea9" id="r_a2cd3a9121bffc66213bf9f056fad8ea9"><td class="memItemLeft" align="right" valign="top"><a id="a2cd3a9121bffc66213bf9f056fad8ea9" name="a2cd3a9121bffc66213bf9f056fad8ea9"></a>
 Data&lt; VecDeriv &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_InterpolatedVel</b></td></tr>
 <tr class="separator:a2cd3a9121bffc66213bf9f056fad8ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef1b801b5885035b1dd82563b9fb5e0c" id="r_aef1b801b5885035b1dd82563b9fb5e0c"><td class="memItemLeft" align="right" valign="top"><a id="aef1b801b5885035b1dd82563b9fb5e0c" name="aef1b801b5885035b1dd82563b9fb5e0c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_constantBeam</b> {true}</td></tr>
+<tr class="memdesc:aef1b801b5885035b1dd82563b9fb5e0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time) <br /></td></tr>
+<tr class="separator:aef1b801b5885035b1dd82563b9fb5e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82d5fec3282ae49075b9ad7393a0fedd" id="r_a82d5fec3282ae49075b9ad7393a0fedd"><td class="memItemLeft" align="right" valign="top"><a id="a82d5fec3282ae49075b9ad7393a0fedd" name="a82d5fec3282ae49075b9ad7393a0fedd"></a>
 <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_constantSection</b></td></tr>
-<tr class="memdesc:a82d5fec3282ae49075b9ad7393a0fedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time) <br /></td></tr>
 <tr class="separator:a82d5fec3282ae49075b9ad7393a0fedd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a35a928e2c932707fd749e7b8fd175" id="r_aa3a35a928e2c932707fd749e7b8fd175"><td class="memItemLeft" align="right" valign="top"><a id="aa3a35a928e2c932707fd749e7b8fd175" name="aa3a35a928e2c932707fd749e7b8fd175"></a>
+type::vector&lt; <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_section</b></td></tr>
+<tr class="separator:aa3a35a928e2c932707fd749e7b8fd175"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class DataTypes&gt;<br />
@@ -633,21 +664,46 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a3101c3c3c681477d34ff653774166bc0" name="a3101c3c3c681477d34ff653774166bc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3101c3c3c681477d34ff653774166bc0">&#9670;&#160;</a></span>computeCrossSectionInertiaMatrix()</h2>
+<a id="a027a9cc5c146f55e153d2ff0a852ba47" name="a027a9cc5c146f55e153d2ff0a852ba47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a027a9cc5c146f55e153d2ff0a852ba47">&#9670;&#160;</a></span>computeCircularCrossSectionInertiaMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class DataTypes &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void computeCrossSectionInertiaMatrix </td>
+          <td class="memname">void computeCircularCrossSectionInertiaMatrix </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramname"><em>rInner</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td>
+          <td class="paramname"><em>section</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>_Iz = M_PI*(r*r*r*r)/4.0;</p>
 
@@ -1204,7 +1260,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation</a></li>
-    <li class="footer">Generated on Wed Mar 19 2025 09:24:20 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Mar 26 2025 09:03:32 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

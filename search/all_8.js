@@ -16,7 +16,7 @@ var searchData=
   ['components_20on_20root_20node_13',['1. The Components on Root Node',['../md_doc_2modeling_2implementation.html#autotoc_md22',1,'']]],
   ['components_3a_20quadsettopologycontainer_20quadsettopologymodifier_20etc_14',['Topology Components: QuadSetTopologyContainer, QuadSetTopologyModifier, etc...',['../md_doc_2modeling_2implementation.html#autotoc_md53',1,'']]],
   ['computeactuallength_15',['computeActualLength',['../classbeamadapter_1_1_base_beam_interpolation.html#a078d4cffe3962f03a28673ff327645cd',1,'beamadapter::BaseBeamInterpolation']]],
-  ['computecrosssectioninertiamatrix_16',['computeCrossSectionInertiaMatrix',['../classbeamadapter_1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0',1,'beamadapter::BeamInterpolation']]],
+  ['computecircularcrosssectioninertiamatrix_16',['computeCircularCrossSectionInertiaMatrix',['../classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47',1,'beamadapter::BeamInterpolation']]],
   ['computedjtspline_17',['computeDJtSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9',1,'beamadapter::BeamLengthMapping']]],
   ['computejspline_18',['computeJSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7',1,'beamadapter::BeamLengthMapping']]],
   ['computejtspline_19',['computeJtSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6',1,'beamadapter::BeamLengthMapping']]],

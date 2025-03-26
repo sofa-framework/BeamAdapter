@@ -3,7 +3,7 @@ var searchData=
   ['cancreate_0',['cancreate',['../classsofa_1_1component_1_1_deprecated_component.html#a9bf7906473f8c43020b0ec91c8b634b7',1,'sofa::component::DeprecatedComponent::canCreate()'],['../classbeamadapter_1_1_beam_interpolation.html#a04fb2d79216e44851cde2e431122c34b',1,'beamadapter::BeamInterpolation::canCreate()']]],
   ['checkloadertopology_1',['checkLoaderTopology',['../classbeamadapter_1_1_rod_mesh_section.html#a6e9d5def39103715582fa2c92b30a45e',1,'beamadapter::RodMeshSection']]],
   ['computeactuallength_2',['computeActualLength',['../classbeamadapter_1_1_base_beam_interpolation.html#a078d4cffe3962f03a28673ff327645cd',1,'beamadapter::BaseBeamInterpolation']]],
-  ['computecrosssectioninertiamatrix_3',['computeCrossSectionInertiaMatrix',['../classbeamadapter_1_1_beam_interpolation.html#a3101c3c3c681477d34ff653774166bc0',1,'beamadapter::BeamInterpolation']]],
+  ['computecircularcrosssectioninertiamatrix_3',['computeCircularCrossSectionInertiaMatrix',['../classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47',1,'beamadapter::BeamInterpolation']]],
   ['computedjtspline_4',['computeDJtSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a779e6ad29fc9312a3712b4ac277683f9',1,'beamadapter::BeamLengthMapping']]],
   ['computejspline_5',['computeJSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a9ce0f8349503574172d0c911128499d7',1,'beamadapter::BeamLengthMapping']]],
   ['computejtspline_6',['computeJtSpline',['../classbeamadapter_1_1_beam_length_mapping.html#a34f0a066873a1bd5d0ead51aa6c9ddd6',1,'beamadapter::BeamLengthMapping']]],
