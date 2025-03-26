@@ -56,7 +56,7 @@ using std::string;
 
 #include <BeamAdapter/component/forcefield/AdaptiveBeamForceFieldAndMass.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
-using sofa::component::fem::_beaminterpolation_::BeamInterpolation;
+using beamadapter::BeamInterpolation;
 
 namespace sofa
 {
