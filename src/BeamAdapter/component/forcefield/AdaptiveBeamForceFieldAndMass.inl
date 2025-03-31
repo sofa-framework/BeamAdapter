@@ -125,6 +125,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::computeGravityVector()
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::computeStiffness(int beamId, BeamLocalMatrices& beamLocalMatrices)
 {
+    SOFA_UNUSED(beamId);
+
     /// material parameters
     Real _G = beamLocalMatrices._youngM / (2.0 * (1.0 + beamLocalMatrices._cPoisson));
 
@@ -506,7 +508,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ///* Calculer la matrice "locale"
     ///* Calculer la force exercée par chaque beam
     ///* Calculer la force exercée par la gravitée
-    for (unsigned int beamId=0; beamId <numBeams; beamId++)
+    for (sofa::Index beamId=0; beamId <numBeams; beamId++)
     {
         ///find the indices of the nodes
         sofa::Index node0Idx, node1Idx;
@@ -565,7 +567,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
 
         const auto& massDensity = helper::getReadAccessor(d_massDensity);
         // for BeamInterpolation which is not overidding the _rho
-        if (beamId < int(massDensity.size()))
+        if (beamId < static_cast<sofa::Index>(massDensity.size()))
         {
             beamMatrices._rho = massDensity[beamId];
         }

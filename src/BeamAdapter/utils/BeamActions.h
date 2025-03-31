@@ -21,6 +21,9 @@
 ******************************************************************************/
 #pragma once
 
+#include <map>
+#include <string>
+
 namespace beamadapter
 {
     
@@ -55,7 +58,7 @@ namespace beamadapter
     };
 
     /// static method to convert an action as string into enum class using @sa beamActionNames
-    static BeamAdapterAction convertBeamAdapterAction(const std::string& sAction)
+    inline BeamAdapterAction convertBeamAdapterAction(const std::string& sAction)
     {
         auto bAction = beamActionNames.find(sAction);
 
