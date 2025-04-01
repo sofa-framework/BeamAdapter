@@ -372,9 +372,9 @@ $(document).ready(function(){initNavTree('_adaptive_beam_mapping_8inl_source.htm
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    </div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment">// HACK for init: In case the number of output points is bigger to the number of distribution, set all points to 0</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = m_pointBeamDistribution.size(); i &lt; d_points.getValue().size(); i++)</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">for</span> (std::size_t i = m_pointBeamDistribution.size(); i &lt; d_points.getValue().size(); i++)</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    {</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        out[i] = Vec&lt;3, InReal&gt;(0.0, 0.0, 0.0);</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        out[i].clear();</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    }</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
@@ -909,7 +909,7 @@ $(document).ready(function(){initNavTree('_adaptive_beam_mapping_8inl_source.htm
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>AdaptiveBeamMapping.inl</b></li>
-    <li class="footer">Generated on Wed Mar 26 2025 11:17:39 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -3,7 +3,7 @@ var classbeamadapter_1_1_beam_interpolation =
     [ "computeCircularCrossSectionInertiaMatrix", "classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47", null ],
     [ "getBeamSection", "classbeamadapter_1_1_beam_interpolation.html#a1a3fe779a5a03afb12f2eec831b376fe", null ],
     [ "getCollisionSampling", "classbeamadapter_1_1_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1", null ],
-    [ "getCurvAbsAtBeam", "classbeamadapter_1_1_beam_interpolation.html#a69d91b5016a811fcdff44413a426c6b5", null ],
+    [ "getCurvAbsAtBeam", "classbeamadapter_1_1_beam_interpolation.html#a05478d461b836199ba51ebe7a5ef81ed", null ],
     [ "getInterpolationParameters", "classbeamadapter_1_1_beam_interpolation.html#afd0a5a145cf50d8ef16c414e658a68ee", null ],
     [ "getMechanicalParameters", "classbeamadapter_1_1_beam_interpolation.html#a8376b33859cf7cf2b0e72d6e87ebe60e", null ],
     [ "getRestTotalLength", "classbeamadapter_1_1_beam_interpolation.html#a35c141faf1674b8412e1605b3e8e5e87", null ],

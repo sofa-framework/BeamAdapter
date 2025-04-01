@@ -38,5 +38,6 @@ var namespacebeamadapter =
       [ "USE_TOOL_1", "namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305a9950492cd70ef06867089e158d45d70a", null ],
       [ "USE_TOOL_2", "namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305ac69bb40704f9ef8b177f7b7d23d03dc2", null ]
     ] ],
+    [ "convertBeamAdapterAction", "namespacebeamadapter.html#afcfbd878d8d408c626c6f9d517ae6135", null ],
     [ "AdaptiveInflatableBeamForceField< Rigid3Types >", "namespacebeamadapter.html#af302e52f383ac2fe14bce173b2bc6c8e", null ]
 ];
