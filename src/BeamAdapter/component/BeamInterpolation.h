@@ -149,8 +149,19 @@ public:
 
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
-    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}
+    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override
+    {
+        SOFA_UNUSED(edgeInList_input);
+        SOFA_UNUSED(baryCoord_input);
+        SOFA_UNUSED(x_output);
+    }
+    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) override
+    {
+        SOFA_UNUSED(x_input);
+        SOFA_UNUSED(edgeInList_output);
+        SOFA_UNUSED(baryCoord_output);
+        SOFA_UNUSED(start);
+    }
 
     Data<helper::OptionsGroup>   crossSectionShape;
 
@@ -182,10 +193,10 @@ public:
 
     Data<bool>          d_straight;
 
-    virtual void clear();
-    virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
+    virtual void clear() override;
+    virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle) override;
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
-                                       type::vector<int>& nbP_density) ;
+                                       type::vector<int>& nbP_density) override;
     Real getRestTotalLength() override;
     void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;

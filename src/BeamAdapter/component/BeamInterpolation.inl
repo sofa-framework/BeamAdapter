@@ -149,13 +149,13 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
         {
             const auto& lengthY = helper::getReadAccessor(d_lengthY);
             const auto& lengthZ = helper::getReadAccessor(d_lengthZ);
-            for (int beamId=0; beamId<nbEdges; beamId++)
+            for (sofa::Size beamId=0; beamId<nbEdges; beamId++)
                 computeRectangularCrossSectionInertiaMatrix(lengthY[beamId], lengthZ[beamId], m_section[beamId]);
         }
         else
         {   const auto& radius = helper::getReadAccessor(d_radius);
             const auto& innerRadius = helper::getReadAccessor(d_innerRadius);
-            for (int beamId=0; beamId<nbEdges; beamId++)
+            for (sofa::Size beamId=0; beamId<nbEdges; beamId++)
                 computeCircularCrossSectionInertiaMatrix(radius[beamId], innerRadius[beamId], m_section[beamId]);
         }
     }
@@ -455,11 +455,13 @@ void BeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity)
 {
+    SOFA_UNUSED(massDensity);
+
     const auto& defaultYoungModuli = d_defaultYoungModulus.getValue();
-    youngModulus = (beamId < int(defaultYoungModuli.size()))? defaultYoungModuli[beamId]: m_defaultYoungModulus;
+    youngModulus = (beamId < static_cast<sofa::Index>(defaultYoungModuli.size()))? defaultYoungModuli[beamId]: m_defaultYoungModulus;
 
     const auto& poissonRatios = d_poissonRatio.getValue();
-    cPoisson = (beamId < int(defaultYoungModuli.size()))? poissonRatios[beamId]: m_defaultPoissonRatio;
+    cPoisson = (beamId < static_cast<sofa::Index>(defaultYoungModuli.size()))? poissonRatios[beamId]: m_defaultPoissonRatio;
 
     //TODO: massDensity??
 }

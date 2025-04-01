@@ -301,7 +301,7 @@ void WireRestShape<DataTypes>::getMechanicalParametersAtX(const Real& x_curv, Re
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
 
     // Check in which section x_used belongs to and get access to this section material
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (std::size_t i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {

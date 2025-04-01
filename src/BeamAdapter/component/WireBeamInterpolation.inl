@@ -175,7 +175,6 @@ void WireBeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index be
     Real& _Asy, Real& _Asz, Real& _J)
 {
     _L = this->d_lengthList.getValue()[beamId];
-    Real _rho;
     Real x_curv = 0;
     this->getAbsCurvXFromBeam(beamId, x_curv);
 
@@ -264,6 +263,8 @@ template<class DataTypes>
 template<class T>
 typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 {
+    SOFA_UNUSED(tObj);
+
     WireRestShape<DataTypes>* _restShape = nullptr;
     std::string _restShapePath;
 

@@ -97,7 +97,8 @@ void BaseBeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat
 
 template <class DataTypes>
 BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape*/)
-    : d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
+    : m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
+    , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
     , d_lengthList(initData(&d_lengthList, "lengthList", "list of the length of each beam"))
     , d_DOF0TransformNode0(initData(&d_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
     , d_DOF1TransformNode1(initData(&d_DOF1TransformNode1, "DOF1TransformNode1", "Optional rigid transformation between the degree of Freedom and the second node of the beam"))
@@ -107,7 +108,6 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engin
         "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , m_topology(nullptr)
     , m_mstate(nullptr)
-    , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
 {
 
     
@@ -147,7 +147,6 @@ void BaseBeamInterpolation<DataTypes>::bwdInit()
     }
 
     m_topologyEdges = &m_topology->getEdges();
-    Size nbEdges = m_topology->getNbEdges();
 }
 
 

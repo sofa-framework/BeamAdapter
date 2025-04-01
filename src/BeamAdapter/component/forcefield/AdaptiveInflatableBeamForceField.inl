@@ -122,7 +122,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeGravityVector()
 template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
 {
-    Real x_curv = 0.0 ;
     Real _rho = 0.0 ;
     Real _nu = 0.0 ;
     Real _E = 0.0 ;
