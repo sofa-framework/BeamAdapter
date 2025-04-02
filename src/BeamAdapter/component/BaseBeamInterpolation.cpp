@@ -28,13 +28,11 @@
 #include <sofa/core/ObjectFactory.h>
 
 
-namespace sofa::component::fem::_basebeaminterpolation_
+namespace beamadapter
 {
-using namespace sofa::defaulttype;
 
+using namespace sofa::defaulttype;
 
 template class SOFA_BEAMADAPTER_API BaseBeamInterpolation<Rigid3Types>;
 
-} // namespace sofa::component::fem::_basebeaminterpolation_
-
-
+} // namespace beamadapter

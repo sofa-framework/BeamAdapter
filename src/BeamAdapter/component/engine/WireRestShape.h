@@ -40,16 +40,11 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyContainer.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa::component::engine
-{
-
-namespace _wirerestshape_
+namespace beamadapter
 {
 
 using sofa::core::topology::TopologyContainer;
 using sofa::core::loader::MeshLoader;
-
-using namespace sofa::beamadapter;
 
 /**
  * \class WireRestShape
@@ -157,8 +152,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _wirerestshape_
-
-using _wirerestshape_::WireRestShape;
-
-} // namespace sofa::component::engine
+} // namespace beamadapter

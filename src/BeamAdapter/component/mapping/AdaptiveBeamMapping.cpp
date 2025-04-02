@@ -39,10 +39,11 @@
 
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 
-namespace sofa::component::mapping::_adaptivebeammapping_
+using namespace sofa::defaulttype;
+
+namespace beamadapter
 {
 
-using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
 
@@ -196,21 +197,14 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::comput
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Register in the Factory
-static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-.add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
-.add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >()
-;
-
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types>;
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types>;
 
-} // namespace sofa::component::mapping::_adaptivebeammapping_
+void registerAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs.")
+                             .add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
+                             .add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >());
+}
+
+} // namespace beamadapter

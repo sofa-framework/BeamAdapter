@@ -35,27 +35,15 @@
 #include <BeamAdapter/component/mapping/MultiAdaptiveBeamMapping.inl>
 #include <sofa/core/ObjectFactory.h>
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
-using namespace defaulttype;
-using namespace core;
-using namespace core::behavior;
+template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types >;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+void registerMultiAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs.")
+                             .add< MultiAdaptiveBeamMapping< sofa::defaulttype::Rigid3Types, sofa::defaulttype::Vec3Types > >());
+}
 
-// Register in the Factory
-static int MultiAdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-.add< MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types > >()
-
-;
-
-template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping< Rigid3Types, Vec3Types >;
-
-} // namespace sofa::component::mapping
+} // namespace beamadapter

@@ -39,24 +39,15 @@
 #include <sofa/core/ObjectFactory.h>
 
 
-namespace sofa::component::fem::_wirebeaminterpolation_
+namespace beamadapter
 {
-using namespace sofa::defaulttype;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+template class SOFA_BEAMADAPTER_API WireBeamInterpolation<sofa::defaulttype::Rigid3Types>;
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int WireBeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation on Wire rest Shape")
-.add< WireBeamInterpolation<Rigid3Types> >();
+void registerWireBeamInterpolation(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam Interpolation on Wire rest Shape")
+                             .add< WireBeamInterpolation<sofa::defaulttype::Rigid3Types> >());
+}
 
-template class SOFA_BEAMADAPTER_API WireBeamInterpolation<Rigid3Types>;
-
-} // namespace sofa::component::fem::_wirebeaminterpolation_
-
-
+} // namespace beamadapter

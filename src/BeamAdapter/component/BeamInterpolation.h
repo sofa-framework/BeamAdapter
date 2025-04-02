@@ -39,15 +39,11 @@
 #include <sofa/helper/OptionsGroup.h>
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _beaminterpolation_
-{
-using sofa::component::fem::BaseBeamInterpolation;
 using sofa::helper::OptionsGroup;
 using sofa::core::topology::BaseMeshTopology;
-using sofa::core::ConstVecCoordId;
 using sofa::core::behavior::MechanicalState;
 using sofa::component::statecontainer::MechanicalObject;
 
@@ -95,7 +91,6 @@ public:
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
-    using BeamSection = sofa::beamadapter::BeamSection;
     using BaseBeamInterpolation<DataTypes>::d_componentState;
 public:
     BeamInterpolation() ;
@@ -142,29 +137,39 @@ public:
 
     const BeamSection& getBeamSection(sofa::Index beamId) override { 
         SOFA_UNUSED(beamId);
-        return this->m_constantSection; 
+        if (m_constantBeam)
+            return this->m_constantSection;
+        return this->m_section[beamId];
     }
     void getInterpolationParameters(sofa::Index beamId, Real &_L, Real &_A, Real &_Iy , Real &_Iz,
                                Real &_Asy, Real &_Asz, Real &J) override;
     void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
 
-    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const ConstVecCoordId &vecXId, Vec3& t );
+    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
 
-  
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
-
-    
-
-    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) {}
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) {}
-
+    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override
+    {
+        SOFA_UNUSED(edgeInList_input);
+        SOFA_UNUSED(baryCoord_input);
+        SOFA_UNUSED(x_output);
+    }
+    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) override
+    {
+        SOFA_UNUSED(x_input);
+        SOFA_UNUSED(edgeInList_output);
+        SOFA_UNUSED(baryCoord_output);
+        SOFA_UNUSED(start);
+    }
 
     Data<helper::OptionsGroup>   crossSectionShape;
 
     /// Circular Cross Section
-    Data<Real>          d_radius;
-    Data<Real>          d_innerRadius;
+    Real                         m_defaultRadius;
+    Data<type::vector<Real>>     d_radius;
+    Real                         m_defaultInnerRadius;
+    Data<type::vector<Real>>     d_innerRadius;
 
     /// Square Cross Section
     Data<Real>          d_sideLength;
@@ -174,21 +179,24 @@ public:
     Data<Real>          d_largeRadius;
 
     /// Rectangular Cross Section
-    Data<Real>          d_lengthY;
-    Data<Real>          d_lengthZ;
+    Real                         m_defaultLengthY;
+    Data<type::vector<Real>>     d_lengthY;
+    Real                         m_defaultLengthZ;
+    Data<type::vector<Real>>     d_lengthZ;
     Data<bool>          d_dofsAndBeamsAligned;
 
-    Real          m_defaultYoungModulus;
-    Real          m_defaultPoissonRatio;
-    Data<type::vector<Real>>          d_defaultYoungModulus;
-    Data<type::vector<Real>>          d_poissonRatio;
+    Real                        m_defaultYoungModulus;
+    Data<type::vector<Real>>    d_defaultYoungModulus;
+
+    Real                        m_defaultPoissonRatio;
+    Data<type::vector<Real>>    d_poissonRatio;
 
     Data<bool>          d_straight;
 
-    virtual void clear();
-    virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle);
+    virtual void clear() override;
+    virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle) override;
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
-                                       type::vector<int>& nbP_density) ;
+                                       type::vector<int>& nbP_density) override;
     Real getRestTotalLength() override;
     void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
@@ -215,15 +223,18 @@ protected :
     Data< VecDeriv > d_InterpolatedVel;
 
     /// GEOMETRICAL COMPUTATION (for now we suppose that the radius of the beam do not vary in space / in time)
+    bool m_constantBeam{true};
     BeamSection      m_constantSection;
+    type::vector<BeamSection> m_section;
+
+    void checkDataSize(Real& defaultValue, Data<type::vector<Real>>& dataList, const size_t& nbEdges);
+
+    void computeRectangularCrossSectionInertiaMatrix(const Real &Ly, const Real &Lz, BeamSection &section);
+    void computeCircularCrossSectionInertiaMatrix(const Real &r, const Real &rInner, BeamSection &section);
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)
 extern template class SOFA_BEAMADAPTER_API BeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace _beaminterpolation_
-
-using _beaminterpolation_::BeamInterpolation ;
-
-} /// namespace sofa::component::fem
+} // namespace beamadapter

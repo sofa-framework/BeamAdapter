@@ -36,7 +36,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
 /*!
@@ -84,7 +84,7 @@ public:
     typedef sofa::type::Mat<12,6,Real> Mat12x6;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
-    typedef sofa::component::controller::InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
+    typedef InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
 
 public:
     Data<bool> useCurvAbs;
@@ -140,7 +140,7 @@ protected:
     void assignSubMappingFromControllerInfo();
 
     // for fromSeveralInterpolations option
-    sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
+    sofa::type::vector< WireBeamInterpolation<TIn>  *> m_instrumentList;
     sofa::type::vector<  typename AdaptiveBeamMapping<TIn, TOut>::SPtr > m_subMappingList;
     TInterventionalRadiologyController* m_ircontroller;
     sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod{nullptr};
@@ -155,4 +155,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Vec3Types>;
 #endif
 
-} // namespace sofa::component::mapping
+} // namespace beamadapter

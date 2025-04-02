@@ -43,13 +43,11 @@
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
 
-namespace sofa::component::controller::_adaptivebeamcontroller_
+namespace beamadapter
 {
 
 using sofa::core::objectmodel::BaseContext ;
 using std::string;
-using sofa::core::VecCoordId;
-using sofa::core::VecDerivId;
 
 //TODO(dmarchal 2017-05-17) to christian & euallie.
 //  This component seems specific to radiology instrument... but its name suggest a very generic behavior
@@ -229,8 +227,8 @@ void AdaptiveBeamController<DataTypes>::onBeginAnimationStep(const double /*dt*/
 template <class DataTypes>
 void AdaptiveBeamController<DataTypes>::applyController()
 {
-    Data<VecCoord>* datax = this->getMechanicalState()->write(VecCoordId::position());
-    Data<VecDeriv>* datav = this->getMechanicalState()->write(VecDerivId::velocity());
+    Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    Data<VecDeriv>* datav = this->getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     auto v = sofa::helper::getWriteOnlyAccessor(*datav);
 
@@ -321,6 +319,6 @@ void AdaptiveBeamController<DataTypes>::applyController()
     m_adaptiveinterpolation->setLength(newCurvAbs.size()-2,L);
 }
 
-} // namespace sofa::component::controller::_adaptivebeamcontroller_
+} // namespace beamadapter
 
 

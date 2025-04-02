@@ -39,7 +39,7 @@
 #include <sofa/helper/ScopedAdvancedTimer.h>
 
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
 using sofa::helper::ScopedAdvancedTimer;
@@ -226,24 +226,24 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 
     const core::MechanicalParams* _mparams = core::MechanicalParams::defaultInstance();
 
-    this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::VecCoordId::position()),*this->getFromModel()->read(sofa::core::ConstVecCoordId::position()));
+    this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::vec_id::write_access::position),*this->getFromModel()->read(sofa::core::vec_id::read_access::position));
 
-    const Data<InVecCoord>& xfree_in = *this->getFromModel()->read(sofa::core::ConstVecCoordId::freePosition());
+    const Data<InVecCoord>& xfree_in = *this->getFromModel()->read(sofa::core::vec_id::read_access::freePosition);
 
-    const Data<VecCoord>&     x_out = *this->getToModel()->read(sofa::core::VecCoordId::position());
-    const Data<VecCoord>& xfree_out = *this->getToModel()->read(sofa::core::VecCoordId::freePosition());
+    const Data<VecCoord>&     x_out = *this->getToModel()->read(sofa::core::vec_id::read_access::position);
+    const Data<VecCoord>& xfree_out = *this->getToModel()->read(sofa::core::vec_id::read_access::freePosition);
 
     core::behavior::MechanicalState<TOut>* ms_out =	dynamic_cast<core::behavior::MechanicalState<TOut> *> (this->getToModel());
 
     if (x_out.getValue().size() != xfree_out.getValue().size())
     {
-        ms_out->vInit(_mparams,sofa::core::VecCoordId::freePosition(),sofa::core::ConstVecCoordId::position());
-        ms_out->vInit(_mparams,sofa::core::VecDerivId::freeVelocity(),sofa::core::ConstVecDerivId::velocity());
+        ms_out->vInit(_mparams,sofa::core::vec_id::write_access::freePosition,sofa::core::vec_id::read_access::position);
+        ms_out->vInit(_mparams,sofa::core::vec_id::write_access::freeVelocity,sofa::core::vec_id::read_access::velocity);
     }
 
     if (xfree_in.getValue().size() > 0)
     {
-        this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::VecCoordId::freePosition()),	*this->getFromModel()->read(sofa::core::ConstVecCoordId::freePosition()));
+        this->apply(_mparams /* PARAMS FIRST */, *this->getToModel()->write(sofa::core::vec_id::write_access::freePosition),	*this->getFromModel()->read(sofa::core::vec_id::read_access::freePosition));
     }
 }
 
@@ -392,7 +392,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     {
         int controledEdgeId = edgeId-nbUnControlledEdges;
         const sofa::type::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
-        sofa::type::vector< sofa::component::fem::WireBeamInterpolation<In>  *> m_instrumentsList;
+        sofa::type::vector< WireBeamInterpolation<In>  *> m_instrumentsList;
         m_ircontroller->getInstrumentList(m_instrumentsList);
         Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
         int idInstrument  = id_instrument_table_on_node[0];
@@ -419,4 +419,4 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::clear(int size)
 }
 
 
-} // namespace sofa::component::mapping
+} // namespace beamadapter

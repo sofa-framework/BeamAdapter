@@ -28,7 +28,7 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using sofa::core::loader::MeshLoader;
@@ -123,4 +123,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

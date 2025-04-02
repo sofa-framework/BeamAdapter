@@ -39,8 +39,9 @@
 
 #include <string>
 
-namespace beamadapter::mapping
+namespace beamadapter
 {
+
 using sofa::core::objectmodel::BaseContext ;
 using sofa::helper::WriteAccessor;
 using sofa::type::RGBAColor ;
@@ -454,9 +455,9 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::applyDJT(const sofa
 template <class TIn1, class TIn2, class TOut>
 const sofa::type::vector<sofa::linearalgebra::BaseMatrix*>* BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::getJs()
 {
-    const OutVecCoord& out = m_toModel->read(sofa::core::ConstVecCoordId::position())->getValue();
-    const In1VecCoord& in1 = m_fromModel1->read(sofa::core::ConstVecCoordId::position())->getValue();
-    const In2VecCoord& in2 = m_fromModel2->read(sofa::core::ConstVecCoordId::position())->getValue();
+    const OutVecCoord& out = m_toModel->read(sofa::core::vec_id::read_access::position)->getValue();
+    const In1VecCoord& in1 = m_fromModel1->read(sofa::core::vec_id::read_access::position)->getValue();
+    const In2VecCoord& in2 = m_fromModel2->read(sofa::core::vec_id::read_access::position)->getValue();
 
     typename SparseMatrixEigen1::CompressedMatrix& J1 = m_eigenJacobian1.compressedMatrix;
     typename SparseMatrixEigen1::CompressedMatrix& J2 = m_eigenJacobian2.compressedMatrix;
@@ -560,4 +561,4 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::draw(const sofa::co
     }
 }
 
-} // namespace
+} // namespace beamadapter

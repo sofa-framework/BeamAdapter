@@ -28,7 +28,7 @@
 #include <sofa/core/ObjectFactory.h>
 
 
-namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
+namespace beamadapter
 {
 
 
@@ -56,25 +56,12 @@ void AdaptiveBeamLengthConstraintResolution::store(int line, SReal* force, bool 
         *m_active = (force[line] != 0);
 }
 
+template class AdaptiveBeamLengthConstraint<sofa::defaulttype::Rigid3Types>;
 
-using namespace sofa::defaulttype;
-using namespace sofa::helper;
-using core::RegisterObject;
+void registerAdaptiveBeamLengthConstraint(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Constrain the length of a beam.")
+                             .add< AdaptiveBeamLengthConstraint<sofa::defaulttype::Rigid3Types> >());
+}
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static int AdaptiveBeamLengthConstraintClass = RegisterObject("Constrain the length of a beam.")
-                .add< AdaptiveBeamLengthConstraint<Rigid3Types> >(true) // default template
-
-        ;
-
-template class AdaptiveBeamLengthConstraint<Rigid3Types>;
-
-
-} // namespace sofa::component::constraintset::_adaptivebeamlengthconstraint_
-
+} // namespace beamadapter

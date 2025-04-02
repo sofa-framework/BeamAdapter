@@ -24,11 +24,11 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 #include <sofa/defaulttype/RigidTypes.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using namespace sofa::defaulttype;
 
 template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<Rigid3Types>;
 
-}// namespace sofa::beamadapter
+}// namespace beamadapter

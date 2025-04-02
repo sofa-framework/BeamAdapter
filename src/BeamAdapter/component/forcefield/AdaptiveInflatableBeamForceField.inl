@@ -48,7 +48,7 @@
 #include <sofa/core/visual/VisualParams.h>
 
 
-namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
+namespace beamadapter
 {
 
 /* ************* ADAPTIVE FORCEFIELD_AND_MASS ************** */
@@ -57,7 +57,6 @@ using sofa::core::objectmodel::BaseContext ;
 using sofa::type::Vec3 ;
 using sofa::type::Quat ;
 using sofa::helper::ReadAccessor ;
-using sofa::core::ConstVecCoordId ;
 using std::set ;
 
 template <class DataTypes>
@@ -123,7 +122,6 @@ void AdaptiveInflatableBeamForceField<DataTypes>::computeGravityVector()
 template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices)
 {
-    Real x_curv = 0.0 ;
     Real _rho = 0.0 ;
     Real _nu = 0.0 ;
     Real _E = 0.0 ;
@@ -619,7 +617,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addForce (const MechanicalPara
 
         /// ADD the effect of the pressure in the axial direction
         // inner radius of the tube
-        Real r = l_interpolation->d_innerRadius.getValue();
+        Real r = l_interpolation->m_defaultInnerRadius;
 
         if (r==(Real)0){
             msg_warning()<<" Inflatable Beam Force Field suppose that the interpolation is a tube ";
@@ -730,7 +728,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::draw(const VisualParams *vpara
     if (!vparams->displayFlags().getShowForceFields() && !vparams->displayFlags().getShowBehaviorModels()) return;
     if (!mstate) return;
 
-    ReadAccessor<Data<VecCoord> > x = mstate->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x = mstate->read(sofa::core::vec_id::read_access::position) ;
 
     unsigned int numBeams = l_interpolation->getNumBeams();
 
@@ -808,5 +806,5 @@ void AdaptiveInflatableBeamForceField<DataTypes>::drawElement(const VisualParams
 }
 
 
-} // namespace sofa::component::forcefield::_AdaptiveInflatableBeamForceField_
+} // namespace beamadapter
 

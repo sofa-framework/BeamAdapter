@@ -24,7 +24,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using sofa::core::loader::MeshLoader;
@@ -38,7 +38,7 @@ using sofa::core::loader::MeshLoader;
  * Method @sa getRestTransformOnX will return the current position of the curviline abscisse along the spire.
  */
 template <class DataTypes>
-class RodSpireSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
+class RodSpireSection : public BaseRodSectionMaterial<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodSpireSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
@@ -66,4 +66,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API RodSpireSection<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

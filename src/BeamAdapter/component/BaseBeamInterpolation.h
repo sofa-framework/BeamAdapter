@@ -39,17 +39,14 @@
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _basebeaminterpolation_
-{
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
 using sofa::type::Vec ;
 using sofa::type::Vec3d ;
 using sofa::type::vector;
-using sofa::core::ConstVecCoordId;
 using sofa::core::behavior::MechanicalState;
 using sofa::component::statecontainer::MechanicalObject;
 
@@ -84,8 +81,6 @@ public:
     using EdgeID = BaseMeshTopology::EdgeID;
     using VecEdgeID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
-
-    using BeamSection = sofa::beamadapter::BeamSection;
 
     BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr*/);
 
@@ -170,11 +165,11 @@ public:
 
     /// spline base interpolation of points and transformation
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, Vec3& posResult) {
-        interpolatePointUsingSpline(edgeInList, baryCoord, localPos, x, posResult, true, ConstVecCoordId::position());
+        interpolatePointUsingSpline(edgeInList, baryCoord, localPos, x, posResult, true, sofa::core::vec_id::read_access::position);
     }
 
     void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
-        const VecCoord& x, Vec3& posResult, bool recompute, const ConstVecCoordId& vecXId);
+        const VecCoord& x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId& vecXId);
 
 
     void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
@@ -246,9 +241,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API BaseBeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _basebeaminterpolation_
-
-/// Import the privately defined into the expected sofa namespace.
-using _basebeaminterpolation_::BaseBeamInterpolation ;
-
-} // namespace sofa::component::fem
+} // namespace beamadapter

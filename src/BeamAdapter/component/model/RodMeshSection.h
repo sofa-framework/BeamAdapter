@@ -25,7 +25,7 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using sofa::core::loader::MeshLoader;
@@ -40,7 +40,7 @@ using sofa::core::loader::MeshLoader;
  * Method @sa getRestTransformOnX will return the current position of the curviline abscisse along the mesh structure.
  */
 template <class DataTypes>
-class RodMeshSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
+class RodMeshSection : public BaseRodSectionMaterial<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodMeshSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
@@ -88,4 +88,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API RodMeshSection<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

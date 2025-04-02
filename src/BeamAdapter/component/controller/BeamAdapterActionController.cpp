@@ -28,13 +28,15 @@
 
 #include <BeamAdapter/component/controller/BeamAdapterActionController.inl>
 
-namespace sofa::component::controller
+namespace beamadapter
 {
-
-const static int BeamAdapterActionControllerClass = core::RegisterObject("BeamAdapterActionController")
-    .add< BeamAdapterActionController<sofa::defaulttype::Rigid3Types> >()
-    ;
 
 template class SOFA_BEAMADAPTER_API BeamAdapterActionController<sofa::defaulttype::Rigid3Types>;
 
-} // namespace sofa::component::controller
+void registerBeamAdapterActionController(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("BeamAdapterActionController")
+                                            .add< BeamAdapterActionController<sofa::defaulttype::Rigid3Types> >());
+}
+
+} // namespace beamadapter

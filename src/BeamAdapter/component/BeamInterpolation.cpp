@@ -40,29 +40,15 @@
 /// Have a look a the end of BeamInterpolation.h
 #include <BeamAdapter/component/BeamInterpolation.inl>
 
-
-namespace sofa::component::fem::_beaminterpolation_
+namespace beamadapter
 {
 
-using namespace sofa::defaulttype;
+template class SOFA_BEAMADAPTER_API BeamInterpolation<sofa::defaulttype::Rigid3Types>;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+void registerBeamInterpolation(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive Beam Interpolation")
+                             .add< BeamInterpolation<sofa::defaulttype::Rigid3Types> >());
+}
 
-//TODO(damien): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int BeamInterpolationClass = core::RegisterObject("Adaptive Beam Interpolation")
-.add< BeamInterpolation<Rigid3Types> >(true)
-;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Explicit template instanciation of extern template.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-template class SOFA_BEAMADAPTER_API BeamInterpolation<Rigid3Types>;
-
-} // namespace sofa::component::fem::_beaminterpolation_
+} // namespace beamadapter

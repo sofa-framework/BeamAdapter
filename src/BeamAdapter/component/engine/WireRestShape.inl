@@ -41,10 +41,7 @@
 #define EPSILON 0.0000000001
 #define VERIF 1
 
-namespace sofa::component::engine
-{
-
-namespace _wirerestshape_
+namespace beamadapter
 {
 
 using sofa::type::vector ;
@@ -304,7 +301,7 @@ void WireRestShape<DataTypes>::getMechanicalParametersAtX(const Real& x_curv, Re
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
 
     // Check in which section x_used belongs to and get access to this section material
-    for (auto i = 1; i < keyPts.size(); ++i)
+    for (std::size_t i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
@@ -368,7 +365,4 @@ void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q,
 }
 
 
-} // namespace _wirerestshape_
-using _wirerestshape_::WireRestShape;
-
-} // namespace sofa::component::engine
+} // namespace beamadapter

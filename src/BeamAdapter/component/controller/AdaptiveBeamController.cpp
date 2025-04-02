@@ -41,28 +41,15 @@
 
 #include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
-namespace sofa::component::controller::_adaptivebeamcontroller_
+namespace beamadapter
 {
 
-using sofa::defaulttype::Rigid3Types;
-using core::RegisterObject;
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3Types>;
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+void registerAdaptiveBeamController(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive beam controller.")
+                             .add< AdaptiveBeamController<sofa::defaulttype::Rigid3Types> >());
+}
 
-//TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-int AdaptiveBeamControllerClass = RegisterObject("Adaptive beam controller")
-.add< AdaptiveBeamController<Rigid3Types> >()
-;
-
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
-
-
-} // namespace sofa::component::controller::_adaptivebeamcontroller_
-
-
+} // namespace beamadapter

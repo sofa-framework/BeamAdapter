@@ -36,14 +36,11 @@
 #include <BeamAdapter/component/BaseBeamInterpolation.inl>
 
 
-namespace sofa::component::fem::_wirebeaminterpolation_
+namespace beamadapter
 {
 
-using sofa::component::engine::WireRestShape ;
-using namespace sofa::beamadapter;
-
 template <class DataTypes>
-WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape)
+WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes> *_restShape)
     : m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
 {
 
@@ -178,7 +175,6 @@ void WireBeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index be
     Real& _Asy, Real& _Asz, Real& _J)
 {
     _L = this->d_lengthList.getValue()[beamId];
-    Real _rho;
     Real x_curv = 0;
     this->getAbsCurvXFromBeam(beamId, x_curv);
 
@@ -267,6 +263,8 @@ template<class DataTypes>
 template<class T>
 typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 {
+    SOFA_UNUSED(tObj);
+
     WireRestShape<DataTypes>* _restShape = nullptr;
     std::string _restShapePath;
 
@@ -302,6 +300,4 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
 }
 
 
-} // namespace sofa::component::fem::_wirebeaminterpolation_
-
-
+} // namespace beamadapter

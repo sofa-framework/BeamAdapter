@@ -28,14 +28,15 @@
 
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
-using namespace sofa::defaulttype;
+template class SOFA_BEAMADAPTER_API RodStraightSection<sofa::defaulttype::Rigid3Types>;
 
-const int RodStraightSectionClass = core::RegisterObject("Class defining a rod straight section Material, defining material and geometry parameters.")
-    .add< RodStraightSection<Rigid3Types> >(true);
+void registerRodStraightSection(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Class defining a rod straight section Material, defining material and geometry parameters.")
+                             .add< RodStraightSection<sofa::defaulttype::Rigid3Types> >());
+}
 
-template class SOFA_BEAMADAPTER_API RodStraightSection<Rigid3Types>;
-
-}// namespace sofa::beamadapter
+} // namespace beamadapter

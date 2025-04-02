@@ -45,7 +45,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 
 
-namespace sofa::component::controller::_interventionalradiologycontroller_
+namespace beamadapter
 {
 
 using type::vector;
@@ -53,7 +53,6 @@ using core::objectmodel::BaseContext;
 using helper::WriteAccessor;
 using core::objectmodel::KeypressedEvent;
 using core::objectmodel::MouseEvent;
-using namespace sofa::beamadapter;
 
 
 template <class DataTypes>
@@ -211,7 +210,7 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
         return;
     }
 
-    WriteAccessor<Data<VecCoord> > x = *this->mState->write(core::VecCoordId::position());
+    WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
     for(unsigned int i=0; i<x.size(); i++)
         x[i] = d_startingPos.getValue();
     m_numControlledNodes = x.size();
@@ -374,7 +373,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
 
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::applyAction(sofa::beamadapter::BeamAdapterAction action)
+void InterventionalRadiologyController<DataTypes>::applyAction(BeamAdapterAction action)
 {
     int id = d_controlledInstrument.getValue();
     if (id >= int(m_instrumentsList.size()))
@@ -773,7 +772,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     totalLengthIsChanging(newCurvAbs, modifiedCurvAbs, idInstrumentTable); 
 
     //    => Get write access to current nodes/dofs
-    Data<VecCoord>* datax = this->getMechanicalState()->write(core::VecCoordId::position());
+    Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::vec_id::write_access::position);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     VecCoord xbuf = x.ref();
 
@@ -1036,8 +1035,8 @@ void InterventionalRadiologyController<DataTypes>::fillInstrumentCurvAbsTable(co
 template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int firstSimulatedNode)
 {
-    WriteAccessor<Data<VecCoord> > xMstate = *getMechanicalState()->write(core::VecCoordId::position());
-    WriteAccessor<Data<VecDeriv> > vMstate = *getMechanicalState()->write(core::VecDerivId::velocity());
+    WriteAccessor<Data<VecCoord> > xMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecDeriv> > vMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
 
     // set the position to startingPos for all the nodes that are not simulated
     // and add a fixedConstraint
@@ -1058,7 +1057,7 @@ bool InterventionalRadiologyController<DataTypes>::modifyTopology(void)
 }
 
 template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::getInstrumentList(type::vector<fem::WireBeamInterpolation<DataTypes>*>& list)
+void InterventionalRadiologyController<DataTypes>::getInstrumentList(type::vector<WireBeamInterpolation<DataTypes>*>& list)
 {
     list = m_instrumentsList;
 }
@@ -1076,6 +1075,6 @@ int InterventionalRadiologyController<DataTypes>::getTotalNbEdges() const
 }
 
 
-} // namespace sofa::component::controller::_interventionalradiologycontroller_
+} // namespace beamadapter
 
 
