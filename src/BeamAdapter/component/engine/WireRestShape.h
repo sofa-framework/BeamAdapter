@@ -83,23 +83,23 @@ public:
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////     
 
      /// This function is called by the force field to evaluate the rest position of each beam
-     void getRestTransformOnX(Transform &global_H_local, const Real &x);
+     void getRestTransformOnX(Transform &global_H_local, const Real x);
 
      /// Returns the BeamSection @sa m_beamSection corresponding to the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getBeamSection
-     [[nodiscard]] const BeamSection& getBeamSectionAtX(const Real& x_curv) const;
+     [[nodiscard]] const BeamSection& getBeamSectionAtX(const Real x_curv) const;
 
      /// Returns the BeamSection data depending on the beam position at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getInterpolationParameters
-     void getInterpolationParametersAtX(const Real& x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
+     void getInterpolationParametersAtX(const Real x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
 
      /// Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getMechanicalParameters
-     void getMechanicalParametersAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const;
+     void getMechanicalParametersAtX(const Real x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const;
 
 
      /**
       * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 
       * and the minimum density (number of points) between them. (Nb. nbP_density.size() == xP_noticeable.size() - 1)
       */
-     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<int>& nbP_density) const ;
+     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<sofa::Size>& nbP_density) const ;
 
 
      /// Functions enabling to load and use a geometry given from OBJ external file
@@ -107,8 +107,8 @@ public:
      
      
      Real getLength() ;
-     void getCollisionSampling(Real &dx, const Real &x_curv);
-     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
+     void getCollisionSampling(Real &dx, const Real x_curv);
+     void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines) ;
 
 
 
@@ -134,7 +134,7 @@ protected:
 
 
 public:
-     Data<type::vector<int> > d_density;
+     Data<type::vector<sofa::Size> > d_density;
      Data<type::vector<Real> > d_keyPoints;
      
      /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.

@@ -72,13 +72,13 @@ public:
     /////////////////////////// Geometry and physics Getter //////////////////////////////////////////
 
     /// Returns the number of visual edges of this section. To be set or computed by child.
-    [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
+    [[nodiscard]] auto getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
 
     /// Returns the number of collision edges of this section. To be set or computed by child.
-    [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+    [[nodiscard]] auto getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
 
     /// Returns the total length of this section. To be set or computed by child.
-    [[nodiscard]] Real getLength() const { return d_length.getValue(); }
+    [[nodiscard]] auto getLength() const { return d_length.getValue(); }
 
 
     /// Returns the BeamSection @sa m_beamSection corresponding to this section
@@ -91,7 +91,7 @@ public:
     void getMechanicalParameters(Real& youngModulus, Real& cPoisson, Real& massDensity) const;
 
     /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter 
-    virtual void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+    virtual void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
     {
         SOFA_UNUSED(global_H_local);
         SOFA_UNUSED(x_used);

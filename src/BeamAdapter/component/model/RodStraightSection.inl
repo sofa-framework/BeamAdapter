@@ -46,25 +46,12 @@ bool RodStraightSection<DataTypes>::initSection()
         return false;
     }
 
-    if (int nbrEdgesVisu = this->d_nbEdgesVisu.getValue() <= 0)
-    {
-        msg_warning() << "Number of visual edges has been set to an invalid value: " << nbrEdgesVisu << ". Value should be a positive integer. Setting to default value: 10";
-        this->d_nbEdgesVisu.setValue(10);
-    }
-
-
-    if (int nbEdgesCollis = this->d_nbEdgesCollis.getValue() <= 0)
-    {
-        msg_warning() << "Number of collision edges has been set to an invalid value: " << nbEdgesCollis << ". Value should be a positive integer. Setting to default value: 20";
-        this->d_nbEdgesCollis.setValue(10);
-    }
-
     return true;
 }
 
 
 template <class DataTypes>
-void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
 {
     global_H_local.set(type::Vec3(x_start + x_used, 0.0, 0.0), Quat());
 }
