@@ -182,7 +182,7 @@ void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noti
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv)
+void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real x_curv)
 {
     unsigned int numLines;
     Real x_used = x_curv - EPSILON;
@@ -229,7 +229,7 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real &x_curv
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, const Real &x)
+void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, const Real x)
 {
     Real x_used = x - EPSILON;
 
@@ -255,7 +255,7 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
 
 
 template <class DataTypes>
-const BeamSection& WireRestShape<DataTypes>::getBeamSectionAtX(const Real& x_curv) const
+const BeamSection& WireRestShape<DataTypes>::getBeamSectionAtX(const Real x_curv) const
 {
     const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
@@ -276,7 +276,7 @@ const BeamSection& WireRestShape<DataTypes>::getBeamSectionAtX(const Real& x_cur
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getInterpolationParametersAtX(const Real& x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const
+void WireRestShape<DataTypes>::getInterpolationParametersAtX(const Real x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const
 {
     const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
@@ -295,7 +295,7 @@ void WireRestShape<DataTypes>::getInterpolationParametersAtX(const Real& x_curv,
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getMechanicalParametersAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const
+void WireRestShape<DataTypes>::getMechanicalParametersAtX(const Real x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const
 {
     const Real x_used = x_curv - Real(EPSILON);
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
@@ -321,7 +321,7 @@ typename WireRestShape<DataTypes>::Real WireRestShape<DataTypes>::getLength()
 
 
 template <class DataTypes>
-void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
+void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines)
 {
     numLines = 0;
     for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)

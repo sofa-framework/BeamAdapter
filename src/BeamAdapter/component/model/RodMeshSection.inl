@@ -62,7 +62,7 @@ bool RodMeshSection<DataTypes>::initSection()
 
 
 template <class DataTypes>
-void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
 {
     Real abs_curr = x_used - x_start;
     abs_curr = abs_curr /(this->d_length.getValue()) * m_absOfGeometry;
