@@ -174,7 +174,7 @@ bool WireRestShape<DataTypes>::initTopology()
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noticeable,
-                                                     type::vector<int>& nbP_density) const
+                                                     type::vector<sofa::Size>& nbP_density) const
 {
     xP_noticeable = d_keyPoints.getValue();
     nbP_density = d_density.getValue();

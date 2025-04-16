@@ -99,7 +99,7 @@ public:
       * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 
       * and the minimum density (number of points) between them. (Nb. nbP_density.size() == xP_noticeable.size() - 1)
       */
-     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<int>& nbP_density) const ;
+     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<sofa::Size>& nbP_density) const ;
 
 
      /// Functions enabling to load and use a geometry given from OBJ external file
@@ -134,7 +134,7 @@ protected:
 
 
 public:
-     Data<type::vector<int> > d_density;
+     Data<type::vector<sofa::Size> > d_density;
      Data<type::vector<Real> > d_keyPoints;
      
      /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.

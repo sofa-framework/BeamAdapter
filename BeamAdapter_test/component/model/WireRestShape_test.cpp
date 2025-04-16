@@ -163,10 +163,10 @@ void WireRestShape_test::testParameterInit()
     Real straightLength = 95.0;
     EXPECT_EQ(fullLength, 100.0);
 
-    int nbrE0 = 50;
-    int nbrE1 = 10;
+    sofa::Size nbrE0 = 50;
+    sofa::Size nbrE1 = 10;
     vector<Real> keysPoints, keysPoints_ref = { 0, straightLength, fullLength };
-    vector<int> nbP_density, nbP_density_ref = { nbrE0, nbrE1 };
+    vector<sofa::Size> nbP_density, nbP_density_ref = { nbrE0, nbrE1 };
     
     wire->getSamplingParameters(keysPoints, nbP_density);
     EXPECT_EQ(keysPoints.size(), 3);
