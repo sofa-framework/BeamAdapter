@@ -70,6 +70,7 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 , l_fixedConstraint(initLink("fixedConstraint", "Path to the FixedProjectiveConstraint"))
+, l_mechanicalTopology(initLink("topology", "Path to the mechanical topology"))
 {
     m_sensored =false;
 }
@@ -80,6 +81,23 @@ void InterventionalRadiologyController<DataTypes>::init()
 {
     BaseContext* context = getContext();
     this->mState = nullptr;
+    
+    if(!l_mechanicalTopology)
+    {
+        msg_info() << "topology (path to the mechanical topology) has not been set, searching for one in the context.";
+        l_mechanicalTopology.set(this->getContext()->getMeshTopologyLink());
+    }
+    
+    if (l_mechanicalTopology)
+    {
+        msg_info() << "Found topology named "<< l_mechanicalTopology->getName() ;
+    }
+    else
+    {
+        msg_error() << "Cannot find topology container. Please specify the link to the topology or insert one in the same node.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
 
     //get the pointers of the WireBeamInterpolations
     const type::vector<std::string>& instrumentPathList = d_instrumentsPath.getValue();
@@ -100,7 +118,8 @@ void InterventionalRadiologyController<DataTypes>::init()
         }
     }
 
-    if (m_instrumentsList.empty()) {
+    if (m_instrumentsList.empty())
+    {
         msg_error() << "No instrument found (no WireBeamInterpolation)! the component can not work and will be set to Invalid.";
         sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
@@ -1067,7 +1086,7 @@ const type::vector< type::vector<int> >& InterventionalRadiologyController<DataT
 template <class DataTypes>
 int InterventionalRadiologyController<DataTypes>::getTotalNbEdges() const
 {
-    return getContext()->getMeshTopology()->getNbEdges();
+    return l_mechanicalTopology->getNbEdges();
 }
 
 

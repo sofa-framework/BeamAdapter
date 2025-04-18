@@ -384,7 +384,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
     assert(nbUnControlledEdges>=0);
 
-    if (edgeId < (totalNbEdges-nbControlledEdge) )
+    if (edgeId < nbUnControlledEdges )
     {
         //if the edge in question is not under control, dont need to compute for collision
     }
