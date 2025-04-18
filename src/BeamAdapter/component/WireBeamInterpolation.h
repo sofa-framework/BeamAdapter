@@ -117,6 +117,11 @@ public:
         return this->m_restShape->getLength();
     }
 
+    void getMechanicalSampling(Real &dx, const Real x_localcurv_abs) override
+    {
+        this->m_restShape->getMechanicalSampling(dx,x_localcurv_abs);
+    }
+    
     void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override
     {
         this->m_restShape->getCollisionSampling(dx,x_localcurv_abs);

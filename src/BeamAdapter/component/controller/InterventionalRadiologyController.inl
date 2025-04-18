@@ -567,7 +567,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     for (int i = static_cast<int>(xPointList.size()) - 1; i>=0; i--)
     {
         //1.  we determin if the poin ument
-        int instrumentId = idInstrumentList[i];
+        const int instrumentId = idInstrumentList[i];
 
         // x_max for the instrument that is controlled (not dropped part)
         Real xMaxControlled = m_instrumentsList[instrumentId]->getRestTotalLength();
@@ -585,9 +585,9 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
         xPointList[i] = xAbsCurv - xBegin; // provides the "local" curv absc of the point (on the instrument reference)
         idInstrumentList[i] = firstInstruOnx;
 
-        // 3. we look for the collision sampling of the current instrument in order to "place" the following point
+        // 3. we look for the mechanical sampling of the current instrument in order to "place" the following point
         Real xIncr;
-        m_instrumentsList[firstInstruOnx]->getCollisionSampling(xIncr, xPointList[i]);
+        m_instrumentsList[firstInstruOnx]->getMechanicalSampling(xIncr, xPointList[i]);
         xAbsCurv -= xIncr;
 
         // the following point could not have x_abs_curv<0;
@@ -626,7 +626,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     for (unsigned int i=0; i<xPointList.size(); i++)
     {
-        int instrumentId = idInstrumentList[i];
+        const int instrumentId = idInstrumentList[i];
 
         // x_max for the instrument that is controlled (not dropped part)
         Real xMaxInstrument = m_instrumentsList[instrumentId]->getRestTotalLength();
@@ -709,7 +709,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     // Create vectors with the CurvAbs of the noticiable points and the id of the corresponding instrument
     type::vector<Real> newCurvAbs;
-    type::vector<type::vector<int>> idInstrumentTable;
+    type::vector<type::vector<int>> idInstrumentTable; // i.e for each node -> [instID0, instID1...]
 
     // ## STEP 1: Find the total length of the COMBINED INSTRUMENTS and the one for which xtip > 0 (so the one which are simulated)
     helper::AdvancedTimer::stepBegin("step1");
@@ -767,10 +767,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     //    => Get write access to current nodes/dofs
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::vec_id::write_access::position);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
-    VecCoord xbuf = x.ref();
+    const VecCoord xbuf = x.ref(); // make a copy of the positions, as it will changed meanwhile
     
     const sofa::Size numberOfNodes = x.size();
     sofa::Size numberOfSimulatedNodes = newCurvAbs.size(); // number of simulated nodes
+
     if (numberOfSimulatedNodes > numberOfNodes)
     {
         msg_warning() << "Parameters missmatch. There are more curv abscisses '" << numberOfSimulatedNodes << "' than the number of dof: " << numberOfNodes;
@@ -1012,7 +1013,7 @@ void InterventionalRadiologyController<DataTypes>::fillInstrumentCurvAbsTable(co
         xBegin -= threshold;
         xEnd += threshold;
 
-        // check curvAbs sorted value, if value is inside [xBegin, xBegin] of the tool add it to instrumentList. 
+        // check curvAbs sorted value, if value is inside [xBegin, xEnd] of the tool add it to instrumentList.
         for (unsigned int i = 0; i < curvAbs.size(); i++)
         {
             if (curvAbs[i] < xBegin) // still not inside range

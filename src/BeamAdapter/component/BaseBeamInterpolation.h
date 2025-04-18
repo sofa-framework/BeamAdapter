@@ -114,6 +114,8 @@ public:
     Real getLength(const EdgeID edgeInList);
     void setLength(const EdgeID edgeInList, Real& length);
     
+    virtual void getMechanicalSampling(Real& dx, const Real x_localcurv_abs) = 0;
+    
     /// Collision information using @sa d_beamCollision
     virtual void getCollisionSampling(Real& dx, const Real x_localcurv_abs) = 0;
     void addCollisionOnBeam(const sofa::Index beam);

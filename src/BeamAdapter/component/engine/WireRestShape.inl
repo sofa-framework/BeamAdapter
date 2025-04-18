@@ -58,7 +58,8 @@ WireRestShape<DataTypes>::WireRestShape()
     , l_sectionMaterials(initLink("wireMaterials", "link to Wire Section Materials (to be ordered according to the instrument, from handle to tip)"))
     , l_topology(initLink("topology", "link to the topology container"))
 {
-
+    d_density.setReadOnly(true); // density is supposed to be filled using the section materials
+    d_keyPoints.setReadOnly(true); // key points are supposed to be filled using the section materials
 }
 
 
@@ -70,16 +71,15 @@ void WireRestShape<DataTypes>::init()
     //////////////////////////////////////////////
     ////////// get and fill local topology ///////
     //////////////////////////////////////////////
-    
-    // Get pointer to given topology using the link. If not found will search in current context.
-    _topology = l_topology.get();
 
-    if (!_topology)
-        this->getContext()->get(_topology);
-
-    if(_topology != nullptr)
+    if (!l_topology)
     {
-        msg_info() << "found topology named "<< _topology->getName() ;
+        l_topology.set(this->getContext()->getMeshTopologyLink());
+    }
+
+    if (l_topology)
+    {
+        msg_info() << "Found topology named "<< l_topology->getName() ;
     }
     else
     {
@@ -93,6 +93,16 @@ void WireRestShape<DataTypes>::init()
         msg_error() << "No BaseRodSectionMaterial set. At least one material should be set and link using wireMaterials.";
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
+    }
+    
+    // Workaround around the fact that d_density and d_keyPoints are supposed to be output only
+    if(d_density.isSet())
+    {
+        msg_warning() << "The density field will be ignored (output only Data).";
+    }
+    if(d_keyPoints.isSet())
+    {
+        msg_warning() << "The keyPoints field will be ignored (output only Data).";
     }
 
 
@@ -124,7 +134,7 @@ void WireRestShape<DataTypes>::initLengths()
     {
         auto rodSection = l_sectionMaterials.get(i);
         keyPointList[i+1] = keyPointList[i] + rodSection->getLength();
-        densityList[i] = rodSection->getNbCollisionEdges();
+        densityList[i] = rodSection->getNbBeams();
     }
 }
 
@@ -133,8 +143,8 @@ template <class DataTypes>
 bool WireRestShape<DataTypes>::initTopology()
 {
     /// fill topology :
-    _topology->clear();
-    _topology->cleanup();
+    l_topology->clear();
+    l_topology->cleanup();
 
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
     if (l_sectionMaterials.size() != keyPts.size() - 1)
@@ -155,12 +165,12 @@ bool WireRestShape<DataTypes>::initTopology()
 
         // add points from the material
         for (int i = startPtId; i < nbrVisuEdges + 1; i++) {
-            _topology->addPoint(prev_length + i * dx, 0, 0);
+            l_topology->addPoint(prev_length + i * dx, 0, 0);
         }
 
         // add segments from the material
         for (int i = prev_edges; i < prev_edges + nbrVisuEdges; i++) {
-            _topology->addEdge(i, i + 1);
+            l_topology->addEdge(i, i + 1);
         }
 
         prev_length = length;
@@ -182,9 +192,50 @@ void WireRestShape<DataTypes>::getSamplingParameters(type::vector<Real>& xP_noti
 
 
 template <class DataTypes>
+void WireRestShape<DataTypes>::getMechanicalSampling(Real &dx, const Real x_curv)
+{
+    unsigned int numLines = 0;
+    Real x_used = x_curv - EPSILON;
+
+    const Real totalLength = this->getLength();
+    x_used = std::clamp(x_used, 0.0, totalLength);
+
+    const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    
+    // verify that size of number of materials == size of keyPoints-1
+    if (l_sectionMaterials.size() != keyPts.size() - 1)
+    {
+        msg_error() << "Problem size of number of materials: " << l_sectionMaterials.size()
+                    << " !=  size of keyPoints-1 " << keyPts.size()-1
+                    << ". Returning default values.";
+        numLines = 20;
+        dx = totalLength / numLines;
+        return;
+    }
+    
+    // Check in which section x_used belongs to and get access to this section material
+    for (sofa::Size i = 1; i< keyPts.size(); ++i)
+    {
+        if (x_used <= keyPts[i])
+        {
+            numLines = l_sectionMaterials.get(i-1)->getNbBeams();
+
+            Real length = fabs(keyPts[i] - keyPts[i-1]);
+            dx = length / numLines;
+            return;
+        }
+    }
+
+    // If x_used is out of bounds. Warn user and returns default value.
+    numLines = 20;
+    dx = totalLength / numLines;
+    msg_error() << " problem in getMechanicalSampling : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
+}
+
+template <class DataTypes>
 void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real x_curv)
 {
-    unsigned int numLines;
+    unsigned int numLines = 0;
     Real x_used = x_curv - EPSILON;
 
     const Real totalLength = this->getLength();
@@ -225,6 +276,17 @@ void WireRestShape<DataTypes>::getCollisionSampling(Real &dx, const Real x_curv)
     numLines = 20;
     dx = totalLength / numLines;
     msg_error() << " problem in getCollisionSampling : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
+}
+
+template <class DataTypes>
+void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines)
+{
+    numLines = 0;
+    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
+    {
+        numLines += l_sectionMaterials.get(i)->getNbCollisionEdges();
+    }
+    dx = getLength() / numLines;
 }
 
 
@@ -318,19 +380,6 @@ typename WireRestShape<DataTypes>::Real WireRestShape<DataTypes>::getLength()
 {
     return d_keyPoints.getValue().back();
 }
-
-
-template <class DataTypes>
-void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines)
-{
-    numLines = 0;
-    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
-    {
-        numLines += l_sectionMaterials.get(i)->getNbCollisionEdges();
-    }
-    dx = getLength() / numLines;
-}
-
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::computeOrientation(const Vec3& AB, const Quat& Q, Quat &result)

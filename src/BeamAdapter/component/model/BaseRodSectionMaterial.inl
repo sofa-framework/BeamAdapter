@@ -34,8 +34,9 @@ BaseRodSectionMaterial<DataTypes>::BaseRodSectionMaterial()
     , d_radius(initData(&d_radius, (Real)1.0, "radius", "Full radius of this section"))
     , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "Inner radius of this section if hollow"))   
     , d_length(initData(&d_length, (Real)1.0, "length", "Total length of this section"))
-    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, (Size)10, "nbEdgesVisu", "number of Edges for the visual model"))
-    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, (Size)20, "nbEdgesCollis", "number of Edges for the collision model"))
+    , d_nbBeams(initData(&d_nbBeams, (Size)5, "nbBeams", "Number of Beams for the mechanical model"))
+    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, (Size)10, "nbEdgesVisu", "Number of Edges for the visual model"))
+    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, (Size)20, "nbEdgesCollis", "Number of Edges for the collision model"))
 {
 
 }

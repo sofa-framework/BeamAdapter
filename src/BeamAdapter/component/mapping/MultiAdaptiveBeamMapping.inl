@@ -213,7 +213,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
             }
             else
             {
-                msg_error() << "Trying to remove baseEdge which is alreay empty. This case is not supposed to happened.";
+                msg_error() << "Trying to remove baseEdge which is already empty. This case is not supposed to happened.";
             }
 
             if (edgeToRemove.size()>0)
@@ -308,7 +308,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     unsigned int numSeg, numLinesInstrument;
     numSeg=0;
     InReal DX=0;
-    // we chose the collision parameters of the most discrestized instrument
+    // we chose the collision parameters of the most discretized instrument
     for (unsigned int i=0; i<m_instrumentList.size(); i++)
     {
         InReal dx=0;
