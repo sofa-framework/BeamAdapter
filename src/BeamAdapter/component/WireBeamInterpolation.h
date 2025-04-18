@@ -91,6 +91,8 @@ public:
     typedef typename Inherited::Vec2 Vec2;
     typedef typename Inherited::Vec3 Vec3;
     typedef typename Inherited::Quat Quat;
+    
+    using EdgeID = BaseMeshTopology::EdgeID;
 
     WireBeamInterpolation(WireRestShape<DataTypes> *_restShape = nullptr);
 
@@ -102,10 +104,10 @@ public:
 
     using BaseBeamInterpolation<DataTypes>::addBeam;
 
-    void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
+    void addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
 
-    void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector< int>& nbP_density) override
+    void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<sofa::Size>& nbP_density) override
     {
         this->m_restShape->getSamplingParameters(xP_noticeable, nbP_density);
     }
@@ -115,7 +117,7 @@ public:
         return this->m_restShape->getLength();
     }
 
-    void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override
+    void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override
     {
         this->m_restShape->getCollisionSampling(dx,x_localcurv_abs);
     }
@@ -126,10 +128,10 @@ public:
     }
 
 
-    virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
+    virtual void getRestTransform(const EdgeID edgeInList, Transform &local0_H_local1_rest);
     
-    void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override;
-    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
+    void getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output) override;
+    void getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
     
     const BeamSection& getBeamSection(sofa::Index beamId) override;
     void getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) override;
@@ -141,7 +143,7 @@ public:
 
     void setPathToRestShape(const std::string &o){m_restShape.setPath(o);}
 
-    void getRestTransformOnX(Transform &global_H_local, const Real &x)
+    void getRestTransformOnX(Transform &global_H_local, const Real x)
     {
         if(this->m_restShape)
         {
@@ -185,7 +187,7 @@ public:
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
-    bool breaksInTwo(const Real& x_min_out, Real& x_break, int& numBeamsNotUnderControlled) {
+    bool breaksInTwo(const Real x_min_out, Real& x_break, int& numBeamsNotUnderControlled) {
         SOFA_UNUSED(x_min_out);
         SOFA_UNUSED(x_break);
         SOFA_UNUSED(numBeamsNotUnderControlled);

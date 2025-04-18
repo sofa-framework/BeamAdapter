@@ -90,7 +90,7 @@ public:
 
     static void getControlPointsFromFrame(
         const Transform& global_H_local0, const Transform& global_H_local1,
-        const Real& L,
+        const Real L,
         Vec3& P0, Vec3& P1,
         Vec3& P2, Vec3& P3);
 
@@ -103,99 +103,98 @@ public:
     virtual void clear();
 
 public:
-    virtual void addBeam(const BaseMeshTopology::EdgeID& eID, const Real& length, const Real& x0, const Real& x1, const Real& angle);
-    unsigned int getNumBeams() { return this->d_edgeList.getValue().size(); }
+    virtual void addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1, const Real angle);
+    sofa::Size getNumBeams() const { return static_cast<sofa::Size>(this->d_edgeList.getValue().size()); }
     
-    void getAbsCurvXFromBeam(int beam, Real& x_curv);
-    void getAbsCurvXFromBeam(int beam, Real& x_curv_start, Real& x_curv_end);
+    void getAbsCurvXFromBeam(const sofa::Index beam, Real& x_curv);
+    void getAbsCurvXFromBeam(const sofa::Index beam, Real& x_curv_start, Real& x_curv_end);
 
     /// getLength / setLength => provides the rest length of each spline using @sa d_lengthList
     virtual Real getRestTotalLength() = 0;
-    Real getLength(unsigned int edgeInList);
-    void setLength(unsigned int edgeInList, Real& length);
+    Real getLength(const EdgeID edgeInList);
+    void setLength(const EdgeID edgeInList, Real& length);
     
     /// Collision information using @sa d_beamCollision
-    virtual void getCollisionSampling(Real& dx, const Real& x_localcurv_abs) = 0;
-    void addCollisionOnBeam(unsigned int b);
+    virtual void getCollisionSampling(Real& dx, const Real x_localcurv_abs) = 0;
+    void addCollisionOnBeam(const sofa::Index beam);
     void clearCollisionOnBeam();
 
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
-        type::vector<int>& nbP_density) = 0;
-    virtual void getNumberOfCollisionSegment(Real& dx, unsigned int& numLines) = 0;
+        type::vector<sofa::Size>& nbP_density) = 0;
+    virtual void getNumberOfCollisionSegment(Real& dx, sofa::Size& numLines) = 0;
 
-
-    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) = 0;
-    virtual void getSplineRestTransform(unsigned int edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) = 0;
+    virtual void getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output) = 0;
+    virtual void getSplineRestTransform(const EdgeID edgeInList, Transform& local_H_local0_rest, Transform& local_H_local1_rest) = 0;
     
     /// Returns the BeamSection @sa m_beamSection corresponding to the given beam
-    virtual const BeamSection& getBeamSection(sofa::Index beamId) = 0;
+    virtual const BeamSection& getBeamSection(const sofa::Index beamId) = 0;
     /// Returns the BeamSection data depending on the beam position at the given beam, similar to @getBeamSection
-    virtual void getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& J) = 0;
+    virtual void getInterpolationParameters(const sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& J) = 0;
     /// Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa
-    virtual void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) = 0;
+    virtual void getMechanicalParameters(const sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) = 0;
 
 
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0);
+    virtual void getBeamAtCurvAbs(const Real x_input, sofa::Index& edgeInList_output, Real& baryCoord_output, unsigned int start = 0);
 
     int computeTransform(const EdgeID edgeInList, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);
     int computeTransform(const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform& global_H_local0, Transform& global_H_local1, const VecCoord& x);
 
-    void getDOFtoLocalTransform(unsigned int edgeInList, Transform& DOF0_H_local0, Transform& DOF1_H_local1);
-    void getDOFtoLocalTransformInGlobalFrame(unsigned int edgeInList, Transform& DOF0Global_H_local0, Transform& DOF1Global_H_local1, const VecCoord& x);
-    void setTransformBetweenDofAndNode(int beam, const Transform& DOF_H_Node, unsigned int zeroORone);
+    void getDOFtoLocalTransform(const EdgeID edgeInList, Transform& DOF0_H_local0, Transform& DOF1_H_local1);
+    void getDOFtoLocalTransformInGlobalFrame(const EdgeID edgeInList, Transform& DOF0Global_H_local0, Transform& DOF1Global_H_local1, const VecCoord& x);
+    void setTransformBetweenDofAndNode(const sofa::Index beam, const Transform& DOF_H_Node, unsigned int zeroORone);
 
-    void getTangent(Vec3& t, const Real& baryCoord,
-        const Transform& global_H_local0, const Transform& global_H_local1, const Real& L);
+    void getTangent(Vec3& t, const Real baryCoord,
+        const Transform& global_H_local0, const Transform& global_H_local1, const Real L);
 
-    int getNodeIndices(unsigned int edgeInList, unsigned int& node0Idx, unsigned int& node1Idx);
+    int getNodeIndices(const EdgeID edgeInList, unsigned int& node0Idx, unsigned int& node1Idx);
 
-    void getSplinePoints(unsigned int edgeInList, const VecCoord& x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3& P3);
+    void getSplinePoints(const EdgeID edgeInList, const VecCoord& x, Vec3& P0, Vec3& P1, Vec3& P2, Vec3& P3);
     unsigned int getStateSize() const;
 
     void computeActualLength(Real& length, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3);
 
-    void computeStrechAndTwist(unsigned int edgeInList, const VecCoord& x, Vec3& ResultNodeO, Vec3& ResultNode1);
+    void computeStrechAndTwist(const EdgeID edgeInList, const VecCoord& x, Vec3& ResultNodeO, Vec3& ResultNode1);
 
 
     
     ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
     void updateBezierPoints(const VecCoord& x, sofa::core::VecCoordId& vId_Out);
-    void updateBezierPoints(const VecCoord& x, unsigned int index, VectorVec3& v);
+    void updateBezierPoints(const VecCoord& x, sofa::Index index, VectorVec3& v);
 
 
     /// spline base interpolation of points and transformation
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos, const VecCoord& x, Vec3& posResult) {
+    void interpolatePointUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos, const VecCoord& x, Vec3& posResult) {
         interpolatePointUsingSpline(edgeInList, baryCoord, localPos, x, posResult, true, sofa::core::vec_id::read_access::position);
     }
 
-    void interpolatePointUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+    void interpolatePointUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos,
         const VecCoord& x, Vec3& posResult, bool recompute, const sofa::core::ConstVecCoordId& vecXId);
 
 
-    void InterpolateTransformUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+    void InterpolateTransformUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos,
         const VecCoord& x, Transform& global_H_localInterpol);
 
-    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real& baryCoord,
-        const Transform& global_H_local0, const Transform& global_H_local1, const Real& L);
+    void InterpolateTransformUsingSpline(Transform& global_H_localResult, const Real baryCoord,
+        const Transform& global_H_local0, const Transform& global_H_local1, const Real L);
 
-    void InterpolateTransformAndVelUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+    void InterpolateTransformAndVelUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos,
         const VecCoord& x, const VecDeriv& v,
         Transform& global_H_localInterpol, Deriv& v_interpol);
 
 
     /// compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)
-    Real ComputeTotalBendingRotationAngle(const Real& dx_computation, const Transform& global_H_local0,
-        const Transform& global_H_local1, const Real& L,
-        const Real& baryCoordMin, const Real& baryCoordMax);
+    Real ComputeTotalBendingRotationAngle(const Real dx_computation, const Transform& global_H_local0,
+        const Transform& global_H_local1, const Real L,
+        const Real baryCoordMin, const Real baryCoordMax);
 
 
     /// 3DOF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+    void MapForceOnNodeUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos,
         const VecCoord& x, const Vec3& finput,
         SpatialVector& FNode0output, SpatialVector& FNode1output);
 
     /// 6DoF mapping
-    void MapForceOnNodeUsingSpline(unsigned int edgeInList, const Real& baryCoord, const Vec3& localPos,
+    void MapForceOnNodeUsingSpline(const EdgeID edgeInList, const Real baryCoord, const Vec3& localPos,
         const VecCoord& x, const SpatialVector& f6DofInput,
         SpatialVector& FNode0output, SpatialVector& FNode1output);
 
@@ -212,7 +211,7 @@ public:
     const VecEdges* m_topologyEdges{ nullptr };
 
     ///2. Vector of length of each beam. Same size as @sa d_edgeList
-    Data< type::vector< double > >    d_lengthList;
+    Data< type::vector< Real > >    d_lengthList;
 
     ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam. Indexation based on the num of Edge
     Data< type::vector< Transform > > d_DOF0TransformNode0;
@@ -224,7 +223,7 @@ public:
     Data< type::vector< Vec2 > >      d_curvAbsList;
 
     ///5. (optional) list of the beams in m_edgeList that need to be considered for collision
-    Data< sofa::type::vector<int> > d_beamCollision;
+    Data< sofa::type::vector<EdgeID> > d_beamCollision;
 
     Data<bool>          d_dofsAndBeamsAligned;
 

@@ -88,6 +88,7 @@ public:
 
     using PointID = BaseMeshTopology::PointID;
     using ElementID = BaseMeshTopology::EdgeID;
+    using EdgeID = BaseMeshTopology::EdgeID;
     using VecElementID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;    
 
@@ -145,17 +146,17 @@ public:
                                Real &_Asy, Real &_Asz, Real &J) override;
     void getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
 
-    void getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
+    void getTangentUsingSplinePoints(const EdgeID edgeInList, const Real  baryCoord, const sofa::core::ConstVecCoordId &vecXId, Vec3& t );
 
     /// computeActualLength => given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)
    
-    virtual void getCurvAbsAtBeam(const unsigned int& edgeInList_input, const Real& baryCoord_input, Real& x_output) override
+    virtual void getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output) override
     {
         SOFA_UNUSED(edgeInList_input);
         SOFA_UNUSED(baryCoord_input);
         SOFA_UNUSED(x_output);
     }
-    virtual void getBeamAtCurvAbs(const Real& x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) override
+    virtual void getBeamAtCurvAbs(const Real  x_input, unsigned int& edgeInList_output, Real& baryCoord_output, unsigned int start = 0) override
     {
         SOFA_UNUSED(x_input);
         SOFA_UNUSED(edgeInList_output);
@@ -194,15 +195,15 @@ public:
     Data<bool>          d_straight;
 
     virtual void clear() override;
-    virtual void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle) override;
+    virtual void addBeam(const EdgeID eID  , const Real length, const Real x0, const Real x1, const Real angle) override;
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
-                                       type::vector<int>& nbP_density) override;
+                                       type::vector<sofa::Size>& nbP_density) override;
     Real getRestTotalLength() override;
-    void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override;
+    void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
 
-    void setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone );
-    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
+    void setTransformBetweenDofAndNode(const sofa::Index beam, const Transform &DOF_H_Node, unsigned int zeroORone );
+    void getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
@@ -229,8 +230,8 @@ protected :
 
     void checkDataSize(Real& defaultValue, Data<type::vector<Real>>& dataList, const size_t& nbEdges);
 
-    void computeRectangularCrossSectionInertiaMatrix(const Real &Ly, const Real &Lz, BeamSection &section);
-    void computeCircularCrossSectionInertiaMatrix(const Real &r, const Real &rInner, BeamSection &section);
+    void computeRectangularCrossSectionInertiaMatrix(const Real Ly, const Real Lz, BeamSection &section);
+    void computeCircularCrossSectionInertiaMatrix(const Real r, const Real rInner, BeamSection &section);
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BEAMINTERPOLATION_CPP)

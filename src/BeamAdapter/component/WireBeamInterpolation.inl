@@ -59,7 +59,7 @@ void WireBeamInterpolation<DataTypes>::init()
     }
 
     type::vector<Real> xP_noticeable;
-    type::vector< int> nbP_density;
+    type::vector<sofa::Size> nbP_density;
 
     m_restShape.get()->getSamplingParameters(xP_noticeable, nbP_density);
 
@@ -81,7 +81,7 @@ template <class DataTypes>
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
+void WireBeamInterpolation<DataTypes>::addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
     auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
@@ -104,7 +104,7 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest)
+void WireBeamInterpolation<DataTypes>::getRestTransform(const EdgeID edgeInList, Transform &local0_H_local1_rest)
 {
     msg_warning() << "GetRestTransform not implemented for not straightRestShape" ;
 
@@ -114,7 +114,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
+void WireBeamInterpolation<DataTypes>::getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
     if (this->isControlled() && this->m_restShape!=nullptr)
     {
@@ -147,7 +147,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output)
+void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output)
 {
     ///TODO(dmarchal 2017-05-17): Please tell who and when it will be done.
     // TODO : version plus complete prenant en compte les coupures et autres particularites de ce modele ?
@@ -207,11 +207,11 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
     Real closestDist = (x_input-globalHlocal0.getOrigin()).norm2();
     Real beamBary = 0.0;
     bool projected = false;
-    unsigned int beamIndex = 0;
+    sofa::Index beamIndex = 0;
 
     // Just look for the closest point on the curve
     // Returns false if this point is not a projection on the curve
-    unsigned int nb = this->getNumBeams();
+    const auto nb = this->getNumBeams();
     for(unsigned int i=0; i<nb; i++)	// Check each segment and each vertex
     {
         this->computeTransform(i, globalHlocal0, globalHlocal1, x);
