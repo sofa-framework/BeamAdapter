@@ -186,7 +186,6 @@ public:
     unsigned int                    m_currentSensorData;
     type::vector<Real>                    m_nodeCurvAbs;
     type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
-    unsigned int                    m_numControlledNodes; // Excluding the nodes that are "dropped"
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP)

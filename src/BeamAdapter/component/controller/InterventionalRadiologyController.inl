@@ -213,7 +213,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
     for(unsigned int i=0; i<x.size(); i++)
         x[i] = d_startingPos.getValue();
-    m_numControlledNodes = x.size();
 
     sofa::Size nbrBeam = 0;
     for (unsigned int i = 0; i < m_instrumentsList.size(); i++)
@@ -226,12 +225,6 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
             nbrBeam += nb;
     }
 
-    if (nbrBeam > m_numControlledNodes)
-    {
-        msg_warning() << "Parameter missmatch: According to the list of controlled instrument controlled. The number of potential beams: "
-            << nbrBeam << " exceed the number of degree of freedom in the MechanicalObject: " << m_numControlledNodes << ". This could lead to unespected behavior.";
-    }
-        
     applyInterventionalRadiologyController();
 
     sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
@@ -775,22 +768,23 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     Data<VecCoord>* datax = this->getMechanicalState()->write(sofa::core::vec_id::write_access::position);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     VecCoord xbuf = x.ref();
-
-    sofa::Size nbrCurvAbs = newCurvAbs.size(); // number of simulated nodes
-    if (nbrCurvAbs > x.size())
+    
+    const sofa::Size numberOfNodes = x.size();
+    sofa::Size numberOfSimulatedNodes = newCurvAbs.size(); // number of simulated nodes
+    if (numberOfSimulatedNodes > numberOfNodes)
     {
-        msg_warning() << "Parameters missmatch. There are more curv abscisses '" << nbrCurvAbs << "' than the number of dof: " << x.size();
-        nbrCurvAbs = x.size();
+        msg_warning() << "Parameters missmatch. There are more curv abscisses '" << numberOfSimulatedNodes << "' than the number of dof: " << numberOfNodes;
+        numberOfSimulatedNodes = numberOfNodes;
     }
 
-    const sofa::Size prev_nbrCurvAbs = m_nodeCurvAbs.size(); // previous number of simulated nodes;
+    const sofa::Size prev_numberOfSimulatedNodes = m_nodeCurvAbs.size(); // previous number of simulated nodes;
 
-    const sofa::Size nbrUnactiveNode = (m_numControlledNodes > nbrCurvAbs) ? m_numControlledNodes - nbrCurvAbs : 0; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
-    const sofa::Size prev_nbrUnactiveNode = (m_numControlledNodes > prev_nbrCurvAbs) ? m_numControlledNodes - prev_nbrCurvAbs : 0;
+    const sofa::Size numberOfUnactiveNodes = numberOfNodes - numberOfSimulatedNodes; // m_numControlledNodes == nbr Dof | nbr of CurvAbs > 0
+    const sofa::Size prev_numberOfUnactiveNodes = numberOfNodes - prev_numberOfSimulatedNodes;
 
-    for (sofa::Index xId = 0; xId < nbrCurvAbs; xId++)
+    for (sofa::Index xId = 0; xId < numberOfSimulatedNodes; xId++)
     {
-        const sofa::Index globalNodeId = nbrUnactiveNode + xId; // position of the curvAbs in the dof buffer filled by the end
+        const sofa::Index globalNodeId = numberOfUnactiveNodes + xId; // position of the curvAbs in the dof buffer filled by the end
         const Real xCurvAbs = modifiedCurvAbs[xId];
 
         if ((xCurvAbs - std::numeric_limits<float>::epsilon()) > m_nodeCurvAbs.back() + threshold)
@@ -811,7 +805,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 break;
         }
 
-        sofa::Index prev_globalNodeId = prev_nbrUnactiveNode + prev_xId;
+        sofa::Index prev_globalNodeId = prev_numberOfUnactiveNodes + prev_xId;
         const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
 
         if (fabs(prev_xCurvAbs - xCurvAbs) < threshold)
@@ -856,36 +850,37 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     // ## STEP 4: Assign the beams
     helper::AdvancedTimer::stepBegin("step4");
-    sofa::Size nbrBeam = newCurvAbs.size() - 1; // number of simulated beams
-    const sofa::Size numEdges = m_numControlledNodes - 1;
+    sofa::Size numberOfBeams = newCurvAbs.size() - 1; // number of simulated beams
+    const sofa::Size numberOfEdges = x.size() - 1;
     
-    if (numEdges < nbrBeam) // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
+    if (numberOfEdges < numberOfBeams) // verify that there is a sufficient number of Edge in the topology : TODO if not, modify topo !
     {
-        msg_error() << "Not enough edges in the topology. Only: " << numEdges << " while nbrBeam = " << nbrBeam << ". Will simulate only " << numEdges << " beams.";
-        nbrBeam = numEdges;
+        msg_error() << "Not enough edges in the topology. Only: " << numberOfEdges << " while nbrBeam = " << numberOfBeams << ". Will simulate only " << numberOfEdges << " beams.";
+        
+        numberOfBeams = numberOfEdges;
     }
 
 
     const type::vector<Real>& rotInstruments = d_rotationInstrument.getValue();
-    for (unsigned int b=0; b< nbrBeam; b++)
+    for (unsigned int b=0; b< numberOfBeams; b++)
     {
-        const Real& x0 = newCurvAbs[b];
-        const Real& x1 = newCurvAbs[b+1];
+        const Real x0 = newCurvAbs[b];
+        const Real x1 = newCurvAbs[b+1];
 
         for (unsigned int i=0; i<m_instrumentsList.size(); i++)
         {
-            const Real& xmax = tools_xEnd[i];
-            const Real& xmin = tools_xBegin[i];
+            const Real xmax = tools_xEnd[i];
+            const Real xmin = tools_xBegin[i];
 
             if (x0>(xmin- threshold) && x0<(xmax+ threshold) && x1>(xmin- threshold) && x1<(xmax+ threshold))
             {
-                BaseMeshTopology::EdgeID eID = (BaseMeshTopology::EdgeID)(numEdges - nbrBeam + b);
+                const auto eID = static_cast<BaseMeshTopology::EdgeID>(numberOfEdges - numberOfBeams + b);
 
-                Real length = x1 - x0;
-                Real x0_local = x0-xmin;
-                Real x1_local = x1-xmin;
+                const Real length = x1 - x0;
+                const Real x0_local = x0-xmin;
+                const Real x1_local = x1-xmin;
 
-                Real theta = rotInstruments[i];
+                const Real theta = rotInstruments[i];
 
                 m_instrumentsList[i]->addBeam(eID, length, x0_local, x1_local,theta );
             }
@@ -896,7 +891,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
 
     // ## STEP 5: Fix the not simulated nodes
     helper::AdvancedTimer::stepBegin("step5");
-    unsigned int firstSimulatedNode = m_numControlledNodes - nbrBeam;
+    unsigned int firstSimulatedNode = numberOfNodes - numberOfBeams;
 
     //    => 1. Fix the nodes (beginning of the instruments) that are not "out"
     fixFirstNodesWithUntil(firstSimulatedNode);
