@@ -47,6 +47,12 @@ void BaseRodSectionMaterial<DataTypes>::init()
 {
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
 
+    if(!d_nbBeams.isSet())
+    {
+        msg_deprecated() << "nbBeams is now required but it was not set. Its value will be copied from nbEdgesCollis as a temporary compatibility solution.";
+        d_nbBeams.setValue(d_nbEdgesCollis.getValue());
+    }
+    
     // Prepare beam sections
     double r = this->d_radius.getValue();
     double rInner = this->d_innerRadius.getValue();
