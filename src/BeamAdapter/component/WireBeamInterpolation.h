@@ -131,6 +131,12 @@ public:
     {
         this->m_restShape->getNumberOfCollisionSegment(dx,numLines);
     }
+    
+    // this is the number of beams which can be simulated according to the rest shape (and its sections)
+    sofa::Size getTotalNumberOfPossibleBeams()
+    {
+        return this->m_restShape->getTotalNumberOfBeams();
+    }
 
 
     virtual void getRestTransform(const EdgeID edgeInList, Transform &local0_H_local1_rest);

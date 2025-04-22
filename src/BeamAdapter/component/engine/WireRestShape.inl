@@ -289,6 +289,17 @@ void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, sofa::Size&
     dx = getLength() / numLines;
 }
 
+template <class DataTypes>
+sofa::Size WireRestShape<DataTypes>::getTotalNumberOfBeams()
+{
+    sofa::Size numBeams = 0;
+    for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)
+    {
+        numBeams += l_sectionMaterials.get(i)->getNbBeams();
+    }
+    
+    return numBeams;
+}
 
 template <class DataTypes>
 void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, const Real x)
