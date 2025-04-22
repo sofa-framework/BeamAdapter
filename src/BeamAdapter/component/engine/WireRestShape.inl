@@ -290,7 +290,7 @@ void WireRestShape<DataTypes>::getNumberOfCollisionSegment(Real &dx, sofa::Size&
 }
 
 template <class DataTypes>
-sofa::Size WireRestShape<DataTypes>::getTotalNumberOfBeams()
+sofa::Size WireRestShape<DataTypes>::getTotalNumberOfBeams() const
 {
     sofa::Size numBeams = 0;
     for (sofa::Size i = 0; i < l_sectionMaterials.size(); ++i)

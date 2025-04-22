@@ -133,7 +133,7 @@ public:
     }
     
     // this is the number of beams which can be simulated according to the rest shape (and its sections)
-    sofa::Size getTotalNumberOfPossibleBeams()
+    sofa::Size getTotalNumberOfPossibleBeams() const
     {
         return this->m_restShape->getTotalNumberOfBeams();
     }

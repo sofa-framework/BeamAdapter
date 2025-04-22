@@ -111,7 +111,7 @@ public:
     void getMechanicalSampling(Real& dx, const Real x_localcurv_abs);
     void getCollisionSampling(Real &dx, const Real x_curv);
     void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines);
-    sofa::Size getTotalNumberOfBeams();
+    sofa::Size getTotalNumberOfBeams() const;
 
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
