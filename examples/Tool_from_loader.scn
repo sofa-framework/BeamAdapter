@@ -25,8 +25,8 @@
     <Node name="GuideCatheter">
         <MeshOBJLoader name="loader" filename="mesh/key_tip.obj" />
         
-        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" radius="0.05" massDensity="0.1" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
-        <RodMeshSection name="MeshTipSection" loader="@loader" nbEdgesCollis="300" nbEdgesVisu="300"  radius="0.05" massDensity="0.1"  youngModulus="1000000" poissonRatio="0.3"/>
+        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" massDensity="0.00000155" radius="0.05" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
+        <RodMeshSection name="MeshTipSection" loader="@loader" youngModulus="1000000" poissonRatio="0.3" massDensity="0.00000155" radius="0.05" nbEdgesCollis="300" nbEdgesVisu="300" />
         
         <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" wireMaterials="@StraightSection @MeshTipSection" />
 

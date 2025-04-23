@@ -35,7 +35,7 @@
 	<LocalMinDistance name="localmindistance" alarmDistance="2" contactDistance="1" angleCone="0.5" coneFactor="0.5" />
 	<CollisionResponse name="Response" response="FrictionContactConstraint" />
 
-<!-- ------------------------- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  ------------------------------ -->
+<!-- INTERVENTIONAL RADIOLOGY INSTRUMENTS (catheter, guidewire, coil)  -->
 
 	<Node name="topoLines_cath">
         <RodStraightSection name="StraightSection" youngModulus="10000" massDensity="0.00000155" radius="1" nbEdgesCollis="40" nbEdgesVisu="220" length="600.0"/><!--stiff silicone E = 10000 MPa // 1550 Kg/m3-->	
@@ -142,14 +142,21 @@
 		</Node>   
 	</Node>
 
-	<Node name="CollisionModel"> 
-		<MeshOBJLoader name="meshLoader" filename="mesh/phantom.obj" triangulate="true" flipNormals="1"/>
-		<MeshTopology position="@meshLoader.position"  triangles="@meshLoader.triangles"/>
-		<MechanicalObject name="DOFs1" position="0 0 400" scale="3" ry="90"/>	
-		<TriangleCollisionModel simulated="0" moving="0"/>	
-		<LineCollisionModel simulated="0" moving="0"/>
-		<PointCollisionModel simulated="0" moving="0"/>
-		<OglModel name="Visual" src="@meshLoader" color="1 0 0 0.3" scale="3" ry="90"/>
+	<Node name="VesselsPhantom">
+		<MeshOBJLoader name="meshLoader" filename="mesh/phantom.obj" triangulate="true" flipNormals="1" scale="3" rotation="0 90 0"/>
+
+		<Node name="Collision"> 
+			<MeshTopology position="@../meshLoader.position"  triangles="@meshLoader.triangles"/>
+			<MechanicalObject name="DOFs1"/>	
+			<TriangleCollisionModel simulated="0" moving="0"/>	
+			<LineCollisionModel simulated="0" moving="0"/>
+			<PointCollisionModel simulated="0" moving="0"/>
+		</Node>
+
+		<Node name="Visual">
+			<OglModel name="Visual" src="@../meshLoader" color="1 0 0 0.3" />
+		</Node> 
+
 	</Node>
 	
 </Node>
