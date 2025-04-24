@@ -175,120 +175,121 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204" id="r_ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft" align="right" valign="top"><a id="ac8bb3912a3ce86b15842e79d0b421204" name="ac8bb3912a3ce86b15842e79d0b421204"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:ac8bb3912a3ce86b15842e79d0b421204"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1810169c0dcd2b6de3f71369feccb9b" id="r_ae1810169c0dcd2b6de3f71369feccb9b"><td class="memItemLeft" align="right" valign="top"><a id="ae1810169c0dcd2b6de3f71369feccb9b" name="ae1810169c0dcd2b6de3f71369feccb9b"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addBeam</b> (const BaseMeshTopology::EdgeID &amp;eID, const Real &amp;length, const Real &amp;x0, const Real &amp;x1, const Real &amp;angle)</td></tr>
-<tr class="separator:ae1810169c0dcd2b6de3f71369feccb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e52e32d5ad4e3895de3b7017a979277" id="r_a4e52e32d5ad4e3895de3b7017a979277"><td class="memItemLeft" align="right" valign="top"><a id="a4e52e32d5ad4e3895de3b7017a979277" name="a4e52e32d5ad4e3895de3b7017a979277"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeams</b> ()</td></tr>
-<tr class="separator:a4e52e32d5ad4e3895de3b7017a979277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a010a2e017f177d751a9c70d238fd2f09" id="r_a010a2e017f177d751a9c70d238fd2f09"><td class="memItemLeft" align="right" valign="top"><a id="a010a2e017f177d751a9c70d238fd2f09" name="a010a2e017f177d751a9c70d238fd2f09"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (int beam, Real &amp;x_curv)</td></tr>
-<tr class="separator:a010a2e017f177d751a9c70d238fd2f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7d3343a52a9fbb920d5e0dbcd7523f7" id="r_ae7d3343a52a9fbb920d5e0dbcd7523f7"><td class="memItemLeft" align="right" valign="top"><a id="ae7d3343a52a9fbb920d5e0dbcd7523f7" name="ae7d3343a52a9fbb920d5e0dbcd7523f7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (int beam, Real &amp;x_curv_start, Real &amp;x_curv_end)</td></tr>
-<tr class="separator:ae7d3343a52a9fbb920d5e0dbcd7523f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a033ef3d6e8b291260621116809c60a79" id="r_a033ef3d6e8b291260621116809c60a79"><td class="memItemLeft" align="right" valign="top"><a id="a033ef3d6e8b291260621116809c60a79" name="a033ef3d6e8b291260621116809c60a79"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addBeam</b> (const EdgeID eID, const Real length, const Real x0, const Real x1, const Real angle)</td></tr>
+<tr class="separator:a033ef3d6e8b291260621116809c60a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cea15b313070fe671645a11ac04e2dc" id="r_a4cea15b313070fe671645a11ac04e2dc"><td class="memItemLeft" align="right" valign="top"><a id="a4cea15b313070fe671645a11ac04e2dc" name="a4cea15b313070fe671645a11ac04e2dc"></a>
+sofa::Size&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeams</b> () const</td></tr>
+<tr class="separator:a4cea15b313070fe671645a11ac04e2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8cca18518195831ae238fae5b97fc04" id="r_ad8cca18518195831ae238fae5b97fc04"><td class="memItemLeft" align="right" valign="top"><a id="ad8cca18518195831ae238fae5b97fc04" name="ad8cca18518195831ae238fae5b97fc04"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (const sofa::Index beam, Real &amp;x_curv)</td></tr>
+<tr class="separator:ad8cca18518195831ae238fae5b97fc04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f6c6dd0d47e7c763a7e197c5d07e45f" id="r_a1f6c6dd0d47e7c763a7e197c5d07e45f"><td class="memItemLeft" align="right" valign="top"><a id="a1f6c6dd0d47e7c763a7e197c5d07e45f" name="a1f6c6dd0d47e7c763a7e197c5d07e45f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (const sofa::Index beam, Real &amp;x_curv_start, Real &amp;x_curv_end)</td></tr>
+<tr class="separator:a1f6c6dd0d47e7c763a7e197c5d07e45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1917eafe58fc4edd3a9270082c593f4d" id="r_a1917eafe58fc4edd3a9270082c593f4d"><td class="memItemLeft" align="right" valign="top">virtual Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a1917eafe58fc4edd3a9270082c593f4d">getRestTotalLength</a> ()=0</td></tr>
 <tr class="memdesc:a1917eafe58fc4edd3a9270082c593f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">getLength / setLength =&gt; provides the rest length of each spline using  <br /></td></tr>
 <tr class="separator:a1917eafe58fc4edd3a9270082c593f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ffd33f7b8d78afb91a7d271f2b36a27" id="r_a5ffd33f7b8d78afb91a7d271f2b36a27"><td class="memItemLeft" align="right" valign="top"><a id="a5ffd33f7b8d78afb91a7d271f2b36a27" name="a5ffd33f7b8d78afb91a7d271f2b36a27"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> (unsigned int edgeInList)</td></tr>
-<tr class="separator:a5ffd33f7b8d78afb91a7d271f2b36a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84ff3f0c4eba8d2aaf2955a148888e65" id="r_a84ff3f0c4eba8d2aaf2955a148888e65"><td class="memItemLeft" align="right" valign="top"><a id="a84ff3f0c4eba8d2aaf2955a148888e65" name="a84ff3f0c4eba8d2aaf2955a148888e65"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setLength</b> (unsigned int edgeInList, Real &amp;length)</td></tr>
-<tr class="separator:a84ff3f0c4eba8d2aaf2955a148888e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1e82c29be1a7350a1554662278adacb" id="r_af1e82c29be1a7350a1554662278adacb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#af1e82c29be1a7350a1554662278adacb">getCollisionSampling</a> (Real &amp;dx, const Real &amp;x_localcurv_abs)=0</td></tr>
-<tr class="memdesc:af1e82c29be1a7350a1554662278adacb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collision information using.  <br /></td></tr>
-<tr class="separator:af1e82c29be1a7350a1554662278adacb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dceb5fa732c7f6bbde0e11c17d0ccb5" id="r_a6dceb5fa732c7f6bbde0e11c17d0ccb5"><td class="memItemLeft" align="right" valign="top"><a id="a6dceb5fa732c7f6bbde0e11c17d0ccb5" name="a6dceb5fa732c7f6bbde0e11c17d0ccb5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addCollisionOnBeam</b> (unsigned int b)</td></tr>
-<tr class="memdesc:a6dceb5fa732c7f6bbde0e11c17d0ccb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set collision information. <br /></td></tr>
-<tr class="separator:a6dceb5fa732c7f6bbde0e11c17d0ccb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa39930305c259a64660e724dde23418a" id="r_aa39930305c259a64660e724dde23418a"><td class="memItemLeft" align="right" valign="top"><a id="aa39930305c259a64660e724dde23418a" name="aa39930305c259a64660e724dde23418a"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> (const EdgeID edgeInList)</td></tr>
+<tr class="separator:aa39930305c259a64660e724dde23418a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfd61552a938aaff80b1d5d2a1084e9f" id="r_acfd61552a938aaff80b1d5d2a1084e9f"><td class="memItemLeft" align="right" valign="top"><a id="acfd61552a938aaff80b1d5d2a1084e9f" name="acfd61552a938aaff80b1d5d2a1084e9f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLength</b> (const EdgeID edgeInList, Real &amp;length)</td></tr>
+<tr class="separator:acfd61552a938aaff80b1d5d2a1084e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdaca6a160b71aa506fa63aa46c684cf" id="r_afdaca6a160b71aa506fa63aa46c684cf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afdaca6a160b71aa506fa63aa46c684cf">getCollisionSampling</a> (Real &amp;dx, const Real x_localcurv_abs)=0</td></tr>
+<tr class="memdesc:afdaca6a160b71aa506fa63aa46c684cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collision information using.  <br /></td></tr>
+<tr class="separator:afdaca6a160b71aa506fa63aa46c684cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa122716859d1e3d01c077403b0d0d829" id="r_aa122716859d1e3d01c077403b0d0d829"><td class="memItemLeft" align="right" valign="top"><a id="aa122716859d1e3d01c077403b0d0d829" name="aa122716859d1e3d01c077403b0d0d829"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addCollisionOnBeam</b> (const sofa::Index beam)</td></tr>
+<tr class="memdesc:aa122716859d1e3d01c077403b0d0d829"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set collision information. <br /></td></tr>
+<tr class="separator:aa122716859d1e3d01c077403b0d0d829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af73022443394ed8a7955beb4d350af8b" id="r_af73022443394ed8a7955beb4d350af8b"><td class="memItemLeft" align="right" valign="top"><a id="af73022443394ed8a7955beb4d350af8b" name="af73022443394ed8a7955beb4d350af8b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearCollisionOnBeam</b> ()</td></tr>
 <tr class="separator:af73022443394ed8a7955beb4d350af8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55630cb6a8ae598a49b3e160b3a0d38a" id="r_a55630cb6a8ae598a49b3e160b3a0d38a"><td class="memItemLeft" align="right" valign="top"><a id="a55630cb6a8ae598a49b3e160b3a0d38a" name="a55630cb6a8ae598a49b3e160b3a0d38a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getSamplingParameters</b> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; int &gt; &amp;nbP_density)=0</td></tr>
-<tr class="separator:a55630cb6a8ae598a49b3e160b3a0d38a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a949597d678697f412acf5d0d65f22d44" id="r_a949597d678697f412acf5d0d65f22d44"><td class="memItemLeft" align="right" valign="top"><a id="a949597d678697f412acf5d0d65f22d44" name="a949597d678697f412acf5d0d65f22d44"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, unsigned int &amp;numLines)=0</td></tr>
-<tr class="separator:a949597d678697f412acf5d0d65f22d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f3ad863fd8466ebf54b3817a9004d07" id="r_a1f3ad863fd8466ebf54b3817a9004d07"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a1f3ad863fd8466ebf54b3817a9004d07">getCurvAbsAtBeam</a> (const unsigned int &amp;edgeInList_input, const Real &amp;baryCoord_input, Real &amp;x_output)=0</td></tr>
-<tr class="separator:a1f3ad863fd8466ebf54b3817a9004d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad859d93f422a34b738d7ea30871e619c" id="r_ad859d93f422a34b738d7ea30871e619c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ad859d93f422a34b738d7ea30871e619c">getSplineRestTransform</a> (unsigned int edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest)=0</td></tr>
-<tr class="separator:ad859d93f422a34b738d7ea30871e619c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb5f705ecc43d9137f220956eaa4fe43" id="r_aeb5f705ecc43d9137f220956eaa4fe43"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aeb5f705ecc43d9137f220956eaa4fe43">getBeamSection</a> (sofa::Index beamId)=0</td></tr>
-<tr class="memdesc:aeb5f705ecc43d9137f220956eaa4fe43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a>.  <br /></td></tr>
-<tr class="separator:aeb5f705ecc43d9137f220956eaa4fe43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b3af6570cde8f780072d318d8772305" id="r_a1b3af6570cde8f780072d318d8772305"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a1b3af6570cde8f780072d318d8772305">getInterpolationParameters</a> (sofa::Index beamId, Real &amp;_L, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;J)=0</td></tr>
-<tr class="memdesc:a1b3af6570cde8f780072d318d8772305"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> data depending on the beam position at the given beam, similar to @getBeamSection.  <br /></td></tr>
-<tr class="separator:a1b3af6570cde8f780072d318d8772305"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65ac8ee3ea115128c4fdaaa794d5ff05" id="r_a65ac8ee3ea115128c4fdaaa794d5ff05"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a65ac8ee3ea115128c4fdaaa794d5ff05">getMechanicalParameters</a> (sofa::Index beamId, Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity)=0</td></tr>
-<tr class="memdesc:a65ac8ee3ea115128c4fdaaa794d5ff05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa.  <br /></td></tr>
-<tr class="separator:a65ac8ee3ea115128c4fdaaa794d5ff05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98561e310fba9668249f081272b52115" id="r_a98561e310fba9668249f081272b52115"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a98561e310fba9668249f081272b52115">getBeamAtCurvAbs</a> (const Real &amp;x_input, unsigned int &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0)</td></tr>
-<tr class="separator:a98561e310fba9668249f081272b52115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bc9c913b631393a391061f7e34172bf" id="r_a6bc9c913b631393a391061f7e34172bf"><td class="memItemLeft" align="right" valign="top"><a id="a6bc9c913b631393a391061f7e34172bf" name="a6bc9c913b631393a391061f7e34172bf"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getSamplingParameters</b> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; sofa::Size &gt; &amp;nbP_density)=0</td></tr>
+<tr class="separator:a6bc9c913b631393a391061f7e34172bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aada6e3f007a7f8ef6f58db1b03b6b21b" id="r_aada6e3f007a7f8ef6f58db1b03b6b21b"><td class="memItemLeft" align="right" valign="top"><a id="aada6e3f007a7f8ef6f58db1b03b6b21b" name="aada6e3f007a7f8ef6f58db1b03b6b21b"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, sofa::Size &amp;numLines)=0</td></tr>
+<tr class="separator:aada6e3f007a7f8ef6f58db1b03b6b21b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed198ee6cfa978a0ec490c617fb97daf" id="r_aed198ee6cfa978a0ec490c617fb97daf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aed198ee6cfa978a0ec490c617fb97daf">getCurvAbsAtBeam</a> (const EdgeID edgeInList_input, const Real baryCoord_input, Real &amp;x_output)=0</td></tr>
+<tr class="separator:aed198ee6cfa978a0ec490c617fb97daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ac13e2d5423b0e016541f6a43ba568" id="r_ac2ac13e2d5423b0e016541f6a43ba568"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac2ac13e2d5423b0e016541f6a43ba568">getSplineRestTransform</a> (const EdgeID edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest)=0</td></tr>
+<tr class="separator:ac2ac13e2d5423b0e016541f6a43ba568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26fda0b3621fd662eb69f4810066a3dd" id="r_a26fda0b3621fd662eb69f4810066a3dd"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a26fda0b3621fd662eb69f4810066a3dd">getBeamSection</a> (const sofa::Index beamId)=0</td></tr>
+<tr class="memdesc:a26fda0b3621fd662eb69f4810066a3dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a>.  <br /></td></tr>
+<tr class="separator:a26fda0b3621fd662eb69f4810066a3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62439a7a3a262a3d0ada5c1efcef2c7a" id="r_a62439a7a3a262a3d0ada5c1efcef2c7a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a62439a7a3a262a3d0ada5c1efcef2c7a">getInterpolationParameters</a> (const sofa::Index beamId, Real &amp;_L, Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;J)=0</td></tr>
+<tr class="memdesc:a62439a7a3a262a3d0ada5c1efcef2c7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> data depending on the beam position at the given beam, similar to @getBeamSection.  <br /></td></tr>
+<tr class="separator:a62439a7a3a262a3d0ada5c1efcef2c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf053f1db321014815dba591907fada7" id="r_aaf053f1db321014815dba591907fada7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aaf053f1db321014815dba591907fada7">getMechanicalParameters</a> (const sofa::Index beamId, Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity)=0</td></tr>
+<tr class="memdesc:aaf053f1db321014815dba591907fada7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa.  <br /></td></tr>
+<tr class="separator:aaf053f1db321014815dba591907fada7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833da66893d6ae4b395462e21b1f9a62" id="r_a833da66893d6ae4b395462e21b1f9a62"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a833da66893d6ae4b395462e21b1f9a62">getBeamAtCurvAbs</a> (const Real x_input, sofa::Index &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0)</td></tr>
+<tr class="separator:a833da66893d6ae4b395462e21b1f9a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb4b982b824f76847732a672b51fece4" id="r_adb4b982b824f76847732a672b51fece4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#adb4b982b824f76847732a672b51fece4">computeTransform</a> (const EdgeID edgeInList, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
 <tr class="separator:adb4b982b824f76847732a672b51fece4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d183d74d69b54c564653c4bfdde93f1" id="r_a8d183d74d69b54c564653c4bfdde93f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a8d183d74d69b54c564653c4bfdde93f1">computeTransform</a> (const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
 <tr class="separator:a8d183d74d69b54c564653c4bfdde93f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18893b2dac3bc59506fd407187c65b66" id="r_a18893b2dac3bc59506fd407187c65b66"><td class="memItemLeft" align="right" valign="top"><a id="a18893b2dac3bc59506fd407187c65b66" name="a18893b2dac3bc59506fd407187c65b66"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransform</b> (unsigned int edgeInList, Transform &amp;DOF0_H_local0, Transform &amp;DOF1_H_local1)</td></tr>
-<tr class="separator:a18893b2dac3bc59506fd407187c65b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab51a3da8dc2e1addb128976cc9591940" id="r_ab51a3da8dc2e1addb128976cc9591940"><td class="memItemLeft" align="right" valign="top"><a id="ab51a3da8dc2e1addb128976cc9591940" name="ab51a3da8dc2e1addb128976cc9591940"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransformInGlobalFrame</b> (unsigned int edgeInList, Transform &amp;DOF0Global_H_local0, Transform &amp;DOF1Global_H_local1, const VecCoord &amp;x)</td></tr>
-<tr class="separator:ab51a3da8dc2e1addb128976cc9591940"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a08515ec2052804401f5edbe5a5731f" id="r_a0a08515ec2052804401f5edbe5a5731f"><td class="memItemLeft" align="right" valign="top"><a id="a0a08515ec2052804401f5edbe5a5731f" name="a0a08515ec2052804401f5edbe5a5731f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (int beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
-<tr class="separator:a0a08515ec2052804401f5edbe5a5731f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68ecd1db013b890451d924df55b6efe0" id="r_a68ecd1db013b890451d924df55b6efe0"><td class="memItemLeft" align="right" valign="top"><a id="a68ecd1db013b890451d924df55b6efe0" name="a68ecd1db013b890451d924df55b6efe0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangent</b> (Vec3 &amp;t, const Real &amp;baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L)</td></tr>
-<tr class="memdesc:a68ecd1db013b890451d924df55b6efe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">getTangent : Computation of a Tangent for the beam (it is given by the derivative of the spline formulation) <br /></td></tr>
-<tr class="separator:a68ecd1db013b890451d924df55b6efe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b45179130515b6173838efcdbf5c76c" id="r_a2b45179130515b6173838efcdbf5c76c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a2b45179130515b6173838efcdbf5c76c">getNodeIndices</a> (unsigned int edgeInList, unsigned int &amp;node0Idx, unsigned int &amp;node1Idx)</td></tr>
-<tr class="separator:a2b45179130515b6173838efcdbf5c76c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad064077be3d1e5c631a7c5a1ebe8bc04" id="r_ad064077be3d1e5c631a7c5a1ebe8bc04"><td class="memItemLeft" align="right" valign="top"><a id="ad064077be3d1e5c631a7c5a1ebe8bc04" name="ad064077be3d1e5c631a7c5a1ebe8bc04"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getSplinePoints</b> (unsigned int edgeInList, const VecCoord &amp;x, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
-<tr class="separator:ad064077be3d1e5c631a7c5a1ebe8bc04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51cb8de84d9cce4265668a435839812" id="r_ac51cb8de84d9cce4265668a435839812"><td class="memItemLeft" align="right" valign="top"><a id="ac51cb8de84d9cce4265668a435839812" name="ac51cb8de84d9cce4265668a435839812"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransform</b> (const EdgeID edgeInList, Transform &amp;DOF0_H_local0, Transform &amp;DOF1_H_local1)</td></tr>
+<tr class="separator:ac51cb8de84d9cce4265668a435839812"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aade08f1c7a172439952b97b80ec70500" id="r_aade08f1c7a172439952b97b80ec70500"><td class="memItemLeft" align="right" valign="top"><a id="aade08f1c7a172439952b97b80ec70500" name="aade08f1c7a172439952b97b80ec70500"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransformInGlobalFrame</b> (const EdgeID edgeInList, Transform &amp;DOF0Global_H_local0, Transform &amp;DOF1Global_H_local1, const VecCoord &amp;x)</td></tr>
+<tr class="separator:aade08f1c7a172439952b97b80ec70500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9e2ab830385bbc55dfab35d7ef1d6d" id="r_a9a9e2ab830385bbc55dfab35d7ef1d6d"><td class="memItemLeft" align="right" valign="top"><a id="a9a9e2ab830385bbc55dfab35d7ef1d6d" name="a9a9e2ab830385bbc55dfab35d7ef1d6d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (const sofa::Index beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
+<tr class="separator:a9a9e2ab830385bbc55dfab35d7ef1d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c39f356c87acc69cabe12185ac1c48" id="r_a68c39f356c87acc69cabe12185ac1c48"><td class="memItemLeft" align="right" valign="top"><a id="a68c39f356c87acc69cabe12185ac1c48" name="a68c39f356c87acc69cabe12185ac1c48"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangent</b> (Vec3 &amp;t, const Real baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L)</td></tr>
+<tr class="memdesc:a68c39f356c87acc69cabe12185ac1c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">getTangent : Computation of a Tangent for the beam (it is given by the derivative of the spline formulation) <br /></td></tr>
+<tr class="separator:a68c39f356c87acc69cabe12185ac1c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eb59021db1d4dfc81642cdb13ef6493" id="r_a2eb59021db1d4dfc81642cdb13ef6493"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a2eb59021db1d4dfc81642cdb13ef6493">getNodeIndices</a> (const EdgeID edgeInList, unsigned int &amp;node0Idx, unsigned int &amp;node1Idx)</td></tr>
+<tr class="separator:a2eb59021db1d4dfc81642cdb13ef6493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa17114d3df5c339fc06da0f0ce4c31a4" id="r_aa17114d3df5c339fc06da0f0ce4c31a4"><td class="memItemLeft" align="right" valign="top"><a id="aa17114d3df5c339fc06da0f0ce4c31a4" name="aa17114d3df5c339fc06da0f0ce4c31a4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getSplinePoints</b> (const EdgeID edgeInList, const VecCoord &amp;x, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
+<tr class="separator:aa17114d3df5c339fc06da0f0ce4c31a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a266f659f3c1ad18b57be03035150dee8" id="r_a266f659f3c1ad18b57be03035150dee8"><td class="memItemLeft" align="right" valign="top"><a id="a266f659f3c1ad18b57be03035150dee8" name="a266f659f3c1ad18b57be03035150dee8"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getStateSize</b> () const</td></tr>
 <tr class="separator:a266f659f3c1ad18b57be03035150dee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a078d4cffe3962f03a28673ff327645cd" id="r_a078d4cffe3962f03a28673ff327645cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a078d4cffe3962f03a28673ff327645cd">computeActualLength</a> (Real &amp;length, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3)</td></tr>
 <tr class="separator:a078d4cffe3962f03a28673ff327645cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3bccc29767b71cdfc5c9d2b48e16f13" id="r_ab3bccc29767b71cdfc5c9d2b48e16f13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ab3bccc29767b71cdfc5c9d2b48e16f13">computeStrechAndTwist</a> (unsigned int edgeInList, const VecCoord &amp;x, Vec3 &amp;ResultNodeO, Vec3 &amp;ResultNode1)</td></tr>
-<tr class="separator:ab3bccc29767b71cdfc5c9d2b48e16f13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7368b3a6ca85319274b042f31814cc3" id="r_af7368b3a6ca85319274b042f31814cc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#af7368b3a6ca85319274b042f31814cc3">computeStrechAndTwist</a> (const EdgeID edgeInList, const VecCoord &amp;x, Vec3 &amp;ResultNodeO, Vec3 &amp;ResultNode1)</td></tr>
+<tr class="separator:af7368b3a6ca85319274b042f31814cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0fee06c51ee65bedde437016717f908" id="r_ae0fee06c51ee65bedde437016717f908"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ae0fee06c51ee65bedde437016717f908">updateBezierPoints</a> (const VecCoord &amp;x, sofa::core::VecCoordId &amp;vId_Out)</td></tr>
 <tr class="memdesc:ae0fee06c51ee65bedde437016717f908"><td class="mdescLeft">&#160;</td><td class="mdescRight">vId_Out provides the id of the multiVecId which stores the position of the Bezier Points  <br /></td></tr>
 <tr class="separator:ae0fee06c51ee65bedde437016717f908"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23139e666aa6c7454e7887fd346d9fc1" id="r_a23139e666aa6c7454e7887fd346d9fc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a23139e666aa6c7454e7887fd346d9fc1">updateBezierPoints</a> (const VecCoord &amp;x, unsigned int index, VectorVec3 &amp;v)</td></tr>
-<tr class="separator:a23139e666aa6c7454e7887fd346d9fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4535a8dba9ea2462c30b9dc4014d607" id="r_af4535a8dba9ea2462c30b9dc4014d607"><td class="memItemLeft" align="right" valign="top"><a id="af4535a8dba9ea2462c30b9dc4014d607" name="af4535a8dba9ea2462c30b9dc4014d607"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolatePointUsingSpline</b> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult)</td></tr>
-<tr class="memdesc:af4535a8dba9ea2462c30b9dc4014d607"><td class="mdescLeft">&#160;</td><td class="mdescRight">spline base interpolation of points and transformation <br /></td></tr>
-<tr class="separator:af4535a8dba9ea2462c30b9dc4014d607"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6ff6a59b5c298c239f30d436a4f4560" id="r_aa6ff6a59b5c298c239f30d436a4f4560"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa6ff6a59b5c298c239f30d436a4f4560">interpolatePointUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult, bool recompute, const sofa::core::ConstVecCoordId &amp;vecXId)</td></tr>
-<tr class="separator:aa6ff6a59b5c298c239f30d436a4f4560"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03049038910e69ca3151cd1e9ed19645" id="r_a03049038910e69ca3151cd1e9ed19645"><td class="memItemLeft" align="right" valign="top"><a id="a03049038910e69ca3151cd1e9ed19645" name="a03049038910e69ca3151cd1e9ed19645"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>InterpolateTransformUsingSpline</b> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Transform &amp;global_H_localInterpol)</td></tr>
-<tr class="separator:a03049038910e69ca3151cd1e9ed19645"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa932d480a4b7def4c8b3b1bc6dc31e3" id="r_afa932d480a4b7def4c8b3b1bc6dc31e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afa932d480a4b7def4c8b3b1bc6dc31e3">InterpolateTransformUsingSpline</a> (Transform &amp;global_H_localResult, const Real &amp;baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L)</td></tr>
-<tr class="separator:afa932d480a4b7def4c8b3b1bc6dc31e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cace9a9dcbdd84e386b41d8b900a4e2" id="r_a8cace9a9dcbdd84e386b41d8b900a4e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a8cace9a9dcbdd84e386b41d8b900a4e2">InterpolateTransformAndVelUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const VecDeriv &amp;v, Transform &amp;global_H_localInterpol, Deriv &amp;v_interpol)</td></tr>
-<tr class="separator:a8cace9a9dcbdd84e386b41d8b900a4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca88ba4f6487f6afd01106f91155fe53" id="r_aca88ba4f6487f6afd01106f91155fe53"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aca88ba4f6487f6afd01106f91155fe53">ComputeTotalBendingRotationAngle</a> (const Real &amp;dx_computation, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L, const Real &amp;baryCoordMin, const Real &amp;baryCoordMax)</td></tr>
-<tr class="memdesc:aca88ba4f6487f6afd01106f91155fe53"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)  <br /></td></tr>
-<tr class="separator:aca88ba4f6487f6afd01106f91155fe53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac216f92163647f47155f4ee557af2039" id="r_ac216f92163647f47155f4ee557af2039"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac216f92163647f47155f4ee557af2039">MapForceOnNodeUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const Vec3 &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
-<tr class="memdesc:ac216f92163647f47155f4ee557af2039"><td class="mdescLeft">&#160;</td><td class="mdescRight">3DOF mapping  <br /></td></tr>
-<tr class="separator:ac216f92163647f47155f4ee557af2039"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a8c6e393881cd74682e12f519491a3" id="r_a27a8c6e393881cd74682e12f519491a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a27a8c6e393881cd74682e12f519491a3">MapForceOnNodeUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const SpatialVector &amp;f6DofInput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
-<tr class="memdesc:a27a8c6e393881cd74682e12f519491a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">6DoF mapping  <br /></td></tr>
-<tr class="separator:a27a8c6e393881cd74682e12f519491a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc5e65617acdac626f33368efd059ece" id="r_afc5e65617acdac626f33368efd059ece"><td class="memItemLeft" align="right" valign="top"><a id="afc5e65617acdac626f33368efd059ece" name="afc5e65617acdac626f33368efd059ece"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateBezierPoints</b> (const VecCoord &amp;x, sofa::Index index, VectorVec3 &amp;v)</td></tr>
+<tr class="separator:afc5e65617acdac626f33368efd059ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32b7f16920505149b5bcd67af019063" id="r_ab32b7f16920505149b5bcd67af019063"><td class="memItemLeft" align="right" valign="top"><a id="ab32b7f16920505149b5bcd67af019063" name="ab32b7f16920505149b5bcd67af019063"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolatePointUsingSpline</b> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult)</td></tr>
+<tr class="memdesc:ab32b7f16920505149b5bcd67af019063"><td class="mdescLeft">&#160;</td><td class="mdescRight">spline base interpolation of points and transformation <br /></td></tr>
+<tr class="separator:ab32b7f16920505149b5bcd67af019063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9779dac24c3282ba0ccd1d8955d6c52d" id="r_a9779dac24c3282ba0ccd1d8955d6c52d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a9779dac24c3282ba0ccd1d8955d6c52d">interpolatePointUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult, bool recompute, const sofa::core::ConstVecCoordId &amp;vecXId)</td></tr>
+<tr class="separator:a9779dac24c3282ba0ccd1d8955d6c52d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af62fe6320f83017da64761cbb4af733e" id="r_af62fe6320f83017da64761cbb4af733e"><td class="memItemLeft" align="right" valign="top"><a id="af62fe6320f83017da64761cbb4af733e" name="af62fe6320f83017da64761cbb4af733e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>InterpolateTransformUsingSpline</b> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Transform &amp;global_H_localInterpol)</td></tr>
+<tr class="separator:af62fe6320f83017da64761cbb4af733e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0964604e069d2c77a189d23006ae3ca8" id="r_a0964604e069d2c77a189d23006ae3ca8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a0964604e069d2c77a189d23006ae3ca8">InterpolateTransformUsingSpline</a> (Transform &amp;global_H_localResult, const Real baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L)</td></tr>
+<tr class="separator:a0964604e069d2c77a189d23006ae3ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a102eb7148d5ab77b4d1712c625d40672" id="r_a102eb7148d5ab77b4d1712c625d40672"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a102eb7148d5ab77b4d1712c625d40672">InterpolateTransformAndVelUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const VecDeriv &amp;v, Transform &amp;global_H_localInterpol, Deriv &amp;v_interpol)</td></tr>
+<tr class="separator:a102eb7148d5ab77b4d1712c625d40672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565571c1ba8c6e24a646685509d0dc48" id="r_a565571c1ba8c6e24a646685509d0dc48"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a565571c1ba8c6e24a646685509d0dc48">ComputeTotalBendingRotationAngle</a> (const Real dx_computation, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L, const Real baryCoordMin, const Real baryCoordMax)</td></tr>
+<tr class="memdesc:a565571c1ba8c6e24a646685509d0dc48"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)  <br /></td></tr>
+<tr class="separator:a565571c1ba8c6e24a646685509d0dc48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc95b3efd3f026f586ad6b0b9fe04ad7" id="r_afc95b3efd3f026f586ad6b0b9fe04ad7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afc95b3efd3f026f586ad6b0b9fe04ad7">MapForceOnNodeUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const Vec3 &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
+<tr class="memdesc:afc95b3efd3f026f586ad6b0b9fe04ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">3DOF mapping  <br /></td></tr>
+<tr class="separator:afc95b3efd3f026f586ad6b0b9fe04ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a563b249e93f1632f87c565bc37e20178" id="r_a563b249e93f1632f87c565bc37e20178"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a563b249e93f1632f87c565bc37e20178">MapForceOnNodeUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const SpatialVector &amp;f6DofInput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
+<tr class="memdesc:a563b249e93f1632f87c565bc37e20178"><td class="mdescLeft">&#160;</td><td class="mdescRight">6DoF mapping  <br /></td></tr>
+<tr class="separator:a563b249e93f1632f87c565bc37e20178"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a562fdc54057e825f4aae5e620a0f1279" id="r_a562fdc54057e825f4aae5e620a0f1279"><td class="memItemLeft" align="right" valign="top"><a id="a562fdc54057e825f4aae5e620a0f1279" name="a562fdc54057e825f4aae5e620a0f1279"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>getControlPointsFromFrame</b> (const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
-<tr class="separator:a562fdc54057e825f4aae5e620a0f1279"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5150fb397887a1ce549097029d06f0" id="r_a2e5150fb397887a1ce549097029d06f0"><td class="memItemLeft" align="right" valign="top"><a id="a2e5150fb397887a1ce549097029d06f0" name="a2e5150fb397887a1ce549097029d06f0"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>getControlPointsFromFrame</b> (const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
+<tr class="separator:a2e5150fb397887a1ce549097029d06f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a899a756e92492f60fdf3694b9be0988a" id="r_a899a756e92492f60fdf3694b9be0988a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a">RotateFrameForAlignX</a> (const Quat &amp;input, Vec3 &amp;x, Quat &amp;output)</td></tr>
 <tr class="memdesc:a899a756e92492f60fdf3694b9be0988a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to rotate a Frame define by a Quat.  <br /></td></tr>
 <tr class="separator:a899a756e92492f60fdf3694b9be0988a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -307,8 +308,8 @@ Data&lt; VecEdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_
 <tr class="memitem:aea622cf27a2af6d3a736bd1f5c8c25f6" id="r_aea622cf27a2af6d3a736bd1f5c8c25f6"><td class="memItemLeft" align="right" valign="top"><a id="aea622cf27a2af6d3a736bd1f5c8c25f6" name="aea622cf27a2af6d3a736bd1f5c8c25f6"></a>
 const VecEdges *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topologyEdges</b> { nullptr }</td></tr>
 <tr class="separator:aea622cf27a2af6d3a736bd1f5c8c25f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa85edbf3d952d9b3e7204a28afd9ca3e" id="r_aa85edbf3d952d9b3e7204a28afd9ca3e"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa85edbf3d952d9b3e7204a28afd9ca3e">d_lengthList</a></td></tr>
-<tr class="separator:aa85edbf3d952d9b3e7204a28afd9ca3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac151e87b5b35310239f391d244833068" id="r_ac151e87b5b35310239f391d244833068"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068">d_lengthList</a></td></tr>
+<tr class="separator:ac151e87b5b35310239f391d244833068"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32dde414cec5c9c285bcfd55cfb27e89" id="r_a32dde414cec5c9c285bcfd55cfb27e89"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Transform &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a32dde414cec5c9c285bcfd55cfb27e89">d_DOF0TransformNode0</a></td></tr>
 <tr class="separator:a32dde414cec5c9c285bcfd55cfb27e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37eccf180bea40b5e88d51bf642c8997" id="r_a37eccf180bea40b5e88d51bf642c8997"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Transform &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a37eccf180bea40b5e88d51bf642c8997">d_DOF1TransformNode1</a></td></tr>
@@ -317,8 +318,8 @@ const VecEdges *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topolog
 Data&lt; type::vector&lt; Vec2 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_curvAbsList</b></td></tr>
 <tr class="memdesc:aa35ff1432a5a396625e50fb586871c66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of 2 Real. absciss curv of first and second point defining the beam. <br /></td></tr>
 <tr class="separator:aa35ff1432a5a396625e50fb586871c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a325866bced2f7b0b48b4f93bbfe4b1b9" id="r_a325866bced2f7b0b48b4f93bbfe4b1b9"><td class="memItemLeft" align="right" valign="top">Data&lt; sofa::type::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a325866bced2f7b0b48b4f93bbfe4b1b9">d_beamCollision</a></td></tr>
-<tr class="separator:a325866bced2f7b0b48b4f93bbfe4b1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec937578493bc22848032f0d8b0b6251" id="r_aec937578493bc22848032f0d8b0b6251"><td class="memItemLeft" align="right" valign="top">Data&lt; sofa::type::vector&lt; EdgeID &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aec937578493bc22848032f0d8b0b6251">d_beamCollision</a></td></tr>
+<tr class="separator:aec937578493bc22848032f0d8b0b6251"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56d2f664fc6fe9d3b3d112bdb7a6fb33" id="r_a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memItemLeft" align="right" valign="top"><a id="a56d2f664fc6fe9d3b3d112bdb7a6fb33" name="a56d2f664fc6fe9d3b3d112bdb7a6fb33"></a>
 Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_dofsAndBeamsAligned</b></td></tr>
 <tr class="separator:a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -412,8 +413,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="ab3bccc29767b71cdfc5c9d2b48e16f13" name="ab3bccc29767b71cdfc5c9d2b48e16f13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3bccc29767b71cdfc5c9d2b48e16f13">&#9670;&#160;</a></span>computeStrechAndTwist()</h2>
+<a id="af7368b3a6ca85319274b042f31814cc3" name="af7368b3a6ca85319274b042f31814cc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7368b3a6ca85319274b042f31814cc3">&#9670;&#160;</a></span>computeStrechAndTwist()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -423,7 +424,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void computeStrechAndTwist </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
@@ -461,8 +462,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="aca88ba4f6487f6afd01106f91155fe53" name="aca88ba4f6487f6afd01106f91155fe53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca88ba4f6487f6afd01106f91155fe53">&#9670;&#160;</a></span>ComputeTotalBendingRotationAngle()</h2>
+<a id="a565571c1ba8c6e24a646685509d0dc48" name="a565571c1ba8c6e24a646685509d0dc48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a565571c1ba8c6e24a646685509d0dc48">&#9670;&#160;</a></span>ComputeTotalBendingRotationAngle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -472,7 +473,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>&lt; DataTypes &gt;::Real ComputeTotalBendingRotationAngle </td>
           <td>(</td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>dx_computation</em>, </td>
         </tr>
         <tr>
@@ -490,19 +491,19 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>L</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoordMin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoordMax</em>&#160;</td>
         </tr>
         <tr>
@@ -627,8 +628,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a98561e310fba9668249f081272b52115" name="a98561e310fba9668249f081272b52115"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98561e310fba9668249f081272b52115">&#9670;&#160;</a></span>getBeamAtCurvAbs()</h2>
+<a id="a833da66893d6ae4b395462e21b1f9a62" name="a833da66893d6ae4b395462e21b1f9a62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833da66893d6ae4b395462e21b1f9a62">&#9670;&#160;</a></span>getBeamAtCurvAbs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -641,13 +642,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void getBeamAtCurvAbs </td>
           <td>(</td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>x_input</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int &amp;&#160;</td>
+          <td class="paramtype">sofa::Index &amp;&#160;</td>
           <td class="paramname"><em>edgeInList_output</em>, </td>
         </tr>
         <tr>
@@ -682,8 +683,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="aeb5f705ecc43d9137f220956eaa4fe43" name="aeb5f705ecc43d9137f220956eaa4fe43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb5f705ecc43d9137f220956eaa4fe43">&#9670;&#160;</a></span>getBeamSection()</h2>
+<a id="a26fda0b3621fd662eb69f4810066a3dd" name="a26fda0b3621fd662eb69f4810066a3dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26fda0b3621fd662eb69f4810066a3dd">&#9670;&#160;</a></span>getBeamSection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -696,7 +697,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual const <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp; getBeamSection </td>
           <td>(</td>
-          <td class="paramtype">sofa::Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>beamId</em></td><td>)</td>
           <td></td>
         </tr>
@@ -715,8 +716,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="af1e82c29be1a7350a1554662278adacb" name="af1e82c29be1a7350a1554662278adacb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1e82c29be1a7350a1554662278adacb">&#9670;&#160;</a></span>getCollisionSampling()</h2>
+<a id="afdaca6a160b71aa506fa63aa46c684cf" name="afdaca6a160b71aa506fa63aa46c684cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdaca6a160b71aa506fa63aa46c684cf">&#9670;&#160;</a></span>getCollisionSampling()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -735,7 +736,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>x_localcurv_abs</em>&#160;</td>
         </tr>
         <tr>
@@ -752,14 +753,14 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>Collision information using. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a325866bced2f7b0b48b4f93bbfe4b1b9">d_beamCollision</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aec937578493bc22848032f0d8b0b6251">d_beamCollision</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a76a4070d70e17f633fcd4c478ee5049b">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a76a4070d70e17f633fcd4c478ee5049b">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a1f3ad863fd8466ebf54b3817a9004d07" name="a1f3ad863fd8466ebf54b3817a9004d07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f3ad863fd8466ebf54b3817a9004d07">&#9670;&#160;</a></span>getCurvAbsAtBeam()</h2>
+<a id="aed198ee6cfa978a0ec490c617fb97daf" name="aed198ee6cfa978a0ec490c617fb97daf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed198ee6cfa978a0ec490c617fb97daf">&#9670;&#160;</a></span>getCurvAbsAtBeam()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -772,13 +773,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual void getCurvAbsAtBeam </td>
           <td>(</td>
-          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList_input</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord_input</em>, </td>
         </tr>
         <tr>
@@ -800,12 +801,12 @@ template&lt;class DataTypes &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a05478d461b836199ba51ebe7a5ef81ed">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#aeaa1b3b23e4f0988381153adeb2802de">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a753566830228ba262f50794b068f094f">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a23d3642caff5e8e09b2f3d7d01d0ce4b">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a1b3af6570cde8f780072d318d8772305" name="a1b3af6570cde8f780072d318d8772305"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b3af6570cde8f780072d318d8772305">&#9670;&#160;</a></span>getInterpolationParameters()</h2>
+<a id="a62439a7a3a262a3d0ada5c1efcef2c7a" name="a62439a7a3a262a3d0ada5c1efcef2c7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62439a7a3a262a3d0ada5c1efcef2c7a">&#9670;&#160;</a></span>getInterpolationParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -818,7 +819,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual void getInterpolationParameters </td>
           <td>(</td>
-          <td class="paramtype">sofa::Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>beamId</em>, </td>
         </tr>
         <tr>
@@ -882,8 +883,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a65ac8ee3ea115128c4fdaaa794d5ff05" name="a65ac8ee3ea115128c4fdaaa794d5ff05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65ac8ee3ea115128c4fdaaa794d5ff05">&#9670;&#160;</a></span>getMechanicalParameters()</h2>
+<a id="aaf053f1db321014815dba591907fada7" name="aaf053f1db321014815dba591907fada7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf053f1db321014815dba591907fada7">&#9670;&#160;</a></span>getMechanicalParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -896,7 +897,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual void getMechanicalParameters </td>
           <td>(</td>
-          <td class="paramtype">sofa::Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>beamId</em>, </td>
         </tr>
         <tr>
@@ -936,8 +937,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a2b45179130515b6173838efcdbf5c76c" name="a2b45179130515b6173838efcdbf5c76c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b45179130515b6173838efcdbf5c76c">&#9670;&#160;</a></span>getNodeIndices()</h2>
+<a id="a2eb59021db1d4dfc81642cdb13ef6493" name="a2eb59021db1d4dfc81642cdb13ef6493"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eb59021db1d4dfc81642cdb13ef6493">&#9670;&#160;</a></span>getNodeIndices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -947,7 +948,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">int getNodeIndices </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
@@ -1001,14 +1002,14 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>getLength / setLength =&gt; provides the rest length of each spline using </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa85edbf3d952d9b3e7204a28afd9ca3e">d_lengthList</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068">d_lengthList</a> </dd></dl>
 
 <p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a35c141faf1674b8412e1605b3e8e5e87">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#adb75caafd0af636e16292dbb4a73cba4">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="ad859d93f422a34b738d7ea30871e619c" name="ad859d93f422a34b738d7ea30871e619c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad859d93f422a34b738d7ea30871e619c">&#9670;&#160;</a></span>getSplineRestTransform()</h2>
+<a id="ac2ac13e2d5423b0e016541f6a43ba568" name="ac2ac13e2d5423b0e016541f6a43ba568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2ac13e2d5423b0e016541f6a43ba568">&#9670;&#160;</a></span>getSplineRestTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1021,7 +1022,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual void getSplineRestTransform </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
@@ -1049,12 +1050,12 @@ template&lt;class DataTypes &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a740c79cf1b47f0d83fab45896cbdf5d4">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a740c79cf1b47f0d83fab45896cbdf5d4">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="aa6ff6a59b5c298c239f30d436a4f4560" name="aa6ff6a59b5c298c239f30d436a4f4560"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6ff6a59b5c298c239f30d436a4f4560">&#9670;&#160;</a></span>interpolatePointUsingSpline()</h2>
+<a id="a9779dac24c3282ba0ccd1d8955d6c52d" name="a9779dac24c3282ba0ccd1d8955d6c52d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9779dac24c3282ba0ccd1d8955d6c52d">&#9670;&#160;</a></span>interpolatePointUsingSpline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1064,13 +1065,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void interpolatePointUsingSpline </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord</em>, </td>
         </tr>
         <tr>
@@ -1116,8 +1117,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a8cace9a9dcbdd84e386b41d8b900a4e2" name="a8cace9a9dcbdd84e386b41d8b900a4e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8cace9a9dcbdd84e386b41d8b900a4e2">&#9670;&#160;</a></span>InterpolateTransformAndVelUsingSpline()</h2>
+<a id="a102eb7148d5ab77b4d1712c625d40672" name="a102eb7148d5ab77b4d1712c625d40672"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a102eb7148d5ab77b4d1712c625d40672">&#9670;&#160;</a></span>InterpolateTransformAndVelUsingSpline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1127,13 +1128,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void InterpolateTransformAndVelUsingSpline </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord</em>, </td>
         </tr>
         <tr>
@@ -1201,8 +1202,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="afa932d480a4b7def4c8b3b1bc6dc31e3" name="afa932d480a4b7def4c8b3b1bc6dc31e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa932d480a4b7def4c8b3b1bc6dc31e3">&#9670;&#160;</a></span>InterpolateTransformUsingSpline()</h2>
+<a id="a0964604e069d2c77a189d23006ae3ca8" name="a0964604e069d2c77a189d23006ae3ca8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0964604e069d2c77a189d23006ae3ca8">&#9670;&#160;</a></span>InterpolateTransformUsingSpline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1218,7 +1219,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord</em>, </td>
         </tr>
         <tr>
@@ -1236,7 +1237,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>L</em>&#160;</td>
         </tr>
         <tr>
@@ -1264,8 +1265,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a27a8c6e393881cd74682e12f519491a3" name="a27a8c6e393881cd74682e12f519491a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27a8c6e393881cd74682e12f519491a3">&#9670;&#160;</a></span>MapForceOnNodeUsingSpline() <span class="overload">[1/2]</span></h2>
+<a id="a563b249e93f1632f87c565bc37e20178" name="a563b249e93f1632f87c565bc37e20178"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a563b249e93f1632f87c565bc37e20178">&#9670;&#160;</a></span>MapForceOnNodeUsingSpline() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1275,13 +1276,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void MapForceOnNodeUsingSpline </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord</em>, </td>
         </tr>
         <tr>
@@ -1323,7 +1324,7 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>6DoF mapping </p>
-<p><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac216f92163647f47155f4ee557af2039" title="3DOF mapping">BeamInterpolation&lt;DataTypes&gt;::MapForceOnNodeUsingSpline</a> 6DoF (reverse) mapping of a force (f6DofInput) that is positionned / to the centerline of a beam</p><ul>
+<p><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afc95b3efd3f026f586ad6b0b9fe04ad7" title="3DOF mapping">BeamInterpolation&lt;DataTypes&gt;::MapForceOnNodeUsingSpline</a> 6DoF (reverse) mapping of a force (f6DofInput) that is positionned / to the centerline of a beam</p><ul>
 <li>point on the centerline given by edgeInList (num of the beam) and baryCoord</li>
 <li>localPos provides the position shift / to the point on the centerline</li>
 <li>x provides the positions of the nodes Result: Forces (and Torques) on the nodes of this beam </li>
@@ -1343,8 +1344,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="ac216f92163647f47155f4ee557af2039" name="ac216f92163647f47155f4ee557af2039"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac216f92163647f47155f4ee557af2039">&#9670;&#160;</a></span>MapForceOnNodeUsingSpline() <span class="overload">[2/2]</span></h2>
+<a id="afc95b3efd3f026f586ad6b0b9fe04ad7" name="afc95b3efd3f026f586ad6b0b9fe04ad7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc95b3efd3f026f586ad6b0b9fe04ad7">&#9670;&#160;</a></span>MapForceOnNodeUsingSpline() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1354,13 +1355,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void MapForceOnNodeUsingSpline </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord</em>, </td>
         </tr>
         <tr>
@@ -1402,7 +1403,7 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>3DOF mapping </p>
-<p><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac216f92163647f47155f4ee557af2039" title="3DOF mapping">BeamInterpolation&lt;DataTypes&gt;::MapForceOnNodeUsingSpline</a> 3DoF (reverse) mapping of a force (finput) that is positionned / to the centerline of a beam</p><ul>
+<p><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afc95b3efd3f026f586ad6b0b9fe04ad7" title="3DOF mapping">BeamInterpolation&lt;DataTypes&gt;::MapForceOnNodeUsingSpline</a> 3DoF (reverse) mapping of a force (finput) that is positionned / to the centerline of a beam</p><ul>
 <li>point on the centerline given by edgeInList (num of the beam) and baryCoord</li>
 <li>localPos provides the position shift / to the point on the centerline</li>
 <li>x provides the positions of the nodes Result: Forces (and Torques) on the nodes of this beam </li>
@@ -1531,7 +1532,7 @@ template&lt;class DataTypes &gt; </div>
 </div>
 </div>
 <a id="ae0fee06c51ee65bedde437016717f908" name="ae0fee06c51ee65bedde437016717f908"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0fee06c51ee65bedde437016717f908">&#9670;&#160;</a></span>updateBezierPoints() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0fee06c51ee65bedde437016717f908">&#9670;&#160;</a></span>updateBezierPoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1563,48 +1564,9 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a23139e666aa6c7454e7887fd346d9fc1" name="a23139e666aa6c7454e7887fd346d9fc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23139e666aa6c7454e7887fd346d9fc1">&#9670;&#160;</a></span>updateBezierPoints() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataTypes &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void updateBezierPoints </td>
-          <td>(</td>
-          <td class="paramtype">const VecCoord &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">VectorVec3 &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>&lt;&lt;" interpolatePointUsingSpline : "&lt;&lt; edgeInList&lt;&lt;"  xbary="&lt;&lt;baryCoord&lt;&lt;"  localPos"&lt;&lt;localPos&lt;&lt;std::endl;</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>remove call to nsform2 =&gt; make something faster ! </dd></dl>
-<p>Mechanical Object to stock Bezier points</p>
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a325866bced2f7b0b48b4f93bbfe4b1b9" name="a325866bced2f7b0b48b4f93bbfe4b1b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a325866bced2f7b0b48b4f93bbfe4b1b9">&#9670;&#160;</a></span>d_beamCollision</h2>
+<a id="aec937578493bc22848032f0d8b0b6251" name="aec937578493bc22848032f0d8b0b6251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec937578493bc22848032f0d8b0b6251">&#9670;&#160;</a></span>d_beamCollision</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1612,7 +1574,7 @@ template&lt;class DataTypes &gt; </div>
 template&lt;class DataTypes &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Data&lt; sofa::type::vector&lt;int&gt; &gt; d_beamCollision</td>
+          <td class="memname">Data&lt; sofa::type::vector&lt;EdgeID&gt; &gt; d_beamCollision</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1660,8 +1622,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="aa85edbf3d952d9b3e7204a28afd9ca3e" name="aa85edbf3d952d9b3e7204a28afd9ca3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa85edbf3d952d9b3e7204a28afd9ca3e">&#9670;&#160;</a></span>d_lengthList</h2>
+<a id="ac151e87b5b35310239f391d244833068" name="ac151e87b5b35310239f391d244833068"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac151e87b5b35310239f391d244833068">&#9670;&#160;</a></span>d_lengthList</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1669,7 +1631,7 @@ template&lt;class DataTypes &gt; </div>
 template&lt;class DataTypes &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Data&lt; type::vector&lt; double &gt; &gt; d_lengthList</td>
+          <td class="memname">Data&lt; type::vector&lt; Real &gt; &gt; d_lengthList</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1686,7 +1648,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a></li>
-    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 24 2025 07:01:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -151,60 +151,47 @@ $(document).ready(function(){initNavTree('_rod_spire_section_8inl_source.html','
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">if</span> (<span class="keywordtype">int</span> nbrEdgesVisu = this-&gt;d_nbEdgesVisu.getValue() &lt;= 0)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        msg_warning() &lt;&lt; <span class="stringliteral">&quot;Number of visual edges has been set to an invalid value: &quot;</span> &lt;&lt; nbrEdgesVisu &lt;&lt; <span class="stringliteral">&quot;. Value should be a positive integer. Setting to default value: 10&quot;</span>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        this-&gt;d_nbEdgesVisu.setValue(10);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">if</span> (<span class="keywordtype">int</span> nbEdgesCollis = this-&gt;d_nbEdgesCollis.getValue() &lt;= 0)</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        msg_warning() &lt;&lt; <span class="stringliteral">&quot;Number of collision edges has been set to an invalid value: &quot;</span> &lt;&lt; nbEdgesCollis &lt;&lt; <span class="stringliteral">&quot;. Value should be a positive integer. Setting to default value: 20&quot;</span>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        this-&gt;d_nbEdgesCollis.setValue(10);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="foldopen" id="foldopen00069" data-start="{" data-end="}">
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_rod_spire_section.html#ad2419503dc80303e8becebae4cbaaae1">   69</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_rod_spire_section.html#ad2419503dc80303e8becebae4cbaaae1">RodSpireSection&lt;DataTypes&gt;::getRestTransformOnX</a>(Transform&amp; global_H_local, <span class="keyword">const</span> Real&amp; x_used, <span class="keyword">const</span> Real&amp; x_start)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>{</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    Real projetedLength = d_spireDiameter.getValue() * M_PI;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    Real lengthSpire = sqrt(d_spireHeight.getValue() * d_spireHeight.getValue() + projetedLength * projetedLength);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// angle in the z direction</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    Real phi = atan(d_spireHeight.getValue() / projetedLength);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_rod_spire_section.html#af40005f249caea8f669021133de5f96a">   56</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_rod_spire_section.html#af40005f249caea8f669021133de5f96a">RodSpireSection&lt;DataTypes&gt;::getRestTransformOnX</a>(Transform&amp; global_H_local, <span class="keyword">const</span> Real x_used, <span class="keyword">const</span> Real x_start)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>{</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    Real projetedLength = d_spireDiameter.getValue() * M_PI;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    Real lengthSpire = sqrt(d_spireHeight.getValue() * d_spireHeight.getValue() + projetedLength * projetedLength);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// angle in the z direction</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    Real phi = atan(d_spireHeight.getValue() / projetedLength);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    Quat Qphi;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    Qphi.axisToQuat(type::Vec3(0, 0, 1), phi);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// spire angle (if theta=2*PI, there is a complete spire between startx and x)</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    Real lengthCurve = x_used - x_start;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    Real numSpire = lengthCurve / lengthSpire;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    Real theta = 2 * M_PI * numSpire;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// computation of the Quat</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    Quat Qtheta;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    Qtheta.axisToQuat(type::Vec3(0, 1, 0), theta);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    Quat newSpireQuat = Qtheta * Qphi;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    Quat Qphi;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    Qphi.axisToQuat(type::Vec3(0, 0, 1), phi);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// spire angle (if theta=2*PI, there is a complete spire between startx and x)</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    Real lengthCurve = x_used - x_start;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    Real numSpire = lengthCurve / lengthSpire;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    Real theta = 2 * M_PI * numSpire;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// computation of the Quat</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    Quat Qtheta;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    Qtheta.axisToQuat(type::Vec3(0, 1, 0), theta);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    Quat newSpireQuat = Qtheta * Qphi;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// computation of the position</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    Real radius = d_spireDiameter.getValue() / 2.0;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    type::Vec3 PosEndCurve(radius * sin(theta), numSpire * d_spireHeight.getValue(), radius * (cos(theta) - 1));</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    type::Vec3 SpirePos = PosEndCurve + type::Vec3(x_start, 0, 0);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    global_H_local.set(SpirePos, newSpireQuat);    </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// computation of the position</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    Real radius = d_spireDiameter.getValue() / 2.0;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    type::Vec3 PosEndCurve(radius * sin(theta), numSpire * d_spireHeight.getValue(), radius * (cos(theta) - 1));</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    type::Vec3 SpirePos = PosEndCurve + type::Vec3(x_start, 0, 0);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    global_H_local.set(SpirePos, newSpireQuat);    </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>}</div>
 </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} <span class="comment">// namespace beamadapter</span></div>
 <div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html">beamadapter::BaseRodSectionMaterial</a></div><div class="ttdoc">Base class describing a Rod section which will define a set of beam elements.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.h:52</div></div>
 <div class="ttc" id="aclassbeamadapter_1_1_rod_spire_section_html_a1eb6140a834141abcaa8b6f80b56e253"><div class="ttname"><a href="classbeamadapter_1_1_rod_spire_section.html#a1eb6140a834141abcaa8b6f80b56e253">beamadapter::RodSpireSection::initSection</a></div><div class="ttdeci">bool initSection() override</div><div class="ttdoc">Internal method to init the section. Called by.</div><div class="ttdef"><b>Definition</b> RodSpireSection.inl:42</div></div>
 <div class="ttc" id="aclassbeamadapter_1_1_rod_spire_section_html_abbdb28e12e8b7a9fa7419e7d94cb1de3"><div class="ttname"><a href="classbeamadapter_1_1_rod_spire_section.html#abbdb28e12e8b7a9fa7419e7d94cb1de3">beamadapter::RodSpireSection::RodSpireSection</a></div><div class="ttdeci">RodSpireSection()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition</b> RodSpireSection.inl:32</div></div>
-<div class="ttc" id="aclassbeamadapter_1_1_rod_spire_section_html_ad2419503dc80303e8becebae4cbaaae1"><div class="ttname"><a href="classbeamadapter_1_1_rod_spire_section.html#ad2419503dc80303e8becebae4cbaaae1">beamadapter::RodSpireSection::getRestTransformOnX</a></div><div class="ttdeci">void getRestTransformOnX(Transform &amp;global_H_local, const Real &amp;x_used, const Real &amp;x_start) override</div><div class="ttdoc">Override method to get the rest position of the beam. In this implementation, it will compute the cur...</div><div class="ttdef"><b>Definition</b> RodSpireSection.inl:69</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_rod_spire_section_html_af40005f249caea8f669021133de5f96a"><div class="ttname"><a href="classbeamadapter_1_1_rod_spire_section.html#af40005f249caea8f669021133de5f96a">beamadapter::RodSpireSection::getRestTransformOnX</a></div><div class="ttdeci">void getRestTransformOnX(Transform &amp;global_H_local, const Real x_used, const Real x_start) override</div><div class="ttdoc">Override method to get the rest position of the beam. In this implementation, it will compute the cur...</div><div class="ttdef"><b>Definition</b> RodSpireSection.inl:56</div></div>
 <div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -212,7 +199,7 @@ $(document).ready(function(){initNavTree('_rod_spire_section_8inl_source.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_371f998ef18a7276d3e0964c7d35f2b9.html">model</a></li><li class="navelem"><b>RodSpireSection.inl</b></li>
-    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 24 2025 07:01:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

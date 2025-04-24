@@ -189,7 +189,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::computeRectangularCrossSectionInertiaMatrix(<span class="keyword">const</span> Real&amp; Ly, <span class="keyword">const</span> Real&amp; Lz, BeamSection&amp; section)</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::computeRectangularCrossSectionInertiaMatrix(<span class="keyword">const</span> Real Ly, <span class="keyword">const</span> Real Lz, BeamSection&amp; section)</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>{</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    section._Iy=Ly*Lz*Lz*Lz/12.0;</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    section._Iz=Lz*Ly*Ly*Ly/12.0;</div>
@@ -202,7 +202,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
 <div class="foldopen" id="foldopen00105" data-start="{" data-end="}">
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47">  105</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::computeCircularCrossSectionInertiaMatrix</a>(<span class="keyword">const</span> Real &amp;r, <span class="keyword">const</span> Real &amp;rInner, <a class="code hl_struct" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a879aa40fb32ada9f490014bbfc2f7fc8">  105</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::computeCircularCrossSectionInertiaMatrix</a>(<span class="keyword">const</span> Real r, <span class="keyword">const</span> Real rInner, <a class="code hl_struct" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>{</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    section.<a class="code hl_variable" href="structbeamadapter_1_1_beam_section.html#a3c7e2592540bfbfddb22de4d0bc0f4c3">_r</a> = r;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    section.<a class="code hl_variable" href="structbeamadapter_1_1_beam_section.html#aaaf94e9eb3386aa6b7cc03b5df40d406">_rInner</a> = rInner;</div>
@@ -334,7 +334,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keyword">auto</span> lengthList = sofa::helper::getWriteOnlyAccessor(this-&gt;d_lengthList);</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        lengthList.clear();</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> edgeListSize = this-&gt;d_edgeList.getValue().size();</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keyword">const</span> <span class="keyword">auto</span> edgeListSize = this-&gt;d_edgeList.getValue().size();</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nd0Id=0, nd1Id=0;</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
@@ -422,7 +422,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    <span class="keywordflow">if</span> (this-&gt;d_edgeList.getValue().size() == 0)</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbEdges = this-&gt;d_edgeList.getValue().size();</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nbEdges = this-&gt;d_edgeList.getValue().size();</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keywordflow">if</span> (this-&gt;d_DOF0TransformNode0.getValue().size() != nbEdges)</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -480,7 +480,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::addBeam(<span class="keyword">const</span> BaseMeshTopology::EdgeID &amp;eID  , <span class="keyword">const</span> Real &amp;length, <span class="keyword">const</span> Real &amp;x0, <span class="keyword">const</span> Real &amp;x1, <span class="keyword">const</span> Real &amp;angle)</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::addBeam(<span class="keyword">const</span> EdgeID eID, <span class="keyword">const</span> Real length, <span class="keyword">const</span> Real x0, <span class="keyword">const</span> Real x1, <span class="keyword">const</span> Real angle)</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>{</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">auto</span> edgeList = sofa::helper::getWriteOnlyAccessor(this-&gt;d_edgeList);</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keyword">auto</span> lengthList = sofa::helper::getWriteOnlyAccessor(this-&gt;d_lengthList);</div>
@@ -505,7 +505,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::getSamplingParameters(type::vector&lt;Real&gt;&amp; <span class="comment">/*xP_noticeable*/</span>, type::vector&lt; int&gt;&amp; <span class="comment">/*nbP_density*/</span>)</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="keywordtype">void</span> BeamInterpolation&lt;DataTypes&gt;::getSamplingParameters(type::vector&lt;Real&gt;&amp; <span class="comment">/*xP_noticeable*/</span>, type::vector&lt;sofa::Size&gt;&amp; <span class="comment">/*nbP_density*/</span>)</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>{</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    msg_error()&lt;&lt;<span class="stringliteral">&quot;getSamplingParameters is not implemented when _restShape== nullptr : TODO !! &quot;</span>;</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>}</div>
@@ -526,7 +526,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
 <div class="foldopen" id="foldopen00424" data-start="{" data-end="}">
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1">  424</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getCollisionSampling</a>(Real &amp;dx, <span class="keyword">const</span> Real&amp; <span class="comment">/*x_localcurv_abs*/</span>)</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a76a4070d70e17f633fcd4c478ee5049b">  424</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getCollisionSampling</a>(Real &amp;dx, <span class="keyword">const</span> Real <span class="comment">/*x_localcurv_abs*/</span>)</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>{</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numLines = 30;</div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    dx = getRestTotalLength()/numLines;</div>
@@ -578,9 +578,9 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span> </div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span> </div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::setTransformBetweenDofAndNode</a>(<span class="keywordtype">int</span> beam, <span class="keyword">const</span> Transform &amp;DOF_H_Node, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> zeroORone )</div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::setTransformBetweenDofAndNode</a>(<span class="keyword">const</span> sofa::Index beam, <span class="keyword">const</span> Transform &amp;DOF_H_Node, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> zeroORone)</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>{</div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>    <span class="keywordflow">if</span> (beam &gt; <span class="keywordtype">int</span>(this-&gt;d_DOF0TransformNode0.getValue().size()-1) || beam &gt; <span class="keywordtype">int</span>(this-&gt;d_DOF1TransformNode1.getValue().size()-1))</div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>    <span class="keywordflow">if</span> (beam &gt; this-&gt;d_DOF0TransformNode0.getValue().size()-1 || beam &gt; this-&gt;d_DOF1TransformNode1.getValue().size()-1)</div>
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>    {</div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>        msg_error()&lt;&lt;<span class="stringliteral">&quot;WARNING setTransformBetweenDofAndNode on non existing beam&quot;</span>;</div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>        <span class="keywordflow">return</span>;</div>
@@ -601,7 +601,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span> </div>
 <div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;</div>
 <div class="foldopen" id="foldopen00494" data-start="{" data-end="}">
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a740c79cf1b47f0d83fab45896cbdf5d4">  494</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getSplineRestTransform</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest)</div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">  494</a></span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getSplineRestTransform</a>(<span class="keyword">const</span> EdgeID edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest)</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>{</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>    <span class="keywordflow">if</span>(d_straight.getValue())</div>
 <div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>    {</div>
@@ -647,7 +647,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span> </div>
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span> </div>
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getTangentUsingSplinePoints</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> edgeInList, <span class="keyword">const</span> Real&amp; baryCoord,</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation&lt;DataTypes&gt;::getTangentUsingSplinePoints</a>(<span class="keyword">const</span> EdgeID edgeInList, <span class="keyword">const</span> Real baryCoord,</div>
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>                                                               <span class="keyword">const</span> sofa::core::ConstVecCoordId &amp;vecXId, Vec3&amp; t )</div>
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>{</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
@@ -675,7 +675,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>        dmsg_info() &lt;&lt;<span class="stringliteral">&quot;entering updateInterpolation&quot;</span> ;</div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span> </div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>    <span class="keyword">const</span> type::vector&lt; Vec2 &gt; &amp;interpolationInputs = d_InterpolationInputs.getValue();</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numInterpolatedPositions = interpolationInputs.size();</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="keyword">const</span> <span class="keyword">auto</span> numInterpolatedPositions = interpolationInputs.size();</div>
 <div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span> </div>
 <div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>    <span class="keyword">auto</span> interpolatedPos = sofa::helper::getWriteOnlyAccessor(d_InterpolatedPos);</div>
 <div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>    <span class="keyword">auto</span> interpolatedVel = sofa::helper::getWriteOnlyAccessor(d_InterpolatedVel);</div>
@@ -757,7 +757,7 @@ $(document).ready(function(){initNavTree('_beam_interpolation_8inl_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><b>BeamInterpolation.inl</b></li>
-    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 24 2025 07:01:57 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

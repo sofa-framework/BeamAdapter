@@ -157,6 +157,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>PointID</b> = BaseMe
 <tr class="memitem:a1c8c117f2d1540752229aecfc90500e5" id="r_a1c8c117f2d1540752229aecfc90500e5"><td class="memItemLeft" align="right" valign="top"><a id="a1c8c117f2d1540752229aecfc90500e5" name="a1c8c117f2d1540752229aecfc90500e5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>ElementID</b> = BaseMeshTopology::EdgeID</td></tr>
 <tr class="separator:a1c8c117f2d1540752229aecfc90500e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab68cac94369eda9d49951dced8105ecc" id="r_ab68cac94369eda9d49951dced8105ecc"><td class="memItemLeft" align="right" valign="top"><a id="ab68cac94369eda9d49951dced8105ecc" name="ab68cac94369eda9d49951dced8105ecc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>EdgeID</b> = BaseMeshTopology::EdgeID</td></tr>
+<tr class="separator:ab68cac94369eda9d49951dced8105ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac085edc817f892a2cded5e3198723d78" id="r_ac085edc817f892a2cded5e3198723d78"><td class="memItemLeft" align="right" valign="top"><a id="ac085edc817f892a2cded5e3198723d78" name="ac085edc817f892a2cded5e3198723d78"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>VecElementID</b> = type::vector&lt; BaseMeshTopology::EdgeID &gt;</td></tr>
 <tr class="separator:ac085edc817f892a2cded5e3198723d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,33 +261,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>computeCrossSectionIn
 <tr class="memitem:a8376b33859cf7cf2b0e72d6e87ebe60e" id="r_a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a8376b33859cf7cf2b0e72d6e87ebe60e">getMechanicalParameters</a> (sofa::Index beamId, Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity) override</td></tr>
 <tr class="memdesc:a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa.  <br /></td></tr>
 <tr class="separator:a8376b33859cf7cf2b0e72d6e87ebe60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a746b87afb3266cb9d7727f9030d8ffe1" id="r_a746b87afb3266cb9d7727f9030d8ffe1"><td class="memItemLeft" align="right" valign="top"><a id="a746b87afb3266cb9d7727f9030d8ffe1" name="a746b87afb3266cb9d7727f9030d8ffe1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangentUsingSplinePoints</b> (unsigned int edgeInList, const Real &amp;baryCoord, const sofa::core::ConstVecCoordId &amp;vecXId, Vec3 &amp;t)</td></tr>
-<tr class="separator:a746b87afb3266cb9d7727f9030d8ffe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05478d461b836199ba51ebe7a5ef81ed" id="r_a05478d461b836199ba51ebe7a5ef81ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a05478d461b836199ba51ebe7a5ef81ed">getCurvAbsAtBeam</a> (const unsigned int &amp;edgeInList_input, const Real &amp;baryCoord_input, Real &amp;x_output) override</td></tr>
-<tr class="memdesc:a05478d461b836199ba51ebe7a5ef81ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeActualLength =&gt; given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)  <br /></td></tr>
-<tr class="separator:a05478d461b836199ba51ebe7a5ef81ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91b6e898afb1b6e16a545c8452a92101" id="r_a91b6e898afb1b6e16a545c8452a92101"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a91b6e898afb1b6e16a545c8452a92101">getBeamAtCurvAbs</a> (const Real &amp;x_input, unsigned int &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0) override</td></tr>
-<tr class="separator:a91b6e898afb1b6e16a545c8452a92101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affd14464dfb841cd1f29319ef73b88c4" id="r_affd14464dfb841cd1f29319ef73b88c4"><td class="memItemLeft" align="right" valign="top"><a id="affd14464dfb841cd1f29319ef73b88c4" name="affd14464dfb841cd1f29319ef73b88c4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangentUsingSplinePoints</b> (const EdgeID edgeInList, const Real baryCoord, const sofa::core::ConstVecCoordId &amp;vecXId, Vec3 &amp;t)</td></tr>
+<tr class="separator:affd14464dfb841cd1f29319ef73b88c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753566830228ba262f50794b068f094f" id="r_a753566830228ba262f50794b068f094f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a753566830228ba262f50794b068f094f">getCurvAbsAtBeam</a> (const EdgeID edgeInList_input, const Real baryCoord_input, Real &amp;x_output) override</td></tr>
+<tr class="memdesc:a753566830228ba262f50794b068f094f"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeActualLength =&gt; given the 4 control points of the spline, it provides an estimate of the length (using gauss points integration)  <br /></td></tr>
+<tr class="separator:a753566830228ba262f50794b068f094f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0438727e99bddf1900ab5fb3e92233e1" id="r_a0438727e99bddf1900ab5fb3e92233e1"><td class="memItemLeft" align="right" valign="top"><a id="a0438727e99bddf1900ab5fb3e92233e1" name="a0438727e99bddf1900ab5fb3e92233e1"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getBeamAtCurvAbs</b> (const Real x_input, unsigned int &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0) override</td></tr>
+<tr class="separator:a0438727e99bddf1900ab5fb3e92233e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee7cb2065b88d21ac4ad05bc997ecf82" id="r_aee7cb2065b88d21ac4ad05bc997ecf82"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#aee7cb2065b88d21ac4ad05bc997ecf82">clear</a> () override</td></tr>
 <tr class="separator:aee7cb2065b88d21ac4ad05bc997ecf82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0620ccd1d7b1b072d9d0b213e2203565" id="r_a0620ccd1d7b1b072d9d0b213e2203565"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a0620ccd1d7b1b072d9d0b213e2203565">addBeam</a> (const BaseMeshTopology::EdgeID &amp;eID, const Real &amp;length, const Real &amp;x0, const Real &amp;x1, const Real &amp;angle) override</td></tr>
-<tr class="separator:a0620ccd1d7b1b072d9d0b213e2203565"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5756a2b96be27b50864ca8a00ed67ca4" id="r_a5756a2b96be27b50864ca8a00ed67ca4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a5756a2b96be27b50864ca8a00ed67ca4">getSamplingParameters</a> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; int &gt; &amp;nbP_density) override</td></tr>
-<tr class="separator:a5756a2b96be27b50864ca8a00ed67ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4232afa1e5c478e19c1c86ed6b3a73a3" id="r_a4232afa1e5c478e19c1c86ed6b3a73a3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a4232afa1e5c478e19c1c86ed6b3a73a3">addBeam</a> (const EdgeID eID, const Real length, const Real x0, const Real x1, const Real angle) override</td></tr>
+<tr class="separator:a4232afa1e5c478e19c1c86ed6b3a73a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a783dd38aad447ed9119f99b8705fc469" id="r_a783dd38aad447ed9119f99b8705fc469"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a783dd38aad447ed9119f99b8705fc469">getSamplingParameters</a> (type::vector&lt; Real &gt; &amp;xP_noticeable, type::vector&lt; sofa::Size &gt; &amp;nbP_density) override</td></tr>
+<tr class="separator:a783dd38aad447ed9119f99b8705fc469"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35c141faf1674b8412e1605b3e8e5e87" id="r_a35c141faf1674b8412e1605b3e8e5e87"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a35c141faf1674b8412e1605b3e8e5e87">getRestTotalLength</a> () override</td></tr>
 <tr class="memdesc:a35c141faf1674b8412e1605b3e8e5e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">getLength / setLength =&gt; provides the rest length of each spline using  <br /></td></tr>
 <tr class="separator:a35c141faf1674b8412e1605b3e8e5e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26c84542c1e907732bf85fa505d676c1" id="r_a26c84542c1e907732bf85fa505d676c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a26c84542c1e907732bf85fa505d676c1">getCollisionSampling</a> (Real &amp;dx, const Real &amp;x_localcurv_abs) override</td></tr>
-<tr class="memdesc:a26c84542c1e907732bf85fa505d676c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collision information using.  <br /></td></tr>
-<tr class="separator:a26c84542c1e907732bf85fa505d676c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f9c68dab8ffa01b8d4d4f2393f8603e" id="r_a2f9c68dab8ffa01b8d4d4f2393f8603e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a2f9c68dab8ffa01b8d4d4f2393f8603e">getNumberOfCollisionSegment</a> (Real &amp;dx, unsigned int &amp;numLines) override</td></tr>
+<tr class="memitem:a76a4070d70e17f633fcd4c478ee5049b" id="r_a76a4070d70e17f633fcd4c478ee5049b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a76a4070d70e17f633fcd4c478ee5049b">getCollisionSampling</a> (Real &amp;dx, const Real x_localcurv_abs) override</td></tr>
+<tr class="memdesc:a76a4070d70e17f633fcd4c478ee5049b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collision information using.  <br /></td></tr>
+<tr class="separator:a76a4070d70e17f633fcd4c478ee5049b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f9c68dab8ffa01b8d4d4f2393f8603e" id="r_a2f9c68dab8ffa01b8d4d4f2393f8603e"><td class="memItemLeft" align="right" valign="top"><a id="a2f9c68dab8ffa01b8d4d4f2393f8603e" name="a2f9c68dab8ffa01b8d4d4f2393f8603e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, unsigned int &amp;numLines) override</td></tr>
 <tr class="separator:a2f9c68dab8ffa01b8d4d4f2393f8603e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a08515ec2052804401f5edbe5a5731f" id="r_a0a08515ec2052804401f5edbe5a5731f"><td class="memItemLeft" align="right" valign="top"><a id="a0a08515ec2052804401f5edbe5a5731f" name="a0a08515ec2052804401f5edbe5a5731f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (int beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
-<tr class="separator:a0a08515ec2052804401f5edbe5a5731f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a740c79cf1b47f0d83fab45896cbdf5d4" id="r_a740c79cf1b47f0d83fab45896cbdf5d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a740c79cf1b47f0d83fab45896cbdf5d4">getSplineRestTransform</a> (unsigned int edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest) override</td></tr>
-<tr class="separator:a740c79cf1b47f0d83fab45896cbdf5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9e2ab830385bbc55dfab35d7ef1d6d" id="r_a9a9e2ab830385bbc55dfab35d7ef1d6d"><td class="memItemLeft" align="right" valign="top"><a id="a9a9e2ab830385bbc55dfab35d7ef1d6d" name="a9a9e2ab830385bbc55dfab35d7ef1d6d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (const sofa::Index beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
+<tr class="separator:a9a9e2ab830385bbc55dfab35d7ef1d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb62ac2c53ea913c953256a151f063a" id="r_a6bb62ac2c53ea913c953256a151f063a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">getSplineRestTransform</a> (const EdgeID edgeInList, Transform &amp;local_H_local0_rest, Transform &amp;local_H_local1_rest) override</td></tr>
+<tr class="separator:a6bb62ac2c53ea913c953256a151f063a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbc2f34cae83fa625a6cc3c57b1d4ace" id="r_acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memItemLeft" align="right" valign="top"><a id="acbc2f34cae83fa625a6cc3c57b1d4ace" name="acbc2f34cae83fa625a6cc3c57b1d4ace"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeamsNotUnderControl</b> ()</td></tr>
 <tr class="separator:acbc2f34cae83fa625a6cc3c57b1d4ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,84 +299,90 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeamsNo
 <tr class="separator:a6d5e7322dca79940cfbcc71243495b3e inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac70e2eeedc06de9ab4be138cf23fae4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aac70e2eeedc06de9ab4be138cf23fae4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aac70e2eeedc06de9ab4be138cf23fae4">bwdInit</a> () override</td></tr>
 <tr class="separator:aac70e2eeedc06de9ab4be138cf23fae4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e52e32d5ad4e3895de3b7017a979277 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a4e52e32d5ad4e3895de3b7017a979277"><td class="memItemLeft" align="right" valign="top">
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeams</b> ()</td></tr>
-<tr class="separator:a4e52e32d5ad4e3895de3b7017a979277 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a010a2e017f177d751a9c70d238fd2f09 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a010a2e017f177d751a9c70d238fd2f09"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (int beam, Real &amp;x_curv)</td></tr>
-<tr class="separator:a010a2e017f177d751a9c70d238fd2f09 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7d3343a52a9fbb920d5e0dbcd7523f7 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ae7d3343a52a9fbb920d5e0dbcd7523f7"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (int beam, Real &amp;x_curv_start, Real &amp;x_curv_end)</td></tr>
-<tr class="separator:ae7d3343a52a9fbb920d5e0dbcd7523f7 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ffd33f7b8d78afb91a7d271f2b36a27 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a5ffd33f7b8d78afb91a7d271f2b36a27"><td class="memItemLeft" align="right" valign="top">
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> (unsigned int edgeInList)</td></tr>
-<tr class="separator:a5ffd33f7b8d78afb91a7d271f2b36a27 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84ff3f0c4eba8d2aaf2955a148888e65 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a84ff3f0c4eba8d2aaf2955a148888e65"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setLength</b> (unsigned int edgeInList, Real &amp;length)</td></tr>
-<tr class="separator:a84ff3f0c4eba8d2aaf2955a148888e65 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dceb5fa732c7f6bbde0e11c17d0ccb5 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a6dceb5fa732c7f6bbde0e11c17d0ccb5"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addCollisionOnBeam</b> (unsigned int b)</td></tr>
-<tr class="memdesc:a6dceb5fa732c7f6bbde0e11c17d0ccb5 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set collision information. <br /></td></tr>
-<tr class="separator:a6dceb5fa732c7f6bbde0e11c17d0ccb5 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cea15b313070fe671645a11ac04e2dc inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a4cea15b313070fe671645a11ac04e2dc"><td class="memItemLeft" align="right" valign="top">
+sofa::Size&#160;</td><td class="memItemRight" valign="bottom"><b>getNumBeams</b> () const</td></tr>
+<tr class="separator:a4cea15b313070fe671645a11ac04e2dc inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8cca18518195831ae238fae5b97fc04 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ad8cca18518195831ae238fae5b97fc04"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (const sofa::Index beam, Real &amp;x_curv)</td></tr>
+<tr class="separator:ad8cca18518195831ae238fae5b97fc04 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f6c6dd0d47e7c763a7e197c5d07e45f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a1f6c6dd0d47e7c763a7e197c5d07e45f"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getAbsCurvXFromBeam</b> (const sofa::Index beam, Real &amp;x_curv_start, Real &amp;x_curv_end)</td></tr>
+<tr class="separator:a1f6c6dd0d47e7c763a7e197c5d07e45f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa39930305c259a64660e724dde23418a inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aa39930305c259a64660e724dde23418a"><td class="memItemLeft" align="right" valign="top">
+Real&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> (const EdgeID edgeInList)</td></tr>
+<tr class="separator:aa39930305c259a64660e724dde23418a inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfd61552a938aaff80b1d5d2a1084e9f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_acfd61552a938aaff80b1d5d2a1084e9f"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLength</b> (const EdgeID edgeInList, Real &amp;length)</td></tr>
+<tr class="separator:acfd61552a938aaff80b1d5d2a1084e9f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa122716859d1e3d01c077403b0d0d829 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aa122716859d1e3d01c077403b0d0d829"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addCollisionOnBeam</b> (const sofa::Index beam)</td></tr>
+<tr class="memdesc:aa122716859d1e3d01c077403b0d0d829 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set collision information. <br /></td></tr>
+<tr class="separator:aa122716859d1e3d01c077403b0d0d829 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af73022443394ed8a7955beb4d350af8b inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_af73022443394ed8a7955beb4d350af8b"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearCollisionOnBeam</b> ()</td></tr>
 <tr class="separator:af73022443394ed8a7955beb4d350af8b inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aada6e3f007a7f8ef6f58db1b03b6b21b inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aada6e3f007a7f8ef6f58db1b03b6b21b"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfCollisionSegment</b> (Real &amp;dx, sofa::Size &amp;numLines)=0</td></tr>
+<tr class="separator:aada6e3f007a7f8ef6f58db1b03b6b21b inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833da66893d6ae4b395462e21b1f9a62 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a833da66893d6ae4b395462e21b1f9a62"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a833da66893d6ae4b395462e21b1f9a62">getBeamAtCurvAbs</a> (const Real x_input, sofa::Index &amp;edgeInList_output, Real &amp;baryCoord_output, unsigned int start=0)</td></tr>
+<tr class="separator:a833da66893d6ae4b395462e21b1f9a62 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb4b982b824f76847732a672b51fece4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_adb4b982b824f76847732a672b51fece4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#adb4b982b824f76847732a672b51fece4">computeTransform</a> (const EdgeID edgeInList, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
 <tr class="separator:adb4b982b824f76847732a672b51fece4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d183d74d69b54c564653c4bfdde93f1 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a8d183d74d69b54c564653c4bfdde93f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a8d183d74d69b54c564653c4bfdde93f1">computeTransform</a> (const EdgeID edgeInList, const PointID node0Idx, const PointID node1Idx, Transform &amp;global_H_local0, Transform &amp;global_H_local1, const VecCoord &amp;x)</td></tr>
 <tr class="separator:a8d183d74d69b54c564653c4bfdde93f1 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18893b2dac3bc59506fd407187c65b66 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a18893b2dac3bc59506fd407187c65b66"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransform</b> (unsigned int edgeInList, Transform &amp;DOF0_H_local0, Transform &amp;DOF1_H_local1)</td></tr>
-<tr class="separator:a18893b2dac3bc59506fd407187c65b66 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab51a3da8dc2e1addb128976cc9591940 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ab51a3da8dc2e1addb128976cc9591940"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransformInGlobalFrame</b> (unsigned int edgeInList, Transform &amp;DOF0Global_H_local0, Transform &amp;DOF1Global_H_local1, const VecCoord &amp;x)</td></tr>
-<tr class="separator:ab51a3da8dc2e1addb128976cc9591940 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a08515ec2052804401f5edbe5a5731f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a0a08515ec2052804401f5edbe5a5731f"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (int beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
-<tr class="separator:a0a08515ec2052804401f5edbe5a5731f inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68ecd1db013b890451d924df55b6efe0 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a68ecd1db013b890451d924df55b6efe0"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangent</b> (Vec3 &amp;t, const Real &amp;baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L)</td></tr>
-<tr class="memdesc:a68ecd1db013b890451d924df55b6efe0 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">getTangent : Computation of a Tangent for the beam (it is given by the derivative of the spline formulation) <br /></td></tr>
-<tr class="separator:a68ecd1db013b890451d924df55b6efe0 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b45179130515b6173838efcdbf5c76c inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a2b45179130515b6173838efcdbf5c76c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a2b45179130515b6173838efcdbf5c76c">getNodeIndices</a> (unsigned int edgeInList, unsigned int &amp;node0Idx, unsigned int &amp;node1Idx)</td></tr>
-<tr class="separator:a2b45179130515b6173838efcdbf5c76c inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad064077be3d1e5c631a7c5a1ebe8bc04 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ad064077be3d1e5c631a7c5a1ebe8bc04"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getSplinePoints</b> (unsigned int edgeInList, const VecCoord &amp;x, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
-<tr class="separator:ad064077be3d1e5c631a7c5a1ebe8bc04 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51cb8de84d9cce4265668a435839812 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ac51cb8de84d9cce4265668a435839812"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransform</b> (const EdgeID edgeInList, Transform &amp;DOF0_H_local0, Transform &amp;DOF1_H_local1)</td></tr>
+<tr class="separator:ac51cb8de84d9cce4265668a435839812 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aade08f1c7a172439952b97b80ec70500 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aade08f1c7a172439952b97b80ec70500"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getDOFtoLocalTransformInGlobalFrame</b> (const EdgeID edgeInList, Transform &amp;DOF0Global_H_local0, Transform &amp;DOF1Global_H_local1, const VecCoord &amp;x)</td></tr>
+<tr class="separator:aade08f1c7a172439952b97b80ec70500 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9e2ab830385bbc55dfab35d7ef1d6d inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a9a9e2ab830385bbc55dfab35d7ef1d6d"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTransformBetweenDofAndNode</b> (const sofa::Index beam, const Transform &amp;DOF_H_Node, unsigned int zeroORone)</td></tr>
+<tr class="separator:a9a9e2ab830385bbc55dfab35d7ef1d6d inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c39f356c87acc69cabe12185ac1c48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a68c39f356c87acc69cabe12185ac1c48"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getTangent</b> (Vec3 &amp;t, const Real baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L)</td></tr>
+<tr class="memdesc:a68c39f356c87acc69cabe12185ac1c48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">getTangent : Computation of a Tangent for the beam (it is given by the derivative of the spline formulation) <br /></td></tr>
+<tr class="separator:a68c39f356c87acc69cabe12185ac1c48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eb59021db1d4dfc81642cdb13ef6493 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a2eb59021db1d4dfc81642cdb13ef6493"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a2eb59021db1d4dfc81642cdb13ef6493">getNodeIndices</a> (const EdgeID edgeInList, unsigned int &amp;node0Idx, unsigned int &amp;node1Idx)</td></tr>
+<tr class="separator:a2eb59021db1d4dfc81642cdb13ef6493 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa17114d3df5c339fc06da0f0ce4c31a4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aa17114d3df5c339fc06da0f0ce4c31a4"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getSplinePoints</b> (const EdgeID edgeInList, const VecCoord &amp;x, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
+<tr class="separator:aa17114d3df5c339fc06da0f0ce4c31a4 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a266f659f3c1ad18b57be03035150dee8 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a266f659f3c1ad18b57be03035150dee8"><td class="memItemLeft" align="right" valign="top">
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getStateSize</b> () const</td></tr>
 <tr class="separator:a266f659f3c1ad18b57be03035150dee8 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a078d4cffe3962f03a28673ff327645cd inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a078d4cffe3962f03a28673ff327645cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a078d4cffe3962f03a28673ff327645cd">computeActualLength</a> (Real &amp;length, const Vec3 &amp;P0, const Vec3 &amp;P1, const Vec3 &amp;P2, const Vec3 &amp;P3)</td></tr>
 <tr class="separator:a078d4cffe3962f03a28673ff327645cd inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3bccc29767b71cdfc5c9d2b48e16f13 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ab3bccc29767b71cdfc5c9d2b48e16f13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ab3bccc29767b71cdfc5c9d2b48e16f13">computeStrechAndTwist</a> (unsigned int edgeInList, const VecCoord &amp;x, Vec3 &amp;ResultNodeO, Vec3 &amp;ResultNode1)</td></tr>
-<tr class="separator:ab3bccc29767b71cdfc5c9d2b48e16f13 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7368b3a6ca85319274b042f31814cc3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_af7368b3a6ca85319274b042f31814cc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#af7368b3a6ca85319274b042f31814cc3">computeStrechAndTwist</a> (const EdgeID edgeInList, const VecCoord &amp;x, Vec3 &amp;ResultNodeO, Vec3 &amp;ResultNode1)</td></tr>
+<tr class="separator:af7368b3a6ca85319274b042f31814cc3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0fee06c51ee65bedde437016717f908 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ae0fee06c51ee65bedde437016717f908"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ae0fee06c51ee65bedde437016717f908">updateBezierPoints</a> (const VecCoord &amp;x, sofa::core::VecCoordId &amp;vId_Out)</td></tr>
 <tr class="memdesc:ae0fee06c51ee65bedde437016717f908 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">vId_Out provides the id of the multiVecId which stores the position of the Bezier Points  <br /></td></tr>
 <tr class="separator:ae0fee06c51ee65bedde437016717f908 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23139e666aa6c7454e7887fd346d9fc1 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a23139e666aa6c7454e7887fd346d9fc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a23139e666aa6c7454e7887fd346d9fc1">updateBezierPoints</a> (const VecCoord &amp;x, unsigned int index, VectorVec3 &amp;v)</td></tr>
-<tr class="separator:a23139e666aa6c7454e7887fd346d9fc1 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4535a8dba9ea2462c30b9dc4014d607 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_af4535a8dba9ea2462c30b9dc4014d607"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolatePointUsingSpline</b> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult)</td></tr>
-<tr class="memdesc:af4535a8dba9ea2462c30b9dc4014d607 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">spline base interpolation of points and transformation <br /></td></tr>
-<tr class="separator:af4535a8dba9ea2462c30b9dc4014d607 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6ff6a59b5c298c239f30d436a4f4560 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aa6ff6a59b5c298c239f30d436a4f4560"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa6ff6a59b5c298c239f30d436a4f4560">interpolatePointUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult, bool recompute, const sofa::core::ConstVecCoordId &amp;vecXId)</td></tr>
-<tr class="separator:aa6ff6a59b5c298c239f30d436a4f4560 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03049038910e69ca3151cd1e9ed19645 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a03049038910e69ca3151cd1e9ed19645"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>InterpolateTransformUsingSpline</b> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Transform &amp;global_H_localInterpol)</td></tr>
-<tr class="separator:a03049038910e69ca3151cd1e9ed19645 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa932d480a4b7def4c8b3b1bc6dc31e3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_afa932d480a4b7def4c8b3b1bc6dc31e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afa932d480a4b7def4c8b3b1bc6dc31e3">InterpolateTransformUsingSpline</a> (Transform &amp;global_H_localResult, const Real &amp;baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L)</td></tr>
-<tr class="separator:afa932d480a4b7def4c8b3b1bc6dc31e3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cace9a9dcbdd84e386b41d8b900a4e2 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a8cace9a9dcbdd84e386b41d8b900a4e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a8cace9a9dcbdd84e386b41d8b900a4e2">InterpolateTransformAndVelUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const VecDeriv &amp;v, Transform &amp;global_H_localInterpol, Deriv &amp;v_interpol)</td></tr>
-<tr class="separator:a8cace9a9dcbdd84e386b41d8b900a4e2 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca88ba4f6487f6afd01106f91155fe53 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_aca88ba4f6487f6afd01106f91155fe53"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aca88ba4f6487f6afd01106f91155fe53">ComputeTotalBendingRotationAngle</a> (const Real &amp;dx_computation, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L, const Real &amp;baryCoordMin, const Real &amp;baryCoordMax)</td></tr>
-<tr class="memdesc:aca88ba4f6487f6afd01106f91155fe53 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)  <br /></td></tr>
-<tr class="separator:aca88ba4f6487f6afd01106f91155fe53 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac216f92163647f47155f4ee557af2039 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ac216f92163647f47155f4ee557af2039"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac216f92163647f47155f4ee557af2039">MapForceOnNodeUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const Vec3 &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
-<tr class="memdesc:ac216f92163647f47155f4ee557af2039 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">3DOF mapping  <br /></td></tr>
-<tr class="separator:ac216f92163647f47155f4ee557af2039 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a8c6e393881cd74682e12f519491a3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a27a8c6e393881cd74682e12f519491a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a27a8c6e393881cd74682e12f519491a3">MapForceOnNodeUsingSpline</a> (unsigned int edgeInList, const Real &amp;baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const SpatialVector &amp;f6DofInput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
-<tr class="memdesc:a27a8c6e393881cd74682e12f519491a3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">6DoF mapping  <br /></td></tr>
-<tr class="separator:a27a8c6e393881cd74682e12f519491a3 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc5e65617acdac626f33368efd059ece inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_afc5e65617acdac626f33368efd059ece"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateBezierPoints</b> (const VecCoord &amp;x, sofa::Index index, VectorVec3 &amp;v)</td></tr>
+<tr class="separator:afc5e65617acdac626f33368efd059ece inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32b7f16920505149b5bcd67af019063 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_ab32b7f16920505149b5bcd67af019063"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolatePointUsingSpline</b> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult)</td></tr>
+<tr class="memdesc:ab32b7f16920505149b5bcd67af019063 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">spline base interpolation of points and transformation <br /></td></tr>
+<tr class="separator:ab32b7f16920505149b5bcd67af019063 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9779dac24c3282ba0ccd1d8955d6c52d inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a9779dac24c3282ba0ccd1d8955d6c52d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a9779dac24c3282ba0ccd1d8955d6c52d">interpolatePointUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Vec3 &amp;posResult, bool recompute, const sofa::core::ConstVecCoordId &amp;vecXId)</td></tr>
+<tr class="separator:a9779dac24c3282ba0ccd1d8955d6c52d inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af62fe6320f83017da64761cbb4af733e inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_af62fe6320f83017da64761cbb4af733e"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>InterpolateTransformUsingSpline</b> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, Transform &amp;global_H_localInterpol)</td></tr>
+<tr class="separator:af62fe6320f83017da64761cbb4af733e inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0964604e069d2c77a189d23006ae3ca8 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a0964604e069d2c77a189d23006ae3ca8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a0964604e069d2c77a189d23006ae3ca8">InterpolateTransformUsingSpline</a> (Transform &amp;global_H_localResult, const Real baryCoord, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L)</td></tr>
+<tr class="separator:a0964604e069d2c77a189d23006ae3ca8 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a102eb7148d5ab77b4d1712c625d40672 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a102eb7148d5ab77b4d1712c625d40672"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a102eb7148d5ab77b4d1712c625d40672">InterpolateTransformAndVelUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const VecDeriv &amp;v, Transform &amp;global_H_localInterpol, Deriv &amp;v_interpol)</td></tr>
+<tr class="separator:a102eb7148d5ab77b4d1712c625d40672 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565571c1ba8c6e24a646685509d0dc48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a565571c1ba8c6e24a646685509d0dc48"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a565571c1ba8c6e24a646685509d0dc48">ComputeTotalBendingRotationAngle</a> (const Real dx_computation, const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L, const Real baryCoordMin, const Real baryCoordMax)</td></tr>
+<tr class="memdesc:a565571c1ba8c6e24a646685509d0dc48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute the total bending Rotation Angle while going through the Spline (to estimate the curvature)  <br /></td></tr>
+<tr class="separator:a565571c1ba8c6e24a646685509d0dc48 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc95b3efd3f026f586ad6b0b9fe04ad7 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_afc95b3efd3f026f586ad6b0b9fe04ad7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afc95b3efd3f026f586ad6b0b9fe04ad7">MapForceOnNodeUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const Vec3 &amp;finput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
+<tr class="memdesc:afc95b3efd3f026f586ad6b0b9fe04ad7 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">3DOF mapping  <br /></td></tr>
+<tr class="separator:afc95b3efd3f026f586ad6b0b9fe04ad7 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a563b249e93f1632f87c565bc37e20178 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a563b249e93f1632f87c565bc37e20178"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a563b249e93f1632f87c565bc37e20178">MapForceOnNodeUsingSpline</a> (const EdgeID edgeInList, const Real baryCoord, const Vec3 &amp;localPos, const VecCoord &amp;x, const SpatialVector &amp;f6DofInput, SpatialVector &amp;FNode0output, SpatialVector &amp;FNode1output)</td></tr>
+<tr class="memdesc:a563b249e93f1632f87c565bc37e20178 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">6DoF mapping  <br /></td></tr>
+<tr class="separator:a563b249e93f1632f87c565bc37e20178 inherit pub_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -379,9 +390,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a04fb2d79216e44851cde2e431122c34b"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a04fb2d79216e44851cde2e431122c34b">canCreate</a> (T *obj, sofa::core::objectmodel::BaseContext *context, sofa::core::objectmodel::BaseObjectDescription *arg)</td></tr>
 <tr class="separator:a04fb2d79216e44851cde2e431122c34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classbeamadapter_1_1_base_beam_interpolation"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classbeamadapter_1_1_base_beam_interpolation')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation&lt; DataTypes &gt;</a></td></tr>
-<tr class="memitem:a562fdc54057e825f4aae5e620a0f1279 inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a562fdc54057e825f4aae5e620a0f1279"><td class="memItemLeft" align="right" valign="top">
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>getControlPointsFromFrame</b> (const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real &amp;L, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
-<tr class="separator:a562fdc54057e825f4aae5e620a0f1279 inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5150fb397887a1ce549097029d06f0 inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a2e5150fb397887a1ce549097029d06f0"><td class="memItemLeft" align="right" valign="top">
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>getControlPointsFromFrame</b> (const Transform &amp;global_H_local0, const Transform &amp;global_H_local1, const Real L, Vec3 &amp;P0, Vec3 &amp;P1, Vec3 &amp;P2, Vec3 &amp;P3)</td></tr>
+<tr class="separator:a2e5150fb397887a1ce549097029d06f0 inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a899a756e92492f60fdf3694b9be0988a inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation" id="r_a899a756e92492f60fdf3694b9be0988a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a">RotateFrameForAlignX</a> (const Quat &amp;input, Vec3 &amp;x, Quat &amp;output)</td></tr>
 <tr class="memdesc:a899a756e92492f60fdf3694b9be0988a inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to rotate a Frame define by a Quat.  <br /></td></tr>
 <tr class="separator:a899a756e92492f60fdf3694b9be0988a inherit pub_static_methods_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -459,8 +470,8 @@ Data&lt; VecEdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_
 <tr class="memitem:aea622cf27a2af6d3a736bd1f5c8c25f6 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_aea622cf27a2af6d3a736bd1f5c8c25f6"><td class="memItemLeft" align="right" valign="top">
 const VecEdges *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topologyEdges</b> { nullptr }</td></tr>
 <tr class="separator:aea622cf27a2af6d3a736bd1f5c8c25f6 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa85edbf3d952d9b3e7204a28afd9ca3e inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_aa85edbf3d952d9b3e7204a28afd9ca3e"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa85edbf3d952d9b3e7204a28afd9ca3e">d_lengthList</a></td></tr>
-<tr class="separator:aa85edbf3d952d9b3e7204a28afd9ca3e inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac151e87b5b35310239f391d244833068 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_ac151e87b5b35310239f391d244833068"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068">d_lengthList</a></td></tr>
+<tr class="separator:ac151e87b5b35310239f391d244833068 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32dde414cec5c9c285bcfd55cfb27e89 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_a32dde414cec5c9c285bcfd55cfb27e89"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Transform &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a32dde414cec5c9c285bcfd55cfb27e89">d_DOF0TransformNode0</a></td></tr>
 <tr class="separator:a32dde414cec5c9c285bcfd55cfb27e89 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37eccf180bea40b5e88d51bf642c8997 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_a37eccf180bea40b5e88d51bf642c8997"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Transform &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a37eccf180bea40b5e88d51bf642c8997">d_DOF1TransformNode1</a></td></tr>
@@ -469,8 +480,8 @@ const VecEdges *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topolog
 Data&lt; type::vector&lt; Vec2 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_curvAbsList</b></td></tr>
 <tr class="memdesc:aa35ff1432a5a396625e50fb586871c66 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of 2 Real. absciss curv of first and second point defining the beam. <br /></td></tr>
 <tr class="separator:aa35ff1432a5a396625e50fb586871c66 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a325866bced2f7b0b48b4f93bbfe4b1b9 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_a325866bced2f7b0b48b4f93bbfe4b1b9"><td class="memItemLeft" align="right" valign="top">Data&lt; sofa::type::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a325866bced2f7b0b48b4f93bbfe4b1b9">d_beamCollision</a></td></tr>
-<tr class="separator:a325866bced2f7b0b48b4f93bbfe4b1b9 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec937578493bc22848032f0d8b0b6251 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_aec937578493bc22848032f0d8b0b6251"><td class="memItemLeft" align="right" valign="top">Data&lt; sofa::type::vector&lt; EdgeID &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aec937578493bc22848032f0d8b0b6251">d_beamCollision</a></td></tr>
+<tr class="separator:aec937578493bc22848032f0d8b0b6251 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56d2f664fc6fe9d3b3d112bdb7a6fb33 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation" id="r_a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memItemLeft" align="right" valign="top">
 Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_dofsAndBeamsAligned</b></td></tr>
 <tr class="separator:a56d2f664fc6fe9d3b3d112bdb7a6fb33 inherit pub_attribs_classbeamadapter_1_1_base_beam_interpolation"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -488,11 +499,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a833e245bef1f7f041a7e6b009532075c" id="r_a833e245bef1f7f041a7e6b009532075c"><td class="memItemLeft" align="right" valign="top"><a id="a833e245bef1f7f041a7e6b009532075c" name="a833e245bef1f7f041a7e6b009532075c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>checkDataSize</b> (Real &amp;defaultValue, Data&lt; type::vector&lt; Real &gt; &gt; &amp;dataList, const size_t &amp;nbEdges)</td></tr>
 <tr class="separator:a833e245bef1f7f041a7e6b009532075c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a947996ea02e43e70fb316ca014714172" id="r_a947996ea02e43e70fb316ca014714172"><td class="memItemLeft" align="right" valign="top"><a id="a947996ea02e43e70fb316ca014714172" name="a947996ea02e43e70fb316ca014714172"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeRectangularCrossSectionInertiaMatrix</b> (const Real &amp;Ly, const Real &amp;Lz, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
-<tr class="separator:a947996ea02e43e70fb316ca014714172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a027a9cc5c146f55e153d2ff0a852ba47" id="r_a027a9cc5c146f55e153d2ff0a852ba47"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a027a9cc5c146f55e153d2ff0a852ba47">computeCircularCrossSectionInertiaMatrix</a> (const Real &amp;r, const Real &amp;rInner, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
-<tr class="separator:a027a9cc5c146f55e153d2ff0a852ba47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a804f945aae9ff90218b0acffc5619a1b" id="r_a804f945aae9ff90218b0acffc5619a1b"><td class="memItemLeft" align="right" valign="top"><a id="a804f945aae9ff90218b0acffc5619a1b" name="a804f945aae9ff90218b0acffc5619a1b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>computeRectangularCrossSectionInertiaMatrix</b> (const Real Ly, const Real Lz, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
+<tr class="separator:a804f945aae9ff90218b0acffc5619a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a879aa40fb32ada9f490014bbfc2f7fc8" id="r_a879aa40fb32ada9f490014bbfc2f7fc8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a879aa40fb32ada9f490014bbfc2f7fc8">computeCircularCrossSectionInertiaMatrix</a> (const Real r, const Real rInner, <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> &amp;section)</td></tr>
+<tr class="separator:a879aa40fb32ada9f490014bbfc2f7fc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -530,8 +541,8 @@ class beamadapter::BeamInterpolation&lt; DataTypes &gt;</div><p>This class imple
 <p>AdaptiveBeam Interpolation provides the basis of the Beam computation As the computation is adaptive, the interpolation can be modified at each time step.</p>
 <p>More informations about SOFA components: <a href="https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/">https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/</a> <a href="https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/">https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/</a> </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0620ccd1d7b1b072d9d0b213e2203565" name="a0620ccd1d7b1b072d9d0b213e2203565"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0620ccd1d7b1b072d9d0b213e2203565">&#9670;&#160;</a></span>addBeam()</h2>
+<a id="a4232afa1e5c478e19c1c86ed6b3a73a3" name="a4232afa1e5c478e19c1c86ed6b3a73a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4232afa1e5c478e19c1c86ed6b3a73a3">&#9670;&#160;</a></span>addBeam()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -544,31 +555,31 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void addBeam </td>
           <td>(</td>
-          <td class="paramtype">const BaseMeshTopology::EdgeID &amp;&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>eID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>length</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>x0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>x1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>angle</em>&#160;</td>
         </tr>
         <tr>
@@ -664,8 +675,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a027a9cc5c146f55e153d2ff0a852ba47" name="a027a9cc5c146f55e153d2ff0a852ba47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a027a9cc5c146f55e153d2ff0a852ba47">&#9670;&#160;</a></span>computeCircularCrossSectionInertiaMatrix()</h2>
+<a id="a879aa40fb32ada9f490014bbfc2f7fc8" name="a879aa40fb32ada9f490014bbfc2f7fc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a879aa40fb32ada9f490014bbfc2f7fc8">&#9670;&#160;</a></span>computeCircularCrossSectionInertiaMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,13 +689,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void computeCircularCrossSectionInertiaMatrix </td>
           <td>(</td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>r</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>rInner</em>, </td>
         </tr>
         <tr>
@@ -706,58 +717,6 @@ template&lt;class DataTypes &gt; </div>
 </table>
 </div><div class="memdoc">
 <p>_Iz = M_PI*(r*r*r*r)/4.0;</p>
-
-</div>
-</div>
-<a id="a91b6e898afb1b6e16a545c8452a92101" name="a91b6e898afb1b6e16a545c8452a92101"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91b6e898afb1b6e16a545c8452a92101">&#9670;&#160;</a></span>getBeamAtCurvAbs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataTypes &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void getBeamAtCurvAbs </td>
-          <td>(</td>
-          <td class="paramtype">const Real &amp;&#160;</td>
-          <td class="paramname"><em>x_input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int &amp;&#160;</td>
-          <td class="paramname"><em>edgeInList_output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Real &amp;&#160;</td>
-          <td class="paramname"><em>baryCoord_output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>start</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a98561e310fba9668249f081272b52115">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -790,12 +749,12 @@ template&lt;class DataTypes &gt; </div>
 <p>Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a>. </p>
 <dl class="section see"><dt>See also</dt><dd>m_beamSection corresponding to the given beam </dd></dl>
 
-<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aeb5f705ecc43d9137f220956eaa4fe43">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a26fda0b3621fd662eb69f4810066a3dd">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a26c84542c1e907732bf85fa505d676c1" name="a26c84542c1e907732bf85fa505d676c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26c84542c1e907732bf85fa505d676c1">&#9670;&#160;</a></span>getCollisionSampling()</h2>
+<a id="a76a4070d70e17f633fcd4c478ee5049b" name="a76a4070d70e17f633fcd4c478ee5049b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76a4070d70e17f633fcd4c478ee5049b">&#9670;&#160;</a></span>getCollisionSampling()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -814,7 +773,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>x_localcurv_abs</em>&#160;</td>
         </tr>
         <tr>
@@ -831,14 +790,14 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>Collision information using. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a325866bced2f7b0b48b4f93bbfe4b1b9">d_beamCollision</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aec937578493bc22848032f0d8b0b6251">d_beamCollision</a> </dd></dl>
 
-<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#af1e82c29be1a7350a1554662278adacb">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#afdaca6a160b71aa506fa63aa46c684cf">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a05478d461b836199ba51ebe7a5ef81ed" name="a05478d461b836199ba51ebe7a5ef81ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05478d461b836199ba51ebe7a5ef81ed">&#9670;&#160;</a></span>getCurvAbsAtBeam()</h2>
+<a id="a753566830228ba262f50794b068f094f" name="a753566830228ba262f50794b068f094f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a753566830228ba262f50794b068f094f">&#9670;&#160;</a></span>getCurvAbsAtBeam()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -851,13 +810,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">virtual void getCurvAbsAtBeam </td>
           <td>(</td>
-          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList_input</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;&#160;</td>
+          <td class="paramtype">const Real&#160;</td>
           <td class="paramname"><em>baryCoord_input</em>, </td>
         </tr>
         <tr>
@@ -960,7 +919,7 @@ template&lt;class DataTypes &gt; </div>
 <p>Returns the <a class="el" href="structbeamadapter_1_1_beam_section.html">BeamSection</a> data depending on the beam position at the given beam, similar to @getBeamSection. </p>
 <p>get the length of the beam:</p>
 
-<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a1b3af6570cde8f780072d318d8772305">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a62439a7a3a262a3d0ada5c1efcef2c7a">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -1014,47 +973,7 @@ template&lt;class DataTypes &gt; </div>
 
 <p>Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa. </p>
 
-<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a65ac8ee3ea115128c4fdaaa794d5ff05">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
-
-</div>
-</div>
-<a id="a2f9c68dab8ffa01b8d4d4f2393f8603e" name="a2f9c68dab8ffa01b8d4d4f2393f8603e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f9c68dab8ffa01b8d4d4f2393f8603e">&#9670;&#160;</a></span>getNumberOfCollisionSegment()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataTypes &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void getNumberOfCollisionSegment </td>
-          <td>(</td>
-          <td class="paramtype">Real &amp;&#160;</td>
-          <td class="paramname"><em>dx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int &amp;&#160;</td>
-          <td class="paramname"><em>numLines</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
+<p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aaf053f1db321014815dba591907fada7">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -1084,14 +1003,14 @@ template&lt;class DataTypes &gt; </div>
 </div><div class="memdoc">
 
 <p>getLength / setLength =&gt; provides the rest length of each spline using </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aa85edbf3d952d9b3e7204a28afd9ca3e">d_lengthList</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068">d_lengthList</a> </dd></dl>
 
 <p>Implements <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a1917eafe58fc4edd3a9270082c593f4d">BaseBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a5756a2b96be27b50864ca8a00ed67ca4" name="a5756a2b96be27b50864ca8a00ed67ca4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5756a2b96be27b50864ca8a00ed67ca4">&#9670;&#160;</a></span>getSamplingParameters()</h2>
+<a id="a783dd38aad447ed9119f99b8705fc469" name="a783dd38aad447ed9119f99b8705fc469"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a783dd38aad447ed9119f99b8705fc469">&#9670;&#160;</a></span>getSamplingParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1110,7 +1029,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">type::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramtype">type::vector&lt; sofa::Size &gt; &amp;&#160;</td>
           <td class="paramname"><em>nbP_density</em>&#160;</td>
         </tr>
         <tr>
@@ -1130,8 +1049,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a740c79cf1b47f0d83fab45896cbdf5d4" name="a740c79cf1b47f0d83fab45896cbdf5d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a740c79cf1b47f0d83fab45896cbdf5d4">&#9670;&#160;</a></span>getSplineRestTransform()</h2>
+<a id="a6bb62ac2c53ea913c953256a151f063a" name="a6bb62ac2c53ea913c953256a151f063a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb62ac2c53ea913c953256a151f063a">&#9670;&#160;</a></span>getSplineRestTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1144,7 +1063,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void getSplineRestTransform </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const EdgeID&#160;</td>
           <td class="paramname"><em>edgeInList</em>, </td>
         </tr>
         <tr>
@@ -1260,7 +1179,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_beam_interpolation.html">BeamInterpolation</a></li>
-    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 24 2025 07:01:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

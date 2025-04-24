@@ -319,7 +319,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; m_instrumentsList.size(); i++)</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    {</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        type::vector&lt;Real&gt; xP_noticeable_I;</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        type::vector&lt; int &gt; density_I;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        type::vector&lt;sofa::Size&gt; density_I;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        m_instrumentsList[i]-&gt;getSamplingParameters(xP_noticeable_I, density_I);</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> nb : density_I)</div>
@@ -568,7 +568,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>    <span class="keywordflow">for</span> (sofa::Size i=0; i&lt;m_instrumentsList.size(); i++)</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>    {</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>        type::vector&lt;Real&gt; xP_noticeable_I;</div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        type::vector&lt; int &gt; density_I;</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        type::vector&lt;sofa::Size&gt; density_I;</div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>        m_instrumentsList[i]-&gt;getSamplingParameters(xP_noticeable_I, density_I); <span class="comment">// sampling of the different section of this instrument</span></div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>        <span class="comment">// check each interval of noticeable point to see if they go out (&gt;0) and use corresponding density to sample the interval.</span></div>
@@ -1188,7 +1188,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_ff77e963eac2778b9932a4f945f7cd72.html">controller</a></li><li class="navelem"><b>InterventionalRadiologyController.inl</b></li>
-    <li class="footer">Generated on Tue Apr 1 2025 20:51:06 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 24 2025 07:01:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
