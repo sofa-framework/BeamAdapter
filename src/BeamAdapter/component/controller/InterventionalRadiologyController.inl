@@ -219,7 +219,7 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     for (unsigned int i = 0; i < m_instrumentsList.size(); i++)
     {
         type::vector<Real> xP_noticeable_I;
-        type::vector< int > density_I;
+        type::vector<sofa::Size> density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
 
         for (auto nb : density_I)
@@ -467,7 +467,7 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
     for (sofa::Size i=0; i<m_instrumentsList.size(); i++)
     {
         type::vector<Real> xP_noticeable_I;
-        type::vector< int > density_I;
+        type::vector<sofa::Size> density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I); // sampling of the different section of this instrument
 
         // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.

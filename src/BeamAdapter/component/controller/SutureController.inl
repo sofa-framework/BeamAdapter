@@ -121,7 +121,7 @@ void SutureController<DataTypes>::initWireModel()
     }
 
     type::vector< Real > xP_noticeable;
-    type::vector< int > nbP_density;
+    type::vector<sofa::Size> nbP_density;
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
     // computation of the number of node on the structure:
@@ -913,7 +913,7 @@ template <class DataTypes>
 void SutureController<DataTypes>::computeSampling(type::vector<Real> &newCurvAbs, VecCoord &x)
 {
     type::vector<Real> xP_noticeable;
-    type::vector<int> nbP_density;
+    type::vector<sofa::Size> nbP_density;
 
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 

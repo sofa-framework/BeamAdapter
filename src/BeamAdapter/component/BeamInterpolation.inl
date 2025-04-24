@@ -90,7 +90,7 @@ BeamInterpolation<DataTypes>::BeamInterpolation() :
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::computeRectangularCrossSectionInertiaMatrix(const Real& Ly, const Real& Lz, BeamSection& section)
+void BeamInterpolation<DataTypes>::computeRectangularCrossSectionInertiaMatrix(const Real Ly, const Real Lz, BeamSection& section)
 {
     section._Iy=Ly*Lz*Lz*Lz/12.0;
     section._Iz=Lz*Ly*Ly*Ly/12.0;
@@ -102,7 +102,7 @@ void BeamInterpolation<DataTypes>::computeRectangularCrossSectionInertiaMatrix(c
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::computeCircularCrossSectionInertiaMatrix(const Real &r, const Real &rInner, BeamSection &section)
+void BeamInterpolation<DataTypes>::computeCircularCrossSectionInertiaMatrix(const Real r, const Real rInner, BeamSection &section)
 {
     section._r = r;
     section._rInner = rInner;
@@ -235,7 +235,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
         auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
 
-        const unsigned int edgeListSize = this->d_edgeList.getValue().size();
+        const auto edgeListSize = this->d_edgeList.getValue().size();
         unsigned int nd0Id=0, nd1Id=0;
 
 
@@ -321,7 +321,7 @@ bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
     if (this->d_edgeList.getValue().size() == 0)
         return false;
 
-    const unsigned int nbEdges = this->d_edgeList.getValue().size();
+    const auto nbEdges = this->d_edgeList.getValue().size();
 
     if (this->d_DOF0TransformNode0.getValue().size() != nbEdges)
         return false;
@@ -378,7 +378,7 @@ void BeamInterpolation<DataTypes>::clear()
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1, const Real &angle)
+void BeamInterpolation<DataTypes>::addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1, const Real angle)
 {
     auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
     auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
@@ -403,7 +403,7 @@ void BeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  
 
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getSamplingParameters(type::vector<Real>& /*xP_noticeable*/, type::vector< int>& /*nbP_density*/)
+void BeamInterpolation<DataTypes>::getSamplingParameters(type::vector<Real>& /*xP_noticeable*/, type::vector<sofa::Size>& /*nbP_density*/)
 {
     msg_error()<<"getSamplingParameters is not implemented when _restShape== nullptr : TODO !! ";
 }
@@ -421,7 +421,7 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRes
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getCollisionSampling(Real &dx, const Real& /*x_localcurv_abs*/)
+void BeamInterpolation<DataTypes>::getCollisionSampling(Real &dx, const Real /*x_localcurv_abs*/)
 {
     unsigned int numLines = 30;
     dx = getRestTotalLength()/numLines;
@@ -469,9 +469,9 @@ void BeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, R
 
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const Transform &DOF_H_Node, unsigned int zeroORone )
+void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(const sofa::Index beam, const Transform &DOF_H_Node, unsigned int zeroORone)
 {
-    if (beam > int(this->d_DOF0TransformNode0.getValue().size()-1) || beam > int(this->d_DOF1TransformNode1.getValue().size()-1))
+    if (beam > this->d_DOF0TransformNode0.getValue().size()-1 || beam > this->d_DOF1TransformNode1.getValue().size()-1)
     {
         msg_error()<<"WARNING setTransformBetweenDofAndNode on non existing beam";
         return;
@@ -491,7 +491,7 @@ void BeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(int beam, const
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
+void BeamInterpolation<DataTypes>::getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
     if(d_straight.getValue())
     {
@@ -538,7 +538,7 @@ void BeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInLis
 
 
 template<class DataTypes>
-void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(unsigned int edgeInList, const Real& baryCoord,
+void BeamInterpolation<DataTypes>::getTangentUsingSplinePoints(const EdgeID edgeInList, const Real baryCoord,
                                                                const sofa::core::ConstVecCoordId &vecXId, Vec3& t )
 {
 
@@ -575,7 +575,7 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
         dmsg_info() <<"entering updateInterpolation" ;
 
     const type::vector< Vec2 > &interpolationInputs = d_InterpolationInputs.getValue();
-    unsigned int numInterpolatedPositions = interpolationInputs.size();
+    const auto numInterpolatedPositions = interpolationInputs.size();
 
     auto interpolatedPos = sofa::helper::getWriteOnlyAccessor(d_InterpolatedPos);
     auto interpolatedVel = sofa::helper::getWriteOnlyAccessor(d_InterpolatedVel);

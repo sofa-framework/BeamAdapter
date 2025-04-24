@@ -48,7 +48,7 @@ public:
     RodStraightSection();
 
     /// Override method to get the rest position of the beam. In this implementation, it will basically returns Vec3(x_start + x_used, 0 0)
-    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
 
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
