@@ -113,6 +113,7 @@ public:
     void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines);
     sofa::Size getTotalNumberOfBeams() const;
 
+
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
      /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
