@@ -57,7 +57,7 @@ void WireBeamInterpolation<DataTypes>::init()
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
-
+        
     type::vector<Real> xP_noticeable;
     type::vector<sofa::Size> nbP_density;
 

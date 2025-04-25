@@ -223,26 +223,34 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     stPos.getOrientation().normalize();
     d_startingPos.setValue(stPos);
 
-    if (!this->mState) {
+    if (!this->mState)
+    {
         msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
         sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
+    }
+    
+    // check if the provided mechanical state and topology can manage our tools
+    sofa::Size requiredNumberOfEdges = 0;
+    for (const auto* instrument : m_instrumentsList)
+    {
+        requiredNumberOfEdges += instrument->getTotalNumberOfPossibleBeams();
+    }
+    
+    if(requiredNumberOfEdges + 1 > this->mState->getSize())
+    {
+        msg_warning() << "The associated Mechanical Object does not contain enough nodes (" << this->mState->getSize()
+                      << ") whereas the provided tool(s) need(s) at least " << requiredNumberOfEdges + 1 << " nodes.";
+    }
+    if(requiredNumberOfEdges > this->l_mechanicalTopology->getNbEdges())
+    {
+        msg_warning() << "The associated Topology does not contain enough edges (" << this->l_mechanicalTopology->getNbEdges()
+                      << ") whereas the provided tool(s) need(s) at least " << requiredNumberOfEdges << " edges.";
     }
 
     WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
     for(unsigned int i=0; i<x.size(); i++)
         x[i] = d_startingPos.getValue();
-
-    sofa::Size nbrBeam = 0;
-    for (unsigned int i = 0; i < m_instrumentsList.size(); i++)
-    {
-        type::vector<Real> xP_noticeable_I;
-        type::vector<sofa::Size> density_I;
-        m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I);
-
-        for (auto nb : density_I)
-            nbrBeam += nb;
-    }
 
     applyInterventionalRadiologyController();
 

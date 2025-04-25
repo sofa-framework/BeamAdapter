@@ -446,7 +446,6 @@ void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigne
     dx = getRestTotalLength()/numLines;
 }
 
-
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy,
     Real& _Iz, Real& _Asy, Real& _Asz, Real& _J)

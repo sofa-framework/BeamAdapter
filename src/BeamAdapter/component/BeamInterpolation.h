@@ -202,7 +202,7 @@ public:
     void getMechanicalSampling(Real& dx, const Real x_localcurv_abs) override;
     void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
-
+    
     void setTransformBetweenDofAndNode(const sofa::Index beam, const Transform &DOF_H_Node, unsigned int zeroORone );
     void getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 
