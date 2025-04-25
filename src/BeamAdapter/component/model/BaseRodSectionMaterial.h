@@ -43,7 +43,7 @@ using sofa::core::loader::MeshLoader;
  * Method @sa initSection and @sa getRestTransformOnX should be overriden to provide the correct creation and interpolation.
  * 
  * The rod section is described by:
- * - Topology parameters: vertices and edges @sa d_nbEdgesVisu and @sa d_nbEdgesCollis
+ * - Topology parameters: vertices and edges @sa d_nbEdgesVisu, @sa d_nbEdgesCollis and @sa d_nbBeams
  * - Geometry parameters: radius @sa d_radius, @sa d_innerRadius and length @sa d_length
  * - Mechanical parameters: @sa d_poissonRatio and @sa d_youngModulus
  */
@@ -76,6 +76,9 @@ public:
 
     /// Returns the number of collision edges of this section. To be set or computed by child.
     [[nodiscard]] auto getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+    
+    /// Returns the number of collision edges of this section. To be set or computed by child.
+    [[nodiscard]] auto getNbBeams() const { return d_nbBeams.getValue(); }
 
     /// Returns the total length of this section. To be set or computed by child.
     [[nodiscard]] auto getLength() const { return d_length.getValue(); }
@@ -111,6 +114,7 @@ public:
     Data<Real> d_innerRadius; ///< Data defining the geometry internal radius of this section is hollow 
     Data<Real> d_length; ///< Data defining the geometry length of this section
 
+    Data<Size> d_nbBeams; ///< Data defining the number of (mechanical) beams composing this section
     Data<Size> d_nbEdgesVisu; ///< Data defining the number of visual edges composing this section
     Data<Size> d_nbEdgesCollis; ///< Data defining the number of collision edges composing this section
 

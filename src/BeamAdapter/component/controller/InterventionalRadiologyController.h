@@ -180,6 +180,10 @@ public:
     SingleLink<
         InterventionalRadiologyController, FixedProjectiveConstraint<DataTypes>,
         BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_fixedConstraint;
+    SingleLink<
+        InterventionalRadiologyController, sofa::core::topology::BaseMeshTopology,
+        BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_mechanicalTopology;
+    
     DeprecatedAndRemoved m_fixedConstraint;
 
     type::vector<Vec3d>                   m_sensorMotionData;

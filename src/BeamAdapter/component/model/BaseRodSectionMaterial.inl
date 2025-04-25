@@ -34,8 +34,9 @@ BaseRodSectionMaterial<DataTypes>::BaseRodSectionMaterial()
     , d_radius(initData(&d_radius, (Real)1.0, "radius", "Full radius of this section"))
     , d_innerRadius(initData(&d_innerRadius, (Real)0.0, "innerRadius", "Inner radius of this section if hollow"))   
     , d_length(initData(&d_length, (Real)1.0, "length", "Total length of this section"))
-    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, (Size)10, "nbEdgesVisu", "number of Edges for the visual model"))
-    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, (Size)20, "nbEdgesCollis", "number of Edges for the collision model"))
+    , d_nbBeams(initData(&d_nbBeams, (Size)5, "nbBeams", "Number of Beams for the mechanical model"))
+    , d_nbEdgesVisu(initData(&d_nbEdgesVisu, (Size)10, "nbEdgesVisu", "Number of Edges for the visual model"))
+    , d_nbEdgesCollis(initData(&d_nbEdgesCollis, (Size)20, "nbEdgesCollis", "Number of Edges for the collision model"))
 {
 
 }
@@ -46,6 +47,12 @@ void BaseRodSectionMaterial<DataTypes>::init()
 {
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);
 
+    if(!d_nbBeams.isSet())
+    {
+        msg_deprecated() << "nbBeams is now required but it was not set. Its value will be copied from nbEdgesCollis as a temporary compatibility solution.";
+        d_nbBeams.setValue(d_nbEdgesCollis.getValue());
+    }
+    
     // Prepare beam sections
     double r = this->d_radius.getValue();
     double rInner = this->d_innerRadius.getValue();

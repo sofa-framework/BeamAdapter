@@ -420,17 +420,29 @@ typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRes
     return le;
 }
 
+
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::getCollisionSampling(Real &dx, const Real /*x_localcurv_abs*/)
+void BeamInterpolation<DataTypes>::getMechanicalSampling(Real& dx, const Real x_localcurv_abs)
 {
-    unsigned int numLines = 30;
+    SOFA_UNUSED(x_localcurv_abs);
+    
+    const auto numLines = this->m_topologyEdges->size();
+    dx = getRestTotalLength()/numLines;
+}
+
+template <class DataTypes>
+void BeamInterpolation<DataTypes>::getCollisionSampling(Real &dx, const Real x_localcurv_abs)
+{
+    SOFA_UNUSED(x_localcurv_abs);
+    
+    const auto numLines = this->m_topologyEdges->size();
     dx = getRestTotalLength()/numLines;
 }
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
-    numLines = 30;
+    numLines = static_cast<unsigned int>(this->m_topologyEdges->size());
     dx = getRestTotalLength()/numLines;
 }
 

@@ -199,6 +199,7 @@ public:
     virtual void getSamplingParameters(type::vector<Real>& xP_noticeable,
                                        type::vector<sofa::Size>& nbP_density) override;
     Real getRestTotalLength() override;
+    void getMechanicalSampling(Real& dx, const Real x_localcurv_abs) override;
     void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override;
     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) override;
 

@@ -60,7 +60,7 @@ AdaptiveBeamForceFieldAndMass<DataTypes>::AdaptiveBeamForceFieldAndMass()
     , m_defaultMassDensity(Real(1.))
     , d_massDensity(initData(&d_massDensity,type::vector<Real>(1, m_defaultMassDensity),"massDensity", "Density of the mass" ))
     , d_useShearStressComputation(initData(&d_useShearStressComputation, true, "shearStressComputation","if false, suppress the shear stress in the computation"))
-    , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is peformed"))
+    , d_reinforceLength(initData(&d_reinforceLength, false, "reinforceLength", "if true, a separate computation for the error in elongation is performed"))
     , l_interpolation(initLink("interpolation","Path to the Interpolation component on scene"))
 
 {
@@ -507,7 +507,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const MechanicalParams*
     ///* Calculer les rotation et les transformations
     ///* Calculer la matrice "locale"
     ///* Calculer la force exercée par chaque beam
-    ///* Calculer la force exercée par la gravitée
+    ///* Calculer la force exercée par la gravité
     for (sofa::Index beamId=0; beamId <numBeams; beamId++)
     {
         ///find the indices of the nodes

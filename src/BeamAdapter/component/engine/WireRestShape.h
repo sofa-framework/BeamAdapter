@@ -107,10 +107,10 @@ public:
      
      
      Real getLength() ;
-     void getCollisionSampling(Real &dx, const Real x_curv);
-     void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines) ;
-
-
+    
+    void getMechanicalSampling(Real& dx, const Real x_localcurv_abs);
+    void getCollisionSampling(Real &dx, const Real x_curv);
+    void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines);
 
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
 
@@ -142,9 +142,7 @@ public:
 
 private:
      /// Link to be set to the topology container in the component graph.
-     SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
-     /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
-     TopologyContainer* _topology{ nullptr }; 
+     SingleLink<WireRestShape<DataTypes>, sofa::core::topology::BaseMeshTopology, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;
 };
 
 
