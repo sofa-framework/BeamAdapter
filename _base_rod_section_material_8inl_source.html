@@ -135,71 +135,78 @@ $(document).ready(function(){initNavTree('_base_rod_section_material_8inl_source
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    , d_radius(initData(&amp;d_radius, (Real)1.0, <span class="stringliteral">&quot;radius&quot;</span>, <span class="stringliteral">&quot;Full radius of this section&quot;</span>))</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    , d_innerRadius(initData(&amp;d_innerRadius, (Real)0.0, <span class="stringliteral">&quot;innerRadius&quot;</span>, <span class="stringliteral">&quot;Inner radius of this section if hollow&quot;</span>))   </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    , d_length(initData(&amp;d_length, (Real)1.0, <span class="stringliteral">&quot;length&quot;</span>, <span class="stringliteral">&quot;Total length of this section&quot;</span>))</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    , d_nbEdgesVisu(initData(&amp;d_nbEdgesVisu, (Size)10, <span class="stringliteral">&quot;nbEdgesVisu&quot;</span>, <span class="stringliteral">&quot;number of Edges for the visual model&quot;</span>))</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    , d_nbEdgesCollis(initData(&amp;d_nbEdgesCollis, (Size)20, <span class="stringliteral">&quot;nbEdgesCollis&quot;</span>, <span class="stringliteral">&quot;number of Edges for the collision model&quot;</span>))</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    , d_nbBeams(initData(&amp;d_nbBeams, (Size)5, <span class="stringliteral">&quot;nbBeams&quot;</span>, <span class="stringliteral">&quot;Number of Beams for the mechanical model&quot;</span>))</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    , d_nbEdgesVisu(initData(&amp;d_nbEdgesVisu, (Size)10, <span class="stringliteral">&quot;nbEdgesVisu&quot;</span>, <span class="stringliteral">&quot;Number of Edges for the visual model&quot;</span>))</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    , d_nbEdgesCollis(initData(&amp;d_nbEdgesCollis, (Size)20, <span class="stringliteral">&quot;nbEdgesCollis&quot;</span>, <span class="stringliteral">&quot;Number of Edges for the collision model&quot;</span>))</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
 </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">   45</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">BaseRodSectionMaterial&lt;DataTypes&gt;::init</a>()</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>{</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Prepare beam sections</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">double</span> r = this-&gt;d_radius.getValue();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">double</span> rInner = this-&gt;d_innerRadius.getValue();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    this-&gt;m_beamSection._r = r;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    this-&gt;m_beamSection._rInner = rInner;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    this-&gt;m_beamSection._Iz = M_PI * (r * r * r * r - rInner * rInner * rInner * rInner) / 4.0;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    this-&gt;m_beamSection._Iy = this-&gt;m_beamSection._Iz;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    this-&gt;m_beamSection._J = this-&gt;m_beamSection._Iz + this-&gt;m_beamSection._Iy;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    this-&gt;m_beamSection._A = M_PI * (r * r - rInner * rInner);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    this-&gt;m_beamSection._Asy = 0.0;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    this-&gt;m_beamSection._Asz = 0.0;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// call delegate method to init the section</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">bool</span> res = initSection();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">if</span> (res)</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
-</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">   46</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">BaseRodSectionMaterial&lt;DataTypes&gt;::init</a>()</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Loading);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span>(!d_nbBeams.isSet())</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        msg_deprecated() &lt;&lt; <span class="stringliteral">&quot;nbBeams is now required but it was not set. Its value will be copied from nbEdgesCollis as a temporary compatibility solution.&quot;</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        d_nbBeams.setValue(d_nbEdgesCollis.getValue());</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Prepare beam sections</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">double</span> r = this-&gt;d_radius.getValue();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">double</span> rInner = this-&gt;d_innerRadius.getValue();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    this-&gt;m_beamSection._r = r;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    this-&gt;m_beamSection._rInner = rInner;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    this-&gt;m_beamSection._Iz = M_PI * (r * r * r * r - rInner * rInner * rInner * rInner) / 4.0;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    this-&gt;m_beamSection._Iy = this-&gt;m_beamSection._Iz;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    this-&gt;m_beamSection._J = this-&gt;m_beamSection._Iz + this-&gt;m_beamSection._Iy;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    this-&gt;m_beamSection._A = M_PI * (r * r - rInner * rInner);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    this-&gt;m_beamSection._Asy = 0.0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    this-&gt;m_beamSection._Asz = 0.0;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// call delegate method to init the section</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">bool</span> res = initSection();</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">   72</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">BaseRodSectionMaterial&lt;DataTypes&gt;::getInterpolationParameters</a>(Real&amp; _A, Real&amp; _Iy, Real&amp; _Iz, Real&amp; _Asy, Real&amp; _Asz, Real&amp; _J)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    _A = m_beamSection._A; </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    _Iy = m_beamSection._Iy;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    _Iz = m_beamSection._Iz;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    _Asy = m_beamSection._Asy;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    _Asz = m_beamSection._Asz;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    _J = m_beamSection._J;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">if</span> (res)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        this-&gt;d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
 </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="foldopen" id="foldopen00084" data-start="{" data-end="}">
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">   84</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">BaseRodSectionMaterial&lt;DataTypes&gt;::getMechanicalParameters</a>(Real&amp; youngModulus, Real&amp; cPoisson, Real&amp; massDensity)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    youngModulus = this-&gt;d_youngModulus.getValue();</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    cPoisson = this-&gt;d_poissonRatio.getValue();</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    massDensity = this-&gt;d_massDensity.getValue();</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">   79</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">BaseRodSectionMaterial&lt;DataTypes&gt;::getInterpolationParameters</a>(Real&amp; _A, Real&amp; _Iy, Real&amp; _Iz, Real&amp; _Asy, Real&amp; _Asz, Real&amp; _J)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    _A = m_beamSection._A; </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    _Iy = m_beamSection._Iy;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    _Iz = m_beamSection._Iz;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    _Asy = m_beamSection._Asy;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    _Asz = m_beamSection._Asz;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    _J = m_beamSection._J;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}</div>
 </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>} <span class="comment">// namespace beamadapter</span></div>
-<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_a6308ba5e6b4e301baa1a95b361a0c718"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">beamadapter::BaseRodSectionMaterial::getInterpolationParameters</a></div><div class="ttdeci">void getInterpolationParameters(Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) const</div><div class="ttdoc">Returns the mass density and the BeamSection of this section.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:72</div></div>
-<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_a7b2c65a663887c0b1cd3f1403f034da3"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">beamadapter::BaseRodSectionMaterial::getMechanicalParameters</a></div><div class="ttdeci">void getMechanicalParameters(Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity) const</div><div class="ttdoc">Returns the Young modulus, Poisson's and massDensity coefficient of this section.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:84</div></div>
-<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_ad72eef1561c7a53b19b048397d4ef570"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">beamadapter::BaseRodSectionMaterial::init</a></div><div class="ttdeci">void init() override</div><div class="ttdoc">init method from BaseObject API. Will call internal</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:45</div></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">   91</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">BaseRodSectionMaterial&lt;DataTypes&gt;::getMechanicalParameters</a>(Real&amp; youngModulus, Real&amp; cPoisson, Real&amp; massDensity)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    youngModulus = this-&gt;d_youngModulus.getValue();</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    cPoisson = this-&gt;d_poissonRatio.getValue();</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    massDensity = this-&gt;d_massDensity.getValue();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
+</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_a6308ba5e6b4e301baa1a95b361a0c718"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#a6308ba5e6b4e301baa1a95b361a0c718">beamadapter::BaseRodSectionMaterial::getInterpolationParameters</a></div><div class="ttdeci">void getInterpolationParameters(Real &amp;_A, Real &amp;_Iy, Real &amp;_Iz, Real &amp;_Asy, Real &amp;_Asz, Real &amp;_J) const</div><div class="ttdoc">Returns the mass density and the BeamSection of this section.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:79</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_a7b2c65a663887c0b1cd3f1403f034da3"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#a7b2c65a663887c0b1cd3f1403f034da3">beamadapter::BaseRodSectionMaterial::getMechanicalParameters</a></div><div class="ttdeci">void getMechanicalParameters(Real &amp;youngModulus, Real &amp;cPoisson, Real &amp;massDensity) const</div><div class="ttdoc">Returns the Young modulus, Poisson's and massDensity coefficient of this section.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:91</div></div>
+<div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_ad72eef1561c7a53b19b048397d4ef570"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#ad72eef1561c7a53b19b048397d4ef570">beamadapter::BaseRodSectionMaterial::init</a></div><div class="ttdeci">void init() override</div><div class="ttdoc">init method from BaseObject API. Will call internal</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:46</div></div>
 <div class="ttc" id="aclassbeamadapter_1_1_base_rod_section_material_html_aead00731a1094daa0206d6bc2a5e6153"><div class="ttname"><a href="classbeamadapter_1_1_base_rod_section_material.html#aead00731a1094daa0206d6bc2a5e6153">beamadapter::BaseRodSectionMaterial::BaseRodSectionMaterial</a></div><div class="ttdeci">BaseRodSectionMaterial()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition</b> BaseRodSectionMaterial.inl:30</div></div>
 <div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -208,7 +215,7 @@ $(document).ready(function(){initNavTree('_base_rod_section_material_8inl_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_371f998ef18a7276d3e0964c7d35f2b9.html">model</a></li><li class="navelem"><b>BaseRodSectionMaterial.inl</b></li>
-    <li class="footer">Generated on Thu Apr 24 2025 16:16:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri Apr 25 2025 07:14:56 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

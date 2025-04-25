@@ -1,6 +1,10 @@
 var NAVTREEINDEX2 =
 {
+"classbeamadapter_1_1_wire_rest_shape.html#a7f07516babe1a28738db8fad4f26b0b7":[5,0,0,24,3],
+"classbeamadapter_1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf":[4,0,0,24,9],
+"classbeamadapter_1_1_wire_rest_shape.html#acbd8d9f6e3bcaf6f2115a657e7ce12cf":[5,0,0,24,9],
 "classbeamadapter_1_1_wire_rest_shape.html#ad5a0b4a26212533bac715100f0f98283":[4,0,0,24,8],
+"classbeamadapter_1_1_wire_rest_shape.html#ad5a0b4a26212533bac715100f0f98283":[5,0,0,24,8],
 "classbeamadapter_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0":[5,0,0,24,0],
 "classbeamadapter_1_1_wire_rest_shape.html#af5ed3e87126ffa0e9469851af5e39dc0":[4,0,0,24,0],
 "classsofa_1_1component_1_1_deprecated_component.html":[5,0,1,0,0],

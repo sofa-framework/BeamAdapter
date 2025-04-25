@@ -157,6 +157,10 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>getNbVisualEdges</b> 
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>getNbCollisionEdges</b> () const</td></tr>
 <tr class="memdesc:a1de49751aaee31f00f361e26289f3b2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of collision edges of this section. To be set or computed by child. <br /></td></tr>
 <tr class="separator:a1de49751aaee31f00f361e26289f3b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a912ffe2cff4e3e9240a40cc91960cfb0" id="r_a912ffe2cff4e3e9240a40cc91960cfb0"><td class="memItemLeft" align="right" valign="top"><a id="a912ffe2cff4e3e9240a40cc91960cfb0" name="a912ffe2cff4e3e9240a40cc91960cfb0"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>getNbBeams</b> () const</td></tr>
+<tr class="memdesc:a912ffe2cff4e3e9240a40cc91960cfb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of collision edges of this section. To be set or computed by child. <br /></td></tr>
+<tr class="separator:a912ffe2cff4e3e9240a40cc91960cfb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdd85a42e5aa758779de858ca342da60" id="r_acdd85a42e5aa758779de858ca342da60"><td class="memItemLeft" align="right" valign="top"><a id="acdd85a42e5aa758779de858ca342da60" name="acdd85a42e5aa758779de858ca342da60"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>getLength</b> () const</td></tr>
 <tr class="memdesc:acdd85a42e5aa758779de858ca342da60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total length of this section. To be set or computed by child. <br /></td></tr>
@@ -203,6 +207,10 @@ Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_inner
 Data&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_length</b></td></tr>
 <tr class="memdesc:a851ed4808916847729e483da733bf9a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data defining the geometry length of this section. <br /></td></tr>
 <tr class="separator:a851ed4808916847729e483da733bf9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d864613206aa4e1e5ed2ccbc7d38c6d" id="r_a0d864613206aa4e1e5ed2ccbc7d38c6d"><td class="memItemLeft" align="right" valign="top"><a id="a0d864613206aa4e1e5ed2ccbc7d38c6d" name="a0d864613206aa4e1e5ed2ccbc7d38c6d"></a>
+Data&lt; Size &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_nbBeams</b></td></tr>
+<tr class="memdesc:a0d864613206aa4e1e5ed2ccbc7d38c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data defining the number of (mechanical) beams composing this section. <br /></td></tr>
+<tr class="separator:a0d864613206aa4e1e5ed2ccbc7d38c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bb9cdb3eab47cbfac9bc8df70d4bca2" id="r_a9bb9cdb3eab47cbfac9bc8df70d4bca2"><td class="memItemLeft" align="right" valign="top"><a id="a9bb9cdb3eab47cbfac9bc8df70d4bca2" name="a9bb9cdb3eab47cbfac9bc8df70d4bca2"></a>
 Data&lt; Size &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_nbEdgesVisu</b></td></tr>
 <tr class="memdesc:a9bb9cdb3eab47cbfac9bc8df70d4bca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data defining the number of visual edges composing this section. <br /></td></tr>
@@ -231,9 +239,11 @@ class beamadapter::BaseRodSectionMaterial&lt; DataTypes &gt;</div><p>Base class 
 <dd>
 <a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#aaf6fa9342bcd9ed5f90ec46cd27f41ec" title="This function is called to get the rest position of the beam depending on the current curved abscisse...">getRestTransformOnX</a> should be overriden to provide the correct creation and interpolation.</dd></dl>
 <p>The rod section is described by:</p><ul>
-<li>Topology parameters: vertices and edges <dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#a9bb9cdb3eab47cbfac9bc8df70d4bca2" title="Data defining the number of visual edges composing this section.">d_nbEdgesVisu</a> and </dd>
+<li>Topology parameters: vertices and edges <dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#a9bb9cdb3eab47cbfac9bc8df70d4bca2" title="Data defining the number of visual edges composing this section.">d_nbEdgesVisu</a>, </dd>
 <dd>
-<a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#aa123ceac868b5e59ba5ce9c99ac559f4" title="Data defining the number of collision edges composing this section.">d_nbEdgesCollis</a></dd></dl>
+<a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#aa123ceac868b5e59ba5ce9c99ac559f4" title="Data defining the number of collision edges composing this section.">d_nbEdgesCollis</a> and </dd>
+<dd>
+<a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#a0d864613206aa4e1e5ed2ccbc7d38c6d" title="Data defining the number of (mechanical) beams composing this section.">d_nbBeams</a></dd></dl>
 </li>
 <li>Geometry parameters: radius <dl class="section see"><dt>See also</dt><dd><a class="el" href="classbeamadapter_1_1_base_rod_section_material.html#aa8b8ebbadfa7096fa530603efc8fdf36" title="Data defining the geometry radius of this section.">d_radius</a>, </dd>
 <dd>
@@ -344,7 +354,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_base_rod_section_material.html">BaseRodSectionMaterial</a></li>
-    <li class="footer">Generated on Thu Apr 24 2025 16:16:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri Apr 25 2025 07:14:56 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
