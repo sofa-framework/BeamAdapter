@@ -128,6 +128,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     {
         msg_info() << m_instrumentsList.size() << " instrument(s) found (WireBeamInterpolation)";
     }
+    const auto numberOfInstruments = m_instrumentsList.size();
 
      m_activatedPointsBuf.clear();
 
@@ -143,15 +144,44 @@ void InterventionalRadiologyController<DataTypes>::init()
         loadMotionData(d_motionFilename.getValue());
     }
 
-    auto x_instr_tip = sofa::helper::getWriteOnlyAccessor(d_xTip);
-    x_instr_tip.resize(m_instrumentsList.size());
+    auto checkData = [&](auto& data)
+    {
+        if(data.isSet())
+        {
+            const auto& values = data.getValue();
+            const auto valueSize = values.size();
+            
+            if(valueSize != numberOfInstruments)
+            {
+                msg_warning() << "Discrepancy for " << data.getName()  << " value: it manages " << valueSize << " tools, but there are " << numberOfInstruments << " defined in instrumentPathList.";
+                if(valueSize > numberOfInstruments)
+                {
+                    msg_warning() << "The superfluous values will be ignored.";
+                }
+                else
+                {
+                    msg_warning() << "The missing values will be set as zero.";
+                }
+            }
+        }
+    };
+    
+    {
+        checkData(d_xTip);
+        auto xTip = sofa::helper::getWriteOnlyAccessor(d_xTip);
+        xTip.resize(numberOfInstruments);
+    }
+    {
+        checkData(d_rotationInstrument);
+        auto angle_Instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
+        angle_Instrument.resize(numberOfInstruments);
+    }
 
-    auto angle_Instrument = sofa::helper::getWriteOnlyAccessor(d_rotationInstrument);
-    angle_Instrument.resize(m_instrumentsList.size());
-
-    for(unsigned int i=0; i<m_instrumentsList.size(); i++)
-        m_instrumentsList[i]->setControlled(true);
-
+    for(auto* instrument : m_instrumentsList)
+    {
+        instrument->setControlled(true);
+    }
+    
     if (!l_fixedConstraint)
     {
         typename FixedProjectiveConstraint<DataTypes>::SPtr fixedConstraint{};
@@ -176,10 +206,21 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     m_nodeCurvAbs.clear();
     m_idInstrumentCurvAbsTable.clear();
+    
+    // initiliaze current curvAbs
+    // if there are deployed at start (xtip set) then it should reflect that.
+    for(const auto xTip : d_xTip.getValue())
+    {
+        if(xTip > 0.0)
+        {
+            m_nodeCurvAbs.push_back(xTip);
+        }
+    }
+    // it should be terminated always by zero (origin)
     m_nodeCurvAbs.push_back(0.0);
+    
     type::vector<int> listInit;
-
-    for(unsigned int i=0; i<m_instrumentsList.size(); i++)
+    for(unsigned int i=0; i<numberOfInstruments; i++)
         listInit.push_back(int(i));
 
     m_idInstrumentCurvAbsTable.push_back(listInit);
