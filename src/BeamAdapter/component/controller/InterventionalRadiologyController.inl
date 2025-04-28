@@ -43,6 +43,7 @@
 
 
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
+#include <ranges>
 
 
 namespace beamadapter
@@ -208,16 +209,38 @@ void InterventionalRadiologyController<DataTypes>::init()
     m_idInstrumentCurvAbsTable.clear();
     
     // initiliaze current curvAbs
-    // if there are deployed at start (xtip set) then it should reflect that.
-    for(const auto xTip : d_xTip.getValue())
+    // if there are to be deployed at start (xtip set) then it should reflect that.
+    // it should always start with zero (origin)
+    m_nodeCurvAbs.push_back(0.0);
+    const auto& xTips = d_xTip.getValue();
+    for(const auto xTip : xTips | std::views::reverse)
     {
         if(xTip > 0.0)
         {
             m_nodeCurvAbs.push_back(xTip);
         }
     }
-    // it should be terminated always by zero (origin)
-    m_nodeCurvAbs.push_back(0.0);
+    
+    // initialize curvAbsNode <-> instrument ID table
+    // i,e identify for each "simulated" node the corresponding tool(s)
+    // if xtip not initialized then only the 0 (origin) node is considered, and has all the tools
+    // and as before, if they are deployed at start (xtip set), then we need to take it into account
+    for(sofa::Index i = 0 ; i < m_nodeCurvAbs.size(); i++)
+    {
+        type::vector<int> listTool;
+        for(sofa::Index id = 0 ; id < numberOfInstruments ; id++)
+        {
+            const auto xTip = xTips[id];
+            
+            if(xTip >= m_nodeCurvAbs[i])
+            {
+                listTool.push_back(id);
+            }
+        }
+        
+        m_idInstrumentCurvAbsTable.push_back(listTool);
+    }
+
     
     type::vector<int> listInit;
     for(unsigned int i=0; i<numberOfInstruments; i++)
@@ -226,40 +249,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     m_idInstrumentCurvAbsTable.push_back(listInit);
 
     Inherit::init();
-
-    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
-}
-
-template<class DataTypes>
-void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string filename)
-{
-    if (!helper::system::DataRepository.findFile(filename))
-    {
-        msg_error() << "File " << filename << " not found.";
-        return;
-    }
-    std::ifstream file(filename.c_str());
-
-    std::string line;
-    Vec3 result;
-    while( std::getline(file,line) )
-    {
-        if (line.empty())
-            continue;
-        std::istringstream values(line);
-        values >> result[0] >> result[1] >> result[2];
-        result[0] /= 1000;
-        m_sensorMotionData.push_back(result);
-    }
-
-    file.close();
-}
-
-
-template <class DataTypes>
-void InterventionalRadiologyController<DataTypes>::bwdInit()
-{
-    // assign the starting pos to each point of the Mechanical State
+    
     Coord stPos =d_startingPos.getValue();
     stPos.getOrientation().normalize();
     d_startingPos.setValue(stPos);
@@ -298,6 +288,30 @@ void InterventionalRadiologyController<DataTypes>::bwdInit()
     sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
+template<class DataTypes>
+void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string filename)
+{
+    if (!helper::system::DataRepository.findFile(filename))
+    {
+        msg_error() << "File " << filename << " not found.";
+        return;
+    }
+    std::ifstream file(filename.c_str());
+
+    std::string line;
+    Vec3 result;
+    while( std::getline(file,line) )
+    {
+        if (line.empty())
+            continue;
+        std::istringstream values(line);
+        values >> result[0] >> result[1] >> result[2];
+        result[0] /= 1000;
+        m_sensorMotionData.push_back(result);
+    }
+
+    file.close();
+}
 
 /*!
  * \todo fix the mouse event with better controls
