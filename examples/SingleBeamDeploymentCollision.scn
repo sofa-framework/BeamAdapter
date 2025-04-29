@@ -32,8 +32,8 @@
 
 
     <Node name="EdgeTopology">
-        <RodStraightSection name="StraightSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" poissonRatio="0.3" nbEdgesCollis="50" nbEdgesVisu="200" length="980.0"/>
-        <RodSpireSection name="SpireSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" poissonRatio="0.3" nbEdgesCollis="10" nbEdgesVisu="200" length="20.0" spireDiameter="25" spireHeight="0.0"/>        
+        <RodStraightSection name="StraightSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" poissonRatio="0.3" nbBeams="50" nbEdgesCollis="50" nbEdgesVisu="200" length="980.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" poissonRatio="0.3" nbBeams="10" nbEdgesCollis="10" nbEdgesVisu="200" length="20.0" spireDiameter="25" spireHeight="0.0"/>        
         
         <WireRestShape template="Rigid3d" name="BeamRestShape" wireMaterials="@StraightSection @SpireSection"/>
     
@@ -46,7 +46,7 @@
     <Node name="BeamModel">
         <EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
         <BTDLinearSolver verbose="0"/>
-        <RegularGridTopology name="MeshLines" nx="60" ny="1" nz="1"
+        <RegularGridTopology name="MeshLines" nx="61" ny="1" nz="1"
                                     xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
                                     p0="0 0 0" drawEdges="1"/>
         <MechanicalObject template="Rigid3d" name="DOFs Container" ry="-90" /> 

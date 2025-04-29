@@ -20,12 +20,12 @@ def createScene(rootNode):
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('RodStraightSection', name='StraightSection', 
                                  length=980.0, radius=0.9, 
-                                 nbEdgesCollis=50, nbEdgesVisu=200, 
+                                 nbBeams=50, nbEdgesCollis=50, nbEdgesVisu=200, 
                                  youngModulus=20000, massDensity=0.00000155, poissonRatio=0.3)
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
                                  length=20.0, radius=0.9, 
-                                 nbEdgesCollis=10, nbEdgesVisu=200,
+                                 nbBeams=10, nbEdgesCollis=10, nbEdgesVisu=200,
                                  spireDiameter=25, spireHeight=0,
                                  youngModulus=20000, massDensity=0.00000155, poissonRatio=0.3)
     topoLines.addObject('WireRestShape', name='BeamRestShape', template="Rigid3d",

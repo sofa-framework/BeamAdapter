@@ -17,7 +17,7 @@ def createScene(rootNode):
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
                                  length=20.0, radius=0.9, 
-                                 nbEdgesCollis=5, nbEdgesVisu=4,
+                                 nbBeams=5, nbEdgesCollis=5, nbEdgesVisu=4,
                                  spireDiameter=25, spireHeight=0,
                                  youngModulus=20000, massDensity=0.00000155)
     topoLines.addObject('WireRestShape', name='BeamRestShape', template="Rigid3d",

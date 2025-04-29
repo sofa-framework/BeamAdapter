@@ -15,8 +15,8 @@
     <DefaultVisualManagerLoop />
 
     <Node name="EdgeTopology">
-        <RodStraightSection name="StraightSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" nbEdgesCollis="30" nbEdgesVisu="196" length="980.0"/>
-        <RodSpireSection name="SpireSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" nbEdgesCollis="5" nbEdgesVisu="4" length="20.0" spireDiameter="25" spireHeight="0.0"/>
+        <RodStraightSection name="StraightSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" nbBeams="30" nbEdgesCollis="30" nbEdgesVisu="196" length="980.0"/>
+        <RodSpireSection name="SpireSection" youngModulus="20000" radius="0.9" massDensity="0.00000155" nbBeams="5" nbEdgesCollis="5" nbEdgesVisu="4" length="20.0" spireDiameter="25" spireHeight="0.0"/>
         
         <WireRestShape template="Rigid3d" name="BeamRestShape" printLog="1" wireMaterials="@StraightSection @SpireSection"/>
         <EdgeSetTopologyContainer name="meshLinesBeam"/>
