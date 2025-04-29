@@ -54,8 +54,8 @@
         <WireBeamInterpolation name="BeamInterpolation" WireRestShape="@../EdgeTopology/BeamRestShape"/>
         <AdaptiveBeamForceFieldAndMass name="BeamForceField" interpolation="@BeamInterpolation"/>
         <InterventionalRadiologyController name="DeployController" template="Rigid3d" instruments="BeamInterpolation"
-                                    startingPos="0 0 0 0 0 0 1" xtip="0 0 0" printLog="1" 
-                                    rotationInstrument="0 0 0" step="5" speed="5" 
+                                    startingPos="0 0 0 0 0 0 1" xtip="0" printLog="1" 
+                                    rotationInstrument="0" step="5" speed="5" 
                                     listening="1" controlledInstrument="0"/>
         <LinearSolverConstraintCorrection wire_optimization="true" printLog="0" />
         <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
