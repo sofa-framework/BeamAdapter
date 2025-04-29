@@ -12,7 +12,7 @@ def createScene(rootNode):
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('RodStraightSection', name='StraightSection', 
                                  length=980.0, radius=0.9, 
-                                 nbEdgesCollis=30, nbEdgesVisu=196, 
+                                 nbBeams=30, nbEdgesCollis=30, nbEdgesVisu=196, 
                                  youngModulus=20000, massDensity=0.00000155)
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
@@ -34,7 +34,7 @@ def createScene(rootNode):
     BeamMechanics.addObject('EulerImplicitSolver', rayleighStiffness=0.2, printLog=False, rayleighMass=0.1)
     BeamMechanics.addObject('BTDLinearSolver', verification=False, subpartSolve=False, verbose=False)
     BeamMechanics.addObject('RegularGridTopology', name='MeshLines', drawEdges=True, 
-                                    nx=60, ny=1, nz=1,
+                                    nx=61, ny=1, nz=1,
                                     xmax=0.0, xmin=0.0, ymin=0, ymax=0, zmax=0, zmin=0,
                                     p0=[0,0,0])
     BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs Container', template='Rigid3d', ry=-90)

@@ -76,7 +76,7 @@
 		<EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" printLog="false" />
 		<BTDLinearSolver subpartSolve="0" verification="0" verbose="0"/>
 		<RegularGridTopology name="meshLinesCombined"
-            nx="181" ny="1" nz="1"
+            nx="180" ny="1" nz="1"
             xmin="0.0" xmax="1.0"
             ymin="0" ymax="0"
             zmin="1" zmax="1"
