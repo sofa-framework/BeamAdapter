@@ -12,14 +12,14 @@ def createScene(rootNode):
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('RodStraightSection', name='StraightSection', 
                                  length=980.0, radius=0.9, 
-                                 nbEdgesCollis=30, nbEdgesVisu=196, 
-                                 youngModulus=20000)
+                                 nbBeams=30, nbEdgesCollis=30, nbEdgesVisu=196, 
+                                 youngModulus=20000, massDensity=0.00000155)
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
                                  length=20.0, radius=0.9, 
-                                 nbEdgesCollis=5, nbEdgesVisu=4,
+                                 nbBeams=5, nbEdgesCollis=5, nbEdgesVisu=4,
                                  spireDiameter=25, spireHeight=0,
-                                 youngModulus=20000)
+                                 youngModulus=20000, massDensity=0.00000155)
     topoLines.addObject('WireRestShape', name='BeamRestShape', template="Rigid3d",
                                  wireMaterials="@StraightSection @SpireSection")
                                  
@@ -34,14 +34,14 @@ def createScene(rootNode):
     BeamMechanics.addObject('EulerImplicitSolver', rayleighStiffness=0.2, printLog=False, rayleighMass=0.1)
     BeamMechanics.addObject('BTDLinearSolver', verification=False, subpartSolve=False, verbose=False)
     BeamMechanics.addObject('RegularGridTopology', name='MeshLines', drawEdges=True, 
-                                    nx=60, ny=1, nz=1,
+                                    nx=61, ny=1, nz=1,
                                     xmax=0.0, xmin=0.0, ymin=0, ymax=0, zmax=0, zmin=0,
                                     p0=[0,0,0])
     BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs Container', template='Rigid3d', ry=-90)
     BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', printLog=False)
     BeamMechanics.addObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', massDensity=0.00000155, interpolation='@BeamInterpolation')
     BeamMechanics.addObject('InterventionalRadiologyController', name='DeployController', template='Rigid3d', instruments='BeamInterpolation', 
-                                    startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0, 0, 0], printLog=True, 
+                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0, 0, 0], printLog=True, 
                                     rotationInstrument=[0, 0, 0], step=0.5, speed=0.5, 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
