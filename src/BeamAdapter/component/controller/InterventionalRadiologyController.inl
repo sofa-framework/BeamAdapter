@@ -213,8 +213,11 @@ void InterventionalRadiologyController<DataTypes>::init()
     // it should always start with zero (origin)
     m_nodeCurvAbs.push_back(0.0);
     const auto& xTips = d_xTip.getValue();
-    for(const auto xTip : xTips | std::views::reverse)
+
+    //for(const auto xTip : xTips | std::views::reverse)
+    for(std::size_t i = xTips.size() ; i > 0 ; i--)
     {
+        const auto xTip = xTips[i-1];
         if(xTip > 0.0)
         {
             m_nodeCurvAbs.push_back(xTip);
