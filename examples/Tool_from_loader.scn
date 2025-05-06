@@ -51,7 +51,7 @@
         <InterventionalRadiologyController name="IRController" template="Rigid3d" listening="true" controlledInstrument="0" 
             instruments="Interpol_GCatheter" printLog="0" 
             speed="10"  step="1" startingPos="0.0 0.0 0.0  0 0 0 1" 
-            rotationInstrument="0 0 0" xtip="0 0 0"  
+            rotationInstrument="0" xtip="0"  
             mainDirection="1 0 0"
         />
         

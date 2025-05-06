@@ -41,8 +41,8 @@ def createScene(rootNode):
     BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', printLog=False)
     BeamMechanics.addObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', massDensity=0.00000155, interpolation='@BeamInterpolation')
     BeamMechanics.addObject('InterventionalRadiologyController', name='DeployController', template='Rigid3d', instruments='BeamInterpolation', 
-                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0, 0, 0], printLog=True, 
-                                    rotationInstrument=[0, 0, 0], step=0.5, speed=0.5, 
+                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0], printLog=True, 
+                                    rotationInstrument=[0], step=0.5, speed=0.5, 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
     BeamMechanics.addObject('RestShapeSpringsForceField', name="RestSPForceField", points='@DeployController.indexFirstNode', angularStiffness=1e8, stiffness=1e8)
