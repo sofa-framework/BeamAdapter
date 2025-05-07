@@ -117,8 +117,10 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engin
 
 
 template<class DataTypes>
-void BaseBeamInterpolation<DataTypes>::bwdInit()
+void BaseBeamInterpolation<DataTypes>::init()
 {
+    Inherit::init();
+    
     BaseContext* context = getContext();
 
     m_mstate = dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
