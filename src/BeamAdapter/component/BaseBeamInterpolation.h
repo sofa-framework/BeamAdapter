@@ -61,6 +61,8 @@ public:
     SOFA_CLASS(SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes) ,
         sofa::core::objectmodel::BaseObject);
 
+    using Inherit = sofa::core::objectmodel::BaseObject;
+    
     using Coord = typename DataTypes::Coord;
     using VecCoord = typename DataTypes::VecCoord;
     using Real = typename Coord::value_type;
