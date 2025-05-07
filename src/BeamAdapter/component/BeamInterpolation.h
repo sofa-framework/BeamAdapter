@@ -117,7 +117,6 @@ public:
 
     //////////////////////////////////// Inherited from Base ///////////////////////////////////////
     void init() override ;
-    void bwdInit() override ;
     void reinit() override ;
     void reset() override ;
 

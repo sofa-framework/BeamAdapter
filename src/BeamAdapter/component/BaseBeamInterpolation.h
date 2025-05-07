@@ -86,7 +86,7 @@ public:
 
     virtual ~BaseBeamInterpolation() = default;
 
-    void bwdInit() override;
+    void init() override;
 
     static void getControlPointsFromFrame(
         const Transform& global_H_local0, const Transform& global_H_local1,

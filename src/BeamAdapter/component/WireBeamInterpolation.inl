@@ -51,6 +51,8 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes>
 template <class DataTypes>
 void WireBeamInterpolation<DataTypes>::init()
 {
+    Inherited::init();
+    
     if( m_restShape.get() == nullptr )
     {
         msg_error() << "Missing WireRestShape. The component is thus de-activated" ;

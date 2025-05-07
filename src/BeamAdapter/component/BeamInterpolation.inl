@@ -164,11 +164,6 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
 
 ////////////////////////////////// ADAPTIVE INTERPOLATION //////////////////////////////////////////
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::init()
-{
-}
-
-template <class DataTypes>
 void BeamInterpolation<DataTypes>::checkDataSize(Real& defaultValue, Data<type::vector<Real>>& dataList, const size_t& nbEdges)
 {
     auto values = sofa::helper::getWriteOnlyAccessor(dataList);
@@ -194,10 +189,10 @@ void BeamInterpolation<DataTypes>::checkDataSize(Real& defaultValue, Data<type::
 }
 
 template <class DataTypes>
-void BeamInterpolation<DataTypes>::bwdInit()
+void BeamInterpolation<DataTypes>::init()
 {
     this->d_componentState.setValue(ComponentState::Loading);
-    BaseBeamInterpolation<DataTypes>::bwdInit();
+    BaseBeamInterpolation<DataTypes>::init();
 
     if (this->d_componentState.getValue() == ComponentState::Invalid)
         return;
@@ -293,8 +288,7 @@ void BeamInterpolation<DataTypes>::bwdInit()
 template<class DataTypes>
 void BeamInterpolation<DataTypes>::reinit()
 {
-    init(); 
-    bwdInit();
+    init();
 }
 
 template<class DataTypes>
@@ -312,7 +306,7 @@ void BeamInterpolation<DataTypes>::reset()
     if(d_componentState.getValue()==ComponentState::Invalid)
         return ;
 
-    bwdInit();
+    init();
 }
 
 template<class DataTypes>

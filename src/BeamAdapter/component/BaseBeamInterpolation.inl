@@ -117,7 +117,7 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engin
 
 
 template<class DataTypes>
-void BaseBeamInterpolation<DataTypes>::bwdInit()
+void BaseBeamInterpolation<DataTypes>::init()
 {
     BaseContext* context = getContext();
 
