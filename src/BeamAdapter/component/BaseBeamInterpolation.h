@@ -28,14 +28,16 @@
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
 #include <sofa/core/objectmodel/Data.h>
-#include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
+#include <sofa/core/behavior/SingleStateAccessor.h>
 
 #include <sofa/type/vector.h>
 #include <sofa/type/Vec.h>
 #include <sofa/type/Mat.h>
+#include <sofa/type/Transform.h>
+#include <sofa/type/SpatialVector.h>
 
-#include <sofa/core/objectmodel/BaseObject.h>
+
 #include <sofa/component/statecontainer/MechanicalObject.h>
 
 
@@ -55,13 +57,13 @@ using sofa::component::statecontainer::MechanicalObject;
  *
  */
 template<class DataTypes>
-class BaseBeamInterpolation : public virtual sofa::core::objectmodel::BaseObject
+class BaseBeamInterpolation : public sofa::core::behavior::SingleStateAccessor<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes) ,
-        sofa::core::objectmodel::BaseObject);
+               SOFA_TEMPLATE(sofa::core::behavior::SingleStateAccessor, DataTypes));
 
-    using Inherit = sofa::core::objectmodel::BaseObject;
+    using Inherit = sofa::core::behavior::SingleStateAccessor<DataTypes>;
     
     using Coord = typename DataTypes::Coord;
     using VecCoord = typename DataTypes::VecCoord;
@@ -70,8 +72,8 @@ public:
     using Deriv = typename DataTypes::Deriv;
     using VecDeriv = typename DataTypes::VecDeriv;
 
-    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
-    using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
+    using Transform = sofa::type::Transform<Real>;
+    using SpatialVector = sofa::type::SpatialVector<Real>;
 
     using Vec2 = sofa::type::Vec<2, Real>;
     using Vec3 = sofa::type::Vec<3, Real>;
@@ -232,9 +234,6 @@ public:
     
     /// link to the (edge) topology
     SingleLink<BaseBeamInterpolation<DataTypes>, BaseMeshTopology, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_topology;
-
-    /// link to the mechanical state
-    SingleLink<BaseBeamInterpolation<DataTypes>, MechanicalState<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_mstate;
 };
 
 

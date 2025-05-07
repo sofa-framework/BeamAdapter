@@ -50,8 +50,9 @@ using sofa::helper::ReadAccessor ;
 
 //////////////////////////////////// BREAMINTERPOLATION ////////////////////////////////////////////
 template <class DataTypes>
-BeamInterpolation<DataTypes>::BeamInterpolation() :
-    crossSectionShape(initData(&crossSectionShape,
+BeamInterpolation<DataTypes>::BeamInterpolation()
+  : Inherit()
+  , crossSectionShape(initData(&crossSectionShape,
                                {"circular","elliptic (not available)","rectangular"},
                                "crossSectionShape",
                                "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
@@ -192,7 +193,7 @@ template <class DataTypes>
 void BeamInterpolation<DataTypes>::init()
 {
     this->d_componentState.setValue(ComponentState::Loading);
-    BaseBeamInterpolation<DataTypes>::init();
+    Inherit::init();
 
     if (this->d_componentState.getValue() == ComponentState::Invalid)
         return;
@@ -225,7 +226,7 @@ void BeamInterpolation<DataTypes>::init()
             DOF1TransformNode1.resize(edgeList.size());
         }
 
-        ReadAccessor<Data<VecCoord> > statePos = this->l_mstate->read(sofa::core::vec_id::read_access::position) ;
+        ReadAccessor<Data<VecCoord> > statePos = this->getMState()->read(sofa::core::vec_id::read_access::position) ;
 
         auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
@@ -600,16 +601,16 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
         dmsg_info() <<" position " << msgendl
-                   << "      ="<< this->l_mstate->read( sofa::core::vec_id::read_access::position )->getValue( ) ;
-        x=this->l_mstate->read( sofa::core::vec_id::read_access::position );
+                   << "      ="<< this->getMState()->read( sofa::core::vec_id::read_access::position )->getValue( ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::position );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
     {
-        x=this->l_mstate->read( sofa::core::vec_id::read_access::freePosition ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::freePosition ) ;
     }
     else /// rest position
     {
-        x=this->l_mstate->read( sofa::core::vec_id::read_access::restPosition ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::restPosition ) ;
         computeVel = false;
     }
 

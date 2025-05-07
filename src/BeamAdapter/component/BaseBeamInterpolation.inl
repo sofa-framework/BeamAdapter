@@ -97,7 +97,8 @@ void BaseBeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat
 
 template <class DataTypes>
 BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation()
-    : m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
+    : Inherit()
+    , m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
     , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
     , d_lengthList(initData(&d_lengthList, "lengthList", "list of the length of each beam"))
     , d_DOF0TransformNode0(initData(&d_DOF0TransformNode0, "DOF0TransformNode0", "Optional rigid transformation between the degree of Freedom and the first node of the beam"))
@@ -107,12 +108,10 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation()
     , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
         "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
     , l_topology(initLink("topology", "link to the topology (must contain edges)"))
-    , l_mstate(initLink("mstate", "link to the mechanical container"))
 {
 
-    
     m_StateNodes->setName("bezierNodes");
-    addSlave(m_StateNodes);
+    this->addSlave(m_StateNodes);
 }
 
 
@@ -120,28 +119,10 @@ template<class DataTypes>
 void BaseBeamInterpolation<DataTypes>::init()
 {
     Inherit::init();
-    
-    BaseContext* context = getContext();
-    
-    if (!l_mstate)
-    {
-        auto mstate = dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
-        l_mstate.set(mstate);
-    }
-    if (l_mstate)
-    {
-        msg_info() << "Found mechanical object named "<< l_mstate->getName() ;
-    }
-    else
-    {
-        msg_error() << "Cannot find the mechanical object. Please specify the link to the topology or insert one in the same node.";
-        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-        return;
-    }
-    
+           
     if (!l_topology)
     {
-        l_topology.set(this->getContext()->getMeshTopologyLink());
+        l_topology.set(this->getMState()->getContext()->getMeshTopologyLink());
     }
 
     if (l_topology)
@@ -151,14 +132,14 @@ void BaseBeamInterpolation<DataTypes>::init()
     else
     {
         msg_error() << "Cannot find a topology container. Please specify the link to the topology or insert one in the same node.";
-        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        this->d_componentState.setValue(ComponentState::Invalid);
         return;
     }
     
     if(l_topology->getNbEdges() == 0)
     {
         msg_error() << "Found a topology but it is empty (no edges). Component is de-activated";
-        d_componentState.setValue(ComponentState::Invalid);
+        this->d_componentState.setValue(ComponentState::Invalid);
         return;
     }
     
@@ -280,7 +261,7 @@ void BaseBeamInterpolation<DataTypes>::getBeamAtCurvAbs(const Real x_input, unsi
     /// LTotal =  length sum of the beams that are "out"
     Real LTotal = 0.0;
 
-    const unsigned int edgeListSize = this->d_edgeList.getValue().size();
+    const sofa::Size edgeListSize = static_cast<sofa::Size>(this->d_edgeList.getValue().size());
 
     /// we find the length of the beam that is "out"
     for (unsigned int e = start; e < edgeListSize; e++)
@@ -374,7 +355,7 @@ void BaseBeamInterpolation<DataTypes>::getDOFtoLocalTransformInGlobalFrame(const
 template <class DataTypes>
 void BaseBeamInterpolation<DataTypes>::setTransformBetweenDofAndNode(const sofa::Index beam, const Transform& DOF_H_Node, unsigned int zeroORone)
 {
-    if (beam > int(d_DOF0TransformNode0.getValue().size() - 1) || beam > int(d_DOF1TransformNode1.getValue().size() - 1))
+    if (beam > (d_DOF0TransformNode0.getValue().size() - 1) || beam > (d_DOF1TransformNode1.getValue().size() - 1))
     {
         msg_error() << "WARNING setTransformBetweenDofAndNode on non existing beam";
         return;
@@ -458,7 +439,7 @@ unsigned int BaseBeamInterpolation<DataTypes>::getStateSize() const
     }
     else
     {
-        return l_mstate->getSize();
+        return this->getMState()->getSize();
     }
 }
 
@@ -596,13 +577,15 @@ void BaseBeamInterpolation<DataTypes>::computeStrechAndTwist(const EdgeID edgeIn
 
 ///vId_Out provides the id of the multiVecId which stores the position of the Bezier Points
 template<class DataTypes>
-void  BaseBeamInterpolation<DataTypes>::updateBezierPoints(const VecCoord& x, sofa::core::VecCoordId& vId_Out) {
+void  BaseBeamInterpolation<DataTypes>::updateBezierPoints(const VecCoord& x, sofa::core::VecCoordId& vId_Out)
+{
+    const sofa::Size edgeListSize = static_cast<sofa::Size>(d_edgeList.getValue().size());
     ///Mechanical Object to stock Bezier points.
-    m_StateNodes->resize(d_edgeList.getValue().size() * 4);
+    m_StateNodes->resize(edgeListSize * 4);
     auto bezierPosVec = sofa::helper::getWriteOnlyAccessor(*m_StateNodes->write(vId_Out));
-    bezierPosVec.resize(d_edgeList.getValue().size() * 4);
+    bezierPosVec.resize(edgeListSize * 4);
 
-    for (unsigned int i = 0; i < d_edgeList.getValue().size(); i++) {
+    for (unsigned int i = 0; i < edgeListSize; i++) {
         updateBezierPoints(x, i, bezierPosVec.wref());
 
     }
@@ -610,8 +593,8 @@ void  BaseBeamInterpolation<DataTypes>::updateBezierPoints(const VecCoord& x, so
 
 template<class DataTypes>
 void BaseBeamInterpolation<DataTypes>::updateBezierPoints(const VecCoord& x, unsigned int index,
-    VectorVec3& bezierPosVec) {
-    /// <<" interpolatePointUsingSpline : "<< edgeInList<<"  xbary="<<baryCoord<<"  localPos"<<localPos<<std::endl;
+    VectorVec3& bezierPosVec)
+{
     const Real _L = d_lengthList.getValue()[index];
 
     /// \todo remove call to
