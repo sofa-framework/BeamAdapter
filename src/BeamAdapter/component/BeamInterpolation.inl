@@ -50,8 +50,9 @@ using sofa::helper::ReadAccessor ;
 
 //////////////////////////////////// BREAMINTERPOLATION ////////////////////////////////////////////
 template <class DataTypes>
-BeamInterpolation<DataTypes>::BeamInterpolation() :
-    crossSectionShape(initData(&crossSectionShape,
+BeamInterpolation<DataTypes>::BeamInterpolation()
+  : Inherit()
+  , crossSectionShape(initData(&crossSectionShape,
                                {"circular","elliptic (not available)","rectangular"},
                                "crossSectionShape",
                                "shape of the cross-section. Can be: circular, elliptic, square, rectangular. Default is circular" ))
@@ -139,7 +140,7 @@ void BeamInterpolation<DataTypes>::computeCrossSectionInertiaMatrix()
     }
     else
     {
-        Size nbEdges = this->m_topology->getNbEdges();
+        Size nbEdges = this->l_topology->getNbEdges();
         m_section.resize(nbEdges);
         if ( crossSectionShape.getValue().getSelectedItem() == "elliptic")
         {
@@ -192,12 +193,12 @@ template <class DataTypes>
 void BeamInterpolation<DataTypes>::init()
 {
     this->d_componentState.setValue(ComponentState::Loading);
-    BaseBeamInterpolation<DataTypes>::init();
+    Inherit::init();
 
     if (this->d_componentState.getValue() == ComponentState::Invalid)
         return;
 
-    Size nbEdges = this->m_topology->getNbEdges();
+    Size nbEdges = this->l_topology->getNbEdges();
     checkDataSize(m_defaultRadius, d_radius, nbEdges);
     checkDataSize(m_defaultInnerRadius, d_innerRadius, nbEdges);
     checkDataSize(m_defaultLengthY, d_lengthY, nbEdges);
@@ -211,7 +212,7 @@ void BeamInterpolation<DataTypes>::init()
         auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
         edgeList.clear();
 
-        for (unsigned int i=0; i<this->m_topology->getNbEdges(); i++)
+        for (unsigned int i=0; i<this->l_topology->getNbEdges(); i++)
         {
             edgeList.push_back(i);
         }
@@ -225,7 +226,7 @@ void BeamInterpolation<DataTypes>::init()
             DOF1TransformNode1.resize(edgeList.size());
         }
 
-        ReadAccessor<Data<VecCoord> > statePos = this->m_mstate->read(sofa::core::vec_id::read_access::position) ;
+        ReadAccessor<Data<VecCoord> > statePos = this->getMState()->read(sofa::core::vec_id::read_access::position) ;
 
         auto lengthList = sofa::helper::getWriteOnlyAccessor(this->d_lengthList);
         lengthList.clear();
@@ -335,17 +336,18 @@ bool BeamInterpolation<DataTypes>::interpolationIsAlreadyInitialized()
 template<class DataTypes>
 bool BeamInterpolation<DataTypes>::verifyTopology()
 {
+    const auto nbEdges = this->l_topology->getNbEdges();
+    
     //TODO(dmarchal) This contains "code" specific slang that cannot be understood by user.
-    dmsg_info() << "The vector _topologyEdges is now set with " << this->m_topologyEdges->size() << " edges" ;
-
+    dmsg_info() << "The vector _topologyEdges is now set with " << nbEdges << " edges" ;
 
     const VecElementID &edgeList = this->d_edgeList.getValue();
     for (unsigned int j = 0; j < edgeList.size(); j++)
     {
-        if(edgeList[j] > this->m_topologyEdges->size())
+        if(edgeList[j] > nbEdges)
         {
             msg_error() << "The provided edge index '" << edgeList[j] << "'is larger than '"
-                        << this->m_topologyEdges->size() << "' the amount of edges in the topology. " ;
+                        << nbEdges << "' the amount of edges in the topology. " ;
             return false;
         }
     }
@@ -420,7 +422,7 @@ void BeamInterpolation<DataTypes>::getMechanicalSampling(Real& dx, const Real x_
 {
     SOFA_UNUSED(x_localcurv_abs);
     
-    const auto numLines = this->m_topologyEdges->size();
+    const auto numLines = this->l_topology->getNbEdges();
     dx = getRestTotalLength()/numLines;
 }
 
@@ -429,14 +431,14 @@ void BeamInterpolation<DataTypes>::getCollisionSampling(Real &dx, const Real x_l
 {
     SOFA_UNUSED(x_localcurv_abs);
     
-    const auto numLines = this->m_topologyEdges->size();
+    const auto numLines = this->l_topology->getNbEdges();
     dx = getRestTotalLength()/numLines;
 }
 
 template <class DataTypes>
 void BeamInterpolation<DataTypes>::getNumberOfCollisionSegment(Real &dx, unsigned int &numLines)
 {
-    numLines = static_cast<unsigned int>(this->m_topologyEdges->size());
+    numLines = static_cast<unsigned int>(this->l_topology->getNbEdges());
     dx = getRestTotalLength()/numLines;
 }
 
@@ -599,16 +601,16 @@ void BeamInterpolation<DataTypes>::updateInterpolation(){
     if(d_vecID.getValue().getSelectedItem() == "current")
     {
         dmsg_info() <<" position " << msgendl
-                   << "      ="<< this->m_mstate->read( sofa::core::vec_id::read_access::position )->getValue( ) ;
-        x=this->m_mstate->read( sofa::core::vec_id::read_access::position );
+                   << "      ="<< this->getMState()->read( sofa::core::vec_id::read_access::position )->getValue( ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::position );
     }
     else if(d_vecID.getValue().getSelectedItem() == "free")
     {
-        x=this->m_mstate->read( sofa::core::vec_id::read_access::freePosition ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::freePosition ) ;
     }
     else /// rest position
     {
-        x=this->m_mstate->read( sofa::core::vec_id::read_access::restPosition ) ;
+        x=this->getMState()->read( sofa::core::vec_id::read_access::restPosition ) ;
         computeVel = false;
     }
 
