@@ -84,7 +84,7 @@ public:
     using VecEdgeID = type::vector<BaseMeshTopology::EdgeID>;
     using VecEdges = type::vector<BaseMeshTopology::Edge>;
 
-    BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr*/);
+    BaseBeamInterpolation();
 
     virtual ~BaseBeamInterpolation() = default;
 
@@ -212,7 +212,6 @@ public:
     typename MechanicalObject<StateDataTypes>::SPtr m_StateNodes;
 
     Data< VecEdgeID > d_edgeList;
-    const VecEdges* m_topologyEdges{ nullptr };
 
     ///2. Vector of length of each beam. Same size as @sa d_edgeList
     Data< type::vector< Real > >    d_lengthList;
@@ -230,13 +229,12 @@ public:
     Data< sofa::type::vector<EdgeID> > d_beamCollision;
 
     Data<bool>          d_dofsAndBeamsAligned;
+    
+    /// link to the (edge) topology
+    SingleLink<BaseBeamInterpolation<DataTypes>, BaseMeshTopology, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_topology;
 
-
-    /// pointer to the topology
-    BaseMeshTopology* m_topology{ nullptr };
-
-    /// pointer on mechanical state
-    MechanicalState<DataTypes>* m_mstate{ nullptr };
+    /// link to the mechanical state
+    SingleLink<BaseBeamInterpolation<DataTypes>, MechanicalState<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_mstate;
 };
 
 

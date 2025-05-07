@@ -96,7 +96,7 @@ void BaseBeamInterpolation<DataTypes>::RotateFrameForAlignNormalizedX(const Quat
 
 
 template <class DataTypes>
-BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engine::WireRestShape<DataTypes> *_restShape*/)
+BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation()
     : m_StateNodes(sofa::core::objectmodel::New< sofa::component::statecontainer::MechanicalObject<StateDataTypes> >())
     , d_edgeList(initData(&d_edgeList, "edgeList", "list of the edge in the topology that are concerned by the Interpolation"))
     , d_lengthList(initData(&d_lengthList, "lengthList", "list of the length of each beam"))
@@ -106,8 +106,8 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation(/*sofa::component::engin
     , d_beamCollision(initData(&d_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
     , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
         "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
-    , m_topology(nullptr)
-    , m_mstate(nullptr)
+    , l_topology(initLink("topology", "link to the topology (must contain edges)"))
+    , l_mstate(initLink("mstate", "link to the mechanical container"))
 {
 
     
@@ -122,33 +122,47 @@ void BaseBeamInterpolation<DataTypes>::init()
     Inherit::init();
     
     BaseContext* context = getContext();
-
-    m_mstate = dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
-    if (m_mstate == nullptr)
+    
+    if (!l_mstate)
     {
-        msg_error() << "No MechanicalState found. Component is de-activated.";
+        auto mstate = dynamic_cast<sofa::core::behavior::MechanicalState<DataTypes> *> (context->getMechanicalState());
+        l_mstate.set(mstate);
+    }
+    if (l_mstate)
+    {
+        msg_info() << "Found mechanical object named "<< l_mstate->getName() ;
+    }
+    else
+    {
+        msg_error() << "Cannot find the mechanical object. Please specify the link to the topology or insert one in the same node.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+    
+    if (!l_topology)
+    {
+        l_topology.set(this->getContext()->getMeshTopologyLink());
+    }
+
+    if (l_topology)
+    {
+        msg_info() << "Found topology named "<< l_topology->getName() ;
+    }
+    else
+    {
+        msg_error() << "Cannot find a topology container. Please specify the link to the topology or insert one in the same node.";
+        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        return;
+    }
+    
+    if(l_topology->getNbEdges() == 0)
+    {
+        msg_error() << "Found a topology but it is empty (no edges). Component is de-activated";
         d_componentState.setValue(ComponentState::Invalid);
         return;
     }
-
-    /// Get the topology from context and check if it is valid.
-    m_topology = context->getMeshTopology();
-    if (!m_topology)
-    {
-        msg_error() << "No Topology found. Component is de-activated.";
-        d_componentState.setValue(ComponentState::Invalid);
-        return;
-    }
-
-    /// Check the topology properties
-    if (m_topology->getNbEdges() == 0)
-    {
-        msg_error() << "Found a topology but it is empty. Component is de-activated";
-        d_componentState.setValue(ComponentState::Invalid);
-        return;
-    }
-
-    m_topologyEdges = &m_topology->getEdges();
+    
+    this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 
@@ -402,15 +416,15 @@ int BaseBeamInterpolation<DataTypes>::getNodeIndices(const EdgeID edgeInList,
     unsigned int& node0Idx,
     unsigned int& node1Idx)
 {
-    if (m_topologyEdges == nullptr)
+    if(!this->isComponentStateValid())
     {
-        msg_error() << "This object does not have edge topology defined (computation halted). ";
+        msg_error() << "(getNodeIndices) This component is invalid, check the other error messages. ";
         return -1;
     }
 
     /// 1. Get the indices of element and nodes
     const EdgeID& e = d_edgeList.getValue()[edgeInList];
-    const BaseMeshTopology::Edge& edge = (*m_topologyEdges)[e];
+    const BaseMeshTopology::Edge& edge = l_topology->getEdge(e);
     node0Idx = edge[0];
     node1Idx = edge[1];
 
@@ -437,14 +451,14 @@ void BaseBeamInterpolation<DataTypes>::getSplinePoints(const EdgeID edgeInList, 
 template<class DataTypes>
 unsigned int BaseBeamInterpolation<DataTypes>::getStateSize() const
 {
-    if (m_mstate == nullptr)
+    if(!this->isComponentStateValid())
     {
-        msg_error() << "No _mstate found (Aborting)";
+        msg_error() << "(getStateSize) This component is invalid, check the other error messages. ";
         return 0;
     }
     else
     {
-        return m_mstate->getSize();
+        return l_mstate->getSize();
     }
 }
 
