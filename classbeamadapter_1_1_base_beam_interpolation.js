@@ -2,7 +2,6 @@ var classbeamadapter_1_1_base_beam_interpolation =
 [
     [ "StateDataTypes", "classbeamadapter_1_1_base_beam_interpolation.html#af7240bec65ca3fb869fcecc0b9fe48f5", null ],
     [ "addCollisionOnBeam", "classbeamadapter_1_1_base_beam_interpolation.html#aa122716859d1e3d01c077403b0d0d829", null ],
-    [ "bwdInit", "classbeamadapter_1_1_base_beam_interpolation.html#aac70e2eeedc06de9ab4be138cf23fae4", null ],
     [ "computeActualLength", "classbeamadapter_1_1_base_beam_interpolation.html#a078d4cffe3962f03a28673ff327645cd", null ],
     [ "computeStrechAndTwist", "classbeamadapter_1_1_base_beam_interpolation.html#af7368b3a6ca85319274b042f31814cc3", null ],
     [ "ComputeTotalBendingRotationAngle", "classbeamadapter_1_1_base_beam_interpolation.html#a565571c1ba8c6e24a646685509d0dc48", null ],
@@ -16,6 +15,7 @@ var classbeamadapter_1_1_base_beam_interpolation =
     [ "getNodeIndices", "classbeamadapter_1_1_base_beam_interpolation.html#a2eb59021db1d4dfc81642cdb13ef6493", null ],
     [ "getRestTotalLength", "classbeamadapter_1_1_base_beam_interpolation.html#a1917eafe58fc4edd3a9270082c593f4d", null ],
     [ "getTangent", "classbeamadapter_1_1_base_beam_interpolation.html#a68c39f356c87acc69cabe12185ac1c48", null ],
+    [ "init", "classbeamadapter_1_1_base_beam_interpolation.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "interpolatePointUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#ab32b7f16920505149b5bcd67af019063", null ],
     [ "interpolatePointUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#a9779dac24c3282ba0ccd1d8955d6c52d", null ],
     [ "InterpolateTransformAndVelUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#a102eb7148d5ab77b4d1712c625d40672", null ],

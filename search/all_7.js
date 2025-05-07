@@ -4,7 +4,7 @@ var searchData=
   ['b_20splines_20bézier_20splines_1',['2. B-splines , Bézier Splines',['../md_doc_2modeling_2theory.html#autotoc_md13',1,'']]],
   ['barypoint_2',['baryPoint',['../structbeamadapter_1_1_adaptive_beam_mapping_1_1_pos_point_definition.html#a3dbef08fcd245ce9904a53a644922279',1,'beamadapter::AdaptiveBeamMapping::PosPointDefinition']]],
   ['basebeaminterpolation_3',['BaseBeamInterpolation',['../classbeamadapter_1_1_base_beam_interpolation.html',1,'beamadapter']]],
-  ['baserodsectionmaterial_4',['baserodsectionmaterial',['../classbeamadapter_1_1_base_rod_section_material.html#aead00731a1094daa0206d6bc2a5e6153',1,'beamadapter::BaseRodSectionMaterial::BaseRodSectionMaterial()'],['../classbeamadapter_1_1_base_rod_section_material.html',1,'BaseRodSectionMaterial&lt; DataTypes &gt;']]],
+  ['baserodsectionmaterial_4',['baserodsectionmaterial',['../classbeamadapter_1_1_base_rod_section_material.html',1,'BaseRodSectionMaterial&lt; DataTypes &gt;'],['../classbeamadapter_1_1_base_rod_section_material.html#aead00731a1094daa0206d6bc2a5e6153',1,'beamadapter::BaseRodSectionMaterial::BaseRodSectionMaterial()']]],
   ['beam_5',['of iterations for the current beam',['../classbeamadapter_1_1_projection_search.html#autotoc_md1',1,'']]],
   ['beam_20adapter_20documentation_6',['Beam Adapter Documentation',['../index.html',1,'']]],
   ['beam_20changes_7',['of iterations (including beam changes)',['../classbeamadapter_1_1_projection_search.html#autotoc_md0',1,'']]],
@@ -22,6 +22,5 @@ var searchData=
   ['bruteforcedetection_19',['BruteForceDetection',['../md_doc_2modeling_2implementation.html#autotoc_md28',1,'']]],
   ['btdlinearsolver_20',['BTDLinearSolver',['../md_doc_2modeling_2implementation.html#autotoc_md39',1,'']]],
   ['buildconstraintmatrix_21',['buildConstraintMatrix',['../classbeamadapter_1_1_adaptive_beam_length_constraint.html#a8c7f07ce2e7ba3113ec7a74c45143090',1,'beamadapter::AdaptiveBeamLengthConstraint']]],
-  ['buildmassmatrix_22',['buildMassMatrix',['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a4403d6c569b58f8f49d91b5a935f6256',1,'beamadapter::AdaptiveBeamForceFieldAndMass']]],
-  ['bwdinit_23',['bwdInit',['../classbeamadapter_1_1_base_beam_interpolation.html#aac70e2eeedc06de9ab4be138cf23fae4',1,'beamadapter::BaseBeamInterpolation']]]
+  ['buildmassmatrix_22',['buildMassMatrix',['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a4403d6c569b58f8f49d91b5a935f6256',1,'beamadapter::AdaptiveBeamForceFieldAndMass']]]
 ];

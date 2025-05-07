@@ -11,5 +11,5 @@ var searchData=
   ['rodstraightsection_8',['rodstraightsection',['../classbeamadapter_1_1_rod_straight_section.html#ae98b6ce6e2d90fde28e90e54d9e451f9',1,'beamadapter::RodStraightSection::RodStraightSection()'],['../classbeamadapter_1_1_rod_straight_section.html',1,'RodStraightSection&lt; DataTypes &gt;']]],
   ['root_20node_9',['1. The Components on Root Node',['../md_doc_2modeling_2implementation.html#autotoc_md22',1,'']]],
   ['rotateframeforalignnormalizedx_10',['RotateFrameForAlignNormalizedX',['../classbeamadapter_1_1_base_beam_interpolation.html#ae58c1d82e9c6a7831ae426db1145a797',1,'beamadapter::BaseBeamInterpolation']]],
-  ['rotateframeforalignx_11',['rotateframeforalignx',['../classbeamadapter_1_1_base_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a',1,'beamadapter::BaseBeamInterpolation::RotateFrameForAlignX()'],['../classbeamadapter_1_1_rod_mesh_section.html#af6e89e1da1340b2e44cfb491c09ac97f',1,'beamadapter::RodMeshSection::rotateFrameForAlignX()']]]
+  ['rotateframeforalignx_11',['rotateframeforalignx',['../classbeamadapter_1_1_rod_mesh_section.html#af6e89e1da1340b2e44cfb491c09ac97f',1,'beamadapter::RodMeshSection::rotateFrameForAlignX()'],['../classbeamadapter_1_1_base_beam_interpolation.html#a899a756e92492f60fdf3694b9be0988a',1,'beamadapter::BaseBeamInterpolation::RotateFrameForAlignX()']]]
 ];

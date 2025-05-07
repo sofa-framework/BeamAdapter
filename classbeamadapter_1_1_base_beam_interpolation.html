@@ -112,6 +112,9 @@ Inheritance diagram for BaseBeamInterpolation&lt; DataTypes &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:af5a69a279b8def63b153129b6429ab0b" id="r_af5a69a279b8def63b153129b6429ab0b"><td class="memItemLeft" align="right" valign="top"><a id="af5a69a279b8def63b153129b6429ab0b" name="af5a69a279b8def63b153129b6429ab0b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Inherit</b> = sofa::core::objectmodel::BaseObject</td></tr>
+<tr class="separator:af5a69a279b8def63b153129b6429ab0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c44b651a62b9c2bd610fda43f76dfd" id="r_ac4c44b651a62b9c2bd610fda43f76dfd"><td class="memItemLeft" align="right" valign="top"><a id="ac4c44b651a62b9c2bd610fda43f76dfd" name="ac4c44b651a62b9c2bd610fda43f76dfd"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Coord</b> = typename DataTypes::Coord</td></tr>
 <tr class="separator:ac4c44b651a62b9c2bd610fda43f76dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,8 +173,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d5e7322dca79940cfbcc71243495b3e" id="r_a6d5e7322dca79940cfbcc71243495b3e"><td class="memItemLeft" align="right" valign="top"><a id="a6d5e7322dca79940cfbcc71243495b3e" name="a6d5e7322dca79940cfbcc71243495b3e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SOFA_CLASS</b> (SOFA_TEMPLATE(<a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>, DataTypes), sofa::core::objectmodel::BaseObject)</td></tr>
 <tr class="separator:a6d5e7322dca79940cfbcc71243495b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac70e2eeedc06de9ab4be138cf23fae4" id="r_aac70e2eeedc06de9ab4be138cf23fae4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#aac70e2eeedc06de9ab4be138cf23fae4">bwdInit</a> () override</td></tr>
-<tr class="separator:aac70e2eeedc06de9ab4be138cf23fae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad72eef1561c7a53b19b048397d4ef570" id="r_ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ad72eef1561c7a53b19b048397d4ef570">init</a> () override</td></tr>
+<tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204" id="r_ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft" align="right" valign="top"><a id="ac8bb3912a3ce86b15842e79d0b421204" name="ac8bb3912a3ce86b15842e79d0b421204"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:ac8bb3912a3ce86b15842e79d0b421204"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -336,35 +339,6 @@ MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="
 <tr class="separator:ac074561fb74cc5e9283867841af8d010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aac70e2eeedc06de9ab4be138cf23fae4" name="aac70e2eeedc06de9ab4be138cf23fae4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac70e2eeedc06de9ab4be138cf23fae4">&#9670;&#160;</a></span>bwdInit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataTypes &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void bwdInit </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the topology from context and check if it is valid.</p>
-<p>Check the topology properties</p>
-
-</div>
-</div>
 <a id="a078d4cffe3962f03a28673ff327645cd" name="a078d4cffe3962f03a28673ff327645cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a078d4cffe3962f03a28673ff327645cd">&#9670;&#160;</a></span>computeActualLength()</h2>
 
@@ -1057,6 +1031,35 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
+<a id="ad72eef1561c7a53b19b048397d4ef570" name="ad72eef1561c7a53b19b048397d4ef570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad72eef1561c7a53b19b048397d4ef570">&#9670;&#160;</a></span>init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataTypes &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the topology from context and check if it is valid.</p>
+<p>Check the topology properties</p>
+
+</div>
+</div>
 <a id="a9779dac24c3282ba0ccd1d8955d6c52d" name="a9779dac24c3282ba0ccd1d8955d6c52d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9779dac24c3282ba0ccd1d8955d6c52d">&#9670;&#160;</a></span>interpolatePointUsingSpline()</h2>
 
@@ -1651,7 +1654,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a></li>
-    <li class="footer">Generated on Tue May 6 2025 23:25:48 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 7 2025 08:20:15 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
