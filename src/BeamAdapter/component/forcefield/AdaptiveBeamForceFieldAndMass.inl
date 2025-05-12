@@ -341,7 +341,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mp
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doAddMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
     MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
