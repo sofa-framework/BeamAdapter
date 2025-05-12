@@ -382,7 +382,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalPara
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
 {
     const unsigned int numBeams = l_interpolation->getNumBeams();
 
