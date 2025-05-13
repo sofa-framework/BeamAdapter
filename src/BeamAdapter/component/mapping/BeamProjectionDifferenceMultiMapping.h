@@ -144,20 +144,14 @@ public:
             const sofa::type::vector< In2DataVecDeriv*>& dataVecOut2RootForce,
             const sofa::type::vector<const OutDataVecDeriv*>& dataVecInForce) override;
 
-    void applyDJT(const sofa::core::MechanicalParams* mparams,
-                  sofa::core::MultiVecDerivId inForce,
-                  sofa::core::ConstMultiVecDerivId outForce) override;
-
     virtual void applyJT(
             const sofa::core::ConstraintParams*  cparams , const sofa::type::vector< In1DataMatrixDeriv*>& dataMatOut1Const  ,
             const sofa::type::vector< In2DataMatrixDeriv*>&  dataMatOut2Const ,
             const sofa::type::vector<const OutDataMatrixDeriv*>&  dataMatInConst) override;
 
-    virtual const sofa::type::vector<sofa::linearalgebra::BaseMatrix*>* getJs() override;
 
     void computeProjection(const In1VecCoord &xFrom, const In2VecCoord &xTo, const bool &updateOrientation);
 
-public:
     sofa::Data<vector<unsigned int>> d_indices;
     sofa::Data<sofa::type::vector<bool>> d_directions;
     sofa::Data<bool> d_updateProjectionPosition;
@@ -171,6 +165,13 @@ public:
     using sofa::core::Multi2Mapping<TIn1, TIn2, TOut>::d_componentState ;
 
 protected:
+
+    void doApplyDJT(const sofa::core::MechanicalParams* mparams,
+                  sofa::core::MultiVecDerivId inForce,
+                  sofa::core::ConstMultiVecDerivId outForce) override;
+    virtual const sofa::type::vector<sofa::linearalgebra::BaseMatrix*>* doGetJs() override;
+
+
     sofa::core::State<In1>* m_fromModel1;
     sofa::core::State<In2>* m_fromModel2;
     sofa::core::State<Out>* m_toModel;
