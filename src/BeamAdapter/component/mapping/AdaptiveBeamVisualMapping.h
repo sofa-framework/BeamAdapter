@@ -66,6 +66,8 @@ public:
     // parameters
     Data<sofa::Size> d_nbPointsOnEachCircle; ///< Discretization of created circles
     Data<SReal> d_radius; ///< Radius of created circles in yz plan
+    Data<SReal> d_thickness; ///< if not 0, add a second layer (where this value will be the distance between the two layers)
+    ///<
     Data<bool> d_flipNormals; ///< Flip Normal ? (Inverse point order when creating quad)
 };
 
