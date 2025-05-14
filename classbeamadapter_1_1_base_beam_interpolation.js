@@ -15,7 +15,6 @@ var classbeamadapter_1_1_base_beam_interpolation =
     [ "getNodeIndices", "classbeamadapter_1_1_base_beam_interpolation.html#a2eb59021db1d4dfc81642cdb13ef6493", null ],
     [ "getRestTotalLength", "classbeamadapter_1_1_base_beam_interpolation.html#a1917eafe58fc4edd3a9270082c593f4d", null ],
     [ "getTangent", "classbeamadapter_1_1_base_beam_interpolation.html#a68c39f356c87acc69cabe12185ac1c48", null ],
-    [ "init", "classbeamadapter_1_1_base_beam_interpolation.html#ad72eef1561c7a53b19b048397d4ef570", null ],
     [ "interpolatePointUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#ab32b7f16920505149b5bcd67af019063", null ],
     [ "interpolatePointUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#a9779dac24c3282ba0ccd1d8955d6c52d", null ],
     [ "InterpolateTransformAndVelUsingSpline", "classbeamadapter_1_1_base_beam_interpolation.html#a102eb7148d5ab77b4d1712c625d40672", null ],
@@ -28,6 +27,5 @@ var classbeamadapter_1_1_base_beam_interpolation =
     [ "d_DOF0TransformNode0", "classbeamadapter_1_1_base_beam_interpolation.html#a32dde414cec5c9c285bcfd55cfb27e89", null ],
     [ "d_DOF1TransformNode1", "classbeamadapter_1_1_base_beam_interpolation.html#a37eccf180bea40b5e88d51bf642c8997", null ],
     [ "d_lengthList", "classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068", null ],
-    [ "m_mstate", "classbeamadapter_1_1_base_beam_interpolation.html#ac074561fb74cc5e9283867841af8d010", null ],
-    [ "m_topology", "classbeamadapter_1_1_base_beam_interpolation.html#a861c2f7fc6a0a3f8e4599d835889817b", null ]
+    [ "l_topology", "classbeamadapter_1_1_base_beam_interpolation.html#a24846dd4595a9640747e73cf2c639854", null ]
 ];

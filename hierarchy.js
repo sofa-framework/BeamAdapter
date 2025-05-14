@@ -8,12 +8,6 @@ var hierarchy =
       ] ],
       [ "WireRestShape< DataTypes >", "classbeamadapter_1_1_wire_rest_shape.html", null ]
     ] ],
-    [ "BaseObject", null, [
-      [ "BaseBeamInterpolation< DataTypes >", "classbeamadapter_1_1_base_beam_interpolation.html", [
-        [ "BeamInterpolation< DataTypes >", "classbeamadapter_1_1_beam_interpolation.html", null ],
-        [ "WireBeamInterpolation< DataTypes >", "classbeamadapter_1_1_wire_beam_interpolation.html", null ]
-      ] ]
-    ] ],
     [ "BeamLocalMatrices", "classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html", null ],
     [ "BeamLocalMatrices", "classbeamadapter_1_1_adaptive_inflatable_beam_force_field_1_1_beam_local_matrices.html", null ],
     [ "BeamSection", "structbeamadapter_1_1_beam_section.html", null ],
@@ -35,6 +29,12 @@ var hierarchy =
     ] ],
     [ "PosPointDefinition", "structbeamadapter_1_1_adaptive_beam_mapping_1_1_pos_point_definition.html", null ],
     [ "ProjectionSearch< DataTypes >", "classbeamadapter_1_1_projection_search.html", null ],
+    [ "SingleStateAccessor", null, [
+      [ "BaseBeamInterpolation< DataTypes >", "classbeamadapter_1_1_base_beam_interpolation.html", [
+        [ "BeamInterpolation< DataTypes >", "classbeamadapter_1_1_beam_interpolation.html", null ],
+        [ "WireBeamInterpolation< DataTypes >", "classbeamadapter_1_1_wire_beam_interpolation.html", null ]
+      ] ]
+    ] ],
     [ "BaseObject", null, [
       [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
     ] ],

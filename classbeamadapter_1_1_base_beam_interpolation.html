@@ -112,9 +112,9 @@ Inheritance diagram for BaseBeamInterpolation&lt; DataTypes &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:af5a69a279b8def63b153129b6429ab0b" id="r_af5a69a279b8def63b153129b6429ab0b"><td class="memItemLeft" align="right" valign="top"><a id="af5a69a279b8def63b153129b6429ab0b" name="af5a69a279b8def63b153129b6429ab0b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Inherit</b> = sofa::core::objectmodel::BaseObject</td></tr>
-<tr class="separator:af5a69a279b8def63b153129b6429ab0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfc8a619021bf68f317fb5772269e623" id="r_adfc8a619021bf68f317fb5772269e623"><td class="memItemLeft" align="right" valign="top"><a id="adfc8a619021bf68f317fb5772269e623" name="adfc8a619021bf68f317fb5772269e623"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Inherit</b> = sofa::core::behavior::SingleStateAccessor&lt; DataTypes &gt;</td></tr>
+<tr class="separator:adfc8a619021bf68f317fb5772269e623"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c44b651a62b9c2bd610fda43f76dfd" id="r_ac4c44b651a62b9c2bd610fda43f76dfd"><td class="memItemLeft" align="right" valign="top"><a id="ac4c44b651a62b9c2bd610fda43f76dfd" name="ac4c44b651a62b9c2bd610fda43f76dfd"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Coord</b> = typename DataTypes::Coord</td></tr>
 <tr class="separator:ac4c44b651a62b9c2bd610fda43f76dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,12 +130,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Deriv</b> = typename
 <tr class="memitem:a7d14e42cbdf606634f45900bd80c16e4" id="r_a7d14e42cbdf606634f45900bd80c16e4"><td class="memItemLeft" align="right" valign="top"><a id="a7d14e42cbdf606634f45900bd80c16e4" name="a7d14e42cbdf606634f45900bd80c16e4"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>VecDeriv</b> = typename DataTypes::VecDeriv</td></tr>
 <tr class="separator:a7d14e42cbdf606634f45900bd80c16e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8d5dcfb2d169bae40623419200bee70" id="r_af8d5dcfb2d169bae40623419200bee70"><td class="memItemLeft" align="right" valign="top"><a id="af8d5dcfb2d169bae40623419200bee70" name="af8d5dcfb2d169bae40623419200bee70"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b> = typename sofa::defaulttype::SolidTypes&lt; Real &gt;::Transform</td></tr>
-<tr class="separator:af8d5dcfb2d169bae40623419200bee70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3840dd179bae8137ed77a52cfc9a5a72" id="r_a3840dd179bae8137ed77a52cfc9a5a72"><td class="memItemLeft" align="right" valign="top"><a id="a3840dd179bae8137ed77a52cfc9a5a72" name="a3840dd179bae8137ed77a52cfc9a5a72"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>SpatialVector</b> = typename sofa::defaulttype::SolidTypes&lt; Real &gt;::SpatialVector</td></tr>
-<tr class="separator:a3840dd179bae8137ed77a52cfc9a5a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36820fd6efbc6ba846cfd1a66bd0c220" id="r_a36820fd6efbc6ba846cfd1a66bd0c220"><td class="memItemLeft" align="right" valign="top"><a id="a36820fd6efbc6ba846cfd1a66bd0c220" name="a36820fd6efbc6ba846cfd1a66bd0c220"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b> = sofa::type::Transform&lt; Real &gt;</td></tr>
+<tr class="separator:a36820fd6efbc6ba846cfd1a66bd0c220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63768f68560ce98eeebe552c8cee813" id="r_af63768f68560ce98eeebe552c8cee813"><td class="memItemLeft" align="right" valign="top"><a id="af63768f68560ce98eeebe552c8cee813" name="af63768f68560ce98eeebe552c8cee813"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>SpatialVector</b> = sofa::type::SpatialVector&lt; Real &gt;</td></tr>
+<tr class="separator:af63768f68560ce98eeebe552c8cee813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada02d8c20beeac9df017dad4c650bcd5" id="r_ada02d8c20beeac9df017dad4c650bcd5"><td class="memItemLeft" align="right" valign="top"><a id="ada02d8c20beeac9df017dad4c650bcd5" name="ada02d8c20beeac9df017dad4c650bcd5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Vec2</b> = sofa::type::Vec&lt; 2, Real &gt;</td></tr>
 <tr class="separator:ada02d8c20beeac9df017dad4c650bcd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,10 +170,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>StateDataTypes</b> =
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6d5e7322dca79940cfbcc71243495b3e" id="r_a6d5e7322dca79940cfbcc71243495b3e"><td class="memItemLeft" align="right" valign="top"><a id="a6d5e7322dca79940cfbcc71243495b3e" name="a6d5e7322dca79940cfbcc71243495b3e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SOFA_CLASS</b> (SOFA_TEMPLATE(<a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>, DataTypes), sofa::core::objectmodel::BaseObject)</td></tr>
-<tr class="separator:a6d5e7322dca79940cfbcc71243495b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad72eef1561c7a53b19b048397d4ef570" id="r_ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ad72eef1561c7a53b19b048397d4ef570">init</a> () override</td></tr>
+<tr class="memitem:a19a9527b5e7dd3835611f462258736e0" id="r_a19a9527b5e7dd3835611f462258736e0"><td class="memItemLeft" align="right" valign="top"><a id="a19a9527b5e7dd3835611f462258736e0" name="a19a9527b5e7dd3835611f462258736e0"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>SOFA_CLASS</b> (SOFA_TEMPLATE(<a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>, DataTypes), SOFA_TEMPLATE(sofa::core::behavior::SingleStateAccessor, DataTypes))</td></tr>
+<tr class="separator:a19a9527b5e7dd3835611f462258736e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad72eef1561c7a53b19b048397d4ef570" id="r_ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570" name="ad72eef1561c7a53b19b048397d4ef570"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204" id="r_ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft" align="right" valign="top"><a id="ac8bb3912a3ce86b15842e79d0b421204" name="ac8bb3912a3ce86b15842e79d0b421204"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
@@ -311,9 +312,6 @@ MechanicalObject&lt; <a class="el" href="classbeamadapter_1_1_base_beam_interpol
 <tr class="memitem:afab32c2c816fd71caf290451221693ca" id="r_afab32c2c816fd71caf290451221693ca"><td class="memItemLeft" align="right" valign="top"><a id="afab32c2c816fd71caf290451221693ca" name="afab32c2c816fd71caf290451221693ca"></a>
 Data&lt; VecEdgeID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_edgeList</b></td></tr>
 <tr class="separator:afab32c2c816fd71caf290451221693ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea622cf27a2af6d3a736bd1f5c8c25f6" id="r_aea622cf27a2af6d3a736bd1f5c8c25f6"><td class="memItemLeft" align="right" valign="top"><a id="aea622cf27a2af6d3a736bd1f5c8c25f6" name="aea622cf27a2af6d3a736bd1f5c8c25f6"></a>
-const VecEdges *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topologyEdges</b> { nullptr }</td></tr>
-<tr class="separator:aea622cf27a2af6d3a736bd1f5c8c25f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac151e87b5b35310239f391d244833068" id="r_ac151e87b5b35310239f391d244833068"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#ac151e87b5b35310239f391d244833068">d_lengthList</a></td></tr>
 <tr class="separator:ac151e87b5b35310239f391d244833068"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32dde414cec5c9c285bcfd55cfb27e89" id="r_a32dde414cec5c9c285bcfd55cfb27e89"><td class="memItemLeft" align="right" valign="top">Data&lt; type::vector&lt; Transform &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html#a32dde414cec5c9c285bcfd55cfb27e89">d_DOF0TransformNode0</a></td></tr>
@@ -329,14 +327,10 @@ Data&lt; type::vector&lt; Vec2 &gt; &gt;&#160;</td><td class="memItemRight" vali
 <tr class="memitem:a56d2f664fc6fe9d3b3d112bdb7a6fb33" id="r_a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memItemLeft" align="right" valign="top"><a id="a56d2f664fc6fe9d3b3d112bdb7a6fb33" name="a56d2f664fc6fe9d3b3d112bdb7a6fb33"></a>
 Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_dofsAndBeamsAligned</b></td></tr>
 <tr class="separator:a56d2f664fc6fe9d3b3d112bdb7a6fb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a861c2f7fc6a0a3f8e4599d835889817b" id="r_a861c2f7fc6a0a3f8e4599d835889817b"><td class="memItemLeft" align="right" valign="top"><a id="a861c2f7fc6a0a3f8e4599d835889817b" name="a861c2f7fc6a0a3f8e4599d835889817b"></a>
-BaseMeshTopology *&#160;</td><td class="memItemRight" valign="bottom"><b>m_topology</b> { nullptr }</td></tr>
-<tr class="memdesc:a861c2f7fc6a0a3f8e4599d835889817b"><td class="mdescLeft">&#160;</td><td class="mdescRight">pointer to the topology <br /></td></tr>
-<tr class="separator:a861c2f7fc6a0a3f8e4599d835889817b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac074561fb74cc5e9283867841af8d010" id="r_ac074561fb74cc5e9283867841af8d010"><td class="memItemLeft" align="right" valign="top"><a id="ac074561fb74cc5e9283867841af8d010" name="ac074561fb74cc5e9283867841af8d010"></a>
-MechanicalState&lt; DataTypes &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>m_mstate</b> { nullptr }</td></tr>
-<tr class="memdesc:ac074561fb74cc5e9283867841af8d010"><td class="mdescLeft">&#160;</td><td class="mdescRight">pointer on mechanical state <br /></td></tr>
-<tr class="separator:ac074561fb74cc5e9283867841af8d010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24846dd4595a9640747e73cf2c639854" id="r_a24846dd4595a9640747e73cf2c639854"><td class="memItemLeft" align="right" valign="top"><a id="a24846dd4595a9640747e73cf2c639854" name="a24846dd4595a9640747e73cf2c639854"></a>
+SingleLink&lt; <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>&lt; DataTypes &gt;, BaseMeshTopology, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_topology</b></td></tr>
+<tr class="memdesc:a24846dd4595a9640747e73cf2c639854"><td class="mdescLeft">&#160;</td><td class="mdescRight">link to the (edge) topology <br /></td></tr>
+<tr class="separator:a24846dd4595a9640747e73cf2c639854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a078d4cffe3962f03a28673ff327645cd" name="a078d4cffe3962f03a28673ff327645cd"></a>
@@ -1027,36 +1021,7 @@ template&lt;class DataTypes &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classbeamadapter_1_1_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">BeamInterpolation&lt; DataTypes &gt;</a>, and <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
-
-</div>
-</div>
-<a id="ad72eef1561c7a53b19b048397d4ef570" name="ad72eef1561c7a53b19b048397d4ef570"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad72eef1561c7a53b19b048397d4ef570">&#9670;&#160;</a></span>init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataTypes &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void init </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the topology from context and check if it is valid.</p>
-<p>Check the topology properties</p>
+<p>Implemented in <a class="el" href="classbeamadapter_1_1_wire_beam_interpolation.html#a6bb62ac2c53ea913c953256a151f063a">WireBeamInterpolation&lt; DataTypes &gt;</a>.</p>
 
 </div>
 </div>
@@ -1654,7 +1619,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a></li>
-    <li class="footer">Generated on Wed May 7 2025 08:20:15 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 14 2025 08:33:45 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
