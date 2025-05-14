@@ -341,7 +341,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const MechanicalParams* mp
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doAddMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
     MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
@@ -382,7 +382,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const MechanicalPara
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
 {
     const unsigned int numBeams = l_interpolation->getNumBeams();
 

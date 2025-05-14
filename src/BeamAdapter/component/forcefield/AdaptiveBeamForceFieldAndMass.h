@@ -121,10 +121,10 @@ public:
     /// Mass Interface
     /////////////////////////////////////
     void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
-    void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    void doAddMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
     void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
-    void buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
+    void doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
     void buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
     void buildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
 
