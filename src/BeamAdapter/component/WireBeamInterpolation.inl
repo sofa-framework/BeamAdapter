@@ -41,7 +41,8 @@ namespace beamadapter
 
 template <class DataTypes>
 WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes> *_restShape)
-    : m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
+    : Inherit()
+    , m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
 {
 
 
@@ -51,7 +52,7 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes>
 template <class DataTypes>
 void WireBeamInterpolation<DataTypes>::init()
 {
-    Inherited::init();
+    Inherit::init();
     
     if( m_restShape.get() == nullptr )
     {
@@ -72,7 +73,7 @@ void WireBeamInterpolation<DataTypes>::init()
 template <class DataTypes>
  void WireBeamInterpolation<DataTypes>::bwdInit()
 {
-    Inherited::bwdInit();
+     Inherit::bwdInit();
 
     if (this->isControlled()){
         msg_info() << "external controller for this ForceField is detected" ;

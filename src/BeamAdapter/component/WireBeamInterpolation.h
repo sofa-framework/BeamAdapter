@@ -75,22 +75,22 @@ class WireBeamInterpolation : public BaseBeamInterpolation<DataTypes>
 public:
     SOFA_CLASS(SOFA_TEMPLATE(WireBeamInterpolation, DataTypes) ,
                SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes) );
+    
+    using Inherit = BaseBeamInterpolation<DataTypes>;
 
-    typedef BaseBeamInterpolation<DataTypes> Inherited;
+    typedef typename Inherit::VecCoord VecCoord;
+    typedef typename Inherit::VecDeriv VecDeriv;
+    typedef typename Inherit::Coord Coord;
+    typedef typename Inherit::Deriv Deriv;
 
-    typedef typename Inherited::VecCoord VecCoord;
-    typedef typename Inherited::VecDeriv VecDeriv;
-    typedef typename Inherited::Coord Coord;
-    typedef typename Inherited::Deriv Deriv;
+    typedef typename Inherit::Real Real;
 
-    typedef typename Inherited::Real Real;
+    typedef typename Inherit::Transform Transform;
+    typedef typename Inherit::SpatialVector SpatialVector;
 
-    typedef typename Inherited::Transform Transform;
-    typedef typename Inherited::SpatialVector SpatialVector;
-
-    typedef typename Inherited::Vec2 Vec2;
-    typedef typename Inherited::Vec3 Vec3;
-    typedef typename Inherited::Quat Quat;
+    typedef typename Inherit::Vec2 Vec2;
+    typedef typename Inherit::Vec3 Vec3;
+    typedef typename Inherit::Quat Quat;
     
     using EdgeID = BaseMeshTopology::EdgeID;
 
@@ -176,9 +176,9 @@ public:
     BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
 
-    ////////////////////////// Inherited attributes ////////////////////////////
+    ////////////////////////// Inherit attributes ////////////////////////////
     /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
-    /// Bring inherited attributes and function in the current lookup context.
+    /// Bring Inherit attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
     using  BaseBeamInterpolation<DataTypes>::d_componentState ;
@@ -189,7 +189,7 @@ public:
     template<class T>
     static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
     {
-        return Inherited::canCreate(obj,context,arg);
+        return Inherit::canCreate(obj,context,arg);
     }
 
     template<class T>

@@ -69,6 +69,8 @@ class BeamInterpolation : public BaseBeamInterpolation<DataTypes>
 {
 public:
     SOFA_CLASS( SOFA_TEMPLATE(BeamInterpolation, DataTypes) , SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes));
+    
+    using Inherit = BaseBeamInterpolation<DataTypes>;
 
     using Coord = typename DataTypes::Coord;
     using VecCoord = typename DataTypes::VecCoord;
