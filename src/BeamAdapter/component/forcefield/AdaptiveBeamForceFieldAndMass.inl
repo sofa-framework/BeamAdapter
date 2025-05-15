@@ -472,7 +472,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const MechanicalPa
 }
 
 template <class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildDampingMatrix(core::behavior::DampingMatrix*)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildDampingMatrix(core::behavior::DampingMatrix*)
 {
     // No damping in this ForceField
 }
@@ -734,7 +734,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const MechanicalPara
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
 {
     const unsigned int numBeams = l_interpolation->getNumBeams();
 
