@@ -152,8 +152,8 @@ jobs:
             echo "Regression tests are not supported on the CI for macOS yet (TODO)"
           fi
 
-      - name: notify dashboard
-        if: always()
+      - name: Notify dashboard
+        if: always() && startsWith(github.repository, 'sofa-framework') && startsWith(github.ref, 'refs/heads/master') # we are not on a fork and on master
         env:
           DASH_AUTH: ${{ secrets.PLUGIN_DASH }}
         shell: bash
