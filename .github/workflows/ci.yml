@@ -1,4 +1,4 @@
-name: CI
+    name: CI
 
 on:
   workflow_dispatch:
@@ -29,6 +29,7 @@ jobs:
           path: ${{ env.WORKSPACE_SRC_PATH }}        
       
       - name: Build and install
+        id: build-install
         shell: bash
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
@@ -70,12 +71,14 @@ jobs:
           echo "artifact_name=$artifact_name" >> $env:GITHUB_OUTPUT
           
       - name: Create artifact
+        id: create-artifact
         uses: actions/upload-artifact@v4.4.0
         with:
           name: ${{ steps.sanitize.outputs.artifact_name }}
           path: ${{ env.WORKSPACE_INSTALL_PATH }}
 
       - name: Install artifact
+        id: install-artifact
         uses: actions/download-artifact@v4.1.7
         with:
           name: ${{ steps.sanitize.outputs.artifact_name }}
@@ -116,7 +119,9 @@ jobs:
       #     echo '----------------------'
       #     echo "SOFA_ROOT = $SOFA_ROOT"
 
+
       - name: Run BeamAdapter_test
+        id: unit-test
         if: always()
         shell: bash
         run: |
@@ -125,6 +130,7 @@ jobs:
           ./bin/BeamAdapter_test${{ steps.sofa.outputs.exe }}
 
       - name: Fetch, install and run Regression_test
+        id: regression-test
         if: always()
         shell: bash
         run: |
@@ -145,6 +151,36 @@ jobs:
           else
             echo "Regression tests are not supported on the CI for macOS yet (TODO)"
           fi
+
+      - name: Notify dashboard
+        if: always() && startsWith(github.repository, 'sofa-framework') && startsWith(github.ref, 'refs/heads/master') # we are not on a fork and on master
+        env:
+          DASH_AUTH: ${{ secrets.PLUGIN_DASH }}
+        shell: bash
+        run: |
+
+          test_status=$([ '${{ steps.unit-test.outcome }}' == 'success' ] && \
+                        [ '${{ steps.regression-test.outcome }}' == 'success' ] && \
+                        echo 'true' || echo 'false')
+
+          build_status=$([ '${{ steps.build-install.outcome }}' == 'success' ] && \
+                         echo 'true' || echo 'false')
+
+          binary_status=$([ '${{ steps.sanitize.outcome }}' == 'success' ] && \
+                         [ '${{ steps.create-artifact.outcome }}' == 'success' ] && \
+                         [ '${{ steps.install-artifact.outcome }}' == 'success' ] && \
+                         echo 'true' || echo 'false')
+
+
+          curl -X POST -H "X-API-KEY: $DASH_AUTH" -H "Content-Type: application/json" -d \
+          "{\"id\":\"$(echo "${{ github.repository }}" | awk -F/ '{ print $2 }')\",\
+           \"github_ref\":\"${{ github.sha }}\",\
+           \"url\":\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\
+           \"build\":\"$build_status\",\
+           \"tests\":\"$test_status\",\
+           \"binary\":\"$binary_status\"}"\
+           https://sofa-framework.org:5000/api/v1/plugins
+
 
   deploy:
     name: Deploy artifacts
