@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(BeamAdapter VERSION 1.0)
+project(BeamAdapter VERSION 1.0 LANGUAGES CXX CUDA)
 
 include(cmake/environment.cmake)
 
