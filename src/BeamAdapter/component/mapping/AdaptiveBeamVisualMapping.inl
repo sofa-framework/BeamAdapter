@@ -177,6 +177,7 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::bwdInit()
     
     const auto N = d_nbPointsOnEachCircle.getValue();
     const auto& edges = m_internalEdges;
+    const bool flipNormals = d_flipNormals.getValue();
     
     if(l_quadTopology->getNbQuads() == 0)
     {
@@ -194,7 +195,7 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::bwdInit()
                     const Index q2 = p1*N+((j+1)%N);
                     const Index q3 = p0*N+((j+1)%N);
                     
-                    if (d_flipNormals.getValue())
+                    if (flipNormals)
                     {
                         l_quadTopology->addQuad(q3, q2, q1, q0);
                     }
@@ -224,17 +225,41 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::bwdInit()
                     const Index q6 = p1*2*N+((j+1)%N) + N;
                     const Index q7 = p0*2*N+((j+1)%N) + N;
                     
-                    if (d_flipNormals.getValue())
+                    if (flipNormals)
                     {
                         l_quadTopology->addQuad(q3, q2, q1, q0);
-                        l_quadTopology->addQuad(q7, q6, q5, q4);
+                        l_quadTopology->addQuad(q4, q5, q6, q7); // normal of the inner layer must be inverted from the outer layer
                     }
                     else
                     {
                         l_quadTopology->addQuad(q0, q1, q2, q3);
-                        l_quadTopology->addQuad(q4, q5, q6, q7);
+                        l_quadTopology->addQuad(q7, q6, q5, q4);
                     }
                 }
+            }
+            
+            
+            // closing the extremities
+            const sofa::Size offset = static_cast<sofa::Size>(edges.size() * N * 2);
+            if(flipNormals)
+            {
+                for(unsigned int j=0; j<N-1; ++j)
+                {
+                    l_quadTopology->addQuad(j+N, j+N+1, j+1, j);
+                    l_quadTopology->addQuad(offset + j, offset+j+1, offset+j+N+1, offset+j+N);
+                }
+                l_quadTopology->addQuad(N+N-1, N, 0, N-1);
+                l_quadTopology->addQuad(offset+N-1, offset+0, offset+N, offset+N+N-1);
+            }
+            else
+            {
+                for(unsigned int j=0; j<N-1; ++j)
+                {
+                    l_quadTopology->addQuad(j, j+1, j+N+1, j+N);
+                    l_quadTopology->addQuad(offset+j+N, offset+j+N+1, offset+j+1, offset + j);
+                }
+                l_quadTopology->addQuad(N-1, 0, N, N+N-1);
+                l_quadTopology->addQuad(offset+N+N-1, offset+N, offset+0, offset+N-1);
             }
         }
     }
@@ -248,7 +273,7 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
     if (!this->isComponentStateValid())
         return;
     
-    const auto* beamState = this->l_wireBeamInterpolation->m_mstate;
+    const auto* beamState = this->l_wireBeamInterpolation->getMState();
     
     // workaround for l_wireBeamInterpolation->m_mstate is nullptr until bwdinit
     if (!beamState)
