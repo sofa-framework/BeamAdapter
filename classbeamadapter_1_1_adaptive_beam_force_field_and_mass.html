@@ -157,12 +157,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix6x6</b> = sofa
 <tr class="memitem:a6d0ae04981f40bb4547668df39892d2a" id="r_a6d0ae04981f40bb4547668df39892d2a"><td class="memItemLeft" align="right" valign="top"><a id="a6d0ae04981f40bb4547668df39892d2a" name="a6d0ae04981f40bb4547668df39892d2a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix6x6NoInit</b> = sofa::type::MatNoInit&lt; 6, 6, Real &gt;</td></tr>
 <tr class="separator:a6d0ae04981f40bb4547668df39892d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8d5dcfb2d169bae40623419200bee70" id="r_af8d5dcfb2d169bae40623419200bee70"><td class="memItemLeft" align="right" valign="top"><a id="af8d5dcfb2d169bae40623419200bee70" name="af8d5dcfb2d169bae40623419200bee70"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b> = typename sofa::defaulttype::SolidTypes&lt; Real &gt;::Transform</td></tr>
-<tr class="separator:af8d5dcfb2d169bae40623419200bee70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3840dd179bae8137ed77a52cfc9a5a72" id="r_a3840dd179bae8137ed77a52cfc9a5a72"><td class="memItemLeft" align="right" valign="top"><a id="a3840dd179bae8137ed77a52cfc9a5a72" name="a3840dd179bae8137ed77a52cfc9a5a72"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>SpatialVector</b> = typename sofa::defaulttype::SolidTypes&lt; Real &gt;::SpatialVector</td></tr>
-<tr class="separator:a3840dd179bae8137ed77a52cfc9a5a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36820fd6efbc6ba846cfd1a66bd0c220" id="r_a36820fd6efbc6ba846cfd1a66bd0c220"><td class="memItemLeft" align="right" valign="top"><a id="a36820fd6efbc6ba846cfd1a66bd0c220" name="a36820fd6efbc6ba846cfd1a66bd0c220"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Transform</b> = sofa::type::Transform&lt; Real &gt;</td></tr>
+<tr class="separator:a36820fd6efbc6ba846cfd1a66bd0c220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63768f68560ce98eeebe552c8cee813" id="r_af63768f68560ce98eeebe552c8cee813"><td class="memItemLeft" align="right" valign="top"><a id="af63768f68560ce98eeebe552c8cee813" name="af63768f68560ce98eeebe552c8cee813"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>SpatialVector</b> = sofa::type::SpatialVector&lt; Real &gt;</td></tr>
+<tr class="separator:af63768f68560ce98eeebe552c8cee813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31985d41984af4119b79c5e6147539e5" id="r_a31985d41984af4119b79c5e6147539e5"><td class="memItemLeft" align="right" valign="top"><a id="a31985d41984af4119b79c5e6147539e5" name="a31985d41984af4119b79c5e6147539e5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>BInterpolation</b> = <a class="el" href="classbeamadapter_1_1_base_beam_interpolation.html">BaseBeamInterpolation</a>&lt; DataTypes &gt;</td></tr>
 <tr class="separator:a31985d41984af4119b79c5e6147539e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,18 +179,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override<
 <tr class="memitem:ab1094b915e637faa84817a097d8d87be" id="r_ab1094b915e637faa84817a097d8d87be"><td class="memItemLeft" align="right" valign="top"><a id="ab1094b915e637faa84817a097d8d87be" name="ab1094b915e637faa84817a097d8d87be"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reinit</b> () override</td></tr>
 <tr class="separator:ab1094b915e637faa84817a097d8d87be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a414cc78a2cf3cc3a17d08a66c413a999" id="r_a414cc78a2cf3cc3a17d08a66c413a999"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a414cc78a2cf3cc3a17d08a66c413a999">draw</a> (const VisualParams *vparams) override</td></tr>
-<tr class="memdesc:a414cc78a2cf3cc3a17d08a66c413a999"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualization.  <br /></td></tr>
-<tr class="separator:a414cc78a2cf3cc3a17d08a66c413a999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49f02af0b262a65366a7bf8df05d27d3" id="r_a49f02af0b262a65366a7bf8df05d27d3"><td class="memItemLeft" align="right" valign="top"><a id="a49f02af0b262a65366a7bf8df05d27d3" name="a49f02af0b262a65366a7bf8df05d27d3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addMDx</b> (const MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecDeriv &amp;dx, SReal factor) override</td></tr>
-<tr class="memdesc:a49f02af0b262a65366a7bf8df05d27d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass Interface. <br /></td></tr>
-<tr class="separator:a49f02af0b262a65366a7bf8df05d27d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35dde21d79be768329c5d146e6d79fca" id="r_a35dde21d79be768329c5d146e6d79fca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a35dde21d79be768329c5d146e6d79fca">addMToMatrix</a> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
-<tr class="separator:a35dde21d79be768329c5d146e6d79fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad81f5968ab6d5c789c4883ac7c718530" id="r_ad81f5968ab6d5c789c4883ac7c718530"><td class="memItemLeft" align="right" valign="top"><a id="ad81f5968ab6d5c789c4883ac7c718530" name="ad81f5968ab6d5c789c4883ac7c718530"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addMBKToMatrix</b> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
-<tr class="separator:ad81f5968ab6d5c789c4883ac7c718530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87dd032f8f33e785c5540f5bc8f213a8" id="r_a87dd032f8f33e785c5540f5bc8f213a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a87dd032f8f33e785c5540f5bc8f213a8">draw</a> (const sofa::core::visual::VisualParams *vparams) override</td></tr>
+<tr class="memdesc:a87dd032f8f33e785c5540f5bc8f213a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualization.  <br /></td></tr>
+<tr class="separator:a87dd032f8f33e785c5540f5bc8f213a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79dd4a578fa36df703fa08a3ab5812c2" id="r_a79dd4a578fa36df703fa08a3ab5812c2"><td class="memItemLeft" align="right" valign="top"><a id="a79dd4a578fa36df703fa08a3ab5812c2" name="a79dd4a578fa36df703fa08a3ab5812c2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addMDx</b> (const sofa::core::MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecDeriv &amp;dx, SReal factor) override</td></tr>
+<tr class="memdesc:a79dd4a578fa36df703fa08a3ab5812c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass Interface. <br /></td></tr>
+<tr class="separator:a79dd4a578fa36df703fa08a3ab5812c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae226e4729faff5e2faf100a6189591c9" id="r_ae226e4729faff5e2faf100a6189591c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#ae226e4729faff5e2faf100a6189591c9">addMToMatrix</a> (const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor *matrix) override</td></tr>
+<tr class="separator:ae226e4729faff5e2faf100a6189591c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac742b048a364ab1ec3344773ea4a4b41" id="r_ac742b048a364ab1ec3344773ea4a4b41"><td class="memItemLeft" align="right" valign="top"><a id="ac742b048a364ab1ec3344773ea4a4b41" name="ac742b048a364ab1ec3344773ea4a4b41"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addMBKToMatrix</b> (const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor *matrix) override</td></tr>
+<tr class="separator:ac742b048a364ab1ec3344773ea4a4b41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4403d6c569b58f8f49d91b5a935f6256" id="r_a4403d6c569b58f8f49d91b5a935f6256"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a4403d6c569b58f8f49d91b5a935f6256">buildMassMatrix</a> (sofa::core::behavior::MassMatrixAccumulator *matrices) override</td></tr>
 <tr class="separator:a4403d6c569b58f8f49d91b5a935f6256"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4664359913203179d7ef20dc66d53b30" id="r_a4664359913203179d7ef20dc66d53b30"><td class="memItemLeft" align="right" valign="top"><a id="a4664359913203179d7ef20dc66d53b30" name="a4664359913203179d7ef20dc66d53b30"></a>
@@ -199,35 +199,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>buildStiffnessMatrix<
 <tr class="memitem:a628fa2699fe929127fc9a19c87174499" id="r_a628fa2699fe929127fc9a19c87174499"><td class="memItemLeft" align="right" valign="top"><a id="a628fa2699fe929127fc9a19c87174499" name="a628fa2699fe929127fc9a19c87174499"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDampingMatrix</b> (core::behavior::DampingMatrix *matrices) override</td></tr>
 <tr class="separator:a628fa2699fe929127fc9a19c87174499"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f1fa55b1f04b3fab16bc3b658d497db" id="r_a4f1fa55b1f04b3fab16bc3b658d497db"><td class="memItemLeft" align="right" valign="top"><a id="a4f1fa55b1f04b3fab16bc3b658d497db" name="a4f1fa55b1f04b3fab16bc3b658d497db"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>accFromF</b> (const MechanicalParams *mparams, DataVecDeriv &amp;, const DataVecDeriv &amp;) override</td></tr>
-<tr class="separator:a4f1fa55b1f04b3fab16bc3b658d497db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5672efcad2cf10d52461092846037a45" id="r_a5672efcad2cf10d52461092846037a45"><td class="memItemLeft" align="right" valign="top"><a id="a5672efcad2cf10d52461092846037a45" name="a5672efcad2cf10d52461092846037a45"></a>
-SReal&#160;</td><td class="memItemRight" valign="bottom"><b>getKineticEnergy</b> (const MechanicalParams *mparams, const DataVecDeriv &amp;) const override</td></tr>
-<tr class="memdesc:a5672efcad2cf10d52461092846037a45"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; vMv/2 using dof-&gt;getV() <br /></td></tr>
-<tr class="separator:a5672efcad2cf10d52461092846037a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee30a6def3e5ff28e5719b068932f9af" id="r_aee30a6def3e5ff28e5719b068932f9af"><td class="memItemLeft" align="right" valign="top"><a id="aee30a6def3e5ff28e5719b068932f9af" name="aee30a6def3e5ff28e5719b068932f9af"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addGravityToV</b> (const MechanicalParams *mparams, DataVecDeriv &amp;) override</td></tr>
-<tr class="separator:aee30a6def3e5ff28e5719b068932f9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a945b69d23a5982e845a53381d427fc0d" id="r_a945b69d23a5982e845a53381d427fc0d"><td class="memItemLeft" align="right" valign="top"><a id="a945b69d23a5982e845a53381d427fc0d" name="a945b69d23a5982e845a53381d427fc0d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>accFromF</b> (const sofa::core::MechanicalParams *mparams, DataVecDeriv &amp;, const DataVecDeriv &amp;) override</td></tr>
+<tr class="separator:a945b69d23a5982e845a53381d427fc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9167341ddca61d3e8dcdb33fa770c7b7" id="r_a9167341ddca61d3e8dcdb33fa770c7b7"><td class="memItemLeft" align="right" valign="top"><a id="a9167341ddca61d3e8dcdb33fa770c7b7" name="a9167341ddca61d3e8dcdb33fa770c7b7"></a>
+SReal&#160;</td><td class="memItemRight" valign="bottom"><b>getKineticEnergy</b> (const sofa::core::MechanicalParams *mparams, const DataVecDeriv &amp;) const override</td></tr>
+<tr class="memdesc:a9167341ddca61d3e8dcdb33fa770c7b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; vMv/2 using dof-&gt;getV() <br /></td></tr>
+<tr class="separator:a9167341ddca61d3e8dcdb33fa770c7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d6dd1091a8f010e91a8cea2f5be0609" id="r_a3d6dd1091a8f010e91a8cea2f5be0609"><td class="memItemLeft" align="right" valign="top"><a id="a3d6dd1091a8f010e91a8cea2f5be0609" name="a3d6dd1091a8f010e91a8cea2f5be0609"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addGravityToV</b> (const sofa::core::MechanicalParams *mparams, DataVecDeriv &amp;) override</td></tr>
+<tr class="separator:a3d6dd1091a8f010e91a8cea2f5be0609"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4da75f71dd850c64e84e68524e08d512" id="r_a4da75f71dd850c64e84e68524e08d512"><td class="memItemLeft" align="right" valign="top"><a id="a4da75f71dd850c64e84e68524e08d512" name="a4da75f71dd850c64e84e68524e08d512"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isDiagonal</b> () const override</td></tr>
 <tr class="separator:a4da75f71dd850c64e84e68524e08d512"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e447123c2639c737be660e6a5f3e439" id="r_a2e447123c2639c737be660e6a5f3e439"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a2e447123c2639c737be660e6a5f3e439">addForce</a> (const MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecCoord &amp;x, const DataVecDeriv &amp;v) override</td></tr>
-<tr class="memdesc:a2e447123c2639c737be660e6a5f3e439"><td class="mdescLeft">&#160;</td><td class="mdescRight">ForceField Interface.  <br /></td></tr>
-<tr class="separator:a2e447123c2639c737be660e6a5f3e439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af77f6f07efcdacd4750245541cfd29d0" id="r_af77f6f07efcdacd4750245541cfd29d0"><td class="memItemLeft" align="right" valign="top"><a id="af77f6f07efcdacd4750245541cfd29d0" name="af77f6f07efcdacd4750245541cfd29d0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addDForce</b> (const MechanicalParams *mparams, DataVecDeriv &amp;datadF, const DataVecDeriv &amp;datadX) override</td></tr>
-<tr class="separator:af77f6f07efcdacd4750245541cfd29d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31b4a7656af80f05a81301b8d2e82202" id="r_a31b4a7656af80f05a81301b8d2e82202"><td class="memItemLeft" align="right" valign="top"><a id="a31b4a7656af80f05a81301b8d2e82202" name="a31b4a7656af80f05a81301b8d2e82202"></a>
-SReal&#160;</td><td class="memItemRight" valign="bottom"><b>getPotentialEnergy</b> (const MechanicalParams *mparams, const DataVecCoord &amp;) const override</td></tr>
-<tr class="separator:a31b4a7656af80f05a81301b8d2e82202"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb6b56aa1c24aee67f9fde54f5de721c" id="r_acb6b56aa1c24aee67f9fde54f5de721c"><td class="memItemLeft" align="right" valign="top"><a id="acb6b56aa1c24aee67f9fde54f5de721c" name="acb6b56aa1c24aee67f9fde54f5de721c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addKToMatrix</b> (const MechanicalParams *mparams, const MultiMatrixAccessor *matrix) override</td></tr>
-<tr class="separator:acb6b56aa1c24aee67f9fde54f5de721c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9966751220bfdfe3d448b4922bb1ea6c" id="r_a9966751220bfdfe3d448b4922bb1ea6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a9966751220bfdfe3d448b4922bb1ea6c">computeStiffness</a> (int beam, <a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html">BeamLocalMatrices</a> &amp;beamLocalMatrices)</td></tr>
-<tr class="separator:a9966751220bfdfe3d448b4922bb1ea6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e98b141d7aa180d1c1fa8a78c9849c8" id="r_a3e98b141d7aa180d1c1fa8a78c9849c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a3e98b141d7aa180d1c1fa8a78c9849c8">computeMass</a> (int beam, <a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html">BeamLocalMatrices</a> &amp;beamMatrices)</td></tr>
-<tr class="separator:a3e98b141d7aa180d1c1fa8a78c9849c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131b4243ef75d02e83e9893265d5a8df" id="r_a131b4243ef75d02e83e9893265d5a8df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a131b4243ef75d02e83e9893265d5a8df">addForce</a> (const sofa::core::MechanicalParams *mparams, DataVecDeriv &amp;f, const DataVecCoord &amp;x, const DataVecDeriv &amp;v) override</td></tr>
+<tr class="memdesc:a131b4243ef75d02e83e9893265d5a8df"><td class="mdescLeft">&#160;</td><td class="mdescRight">ForceField Interface.  <br /></td></tr>
+<tr class="separator:a131b4243ef75d02e83e9893265d5a8df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a016635279c9db918fb2245aee676009a" id="r_a016635279c9db918fb2245aee676009a"><td class="memItemLeft" align="right" valign="top"><a id="a016635279c9db918fb2245aee676009a" name="a016635279c9db918fb2245aee676009a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addDForce</b> (const sofa::core::MechanicalParams *mparams, DataVecDeriv &amp;datadF, const DataVecDeriv &amp;datadX) override</td></tr>
+<tr class="separator:a016635279c9db918fb2245aee676009a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08e722d8167a31bfedf039d85f648c1a" id="r_a08e722d8167a31bfedf039d85f648c1a"><td class="memItemLeft" align="right" valign="top"><a id="a08e722d8167a31bfedf039d85f648c1a" name="a08e722d8167a31bfedf039d85f648c1a"></a>
+SReal&#160;</td><td class="memItemRight" valign="bottom"><b>getPotentialEnergy</b> (const sofa::core::MechanicalParams *mparams, const DataVecCoord &amp;) const override</td></tr>
+<tr class="separator:a08e722d8167a31bfedf039d85f648c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a585ebac44b870c6219050c2835f3ad39" id="r_a585ebac44b870c6219050c2835f3ad39"><td class="memItemLeft" align="right" valign="top"><a id="a585ebac44b870c6219050c2835f3ad39" name="a585ebac44b870c6219050c2835f3ad39"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addKToMatrix</b> (const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor *matrix) override</td></tr>
+<tr class="separator:a585ebac44b870c6219050c2835f3ad39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab123ed360dccdd8cc633f6650a56579c" id="r_ab123ed360dccdd8cc633f6650a56579c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#ab123ed360dccdd8cc633f6650a56579c">computeStiffness</a> (const sofa::Index beamID, <a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html">BeamLocalMatrices</a> &amp;beamLocalMatrices)</td></tr>
+<tr class="separator:ab123ed360dccdd8cc633f6650a56579c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d6f443fc275e92d2b631b16c88af4d6" id="r_a0d6f443fc275e92d2b631b16c88af4d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a0d6f443fc275e92d2b631b16c88af4d6">computeMass</a> (const sofa::Index beamID, <a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html">BeamLocalMatrices</a> &amp;beamMatrices)</td></tr>
+<tr class="separator:a0d6f443fc275e92d2b631b16c88af4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -253,10 +253,10 @@ Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_reinf
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a02f5da6ab0be3ccd962ecbdc0747afe8" id="r_a02f5da6ab0be3ccd962ecbdc0747afe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a02f5da6ab0be3ccd962ecbdc0747afe8">applyMassLarge</a> (VecDeriv &amp;df, int bIndex, Index nd0Id, Index nd1Id, SReal factor)</td></tr>
-<tr class="separator:a02f5da6ab0be3ccd962ecbdc0747afe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29b38cbe6228f118a7fb4d51854cd459" id="r_a29b38cbe6228f118a7fb4d51854cd459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a29b38cbe6228f118a7fb4d51854cd459">applyStiffnessLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, int beam, Index nd0Id, Index nd1Id, SReal factor)</td></tr>
-<tr class="separator:a29b38cbe6228f118a7fb4d51854cd459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7e4db542e28137039400978f251fb64" id="r_ae7e4db542e28137039400978f251fb64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#ae7e4db542e28137039400978f251fb64">applyMassLarge</a> (VecDeriv &amp;df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
+<tr class="separator:ae7e4db542e28137039400978f251fb64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af04a637b248be94a253ef8a13dafe4df" id="r_af04a637b248be94a253ef8a13dafe4df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#af04a637b248be94a253ef8a13dafe4df">applyStiffnessLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
+<tr class="separator:af04a637b248be94a253ef8a13dafe4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6151c3afd2ea8395734b42adb91cb6cf" id="r_a6151c3afd2ea8395734b42adb91cb6cf"><td class="memItemLeft" align="right" valign="top"><a id="a6151c3afd2ea8395734b42adb91cb6cf" name="a6151c3afd2ea8395734b42adb91cb6cf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computeGravityVector</b> ()</td></tr>
 <tr class="separator:a6151c3afd2ea8395734b42adb91cb6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,8 +272,8 @@ SingleLink&lt; <a class="el" href="classbeamadapter_1_1_adaptive_beam_force_fiel
 class beamadapter::AdaptiveBeamForceFieldAndMass&lt; DataTypes &gt;</div><p><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html" title="AdaptiveBeamForceFieldAndMass Class.">AdaptiveBeamForceFieldAndMass</a> Class. </p>
 <p>More informations about SOFA components: <a href="https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/">https://www.sofa-framework.org/community/doc/programming-with-sofa/create-your-component/</a> <a href="https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/">https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/</a> </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2e447123c2639c737be660e6a5f3e439" name="a2e447123c2639c737be660e6a5f3e439"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e447123c2639c737be660e6a5f3e439">&#9670;&#160;</a></span>addForce()</h2>
+<a id="a131b4243ef75d02e83e9893265d5a8df" name="a131b4243ef75d02e83e9893265d5a8df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a131b4243ef75d02e83e9893265d5a8df">&#9670;&#160;</a></span>addForce()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,7 +286,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void addForce </td>
           <td>(</td>
-          <td class="paramtype">const MechanicalParams *&#160;</td>
+          <td class="paramtype">const sofa::core::MechanicalParams *&#160;</td>
           <td class="paramname"><em>mparams</em>, </td>
         </tr>
         <tr>
@@ -368,8 +368,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a35dde21d79be768329c5d146e6d79fca" name="a35dde21d79be768329c5d146e6d79fca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35dde21d79be768329c5d146e6d79fca">&#9670;&#160;</a></span>addMToMatrix()</h2>
+<a id="ae226e4729faff5e2faf100a6189591c9" name="ae226e4729faff5e2faf100a6189591c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae226e4729faff5e2faf100a6189591c9">&#9670;&#160;</a></span>addMToMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -382,13 +382,13 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void addMToMatrix </td>
           <td>(</td>
-          <td class="paramtype">const MechanicalParams *&#160;</td>
+          <td class="paramtype">const sofa::core::MechanicalParams *&#160;</td>
           <td class="paramname"><em>mparams</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const MultiMatrixAccessor *&#160;</td>
+          <td class="paramtype">const sofa::core::behavior::MultiMatrixAccessor *&#160;</td>
           <td class="paramname"><em>matrix</em>&#160;</td>
         </tr>
         <tr>
@@ -407,8 +407,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a02f5da6ab0be3ccd962ecbdc0747afe8" name="a02f5da6ab0be3ccd962ecbdc0747afe8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02f5da6ab0be3ccd962ecbdc0747afe8">&#9670;&#160;</a></span>applyMassLarge()</h2>
+<a id="ae7e4db542e28137039400978f251fb64" name="ae7e4db542e28137039400978f251fb64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7e4db542e28137039400978f251fb64">&#9670;&#160;</a></span>applyMassLarge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,25 +427,25 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>bIndex</em>, </td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>beamID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>nd0Id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>nd1Id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">SReal&#160;</td>
+          <td class="paramtype">const SReal&#160;</td>
           <td class="paramname"><em>factor</em>&#160;</td>
         </tr>
         <tr>
@@ -467,8 +467,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a29b38cbe6228f118a7fb4d51854cd459" name="a29b38cbe6228f118a7fb4d51854cd459"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29b38cbe6228f118a7fb4d51854cd459">&#9670;&#160;</a></span>applyStiffnessLarge()</h2>
+<a id="af04a637b248be94a253ef8a13dafe4df" name="af04a637b248be94a253ef8a13dafe4df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af04a637b248be94a253ef8a13dafe4df">&#9670;&#160;</a></span>applyStiffnessLarge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -493,25 +493,25 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>beam</em>, </td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>beamID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>nd0Id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Index&#160;</td>
+          <td class="paramtype">const sofa::Index&#160;</td>
           <td class="paramname"><em>nd1Id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">SReal&#160;</td>
+          <td class="paramtype">const SReal&#160;</td>
           <td class="paramname"><em>factor</em>&#160;</td>
         </tr>
         <tr>
@@ -563,8 +563,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a3e98b141d7aa180d1c1fa8a78c9849c8" name="a3e98b141d7aa180d1c1fa8a78c9849c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e98b141d7aa180d1c1fa8a78c9849c8">&#9670;&#160;</a></span>computeMass()</h2>
+<a id="a0d6f443fc275e92d2b631b16c88af4d6" name="a0d6f443fc275e92d2b631b16c88af4d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d6f443fc275e92d2b631b16c88af4d6">&#9670;&#160;</a></span>computeMass()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -574,8 +574,8 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void computeMass </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>beam</em>, </td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>beamID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -598,8 +598,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a9966751220bfdfe3d448b4922bb1ea6c" name="a9966751220bfdfe3d448b4922bb1ea6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9966751220bfdfe3d448b4922bb1ea6c">&#9670;&#160;</a></span>computeStiffness()</h2>
+<a id="ab123ed360dccdd8cc633f6650a56579c" name="ab123ed360dccdd8cc633f6650a56579c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab123ed360dccdd8cc633f6650a56579c">&#9670;&#160;</a></span>computeStiffness()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -609,8 +609,8 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void computeStiffness </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>beam</em>, </td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>beamID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -635,8 +635,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="a414cc78a2cf3cc3a17d08a66c413a999" name="a414cc78a2cf3cc3a17d08a66c413a999"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a414cc78a2cf3cc3a17d08a66c413a999">&#9670;&#160;</a></span>draw()</h2>
+<a id="a87dd032f8f33e785c5540f5bc8f213a8" name="a87dd032f8f33e785c5540f5bc8f213a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87dd032f8f33e785c5540f5bc8f213a8">&#9670;&#160;</a></span>draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -649,7 +649,7 @@ template&lt;class DataTypes &gt; </div>
         <tr>
           <td class="memname">void draw </td>
           <td>(</td>
-          <td class="paramtype">const VisualParams *&#160;</td>
+          <td class="paramtype">const sofa::core::visual::VisualParams *&#160;</td>
           <td class="paramname"><em>vparams</em></td><td>)</td>
           <td></td>
         </tr>
@@ -672,7 +672,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Fri May 16 2025 15:35:04 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 19 2025 22:15:14 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
