@@ -673,12 +673,9 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addDForce(const MechanicalPara
 
 
 template<class DataTypes>
-void AdaptiveInflatableBeamForceField<DataTypes>::addKToMatrix(const MechanicalParams* mparams,
-                                                            const MultiMatrixAccessor* matrix)
+void AdaptiveInflatableBeamForceField<DataTypes>::addKToMatrix(sofa::linearalgebra::BaseMatrix * matrix,
+                                                               SReal kFact, unsigned int & offset)
 {
-    MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(mstate);
-    Real k = (Real)mparams->kFactor();
-
     unsigned int numBeams = l_interpolation->getNumBeams();
 
     for (unsigned int b=0; b<numBeams; b++)
@@ -699,18 +696,18 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addKToMatrix(const MechanicalP
 
         int index0[6], index1[6];
         for (int i=0;i<6;i++)
-            index0[i] = matrixRef.offset+node0Idx*6+i;
+            index0[i] = offset+node0Idx*6+i;
         for (int i=0;i<6;i++)
-            index1[i] = matrixRef.offset+node1Idx*6+i;
+            index1[i] = offset+node1Idx*6+i;
 
         for (int i=0;i<6;i++)
         {
             for (int j=0;j<6;j++)
             {
-                matrixRef.matrix->add(index0[i], index0[j], - K00(i,j)*k);
-                matrixRef.matrix->add(index0[i], index1[j], - K01(i,j)*k);
-                matrixRef.matrix->add(index1[i], index0[j], - K10(i,j)*k);
-                matrixRef.matrix->add(index1[i], index1[j], - K11(i,j)*k);
+                matrix->add(index0[i], index0[j], - K00(i,j)*kFact);
+                matrix->add(index0[i], index1[j], - K01(i,j)*kFact);
+                matrix->add(index1[i], index0[j], - K10(i,j)*kFact);
+                matrix->add(index1[i], index1[j], - K11(i,j)*kFact);
             }
         }
     }

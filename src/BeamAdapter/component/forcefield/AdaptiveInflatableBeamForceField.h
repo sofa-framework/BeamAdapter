@@ -200,8 +200,7 @@ public:
     }
 
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
-    void addKToMatrix(const MechanicalParams* mparams,
-                      const MultiMatrixAccessor* matrix) override;
+    void addKToMatrix(sofa::linearalgebra::BaseMatrix * matrix, SReal kFact, unsigned int & offset) override;
 
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
