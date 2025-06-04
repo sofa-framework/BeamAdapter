@@ -443,7 +443,7 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::applyJT( const sofa
 }
 
 template <class TIn1, class TIn2, class TOut>
-void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::applyDJT(const sofa::core::MechanicalParams* mparams,
+void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::doApplyDJT(const sofa::core::MechanicalParams* mparams,
                                                                       sofa::core::MultiVecDerivId inForce,
                                                                       sofa::core::ConstMultiVecDerivId outForce)
 {
@@ -453,7 +453,7 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::applyDJT(const sofa
 }
 
 template <class TIn1, class TIn2, class TOut>
-const sofa::type::vector<sofa::linearalgebra::BaseMatrix*>* BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::getJs()
+const sofa::type::vector<sofa::linearalgebra::BaseMatrix*>* BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::doGetJs()
 {
     const OutVecCoord& out = m_toModel->read(sofa::core::vec_id::read_access::position)->getValue();
     const In1VecCoord& in1 = m_fromModel1->read(sofa::core::vec_id::read_access::position)->getValue();
