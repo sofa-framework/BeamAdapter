@@ -198,7 +198,7 @@ void WireRestShape<DataTypes>::getMechanicalSampling(Real &dx, const Real x_curv
     Real x_used = x_curv - EPSILON;
 
     const Real totalLength = this->getLength();
-    x_used = std::clamp(x_used, 0.0, totalLength);
+    x_used = std::clamp(x_used, static_cast<Real>(0.0), totalLength);
 
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
     
