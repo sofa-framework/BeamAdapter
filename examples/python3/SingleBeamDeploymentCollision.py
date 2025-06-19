@@ -63,8 +63,8 @@ def createScene(rootNode):
     BeamCollis.addObject('EdgeSetTopologyModifier', name='colliseEdgeModifier')
     BeamCollis.addObject('MechanicalObject', name='CollisionDOFs')
     BeamCollis.addObject('MultiAdaptiveBeamMapping', controller='../DeployController', useCurvAbs=True, printLog=False, name='collisMap')
-    BeamCollis.addObject('LineCollisionModel', proximity=0.0)
-    BeamCollis.addObject('PointCollisionModel', proximity=0.0)
+    BeamCollis.addObject('LineCollisionModel', contactDistance=0.0)
+    BeamCollis.addObject('PointCollisionModel', contactDistance=0.0)
 
     Carotids = rootNode.addChild('Carotids')
     Carotids.addObject('MeshSTLLoader', filename='../mesh/carotids.stl', flipNormals=False, triangulate=True, name='meshLoader', rotation=[10.0, 0.0, -90.0])

@@ -66,8 +66,8 @@
             <EdgeSetTopologyModifier name="colliseEdgeModifier" />
             <MechanicalObject name="CollisionDOFs" />
             <MultiAdaptiveBeamMapping controller="../DeployController" useCurvAbs="1" printLog="0" name="collisMap" />
-            <LineCollisionModel proximity="0.0" />
-            <PointCollisionModel proximity="0.0" />
+            <LineCollisionModel contactDistance="0.0" />
+            <PointCollisionModel contactDistance="0.0" />
         </Node>
     </Node>  
     
