@@ -42,7 +42,7 @@
 
 using namespace sofa::gpu::cuda;
 
-namespace beamadapter::cuda
+namespace beamadapter
 {
     // template class SOFA_BEAMADAPTER_CUDA_API BeamInterpolation<CudaRigid3fTypes>;
     // template class SOFA_BEAMADAPTER_CUDA_API WireBeamInterpolation<CudaRigid3fTypes>;
@@ -67,7 +67,8 @@ namespace beamadapter::cuda
 #endif
 
 using namespace sofa::gpu::cuda;
-
+namespace cuda
+{
 void registerBeamAdapterCUDAComponents(sofa::core::ObjectFactory* factory)
 {
 #ifdef SOFA_GPU_CUDA_DOUBLE
@@ -145,5 +146,7 @@ void registerBeamAdapterCUDAComponents(sofa::core::ObjectFactory* factory)
 #endif
     );
 }
+
+} // namespace cuda
 
 } // namespace beamadapter
