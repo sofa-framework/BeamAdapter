@@ -109,8 +109,8 @@
 				<EdgeSetTopologyModifier   name="colliseEdgeModifier" />
 				<MechanicalObject name="CollisionDOFs"/>
 				<MultiAdaptiveBeamMapping  name="collisMap"  controller="../IRController" useCurvAbs="1" printLog="0"/> 
-				<LineCollisionModel proximity="0.0" group="1"/>
-				<PointCollisionModel proximity="0.0" group="1"/>
+				<LineCollisionModel contactDistance="0.0" group="1"/>
+				<PointCollisionModel contactDistance="0.0" group="1"/>
 		</Node>	
 
 		<Node name="VisuCatheter" activated="true">
