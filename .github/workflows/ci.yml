@@ -170,6 +170,7 @@ jobs:
                          [ '${{ steps.create-artifact.outcome }}' == 'success' ] && \
                          [ '${{ steps.install-artifact.outcome }}' == 'success' ] && \
                          echo 'true' || echo 'false')
+          os=$(echo "${{ matrix.os }}" | awk -F- '{ print $1 }')
 
 
           curl -X POST -H "X-API-KEY: $DASH_AUTH" -H "Content-Type: application/json" -d \
@@ -178,6 +179,7 @@ jobs:
            \"url\":\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\
            \"build\":$build_status,\
            \"tests\":$test_status,\
+           \"os\":\"$os\",\
            \"binary\":$binary_status}"\
            https://sofa-framework.org:5000/api/v1/plugins
 
