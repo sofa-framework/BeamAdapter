@@ -58,7 +58,7 @@ public:
     }
 
     /// Unload the scene
-    void onTearDown() override
+    void doTearDown() override
     {
         if (m_root != nullptr) {
             sofa::simulation::node::unload(m_root);
