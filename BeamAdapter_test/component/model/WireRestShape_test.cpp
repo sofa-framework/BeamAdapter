@@ -46,7 +46,7 @@ public:
     typedef typename Coord::value_type   Real;
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 
-    void onSetUp() override
+    void doSetUp() override
     {
         m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
 
@@ -55,7 +55,7 @@ public:
     }
 
     /// Unload the scene
-    void onTearDown() override
+    void doTearDown() override
     {
         if (m_root != nullptr) {
             sofa::simulation::node::unload(m_root);
