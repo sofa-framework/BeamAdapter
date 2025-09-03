@@ -38,12 +38,12 @@ var hierarchy =
     [ "BaseObject", null, [
       [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
     ] ],
-    [ "Constraint", null, [
-      [ "AdaptiveBeamLengthConstraint< DataTypes >", "classbeamadapter_1_1_adaptive_beam_length_constraint.html", null ]
-    ] ],
     [ "ConstraintResolution", null, [
       [ "AdaptiveBeamLengthConstraintResolution", "classbeamadapter_1_1_adaptive_beam_length_constraint_resolution.html", null ],
       [ "AdaptiveBeamSlidingConstraintResolution", "classbeamadapter_1_1_adaptive_beam_sliding_constraint_resolution.html", null ]
+    ] ],
+    [ "LagrangianConstraint", null, [
+      [ "AdaptiveBeamLengthConstraint< DataTypes >", "classbeamadapter_1_1_adaptive_beam_length_constraint.html", null ]
     ] ],
     [ "Mapping", null, [
       [ "AdaptiveBeamMapping< TIn, TOut >", "classbeamadapter_1_1_adaptive_beam_mapping.html", null ],
