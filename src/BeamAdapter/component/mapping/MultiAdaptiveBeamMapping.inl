@@ -307,45 +307,46 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
     // fill topology :
     _topology->clear();
     _topology->cleanup();
-
-    unsigned int numSeg, numLinesInstrument;
-    numSeg=0;
-    InReal DX=0;
-    // we chose the collision parameters of the most discretized instrument
+    
+    // we build the topology according to the description(s) of the tool(s)
+    // this will ensure that we have enough DOFs/edges for the worst deployment cases
+    SReal previousXAbs = 0.0;
+    SReal previousNbEdges = 0.0;
+    _topology->addPoint( 0.0, 0, 0);
     for (unsigned int i=0; i<m_instrumentList.size(); i++)
     {
         InReal dx=0;
+        unsigned int numLinesInstrument = 0;
+        
         m_instrumentList[i]->getNumberOfCollisionSegment(dx, numLinesInstrument);
-        if( numSeg < numLinesInstrument ){
-            numSeg = numLinesInstrument;
-            DX=dx;
+        
+        // add the DOFs and edges according to the number set in the tool
+        // DOFs
+        for (unsigned int i=1; i<numLinesInstrument+1; i++)
+        {
+            Real px = i*dx;
+            _topology->addPoint( previousXAbs + px, 0, 0);
         }
+        // Edges
+        for (unsigned int i=0; i<numLinesInstrument; i++)
+        {
+            _topology->addEdge(previousNbEdges + i, previousNbEdges + i+1);
+        }
+        
+        previousXAbs += (numLinesInstrument+1)*dx;
+        previousNbEdges += numLinesInstrument;
     }
-
-    msg_info() << "numSeg found in MultiAdaptiveBeamMapping="<< numSeg;
-
-
-    // add points
-    for ( int i=0; i<(int)numSeg+1; i++)
-    {
-        Real px = i*DX;
-        _topology->addPoint( px, 0, 0);
-    }
-    // add segments
-    for (int i=0; i<(int)numSeg; i++)
-    {
-        _topology->addEdge(i,i+1);
-    }
-
+    const auto totalNbDOFs = previousNbEdges + 1;
+    
     // create edge around vertex array
     _topology->init();
 
     // resize Mstate
-    this->toModel->resize(numSeg+1);
+    this->toModel->resize(totalNbDOFs);
 
     // resize the internal list of the collision points ( for each point : [x_curv on the global wire , id of the corresponding instrument]
-    _xPointList.resize(numSeg+1);
-    _idm_instrumentList.resize(numSeg+1);
+    _xPointList.resize(totalNbDOFs);
+    _idm_instrumentList.resize(totalNbDOFs);
 }
 
 
