@@ -1117,14 +1117,17 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int firstSimulatedNode)
 {
     WriteAccessor<Data<VecCoord> > xMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrestMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::restPosition);
     WriteAccessor<Data<VecDeriv> > vMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
 
     // set the position to startingPos for all the nodes that are not simulated
+    const auto& startPos = d_startingPos.getValue();
     // and add a fixedConstraint
     l_fixedConstraint->clearConstraints();
     for(unsigned int i=0; i<firstSimulatedNode-1 ; i++)
     {
-        xMstate[i]=d_startingPos.getValue();
+        xMstate[i] = startPos;
+        xrestMstate[i] = startPos;
         vMstate[i].clear();
         l_fixedConstraint->addConstraint(i);
     }
