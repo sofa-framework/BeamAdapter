@@ -284,6 +284,9 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
         newMapping->d_parallelMapping.setParent(&d_parallelMapping);
         newMapping->d_parallelMapping.update();
         m_subMappingList.push_back(newMapping);
+        
+        // add in the list of slaves, it is useful to see the sub-mappings in the GUI
+        this->addSlave(newMapping);
     }
 
 
