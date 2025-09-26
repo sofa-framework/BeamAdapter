@@ -1127,6 +1127,8 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
     for(unsigned int i=0; i<firstSimulatedNode-1 ; i++)
     {
         xMstate[i] = startPos;
+        // Overwriting the rest position avoids a jump of released DoFs, trying to reach their rest position when released
+        // This remains safe since BeamFEMForceField uses the interpolation object to compute transformation without using the rest shape
         xrestMstate[i] = startPos;
         vMstate[i].clear();
         l_fixedConstraint->addConstraint(i);
