@@ -672,7 +672,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
         // 3. we look for the mechanical sampling of the current instrument in order to "place" the following point
         Real xIncr;
-        m_instrumentsList[firstInstruOnx]->getMechanicalSampling(xIncr, xPointList[i]);
+        m_instrumentsList[firstInstruOnx]->getCollisionSampling(xIncr, xPointList[i]);
         xAbsCurv -= xIncr;
 
         // the following point could not have x_abs_curv<0;
