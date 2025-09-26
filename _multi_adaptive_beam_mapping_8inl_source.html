@@ -404,122 +404,123 @@ $(document).ready(function(){initNavTree('_multi_adaptive_beam_mapping_8inl_sour
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="comment">// fill topology :</span></div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    _topology-&gt;clear();</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    _topology-&gt;cleanup();</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSeg, numLinesInstrument;</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    numSeg=0;</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    InReal DX=0;</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="comment">// we chose the collision parameters of the most discretized instrument</span></div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;m_instrumentList.size(); i++)</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    {</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        InReal dx=0;</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        m_instrumentList[i]-&gt;getNumberOfCollisionSegment(dx, numLinesInstrument);</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordflow">if</span>( numSeg &lt; numLinesInstrument ){</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            numSeg = numLinesInstrument;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            DX=dx;</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        }</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    }</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    msg_info() &lt;&lt; <span class="stringliteral">&quot;numSeg found in MultiAdaptiveBeamMapping=&quot;</span>&lt;&lt; numSeg;</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="comment">// add points</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> i=0; i&lt;(int)numSeg+1; i++)</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    {</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        Real px = i*DX;</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        _topology-&gt;addPoint( px, 0, 0);</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="comment">// add segments</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;(int)numSeg; i++)</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        _topology-&gt;addEdge(i,i+1);</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    </div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="comment">// we build the topology according to the description(s) of the tool(s)</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment">// this will ensure that we have enough DOFs/edges for the worst deployment cases</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    SReal previousXAbs = 0.0;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    SReal previousNbEdges = 0.0;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    _topology-&gt;addPoint( 0.0, 0, 0);</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;m_instrumentList.size(); i++)</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    {</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        InReal dx=0;</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numLinesInstrument = 0;</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        </div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        m_instrumentList[i]-&gt;getNumberOfCollisionSegment(dx, numLinesInstrument);</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        </div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="comment">// add the DOFs and edges according to the number set in the tool</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="comment">// DOFs</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=1; i&lt;numLinesInstrument+1; i++)</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            Real px = i*dx;</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            _topology-&gt;addPoint( previousXAbs + px, 0, 0);</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        }</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="comment">// Edges</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;numLinesInstrument; i++)</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        {</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            _topology-&gt;addEdge(previousNbEdges + i, previousNbEdges + i+1);</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        }</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        </div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        previousXAbs += (numLinesInstrument+1)*dx;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        previousNbEdges += numLinesInstrument;</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    }</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="comment">// create edge around vertex array</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    _topology-&gt;init();</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="comment">// resize Mstate</span></div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    this-&gt;toModel-&gt;resize(numSeg+1);</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="comment">// resize the internal list of the collision points ( for each point : [x_curv on the global wire , id of the corresponding instrument]</span></div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    _xPointList.resize(numSeg+1);</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    _idm_instrumentList.resize(numSeg+1);</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>}</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="keyword">const</span> <span class="keyword">auto</span> totalNbDOFs = previousNbEdges + 1;</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    </div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="comment">// create edge around vertex array</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    _topology-&gt;init();</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="comment">// resize Mstate</span></div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    this-&gt;toModel-&gt;resize(totalNbDOFs);</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="comment">// resize the internal list of the collision points ( for each point : [x_curv on the global wire , id of the corresponding instrument]</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    _xPointList.resize(totalNbDOFs);</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    _idm_instrumentList.resize(totalNbDOFs);</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>}</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::bwdInit()</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>{</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;m_instrumentList.size(); i++)</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    {</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        m_subMappingList[i]-&gt;setUseCurvAbs(this-&gt;useCurvAbs.getValue());</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        m_subMappingList[i]-&gt;setName(<span class="stringliteral">&quot; SubMapping - &quot;</span> + m_instrumentList[i]-&gt;getName() );</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        m_subMappingList[i]-&gt;bwdInit();</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    }</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    assignSubMappingFromControllerInfo();</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>}</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::bwdInit()</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>{</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;m_instrumentList.size(); i++)</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    {</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        m_subMappingList[i]-&gt;setUseCurvAbs(this-&gt;useCurvAbs.getValue());</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        m_subMappingList[i]-&gt;setName(<span class="stringliteral">&quot; SubMapping - &quot;</span> + m_instrumentList[i]-&gt;getName() );</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        m_subMappingList[i]-&gt;bwdInit();</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    }</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    assignSubMappingFromControllerInfo();</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>}</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::setBarycentricMapping()</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>{</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    isBarycentricMapping=<span class="keyword">true</span>;</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;m_subMappingList.size();i++)</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    {</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        m_subMappingList[i]-&gt;setBarycentricMapping();</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    }</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>}</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="keywordtype">int</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::addBaryPoint(<span class="keyword">const</span> <span class="keywordtype">int</span>&amp; edgeId,<span class="keyword">const</span> Vec3&amp; _baryCoord,<span class="keywordtype">bool</span> isStraight)</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>{</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordtype">int</span> returnId=this-&gt;getMechTo()[0]-&gt;getSize();</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    this-&gt;getMechTo()[0]-&gt;resize(returnId+1);</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    assert(m_ircontroller !=<span class="keyword">nullptr</span> &amp;&amp; isBarycentricMapping);</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keyword">const</span> type::vector&lt;type::vector&lt;int&gt; &gt;&amp; id_instrument_curvAbs_table = m_ircontroller-&gt;get_id_instrument_curvAbs_table();</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordtype">int</span> nbControlledEdge  = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(id_instrument_curvAbs_table.size()) - 1;</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordtype">int</span> totalNbEdges = m_ircontroller-&gt;getTotalNbEdges();</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordtype">int</span> nbUnControlledEdges = totalNbEdges - nbControlledEdge;</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    assert(nbUnControlledEdges&gt;=0);</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keywordflow">if</span> (edgeId &lt; nbUnControlledEdges )</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    {</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        <span class="comment">//if the edge in question is not under control, dont need to compute for collision</span></div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    }</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    {</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        <span class="keywordtype">int</span> controledEdgeId = edgeId-nbUnControlledEdges;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="keyword">const</span> sofa::type::vector&lt;int&gt;&amp;  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        sofa::type::vector&lt; WireBeamInterpolation&lt;In&gt;  *&gt; m_instrumentsList;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        m_ircontroller-&gt;getInstrumentList(m_instrumentsList);</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        Real radius = m_instrumentsList[id_instrument_table_on_node[0]]-&gt;getBeamSection(controledEdgeId)._r;</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <span class="keywordtype">int</span> idInstrument  = id_instrument_table_on_node[0];</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=1;i&lt;id_instrument_table_on_node.size();i++)</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        {</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            <span class="keywordflow">if</span>(radius &lt; m_instrumentsList[id_instrument_table_on_node[i]]-&gt;getBeamSection(controledEdgeId)._r)</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            {</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>                radius = m_instrumentsList[id_instrument_table_on_node[i]]-&gt;getBeamSection(controledEdgeId)._r;</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>                idInstrument = id_instrument_table_on_node[i];</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>            }</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>        }</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        m_subMappingList[idInstrument]-&gt;addBaryPoint(controledEdgeId,_baryCoord,isStraight);</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        m_subMappingList[idInstrument]-&gt;addIdPointSubMap(returnId);</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    }</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keywordflow">return</span> returnId;</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>}</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span> </div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::clear(<span class="keywordtype">int</span> size)</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>{</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;m_subMappingList.size();i++)</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>        m_subMappingList[i]-&gt;clear(size);</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    this-&gt;getMechTo()[0]-&gt;resize(0);</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>}</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::setBarycentricMapping()</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>{</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    isBarycentricMapping=<span class="keyword">true</span>;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;m_subMappingList.size();i++)</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        m_subMappingList[i]-&gt;setBarycentricMapping();</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    }</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>}</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="keywordtype">int</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::addBaryPoint(<span class="keyword">const</span> <span class="keywordtype">int</span>&amp; edgeId,<span class="keyword">const</span> Vec3&amp; _baryCoord,<span class="keywordtype">bool</span> isStraight)</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>{</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordtype">int</span> returnId=this-&gt;getMechTo()[0]-&gt;getSize();</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    this-&gt;getMechTo()[0]-&gt;resize(returnId+1);</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    assert(m_ircontroller !=<span class="keyword">nullptr</span> &amp;&amp; isBarycentricMapping);</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keyword">const</span> type::vector&lt;type::vector&lt;int&gt; &gt;&amp; id_instrument_curvAbs_table = m_ircontroller-&gt;get_id_instrument_curvAbs_table();</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordtype">int</span> nbControlledEdge  = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(id_instrument_curvAbs_table.size()) - 1;</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordtype">int</span> totalNbEdges = m_ircontroller-&gt;getTotalNbEdges();</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <span class="keywordtype">int</span> nbUnControlledEdges = totalNbEdges - nbControlledEdge;</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    assert(nbUnControlledEdges&gt;=0);</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keywordflow">if</span> (edgeId &lt; nbUnControlledEdges )</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    {</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <span class="comment">//if the edge in question is not under control, dont need to compute for collision</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    }</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    {</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="keywordtype">int</span> controledEdgeId = edgeId-nbUnControlledEdges;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <span class="keyword">const</span> sofa::type::vector&lt;int&gt;&amp;  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        sofa::type::vector&lt; WireBeamInterpolation&lt;In&gt;  *&gt; m_instrumentsList;</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        m_ircontroller-&gt;getInstrumentList(m_instrumentsList);</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        Real radius = m_instrumentsList[id_instrument_table_on_node[0]]-&gt;getBeamSection(controledEdgeId)._r;</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="keywordtype">int</span> idInstrument  = id_instrument_table_on_node[0];</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=1;i&lt;id_instrument_table_on_node.size();i++)</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        {</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            <span class="keywordflow">if</span>(radius &lt; m_instrumentsList[id_instrument_table_on_node[i]]-&gt;getBeamSection(controledEdgeId)._r)</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>            {</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>                radius = m_instrumentsList[id_instrument_table_on_node[i]]-&gt;getBeamSection(controledEdgeId)._r;</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                idInstrument = id_instrument_table_on_node[i];</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>            }</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        }</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        m_subMappingList[idInstrument]-&gt;addBaryPoint(controledEdgeId,_baryCoord,isStraight);</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        m_subMappingList[idInstrument]-&gt;addIdPointSubMap(returnId);</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    }</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordflow">return</span> returnId;</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>}</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span> </div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> TIn, <span class="keyword">class</span> TOut&gt;</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span><span class="keywordtype">void</span> MultiAdaptiveBeamMapping&lt; TIn, TOut&gt;::clear(<span class="keywordtype">int</span> size)</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>{</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;m_subMappingList.size();i++)</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>        m_subMappingList[i]-&gt;clear(size);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    this-&gt;getMechTo()[0]-&gt;resize(0);</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>}</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>} <span class="comment">// namespace beamadapter</span></div>
 <div class="ttc" id="aclassbeamadapter_1_1_multi_adaptive_beam_mapping_html"><div class="ttname"><a href="classbeamadapter_1_1_multi_adaptive_beam_mapping.html">beamadapter::MultiAdaptiveBeamMapping</a></div><div class="ttdoc">MultiAdaptiveBeamMapping Class.</div><div class="ttdef"><b>Definition</b> MultiAdaptiveBeamMapping.h:48</div></div>
 <div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -528,7 +529,7 @@ $(document).ready(function(){initNavTree('_multi_adaptive_beam_mapping_8inl_sour
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_429833ab1b4ac5c228963ef763dbd568.html">mapping</a></li><li class="navelem"><b>MultiAdaptiveBeamMapping.inl</b></li>
-    <li class="footer">Generated on Wed Sep 24 2025 12:18:29 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri Sep 26 2025 08:05:32 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
