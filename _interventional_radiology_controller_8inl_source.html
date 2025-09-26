@@ -773,7 +773,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span> </div>
 <div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>        <span class="comment">// 3. we look for the mechanical sampling of the current instrument in order to &quot;place&quot; the following point</span></div>
 <div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>        Real xIncr;</div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>        m_instrumentsList[firstInstruOnx]-&gt;getMechanicalSampling(xIncr, xPointList[i]);</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>        m_instrumentsList[firstInstruOnx]-&gt;getCollisionSampling(xIncr, xPointList[i]);</div>
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>        xAbsCurv -= xIncr;</div>
 <div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span> </div>
 <div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>        <span class="comment">// the following point could not have x_abs_curv&lt;0;</span></div>
@@ -1269,7 +1269,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_ff77e963eac2778b9932a4f945f7cd72.html">controller</a></li><li class="navelem"><b>InterventionalRadiologyController.inl</b></li>
-    <li class="footer">Generated on Fri Sep 26 2025 08:05:32 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri Sep 26 2025 09:39:18 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
