@@ -49,12 +49,12 @@
         <RegularGridTopology name="MeshLines" nx="61" ny="1" nz="1"
                                     xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
                                     p0="0 0 0" drawEdges="1"/>
-        <MechanicalObject template="Rigid3d" name="DOFs Container" ry="-90" /> 
+        <MechanicalObject template="Rigid3d" name="DOFs Container" ry="-90"/> 
 
         <WireBeamInterpolation name="BeamInterpolation" WireRestShape="@../EdgeTopology/BeamRestShape"/>
         <AdaptiveBeamForceFieldAndMass name="BeamForceField" interpolation="@BeamInterpolation"/>
         <InterventionalRadiologyController name="DeployController" template="Rigid3d" instruments="BeamInterpolation"
-                                    topology="@MeshLines" startingPos="0 0 0 0 0 0 1" xtip="0" printLog="1" 
+                                    topology="@MeshLines" startingPos="0 0 0  0 -0.7071068 0 0.7071068" xtip="0" printLog="1" 
                                     rotationInstrument="0" step="5" speed="5" 
                                     listening="1" controlledInstrument="0"/>
         <LinearSolverConstraintCorrection wire_optimization="true" printLog="0" />
