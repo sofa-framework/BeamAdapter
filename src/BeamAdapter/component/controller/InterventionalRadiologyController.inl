@@ -283,8 +283,13 @@ void InterventionalRadiologyController<DataTypes>::init()
     }
 
     WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrest = *this->mState->write(sofa::core::vec_id::write_access::restPosition);
+    const auto& startPos = d_startingPos.getValue();
     for(unsigned int i=0; i<x.size(); i++)
-        x[i] = d_startingPos.getValue();
+    {
+        x[i] = startPos;
+        xrest[i] = startPos;
+    }
 
     applyInterventionalRadiologyController();
 
