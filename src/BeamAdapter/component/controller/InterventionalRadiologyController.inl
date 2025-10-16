@@ -283,8 +283,13 @@ void InterventionalRadiologyController<DataTypes>::init()
     }
 
     WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrest = *this->mState->write(sofa::core::vec_id::write_access::restPosition);
+    const auto& startPos = d_startingPos.getValue();
     for(unsigned int i=0; i<x.size(); i++)
-        x[i] = d_startingPos.getValue();
+    {
+        x[i] = startPos;
+        xrest[i] = startPos;
+    }
 
     applyInterventionalRadiologyController();
 
@@ -1117,14 +1122,19 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int firstSimulatedNode)
 {
     WriteAccessor<Data<VecCoord> > xMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrestMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::restPosition);
     WriteAccessor<Data<VecDeriv> > vMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
 
     // set the position to startingPos for all the nodes that are not simulated
+    const auto& startPos = d_startingPos.getValue();
     // and add a fixedConstraint
     l_fixedConstraint->clearConstraints();
     for(unsigned int i=0; i<firstSimulatedNode-1 ; i++)
     {
-        xMstate[i]=d_startingPos.getValue();
+        xMstate[i] = startPos;
+        // Overwriting the rest position avoids a jump of released DoFs, trying to reach their rest position when released
+        // This remains safe since BeamFEMForceField uses the interpolation object to compute transformation without using the rest shape
+        xrestMstate[i] = startPos;
         vMstate[i].clear();
         l_fixedConstraint->addConstraint(i);
     }

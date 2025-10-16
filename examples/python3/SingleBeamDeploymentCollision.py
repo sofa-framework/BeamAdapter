@@ -45,11 +45,11 @@ def createScene(rootNode):
                                     nx=61, ny=1, nz=1,
                                     xmax=0.0, xmin=0.0, ymin=0, ymax=0, zmax=0, zmin=0,
                                     p0=[0,0,0])
-    BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d', ry=-90)
+    BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d')
     BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', printLog=False)
     BeamMechanics.addObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', massDensity=0.00000155, interpolation='@BeamInterpolation')
     BeamMechanics.addObject('InterventionalRadiologyController', name='DeployController', template='Rigid3d', instruments='BeamInterpolation', 
-                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0], printLog=True, 
+                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, -0.7071068, 0, 0.7071068], xtip=[0], printLog=True, 
                                     rotationInstrument=[0], step=5., speed=5., 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
