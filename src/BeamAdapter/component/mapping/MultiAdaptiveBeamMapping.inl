@@ -48,28 +48,53 @@ using sofa::helper::ScopedAdvancedTimer;
 template <class TIn, class TOut>
 MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller)
 : Inherit(from, to)
+, l_controller(initLink("controller", "Link to the ircontroller component on scene"))
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-, m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
 , d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation in all the submappings"))
-, m_ircontroller(_ircontroller)
 , isBarycentricMapping(false)
 {
-    this->addAlias(&m_controlerPath, "controller");
+    l_controller.set(_ircontroller);
+    
 }
 
 
 template <class TIn, class TOut>
 MultiAdaptiveBeamMapping< TIn, TOut>::MultiAdaptiveBeamMapping()
 : Inherit()
+, l_controller(initLink("controller", "Link to the ircontroller component on scene"))
 , useCurvAbs(initData(&useCurvAbs,true,"useCurvAbs","true if the curvilinear abscissa of the points remains the same during the simulation if not the curvilinear abscissa moves with adaptivity and the num of segment per beam is always the same"))
-, m_controlerPath(initData(&m_controlerPath,"ircontroller", "Path to the ircontroller component on scene"))
 , d_parallelMapping(initData(&d_parallelMapping, false, "parallelMapping", "flag to enable parallel internal computation in all the submappings"))
-, m_ircontroller(nullptr)
 , isBarycentricMapping(false)
 {
-    this->addAlias(&m_controlerPath, "controller");
+    
 }
 
+template <class TIn, class TOut>
+void MultiAdaptiveBeamMapping< TIn, TOut>::parse(core::objectmodel::BaseObjectDescription* arg)
+{
+    // check for the old data name
+    if (arg->getAttribute("ircontroller"))
+    {
+        msg_warning() << "Attribute 'ircontroller' has been renamed to 'controller'. ";
+    }
+    
+    // check if the 'old' controller attribute is not a link (i.e not starting with '@')
+    if (arg->getAttribute("ircontroller") || arg->getAttribute("controller"))
+    {
+        const auto valueAttr = std::string((arg->getAttribute("ircontroller")) ? arg->getAttribute("ircontroller") : arg->getAttribute("controller"));
+        assert(!valueAttr.empty());
+        
+        if(valueAttr[0] != '@')
+        {
+            msg_warning() << "Attribute 'controller' (or 'ircontroller') is now a link, not a string anymore. The value needs to be a link (i.e starts with '@').";
+            msg_warning() << "The current string value will be converted to a link.";
+            arg->setAttribute("controller", std::string("@") + valueAttr);
+            
+        }
+    }
+    
+    Inherit::parse(arg);
+}
 
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::apply(const core::MechanicalParams* mparams /* PARAMS FIRST */, Data<VecCoord>& dOut, const Data<InVecCoord>& dIn)
@@ -160,7 +185,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
     sofa::type::vector<int> removeEdgeAtPoint;
 
     // 1. get the new controls
-    m_ircontroller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
+    l_controller->interventionalRadiologyCollisionControls(_xPointList, _idm_instrumentList, removeEdgeAtPoint);
     
     if(!isBarycentricMapping)
     {
@@ -252,29 +277,27 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::assignSubMappingFromControllerInfo()
 template <class TIn, class TOut>
 void MultiAdaptiveBeamMapping< TIn, TOut>::init()
 {
-    if (m_ircontroller==nullptr) 
+    if (!l_controller)
     {
-        ///////// get the Adaptive Interpolation component ///////
-        core::objectmodel::BaseContext * c = this->getContext();
-
-        const type::vector<std::string>& interpolName = m_controlerPath.getValue();
-        if (interpolName.empty()) {
-            m_ircontroller = c->get<TInterventionalRadiologyController>(core::objectmodel::BaseContext::Local);
-        } else {
-            m_ircontroller = c->get<TInterventionalRadiologyController>(m_controlerPath.getValue()[0]);
-        }
-
-        if (m_ircontroller == nullptr) {
-            msg_error() << " no Beam Interpolation found !!! the component can not work";
+        msg_warning() << "The InterventionalRadiologyController has not been set, searching in the parent node...";
+        
+        typename TInterventionalRadiologyController::SPtr ircontroller = nullptr;
+        this->getContext()->get(ircontroller, core::objectmodel::BaseContext::SearchUp);
+        
+        if (!ircontroller)
+        {
+            msg_error() << "No InterventionalRadiologyController found, this component cannot work and will be invalid.";
             sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
             return;
         }
-        else {
-            msg_info() << " interpolation named" << m_ircontroller->getName() << " found (for " << this->getName() << ")";
+        else
+        {
+            l_controller.set(ircontroller);
+            msg_warning() << "An InterventionalRadiologyController named " << l_controller->getName() << " has been found, and will be used for this component.";
         }
     }
 
-    m_ircontroller->getInstrumentList(m_instrumentList);
+    l_controller->getInstrumentList(m_instrumentList);
 
     // create a mapping for each instrument
     m_subMappingList.clear();
@@ -381,10 +404,10 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
     int returnId=this->getMechTo()[0]->getSize();
     this->getMechTo()[0]->resize(returnId+1);
 
-    assert(m_ircontroller !=nullptr && isBarycentricMapping);
-    const type::vector<type::vector<int> >& id_instrument_curvAbs_table = m_ircontroller->get_id_instrument_curvAbs_table();
+    assert(l_controller !=nullptr && isBarycentricMapping);
+    const type::vector<type::vector<int> >& id_instrument_curvAbs_table = l_controller->get_id_instrument_curvAbs_table();
     int nbControlledEdge  = static_cast<int>(id_instrument_curvAbs_table.size()) - 1;
-    int totalNbEdges = m_ircontroller->getTotalNbEdges();
+    int totalNbEdges = l_controller->getTotalNbEdges();
     int nbUnControlledEdges = totalNbEdges - nbControlledEdge;
     assert(nbUnControlledEdges>=0);
 
@@ -397,7 +420,7 @@ int MultiAdaptiveBeamMapping< TIn, TOut>::addBaryPoint(const int& edgeId,const V
         int controledEdgeId = edgeId-nbUnControlledEdges;
         const sofa::type::vector<int>&  id_instrument_table_on_node = id_instrument_curvAbs_table[controledEdgeId+1];
         sofa::type::vector< WireBeamInterpolation<In>  *> m_instrumentsList;
-        m_ircontroller->getInstrumentList(m_instrumentsList);
+        l_controller->getInstrumentList(m_instrumentsList);
         Real radius = m_instrumentsList[id_instrument_table_on_node[0]]->getBeamSection(controledEdgeId)._r;
         int idInstrument  = id_instrument_table_on_node[0];
         for(unsigned int i=1;i<id_instrument_table_on_node.size();i++)
