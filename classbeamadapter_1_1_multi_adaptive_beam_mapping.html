@@ -223,14 +223,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJT</b> (const co
 void&#160;</td><td class="memItemRight" valign="bottom"><b>applyJT</b> (const core::ConstraintParams *cparams, Data&lt; InMatrixDeriv &gt; &amp;out, const Data&lt; OutMatrixDeriv &gt; &amp;in) override</td></tr>
 <tr class="separator:a5e77419ee4e1faf3c37d036a3c8f9c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72eef1561c7a53b19b048397d4ef570" id="r_ad72eef1561c7a53b19b048397d4ef570"><td class="memItemLeft" align="right" valign="top"><a id="ad72eef1561c7a53b19b048397d4ef570" name="ad72eef1561c7a53b19b048397d4ef570"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> () override</td></tr>
 <tr class="separator:ad72eef1561c7a53b19b048397d4ef570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac70e2eeedc06de9ab4be138cf23fae4" id="r_aac70e2eeedc06de9ab4be138cf23fae4"><td class="memItemLeft" align="right" valign="top"><a id="aac70e2eeedc06de9ab4be138cf23fae4" name="aac70e2eeedc06de9ab4be138cf23fae4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>bwdInit</b> () override</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>bwdInit</b> () override</td></tr>
 <tr class="separator:aac70e2eeedc06de9ab4be138cf23fae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a047e7c67375af81bfb39fd5ba238e5f4" id="r_a047e7c67375af81bfb39fd5ba238e5f4"><td class="memItemLeft" align="right" valign="top"><a id="a047e7c67375af81bfb39fd5ba238e5f4" name="a047e7c67375af81bfb39fd5ba238e5f4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>handleEvent</b> (sofa::core::objectmodel::Event *) override</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>handleEvent</b> (sofa::core::objectmodel::Event *) override</td></tr>
 <tr class="separator:a047e7c67375af81bfb39fd5ba238e5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ecae0173eda77b82df7bd0902c8e45" id="r_a46ecae0173eda77b82df7bd0902c8e45"><td class="memItemLeft" align="right" valign="top"><a id="a46ecae0173eda77b82df7bd0902c8e45" name="a46ecae0173eda77b82df7bd0902c8e45"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>parse</b> (core::objectmodel::BaseObjectDescription *arg) override</td></tr>
+<tr class="separator:a46ecae0173eda77b82df7bd0902c8e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad9faef279bc359e8ccd536f7cfde76a" id="r_aad9faef279bc359e8ccd536f7cfde76a"><td class="memItemLeft" align="right" valign="top"><a id="aad9faef279bc359e8ccd536f7cfde76a" name="aad9faef279bc359e8ccd536f7cfde76a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setBarycentricMapping</b> ()</td></tr>
 <tr class="separator:aad9faef279bc359e8ccd536f7cfde76a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,12 +246,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> (int size)<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a2b59b3b794b76a65beab51d4e3a95173" id="r_a2b59b3b794b76a65beab51d4e3a95173"><td class="memItemLeft" align="right" valign="top"><a id="a2b59b3b794b76a65beab51d4e3a95173" name="a2b59b3b794b76a65beab51d4e3a95173"></a>
+SingleLink&lt; <a class="el" href="classbeamadapter_1_1_multi_adaptive_beam_mapping.html">MultiAdaptiveBeamMapping</a>&lt; TIn, TOut &gt;, <a class="el" href="classbeamadapter_1_1_interventional_radiology_controller.html">TInterventionalRadiologyController</a>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>l_controller</b></td></tr>
+<tr class="separator:a2b59b3b794b76a65beab51d4e3a95173"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a630ccdc1b760d0fe8ef99cb70fcbba9e" id="r_a630ccdc1b760d0fe8ef99cb70fcbba9e"><td class="memItemLeft" align="right" valign="top"><a id="a630ccdc1b760d0fe8ef99cb70fcbba9e" name="a630ccdc1b760d0fe8ef99cb70fcbba9e"></a>
 Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>useCurvAbs</b></td></tr>
 <tr class="separator:a630ccdc1b760d0fe8ef99cb70fcbba9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27f50b7df272a45bc44d0d132dc8dd45" id="r_a27f50b7df272a45bc44d0d132dc8dd45"><td class="memItemLeft" align="right" valign="top"><a id="a27f50b7df272a45bc44d0d132dc8dd45" name="a27f50b7df272a45bc44d0d132dc8dd45"></a>
-Data&lt; type::vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_controlerPath</b></td></tr>
-<tr class="separator:a27f50b7df272a45bc44d0d132dc8dd45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5fc6bed4cd286e8336811afcb056f25" id="r_af5fc6bed4cd286e8336811afcb056f25"><td class="memItemLeft" align="right" valign="top">Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_multi_adaptive_beam_mapping.html#af5fc6bed4cd286e8336811afcb056f25">d_parallelMapping</a></td></tr>
 <tr class="separator:af5fc6bed4cd286e8336811afcb056f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -268,9 +271,6 @@ sofa::type::vector&lt; <a class="el" href="classbeamadapter_1_1_wire_beam_interp
 <tr class="memitem:a8c2805e7523ba220b458e33369021ada" id="r_a8c2805e7523ba220b458e33369021ada"><td class="memItemLeft" align="right" valign="top"><a id="a8c2805e7523ba220b458e33369021ada" name="a8c2805e7523ba220b458e33369021ada"></a>
 sofa::type::vector&lt; typename <a class="el" href="classbeamadapter_1_1_adaptive_beam_mapping.html">AdaptiveBeamMapping</a>&lt; TIn, TOut &gt;::SPtr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_subMappingList</b></td></tr>
 <tr class="separator:a8c2805e7523ba220b458e33369021ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a521551555e6d55a9afd702449c2b747b" id="r_a521551555e6d55a9afd702449c2b747b"><td class="memItemLeft" align="right" valign="top"><a id="a521551555e6d55a9afd702449c2b747b" name="a521551555e6d55a9afd702449c2b747b"></a>
-<a class="el" href="classbeamadapter_1_1_interventional_radiology_controller.html">TInterventionalRadiologyController</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_ircontroller</b></td></tr>
-<tr class="separator:a521551555e6d55a9afd702449c2b747b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac195728f4367eebc718425b69d16aac9" id="r_ac195728f4367eebc718425b69d16aac9"><td class="memItemLeft" align="right" valign="top"><a id="ac195728f4367eebc718425b69d16aac9" name="ac195728f4367eebc718425b69d16aac9"></a>
 sofa::component::topology::container::dynamic::EdgeSetTopologyModifier *&#160;</td><td class="memItemRight" valign="bottom"><b>_edgeMod</b> {nullptr}</td></tr>
 <tr class="separator:ac195728f4367eebc718425b69d16aac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -342,7 +342,7 @@ template&lt;class TIn , class TOut &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_multi_adaptive_beam_mapping.html">MultiAdaptiveBeamMapping</a></li>
-    <li class="footer">Generated on Thu Oct 16 2025 21:32:42 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Nov 6 2025 09:25:17 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
