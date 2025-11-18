@@ -23,6 +23,7 @@
 #include <BeamAdapter/component/controller/BeamAdapterActionController.h>
 #include <sofa/core/objectmodel/MouseEvent.h>
 #include <sofa/core/objectmodel/KeypressedEvent.h>
+#include <sofa/core/objectmodel/KeyreleasedEvent.h>
 
 namespace beamadapter
 {
@@ -69,10 +70,11 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 {
     if (!d_writeMode.getValue())
         return;
-
+    
     /// Control keys for interventonal Radiology simulations:
     switch (kev->getKey())
     {
+		
     case 'E':
         m_currAction = BeamAdapterAction::NO_ACTION;
         m_exportActions = !m_exportActions;
@@ -109,6 +111,16 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 
 
 template <class DataTypes>
+void BeamAdapterActionController<DataTypes>::onKeyReleasedEvent(core::objectmodel::KeyreleasedEvent* kev)
+{
+    if (!d_writeMode.getValue())
+        return;
+
+    m_currAction = BeamAdapterAction::NO_ACTION;
+}
+
+
+template <class DataTypes>
 void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /*dt*/)
 {
     const auto currentTime = this->getContext()->getTime();
@@ -133,7 +145,6 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
         }
 
         m_lastAction = m_currAction;
-        m_currAction = BeamAdapterAction::NO_ACTION;
     }
     else
     {
