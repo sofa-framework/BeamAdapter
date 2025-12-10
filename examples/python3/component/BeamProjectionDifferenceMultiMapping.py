@@ -20,7 +20,7 @@ def createScene(rootnode):
     rootnode.dt.value = 0.01
 
     rootnode.addObject('FreeMotionAnimationLoop')
-    rootnode.addObject('ProjectedGaussSeidelConstraintSolver', maxIterations=1000, tolerance=1e-3)
+    rootnode.addObject('BlockGaussSeidelConstraintSolver', maxIterations=1000, tolerance=1e-3)
 
     simulation = rootnode.addChild('Simulation')
     simulation.addObject('EulerImplicitSolver')
