@@ -56,7 +56,7 @@
         />
         
         <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
-        <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8" />
+        <FixedWeakConstraint  indices="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8" />
 
         <Node name='VisuGuideCatheter'>
             <MechanicalObject name='dof_visual_GC' />
