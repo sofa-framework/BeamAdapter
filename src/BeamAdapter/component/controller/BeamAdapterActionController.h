@@ -59,6 +59,8 @@ public:
     /// Method to control the Beam using keyboard and save the actions in @sa d_actions
     void onKeyPressedEvent(core::objectmodel::KeypressedEvent* kev) override;
 
+    void onKeyReleasedEvent(core::objectmodel::KeyreleasedEvent* kev) override;
+
     /// Unused metho for mouse event
     void onMouseEvent(core::objectmodel::MouseEvent* ev) override { SOFA_UNUSED(ev);}
 

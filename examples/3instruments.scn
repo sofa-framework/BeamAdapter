@@ -65,7 +65,7 @@
             ymin='0' ymax='0'
             zmin='1' zmax='1'
 		/>
-		<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' ry='-90'/> 
+		<MechanicalObject template='Rigid3d' name='DOFs' showIndices='0' /> 
 
 		<WireBeamInterpolation name='InterpolCatheter' WireRestShape='@../topoLines_cath/catheterRestShape'/> 
 		<AdaptiveBeamForceFieldAndMass name='CatheterForceField' interpolation='@InterpolCatheter'/> 
