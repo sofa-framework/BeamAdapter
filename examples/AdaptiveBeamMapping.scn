@@ -7,6 +7,8 @@
  	<RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
  	<RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [CubeTopology MeshTopology] -->
  	<RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->
+	<RequiredPlugin name="BeamAdapter"/> <!-- Needed to use components [AdaptiveBeamController,AdaptiveBeamForceFieldAndMass,BeamInterpolation] -->
+
 	<VisualStyle displayFlags="showBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields" />
 
 	<DefaultAnimationLoop />
