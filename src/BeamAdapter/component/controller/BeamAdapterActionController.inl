@@ -77,7 +77,8 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 		
     case 'E':
         m_currAction = BeamAdapterAction::NO_ACTION;
-        m_exportActions = !m_exportActions;
+        std::cout << "timeSteps='" << d_timeSteps.getValue() << "'" << std::endl;
+        std::cout << "actions='" << d_actions.getValue() << "'" << std::endl;
         break;
     case 'D':
         m_currAction = BeamAdapterAction::DROP_TOOL;
@@ -137,12 +138,6 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
         auto actions = sofa::helper::WriteAccessor(d_actions);
         times.push_back(currentTime);
         actions.push_back(int(m_currAction));
-
-        if (m_exportActions)
-        {
-            std::cout << "timeSteps='" << times.wref() << "'" << std::endl;
-            std::cout << "actions='" << actions.wref() << "'" << std::endl;
-        }
 
         m_lastAction = m_currAction;
     }
