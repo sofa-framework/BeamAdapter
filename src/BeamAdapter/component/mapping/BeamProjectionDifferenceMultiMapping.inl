@@ -55,7 +55,7 @@ BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::BeamProjectionDifference
     , d_updateProjectionOrientation(initData(&d_updateProjectionOrientation, false, "updateProjectionOrientation", "Update the projection on the beam at each time step even when direction[0]=1."))
     , d_draw(initData(&d_draw, "draw", "Draw projection points and directions"))
     , d_drawSize(initData(&d_drawSize, Real(3), "drawSize", ""))
-    , d_projections(initData(&d_projections, "projections", ""))
+    , d_projections(initData(&d_projections, "projections", "Computed projection points."))
     , d_filter(initData(&d_filter, Real(1e-2), "filter", "When updating the projection at each time step, use this parameter to filter small changes: "
                                                          "If the projection is on the same edge as the previous step, and the weight (in [0, 1]) is smaller than the value of 'filter', skip."))
     , l_in2Topology(initLink("topologyInput2", "link to input2's topology container (beams to project on)"))
