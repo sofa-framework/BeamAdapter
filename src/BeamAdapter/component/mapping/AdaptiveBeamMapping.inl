@@ -44,8 +44,8 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
-#include <sofa/simulation/ParallelForEach.h>
-#include <sofa/simulation/MainTaskSchedulerFactory.h>
+#include <sofa/simulation/task/ParallelForEach.h>
+#include <sofa/simulation/task/MainTaskSchedulerFactory.h>
 
 namespace beamadapter
 {
