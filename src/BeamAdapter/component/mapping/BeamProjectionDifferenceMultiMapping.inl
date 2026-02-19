@@ -55,6 +55,9 @@ BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::BeamProjectionDifference
     , d_updateProjectionOrientation(initData(&d_updateProjectionOrientation, false, "updateProjectionOrientation", "Update the projection on the beam at each time step even when direction[0]=1."))
     , d_draw(initData(&d_draw, "draw", "Draw projection points and directions"))
     , d_drawSize(initData(&d_drawSize, Real(3), "drawSize", ""))
+    , d_projections(initData(&d_projections, "projections", "Computed projection points."))
+    , d_filter(initData(&d_filter, Real(1e-2), "filter", "When updating the projection at each time step, use this parameter to filter small changes: "
+                                                         "If the projection is on the same edge as the previous step, and the weight (in [0, 1]) is smaller than the value of 'filter', skip."))
     , l_in2Topology(initLink("topologyInput2", "link to input2's topology container (beams to project on)"))
     , l_interpolation(initLink("interpolationInput2", "link to input2's interpolation component (BeamInterpolation)"))
     , m_fromModel1(NULL)
@@ -124,6 +127,10 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::init()
         msg_warning() << "Wrong size for directions, [" << directions << "]. The size should be " << OutCoord::total_size << ".";
         directions.resize(OutCoord::total_size);
     }
+
+    auto projections = sofa::helper::getWriteAccessor(d_projections);
+    const auto& indices = sofa::helper::getReadAccessor(d_indices);
+    projections.resize(indices.size());
 }
 
 
@@ -134,8 +141,9 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::computeProjection(c
     auto interpolation = l_interpolation.get();
     auto edges = l_in2Topology.get()->getEdges();
 
-    // for each point of P of xFrom
+    // for each point P of xFrom
     const auto& indices = sofa::helper::getReadAccessor(d_indices);
+    const auto& filter = sofa::helper::getReadAccessor(d_filter);
     m_mappedPoints.resize(indices.size());
 
     for (unsigned int i=0; i<indices.size(); i++)
@@ -155,16 +163,17 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::computeProjection(c
             OutDeriv dirAxe = Out::coordDifference(Q2, Q1);
             Real normAxe = In1::getDPos(dirAxe).norm();
 
-            if (std::abs(normAxe)<std::numeric_limits<SReal>::epsilon())  // edge is degenerated, continue with next edge
+            SReal epsilon = std::numeric_limits<SReal>::epsilon();
+            if (std::abs(normAxe)<epsilon)  // edge is degenerated, continue with next edge
                 continue;
 
             dirAxe /= normAxe;
 
             Real r =  In1::getDPos(In1::coordDifference(P, Q1)) * In1::getDPos(dirAxe);
             Real alpha = r / normAxe;
-            alpha = (std::abs(alpha)<1e-2)? std::abs(alpha): alpha;
+            alpha = (std::abs(alpha)<1e-2)? std::abs(alpha): alpha; // avoid jumps between two edges when the projection is near the boundary
 
-            if (alpha < 0 || alpha > 1)  // not on the edge, continue with next edge
+            if (alpha < 0 - epsilon || alpha > 1 + epsilon)  // not on the edge, continue with next edge
                 continue;
 
             In1Coord proj;
@@ -198,16 +207,19 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::computeProjection(c
         {
             mp.interpolatedTransform = m_mappedPoints[i].interpolatedTransform;
         }
-        m_mappedPoints[i] = mp;
+
+        // When updating the projection at each time step, filter small changes
+        if (m_mappedPoints[i].edgeIndex != mp.edgeIndex || std::abs(m_mappedPoints[i].alpha - mp.alpha) > filter)
+            m_mappedPoints[i] = mp;
     }
 }
 
 
 template <class TIn1, class TIn2, class TOut>
-void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::apply( const sofa::core::MechanicalParams* mparams,
-                                                                  const sofa::type::vector<OutDataVecCoord*>& dataVecOutPos,
-                                                                  const sofa::type::vector<const In1DataVecCoord*>& dataVecIn1Pos ,
-                                                                  const sofa::type::vector<const In2DataVecCoord*>& dataVecIn2Pos)
+void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::apply(const sofa::core::MechanicalParams* mparams,
+                                                                   const sofa::type::vector<OutDataVecCoord*>& dataVecOutPos,
+                                                                   const sofa::type::vector<const In1DataVecCoord*>& dataVecIn1Pos,
+                                                                   const sofa::type::vector<const In2DataVecCoord*>& dataVecIn2Pos)
 {
     SOFA_UNUSED(mparams);
 
@@ -222,6 +234,7 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::apply( const sofa::
     OutVecCoord& out = *dataVecOutPos[0]->beginEdit();
     const auto& directions = sofa::helper::getReadAccessor(d_directions);
     auto interpolation = l_interpolation.get();
+    auto projections = sofa::helper::getWriteAccessor(d_projections);
 
     if (m_mappedPoints.empty() || !directions[0])
     {
@@ -243,26 +256,22 @@ void BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>::apply( const sofa::
         MappedPoint& mp = m_mappedPoints[i];
         if (mp.onBeam)
         {
-            Transform interpolatedTransform;
-            interpolation->InterpolateTransformUsingSpline(interpolatedTransform,
+            Transform R0_H_projection; // projection of the constraint on the beam
+            interpolation->InterpolateTransformUsingSpline(R0_H_projection,
                                                            mp.alpha,
                                                            Transform(in2[mp.pi1].getCenter(), in2[mp.pi1].getOrientation()),
                                                            Transform(in2[mp.pi2].getCenter(), in2[mp.pi2].getOrientation()),
                                                            interpolation->getLength(mp.edgeIndex));
 
-            In1Coord projection;
-            projection.getCenter() = interpolatedTransform.getOrigin();
-            projection.getOrientation() = interpolatedTransform.getOrientation();
+            Transform R0_H_constraint(in1[indices[i]].getCenter(), in1[indices[i]].getOrientation());
+            In1Coord projection(R0_H_projection.getOrigin(), R0_H_projection.getOrientation());
+            projections[i] = projection;
 
-            In1Coord p;
-            for (size_t j=0; j<In1Coord::total_size; j++)
-            {
-                p[j] = in1[indices[i]][j] - projection[j];
-            }
-
+            Transform constraint_H_projection;
+            constraint_H_projection = R0_H_projection.inversed() * R0_H_constraint;
             In1Coord v;
-            v.getCenter() = mp.interpolatedTransform.getRotationMatrix().transposed() * Out::getCPos(p);
-            v.getOrientation() = p.getOrientation() * Out::getCRot(p);
+            v.getCenter() = constraint_H_projection.getOrigin();
+            v.getOrientation() = constraint_H_projection.getOrientation();
 
             for (size_t j=0; j<In1Coord::total_size; j++)
             {
