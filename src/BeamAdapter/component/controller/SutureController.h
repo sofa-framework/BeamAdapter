@@ -38,8 +38,6 @@
 #include <sofa/helper/set.h>
 
 #include <sofa/component/controller/MechanicalStateController.h>
-#include <sofa/component/collision/geometry/PointModel.h>
-#include <sofa/component/collision/geometry/LineModel.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
