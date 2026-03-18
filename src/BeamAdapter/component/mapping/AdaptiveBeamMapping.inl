@@ -417,9 +417,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x = dataInX.getValue();
 
-    m_isXBufferUsed = false;
-    m_xBuffer = x ;
-
     //////////// What's for ?? it seems not useful//////////
     bool proximity_lever = false;
     if (d_proximity.getValue() > 0.0)
