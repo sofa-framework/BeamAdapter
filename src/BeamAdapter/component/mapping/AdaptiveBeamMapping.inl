@@ -205,8 +205,6 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in = dIn.getValue();
 
-    m_isXBufferUsed=false;
-
     // When using an adaptatif controller, one need to redistribute the points at each time step
     {
         SCOPED_TIMER("computeDistribution");

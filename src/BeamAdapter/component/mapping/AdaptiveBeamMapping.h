@@ -191,9 +191,6 @@ public:
 
     TopologyContainer* m_topology;
 
-    bool m_isXBufferUsed;
-    typename In::VecCoord m_xBuffer;
-
     type::vector< PosPointDefinition > m_pointBeamDistribution;
 
     /// for continuous_friction_contact:

@@ -53,8 +53,6 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in= dIn.getValue();
 
-    m_isXBufferUsed=false;
-
     // When using an adaptatif controller, one need to redistribute the points at each time step
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
         computeDistribution();
