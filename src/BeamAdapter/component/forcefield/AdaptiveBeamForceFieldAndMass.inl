@@ -492,15 +492,22 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
 
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
     const VecCoord& x = datax.getValue();
+    const auto& massDensity = helper::getReadAccessor(d_massDensity);
 
     f.resize(x.size()); // current content of the vector will remain the same (http://www.cplusplus.com/reference/vector/vector/resize/)
 
     const auto numBeams = l_interpolation->getNumBeams();
     m_localBeamMatrices.resize(numBeams);
 
-    if(d_computeMass.getValue())
+    const bool computeMass = d_computeMass.getValue();
+    const bool reinforceLength = d_reinforceLength.getValue();
+    const bool useShearStressComputation = d_useShearStressComputation.getValue();
+    
+    if(computeMass)
+    {
         computeGravityVector();
-
+    }
+    
     /// TODO:
     ///* Redimentionner _localBeamMatrices
     ///* Calculer les rotation et les transformations
@@ -560,11 +567,9 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
         /// Update Interpolation & geometrical parameters with current positions
 
         /// material parameters
-        auto beamInterpolation = l_interpolation.get();
-        beamInterpolation->getInterpolationParameters(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
+        l_interpolation->getInterpolationParameters(beamId, beamMatrices._L, beamMatrices._A, beamMatrices._Iy,
             beamMatrices._Iz, beamMatrices._Asy, beamMatrices._Asz, beamMatrices._J);
 
-        const auto& massDensity = helper::getReadAccessor(d_massDensity);
         // for BeamInterpolation which is not overidding the _rho
         if (beamId < static_cast<sofa::Index>(massDensity.size()))
         {
@@ -574,12 +579,12 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
         {
             beamMatrices._rho = m_defaultMassDensity;
         }
-        beamInterpolation->getMechanicalParameters(beamId, beamMatrices._youngM, beamMatrices._cPoisson, beamMatrices._rho);
+        l_interpolation->getMechanicalParameters(beamId, beamMatrices._youngM, beamMatrices._cPoisson, beamMatrices._rho);
 
         /// compute the local mass matrices
-        if(d_computeMass.getValue())
+        if(computeMass)
         {
-            computeMass(beamId, beamMatrices);
+            this->computeMass(beamId, beamMatrices);
         }
 
         /// IF RIGIDIFICATION: no stiffness forces:
@@ -610,7 +615,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
             U1local[i+3] = u1.getAngularVelocity()[i];
         }
 
-        if(d_reinforceLength.getValue())
+        if(reinforceLength)
         {
             Vec3 P0,P1,P2,P3;
             Real length;
@@ -622,7 +627,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
             U1local[0]=( length-rest_length)/2;
         }
 
-        if (!d_useShearStressComputation.getValue())
+        if (!useShearStressComputation)
         {
             /////////////////// TEST //////////////////////
             /// test: correction due to spline computation;
@@ -657,7 +662,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
         }
     }
 
-    if(d_computeMass.getValue())
+    if(computeMass)
     {
         /// will add gravity directly using m_gravity:
         DataVecDeriv emptyVec;
