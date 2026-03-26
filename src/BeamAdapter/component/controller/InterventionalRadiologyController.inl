@@ -1125,6 +1125,7 @@ void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsign
 
     if (firstSimulatedNode == 0)
     {
+        msg_warning() << "An invalid value of firstSimulatedNode equal to 0 has been given to fixFirstNodesWithUntil() method.";
         d_indexFirstNode = 0;
         return;
     }
