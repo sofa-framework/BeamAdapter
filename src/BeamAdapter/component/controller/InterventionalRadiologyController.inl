@@ -573,9 +573,16 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
 
             if (curvAbs_interval > 0)
             {
+                const Real intervalLength = nxP - xP;
+                if (intervalLength <= 0 || density_I[j] == 0)
+                {
+                    xSampling = curvAbs_nxP;
+                    continue;
+                }
+
                 // compute the number of point of the emerged interval (if all the interval is emerged, i.e >0 , numNewNodes == density[j])
-                Real ratio = Real(density_I[j]) / (nxP - xP);
-                int numNewNodes = int(floor(curvAbs_interval * ratio)); // if density == 0, no sampling (numNewNodes == 0) 
+                Real ratio = Real(density_I[j]) / intervalLength;
+                int numNewNodes = int(floor(curvAbs_interval * ratio));
 
                 // Add the new points using reverse order iterator as they are computed deduce to next noticeable point
                 for (int k = numNewNodes; k>0; k--)
