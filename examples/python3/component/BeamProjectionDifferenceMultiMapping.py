@@ -49,7 +49,7 @@ def createScene(rootnode):
     fixing = particles.addChild('FixingConstraintParticle1')
     beam.addChild(fixing)
     fixing.addObject('MechanicalObject', template='Rigid3', position=[0, 0, 0, 0, 0, 0, 0])
-    fixing.addObject('RestShapeSpringsForceField', stiffness=1e6, angularStiffness=1e6)
+    fixing.addObject('FixedWeakConstraint', stiffness=1e6, angularStiffness=1e6)
     fixing.addObject('BeamProjectionDifferenceMultiMapping',
                      directions=[1, 1, 1, 1, 1, 1, 1],  # The three positions and rotations
                      input1=particles.getMechanicalState().linkpath,
@@ -63,7 +63,7 @@ def createScene(rootnode):
     sliding = particles.addChild('SlidingConstraintParticle2')
     beam.addChild(sliding)
     sliding.addObject('MechanicalObject', template='Rigid3', position=[0, 0, 0, 0, 0, 0, 0])
-    sliding.addObject('RestShapeSpringsForceField', stiffness=1e6, angularStiffness=0)
+    sliding.addObject('FixedWeakConstraint', stiffness=1e6, angularStiffness=0, fixAll=True)
     sliding.addObject('BeamProjectionDifferenceMultiMapping',
                       directions=[0, 1, 1, 1, 1, 1, 1],  # Only y, z positions to allow the particle to slide on the beam
                       # but this time we add the three rotations
@@ -77,7 +77,7 @@ def createScene(rootnode):
     sliding = particles.addChild('SlidingConstraintParticle3')
     beam.addChild(sliding)
     sliding.addObject('MechanicalObject', template='Rigid3', position=[0, 0, 0, 0, 0, 0, 0])
-    sliding.addObject('RestShapeSpringsForceField', stiffness=1e6, angularStiffness=1e6)
+    sliding.addObject('FixedWeakConstraint', stiffness=1e6, angularStiffness=1e6, fixAll=True)
     sliding.addObject('BeamProjectionDifferenceMultiMapping',
                       directions=[0, 1, 1, 0, 0, 0, 0],  # Only y, z positions to allow the particle to slide on the beam
                       input1=particles.getMechanicalState().linkpath,
