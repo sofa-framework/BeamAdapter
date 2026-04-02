@@ -36,7 +36,7 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyContainer.h>
 #include <sofa/core/loader/MeshLoader.h>
 
@@ -55,10 +55,10 @@ using sofa::core::loader::MeshLoader;
  * This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
  */
 template <class DataTypes>
-class WireRestShape : public core::objectmodel::BaseObject
+class WireRestShape : public core::objectmodel::BaseComponent
 {
 public:
-    SOFA_CLASS(WireRestShape, core::objectmodel::BaseObject);
+    SOFA_CLASS(WireRestShape, core::objectmodel::BaseComponent);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -76,7 +76,7 @@ public:
       */
      virtual ~WireRestShape() = default;
 
-     /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+     /////////////////////////// Inherited from BaseComponent //////////////////////////////////////////
      void init() override ;
 
 
