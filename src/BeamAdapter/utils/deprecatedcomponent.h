@@ -21,19 +21,19 @@
 ******************************************************************************/
 #pragma once
 
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 
 
 namespace sofa::component
 {
-using sofa::core::objectmodel::BaseObject ;
+using sofa::core::objectmodel::BaseComponent ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::core::objectmodel::BaseObjectDescription ;
 
-class DeprecatedComponent : public BaseObject
+class DeprecatedComponent : public BaseComponent
 {
 public:
-      SOFA_CLASS(DeprecatedComponent, BaseObject) ;
+      SOFA_CLASS(DeprecatedComponent, BaseComponent) ;
 
       /// Pre-construction check method called by ObjectFactory.
       template<class T>

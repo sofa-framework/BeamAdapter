@@ -287,7 +287,7 @@ void MultiAdaptiveBeamMapping< TIn, TOut>::init()
         if (!ircontroller)
         {
             msg_error() << "No InterventionalRadiologyController found, this component cannot work and will be invalid.";
-            sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+            sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
             return;
         }
         else
