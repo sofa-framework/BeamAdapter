@@ -341,7 +341,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const sofa::core::Mechanic
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const sofa::core::MechanicalParams *mparams,
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doAddMToMatrix(const sofa::core::MechanicalParams *mparams,
                                                             const sofa::core::behavior::MultiMatrixAccessor* matrix)
 {
     sofa::core::behavior::MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(mstate);
@@ -382,7 +382,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMToMatrix(const sofa::core::Me
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices)
 {
     const auto numBeams = l_interpolation->getNumBeams();
 
@@ -471,7 +471,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMBKToMatrix(const sofa::core::
 }
 
 template <class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildDampingMatrix(core::behavior::DampingMatrix*)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildDampingMatrix(core::behavior::DampingMatrix*)
 {
     // No damping in this ForceField
 }
@@ -695,12 +695,8 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addDForce(const sofa::core::Mecha
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const sofa::core::MechanicalParams* mparams,
-                                                            const sofa::core::behavior::MultiMatrixAccessor* matrix)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(sofa::linearalgebra::BaseMatrix * matrix, SReal kFact, unsigned int &offset)
 {
-    sofa::core::behavior::MultiMatrixAccessor::MatrixRef matrixRef = matrix->getMatrix(mstate);
-    const Real k = (Real)mparams->kFactor();
-
     const auto numBeams = l_interpolation->getNumBeams();
 
     for (sofa::Index b=0; b<numBeams; b++)
@@ -720,25 +716,25 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addKToMatrix(const sofa::core::Me
 
         sofa::Index index0[6], index1[6];
         for (sofa::Index i=0;i<6;i++)
-            index0[i] = matrixRef.offset+node0Idx*6+i;
+            index0[i] = offset+node0Idx*6+i;
         for (sofa::Index i=0;i<6;i++)
-            index1[i] = matrixRef.offset+node1Idx*6+i;
+            index1[i] = offset+node1Idx*6+i;
 
         for (sofa::Index i=0;i<6;i++)
         {
             for (sofa::Index j=0;j<6;j++)
             {
-                matrixRef.matrix->add(index0[i], index0[j], - K00(i,j)*k);
-                matrixRef.matrix->add(index0[i], index1[j], - K01(i,j)*k);
-                matrixRef.matrix->add(index1[i], index0[j], - K10(i,j)*k);
-                matrixRef.matrix->add(index1[i], index1[j], - K11(i,j)*k);
+                matrix->add(index0[i], index0[j], - K00(i,j)*kFact);
+                matrix->add(index0[i], index1[j], - K01(i,j)*kFact);
+                matrix->add(index1[i], index0[j], - K10(i,j)*kFact);
+                matrix->add(index1[i], index1[j], - K11(i,j)*kFact);
             }
         }
     }
 }
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::doBuildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix)
 {
     const auto numBeams = l_interpolation->getNumBeams();
 
