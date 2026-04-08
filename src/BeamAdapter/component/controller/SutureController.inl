@@ -1205,8 +1205,8 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
 
     for (unsigned int i=0; i<m_vecGlobalHGravityCenter.size(); i++)
     {
-        Real Length = m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first;
-        Vec3 sizeArrows (Length/4, Length/8, Length/8);
+        float Length = static_cast<float>(m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first);
+        sofa::type::Vec3f sizeArrows (Length/4, Length/8, Length/8);
 
         vparams->drawTool()->drawFrame(m_vecGlobalHGravityCenter[i].getOrigin(), m_vecGlobalHGravityCenter[i].getOrientation(), sizeArrows);
     }

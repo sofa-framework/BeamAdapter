@@ -64,7 +64,7 @@ public:
     typedef Vec<3, Real> Vec3;
     typedef Vec<6, Real> Vec6;
 
-    /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+    /////////////////////////// Inherited from BaseComponent //////////////////////////////////////////
     virtual void init() override ;
     virtual void reset() override ;
     virtual void draw(const VisualParams* vparams) override ;
