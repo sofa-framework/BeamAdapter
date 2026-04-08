@@ -118,9 +118,9 @@ public:
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
-    void doAddMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
-    void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
+    void addMDx(const sofa::core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
+    void doAddMToMatrix(const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
+    void addMBKToMatrix(const sofa::core::MechanicalParams* mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
 
     void doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
     void doBuildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
