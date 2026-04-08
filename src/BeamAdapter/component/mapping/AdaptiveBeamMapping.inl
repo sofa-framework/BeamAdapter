@@ -44,8 +44,8 @@
 #include <sofa/core/ConstraintParams.h>
 #include <sofa/core/MechanicalParams.h>
 
-#include <sofa/simulation/ParallelForEach.h>
-#include <sofa/simulation/MainTaskSchedulerFactory.h>
+#include <sofa/simulation/task/ParallelForEach.h>
+#include <sofa/simulation/task/MainTaskSchedulerFactory.h>
 
 namespace beamadapter
 {
@@ -205,8 +205,6 @@ void AdaptiveBeamMapping< TIn, TOut>::apply(const MechanicalParams* mparams, Dat
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in = dIn.getValue();
 
-    m_isXBufferUsed=false;
-
     // When using an adaptatif controller, one need to redistribute the points at each time step
     {
         SCOPED_TIMER("computeDistribution");
@@ -302,22 +300,12 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecDeriv& in= dIn.getValue();
-    
-    Data<InVecCoord>& dataInX = *this->getFromModel()->write(sofa::core::vec_id::write_access::position);
-    auto x = sofa::helper::getWriteOnlyAccessor(dataInX);
+
+    const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
+    const InVecCoord& x = dataInX.getValue();
 
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
         computeDistribution();
-
-    // TODO: check if m_isXBufferUsed is set somewhere else
-    // As far as I could see, m_isXBufferUsed is never set to true
-    InVecCoord xBuf2{};
-    if (m_isXBufferUsed)
-    {
-        // TODO : solve this problem during constraint motion propagation !!
-        xBuf2 = x.ref();
-        x.wref() = m_xBuffer;
-    }
 
     // should not be necessary if apply() was called first
     if (!m_isSubMapping)
@@ -348,7 +336,7 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
 
             Deriv vResult(sofa::type::NOINIT);
 
-            applyJonPoint(elementID, vDOF0, vDOF1, vResult, x.ref());
+            applyJonPoint(elementID, vDOF0, vDOF1, vResult, x);
 
             if (m_isSubMapping)
             {
@@ -370,12 +358,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJ(const core::MechanicalParams* mpara
     assert(taskScheduler);
 
     simulation::forEachRange(execution, *taskScheduler, m_pointBeamDistribution.begin(), m_pointBeamDistribution.end(), applyJ_impl);
-
-    if(m_isXBufferUsed)
-    {
-        x.wref() = xBuf2;
-        m_isXBufferUsed = false;
-    }
 }
 
 
@@ -432,9 +414,6 @@ void AdaptiveBeamMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cpar
     const OutMatrixDeriv& in = dIn.getValue();
     const Data<InVecCoord>& dataInX = *this->getFromModel()->read(sofa::core::vec_id::read_access::position);
     const InVecCoord& x = dataInX.getValue();
-
-    m_isXBufferUsed = false;
-    m_xBuffer = x ;
 
     //////////// What's for ?? it seems not useful//////////
     bool proximity_lever = false;

@@ -15,7 +15,7 @@ def createScene(rootNode):
 
         rootNode.addObject('DefaultVisualManagerLoop')
         rootNode.addObject('FreeMotionAnimationLoop')
-        rootNode.addObject('GenericConstraintSolver', tolerance="1e-3", maxIterations="5000", resolutionMethod="UnbuiltGaussSeidel")
+        rootNode.addObject('UnbuiltGaussSeidelConstraintSolver', tolerance="1e-3", maxIterations="5000")
         rootNode.addObject('CollisionPipeline', depth="6", verbose="0", draw="1")
         rootNode.addObject('BruteForceBroadPhase', name='N2')
         rootNode.addObject('BVHNarrowPhase')

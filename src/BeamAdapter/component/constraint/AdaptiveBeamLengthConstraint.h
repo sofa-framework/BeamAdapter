@@ -25,7 +25,7 @@
 #include <sofa/helper/map.h>
 
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/core/behavior/Constraint.h>
+#include <sofa/core/behavior/LagrangianConstraint.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/type/Vec.h>
 
@@ -34,7 +34,7 @@
 namespace beamadapter
 {
 using sofa::core::behavior::ConstraintResolution ;
-using sofa::core::behavior::Constraint ;
+using sofa::core::behavior::LagrangianConstraint;
 using sofa::core::behavior::MechanicalState ;
 using sofa::core::ConstraintParams ;
 using sofa::core::objectmodel::Data ;
@@ -79,11 +79,11 @@ public:
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamLengthConstraint : public Constraint<DataTypes>
+class AdaptiveBeamLengthConstraint : public LagrangianConstraint<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamLengthConstraint,DataTypes),
-               SOFA_TEMPLATE(Constraint,DataTypes));
+               SOFA_TEMPLATE(LagrangianConstraint,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -99,7 +99,7 @@ public:
     typedef typename std::map<Real, double>::iterator MapIterator;
 
     typedef MechanicalState<DataTypes> TypedMechanicalState;
-    typedef Constraint<DataTypes> Inherit;
+    typedef LagrangianConstraint<DataTypes> Inherit;
     typedef Data<VecCoord>	 	  DataVecCoord;
     typedef Data<VecDeriv> 		  DataVecDeriv;
     typedef Data<MatrixDeriv>     DataMatrixDeriv;

@@ -38,8 +38,6 @@
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/component/constraint/projective/FixedProjectiveConstraint.h>
 #include <sofa/core/DataEngine.h>
-#include <sofa/component/collision/geometry/PointModel.h>
-#include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/utils/BeamActions.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
