@@ -1,18 +1,18 @@
 def createScene(rootnode):
     settings = rootnode.addChild('Settings')
-    settings.addObject('RequiredPlugin', name='BeamAdapter')  # Needed to use components [BeamProjectionDifferenceMultiMapping]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.AnimationLoop')  # Needed to use components [FreeMotionAnimationLoop]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Constraint.Lagrangian.Correction')  # Needed to use components [GenericConstraintCorrection]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Constraint.Lagrangian.Solver')  # Needed to use components [GenericConstraintSolver]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Constraint.Projective')  # Needed to use components [FixedConstraint]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.LinearSolver.Direct')  # Needed to use components [SparseLDLSolver]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Mass')  # Needed to use components [UniformMass]  
-    settings.addObject('RequiredPlugin', name='Sofa.Component.ODESolver.Backward')  # Needed to use components [EulerImplicitSolver]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.SolidMechanics.Spring')  # Needed to use components [RestShapeSpringsForceField]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.StateContainer')  # Needed to use components [MechanicalObject]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Topology.Container.Dynamic')  # Needed to use components [EdgeSetTopologyContainer,PointSetTopologyContainer]
-    settings.addObject('RequiredPlugin', name='Sofa.Component.Visual')  # Needed to use components [VisualStyle]  
-    settings.addObject('RequiredPlugin', name='Sofa.GUI.Component')  # Needed to use components [AttachBodyButtonSetting]
+    settings.addObject('RequiredPlugin', pluginName='BeamAdapter')  # Needed to use components [BeamProjectionDifferenceMultiMapping]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.AnimationLoop')  # Needed to use components [FreeMotionAnimationLoop]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Constraint.Lagrangian.Correction')  # Needed to use components [GenericConstraintCorrection]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Constraint.Lagrangian.Solver')  # Needed to use components [GenericConstraintSolver]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Constraint.Projective')  # Needed to use components [FixedConstraint]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.LinearSolver.Direct')  # Needed to use components [SparseLDLSolver]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Mass')  # Needed to use components [UniformMass]  
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.ODESolver.Backward')  # Needed to use components [EulerImplicitSolver]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.SolidMechanics.Spring')  # Needed to use components [RestShapeSpringsForceField]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.StateContainer')  # Needed to use components [MechanicalObject]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Topology.Container.Dynamic')  # Needed to use components [EdgeSetTopologyContainer,PointSetTopologyContainer]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Visual')  # Needed to use components [VisualStyle]  
+    settings.addObject('RequiredPlugin', pluginName='Sofa.GUI.Component')  # Needed to use components [AttachBodyButtonSetting]
 
     rootnode.addObject('VisualStyle', displayFlags='showBehavior showVisual')
     rootnode.addObject('AttachBodyButtonSetting', stiffness=0.1)
@@ -20,7 +20,7 @@ def createScene(rootnode):
     rootnode.dt.value = 0.01
 
     rootnode.addObject('FreeMotionAnimationLoop')
-    rootnode.addObject('GenericConstraintSolver', maxIterations=1000, tolerance=1e-3)
+    rootnode.addObject('BlockGaussSeidelConstraintSolver', maxIterations=1000, tolerance=1e-3)
 
     simulation = rootnode.addChild('Simulation')
     simulation.addObject('EulerImplicitSolver')
