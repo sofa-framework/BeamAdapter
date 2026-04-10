@@ -122,7 +122,7 @@ public:
     void addMToMatrix(const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
     void addMBKToMatrix(const sofa::core::MechanicalParams* mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
 
-    void buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
+    void doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
     void buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
     void buildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
 
