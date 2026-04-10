@@ -283,8 +283,13 @@ void InterventionalRadiologyController<DataTypes>::init()
     }
 
     WriteAccessor<Data<VecCoord> > x = *this->mState->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrest = *this->mState->write(sofa::core::vec_id::write_access::restPosition);
+    const auto& startPos = d_startingPos.getValue();
     for(unsigned int i=0; i<x.size(); i++)
-        x[i] = d_startingPos.getValue();
+    {
+        x[i] = startPos;
+        xrest[i] = startPos;
+    }
 
     applyInterventionalRadiologyController();
 
@@ -568,9 +573,16 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
 
             if (curvAbs_interval > 0)
             {
+                const Real intervalLength = nxP - xP;
+                if (intervalLength <= 0 || density_I[j] == 0)
+                {
+                    xSampling = curvAbs_nxP;
+                    continue;
+                }
+
                 // compute the number of point of the emerged interval (if all the interval is emerged, i.e >0 , numNewNodes == density[j])
-                Real ratio = Real(density_I[j]) / (nxP - xP);
-                int numNewNodes = int(floor(curvAbs_interval * ratio)); // if density == 0, no sampling (numNewNodes == 0) 
+                Real ratio = Real(density_I[j]) / intervalLength;
+                int numNewNodes = int(floor(curvAbs_interval * ratio));
 
                 // Add the new points using reverse order iterator as they are computed deduce to next noticeable point
                 for (int k = numNewNodes; k>0; k--)
@@ -672,7 +684,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
         // 3. we look for the mechanical sampling of the current instrument in order to "place" the following point
         Real xIncr;
-        m_instrumentsList[firstInstruOnx]->getMechanicalSampling(xIncr, xPointList[i]);
+        m_instrumentsList[firstInstruOnx]->getCollisionSampling(xIncr, xPointList[i]);
         xAbsCurv -= xIncr;
 
         // the following point could not have x_abs_curv<0;
@@ -1117,14 +1129,19 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::fixFirstNodesWithUntil(unsigned int firstSimulatedNode)
 {
     WriteAccessor<Data<VecCoord> > xMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    WriteAccessor<Data<VecCoord> > xrestMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::restPosition);
     WriteAccessor<Data<VecDeriv> > vMstate = *getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
 
     // set the position to startingPos for all the nodes that are not simulated
+    const auto& startPos = d_startingPos.getValue();
     // and add a fixedConstraint
     l_fixedConstraint->clearConstraints();
     for(unsigned int i=0; i<firstSimulatedNode-1 ; i++)
     {
-        xMstate[i]=d_startingPos.getValue();
+        xMstate[i] = startPos;
+        // Overwriting the rest position avoids a jump of released DoFs, trying to reach their rest position when released
+        // This remains safe since BeamFEMForceField uses the interpolation object to compute transformation without using the rest shape
+        xrestMstate[i] = startPos;
         vMstate[i].clear();
         l_fixedConstraint->addConstraint(i);
     }

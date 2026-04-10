@@ -164,6 +164,8 @@ public:
     sofa::Data<bool> d_updateProjectionOrientation;
     sofa::Data<bool> d_draw;
     sofa::Data<Real> d_drawSize;
+    sofa::Data<vector<In1Coord>> d_projections;
+    sofa::Data<SReal> d_filter;
 
     sofa::SingleLink<BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>, sofa::core::topology::BaseMeshTopology, sofa::BaseLink::FLAG_STOREPATH | sofa::BaseLink::FLAG_STRONGLINK> l_in2Topology;
     sofa::SingleLink<BeamProjectionDifferenceMultiMapping<TIn1, TIn2, TOut>, BeamInterpolation<TIn2>, sofa::BaseLink::FLAG_STOREPATH | sofa::BaseLink::FLAG_STRONGLINK> l_interpolation;
