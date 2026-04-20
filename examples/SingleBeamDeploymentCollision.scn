@@ -59,7 +59,7 @@
                                     listening="1" controlledInstrument="0"/>
         <LinearSolverConstraintCorrection wire_optimization="true" printLog="0" />
         <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
-        <RestShapeSpringsForceField name="RestSPForceField" points="@DeployController.indexFirstNode" angularStiffness="1e8" stiffness="1e8"/> 
+        <FixedWeakConstraint name="RestSPForceField" indices="@DeployController.indexFirstNode" angularStiffness="1e8" stiffness="1e8"/>
 
         <Node name="CollisionModel">
             <EdgeSetTopologyContainer name="collisEdgeSet" />
