@@ -1291,8 +1291,8 @@ $(document).ready(function(){initNavTree('_suture_controller_8inl_source.html','
 <div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span> </div>
 <div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;m_vecGlobalHGravityCenter.size(); i++)</div>
 <div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>    {</div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>        Real Length = m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first;</div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>        Vec3 sizeArrows (Length/4, Length/8, Length/8);</div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>        <span class="keywordtype">float</span> Length = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first);</div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>        sofa::type::Vec3f sizeArrows (Length/4, Length/8, Length/8);</div>
 <div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span> </div>
 <div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>        vparams-&gt;drawTool()-&gt;drawFrame(m_vecGlobalHGravityCenter[i].getOrigin(), m_vecGlobalHGravityCenter[i].getOrientation(), sizeArrows);</div>
 <div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>    }</div>
@@ -1307,7 +1307,7 @@ $(document).ready(function(){initNavTree('_suture_controller_8inl_source.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_ff77e963eac2778b9932a4f945f7cd72.html">controller</a></li><li class="navelem"><b>SutureController.inl</b></li>
-    <li class="footer">Generated on Thu Apr 23 2026 07:54:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 07:55:24 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

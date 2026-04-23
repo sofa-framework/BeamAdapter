@@ -847,9 +847,9 @@ $(document).ready(function(){initNavTree('_adaptive_inflatable_beam_force_field_
 <div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span><span class="keywordtype">void</span> <a class="code hl_class" href="classbeamadapter_1_1_adaptive_inflatable_beam_force_field.html">AdaptiveInflatableBeamForceField&lt;DataTypes&gt;::drawElement</a>(<span class="keyword">const</span> VisualParams *vparams, <span class="keywordtype">int</span> beam,</div>
 <div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>                                                           Transform &amp;global_H0_local, Transform &amp;global_H1_local)</div>
 <div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>{</div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    <span class="keywordtype">double</span> length = (double) l_interpolation-&gt;getLength(beam);</div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    <span class="keywordtype">float</span> length = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(l_interpolation-&gt;getLength(beam));</div>
 <div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span> </div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    Vec3 sizeArrows (length/4., length/8., length/8.);</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    type::Vec3f sizeArrows (length/4., length/8., length/8.);</div>
 <div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span> </div>
 <div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    vparams-&gt;drawTool()-&gt;drawFrame(global_H0_local.getOrigin(), global_H0_local.getOrientation(), sizeArrows);</div>
 <div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>    vparams-&gt;drawTool()-&gt;drawFrame(global_H1_local.getOrigin(), global_H1_local.getOrientation(), sizeArrows);</div>
@@ -870,7 +870,7 @@ $(document).ready(function(){initNavTree('_adaptive_inflatable_beam_force_field_
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_bbd07e5c89779a759b9b90a5792301a2.html">forcefield</a></li><li class="navelem"><b>AdaptiveInflatableBeamForceField.inl</b></li>
-    <li class="footer">Generated on Thu Apr 23 2026 07:54:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 07:55:24 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -222,7 +222,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">if</span> (m_instrumentsList.empty())</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        msg_error() &lt;&lt; <span class="stringliteral">&quot;No instrument found (no WireBeamInterpolation)! the component can not work and will be set to Invalid.&quot;</span>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    }</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordflow">else</span></div>
@@ -360,7 +360,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordflow">if</span> (!this-&gt;mState)</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    {</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        msg_error() &lt;&lt; <span class="stringliteral">&quot;No MechanicalState found. The component can not work and will be set to Invalid.&quot;</span>;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    }</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    </div>
@@ -393,7 +393,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    applyInterventionalRadiologyController();</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>}</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> DataTypes&gt;</div>
@@ -1293,7 +1293,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_ff77e963eac2778b9932a4f945f7cd72.html">controller</a></li><li class="navelem"><b>InterventionalRadiologyController.inl</b></li>
-    <li class="footer">Generated on Thu Apr 23 2026 07:54:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 07:55:24 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

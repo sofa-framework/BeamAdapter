@@ -1,6 +1,6 @@
 var hierarchy =
 [
-    [ "BaseObject", null, [
+    [ "BaseComponent", null, [
       [ "BaseRodSectionMaterial< DataTypes >", "classbeamadapter_1_1_base_rod_section_material.html", [
         [ "RodMeshSection< DataTypes >", "classbeamadapter_1_1_rod_mesh_section.html", null ],
         [ "RodSpireSection< DataTypes >", "classbeamadapter_1_1_rod_spire_section.html", null ],
@@ -35,7 +35,7 @@ var hierarchy =
         [ "WireBeamInterpolation< DataTypes >", "classbeamadapter_1_1_wire_beam_interpolation.html", null ]
       ] ]
     ] ],
-    [ "BaseObject", null, [
+    [ "BaseComponent", null, [
       [ "DeprecatedComponent", "classsofa_1_1component_1_1_deprecated_component.html", null ]
     ] ],
     [ "ConstraintResolution", null, [
