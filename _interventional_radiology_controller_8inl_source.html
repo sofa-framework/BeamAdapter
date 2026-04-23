@@ -1229,54 +1229,61 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
 <div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span><span class="keywordtype">void</span> InterventionalRadiologyController&lt;DataTypes&gt;::fixFirstNodesWithUntil(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstSimulatedNode)</div>
 <div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>{</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    WriteAccessor&lt;Data&lt;VecCoord&gt; &gt; xMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::position);</div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>    WriteAccessor&lt;Data&lt;VecCoord&gt; &gt; xrestMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::restPosition);</div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    WriteAccessor&lt;Data&lt;VecDeriv&gt; &gt; vMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::velocity);</div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span> </div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>    <span class="comment">// set the position to startingPos for all the nodes that are not simulated</span></div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; startPos = d_startingPos.getValue();</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>    <span class="comment">// and add a fixedConstraint</span></div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>    l_fixedConstraint-&gt;clearConstraints();</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;firstSimulatedNode-1 ; i++)</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>    {</div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>        xMstate[i] = startPos;</div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>        <span class="comment">// Overwriting the rest position avoids a jump of released DoFs, trying to reach their rest position when released</span></div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>        <span class="comment">// This remains safe since BeamFEMForceField uses the interpolation object to compute transformation without using the rest shape</span></div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>        xrestMstate[i] = startPos;</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>        vMstate[i].clear();</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>        l_fixedConstraint-&gt;addConstraint(i);</div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>    }</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>    d_indexFirstNode = firstSimulatedNode-1 ;</div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>}</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span> </div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span><span class="keywordtype">bool</span> InterventionalRadiologyController&lt;DataTypes&gt;::modifyTopology(<span class="keywordtype">void</span>)</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>{</div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>}</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span> </div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span><span class="keywordtype">void</span> InterventionalRadiologyController&lt;DataTypes&gt;::getInstrumentList(type::vector&lt;WireBeamInterpolation&lt;DataTypes&gt;*&gt;&amp; list)</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>{</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>    list = m_instrumentsList;</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>}</div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span> </div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span><span class="keyword">const</span> type::vector&lt; type::vector&lt;int&gt; &gt;&amp; InterventionalRadiologyController&lt;DataTypes&gt;::get_id_instrument_curvAbs_table()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>    <span class="keywordflow">return</span> m_idInstrumentCurvAbsTable;</div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>}</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span> </div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="keywordtype">int</span> InterventionalRadiologyController&lt;DataTypes&gt;::getTotalNbEdges()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>    <span class="keywordflow">return</span> l_mechanicalTopology-&gt;getNbEdges();</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>}</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span> </div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    l_fixedConstraint-&gt;clearConstraints();</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span> </div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    <span class="keywordflow">if</span> (firstSimulatedNode == 0)</div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>    {</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>        msg_warning() &lt;&lt; <span class="stringliteral">&quot;An invalid value of firstSimulatedNode equal to 0 has been given to fixFirstNodesWithUntil() method.&quot;</span>;</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>        d_indexFirstNode = 0;</div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>    }</div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span> </div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>    WriteAccessor&lt;Data&lt;VecCoord&gt; &gt; xMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::position);</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>    WriteAccessor&lt;Data&lt;VecCoord&gt; &gt; xrestMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::restPosition);</div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>    WriteAccessor&lt;Data&lt;VecDeriv&gt; &gt; vMstate = *getMechanicalState()-&gt;write(sofa::core::vec_id::write_access::velocity);</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span> </div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>    <span class="comment">// set the position to startingPos for all the nodes that are not simulated</span></div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; startPos = d_startingPos.getValue();</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0; i&lt;firstSimulatedNode-1 ; i++)</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>    {</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>        xMstate[i] = startPos;</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>        <span class="comment">// Overwriting the rest position avoids a jump of released DoFs, trying to reach their rest position when released</span></div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>        <span class="comment">// This remains safe since BeamFEMForceField uses the interpolation object to compute transformation without using the rest shape</span></div>
+<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>        xrestMstate[i] = startPos;</div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>        vMstate[i].clear();</div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>        l_fixedConstraint-&gt;addConstraint(i);</div>
+<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    }</div>
+<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>    d_indexFirstNode = firstSimulatedNode-1 ;</div>
+<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>}</div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span> </div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span><span class="keywordtype">bool</span> InterventionalRadiologyController&lt;DataTypes&gt;::modifyTopology(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>{</div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>}</div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span> </div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span><span class="keywordtype">void</span> InterventionalRadiologyController&lt;DataTypes&gt;::getInstrumentList(type::vector&lt;WireBeamInterpolation&lt;DataTypes&gt;*&gt;&amp; list)</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>{</div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>    list = m_instrumentsList;</div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>}</div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span> </div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="keyword">const</span> type::vector&lt; type::vector&lt;int&gt; &gt;&amp; InterventionalRadiologyController&lt;DataTypes&gt;::get_id_instrument_curvAbs_table()<span class="keyword"> const</span></div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    <span class="keywordflow">return</span> m_idInstrumentCurvAbsTable;</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>}</div>
 <div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span> </div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>} <span class="comment">// namespace beamadapter</span></div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span> </div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataTypes&gt;</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span><span class="keywordtype">int</span> InterventionalRadiologyController&lt;DataTypes&gt;::getTotalNbEdges()<span class="keyword"> const</span></div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>    <span class="keywordflow">return</span> l_mechanicalTopology-&gt;getNbEdges();</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>}</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span> </div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span> </div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span> </div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span> </div>
 <div class="ttc" id="aclassbeamadapter_1_1_interventional_radiology_controller_html"><div class="ttname"><a href="classbeamadapter_1_1_interventional_radiology_controller.html">beamadapter::InterventionalRadiologyController</a></div><div class="ttdoc">InterventionalRadiologyController Class.</div><div class="ttdef"><b>Definition</b> InterventionalRadiologyController.h:63</div></div>
 <div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 <div class="ttc" id="anamespacebeamadapter_html_a8f1473d10d6aa803639b0ddf45b82305"><div class="ttname"><a href="namespacebeamadapter.html#a8f1473d10d6aa803639b0ddf45b82305">beamadapter::BeamAdapterAction</a></div><div class="ttdeci">BeamAdapterAction</div><div class="ttdoc">Enum class listing all possible actions during Beam navigation.</div><div class="ttdef"><b>Definition</b> BeamActions.h:32</div></div>
@@ -1286,7 +1293,7 @@ $(document).ready(function(){initNavTree('_interventional_radiology_controller_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1974de49d08fb87a0aadc515bc0ea43c.html">BeamAdapter</a></li><li class="navelem"><a class="el" href="dir_084a659d65bb45ff503e6dd609823a8c.html">component</a></li><li class="navelem"><a class="el" href="dir_ff77e963eac2778b9932a4f945f7cd72.html">controller</a></li><li class="navelem"><b>InterventionalRadiologyController.inl</b></li>
-    <li class="footer">Generated on Wed Apr 8 2026 06:56:58 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 07:54:49 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
