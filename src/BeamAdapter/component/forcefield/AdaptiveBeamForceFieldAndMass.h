@@ -108,7 +108,7 @@ public:
 
 
     /////////////////////////////////////
-    /// This is inhereted from BaseObject
+    /// This is inhereted from BaseComponent
     /////////////////////////////////////
     void init() override ;
     void reinit() override ;

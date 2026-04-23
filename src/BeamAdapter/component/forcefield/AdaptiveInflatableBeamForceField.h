@@ -43,7 +43,7 @@
 #include <sofa/type/Vec.h>
 #include <sofa/type/Mat.h>
 
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/core/visual/VisualParams.h>
 
 #include <BeamAdapter/config.h>
@@ -143,7 +143,7 @@ public:
 
 
     /////////////////////////////////////
-    /// This is inhereted from BaseObject
+    /// This is inhereted from BaseComponent
     /////////////////////////////////////
     virtual void init() override ;
     virtual void reinit() override ;

@@ -30,7 +30,7 @@
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.inl>
 
 
-using sofa::core::objectmodel::BaseObject ;
+using sofa::core::objectmodel::BaseComponent ;
 using sofa::core::objectmodel::BaseContext ;
 using sofa::core::objectmodel::BaseObjectDescription ;
 #include <BeamAdapter/utils/deprecatedcomponent.h>

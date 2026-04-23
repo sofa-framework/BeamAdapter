@@ -23,7 +23,7 @@
 
 #include <BeamAdapter/component/model/RodMeshSection.h>
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 
 #define EPSILON 0.0001
 

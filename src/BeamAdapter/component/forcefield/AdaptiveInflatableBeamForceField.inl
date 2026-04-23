@@ -796,10 +796,10 @@ template<class DataTypes>
 void AdaptiveInflatableBeamForceField<DataTypes>::drawElement(const VisualParams *vparams, int beam,
                                                            Transform &global_H0_local, Transform &global_H1_local)
 {
-    double length = (double) l_interpolation->getLength(beam);
+    float length = static_cast<float>(l_interpolation->getLength(beam));
 
     /// ARROWS
-    Vec3 sizeArrows (length/4., length/8., length/8.);
+    type::Vec3f sizeArrows (length/4., length/8., length/8.);
 
     vparams->drawTool()->drawFrame(global_H0_local.getOrigin(), global_H0_local.getOrientation(), sizeArrows);
     vparams->drawTool()->drawFrame(global_H1_local.getOrigin(), global_H1_local.getOrientation(), sizeArrows);

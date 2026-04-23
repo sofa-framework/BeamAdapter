@@ -46,7 +46,7 @@
 #include <sofa/type/Vec.h>
 #include <sofa/type/Mat.h>
 
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 
 
 namespace beamadapter

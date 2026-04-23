@@ -24,7 +24,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/loader/MeshLoader.h>
 
@@ -48,10 +48,10 @@ using sofa::core::loader::MeshLoader;
  * - Mechanical parameters: @sa d_poissonRatio and @sa d_youngModulus
  */
 template <class DataTypes>
-class BaseRodSectionMaterial : public core::objectmodel::BaseObject
+class BaseRodSectionMaterial : public core::objectmodel::BaseComponent
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes), core::objectmodel::BaseObject);
+    SOFA_CLASS(SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes), core::objectmodel::BaseComponent);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -60,12 +60,12 @@ public:
     using Quat = sofa::type::Quat<Real>;
     using Size = sofa::Size;
 
-    /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+    /////////////////////////// Inherited from BaseComponent //////////////////////////////////////////
 
     /// Default Constructor
     BaseRodSectionMaterial();
 
-    /// init method from BaseObject API. Will call internal @see initSection to be overriden by children
+    /// init method from BaseComponent API. Will call internal @see initSection to be overriden by children
     void init() override;
 
 

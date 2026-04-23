@@ -122,7 +122,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     if (m_instrumentsList.empty())
     {
         msg_error() << "No instrument found (no WireBeamInterpolation)! the component can not work and will be set to Invalid.";
-        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
     else
@@ -260,7 +260,7 @@ void InterventionalRadiologyController<DataTypes>::init()
     if (!this->mState)
     {
         msg_error() << "No MechanicalState found. The component can not work and will be set to Invalid.";
-        sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
+        sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
     
@@ -293,7 +293,7 @@ void InterventionalRadiologyController<DataTypes>::init()
 
     applyInterventionalRadiologyController();
 
-    sofa::core::objectmodel::BaseObject::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
+    sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
 template<class DataTypes>

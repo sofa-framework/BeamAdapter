@@ -101,7 +101,7 @@ public :
     AdaptiveBeamController();
     virtual ~AdaptiveBeamController() = default;
 
-    /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
+    /////////////// Inherited from BaseComponent  /////////////////////////////////////////////////////
     virtual void init() override ;
     virtual void reinit() override ;
 
