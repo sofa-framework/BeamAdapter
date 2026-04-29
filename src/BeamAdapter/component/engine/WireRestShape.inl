@@ -173,8 +173,8 @@ bool WireRestShape<DataTypes>::initTopology()
             l_topology->addEdge(i, i + 1);
         }
 
-        prev_length = length;
-        prev_edges = nbrVisuEdges;
+        prev_length += length;
+        prev_edges += nbrVisuEdges;
         startPtId = 1; // Assume the last point of mat[n] == first point of mat[n+1]
     }
 
