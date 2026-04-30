@@ -62,7 +62,8 @@ bool RodMeshSection<DataTypes>::initSection()
 
 
 template <class DataTypes>
-void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
+void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                                                   const Transform& predecessor_H_sectionStart)
 {
     Real abs_curr = x_used - x_start;
     abs_curr = abs_curr /(this->d_length.getValue()) * m_absOfGeometry;
@@ -97,11 +98,10 @@ void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, c
         p.getOrientation() = slerp;
     }
 
-    type::Vec3 PosEndCurve = p.getCenter();
-    Quat ExtremityQuat = p.getOrientation();
-    type::Vec3 ExtremityPos = PosEndCurve + type::Vec3(x_start, 0, 0);
-
-    global_H_local.set(ExtremityPos, ExtremityQuat);
+    // p is expressed in the section-local frame (origin at section start, +X = predecessor tip tangent).
+    Transform sectionStart_H_local;
+    sectionStart_H_local.set(p.getCenter(), p.getOrientation());
+    global_H_local = predecessor_H_sectionStart * sectionStart_H_local;
 }
 
 

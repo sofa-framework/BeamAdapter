@@ -47,8 +47,11 @@ public:
     /// Default Constructor
     RodStraightSection();
 
-    /// Override method to get the rest position of the beam. In this implementation, it will basically returns Vec3(x_start + x_used, 0 0)
-    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
+    /// Override method to get the rest position of the beam. The local rest position along the section's own +X axis
+    /// is composed with @p predecessor_H_sectionStart so the section continues tangent to the predecessor's tip frame
+    /// rather than assuming a world-X anchored start.
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                             const Transform& predecessor_H_sectionStart) override;
 
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method

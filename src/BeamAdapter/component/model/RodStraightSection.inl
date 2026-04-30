@@ -51,9 +51,12 @@ bool RodStraightSection<DataTypes>::initSection()
 
 
 template <class DataTypes>
-void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
+void RodStraightSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                                                       const Transform& predecessor_H_sectionStart)
 {
-    global_H_local.set(type::Vec3(x_used, 0.0, 0.0), Quat());
+    Transform sectionStart_H_local;
+    sectionStart_H_local.set(type::Vec3(x_used - x_start, 0.0, 0.0), Quat());
+    global_H_local = predecessor_H_sectionStart * sectionStart_H_local;
 }
 
 
