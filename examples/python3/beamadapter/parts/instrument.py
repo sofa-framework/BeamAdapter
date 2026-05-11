@@ -53,7 +53,7 @@ def combineInstruments(node, xtip=[1, 0, 0], instruments=['guide'],
                                     controlledInstrument=controlledInstrument)
     InstrumentCombined.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
     InstrumentCombined.addObject('FixedConstraint', indices=0, name='FixedConstraint')
-    InstrumentCombined.addObject('RestShapeSpringsForceField', points='@m_ircontroller.indexFirstNode', 
+    InstrumentCombined.addObject('FixedWeakConstraint', indices='@m_ircontroller.indexFirstNode',
                                     angularStiffness=1e8, stiffness=1e8)
 
     return (InstrumentCombined)
@@ -90,7 +90,7 @@ def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments=['guide'],
                                     controlledInstrument=controlledInstrument)
     InstrumentCombined.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
     InstrumentCombined.addObject('FixedConstraint', indices=0, name='FixedConstraint')
-    InstrumentCombined.addObject('RestShapeSpringsForceField', points='@m_ircontroller.indexFirstNode', 
+    InstrumentCombined.addObject('FixedWeakConstraint', indices='@m_ircontroller.indexFirstNode',
                                     angularStiffness=1e8, stiffness=1e8)
 
     # Collision model

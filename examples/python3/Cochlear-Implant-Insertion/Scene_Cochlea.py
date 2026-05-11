@@ -60,7 +60,7 @@ def createScene(rootNode):
         InstrumentCombined.addObject('AdaptiveBeamForceFieldAndMass', name="CatheterForceField", massDensity="0.000005", interpolation="@InterpolCatheter", printLog=False)
         InstrumentCombined.addObject('LinearSolverConstraintCorrection', printLog=False, wire_optimization="true")
         InstrumentCombined.addObject("FixedProjectiveConstraint", indices="0")
-        InstrumentCombined.addObject('RestShapeSpringsForceField', name="MeasurementFF", points="@m_ircontroller.indexFirstNode",  stiffness="1e10", recompute_indices="1", angularStiffness="1e10", external_rest_shape="@../RefStartingPos/ReferencePos", external_points="0", drawSpring="1", springColor="1 0 0 1")
+        InstrumentCombined.addObject('RestShapeSpringsForceField', name="MeasurementFF", indices="@m_ircontroller.indexFirstNode",  stiffness="1e10",  angularStiffness="1e10", external_rest_shape="@../RefStartingPos/ReferencePos", externalIndices="0", drawSpring="1", springColor="1 0 0 1")
 
         CollisInstrumentCombined = InstrumentCombined.addChild('CollisInstrumentCombined')
         CollisInstrumentCombined.addObject('EdgeSetTopologyContainer', name="collisEdgeSet")
