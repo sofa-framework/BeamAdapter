@@ -119,12 +119,12 @@ public:
     /// Mass Interface
     /////////////////////////////////////
     void addMDx(const sofa::core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
-    void addMToMatrix(const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
+    void doAddMToMatrix(const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
     void addMBKToMatrix(const sofa::core::MechanicalParams* mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
 
-    void buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
-    void buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
-    void buildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
+    void doBuildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
+    void doBuildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
+    void doBuildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
     void accFromF(const sofa::core::MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
@@ -166,8 +166,7 @@ public:
     }
 
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
-    void addKToMatrix(const sofa::core::MechanicalParams* mparams,
-                      const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
+    void addKToMatrix(sofa::linearalgebra::BaseMatrix * matrix, SReal kFact, unsigned int &offset) override;
 
     void computeStiffness(const sofa::Index beamID, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(const sofa::Index beamID, BeamLocalMatrices& beamMatrices);
