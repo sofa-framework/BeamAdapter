@@ -419,7 +419,7 @@ void BeamLengthMapping< TIn, TOut>::applyJT(const core::ConstraintParams* cparam
 /// BeamLengthMapping::applyDJT(MultiVecDerivId parentDfId, const ConstMultiVecDerivId childDfId)
 /// this function computes the additional stiffness force created on the parents by the force on the child (due to mapping non-linearity)
 template <class TIn, class TOut>
-void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId)
+void BeamLengthMapping< TIn, TOut>::doApplyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId)
 {
     const unsigned& geometricStiffness = d_geometricStiffness.getValue();
     if( !geometricStiffness ) return;
@@ -579,7 +579,7 @@ void BeamLengthMapping< TIn, TOut>::applyDJT(const MechanicalParams* mparams, co
 }
 
 template <class TIn, class TOut>
-void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams, core::ConstMultiVecDerivId childForceId )
+void BeamLengthMapping<TIn, TOut>::doUpdateK(const core::MechanicalParams* mparams, core::ConstMultiVecDerivId childForceId )
 {
     SOFA_UNUSED(mparams);
     const unsigned& geometricStiffness = d_geometricStiffness.getValue();
@@ -761,7 +761,7 @@ void BeamLengthMapping<TIn, TOut>::updateK(const core::MechanicalParams* mparams
 
 
 template <class TIn, class TOut>
-const sofa::linearalgebra::BaseMatrix* BeamLengthMapping<TIn, TOut>::getK()
+const sofa::linearalgebra::BaseMatrix* BeamLengthMapping<TIn, TOut>::doGetK()
 {
     return &K_geom;
 }
