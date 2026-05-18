@@ -103,10 +103,11 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         return root;
     }
 
-    void checkDataInitialization(const Data<type::vector<SReal>>& data,
-                                 const SReal& defaultValue,
+    template<class Real>
+    void checkDataInitialization(const Data<type::vector<Real>>& data,
+                                 const Real& defaultValue,
                                  const sofa::Size& nbBeam,
-                                 const SReal& value)
+                                 const Real& value)
     {
         const auto& vector = helper::getReadAccessor(data);
         ASSERT_EQ(vector.size(), nbBeam);
