@@ -408,7 +408,7 @@ template <class DataTypes>
 typename BeamInterpolation<DataTypes>::Real BeamInterpolation<DataTypes>::getRestTotalLength()
 {
     Real le(0.0);
-    const type::vector< double > &lengthList = this->d_lengthList.getValue();
+    const type::vector< SReal > &lengthList = this->d_lengthList.getValue();
 
     for (unsigned int i = 0; i < lengthList.size(); i++)
         le += lengthList[i];

@@ -146,7 +146,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         this->deltaRange.first= 1;
         this->deltaRange.second= 1000;
 
-        MechanicalObject<defaulttype::Rigid3dTypes>* FromModel = nullptr;
+        MechanicalObject<defaulttype::Rigid3Types>* FromModel = nullptr;
         this->root->getTreeObject(FromModel);
         this->inDofs = FromModel;
 
@@ -215,7 +215,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         this->deltaRange.second= 100000;
 
 
-        MechanicalObject<defaulttype::Rigid3dTypes>* FromModel = nullptr;
+        MechanicalObject<defaulttype::Rigid3Types>* FromModel = nullptr;
         this->root->getTreeObject(FromModel);
         this->inDofs = FromModel;
 
@@ -259,7 +259,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
 // Define the list of types to instanciate. We do not necessarily need to test all combinations.
 using ::testing::Types;
 typedef Types<
-BeamLengthMapping<defaulttype::Rigid3dTypes,defaulttype::Vec1dTypes>
+BeamLengthMapping<defaulttype::Rigid3Types,defaulttype::Vec1Types>
 //,mapping::_beamlengthmapping_::BeamLengthMapping<defaulttype::Rigid3fTypes,defaulttype::Vec1fTypes>
 > DataTypes; // the types to instanciate.
 

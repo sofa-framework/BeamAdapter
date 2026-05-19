@@ -216,7 +216,7 @@ public:
     Data< VecEdgeID > d_edgeList;
 
     ///2. Vector of length of each beam. Same size as @sa d_edgeList
-    Data< type::vector< Real > >    d_lengthList;
+    Data< type::vector< SReal > >    d_lengthList;
 
     ///3. (optional) apply a rigid Transform between the degree of Freedom and the first node of the beam. Indexation based on the num of Edge
     Data< type::vector< Transform > > d_DOF0TransformNode0;
