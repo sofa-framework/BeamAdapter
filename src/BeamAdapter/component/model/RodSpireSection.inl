@@ -53,7 +53,8 @@ bool RodSpireSection<DataTypes>::initSection()
 
 
 template <class DataTypes>
-void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
+void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                                                    const Transform& predecessor_H_sectionStart)
 {
     Real projetedLength = d_spireDiameter.getValue() * M_PI;
     Real lengthSpire = sqrt(d_spireHeight.getValue() * d_spireHeight.getValue() + projetedLength * projetedLength);
@@ -73,12 +74,13 @@ void RodSpireSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, 
     Qtheta.axisToQuat(type::Vec3(0, 1, 0), theta);
     Quat newSpireQuat = Qtheta * Qphi;
 
-    // computation of the position
+    // computation of the position in the section-local frame (origin at section start, +X = predecessor tip tangent)
     Real radius = d_spireDiameter.getValue() / 2.0;
     type::Vec3 PosEndCurve(radius * sin(theta), numSpire * d_spireHeight.getValue(), radius * (cos(theta) - 1));
-    type::Vec3 SpirePos = PosEndCurve + type::Vec3(x_start, 0, 0);
 
-    global_H_local.set(SpirePos, newSpireQuat);    
+    Transform sectionStart_H_local;
+    sectionStart_H_local.set(PosEndCurve, newSpireQuat);
+    global_H_local = predecessor_H_sectionStart * sectionStart_H_local;
 }
 
 } // namespace beamadapter

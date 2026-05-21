@@ -173,8 +173,8 @@ bool WireRestShape<DataTypes>::initTopology()
             l_topology->addEdge(i, i + 1);
         }
 
-        prev_length = length;
-        prev_edges = nbrVisuEdges;
+        prev_length += length;
+        prev_edges += nbrVisuEdges;
         startPtId = 1; // Assume the last point of mat[n] == first point of mat[n+1]
     }
 
@@ -315,12 +315,23 @@ void WireRestShape<DataTypes>::getRestTransformOnX(Transform &global_H_local, co
     }
    
     const type::vector<Real>& keyPts = d_keyPoints.getValue();
+    // Walk all sections preceding the one that owns x_used and accumulate their tip transforms.
+    // Each section composes its local rest geometry with this predecessor frame, so chained non-straight
+    // sections (Spire after Spire, Mesh after Spire, ...) stay tangent-continuous instead of being placed
+    // along the world X axis at keyPts[i].
+    Transform predecessor = Transform::identity();
     for (sofa::Size i = 1; i < keyPts.size(); ++i)
     {
         if (x_used <= keyPts[i])
         {
-            return l_sectionMaterials.get(i - 1)->getRestTransformOnX(global_H_local, x_used, keyPts[i - 1]);
+            return l_sectionMaterials.get(i - 1)->getRestTransformOnX(
+                global_H_local, x_used, keyPts[i - 1], predecessor);
         }
+
+        Transform tip;
+        l_sectionMaterials.get(i - 1)->getRestTransformOnX(
+            tip, keyPts[i], keyPts[i - 1], predecessor);
+        predecessor = tip;
     }
 
     msg_error() << " problem in getRestTransformOnX : x_curv " << x_used << " is not between keyPoints" << d_keyPoints.getValue();
