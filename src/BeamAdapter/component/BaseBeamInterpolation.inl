@@ -107,6 +107,7 @@ BaseBeamInterpolation<DataTypes>::BaseBeamInterpolation()
     , d_beamCollision(initData(&d_beamCollision, "beamCollision", "list of beam (in edgeList) that needs to be considered for collision"))
     , d_dofsAndBeamsAligned(initData(&d_dofsAndBeamsAligned, true, "dofsAndBeamsAligned",
         "if false, a transformation for each beam is computed between the DOF and the beam nodes"))
+	, d_wireTipIndex(initData(&d_wireTipIndex, (sofa::Index)0, "wireTipIndex", "index of the beam extremity that is considered as the tip of the wire"))
     , l_topology(initLink("topology", "link to the topology (must contain edges)"))
 {
 
@@ -186,6 +187,9 @@ void BaseBeamInterpolation<DataTypes>::addBeam(const EdgeID eID, const Real leng
     d_dofsAndBeamsAligned.setValue(false);
     DOF0TransformNode0.push_back(Transform(Vec3(0, 0, 0), QuatX));
     DOF1TransformNode1.push_back(Transform(Vec3(0, 0, 0), QuatX));
+
+    const BaseMeshTopology::Edge& edge = l_topology->getEdge(eID);
+	d_wireTipIndex.setValue(edge[1]);
 }
 
 
@@ -392,6 +396,7 @@ void BaseBeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real baryCoord,
 }
 
 
+// TODO check why this method is called in continue
 template<class DataTypes>
 int BaseBeamInterpolation<DataTypes>::getNodeIndices(const EdgeID edgeInList,
     unsigned int& node0Idx,

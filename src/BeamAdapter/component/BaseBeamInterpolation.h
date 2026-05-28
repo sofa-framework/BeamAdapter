@@ -231,6 +231,9 @@ public:
     Data< sofa::type::vector<EdgeID> > d_beamCollision;
 
     Data<bool>          d_dofsAndBeamsAligned;
+
+    /// index of the beam extremity that is considered as the tip of the wire
+	Data <sofa::Index> d_wireTipIndex;
     
     /// link to the (edge) topology
     SingleLink<BaseBeamInterpolation<DataTypes>, BaseMeshTopology, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_topology;
