@@ -66,7 +66,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 {
     void doSetUp() override
     {
-        sofa::simpleapi::importPlugin(Sofa.Component.ODESolver.Backward);
+        sofa::simpleapi::importPlugin(Sofa.Component.IntegrationSchemes.Backward);
         sofa::simpleapi::importPlugin(Sofa.Component.LinearSolver.Iterative);
         sofa::simpleapi::importPlugin(Sofa.Component.StateContainer);
         sofa::simpleapi::importPlugin(Sofa.Component.Topology.Container.Constant);
