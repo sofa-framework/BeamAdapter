@@ -50,8 +50,11 @@ public:
     /// Default Constructor
     RodSpireSection();
 
-    /// Override method to get the rest position of the beam. In this implementation, it will compute the current position given the spire parameters
-    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
+    /// Override method to get the rest position of the beam. The spire is computed in the section's local frame
+    /// (origin at the section start, +X aligned with the predecessor tip tangent) and composed with
+    /// @p predecessor_H_sectionStart to obtain the world rest transform.
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                             const Transform& predecessor_H_sectionStart) override;
 
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method

@@ -93,12 +93,18 @@ public:
     /// Returns the Young modulus, Poisson's and massDensity coefficient of this section
     void getMechanicalParameters(Real& youngModulus, Real& cPoisson, Real& massDensity) const;
 
-    /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter 
-    virtual void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
+    /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter.
+    /// @param predecessor_H_sectionStart locates this section's starting frame wrt world. Pass Transform::identity()
+    /// for the first section. Subsequent sections receive the accumulated tip transform of all preceding sections so
+    /// each section composes its local rest geometry with the actual end-frame of the predecessor instead of assuming
+    /// the wire so far ran straight along world +X.
+    virtual void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                                     const Transform& predecessor_H_sectionStart)
     {
         SOFA_UNUSED(global_H_local);
         SOFA_UNUSED(x_used);
         SOFA_UNUSED(x_start);
+        SOFA_UNUSED(predecessor_H_sectionStart);
     }
  
 protected:

@@ -53,8 +53,11 @@ public:
     /// Default Constructor
     RodMeshSection();
 
-    /// Override method to get the rest position of the beam. In this implementation, it will interpolate along the loaded mesh geometry
-    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
+    /// Override method to get the rest position of the beam. The mesh-interpolated rest transform is expressed in the
+    /// section's local frame (origin at the section start, +X = predecessor tip tangent) and composed with
+    /// @p predecessor_H_sectionStart to obtain the world rest transform.
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start,
+                             const Transform& predecessor_H_sectionStart) override;
       
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
