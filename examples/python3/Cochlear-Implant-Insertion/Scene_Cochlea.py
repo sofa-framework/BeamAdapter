@@ -50,7 +50,7 @@ def createScene(rootNode):
         RefStartingPos.addObject('MechanicalObject', name="ReferencePos", template="Rigid3d", position="-3 1.5 0.3  1 0 0 0")
 
         InstrumentCombined = rootNode.addChild('InstrumentCombined')
-        InstrumentCombined.addObject('EulerImplicitSolver', rayleighStiffness="0.01", rayleighMass="0.03", printLog=False )
+        InstrumentCombined.addObject('EulerImplicitIntegrationScheme', rayleighStiffness="0.01", rayleighMass="0.03", printLog=False )
         InstrumentCombined.addObject('BTDLinearSolver')
         InstrumentCombined.addObject('RegularGridTopology', name="meshLinesCombined", nx="100", ny="1", nz="1")
 

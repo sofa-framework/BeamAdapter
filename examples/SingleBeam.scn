@@ -3,7 +3,7 @@
  	<RequiredPlugin pluginName="BeamAdapter"/> <!-- Needed to use components [WireBeamInterpolation WireRestShape] -->
 	<RequiredPlugin pluginName="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->
  	<RequiredPlugin pluginName="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->
- 	<RequiredPlugin pluginName="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
+ 	<RequiredPlugin pluginName="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitIntegrationScheme] -->
  	<RequiredPlugin pluginName="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
  	<RequiredPlugin pluginName="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->
  	<RequiredPlugin pluginName="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->
@@ -13,7 +13,7 @@
 	<DefaultVisualManagerLoop />
 	
 	<Node name="BeamModel">
-		<EulerImplicitSolver rayleighStiffness="0" rayleighMass="0" printLog="false" />
+		<EulerImplicitIntegrationScheme rayleighStiffness="0" rayleighMass="0" printLog="false" />
 		<BTDLinearSolver verbose="0"/>
 		<MechanicalObject template="Rigid3d" name="DOFs" position="0 0 0 0 0 0 1  2 0 0 0 0 0 1  4 0 0 0 0 0 1  6 0 0 0 0 0 1"/> 
 		<MeshTopology name="lines" lines="0 1 1 2 2 3" /> 

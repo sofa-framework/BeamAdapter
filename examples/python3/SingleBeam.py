@@ -11,7 +11,7 @@ def createScene(rootNode):
 
     # rootNode/BeamModel
     BeamModel = rootNode.addChild('BeamModel', bbox="-3 -6 -3 3 3 3")
-    BeamModel.addObject('EulerImplicitSolver', rayleighStiffness='0', rayleighMass='0', printLog='false')
+    BeamModel.addObject('EulerImplicitIntegrationScheme', rayleighStiffness='0', rayleighMass='0', printLog='false')
     BeamModel.addObject('BTDLinearSolver', verbose='0')
     BeamModel.addObject('RegularGridTopology', name='MeshLines', n=[200, 1, 1], min=[0, 0, 0], max=[100, 0, 0])
     BeamModel.addObject('MechanicalObject', template='Rigid3d', name='DOFs', position='@MeshLines.positions')
