@@ -88,7 +88,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
             "    <DefaultAnimationLoop />"
             "    <DefaultVisualManagerLoop />"
             "    <Node name='BeamModel'/>"
-            "        <EulerImplicitSolver rayleighStiffness='0.0' rayleighMass='0.0' />"
+            "        <EulerImplicitIntegrationScheme rayleighStiffness='0.0' rayleighMass='0.0' />"
             "        <BTDLinearSolver />"
             "        <RegularGridTopology name='MeshLines' nx='200' ny='1' nz='1' xmax='100' xmin='0' ymin='0' ymax='0' zmax='0' zmin='0'/>"
             "        <MechanicalObject template='Rigid3d' name='DOFs' />"
@@ -142,7 +142,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "   		    <EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "   		    <EulerImplicitIntegrationScheme rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "               <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "               $line1"
                 "               <BeamInterpolation template='Rigid3d' name='Interpol' radius='0.1'/>"

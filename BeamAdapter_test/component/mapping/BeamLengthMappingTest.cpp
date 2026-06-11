@@ -193,7 +193,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
                 "    <RequiredPlugin name=\"Sofa.Component.ODESolver.Backward\"/>"
                 "    <RequiredPlugin name=\"Sofa.Component.LinearSolver.Iterative\"/>"
-                "    <EulerImplicitSolver rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
+                "    <EulerImplicitIntegrationScheme rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "    <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "    <Mesh name='meshSuture' edges='0 1' />"
                 "    <MechanicalObject template='Rigid3' name='DOFs' showIndices='0' position='0 0 0 0 0 0 1   1 0 0 0 0 0 1'/>"
