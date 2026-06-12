@@ -191,8 +191,8 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "    <RequiredPlugin name=\"Sofa.Component.IntegrationScheme.Backward\"/>"
-                "    <RequiredPlugin name=\"Sofa.Component.LinearSolver.Iterative\"/>"
+                "    <RequiredPlugin pluginName=\"Sofa.Component.IntegrationScheme.Backward\"/>"
+                "    <RequiredPlugin pluginName=\"Sofa.Component.LinearSolver.Iterative\"/>"
                 "    <EulerImplicitIntegrationScheme rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "    <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"
                 "    <Mesh name='meshSuture' edges='0 1' />"
