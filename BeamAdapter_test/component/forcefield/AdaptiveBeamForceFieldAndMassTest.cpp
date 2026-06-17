@@ -48,7 +48,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "               <RequiredPlugin name='Sofa.Component.IntegrationSchemes.Backward' />"
+                "               <RequiredPlugin name='Sofa.Component.IntegrationScheme.Backward' />"
                 "               <RequiredPlugin name='Sofa.Component.LinearSolver.Iterative' />"
                 "               <RequiredPlugin name='Sofa.Component.StateContainer' />"
                 "               <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
@@ -87,7 +87,7 @@ struct AdaptiveBeamForceFieldAndMassTest : public sofa::testing::BaseSimulationT
         string scene =
             "<?xml version='1.0'?>"
             "<Node 	name='Root' gravity='0 -9.81 0' dt='0.01'>"
-            "    <RequiredPlugin name='Sofa.Component.IntegrationSchemes.Backward' />"
+            "    <RequiredPlugin name='Sofa.Component.IntegrationScheme.Backward' />"
             "    <RequiredPlugin name='Sofa.Component.LinearSolver.Direct' />"
             "    <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
             "    <RequiredPlugin name='Sofa.Component.StateContainer' />"

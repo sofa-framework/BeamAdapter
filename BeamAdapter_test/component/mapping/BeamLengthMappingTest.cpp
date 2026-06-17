@@ -118,7 +118,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         const int Nout=2; // WARNING this number has to be changed to test with more than one beam !!
         const int Nin=3;
 
-        sofa::simpleapi::importPlugin("Sofa.Component.IntegrationSchemes.Backward");
+        sofa::simpleapi::importPlugin("Sofa.Component.IntegrationScheme.Backward");
         sofa::simpleapi::importPlugin("Sofa.Component.LinearSolver.Iterative");
 
         string scene =
@@ -191,7 +191,7 @@ struct BeamLengthMappingTest : public sofa::mapping_test::Mapping_test<_BeamLeng
         string scene =
                 "<?xml version='1.0'?>"
                 "<Node 	name='Root' gravity='0 0 0' time='0' animate='0'>"
-                "    <RequiredPlugin name=\"Sofa.Component.IntegrationSchemes.Backward\"/>"
+                "    <RequiredPlugin name=\"Sofa.Component.IntegrationScheme.Backward\"/>"
                 "    <RequiredPlugin name=\"Sofa.Component.LinearSolver.Iterative\"/>"
                 "    <EulerImplicitIntegrationScheme rayleighStiffness='0.08' rayleighMass='0.08' printLog='false' />"
                 "    <CGLinearSolver iterations='100' threshold='1e-10' tolerance='1e-15' />"

@@ -66,7 +66,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
 {
     void doSetUp() override
     {
-        sofa::simpleapi::importPlugin(Sofa.Component.IntegrationSchemes.Backward);
+        sofa::simpleapi::importPlugin(Sofa.Component.IntegrationScheme.Backward);
         sofa::simpleapi::importPlugin(Sofa.Component.LinearSolver.Iterative);
         sofa::simpleapi::importPlugin(Sofa.Component.StateContainer);
         sofa::simpleapi::importPlugin(Sofa.Component.Topology.Container.Constant);
@@ -78,7 +78,7 @@ struct BeamInterpolationTest : public  sofa::testing::BaseSimulationTest,
         string scene =
             "<?xml version='1.0'?>"
             "<Node 	name='Root' gravity='0 -9.81 0' dt='0.01'>"
-            "    <RequiredPlugin name='Sofa.Component.IntegrationSchemes.Backward' />"
+            "    <RequiredPlugin name='Sofa.Component.IntegrationScheme.Backward' />"
             "    <RequiredPlugin name='Sofa.Component.LinearSolver.Direct' />"
             "    <RequiredPlugin name='Sofa.Component.Constraint.Projective' />"
             "    <RequiredPlugin name='Sofa.Component.StateContainer' />"
