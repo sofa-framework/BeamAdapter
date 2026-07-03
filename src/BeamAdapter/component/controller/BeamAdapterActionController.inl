@@ -34,9 +34,10 @@ BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
     , d_actions(initData(&d_actions, "actions", "List of actions to script the BeamAdapter"))
     , d_actionString(initData(&d_actionString, "actionString", "List of actions as string to script the BeamAdapter"))
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
+	, d_currentAction(initData(&d_currentAction, 0, "currentAction", "Current action applied to the BeamAdapter"))
     , l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
 {
-    
+	d_currentAction.setReadOnly(true);
 }
 
 template <class DataTypes>
@@ -104,6 +105,12 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
     case 21: // bas = 21
         m_currAction = BeamAdapterAction::MOVE_BACKWARD;
         break;
+    case 'I':
+        m_currAction = BeamAdapterAction::ACTIVATE_TOOL;
+        break;
+    case 'O': 
+        m_currAction = BeamAdapterAction::DEACTIVATE_TOOL;
+        break;
     default:
         m_currAction = BeamAdapterAction::NO_ACTION;
     break;
@@ -134,10 +141,13 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
         ctrl->applyAction(m_currAction);
 
+		int currentActionInt = int(m_currAction);
+        d_currentAction.setValue(currentActionInt);
+
         auto times = sofa::helper::WriteAccessor(d_timeSteps);
         auto actions = sofa::helper::WriteAccessor(d_actions);
         times.push_back(currentTime);
-        actions.push_back(int(m_currAction));
+        actions.push_back(currentActionInt);
 
         m_lastAction = m_currAction;
     }
@@ -150,10 +160,12 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
             if (currentTime >= time) // check if another key time has been reached and change action
             {                
-                m_currAction = BeamAdapterAction(d_actions.getValue()[m_readStep]);
+				int currentActionInt = d_actions.getValue()[m_readStep];
+                m_currAction = BeamAdapterAction(currentActionInt);
                 m_readStep++;
 
                 ctrl->applyAction(m_currAction);
+				d_currentAction.setValue(currentActionInt);
             }
         }
     }

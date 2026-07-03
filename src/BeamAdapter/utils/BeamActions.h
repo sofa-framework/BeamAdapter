@@ -41,6 +41,8 @@ namespace beamadapter
         USE_TOOL_0,
         USE_TOOL_1,
         USE_TOOL_2,
+        ACTIVATE_TOOL,
+		DEACTIVATE_TOOL
     };
 
     /// \brief map of action as string keyword instead of int for better clarity in scene scripting
@@ -49,12 +51,15 @@ namespace beamadapter
         {"fwd", BeamAdapterAction::MOVE_FORWARD},
         {"bwd", BeamAdapterAction::MOVE_BACKWARD},
         {"right", BeamAdapterAction::SPIN_RIGHT},
+        {"left", BeamAdapterAction::SPIN_LEFT},
         {"nextT", BeamAdapterAction::SWITCH_NEXT_TOOL},
         {"prevT", BeamAdapterAction::SWITCH_PREVIOUS_TOOL},
         {"dropT", BeamAdapterAction::DROP_TOOL},
         {"tool0", BeamAdapterAction::USE_TOOL_0},
         {"tool1", BeamAdapterAction::USE_TOOL_1},
-        {"tool2", BeamAdapterAction::USE_TOOL_2}
+		{"tool2", BeamAdapterAction::USE_TOOL_2},
+		{"activate", BeamAdapterAction::ACTIVATE_TOOL},
+		{"deactivate", BeamAdapterAction::DEACTIVATE_TOOL}
     };
 
     /// static method to convert an action as string into enum class using @sa beamActionNames

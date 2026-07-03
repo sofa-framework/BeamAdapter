@@ -68,6 +68,7 @@ public:
     Data <type::vector<int> > d_actions; ///< List of actions to import or export.
     Data <type::vector<std::string> > d_actionString; ///< List of actions to import or export as string.
     Data <type::vector<Real> > d_timeSteps; ///< List of key times corresponding to BeamActions in @sa d_actions or @sa d_actionString
+	Data < int > d_currentAction; ///< current action status for read only from outside of the component. Will be updated at each timestep.
 
     /// Link to the InterventionalRadiologyController, controlling the Beam, to script.
     SingleLink<BeamAdapterActionController<DataTypes>, InterventionalRadiologyController<DataTypes>, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_interventionController;
