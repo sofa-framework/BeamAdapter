@@ -850,6 +850,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 break;
         }
 
+        // If no previous node was found beyond xCurvAbs (see the "Case 1" warning above), the loop
+        // ends with prev_xId == m_nodeCurvAbs.size(): clamp to the last node to avoid out-of-bounds access.
+        if (prev_xId >= m_nodeCurvAbs.size())
+            prev_xId = m_nodeCurvAbs.size() - 1;
+
         sofa::Index prev_globalNodeId = prev_numberOfUnactiveNodes + prev_xId;
         const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
 
