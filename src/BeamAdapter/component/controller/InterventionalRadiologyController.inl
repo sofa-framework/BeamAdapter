@@ -38,7 +38,6 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/core/behavior/MechanicalState.h>
 #include <sofa/helper/AdvancedTimer.h>
-#include <sofa/helper/system/FileRepository.h>
 #include <sofa/type/vector_algorithm.h>
 
 
@@ -68,12 +67,10 @@ InterventionalRadiologyController<DataTypes>::InterventionalRadiologyController(
 , d_startingPos(initData(&d_startingPos,Coord(),"startingPos","starting pos for inserting the instrument"))
 , d_threshold(initData(&d_threshold, (Real)0.01, "threshold", "threshold for controller precision which is homogeneous to the unit of length used in the simulation"))
 , d_rigidCurvAbs(initData(&d_rigidCurvAbs, "rigidCurvAbs", "pairs of curv abs for beams we want to rigidify"))
-, d_motionFilename(initData(&d_motionFilename, "motionFilename", "text file that includes tracked motion from optical sensor"))
 , d_indexFirstNode(initData(&d_indexFirstNode, (unsigned int) 0, "indexFirstNode", "first node (should be fixed with restshape)"))
 , l_fixedConstraint(initLink("fixedConstraint", "Path to the FixedProjectiveConstraint"))
 , l_mechanicalTopology(initLink("topology", "Path to the mechanical topology"))
 {
-    m_sensored =false;
 }
 
 
@@ -137,13 +134,7 @@ void InterventionalRadiologyController<DataTypes>::init()
      {
          m_FF=true;
          m_RW=false;
-         m_sensored = false;
      }
-    if (!d_motionFilename.getValue().empty())
-    {
-        m_FF = true; m_sensored = true; m_currentSensorData = 0;
-        loadMotionData(d_motionFilename.getValue());
-    }
 
     auto checkData = [&](auto& data)
     {
@@ -296,31 +287,6 @@ void InterventionalRadiologyController<DataTypes>::init()
     sofa::core::objectmodel::BaseComponent::d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
 }
 
-template<class DataTypes>
-void InterventionalRadiologyController<DataTypes>::loadMotionData(std::string filename)
-{
-    if (!helper::system::DataRepository.findFile(filename))
-    {
-        msg_error() << "File " << filename << " not found.";
-        return;
-    }
-    std::ifstream file(filename.c_str());
-
-    std::string line;
-    Vec3 result;
-    while( std::getline(file,line) )
-    {
-        if (line.empty())
-            continue;
-        std::istringstream values(line);
-        values >> result[0] >> result[1] >> result[2];
-        result[0] /= 1000;
-        m_sensorMotionData.push_back(result);
-    }
-
-    file.close();
-}
-
 /*!
  * \todo fix the mouse event with better controls
  */
@@ -413,26 +379,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
         }
         if (m_FF)
         {
-            if (!m_sensored)
-                xInstrTip[id] += d_speed.getValue() * context->getDt();
-        else
-            {
-                unsigned int newSensorData = m_currentSensorData + 1;
-
-                while( m_sensorMotionData[newSensorData][0] < context->getTime() )
-                {
-                    m_currentSensorData = newSensorData;
-                    newSensorData++;
-                }
-                if(newSensorData >= m_sensorMotionData.size())
-                {
-                    xInstrTip[id] = 0;
-                }
-                else
-                {
-                    xInstrTip[id] += m_sensorMotionData[m_currentSensorData][1];
-                }
-            }
+            xInstrTip[id] += d_speed.getValue() * context->getDt();
         }
         if (m_RW)
         {
