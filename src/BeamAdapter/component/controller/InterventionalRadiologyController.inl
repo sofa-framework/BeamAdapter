@@ -500,6 +500,14 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
         type::vector<sofa::Size> density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I); // sampling of the different section of this instrument
 
+        // an instrument must provide at least one noticeable point; otherwise the loop below and the
+        // final key point access (xP_noticeable_I.size()-1) would read out of bounds.
+        if (xP_noticeable_I.empty())
+        {
+            msg_error() << "Instrument " << i << " provides no sampling parameters (no noticeable point). Skipping it.";
+            continue;
+        }
+
         // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.
         for (int j=0; j<(int)(xP_noticeable_I.size()-1); j++)
         {
