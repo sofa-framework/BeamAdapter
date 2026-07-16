@@ -156,7 +156,6 @@ public:
     void totalLengthIsChanging(const type::vector<Real>& newNodeCurvAbs, type::vector<Real>& modifiedNodeCurvAbs, const type::vector< type::vector<int> >& newTable);
     void fixFirstNodesWithUntil(unsigned int first_simulated_Node);
     void activateBeamListForCollision( type::vector<Real> &curv_abs, type::vector< type::vector<int> > &id_instrument_table);
-    void loadMotionData(std::string filename);
 
     Data<int>            d_controlledInstrument;
     Data<type::vector<Real>>   d_xTip;
@@ -167,12 +166,11 @@ public:
     Data<Coord>          d_startingPos;
     Data<Real>           d_threshold;
     Data<type::vector<Real>>   d_rigidCurvAbs; // Pairs (start - end)
-    Data<std::string>    d_motionFilename;
     Data<unsigned int>   d_indexFirstNode; // First Node simulated
-    
-    
+
+
     bool m_useBeamActions = false;
-    bool m_FF, m_RW, m_sensored;
+    bool m_FF = false, m_RW = false;
 
     SingleLink<
         InterventionalRadiologyController, FixedProjectiveConstraint<DataTypes>,
@@ -183,8 +181,6 @@ public:
     
     DeprecatedAndRemoved m_fixedConstraint;
 
-    type::vector<Vec3d>                   m_sensorMotionData;
-    unsigned int                    m_currentSensorData;
     type::vector<Real>                    m_nodeCurvAbs;
     type::vector< type::vector<int> >           m_idInstrumentCurvAbsTable;
 };
