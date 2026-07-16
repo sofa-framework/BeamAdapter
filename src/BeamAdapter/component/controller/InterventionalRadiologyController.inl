@@ -961,7 +961,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     {
         RealConstIterator it = rigidCurvAbs->begin();
 
-        for (unsigned int i=0; i<newCurvAbs.size(); i++)
+        // firstSimulatedNode + i indexes into the dofs, so it must stay within [0, numberOfNodes-1]
+        for (unsigned int i=0; i<newCurvAbs.size() && (firstSimulatedNode + i) < numberOfNodes; i++)
         {
             if (newCurvAbs[i] < ((*it)+ std::numeric_limits<float>::epsilon()) && newCurvAbs[i] > ((*it)- std::numeric_limits<float>::epsilon())) // node= border of the rigid segment
             {
