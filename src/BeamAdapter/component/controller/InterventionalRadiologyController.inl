@@ -372,7 +372,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     if(m_FF || m_RW)
     {
         int id = d_controlledInstrument.getValue();
-        if (id >= (int)xInstrTip.size())
+        if (id < 0 || id >= (int)xInstrTip.size())
         {
             msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead";
             id=0;
@@ -406,7 +406,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyAction(BeamAdapterAction action)
 {
     int id = d_controlledInstrument.getValue();
-    if (id >= int(m_instrumentsList.size()))
+    if (id < 0 || id >= int(m_instrumentsList.size()))
     {
         msg_warning() << "Controlled Instrument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
         return;
