@@ -611,10 +611,8 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     Real xAbsCurv = m_nodeCurvAbs[node];
     int firstInstruOnx = m_idInstrumentCurvAbsTable[node][0];
 
-    type::vector<unsigned int> segRemove;
-
-    for (unsigned int it=0; it<m_instrumentsList.size(); it++)
-        segRemove.push_back(0);
+    // -1 means "nothing to remove" for that instrument; using 0 as sentinel would drop a point at index 0.
+    type::vector<int> segRemove(m_instrumentsList.size(), -1);
 
     for (int i = static_cast<int>(xPointList.size()) - 1; i>=0; i--)
     {
@@ -667,7 +665,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
     {
-        if(segRemove[it]!=0)
+        if(segRemove[it]!=-1)
             removeEdge.push_back(segRemove[it]);
     }
 
