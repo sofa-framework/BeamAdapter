@@ -272,9 +272,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df
 
 
 template<class DataTypes>
-<<<<<<< Updated upstream
-void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge( VecDeriv& df, int bIndex, Index nd0Id, Index nd1Id, SReal factor)
-=======
 void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge(VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)
 {
     /// Real mass-vector product: df += factor * M * dx (in the beam local frame).
@@ -310,19 +307,10 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge(VecDeriv& df, cons
 
 template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::applyGravityLarge(VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)
->>>>>>> Stashed changes
 {
     const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[bIndex];
 
-<<<<<<< Updated upstream
-    /// displacement in local frame (only gravity as external force)
-    Vec6 a0 = beamLocalMatrix.m_A0Ref * m_gravity;
-    Vec6 a1 = beamLocalMatrix.m_A1Ref * m_gravity;
 
-    /// internal force in local frame
-    Vec6 f0 = beamLocalMatrix.m_M00*a0 + beamLocalMatrix.m_M01*a1;
-    Vec6 f1 = beamLocalMatrix.m_M10*a0 + beamLocalMatrix.m_M11*a1;
-=======
     /// gravity acceleration expressed in the beam local frame
     const Vec6 a0 = beamLocalMatrix.m_A0Ref * m_gravity;
     const Vec6 a1 = beamLocalMatrix.m_A1Ref * m_gravity;
@@ -330,7 +318,6 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyGravityLarge(VecDeriv& df, c
     /// gravity force in local frame
     const Vec6 f0 = beamLocalMatrix.m_M00*a0 + beamLocalMatrix.m_M01*a1;
     const Vec6 f1 = beamLocalMatrix.m_M10*a0 + beamLocalMatrix.m_M11*a1;
->>>>>>> Stashed changes
 
     /// force in global frame
     Vec6 F0 = beamLocalMatrix.m_A0Ref.multTranspose(f0);
