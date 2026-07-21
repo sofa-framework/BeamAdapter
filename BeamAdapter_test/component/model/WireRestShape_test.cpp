@@ -35,7 +35,7 @@ using namespace sofa::testing;
 using namespace sofa::defaulttype;
 using namespace sofa::type;
 using namespace sofa::core::objectmodel;
-using namespace sofa::component::engine::_wirerestshape_;
+using namespace beamadapter;
 
 class WireRestShape_test : public BaseTest
 {
@@ -46,7 +46,7 @@ public:
     typedef typename Coord::value_type   Real;
     typedef typename sofa::defaulttype::SolidTypes<Real>::Transform Transform;
 
-    void onSetUp() override
+    void doSetUp() override
     {
         m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
 
@@ -55,7 +55,7 @@ public:
     }
 
     /// Unload the scene
-    void onTearDown() override
+    void doTearDown() override
     {
         if (m_root != nullptr) {
             sofa::simulation::node::unload(m_root);
@@ -163,10 +163,10 @@ void WireRestShape_test::testParameterInit()
     Real straightLength = 95.0;
     EXPECT_EQ(fullLength, 100.0);
 
-    int nbrE0 = 50;
-    int nbrE1 = 10;
+    sofa::Size nbrE0 = 50;
+    sofa::Size nbrE1 = 10;
     vector<Real> keysPoints, keysPoints_ref = { 0, straightLength, fullLength };
-    vector<int> nbP_density, nbP_density_ref = { nbrE0, nbrE1 };
+    vector<sofa::Size> nbP_density, nbP_density_ref = { nbrE0, nbrE1 };
     
     wire->getSamplingParameters(keysPoints, nbP_density);
     EXPECT_EQ(keysPoints.size(), 3);

@@ -36,7 +36,7 @@
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.h>
 
-namespace sofa::component::mapping
+namespace beamadapter
 {
 
 /*!
@@ -84,11 +84,12 @@ public:
     typedef sofa::type::Mat<12,6,Real> Mat12x6;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
-    typedef sofa::component::controller::InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
+    typedef InterventionalRadiologyController<TIn> TInterventionalRadiologyController;
 
 public:
+    SingleLink<MultiAdaptiveBeamMapping<TIn, TOut>, TInterventionalRadiologyController, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_controller;
+    
     Data<bool> useCurvAbs;
-    Data< type::vector< std::string > > m_controlerPath;
     Data<bool> d_parallelMapping;           /*!< flag to enable parallel internal computation of apply/applyJ for the submapping(s) AdaptiveBeamMapping */
 
     MultiAdaptiveBeamMapping(core::State< In >* from, core::State< Out >* to, TInterventionalRadiologyController* _ircontroller);
@@ -105,10 +106,11 @@ public:
     void applyJT(const core::ConstraintParams *cparams /* PARAMS FIRST */, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in) override;
 
 
-    virtual void init() override;
-    virtual void bwdInit() override;
+    void init() override;
+    void bwdInit() override;
 
-    virtual void handleEvent(sofa::core::objectmodel::Event *) override;
+    void handleEvent(sofa::core::objectmodel::Event *) override;
+    void parse(core::objectmodel::BaseObjectDescription* arg) override;
 
     void setBarycentricMapping();
 
@@ -140,9 +142,8 @@ protected:
     void assignSubMappingFromControllerInfo();
 
     // for fromSeveralInterpolations option
-    sofa::type::vector< sofa::component::fem::WireBeamInterpolation<TIn>  *> m_instrumentList;
+    sofa::type::vector< WireBeamInterpolation<TIn>  *> m_instrumentList;
     sofa::type::vector<  typename AdaptiveBeamMapping<TIn, TOut>::SPtr > m_subMappingList;
-    TInterventionalRadiologyController* m_ircontroller;
     sofa::component::topology::container::dynamic::EdgeSetTopologyModifier* _edgeMod{nullptr};
     sofa::type::vector<InReal> _xPointList;     //=> for each mapped point provides the local position (curv. abs.)
     sofa::type::vector<int> _idm_instrumentList; //=> for each mapped point provides the interpolation (in m_instrumentList)
@@ -155,4 +156,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Vec3Types>;
 #endif
 
-} // namespace sofa::component::mapping
+} // namespace beamadapter

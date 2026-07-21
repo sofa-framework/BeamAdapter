@@ -22,15 +22,20 @@
 #include <BeamAdapter/CUDA/init.h>
 #include <BeamAdapter/initBeamAdapter.h>
 #include <SofaCUDA/init.h>
+
 #include <sofa/core/ObjectFactory.h>
+#include <sofa/helper/system/PluginManager.h>
+
 namespace beamadapter::cuda
 {
+
+extern void registerBeamAdapterCUDAComponents(sofa::core::ObjectFactory* factory);
 
 extern "C" {
     SOFA_EXPORT_DYNAMIC_LIBRARY void initExternalModule();
     SOFA_EXPORT_DYNAMIC_LIBRARY const char* getModuleName();
     SOFA_EXPORT_DYNAMIC_LIBRARY const char* getModuleVersion();
-    SOFA_EXPORT_DYNAMIC_LIBRARY const char* getModuleComponentList();
+    SOFA_BEAMADAPTER_API void registerObjects(sofa::core::ObjectFactory* factory);
 }
 
 void initExternalModule()
@@ -53,17 +58,18 @@ void init()
     static bool first = true;
     if (first)
     {
-        sofa::component::initBeamAdapter();
+        // make sure that this plugin is registered into the PluginManager
+        sofa::helper::system::PluginManager::getInstance().registerPlugin(MODULE_NAME);
+
+        beamadapter::initBeamAdapter();
         sofa::gpu::cuda::init();
         first = false;
     }
 }
 
-const char* getModuleComponentList()
+void registerObjects(sofa::core::ObjectFactory* factory)
 {
-    /// string containing the names of the classes provided by the plugin
-    static std::string classes = sofa::core::ObjectFactory::getInstance()->listClassesFromTarget(MODULE_NAME);
-    return classes.c_str();
+    registerBeamAdapterCUDAComponents(factory);
 }
 
 } // namespace beamadapter::cuda

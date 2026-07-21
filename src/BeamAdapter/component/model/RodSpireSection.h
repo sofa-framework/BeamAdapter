@@ -24,7 +24,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using sofa::core::loader::MeshLoader;
@@ -38,7 +38,7 @@ using sofa::core::loader::MeshLoader;
  * Method @sa getRestTransformOnX will return the current position of the curviline abscisse along the spire.
  */
 template <class DataTypes>
-class RodSpireSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
+class RodSpireSection : public BaseRodSectionMaterial<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodSpireSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
@@ -51,7 +51,7 @@ public:
     RodSpireSection();
 
     /// Override method to get the rest position of the beam. In this implementation, it will compute the current position given the spire parameters
-    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
 
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
@@ -66,4 +66,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API RodSpireSection<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

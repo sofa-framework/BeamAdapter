@@ -24,11 +24,11 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/utils/BeamSection.h>
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 using sofa::core::loader::MeshLoader;
@@ -43,15 +43,15 @@ using sofa::core::loader::MeshLoader;
  * Method @sa initSection and @sa getRestTransformOnX should be overriden to provide the correct creation and interpolation.
  * 
  * The rod section is described by:
- * - Topology parameters: vertices and edges @sa d_nbEdgesVisu and @sa d_nbEdgesCollis
+ * - Topology parameters: vertices and edges @sa d_nbEdgesVisu, @sa d_nbEdgesCollis and @sa d_nbBeams
  * - Geometry parameters: radius @sa d_radius, @sa d_innerRadius and length @sa d_length
  * - Mechanical parameters: @sa d_poissonRatio and @sa d_youngModulus
  */
 template <class DataTypes>
-class BaseRodSectionMaterial : public core::objectmodel::BaseObject
+class BaseRodSectionMaterial : public core::objectmodel::BaseComponent
 {
 public:
-    SOFA_CLASS(SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes), core::objectmodel::BaseObject);
+    SOFA_CLASS(SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes), core::objectmodel::BaseComponent);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -60,34 +60,41 @@ public:
     using Quat = sofa::type::Quat<Real>;
     using Size = sofa::Size;
 
-    /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+    /////////////////////////// Inherited from BaseComponent //////////////////////////////////////////
 
     /// Default Constructor
     BaseRodSectionMaterial();
 
-    /// init method from BaseObject API. Will call internal @see initSection to be overriden by children
+    /// init method from BaseComponent API. Will call internal @see initSection to be overriden by children
     void init() override;
 
 
     /////////////////////////// Geometry and physics Getter //////////////////////////////////////////
 
     /// Returns the number of visual edges of this section. To be set or computed by child.
-    [[nodiscard]] int getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
+    [[nodiscard]] auto getNbVisualEdges() const { return d_nbEdgesVisu.getValue(); }
 
     /// Returns the number of collision edges of this section. To be set or computed by child.
-    [[nodiscard]] int getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+    [[nodiscard]] auto getNbCollisionEdges() const { return d_nbEdgesCollis.getValue(); }
+    
+    /// Returns the number of collision edges of this section. To be set or computed by child.
+    [[nodiscard]] auto getNbBeams() const { return d_nbBeams.getValue(); }
 
     /// Returns the total length of this section. To be set or computed by child.
-    [[nodiscard]] Real getLength() const { return d_length.getValue(); }
+    [[nodiscard]] auto getLength() const { return d_length.getValue(); }
 
-    /// Returns the Young modulus and Poisson's coefficient of this section
-    void getYoungModulusAtX(Real& youngModulus, Real& cPoisson) const;
+
+    /// Returns the BeamSection @sa m_beamSection corresponding to this section
+    [[nodiscard]] const BeamSection& getBeamSection() const { return m_beamSection; }
 
     /// Returns the mass density and the BeamSection of this section
-    void getInterpolationParam(Real& _rho, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
+    void getInterpolationParameters(Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) const;
+
+    /// Returns the Young modulus, Poisson's and massDensity coefficient of this section
+    void getMechanicalParameters(Real& youngModulus, Real& cPoisson, Real& massDensity) const;
 
     /// This function is called to get the rest position of the beam depending on the current curved abscisse given in parameter 
-    virtual void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+    virtual void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
     {
         SOFA_UNUSED(global_H_local);
         SOFA_UNUSED(x_used);
@@ -107,16 +114,17 @@ public:
     Data<Real> d_innerRadius; ///< Data defining the geometry internal radius of this section is hollow 
     Data<Real> d_length; ///< Data defining the geometry length of this section
 
+    Data<Size> d_nbBeams; ///< Data defining the number of (mechanical) beams composing this section
     Data<Size> d_nbEdgesVisu; ///< Data defining the number of visual edges composing this section
     Data<Size> d_nbEdgesCollis; ///< Data defining the number of collision edges composing this section
 
 private:
     /// Internal structure to store physical parameter of the a beam section
-    BeamSection beamSection;
+    BeamSection m_beamSection;
 };
 
 #if !defined(SOFA_PLUGIN_BEAMADAPTER_BASERODSECTIONMATERIAL_CPP)
 extern template class SOFA_BEAMADAPTER_API BaseRodSectionMaterial<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

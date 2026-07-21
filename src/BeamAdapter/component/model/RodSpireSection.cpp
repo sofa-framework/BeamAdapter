@@ -27,14 +27,15 @@
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
-using namespace sofa::defaulttype;
+template class SOFA_BEAMADAPTER_API RodSpireSection<sofa::defaulttype::Rigid3Types>;
 
-const int RodSpireSectionClass = core::RegisterObject("Class defining a rod spire section, defining material and geometry parameters.")
-    .add< RodSpireSection<Rigid3Types> >(true);
+void registerRodSpireSection(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Class defining a rod spire section, defining material and geometry parameters.")
+                             .add< RodSpireSection<sofa::defaulttype::Rigid3Types> >());
+}
 
-template class SOFA_BEAMADAPTER_API RodSpireSection<Rigid3Types>;
-
-}// namespace sofa::beamadapter
+} // namespace beamadapter

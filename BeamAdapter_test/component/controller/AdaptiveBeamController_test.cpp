@@ -19,32 +19,22 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#define SOFA_COMPONENT_COLLISION_ADAPTIVEBEAMCONTACTMAPPER_CPP
+#include <gtest/gtest.h>
+#include <sofa/simulation/Node.h>
+#include <sofa/simpleapi/SimpleApi.h>
+#include <sofa/core/ObjectFactory.h>
 
-
-#include "AdaptiveBeamContactMapper.inl"
-#include <sofa/helper/Factory.inl>
-
-namespace sofa
+TEST(AdaptiveBeamController, target)
 {
+    sofa::simpleapi::importPlugin("BeamAdapter");
+    
+    const auto node = sofa::simpleapi::createNode("node");
+    const auto controller = sofa::simpleapi::createObject(node, "AdaptiveBeamController");
 
-namespace component
-{
+    const auto& creators = sofa::core::ObjectFactory::getInstance()->getEntry("AdaptiveBeamController").creatorMap;
 
-namespace collision
-{
+    const auto it = creators.find(sofa::defaulttype::Rigid3Types::Name());
+    EXPECT_NE(it, creators.end());
 
-using namespace defaulttype;
-
-
-template class SOFA_BEAMADAPTER_API AdaptiveBeamContactMapper<BSplineModel<1>,Vec3Types>;
-
-ContactMapperCreator< ContactMapper<BSplineModel<1> > > AdaptiveBSplineContactMapperClass("AdaptiveBeamContactMapper",true);
-template class SOFA_BEAMADAPTER_API ContactMapper<BSplineModel<1> >;
-
-} // namespace collision
-
-} // namespace component
-
-} // namespace sofa
-
+    EXPECT_EQ(std::string(it->second->getTarget()), std::string("BeamAdapter"));
+}

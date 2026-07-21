@@ -15,7 +15,7 @@ def createScene(rootNode):
 
         rootNode.addObject('DefaultVisualManagerLoop')
         rootNode.addObject('FreeMotionAnimationLoop')
-        rootNode.addObject('GenericConstraintSolver', tolerance="1e-3", maxIterations="5000", resolutionMethod="UnbuiltGaussSeidel")
+        rootNode.addObject('UnbuiltGaussSeidelConstraintSolver', tolerance="1e-3", maxIterations="5000")
         rootNode.addObject('CollisionPipeline', depth="6", verbose="0", draw="1")
         rootNode.addObject('BruteForceBroadPhase', name='N2')
         rootNode.addObject('BVHNarrowPhase')
@@ -56,7 +56,7 @@ def createScene(rootNode):
 
         InstrumentCombined.addObject('MechanicalObject', template="Rigid3d", name="DOFs" )
         InstrumentCombined.addObject('InterventionalRadiologyController', template="Rigid3d", name="m_ircontroller", printLog=False, xtip="0.1",speed ='4',   step="0.1", rotationInstrument="0", controlledInstrument="0", startingPos="@../RefStartingPos/ReferencePos.position", instruments="InterpolCatheter")
-        InstrumentCombined.addObject('WireBeamInterpolation', name="InterpolCatheter", WireRestShape="@../topoLines_cath/catheterRestShape", radius="3.0", printLog=False)
+        InstrumentCombined.addObject('WireBeamInterpolation', name="InterpolCatheter", WireRestShape="@../topoLines_cath/catheterRestShape", printLog=False)
         InstrumentCombined.addObject('AdaptiveBeamForceFieldAndMass', name="CatheterForceField", massDensity="0.000005", interpolation="@InterpolCatheter", printLog=False)
         InstrumentCombined.addObject('LinearSolverConstraintCorrection', printLog=False, wire_optimization="true")
         InstrumentCombined.addObject("FixedProjectiveConstraint", indices="0")

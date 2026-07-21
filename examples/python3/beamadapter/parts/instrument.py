@@ -101,8 +101,8 @@ def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments=['guide'],
     Collis.addObject('MechanicalObject', name='CollisionDOFs')
     Collis.addObject('MultiAdaptiveBeamMapping', controller='../m_ircontroller', 
                         useCurvAbs=True, printLog=False, name='collisMap')
-    Collis.addObject('LineCollisionModel', proximity=0.0, group=1)
-    Collis.addObject('PointCollisionModel', proximity=0.0, group=1)
+    Collis.addObject('LineCollisionModel', contactDistance=0.0, group=1)
+    Collis.addObject('PointCollisionModel', contactDistance=0.0, group=1)
 
     # Visualization Guide
     VisuGuide = InstrumentCombined.addChild('VisuGuide')
@@ -142,8 +142,8 @@ def createInstrumentsCombinedXRay(node, xtip=[1, 0, 0], instruments=['guide'],
     Collis.addObject('MechanicalObject', name='CollisionDOFs')
     Collis.addObject('MultiAdaptiveBeamMapping', controller='../m_ircontroller', 
                         useCurvAbs=True, printLog=False, name='collisMap')
-    Collis.addObject('LineCollisionModel', proximity=0.0, group=1)
-    Collis.addObject('PointCollisionModel', proximity=0.0, group=1)
+    Collis.addObject('LineCollisionModel', contactDistance=0.0, group=1)
+    Collis.addObject('PointCollisionModel', contactDistance=0.0, group=1)
 
     # Visualization Guide
     VisuGuide = InstrumentCombined.addChild('VisuGuide')

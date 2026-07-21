@@ -37,31 +37,21 @@
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/component/controller/MechanicalStateController.h>
 #include <sofa/component/constraint/projective/FixedProjectiveConstraint.h>
-#include <sofa/component/collision/geometry/PointModel.h>
-#include <sofa/component/collision/geometry/LineModel.h>
 
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetGeometryAlgorithms.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
+#include <BeamAdapter/config.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Declarations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::controller
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamcontroller_
+namespace beamadapter
 {
 
 using sofa::component::constraint::projective::FixedProjectiveConstraint;
 using sofa::component::topology::container::dynamic::EdgeSetTopologyModifier ;
 using sofa::component::topology::container::dynamic::EdgeSetGeometryAlgorithms ;
-using sofa::component::fem::BeamInterpolation ;
 using sofa::core::objectmodel::KeypressedEvent ;
 using sofa::core::objectmodel::MouseEvent ;
 using sofa::core::topology::BaseMeshTopology ;
@@ -84,11 +74,11 @@ using std::string;
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamController : public MechanicalStateController<DataTypes>
+class AdaptiveBeamController : public sofa::component::controller::MechanicalStateController<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamController,DataTypes),
-               SOFA_TEMPLATE(MechanicalStateController,DataTypes));
+               SOFA_TEMPLATE(sofa::component::controller::MechanicalStateController,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -97,9 +87,9 @@ public:
     typedef typename Coord::value_type   Real    ;
 
     typedef BaseMeshTopology::EdgeID ElementID;
-    typedef type::vector<BaseMeshTopology::EdgeID> VecElementID;
+    typedef sofa::type::vector<BaseMeshTopology::EdgeID> VecElementID;
 
-    typedef MechanicalStateController<DataTypes> Inherit;
+    typedef sofa::component::controller::MechanicalStateController<DataTypes> Inherit;
 
     typedef typename SolidTypes<Real>::Transform Transform;
     typedef typename SolidTypes<Real>::SpatialVector SpatialVector;
@@ -111,7 +101,7 @@ public :
     AdaptiveBeamController();
     virtual ~AdaptiveBeamController() = default;
 
-    /////////////// Inherited from BaseObject  /////////////////////////////////////////////////////
+    /////////////// Inherited from BaseComponent  /////////////////////////////////////////////////////
     virtual void init() override ;
     virtual void reinit() override ;
 
@@ -144,10 +134,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamController<defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace _adaptivebeamcontroller_
-
-
-/// 'Export' the objects defined in the private namespace into the 'public' one.
-using _adaptivebeamcontroller_::AdaptiveBeamController ;
-
-} /// namespace sofa::component::controller
+} // namespace beamadapter

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
 *                              BeamAdapter plugin                             *
 *                  (c) 2006 Inria, University of Lille, CNRS                  *
 *                                                                             *
@@ -27,14 +27,11 @@
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <sofa/core/behavior/ConstraintResolution.h>
 
-namespace sofa::component::constraintset
-{
 
-namespace _adaptiveBeamSlidingConstraint_
+namespace beamadapter
 {
 
 using sofa::core::behavior::ConstraintResolution ;
-using sofa::core::ConstVecCoordId;
 using sofa::core::ConstraintParams;
 using sofa::helper::ReadAccessor;
 
@@ -104,8 +101,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::internalInit()
     // We search for the closest segment, on which to project each point
     // Convention : object1 is the beam model, object2 is the list of point constraints
 
-    ReadAccessor<Data<VecCoord> > x1 = mstate1->read(ConstVecCoordId::position()) ;
-    ReadAccessor<Data<VecCoord> > x2 = mstate2->read(ConstVecCoordId::position()) ;
+    ReadAccessor<Data<VecCoord> > x1 = mstate1->read(sofa::core::vec_id::read_access::position) ;
+    ReadAccessor<Data<VecCoord> > x2 = mstate2->read(sofa::core::vec_id::read_access::position) ;
 
     unsigned int m2Size = x2.size();
     m_previousPositions.clear();
@@ -156,8 +153,8 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::buildConstraintMatrix(const Const
     Real baryCoord;
     unsigned int beam = 0;
 
-    ReadAccessor<Data<VecCoord> > x1free=mstate1->read(ConstVecCoordId::freePosition()) ;
-    ReadAccessor<Data<VecCoord> > x2free=mstate2->read(ConstVecCoordId::freePosition()) ;
+    ReadAccessor<Data<VecCoord> > x1free=mstate1->read(sofa::core::vec_id::read_access::freePosition) ;
+    ReadAccessor<Data<VecCoord> > x2free=mstate2->read(sofa::core::vec_id::read_access::freePosition) ;
 
     unsigned int m2 = x2free.size();
     WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
@@ -276,7 +273,7 @@ void AdaptiveBeamSlidingConstraint<DataTypes>::draw(const VisualParams* vparams)
     
     vparams->drawTool()->saveLastState();
 
-    ReadAccessor<Data<VecCoord> > x = mstate2->read(ConstVecCoordId::position());
+    ReadAccessor<Data<VecCoord> > x = mstate2->read(sofa::core::vec_id::read_access::position);
     sofa::type::Vec3 point;
     std::vector< sofa::type::Vec3 > points;
     std::vector< sofa::type::RGBAColor> colors;
@@ -547,7 +544,6 @@ bool ProjectionSearch<DataTypes>::testForProjection(Real curvAbs)
 }
 
 
+} // namespace beamadapter
 
-} // namespace _adaptiveBeamSlidingConstraint_
 
-} // namespace sofa::component::constraintset

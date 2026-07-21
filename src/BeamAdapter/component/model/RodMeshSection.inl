@@ -23,11 +23,11 @@
 
 #include <BeamAdapter/component/model/RodMeshSection.h>
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.inl>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 
 #define EPSILON 0.0001
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 template <class DataTypes>
@@ -62,7 +62,7 @@ bool RodMeshSection<DataTypes>::initSection()
 
 
 template <class DataTypes>
-void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start)
+void RodMeshSection<DataTypes>::getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start)
 {
     Real abs_curr = x_used - x_start;
     abs_curr = abs_curr /(this->d_length.getValue()) * m_absOfGeometry;
@@ -295,4 +295,4 @@ void RodMeshSection<DataTypes>::rotateFrameForAlignX(const Quat& input, type::Ve
 
 
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

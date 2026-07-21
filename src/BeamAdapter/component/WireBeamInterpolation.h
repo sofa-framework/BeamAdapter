@@ -34,7 +34,7 @@
 #include <BeamAdapter/config.h>
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
@@ -46,15 +46,12 @@
 #include <sofa/type/Vec.h>
 #include <sofa/type/Mat.h>
 
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 
 
-namespace sofa::component::fem
+namespace beamadapter
 {
 
-namespace _wirebeaminterpolation_
-{
-using sofa::component::fem::BeamInterpolation ;
 using sofa::core::topology::BaseMeshTopology ;
 using sofa::type::Quat ;
 using sofa::type::Vec ;
@@ -73,29 +70,31 @@ using sofa::type::vector;
  * TODO : put in a separate class what is specific to wire shape !
  */
 template<class DataTypes>
-class WireBeamInterpolation : public virtual BeamInterpolation<DataTypes>
+class WireBeamInterpolation : public BaseBeamInterpolation<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(WireBeamInterpolation, DataTypes) ,
-               SOFA_TEMPLATE(BeamInterpolation, DataTypes) );
+               SOFA_TEMPLATE(BaseBeamInterpolation, DataTypes) );
+    
+    using Inherit = BaseBeamInterpolation<DataTypes>;
 
-    typedef BeamInterpolation<DataTypes> Inherited;
+    typedef typename Inherit::VecCoord VecCoord;
+    typedef typename Inherit::VecDeriv VecDeriv;
+    typedef typename Inherit::Coord Coord;
+    typedef typename Inherit::Deriv Deriv;
 
-    typedef typename Inherited::VecCoord VecCoord;
-    typedef typename Inherited::VecDeriv VecDeriv;
-    typedef typename Inherited::Coord Coord;
-    typedef typename Inherited::Deriv Deriv;
+    typedef typename Inherit::Real Real;
 
-    typedef typename Inherited::Real Real;
+    typedef typename Inherit::Transform Transform;
+    typedef typename Inherit::SpatialVector SpatialVector;
 
-    typedef typename Inherited::Transform Transform;
-    typedef typename Inherited::SpatialVector SpatialVector;
+    typedef typename Inherit::Vec2 Vec2;
+    typedef typename Inherit::Vec3 Vec3;
+    typedef typename Inherit::Quat Quat;
+    
+    using EdgeID = BaseMeshTopology::EdgeID;
 
-    typedef typename Inherited::Vec2 Vec2;
-    typedef typename Inherited::Vec3 Vec3;
-    typedef typename Inherited::Quat Quat;
-
-    WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape = nullptr);
+    WireBeamInterpolation(WireRestShape<DataTypes> *_restShape = nullptr);
 
     virtual ~WireBeamInterpolation() = default;
 
@@ -103,12 +102,12 @@ public:
     void bwdInit() override;
     void reinit() override { init(); bwdInit(); }
 
-    using BeamInterpolation<DataTypes>::addBeam;
+    using BaseBeamInterpolation<DataTypes>::addBeam;
 
-    void addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
+    void addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1,
                  const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1);
 
-    void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector< int>& nbP_density) override
+    void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<sofa::Size>& nbP_density) override
     {
         this->m_restShape->getSamplingParameters(xP_noticeable, nbP_density);
     }
@@ -118,7 +117,12 @@ public:
         return this->m_restShape->getLength();
     }
 
-    void getCollisionSampling(Real &dx, const Real& x_localcurv_abs) override
+    void getMechanicalSampling(Real &dx, const Real x_localcurv_abs) override
+    {
+        this->m_restShape->getMechanicalSampling(dx,x_localcurv_abs);
+    }
+    
+    void getCollisionSampling(Real &dx, const Real x_localcurv_abs) override
     {
         this->m_restShape->getCollisionSampling(dx,x_localcurv_abs);
     }
@@ -127,25 +131,30 @@ public:
     {
         this->m_restShape->getNumberOfCollisionSegment(dx,numLines);
     }
-
-
-    void getYoungModulusAtX(int beamId,Real& x_curv, Real& youngModulus, Real& cPoisson) override
+    
+    // this is the number of beams which can be simulated according to the rest shape (and its sections)
+    sofa::Size getTotalNumberOfPossibleBeams() const
     {
-        this->getAbsCurvXFromBeam(beamId, x_curv);
-        this->m_restShape->getYoungModulusAtX(x_curv, youngModulus, cPoisson);
+        return this->m_restShape->getTotalNumberOfBeams();
     }
 
-    virtual void getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest);
-    void getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
 
-    void getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output);
+    virtual void getRestTransform(const EdgeID edgeInList, Transform &local0_H_local1_rest);
+    
+    void getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output) override;
+    void getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest) override;
+    
+    const BeamSection& getBeamSection(sofa::Index beamId) override;
+    void getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz, Real& _Asy, Real& _Asz, Real& _J) override;
+    void getMechanicalParameters(sofa::Index, Real& youngModulus, Real& cPoisson, Real& massDensity) override;
+    
     bool getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x,  Real& x_output);	// Project a point on the segments, return false if cant project
 
     
 
     void setPathToRestShape(const std::string &o){m_restShape.setPath(o);}
 
-    void getRestTransformOnX(Transform &global_H_local, const Real &x)
+    void getRestTransformOnX(Transform &global_H_local, const Real x)
     {
         if(this->m_restShape)
         {
@@ -158,16 +167,21 @@ public:
         }
     }
 
-    SingleLink<WireBeamInterpolation<DataTypes>, sofa::component::engine::WireRestShape<DataTypes>,
+    ///////// for AdaptiveControllers
+    bool isControlled() { return m_isControlled; }
+    void setControlled(bool value) { m_isControlled = value; }
+
+
+    SingleLink<WireBeamInterpolation<DataTypes>, WireRestShape<DataTypes>,
     BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_restShape; /*! link on an external rest-shape*/
 
 
-    ////////////////////////// Inherited attributes ////////////////////////////
+    ////////////////////////// Inherit attributes ////////////////////////////
     /// https://gcc.gnu.org/onlinedocs/gcc/Name-lookup.html
-    /// Bring inherited attributes and function in the current lookup context.
+    /// Bring Inherit attributes and function in the current lookup context.
     /// otherwise any access to the base::attribute would require
     /// the "this->" approach.
-    using  BeamInterpolation<DataTypes>::d_componentState ;
+    using  BaseBeamInterpolation<DataTypes>::d_componentState ;
     ////////////////////////////////////////////////////////////////////////////
 
 public:
@@ -175,7 +189,7 @@ public:
     template<class T>
     static bool canCreate(T* obj, sofa::core::objectmodel::BaseContext* context, sofa::core::objectmodel::BaseObjectDescription* arg)
     {
-        return Inherited::canCreate(obj,context,arg);
+        return Inherit::canCreate(obj,context,arg);
     }
 
     template<class T>
@@ -184,13 +198,16 @@ public:
     /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
     /// For coils: a part of the coil instrument can be brokenIn2  (by default the point of release is the end of the straight length)
     [[deprecated("Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06")]]
-    bool breaksInTwo(const Real& x_min_out, Real& x_break, int& numBeamsNotUnderControlled) {
+    bool breaksInTwo(const Real x_min_out, Real& x_break, int& numBeamsNotUnderControlled) {
         SOFA_UNUSED(x_min_out);
         SOFA_UNUSED(x_break);
         SOFA_UNUSED(numBeamsNotUnderControlled);
         msg_warning() << "Releasing catheter or brokenIn2 mode is not anymore supported. Feature has been removed after release v23.06";
         return 0.0;
     }
+
+protected:
+    bool  m_isControlled{ false };
 };
 
 
@@ -198,9 +215,4 @@ public:
 extern template class SOFA_BEAMADAPTER_API WireBeamInterpolation<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _wirebeaminterpolation_
-
-/// Import the privately defined into the expected sofa namespace.
-using _wirebeaminterpolation_::WireBeamInterpolation ;
-
-} // namespace sofa::component::fem
+} // namespace beamadapter

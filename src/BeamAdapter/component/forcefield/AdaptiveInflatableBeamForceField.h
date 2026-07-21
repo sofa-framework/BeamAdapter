@@ -43,37 +43,17 @@
 #include <sofa/type/Vec.h>
 #include <sofa/type/Mat.h>
 
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/core/visual/VisualParams.h>
 
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/BeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::forcefield
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _AdaptiveInflatableBeamForceField_
+namespace beamadapter
 {
 
 using sofa::type::vector;
-using sofa::component::engine::WireRestShape ;
-using sofa::component::fem::BeamInterpolation ;
 using sofa::core::behavior::MultiMatrixAccessor ;
 using sofa::core::visual::VisualParams ;
 using sofa::core::behavior::Mass ;
@@ -163,7 +143,7 @@ public:
 
 
     /////////////////////////////////////
-    /// This is inhereted from BaseObject
+    /// This is inhereted from BaseComponent
     /////////////////////////////////////
     virtual void init() override ;
     virtual void reinit() override ;
@@ -234,9 +214,7 @@ public:
     DataVecDeriv d_dataG;
 
 protected :
-
     SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, BInterpolation          , BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveInflatableBeamForceField<DataTypes>, WireRestShape<DataTypes>, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, int bIndex, Index nd0Id, Index nd1Id, SReal factor);
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, int beam, Index nd0Id, Index nd1Id, SReal factor );
@@ -259,13 +237,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveInflatableBeamForceField<Rigid3Types> ;
 #endif
 
-} /// namespace _AdaptiveInflatableBeamForceField_
-
-
-////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
-/// 'Export' the objects defined in the private namespace into the 'public' one.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-using _AdaptiveInflatableBeamForceField_::AdaptiveInflatableBeamForceField ;
-
-
-} /// namespace sofa::component::forcefield
+} // namespace beamadapter

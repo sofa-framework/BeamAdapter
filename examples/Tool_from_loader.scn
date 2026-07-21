@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <Node name="root" dt="0.15"  gravity="0 0 0"> 
     <Node name="Plugins">
-        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
-        <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Edge2QuadTopologicalMapping] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [RegularGridTopology] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [EdgeSetGeometryAlgorithms, EdgeSetTopologyContainer, EdgeSetTopologyModifier, QuadSetGeometryAlgorithms, QuadSetTopologyContainer, QuadSetTopologyModifier] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->  
-        <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->  
-        <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->  
-        <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->  
-        <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->  
-        <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->  
-        <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->  
-        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->  
-        <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->  
-        <RequiredPlugin name="BeamAdapter" />
+        <RequiredPlugin pluginName="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Edge2QuadTopologicalMapping] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [RegularGridTopology] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [EdgeSetGeometryAlgorithms, EdgeSetTopologyContainer, EdgeSetTopologyModifier, QuadSetGeometryAlgorithms, QuadSetTopologyContainer, QuadSetTopologyModifier] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->  
+        <RequiredPlugin pluginName="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->  
+        <RequiredPlugin pluginName="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->  
+        <RequiredPlugin pluginName="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->  
+        <RequiredPlugin pluginName="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [BTDLinearSolver] -->  
+        <RequiredPlugin pluginName="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->  
+        <RequiredPlugin pluginName="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
+        <RequiredPlugin pluginName="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->  
+        <RequiredPlugin pluginName="BeamAdapter" />
     </Node>
 
     <VisualStyle displayFlags="showVisualModels showBehaviorModels hideMappings hideForceFields" />
@@ -25,8 +25,8 @@
     <Node name="GuideCatheter">
         <MeshOBJLoader name="loader" filename="mesh/key_tip.obj" />
         
-        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" radius="10" massDensity="0.1" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
-        <RodMeshSection name="MeshTipSection" loader="@loader" nbEdgesCollis="300" nbEdgesVisu="300"  radius="10" massDensity="0.1"  youngModulus="1000000" poissonRatio="0.3"/>
+        <RodStraightSection name="StraightSection" youngModulus="1000000" poissonRatio="0.3" massDensity="0.00000155" radius="0.05" nbBeams="30" nbEdgesCollis="30" nbEdgesVisu="200" length="980.0"/>
+        <RodMeshSection name="MeshTipSection" loader="@loader" youngModulus="1000000" poissonRatio="0.3" massDensity="0.00000155" radius="0.05" nbBeams="300" nbEdgesCollis="300" nbEdgesVisu="300" />
         
         <WireRestShape template="Rigid3d" name="GC_RestShape" printLog="false" wireMaterials="@StraightSection @MeshTipSection" />
 
@@ -39,23 +39,23 @@
     <Node name="Instrument">
         <EulerImplicitSolver rayleighStiffness="0.2" rayleighMass="0.1" />
         <BTDLinearSolver />
-        <RegularGridTopology name="MeshLines" nx="300" ny="1" nz="1"
+        <RegularGridTopology name="MeshLines" nx="331" ny="1" nz="1"
             xmax="0.0" xmin="0.0" ymin="0" ymax="0" zmax="0" zmin="0"
             p0="0 0 0" drawEdges="0"/>
                                 
         <MechanicalObject name="Instrument_DOFs" template="Rigid3d" /> 
         
-        <WireBeamInterpolation name="Interpol_GCatheter" WireRestShape="@../GuideCatheter/GC_RestShape" radius="0.05" printLog="0"/> 
+        <WireBeamInterpolation name="Interpol_GCatheter" WireRestShape="@../GuideCatheter/GC_RestShape" printLog="0"/> 
         <AdaptiveBeamForceFieldAndMass name="FF_GCatheter" interpolation="@Interpol_GCatheter" massDensity="0.00000155"/>
 
         <InterventionalRadiologyController name="IRController" template="Rigid3d" listening="true" controlledInstrument="0" 
             instruments="Interpol_GCatheter" printLog="0" 
             speed="10"  step="1" startingPos="0.0 0.0 0.0  0 0 0 1" 
-            rotationInstrument="0 0 0" xtip="0 0 0"  
+            rotationInstrument="0" xtip="0"  
             mainDirection="1 0 0"
         />
         
-        <FixedConstraint name="FixedConstraint" indices="0" />
+        <FixedProjectiveConstraint name="FixedConstraint" indices="0" />
         <RestShapeSpringsForceField  points="@IRController.indexFirstNode" stiffness="1e8" angularStiffness="1e8" />
 
         <Node name='VisuGuideCatheter'>

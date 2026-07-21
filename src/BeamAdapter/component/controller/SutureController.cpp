@@ -32,34 +32,22 @@
 //
 #define SOFA_PLUGIN_BEAMADAPTER_SUTURECONTROLLER_CPP
 
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
 #include <BeamAdapter/component/controller/SutureController.inl>
 
-namespace sofa::component::controller
+
+namespace beamadapter
 {
 
-namespace _suturecontroller_
+template class SOFA_BEAMADAPTER_API SutureController<sofa::defaulttype::Rigid3Types>;
+
+void registerSutureController(sofa::core::ObjectFactory* factory)
 {
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+                             .add< SutureController<sofa::defaulttype::Rigid3Types> >());
+}
 
-using namespace sofa::defaulttype;
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static int SutureControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-.add< SutureController<Rigid3Types> >(true)
-
-;
-
-template class SOFA_BEAMADAPTER_API SutureController<Rigid3Types>;
-
-} /// _suturecontroller_
-
-} /// namespace sofa::component::controller
+} // namespace beamadapter

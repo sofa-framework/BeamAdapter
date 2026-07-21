@@ -32,37 +32,18 @@
 //
 #pragma once
 
-//////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#include <BeamAdapter/config.h>
+
+#include <sofa/type/Transform.h>
+#include <sofa/type/SpatialVector.h>
 #include <sofa/core/behavior/ForceField.h>
 #include <sofa/core/behavior/Mass.h>
-#include <BeamAdapter/config.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 #include <BeamAdapter/component/engine/WireRestShape.h>
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::forcefield
+namespace beamadapter
 {
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamforcefieldandmass_
-{
-
-using sofa::core::behavior::MultiMatrixAccessor;
-using sofa::core::visual::VisualParams;
-using sofa::core::MechanicalParams;
 
 /*!
  * \class AdaptiveBeamForceFieldAndMass
@@ -94,11 +75,10 @@ public:
     using Vec6NoInit = sofa::type::VecNoInit<6, Real>;
     using Matrix6x6 = sofa::type::Mat<6, 6, Real>;
     using Matrix6x6NoInit = sofa::type::MatNoInit<6, 6, Real>;
-    using Transform = typename sofa::defaulttype::SolidTypes<Real>::Transform;
-    using SpatialVector = typename sofa::defaulttype::SolidTypes<Real>::SpatialVector;
+    using Transform = sofa::type::Transform<Real>;
+    using SpatialVector = sofa::type::SpatialVector<Real>;
 
-    using BInterpolation = sofa::component::fem::BeamInterpolation<DataTypes>;
-    using WireRestShape = sofa::component::engine::WireRestShape<DataTypes>;
+    using BInterpolation = BaseBeamInterpolation<DataTypes>;
     using core::behavior::Mass<DataTypes>::mstate;
 
 protected:
@@ -107,8 +87,8 @@ protected:
      * \class BeamLocalMatrices
     * @brief BeamLocalMatrices Class
     */
-    class BeamLocalMatrices{
-
+    class BeamLocalMatrices
+    {
     public:
         BeamLocalMatrices() = default;
 
@@ -118,6 +98,8 @@ protected:
 
         Real _A, _L, _Iy, _Iz, _Asy, _Asz, _J; ///< Interpolation & geometrical parameters
         Real _rho;
+        Real _youngM;
+        Real _cPoisson;
     };
 
 public:
@@ -126,33 +108,33 @@ public:
 
 
     /////////////////////////////////////
-    /// This is inhereted from BaseObject
+    /// This is inhereted from BaseComponent
     /////////////////////////////////////
     void init() override ;
     void reinit() override ;
-    void draw(const VisualParams* vparams) override ;
+    void draw(const sofa::core::visual::VisualParams* vparams) override ;
 
 
     /////////////////////////////////////
     /// Mass Interface
     /////////////////////////////////////
-    void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
-    void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
-    void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
+    void addMDx(const sofa::core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
+    void addMToMatrix(const sofa::core::MechanicalParams *mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
+    void addMBKToMatrix(const sofa::core::MechanicalParams* mparams, const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
 
     void buildMassMatrix(sofa::core::behavior::MassMatrixAccumulator* matrices) override;
     void buildStiffnessMatrix(core::behavior::StiffnessMatrix* matrix) override;
     void buildDampingMatrix(core::behavior::DampingMatrix* matrices) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    void accFromF(const MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
+    void accFromF(const sofa::core::MechanicalParams* mparams, DataVecDeriv& , const DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"accFromF can not be implemented easily: It necessitates a solver because M^-1 is not available";
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    SReal getKineticEnergy(const MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
+    SReal getKineticEnergy(const sofa::core::MechanicalParams* mparams, const DataVecDeriv& )  const override ///< vMv/2 using dof->getV()
     {
         SOFA_UNUSED(mparams);
         msg_error() << "getKineticEnergy not yet implemented";
@@ -160,7 +142,7 @@ public:
     }
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    void addGravityToV(const MechanicalParams* mparams, DataVecDeriv& ) override
+    void addGravityToV(const sofa::core::MechanicalParams* mparams, DataVecDeriv& ) override
     {
         SOFA_UNUSED(mparams);
         msg_error() << "addGravityToV not implemented yet";
@@ -171,12 +153,12 @@ public:
     /////////////////////////////////////
     /// ForceField Interface
     /////////////////////////////////////
-    void addForce(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v) override;
+    void addForce(const sofa::core::MechanicalParams* mparams, DataVecDeriv& f, const DataVecCoord& x, const DataVecDeriv& v) override;
 
-    void addDForce(const MechanicalParams* mparams, DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
+    void addDForce(const sofa::core::MechanicalParams* mparams, DataVecDeriv&   datadF , const DataVecDeriv&   datadX ) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
-    SReal getPotentialEnergy(const MechanicalParams* mparams, const DataVecCoord& )const override
+    SReal getPotentialEnergy(const sofa::core::MechanicalParams* mparams, const DataVecCoord& )const override
     {
         SOFA_UNUSED(mparams);
         msg_error()<<"getPotentialEnergy not yet implemented"; 
@@ -184,25 +166,25 @@ public:
     }
 
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
-    void addKToMatrix(const MechanicalParams* mparams,
-                      const MultiMatrixAccessor* matrix) override;
+    void addKToMatrix(const sofa::core::MechanicalParams* mparams,
+                      const sofa::core::behavior::MultiMatrixAccessor* matrix) override;
 
-    void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
-    void computeMass(int beam, BeamLocalMatrices& beamMatrices);
-
+    void computeStiffness(const sofa::Index beamID, BeamLocalMatrices& beamLocalMatrices);
+    void computeMass(const sofa::Index beamID, BeamLocalMatrices& beamMatrices);
 
     Data<bool> d_computeMass;               ///< if false, only compute the stiff elastic model
-    Data<Real> d_massDensity;               ///< Density of the mass (usually in kg/m^3)
+    Real m_defaultMassDensity;
+    Data<type::vector<Real>> d_massDensity; ///< Density of the mass
     Data<bool> d_useShearStressComputation; ///< if false, suppress the shear stress in the computation
     Data<bool> d_reinforceLength;           ///< if true, perform a separate computation to evaluate the elongation
 
 protected :
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
-    SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, WireRestShape, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_instrumentParameters;
 
 
     void applyMassLarge( VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor);
     void applyGravityLarge( VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor);
+
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor );
     void computeGravityVector();
 
@@ -210,8 +192,8 @@ private:
     type::vector<BeamLocalMatrices> m_localBeamMatrices;
     Vec6 m_gravity;
 
-    void drawElement(const VisualParams* vparams, int beam,
-                     Transform &global_H0_local, Transform &global_H1_local) ;
+    void drawElement(const sofa::core::visual::VisualParams* vparams, const sofa::Index beamID,
+                     const Transform &global_H0_local, const Transform &global_H1_local) ;
 };
 
 /// Instantiate the templates so that they are not instiated in each translation unit (see )
@@ -219,13 +201,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamForceFieldAndMass<sofa::defaulttype::Rigid3Types> ;
 #endif
 
-} /// namespace _adaptivebeamforcefieldandmass_
-
-
-////////////////////////////////// EXPORT NAMES IN SOFA NAMESPACE //////////////////////////////////
-/// 'Export' the objects defined in the private namespace into the 'public' one.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-using _adaptivebeamforcefieldandmass_::AdaptiveBeamForceFieldAndMass ;
-
-
-} /// namespace sofa::component::forcefield
+} // namespace beamadapter

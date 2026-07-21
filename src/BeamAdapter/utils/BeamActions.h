@@ -21,7 +21,10 @@
 ******************************************************************************/
 #pragma once
 
-namespace sofa::beamadapter
+#include <map>
+#include <string>
+
+namespace beamadapter
 {
     
     /// \brief Enum class listing all possible actions during Beam navigation
@@ -55,7 +58,7 @@ namespace sofa::beamadapter
     };
 
     /// static method to convert an action as string into enum class using @sa beamActionNames
-    static BeamAdapterAction convertBeamAdapterAction(const std::string& sAction)
+    inline BeamAdapterAction convertBeamAdapterAction(const std::string& sAction)
     {
         auto bAction = beamActionNames.find(sAction);
 
@@ -65,4 +68,4 @@ namespace sofa::beamadapter
             return BeamAdapterAction::NO_ACTION;
     }
 
-} // namespace sofa::beamAdapter
+} // namespace beamadapter

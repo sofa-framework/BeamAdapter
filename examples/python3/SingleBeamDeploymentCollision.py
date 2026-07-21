@@ -19,15 +19,15 @@ def createScene(rootNode):
 
     topoLines = rootNode.addChild('EdgeTopology')
     topoLines.addObject('RodStraightSection', name='StraightSection', 
-                                 length=980.0, radius=1, 
-                                 nbEdgesCollis=50, nbEdgesVisu=200, 
-                                 youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
+                                 length=980.0, radius=0.9, 
+                                 nbBeams=50, nbEdgesCollis=50, nbEdgesVisu=200, 
+                                 youngModulus=20000, massDensity=0.00000155, poissonRatio=0.3)
 
     topoLines.addObject('RodSpireSection', name='SpireSection', 
-                                 length=20.0, radius=1, 
-                                 nbEdgesCollis=10, nbEdgesVisu=200,
+                                 length=20.0, radius=0.9, 
+                                 nbBeams=10, nbEdgesCollis=10, nbEdgesVisu=200,
                                  spireDiameter=25, spireHeight=0,
-                                 youngModulus=20000, massDensity=0.1, poissonRatio=0.3)
+                                 youngModulus=20000, massDensity=0.00000155, poissonRatio=0.3)
     topoLines.addObject('WireRestShape', name='BeamRestShape', template="Rigid3d",
                                  wireMaterials="@StraightSection @SpireSection")
                                  
@@ -42,16 +42,15 @@ def createScene(rootNode):
     BeamMechanics.addObject('EulerImplicitSolver', rayleighStiffness=0.2, rayleighMass=0.1)
     BeamMechanics.addObject('BTDLinearSolver', verification=False, subpartSolve=False, verbose=False)
     BeamMechanics.addObject('RegularGridTopology', name='MeshLines', 
-                                    nx=60, ny=1, nz=1,
+                                    nx=61, ny=1, nz=1,
                                     xmax=0.0, xmin=0.0, ymin=0, ymax=0, zmax=0, zmin=0,
                                     p0=[0,0,0])
-    BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d', ry=-90)
-    BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', 
-                                    radius=0.9, printLog=False)
+    BeamMechanics.addObject('MechanicalObject', showIndices=False, name='DOFs', template='Rigid3d')
+    BeamMechanics.addObject('WireBeamInterpolation', name='BeamInterpolation', WireRestShape='@../EdgeTopology/BeamRestShape', printLog=False)
     BeamMechanics.addObject('AdaptiveBeamForceFieldAndMass', name='BeamForceField', massDensity=0.00000155, interpolation='@BeamInterpolation')
     BeamMechanics.addObject('InterventionalRadiologyController', name='DeployController', template='Rigid3d', instruments='BeamInterpolation', 
-                                    startingPos=[0, 0, 0, 0, 0, 0, 1], xtip=[0, 0, 0], printLog=True, 
-                                    rotationInstrument=[0, 0, 0], step=5., speed=5., 
+                                    topology="@MeshLines", startingPos=[0, 0, 0, 0, -0.7071068, 0, 0.7071068], xtip=[0], printLog=True, 
+                                    rotationInstrument=[0], step=5., speed=5., 
                                     listening=True, controlledInstrument=0)
     BeamMechanics.addObject('LinearSolverConstraintCorrection', wire_optimization='true', printLog=False)
     BeamMechanics.addObject('FixedProjectiveConstraint', indices=0, name='FixedConstraint')
@@ -64,8 +63,8 @@ def createScene(rootNode):
     BeamCollis.addObject('EdgeSetTopologyModifier', name='colliseEdgeModifier')
     BeamCollis.addObject('MechanicalObject', name='CollisionDOFs')
     BeamCollis.addObject('MultiAdaptiveBeamMapping', controller='../DeployController', useCurvAbs=True, printLog=False, name='collisMap')
-    BeamCollis.addObject('LineCollisionModel', proximity=0.0)
-    BeamCollis.addObject('PointCollisionModel', proximity=0.0)
+    BeamCollis.addObject('LineCollisionModel', contactDistance=0.0)
+    BeamCollis.addObject('PointCollisionModel', contactDistance=0.0)
 
     Carotids = rootNode.addChild('Carotids')
     Carotids.addObject('MeshSTLLoader', filename='../mesh/carotids.stl', flipNormals=False, triangulate=True, name='meshLoader', rotation=[10.0, 0.0, -90.0])

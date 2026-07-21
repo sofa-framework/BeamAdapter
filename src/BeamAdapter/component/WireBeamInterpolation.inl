@@ -33,21 +33,16 @@
 #pragma once
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-#include <BeamAdapter/component/BeamInterpolation.inl>
+#include <BeamAdapter/component/BaseBeamInterpolation.inl>
 
-namespace sofa::component::fem
+
+namespace beamadapter
 {
-
-namespace _wirebeaminterpolation_
-{
-
-using sofa::component::engine::WireRestShape ;
-
 
 template <class DataTypes>
-WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine::WireRestShape<DataTypes> *_restShape)
-: Inherited()
-, m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
+WireBeamInterpolation<DataTypes>::WireBeamInterpolation(WireRestShape<DataTypes> *_restShape)
+    : Inherit()
+    , m_restShape(initLink("WireRestShape", "link to the component on the scene"), _restShape)
 {
 
 
@@ -57,17 +52,17 @@ WireBeamInterpolation<DataTypes>::WireBeamInterpolation(sofa::component::engine:
 template <class DataTypes>
 void WireBeamInterpolation<DataTypes>::init()
 {
-    Inherited::init();
-
+    Inherit::init();
+    
     if( m_restShape.get() == nullptr )
     {
         msg_error() << "Missing WireRestShape. The component is thus de-activated" ;
         this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
         return;
     }
-
+        
     type::vector<Real> xP_noticeable;
-    type::vector< int> nbP_density;
+    type::vector<sofa::Size> nbP_density;
 
     m_restShape.get()->getSamplingParameters(xP_noticeable, nbP_density);
 
@@ -78,7 +73,7 @@ void WireBeamInterpolation<DataTypes>::init()
 template <class DataTypes>
  void WireBeamInterpolation<DataTypes>::bwdInit()
 {
-    Inherited::bwdInit();
+     Inherit::bwdInit();
 
     if (this->isControlled()){
         msg_info() << "external controller for this ForceField is detected" ;
@@ -89,7 +84,7 @@ template <class DataTypes>
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &eID  , const Real &length, const Real &x0, const Real &x1,
+void WireBeamInterpolation<DataTypes>::addBeam(const EdgeID eID, const Real length, const Real x0, const Real x1,
                                                const Transform &DOF0_H_Node0, const Transform &DOF1_H_Node1)
 {
     auto edgeList = sofa::helper::getWriteOnlyAccessor(this->d_edgeList);
@@ -112,7 +107,7 @@ void WireBeamInterpolation<DataTypes>::addBeam(const BaseMeshTopology::EdgeID &e
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList, Transform &local0_H_local1_rest)
+void WireBeamInterpolation<DataTypes>::getRestTransform(const EdgeID edgeInList, Transform &local0_H_local1_rest)
 {
     msg_warning() << "GetRestTransform not implemented for not straightRestShape" ;
 
@@ -122,7 +117,7 @@ void WireBeamInterpolation<DataTypes>::getRestTransform(unsigned int edgeInList,
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
+void WireBeamInterpolation<DataTypes>::getSplineRestTransform(const EdgeID edgeInList, Transform &local_H_local0_rest, Transform &local_H_local1_rest)
 {
     if (this->isControlled() && this->m_restShape!=nullptr)
     {
@@ -155,7 +150,7 @@ void WireBeamInterpolation<DataTypes>::getSplineRestTransform(unsigned int edgeI
 
 
 template<class DataTypes>
-void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edgeInList_input, const Real& baryCoord_input, Real& x_output)
+void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const EdgeID edgeInList_input, const Real baryCoord_input, Real& x_output)
 {
     ///TODO(dmarchal 2017-05-17): Please tell who and when it will be done.
     // TODO : version plus complete prenant en compte les coupures et autres particularites de ce modele ?
@@ -165,6 +160,40 @@ void WireBeamInterpolation<DataTypes>::getCurvAbsAtBeam(const unsigned int &edge
 
     x_output += this->getLength(edgeInList_input) * baryCoord_input;
 }
+
+
+template<class DataTypes>
+const BeamSection& WireBeamInterpolation<DataTypes>::getBeamSection(sofa::Index beamId)
+{
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(beamId, x_curv);
+
+    auto restShape = this->m_restShape.get();
+    return restShape->getBeamSectionAtX(x_curv);
+}
+
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getInterpolationParameters(sofa::Index beamId, Real& _L, Real& _A, Real& _Iy, Real& _Iz,
+    Real& _Asy, Real& _Asz, Real& _J)
+{
+    _L = this->d_lengthList.getValue()[beamId];
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(beamId, x_curv);
+
+    auto restShape = this->m_restShape.get();
+    restShape->getInterpolationParametersAtX(x_curv, _A, _Iy, _Iz, _Asy, _Asz, _J);
+}
+
+
+template<class DataTypes>
+void WireBeamInterpolation<DataTypes>::getMechanicalParameters(sofa::Index beamId, Real& youngModulus, Real& cPoisson, Real& massDensity)
+{
+    Real x_curv = 0;
+    this->getAbsCurvXFromBeam(beamId, x_curv);
+    this->m_restShape->getMechanicalParametersAtX(x_curv, youngModulus, cPoisson, massDensity);
+}
+
 
 template<class DataTypes>
 bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input, const VecCoord& x, Real& x_output)
@@ -181,11 +210,11 @@ bool WireBeamInterpolation<DataTypes>::getApproximateCurvAbs(const Vec3& x_input
     Real closestDist = (x_input-globalHlocal0.getOrigin()).norm2();
     Real beamBary = 0.0;
     bool projected = false;
-    unsigned int beamIndex = 0;
+    sofa::Index beamIndex = 0;
 
     // Just look for the closest point on the curve
     // Returns false if this point is not a projection on the curve
-    unsigned int nb = this->getNumBeams();
+    const auto nb = this->getNumBeams();
     for(unsigned int i=0; i<nb; i++)	// Check each segment and each vertex
     {
         this->computeTransform(i, globalHlocal0, globalHlocal1, x);
@@ -237,24 +266,26 @@ template<class DataTypes>
 template<class T>
 typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::objectmodel::BaseContext* context, core::objectmodel::BaseObjectDescription* arg)
 {
+    SOFA_UNUSED(tObj);
+
     WireRestShape<DataTypes>* _restShape = nullptr;
     std::string _restShapePath;
-    bool pathOK = false;
 
-    if(arg)
+    if(arg && context)
     {
+        bool pathOK = false;
         if (arg->getAttribute("WireRestShape",nullptr) != nullptr)
         {
             _restShapePath = arg->getAttribute("WireRestShape");
             context->findLinkDest(_restShape, _restShapePath, nullptr);
 
             if(_restShape == nullptr)
-              msg_warning(context) << " ("<< tObj->getClassName() <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+              msg_warning(context) << " ("<< WireBeamInterpolation<DataTypes>::GetClass()->className <<") : WireRestShape attribute not set correctly, WireBeamInterpolation will be constructed with a default WireRestShape" ;
             else
                 pathOK = true;
         }
         else
-            msg_error(context) << " (" << tObj->getClassName() <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
+            msg_error(context) << " (" << WireBeamInterpolation<DataTypes>::GetClass()->className <<") : WireRestShape attribute not used, WireBeamInterpolation will be constructed with a default WireRestShape" ;
 
 
         if (!pathOK)
@@ -271,6 +302,5 @@ typename T::SPtr  WireBeamInterpolation<DataTypes>::create(T* tObj, core::object
     return obj;
 }
 
-} // namespace _wirebeaminterpolation_
 
-} // namespace sofa::component::fem
+} // namespace beamadapter

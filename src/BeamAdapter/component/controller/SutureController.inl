@@ -39,10 +39,8 @@
 #include <BeamAdapter/component/controller/SutureController.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
-namespace sofa::component::controller
-{
 
-namespace _suturecontroller_
+namespace beamadapter
 {
 
 using sofa::core::objectmodel::BaseContext ;
@@ -123,7 +121,7 @@ void SutureController<DataTypes>::initWireModel()
     }
 
     type::vector< Real > xP_noticeable;
-    type::vector< int > nbP_density;
+    type::vector<sofa::Size> nbP_density;
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
     // computation of the number of node on the structure:
@@ -139,8 +137,8 @@ void SutureController<DataTypes>::initWireModel()
 
     Real x_curv = 0.0;
 
-    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
-    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
+    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     auto v = sofa::helper::getWriteOnlyAccessor(*datav);
 
@@ -325,8 +323,8 @@ void SutureController<DataTypes>::onBeginAnimationStep(const double dt)
         applyController();
 
     // Propagate modifications
-    MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()); // apply projective constraints
-    MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::VecCoordId::position(),sofa::core::VecDerivId::velocity()).execute( getContext() );
+    MechanicalProjectPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(), sofa::core::vec_id::write_access::position,sofa::core::vec_id::write_access::velocity); // apply projective constraints
+    MechanicalPropagateOnlyPositionAndVelocityVisitor(core::MechanicalParams::defaultInstance(), getContext()->getTime(),sofa::core::vec_id::write_access::position,sofa::core::vec_id::write_access::velocity).execute( getContext() );
     simulation::UpdateMappingVisitor(core::ExecParams::defaultInstance()).execute(getContext());
 }
 
@@ -505,8 +503,8 @@ void SutureController<DataTypes>::addImposedCurvAbs(type::vector<Real> &newCurvA
 template <class DataTypes>
 void SutureController<DataTypes>::applyController()
 {
-    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::VecCoordId::position());
-    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::VecDerivId::velocity());
+    Data<VecCoord>* datax = getMechanicalState()->write(sofa::core::vec_id::write_access::position);
+    Data<VecDeriv>* datav = getMechanicalState()->write(sofa::core::vec_id::write_access::velocity);
     auto x = sofa::helper::getWriteOnlyAccessor(*datax);
     auto v = sofa::helper::getWriteOnlyAccessor(*datav);
     type::vector<Real> newCurvAbs;
@@ -915,7 +913,7 @@ template <class DataTypes>
 void SutureController<DataTypes>::computeSampling(type::vector<Real> &newCurvAbs, VecCoord &x)
 {
     type::vector<Real> xP_noticeable;
-    type::vector<int> nbP_density;
+    type::vector<sofa::Size> nbP_density;
 
     l_adaptiveInterpolation->getSamplingParameters(xP_noticeable, nbP_density);
 
@@ -1173,7 +1171,7 @@ void SutureController<DataTypes>::updateControlPointsPositions()
 
     unsigned int numBeams = l_adaptiveInterpolation->getNumBeams();
     Transform global_H0_local, global_H1_local;
-    const VecCoord& x = getMechanicalState()->write(sofa::core::VecCoordId::position())->getValue();
+    const VecCoord& x = getMechanicalState()->read(sofa::core::vec_id::read_access::position)->getValue();
     for (unsigned int b = 0; b < numBeams; b++)
     {
         l_adaptiveInterpolation->computeTransform(b, global_H0_local, global_H1_local, x);
@@ -1207,13 +1205,12 @@ void SutureController<DataTypes>::draw(const core::visual::VisualParams* vparams
 
     for (unsigned int i=0; i<m_vecGlobalHGravityCenter.size(); i++)
     {
-        Real Length = m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first;
-        Vec3 sizeArrows (Length/4, Length/8, Length/8);
+        float Length = static_cast<float>(m_rigidCurveSegments[i].second - m_rigidCurveSegments[i].first);
+        sofa::type::Vec3f sizeArrows (Length/4, Length/8, Length/8);
 
         vparams->drawTool()->drawFrame(m_vecGlobalHGravityCenter[i].getOrigin(), m_vecGlobalHGravityCenter[i].getOrientation(), sizeArrows);
     }
 }
 
-} /// namespace _suturecontroller_
+} // namespace beamadapter
 
-} /// namespace sofa::component::controller

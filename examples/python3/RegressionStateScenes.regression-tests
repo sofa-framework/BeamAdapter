@@ -1,0 +1,11 @@
+# WARNING: 
+# REGRESSION_TEST DOES NOT SUPPORT DASHES ("-") IN SCENE NAMES.
+# USE UNDERSCORES ("_") INSTEAD.
+
+### References relative path ###
+../../regression/references
+
+### Demo scenes ###
+SingleBeam.py 1000 1e-4 1 1
+SingleBeamDeployment.py 10000 1e-4 1 1
+SingleBeamDeploymentCollision.py 7000 1e-4 1 1

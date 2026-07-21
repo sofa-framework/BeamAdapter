@@ -29,14 +29,11 @@
 #include <sofa/core/behavior/ConstraintResolution.h>
 #include <BeamAdapter/component/constraint/AdaptiveBeamLengthConstraint.h>
 
-namespace sofa::component::constraintset
-{
 
-namespace _adaptivebeamlengthconstraint_
+namespace beamadapter
 {
 
 using helper::ReadAccessor;
-using sofa::core::ConstVecCoordId;
 using std::stringstream;
 using sofa::core::ConstraintParams;
 using sofa::linearalgebra::BaseVector;
@@ -101,7 +98,7 @@ void AdaptiveBeamLengthConstraint<DataTypes>::detectElongation(const VecCoord& x
     Real alarmLength = m_alarmLength.getValue();
     bool prev_stretch = false;
 
-    fem::WireBeamInterpolation<DataTypes>* interpolation = m_interpolation.get();
+    auto* interpolation = m_interpolation.get();
 
     /// storage of the length (and the rest_length)  of the interval being stretched
     ///	length_interval=0.0; //commented to remove compilation warning
@@ -297,8 +294,8 @@ void AdaptiveBeamLengthConstraint<DataTypes>::buildConstraintMatrix(const Constr
     m_nbConstraints = 0;
     m_cid = constraintId;
 
-    ReadAccessor<Data<VecCoord> > x = this->mstate->read(ConstVecCoordId::position()) ;
-    ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(ConstVecCoordId::freePosition()) ;
+    ReadAccessor<Data<VecCoord> > x = this->mstate->read(sofa::core::vec_id::read_access::position) ;
+    ReadAccessor<Data<VecCoord> > xfree = this->mstate->read(sofa::core::vec_id::read_access::freePosition) ;
 
     auto c = sofa::helper::getWriteOnlyAccessor(c_d);
 
@@ -408,6 +405,4 @@ void AdaptiveBeamLengthConstraint<DataTypes>::draw(const VisualParams* vparams)
     vparams->drawTool()->restoreLastState();
 }
 
-} /// namespace _adaptivebeamlengthconstraint_
-
-} /// namespace sofa::component::constraintset
+} // namespace beamadapter

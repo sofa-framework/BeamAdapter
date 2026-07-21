@@ -36,20 +36,15 @@
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
 #include <sofa/defaulttype/SolidTypes.h>
-#include <sofa/core/objectmodel/BaseObject.h>
+#include <sofa/core/objectmodel/BaseComponent.h>
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyContainer.h>
 #include <sofa/core/loader/MeshLoader.h>
 
-namespace sofa::component::engine
-{
-
-namespace _wirerestshape_
+namespace beamadapter
 {
 
 using sofa::core::topology::TopologyContainer;
 using sofa::core::loader::MeshLoader;
-
-using namespace sofa::beamadapter;
 
 /**
  * \class WireRestShape
@@ -60,10 +55,10 @@ using namespace sofa::beamadapter;
  * This component compute the beam discretization and the shape functions on multiple segments using curvilinear abscissa.
  */
 template <class DataTypes>
-class WireRestShape : public core::objectmodel::BaseObject
+class WireRestShape : public core::objectmodel::BaseComponent
 {
 public:
-    SOFA_CLASS(WireRestShape, core::objectmodel::BaseObject);
+    SOFA_CLASS(WireRestShape, core::objectmodel::BaseComponent);
 
     using Coord = typename DataTypes::Coord;
     using Real = typename Coord::value_type;
@@ -81,26 +76,30 @@ public:
       */
      virtual ~WireRestShape() = default;
 
-     /////////////////////////// Inherited from BaseObject //////////////////////////////////////////
+     /////////////////////////// Inherited from BaseComponent //////////////////////////////////////////
      void init() override ;
 
 
      /////////////////////////// Methods of WireRestShape  //////////////////////////////////////////     
 
      /// This function is called by the force field to evaluate the rest position of each beam
-     void getRestTransformOnX(Transform &global_H_local, const Real &x);
+     void getRestTransformOnX(Transform &global_H_local, const Real x);
 
-     /// This function gives the Young modulus and Poisson's coefficient of the beam depending on the beam position
-     void getYoungModulusAtX(const Real& x_curv, Real& youngModulus, Real& cPoisson) const;
+     /// Returns the BeamSection @sa m_beamSection corresponding to the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getBeamSection
+     [[nodiscard]] const BeamSection& getBeamSectionAtX(const Real x_curv) const;
 
-     /// This function gives the mass density and the BeamSection data depending on the beam position
-     void getInterpolationParam(const Real& x_curv, Real &_rho, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
+     /// Returns the BeamSection data depending on the beam position at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getInterpolationParameters
+     void getInterpolationParametersAtX(const Real x_curv, Real &_A, Real &_Iy , Real &_Iz, Real &_Asy, Real &_Asz, Real &_J) const;
+
+     /// Returns the Young modulus, Poisson's ratio and massDensity coefficient of the section at the given curvilinear abscissa, will call @sa BaseRodSectionMaterial::getMechanicalParameters
+     void getMechanicalParametersAtX(const Real x_curv, Real& youngModulus, Real& cPoisson, Real& massDensity) const;
+
 
      /**
       * This function provides a type::vector with the curviliar abscissa of the noticeable point(s) 
       * and the minimum density (number of points) between them. (Nb. nbP_density.size() == xP_noticeable.size() - 1)
       */
-     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<int>& nbP_density) const ;
+     void getSamplingParameters(type::vector<Real>& xP_noticeable, type::vector<sofa::Size>& nbP_density) const ;
 
 
      /// Functions enabling to load and use a geometry given from OBJ external file
@@ -108,9 +107,11 @@ public:
      
      
      Real getLength() ;
-     void getCollisionSampling(Real &dx, const Real &x_curv);
-     void getNumberOfCollisionSegment(Real &dx, unsigned int &numLines) ;
-
+    
+    void getMechanicalSampling(Real& dx, const Real x_localcurv_abs);
+    void getCollisionSampling(Real &dx, const Real x_curv);
+    void getNumberOfCollisionSegment(Real &dx, sofa::Size& numLines);
+    sofa::Size getTotalNumberOfBeams() const;
 
 
      /////////////////////////// Deprecated Methods  ////////////////////////////////////////// 
@@ -135,7 +136,7 @@ protected:
 
 
 public:
-     Data<type::vector<int> > d_density;
+     Data<type::vector<sofa::Size> > d_density;
      Data<type::vector<Real> > d_keyPoints;
      
      /// Vector or links to the Wire section material. The order of the linked material will define the WireShape structure.
@@ -143,9 +144,7 @@ public:
 
 private:
      /// Link to be set to the topology container in the component graph.
-     SingleLink<WireRestShape<DataTypes>, TopologyContainer, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;     
-     /// Pointer to the topology container, should be set using @sa l_topology, otherwise will search for one in current Node.
-     TopologyContainer* _topology{ nullptr }; 
+     SingleLink<WireRestShape<DataTypes>, sofa::core::topology::BaseMeshTopology, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_topology;
 };
 
 
@@ -153,8 +152,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API WireRestShape<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace _wirerestshape_
-
-using _wirerestshape_::WireRestShape;
-
-} // namespace sofa::component::engine
+} // namespace beamadapter

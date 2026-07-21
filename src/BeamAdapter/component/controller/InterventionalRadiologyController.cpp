@@ -32,37 +32,23 @@
 //
 #define SOFA_PLUGIN_BEAMADAPTER_INTERVENTIONALRADIOCONTROLLER_CPP
 
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.inl>
 
 
-namespace sofa::component::controller
+namespace beamadapter
 {
 
-namespace _interventionalradiologycontroller_
+template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<sofa::defaulttype::Rigid3Types>;
+
+void registerInterventionalRadiologyController(sofa::core::ObjectFactory* factory)
 {
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
+                             .add< InterventionalRadiologyController<sofa::defaulttype::Rigid3Types> >());
+}
 
-using namespace sofa::defaulttype;
-
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static int InterventionalRadiologyControllerClass = core::RegisterObject("Provides a Mouse & Keyboard user control on an EdgeSet Topology.")
-.add< InterventionalRadiologyController<Rigid3Types> >(true)
-;
-
-template class SOFA_BEAMADAPTER_API InterventionalRadiologyController<Rigid3Types>;
-
-} // namespace _interventionalradiologycontroller_
-
-} // namespace sofa::component::controller
+} // namespace beamadapter

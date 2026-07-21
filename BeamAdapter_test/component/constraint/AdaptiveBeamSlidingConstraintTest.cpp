@@ -39,18 +39,16 @@ using sofa::simulation::SceneLoaderXML ;
 using sofa::simulation::graph::DAGSimulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
-using sofa::simulation::setSimulation ;
 using sofa::core::objectmodel::New ;
 using sofa::core::objectmodel::BaseData ;
 using sofa::component::statecontainer::MechanicalObject ;
 
 #include <BeamAdapter/component/constraint/AdaptiveBeamSlidingConstraint.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
-using sofa::component::constraintset::AdaptiveBeamSlidingConstraint ;
-using sofa::component::fem::WireBeamInterpolation ;
 
+using namespace beamadapter;
 
-namespace sofa
+namespace beamadapter_test
 {
 
 template <typename DataTypes>

@@ -34,39 +34,22 @@
 #define SOFA_PLUGIN_BEAMADAPTER_ADAPTIVEBEAMCONTROLLER_CPP
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 
-#include <BeamAdapter/config.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.inl>
 
-namespace sofa::component::controller
+namespace beamadapter
 {
 
-namespace _adaptivebeamcontroller_
+template class SOFA_BEAMADAPTER_API AdaptiveBeamController<sofa::defaulttype::Rigid3Types>;
+
+void registerAdaptiveBeamController(sofa::core::ObjectFactory* factory)
 {
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Adaptive beam controller.")
+                             .add< AdaptiveBeamController<sofa::defaulttype::Rigid3Types> >());
+}
 
-using sofa::defaulttype::Rigid3Types;
-using sofa::defaulttype::Rigid3Types;
-using core::RegisterObject;
-
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//TODO(dmarchal 2017-06-01): Il faut remplacer les descriptions dans RegisterObject par un vrai description
-static int AdaptiveBeamControllerClass = RegisterObject("")
-.add< AdaptiveBeamController<Rigid3Types> >()
-;
-
-template class SOFA_BEAMADAPTER_API AdaptiveBeamController<Rigid3Types>;
-
-
-} // namespace _adaptivebeamcontroller_
-
-} // namespace sofa::component::controller
+} // namespace beamadapter

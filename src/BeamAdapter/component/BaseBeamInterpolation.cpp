@@ -19,36 +19,20 @@
 *                                                                             *
 * Contact information: contact@sofa-framework.org                             *
 ******************************************************************************/
-#define SOFA_COMPONENT_COLLISION_MULTIADAPTIVEBEAMCONTACTMAPPER_CPP
+#define SOFA_PLUGIN_BEAMADAPTER_BaseBeamInterpolation_CPP
+
+#include <BeamAdapter/config.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.inl>
+#include <sofa/defaulttype/VecTypes.h>
+#include <sofa/defaulttype/RigidTypes.h>
+#include <sofa/core/ObjectFactory.h>
 
 
-#include "MultiAdaptiveBeamContactMapper.inl"
-#include <sofa/helper/Factory.inl>
-
-namespace sofa
+namespace beamadapter
 {
 
-namespace component
-{
+using namespace sofa::defaulttype;
 
-namespace collision
-{
+template class SOFA_BEAMADAPTER_API BaseBeamInterpolation<Rigid3Types>;
 
-using namespace defaulttype;
-
-
-
-template class SOFA_BEAMADAPTER_API MultiAdaptiveBeamContactMapper<BSplineModel<2>,Vec3Types>;
-
-
-ContactMapperCreator< ContactMapper<BSplineModel<2> > > BSplineMultiContactMapperClass("MultiAdaptiveBeamContactMapper",true);
-template class  ContactMapper<BSplineModel<2> >;
-
-
-
-} // namespace collision
-
-} // namespace component
-
-} // namespace sofa
-
+} // namespace beamadapter

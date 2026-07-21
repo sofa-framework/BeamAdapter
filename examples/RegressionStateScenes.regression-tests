@@ -7,6 +7,8 @@
 
 ### Demo scenes ###
 SingleBeam.scn 1000 1e-4 1 1
-SingleBeamDeployment.scn 1000 1e-4 1 1
-SingleBeamDeploymentCollision.scn 1000 1e-4 1 1
-3instruments_collis.scn 2000 1e-4 1 1
+SingleBeamDeployment.scn 10000 1e-4 1 1
+SingleBeamDeploymentCollision.scn 7000 1e-4 1 1
+3instruments.scn 2000 1e-4 1 1
+3instruments_collis.scn 3000 1e-4 1 1
+Tool_from_loader.scn 1000 1e-4 1 1

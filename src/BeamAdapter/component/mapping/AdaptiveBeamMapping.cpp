@@ -34,14 +34,16 @@
 
 //////////////////////// Inclusion of headers...from wider to narrower/closer //////////////////////
 #include <sofa/core/behavior/MechanicalState.h>
+#include <BeamAdapter/config.h>
 #include <sofa/core/ObjectFactory.h>
 
 #include <BeamAdapter/component/mapping/AdaptiveBeamMapping.inl>
 
-namespace sofa::component::mapping::_adaptivebeammapping_
+using namespace sofa::defaulttype;
+
+namespace beamadapter
 {
 
-using namespace defaulttype;
 using namespace core;
 using namespace core::behavior;
 
@@ -50,8 +52,6 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::apply(
 {
     auto out = sofa::helper::getWriteOnlyAccessor(dOut);
     const InVecCoord& in= dIn.getValue();
-
-    m_isXBufferUsed=false;
 
     // When using an adaptatif controller, one need to redistribute the points at each time step
     if (d_useCurvAbs.getValue() && !d_contactDuplicate.getValue())
@@ -195,21 +195,14 @@ SOFA_BEAMADAPTER_API void AdaptiveBeamMapping<Rigid3Types, Rigid3Types >::comput
     dmsg_info()<<" ********** TEST J-Jt(transposed): ********** \n"<<Test;
 }
 
-/////////////////////////////////////////// FACTORY ////////////////////////////////////////////////
-///
-/// Register the component into the sofa factory.
-/// For more details:
-/// https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/the-objectfactory/
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Register in the Factory
-static int AdaptiveBeamMappingClass = core::RegisterObject("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs")
-.add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
-.add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >()
-;
-
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Vec3Types>;
 template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<Rigid3Types, Rigid3Types>;
 
-} // namespace sofa::component::mapping::_adaptivebeammapping_
+void registerAdaptiveBeamMapping(sofa::core::ObjectFactory* factory)
+{
+    factory->registerObjects(sofa::core::ObjectRegistrationData("Set the positions and velocities of points attached to a beam using linear interpolation between DOFs.")
+                             .add< AdaptiveBeamMapping<Rigid3Types, Vec3Types   > >(true) //default template
+                             .add< AdaptiveBeamMapping<Rigid3Types, Rigid3Types > >());
+}
+
+} // namespace beamadapter

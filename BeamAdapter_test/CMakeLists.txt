@@ -7,6 +7,7 @@ find_package(Threads REQUIRED)
 
 set(SOURCE_FILES
     BeamInterpolation_test.cpp
+    component/controller/AdaptiveBeamController_test.cpp
     component/controller/InterventionalRadiologyController_test.cpp
     component/constraint/AdaptiveBeamSlidingConstraintTest.cpp
     component/forcefield/AdaptiveBeamForceFieldAndMassTest.cpp

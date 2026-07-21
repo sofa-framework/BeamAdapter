@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(BeamAdapter.CUDA)
+project(BeamAdapter.CUDA LANGUAGES CXX CUDA)
 
 set(HEADER_FILES
     src/BeamAdapter/CUDA/init.h

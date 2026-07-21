@@ -65,12 +65,6 @@ struct BeamProjectionDifferenceMultiMappingTest : public sofa::Multi2Mapping_tes
     typedef typename In2DataTypes::VecCoord In2VecCoord;
     typedef typename OutDataTypes::VecCoord OutVecCoord;
 
-
-    void SetUp() override
-    {
-    }
-
-
     BeamProjectionDifferenceMultiMapping* m_mapping;
     sofa::component::fem::BeamInterpolation<sofa::defaulttype::Rigid3Types>* m_interpolation;
     sofa::component::topology::container::constant::MeshTopology* m_topology;

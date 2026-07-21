@@ -24,7 +24,7 @@
 #include <BeamAdapter/config.h>
 #include <BeamAdapter/component/model/BaseRodSectionMaterial.h>
 
-namespace sofa::beamadapter
+namespace beamadapter
 {
 
 /**
@@ -35,7 +35,7 @@ namespace sofa::beamadapter
  * Method @sa getRestTransformOnX will return: Vec3(current_x, 0 0)
  */
 template <class DataTypes>
-class RodStraightSection : public sofa::beamadapter::BaseRodSectionMaterial<DataTypes>
+class RodStraightSection : public BaseRodSectionMaterial<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(RodStraightSection, DataTypes), SOFA_TEMPLATE(BaseRodSectionMaterial, DataTypes));
@@ -48,7 +48,7 @@ public:
     RodStraightSection();
 
     /// Override method to get the rest position of the beam. In this implementation, it will basically returns Vec3(x_start + x_used, 0 0)
-    void getRestTransformOnX(Transform& global_H_local, const Real& x_used, const Real& x_start) override;
+    void getRestTransformOnX(Transform& global_H_local, const Real x_used, const Real x_start) override;
 
 protected:
     /// Internal method to init the section. Called by @sa BaseRodSectionMaterial::init() method
@@ -59,4 +59,4 @@ protected:
 extern template class SOFA_BEAMADAPTER_API RodStraightSection<sofa::defaulttype::Rigid3Types>;
 #endif
 
-} // namespace sofa::beamadapter
+} // namespace beamadapter

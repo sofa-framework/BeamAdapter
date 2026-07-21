@@ -45,27 +45,10 @@
 #include <sofa/component/topology/container/dynamic/EdgeSetTopologyModifier.h>
 
 #include <BeamAdapter/config.h>
-#include <BeamAdapter/component/BeamInterpolation.h>
+#include <BeamAdapter/component/BaseBeamInterpolation.h>
 #include <BeamAdapter/component/controller/AdaptiveBeamController.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::mapping
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeammapping_
+namespace beamadapter
 {
 
 using sofa::core::State ;
@@ -74,7 +57,6 @@ using sofa::type::Vec;
 using sofa::type::Mat;
 using sofa::core::topology::BaseMeshTopology;
 using defaulttype::SolidTypes;
-using sofa::component::fem::BeamInterpolation;
 using core::MechanicalParams;
 using core::ConstraintParams;
 using core::visual::VisualParams;
@@ -126,7 +108,7 @@ public:
     typedef Mat<12,3,Real> Mat12x3;
     typedef Mat<6,12,Real> Mat6x12;
     typedef Mat<12,6,Real> Mat12x6;
-    typedef BeamInterpolation<TIn> BInterpolation;
+    typedef BaseBeamInterpolation<TIn> BInterpolation;
 
     typedef std::pair<unsigned int, Vec3> BeamIdAndBaryCoord;
     struct PosPointDefinition
@@ -160,7 +142,7 @@ public:
 
     AdaptiveBeamMapping(State< In >* from=nullptr,
                         State< Out >* to=nullptr,
-                        BeamInterpolation< TIn >* interpolation=nullptr,
+                        BaseBeamInterpolation< TIn >* interpolation=nullptr,
                         bool isSubMapping=false) ;
 
     virtual ~AdaptiveBeamMapping() = default;
@@ -209,9 +191,6 @@ public:
 
     TopologyContainer* m_topology;
 
-    bool m_isXBufferUsed;
-    typename In::VecCoord m_xBuffer;
-
     type::vector< PosPointDefinition > m_pointBeamDistribution;
 
     /// for continuous_friction_contact:
@@ -241,8 +220,4 @@ extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigi
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamMapping<defaulttype::Rigid3Types, defaulttype::Rigid3Types>;
 #endif
 
-} /// _adaptivebeammapping_
-
-using _adaptivebeammapping_::AdaptiveBeamMapping ;
-
-} /// namespace sofa::component::mapping
+} // namespace beamadapter

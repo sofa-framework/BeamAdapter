@@ -25,33 +25,16 @@
 #include <sofa/helper/map.h>
 
 #include <sofa/core/behavior/MechanicalState.h>
-#include <sofa/core/behavior/Constraint.h>
+#include <sofa/core/behavior/LagrangianConstraint.h>
 #include <sofa/defaulttype/SolidTypes.h>
 #include <sofa/type/Vec.h>
 
 #include <BeamAdapter/component/WireBeamInterpolation.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Forward declarations, see https://en.wikipedia.org/wiki/Forward_declaration
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Declarations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace sofa::component::constraintset
-{
-
-/////////////////////////////////// private namespace pattern //////////////////////////////////////
-/// To avoid the lacking of names imported with with 'using' in the other's component namespace
-/// you should use a private namespace and "export" only this one in the public namespace.
-/// This is done at the end of this file, have a look if you are not used to this pattern.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace _adaptivebeamlengthconstraint_
+namespace beamadapter
 {
 using sofa::core::behavior::ConstraintResolution ;
-using sofa::core::behavior::Constraint ;
+using sofa::core::behavior::LagrangianConstraint;
 using sofa::core::behavior::MechanicalState ;
 using sofa::core::ConstraintParams ;
 using sofa::core::objectmodel::Data ;
@@ -96,11 +79,11 @@ public:
  * https://www.sofa-framework.org/community/doc/programming-with-sofa/components-api/components-and-datas/
  */
 template<class DataTypes>
-class AdaptiveBeamLengthConstraint : public Constraint<DataTypes>
+class AdaptiveBeamLengthConstraint : public LagrangianConstraint<DataTypes>
 {
 public:
     SOFA_CLASS(SOFA_TEMPLATE(AdaptiveBeamLengthConstraint,DataTypes),
-               SOFA_TEMPLATE(Constraint,DataTypes));
+               SOFA_TEMPLATE(LagrangianConstraint,DataTypes));
 
     typedef typename DataTypes::VecCoord VecCoord;
     typedef typename DataTypes::VecDeriv VecDeriv;
@@ -116,7 +99,7 @@ public:
     typedef typename std::map<Real, double>::iterator MapIterator;
 
     typedef MechanicalState<DataTypes> TypedMechanicalState;
-    typedef Constraint<DataTypes> Inherit;
+    typedef LagrangianConstraint<DataTypes> Inherit;
     typedef Data<VecCoord>	 	  DataVecCoord;
     typedef Data<VecDeriv> 		  DataVecDeriv;
     typedef Data<MatrixDeriv>     DataMatrixDeriv;
@@ -153,7 +136,7 @@ protected:
     Data<Real>             m_constrainedLength ;
     Data<Real>             m_maxBendingAngle ;
     SingleLink<AdaptiveBeamLengthConstraint<DataTypes>,
-               fem::WireBeamInterpolation<DataTypes>,
+               WireBeamInterpolation<DataTypes>,
                BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> m_interpolation;
 
 private:
@@ -165,8 +148,4 @@ private:
 extern template class SOFA_BEAMADAPTER_API AdaptiveBeamLengthConstraint<defaulttype::Rigid3Types>;
 #endif
 
-} /// namespace _adaptivebeamlengthconstraint_
-
-using _adaptivebeamlengthconstraint_::AdaptiveBeamLengthConstraint ;
-
-} /// namespace sofa::component::constraintset
+} // namespace beamadapter
