@@ -181,7 +181,10 @@ public:
 protected :
     SingleLink<AdaptiveBeamForceFieldAndMass<DataTypes>, BInterpolation, BaseLink::FLAG_STOREPATH|BaseLink::FLAG_STRONGLINK> l_interpolation;
 
-    void applyMassLarge( VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor);
+
+    void applyMassLarge( VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor);
+    void applyGravityLarge( VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor);
+
     void applyStiffnessLarge( VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor );
     void computeGravityVector();
 

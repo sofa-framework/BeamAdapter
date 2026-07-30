@@ -287,15 +287,50 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::applyStiffnessLarge( VecDeriv& df
 
 
 template<class DataTypes>
-void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge(VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)
+void AdaptiveBeamForceFieldAndMass<DataTypes>::applyMassLarge(VecDeriv& df, const VecDeriv& dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)
+{
+    /// Real mass-vector product: df += factor * M * dx (in the beam local frame).
+    const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[beamID];
+
+    Vec6 U0, U1;
+    for (unsigned int i=0; i<6; i++)
+    {
+        U0[i] = dx[nd0Id][i];
+        U1[i] = dx[nd1Id][i];
+    }
+
+    /// displacement in local frame
+    const Vec6 a0 = beamLocalMatrix.m_A0Ref * U0;
+    const Vec6 a1 = beamLocalMatrix.m_A1Ref * U1;
+
+    /// inertial force in local frame
+    const Vec6 f0 = beamLocalMatrix.m_M00*a0 + beamLocalMatrix.m_M01*a1;
+    const Vec6 f1 = beamLocalMatrix.m_M10*a0 + beamLocalMatrix.m_M11*a1;
+
+    /// force in global frame
+    const Vec6 F0 = beamLocalMatrix.m_A0Ref.multTranspose(f0);
+    const Vec6 F1 = beamLocalMatrix.m_A1Ref.multTranspose(f1);
+
+    /// put the result in df
+    for (unsigned int i=0; i<6; i++)
+    {
+        df[nd0Id][i] += F0[i]*factor;
+        df[nd1Id][i] += F1[i]*factor;
+    }
+}
+
+
+template<class DataTypes>
+void AdaptiveBeamForceFieldAndMass<DataTypes>::applyGravityLarge(VecDeriv& df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)
 {
     const BeamLocalMatrices &beamLocalMatrix = m_localBeamMatrices[beamID];
 
-    /// displacement in local frame (only gravity as external force)
+
+    /// gravity acceleration expressed in the beam local frame
     const Vec6 a0 = beamLocalMatrix.m_A0Ref * m_gravity;
     const Vec6 a1 = beamLocalMatrix.m_A1Ref * m_gravity;
 
-    /// internal force in local frame
+    /// gravity force in local frame
     const Vec6 f0 = beamLocalMatrix.m_M00*a0 + beamLocalMatrix.m_M01*a1;
     const Vec6 f1 = beamLocalMatrix.m_M10*a0 + beamLocalMatrix.m_M11*a1;
 
@@ -321,9 +356,9 @@ template<class DataTypes>
 void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const sofa::core::MechanicalParams* mparams , DataVecDeriv& dataf, const DataVecDeriv& datadx, const SReal factor)
 {
     SOFA_UNUSED(mparams);
-    SOFA_UNUSED(datadx);
 
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
+    const VecDeriv& dx = datadx.getValue();
 
     const auto size = l_interpolation->getStateSize();
     if (f.size() != size)
@@ -335,7 +370,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addMDx(const sofa::core::Mechanic
         sofa::Index node0Idx, node1Idx;
         l_interpolation->getNodeIndices( b,  node0Idx, node1Idx );
 
-        applyMassLarge( f.wref(), b, node0Idx, node1Idx, factor);
+        applyMassLarge( f.wref(), dx, b, node0Idx, node1Idx, factor);
     }
 }
 
@@ -488,6 +523,7 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
                                                          const DataVecDeriv& v)
 {
     SCOPED_TIMER("AdaptiveBeamForceFieldAndMass_addForce");
+    SOFA_UNUSED(mparams);
     SOFA_UNUSED(v);
 
     auto f = sofa::helper::getWriteOnlyAccessor(dataf);
@@ -664,9 +700,13 @@ void AdaptiveBeamForceFieldAndMass<DataTypes>::addForce (const sofa::core::Mecha
 
     if(computeMass)
     {
-        /// will add gravity directly using m_gravity:
-        DataVecDeriv emptyVec;
-        addMDx(mparams, dataf, emptyVec, 1.0);
+        /// add the gravity force M*g directly using m_gravity:
+        for (sofa::Index beamId=0; beamId<numBeams; beamId++)
+        {
+            sofa::Index node0Idx, node1Idx;
+            l_interpolation->getNodeIndices(beamId, node0Idx, node1Idx);
+            applyGravityLarge(f.wref(), beamId, node0Idx, node1Idx, 1.0);
+        }
     }
 }
 
