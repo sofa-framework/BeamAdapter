@@ -7,7 +7,7 @@ def createScene(rootnode):
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Constraint.Projective')  # Needed to use components [FixedConstraint]
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.LinearSolver.Direct')  # Needed to use components [SparseLDLSolver]
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Mass')  # Needed to use components [UniformMass]  
-    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.ODESolver.Backward')  # Needed to use components [EulerImplicitSolver]
+    settings.addObject('RequiredPlugin', pluginName='Sofa.Component.IntegrationScheme.Backward')  # Needed to use components [EulerImplicitIntegrationScheme]
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.SolidMechanics.Spring')  # Needed to use components [RestShapeSpringsForceField]
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.StateContainer')  # Needed to use components [MechanicalObject]
     settings.addObject('RequiredPlugin', pluginName='Sofa.Component.Topology.Container.Dynamic')  # Needed to use components [EdgeSetTopologyContainer,PointSetTopologyContainer]
@@ -23,7 +23,7 @@ def createScene(rootnode):
     rootnode.addObject('BlockGaussSeidelConstraintSolver', maxIterations=1000, tolerance=1e-3)
 
     simulation = rootnode.addChild('Simulation')
-    simulation.addObject('EulerImplicitSolver')
+    simulation.addObject('EulerImplicitIntegrationScheme')
     simulation.addObject('SparseLDLSolver', template='CompressedRowSparseMatrixMat3x3d')
     simulation.addObject('GenericConstraintCorrection')
 
