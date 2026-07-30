@@ -83,8 +83,8 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::init()
     localCenters.clear();
     m_internalEdges.clear();
     
-    SReal prev_length = 0.0;
-    sofa::Index prev_edges = 0;
+    SReal prev_length = 0.0; // cumulated length of the previous materials
+    sofa::Index prev_edges = 0; // cumulated number of edges of the previous materials
     sofa::Index startPtId = 0;
     const auto& keyPts = wireShape->d_keyPoints.getValue();
     for (sofa::Size i = 0; i < wireShape->l_sectionMaterials.size(); ++i)
@@ -95,20 +95,20 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::init()
         SReal dx = length / nbrVisuEdges;
 
         // add points from the material
-        for (sofa::Index i = startPtId; i < nbrVisuEdges + 1; i++)
+        for (sofa::Index j = startPtId; j < nbrVisuEdges + 1; j++)
         {
-            const InCoord p({prev_length + i * dx, 0.0, 0.0}, {0.0, 0.0, 0.0, 1.0});
+            const InCoord p({prev_length + j * dx, 0.0, 0.0}, {0.0, 0.0, 0.0, 1.0});
             localCenters.push_back(p);
         }
 
         // add segments from the material
-        for (sofa::Index i = prev_edges; i < prev_edges + nbrVisuEdges; i++)
+        for (sofa::Index e = prev_edges; e < prev_edges + nbrVisuEdges; e++)
         {
-            m_internalEdges.emplace_back(i, i + 1);
+            m_internalEdges.emplace_back(e, e + 1);
         }
 
-        prev_length = length;
-        prev_edges = nbrVisuEdges;
+        prev_length += length;
+        prev_edges += nbrVisuEdges;
         startPtId = 1; // Assume the last point of mat[n] == first point of mat[n+1]
     }
     
