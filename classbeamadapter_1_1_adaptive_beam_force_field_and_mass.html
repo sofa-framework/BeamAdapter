@@ -253,8 +253,10 @@ Data&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>d_reinf
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae7e4db542e28137039400978f251fb64" id="r_ae7e4db542e28137039400978f251fb64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#ae7e4db542e28137039400978f251fb64">applyMassLarge</a> (VecDeriv &amp;df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
-<tr class="separator:ae7e4db542e28137039400978f251fb64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc396ecaac88db26a089a59ce838f53d" id="r_acc396ecaac88db26a089a59ce838f53d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#acc396ecaac88db26a089a59ce838f53d">applyMassLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
+<tr class="separator:acc396ecaac88db26a089a59ce838f53d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60cf21a1c550ee139d03c0f976c5bab9" id="r_a60cf21a1c550ee139d03c0f976c5bab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#a60cf21a1c550ee139d03c0f976c5bab9">applyGravityLarge</a> (VecDeriv &amp;df, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
+<tr class="separator:a60cf21a1c550ee139d03c0f976c5bab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af04a637b248be94a253ef8a13dafe4df" id="r_af04a637b248be94a253ef8a13dafe4df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html#af04a637b248be94a253ef8a13dafe4df">applyStiffnessLarge</a> (VecDeriv &amp;df, const VecDeriv &amp;dx, const sofa::Index beamID, const sofa::Index nd0Id, const sofa::Index nd1Id, const SReal factor)</td></tr>
 <tr class="separator:af04a637b248be94a253ef8a13dafe4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6151c3afd2ea8395734b42adb91cb6cf" id="r_a6151c3afd2ea8395734b42adb91cb6cf"><td class="memItemLeft" align="right" valign="top"><a id="a6151c3afd2ea8395734b42adb91cb6cf" name="a6151c3afd2ea8395734b42adb91cb6cf"></a>
@@ -364,7 +366,7 @@ template&lt;class DataTypes &gt; </div>
 <p>compute the force in the local frame:</p>
 <p>compute the force in the global frame</p>
 <p>Add this force to vector f</p>
-<p>will add gravity directly using m_gravity:</p>
+<p>add the gravity force M*g directly using m_gravity:</p>
 
 </div>
 </div>
@@ -407,8 +409,8 @@ template&lt;class DataTypes &gt; </div>
 
 </div>
 </div>
-<a id="ae7e4db542e28137039400978f251fb64" name="ae7e4db542e28137039400978f251fb64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7e4db542e28137039400978f251fb64">&#9670;&#160;</a></span>applyMassLarge()</h2>
+<a id="a60cf21a1c550ee139d03c0f976c5bab9" name="a60cf21a1c550ee139d03c0f976c5bab9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60cf21a1c550ee139d03c0f976c5bab9">&#9670;&#160;</a></span>applyGravityLarge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -419,7 +421,7 @@ template&lt;class DataTypes &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void applyMassLarge </td>
+          <td class="memname">void applyGravityLarge </td>
           <td>(</td>
           <td class="paramtype">VecDeriv &amp;&#160;</td>
           <td class="paramname"><em>df</em>, </td>
@@ -460,8 +462,75 @@ template&lt;class DataTypes &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>displacement in local frame (only gravity as external force)</p>
-<p>internal force in local frame</p>
+<p>gravity acceleration expressed in the beam local frame</p>
+<p>gravity force in local frame</p>
+<p>force in global frame</p>
+<p>put the result in df</p>
+
+</div>
+</div>
+<a id="acc396ecaac88db26a089a59ce838f53d" name="acc396ecaac88db26a089a59ce838f53d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc396ecaac88db26a089a59ce838f53d">&#9670;&#160;</a></span>applyMassLarge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataTypes &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void applyMassLarge </td>
+          <td>(</td>
+          <td class="paramtype">VecDeriv &amp;&#160;</td>
+          <td class="paramname"><em>df</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const VecDeriv &amp;&#160;</td>
+          <td class="paramname"><em>dx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>beamID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>nd0Id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sofa::Index&#160;</td>
+          <td class="paramname"><em>nd1Id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SReal&#160;</td>
+          <td class="paramname"><em>factor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Real mass-vector product: df += factor * M * dx (in the beam local frame).</p>
+<p>displacement in local frame</p>
+<p>inertial force in local frame</p>
 <p>force in global frame</p>
 <p>put the result in df</p>
 
@@ -672,7 +741,7 @@ template&lt;class DataTypes &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacebeamadapter.html">beamadapter</a></li><li class="navelem"><a class="el" href="classbeamadapter_1_1_adaptive_beam_force_field_and_mass.html">AdaptiveBeamForceFieldAndMass</a></li>
-    <li class="footer">Generated on Thu Jul 16 2026 16:01:05 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Jul 30 2026 01:32:36 for BeamAdapter by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
