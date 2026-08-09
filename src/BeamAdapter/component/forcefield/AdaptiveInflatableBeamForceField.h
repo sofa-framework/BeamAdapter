@@ -154,7 +154,7 @@ public:
     /// Mass Interface
     /////////////////////////////////////
     virtual void addMDx(const MechanicalParams* mparams, DataVecDeriv& f, const DataVecDeriv& dx, SReal factor) override;
-    virtual void addMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
+    virtual void doAddMToMatrix(const MechanicalParams *mparams, const MultiMatrixAccessor* matrix) override;
     virtual void addMBKToMatrix(const MechanicalParams* mparams, const MultiMatrixAccessor* matrix) override;
 
     //TODO(dmarchal 2017-05-17) So what do we do ? For who is this message intended for ? How can we make this code "more" manageable.
@@ -200,8 +200,7 @@ public:
     }
 
     using sofa::core::behavior::ForceField<DataTypes>::addKToMatrix;
-    void addKToMatrix(const MechanicalParams* mparams,
-                      const MultiMatrixAccessor* matrix) override;
+    void addKToMatrix(sofa::linearalgebra::BaseMatrix * matrix, SReal kFact, unsigned int & offset) override;
 
     void computeStiffness(int beam, BeamLocalMatrices& beamLocalMatrices);
     void computeMass(int beam, BeamLocalMatrices& beamMatrices);
