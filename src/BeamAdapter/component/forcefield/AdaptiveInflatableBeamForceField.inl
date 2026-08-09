@@ -370,7 +370,7 @@ void AdaptiveInflatableBeamForceField<DataTypes>::addMDx(const MechanicalParams*
 
 
 template<class DataTypes>
-void AdaptiveInflatableBeamForceField<DataTypes>::addMToMatrix(const MechanicalParams *mparams,
+void AdaptiveInflatableBeamForceField<DataTypes>::doAddMToMatrix(const MechanicalParams *mparams,
                                                             const MultiMatrixAccessor* matrix)
 {
     MultiMatrixAccessor::MatrixRef r = matrix->getMatrix(this->mstate);
