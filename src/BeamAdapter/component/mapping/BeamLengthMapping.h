@@ -156,11 +156,6 @@ public:
     virtual void applyJ(const MechanicalParams *mparams, Data<VecDeriv>& out, const Data<InVecDeriv>& in) override;
     virtual void applyJT(const MechanicalParams *mparams, Data<InVecDeriv>& out, const Data<VecDeriv>& in) override;
     virtual void applyJT(const ConstraintParams *cparams, Data<InMatrixDeriv>& out, const Data<OutMatrixDeriv>& in) override;
-    virtual void applyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) override;
-
-    // interface of baseMapping.h
-    virtual void updateK( const MechanicalParams* /*mparams*/, core::ConstMultiVecDerivId /*outForce*/ ) override;
-    const linearalgebra::BaseMatrix* getK() override;
 
 
 
@@ -178,6 +173,12 @@ public:
  protected:
    /* Vec3 F0_buf, F1_buf, F2_buf, F3_buf; // Used for debug */
     SparseKMatrixEigen K_geom;
+
+    virtual void doApplyDJT(const MechanicalParams* mparams, core::MultiVecDerivId parentDfId, core::ConstMultiVecDerivId childDfId) override;
+
+    // interface of baseMapping.h
+    virtual void doUpdateK( const MechanicalParams* /*mparams*/, core::ConstMultiVecDerivId /*outForce*/ ) override;
+    const linearalgebra::BaseMatrix* doGetK() override;
 
     // used for applyJ on one beam
     void computeJSpline(Real &dlength, const Vec3& P0, const Vec3& P1, const Vec3& P2, const Vec3& P3,
