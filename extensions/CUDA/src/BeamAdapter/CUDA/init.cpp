@@ -62,7 +62,7 @@ void init()
         sofa::helper::system::PluginManager::getInstance().registerPlugin(MODULE_NAME);
 
         beamadapter::initBeamAdapter();
-        sofa::gpu::cuda::init();
+        sofacuda::init();
         first = false;
     }
 }
