@@ -372,7 +372,7 @@ void InterventionalRadiologyController<DataTypes>::onBeginAnimationStep(const do
     if(m_FF || m_RW)
     {
         int id = d_controlledInstrument.getValue();
-        if (id >= (int)xInstrTip.size())
+        if (id < 0 || id >= (int)xInstrTip.size())
         {
             msg_warning()<<"Controlled Instument num "<<id<<" does not exist (size ="<< xInstrTip.size() <<") use instrument 0 instead";
             id=0;
@@ -406,7 +406,7 @@ template <class DataTypes>
 void InterventionalRadiologyController<DataTypes>::applyAction(BeamAdapterAction action)
 {
     int id = d_controlledInstrument.getValue();
-    if (id >= int(m_instrumentsList.size()))
+    if (id < 0 || id >= int(m_instrumentsList.size()))
     {
         msg_warning() << "Controlled Instrument num " << id << " does not exist (size =" << m_instrumentsList.size() << ").";
         return;
@@ -499,6 +499,14 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
         type::vector<Real> xP_noticeable_I;
         type::vector<sofa::Size> density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I); // sampling of the different section of this instrument
+
+        // an instrument must provide at least one noticeable point; otherwise the loop below and the
+        // final key point access (xP_noticeable_I.size()-1) would read out of bounds.
+        if (xP_noticeable_I.empty())
+        {
+            msg_error() << "Instrument " << i << " provides no sampling parameters (no noticeable point). Skipping it.";
+            continue;
+        }
 
         // check each interval of noticeable point to see if they go out (>0) and use corresponding density to sample the interval.
         for (int j=0; j<(int)(xP_noticeable_I.size()-1); j++)
@@ -603,10 +611,8 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
     Real xAbsCurv = m_nodeCurvAbs[node];
     int firstInstruOnx = m_idInstrumentCurvAbsTable[node][0];
 
-    type::vector<unsigned int> segRemove;
-
-    for (unsigned int it=0; it<m_instrumentsList.size(); it++)
-        segRemove.push_back(0);
+    // -1 means "nothing to remove" for that instrument; using 0 as sentinel would drop a point at index 0.
+    type::vector<int> segRemove(m_instrumentsList.size(), -1);
 
     for (int i = static_cast<int>(xPointList.size()) - 1; i>=0; i--)
     {
@@ -659,7 +665,7 @@ void InterventionalRadiologyController<DataTypes>::interventionalRadiologyCollis
 
     for (unsigned int it=0; it<m_instrumentsList.size(); it++)
     {
-        if(segRemove[it]!=0)
+        if(segRemove[it]!=-1)
             removeEdge.push_back(segRemove[it]);
     }
 
@@ -850,6 +856,11 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 break;
         }
 
+        // If no previous node was found beyond xCurvAbs (see the "Case 1" warning above), the loop
+        // ends with prev_xId == m_nodeCurvAbs.size(): clamp to the last node to avoid out-of-bounds access.
+        if (prev_xId >= m_nodeCurvAbs.size())
+            prev_xId = m_nodeCurvAbs.size() - 1;
+
         sofa::Index prev_globalNodeId = prev_numberOfUnactiveNodes + prev_xId;
         const Real prev_xCurvAbs = m_nodeCurvAbs[prev_xId];
 
@@ -950,7 +961,8 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
     {
         RealConstIterator it = rigidCurvAbs->begin();
 
-        for (unsigned int i=0; i<newCurvAbs.size(); i++)
+        // firstSimulatedNode + i indexes into the dofs, so it must stay within [0, numberOfNodes-1]
+        for (unsigned int i=0; i<newCurvAbs.size() && (firstSimulatedNode + i) < numberOfNodes; i++)
         {
             if (newCurvAbs[i] < ((*it)+ std::numeric_limits<float>::epsilon()) && newCurvAbs[i] > ((*it)- std::numeric_limits<float>::epsilon())) // node= border of the rigid segment
             {

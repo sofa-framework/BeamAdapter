@@ -465,6 +465,20 @@ TEST_F(InterventionalRadiologyController_test, action_movesControlledInstrument)
     EXPECT_NEAR(ctrl->d_xTip.getValue()[0], x0Before, 1e-9);
 }
 
+/// A negative controlledInstrument must be rejected (bounds check), not used as a negative index.
+TEST_F(InterventionalRadiologyController_test, action_negativeControlledInstrument_isRejected)
+{
+    loadScene(singleInstrumentScene("controlledInstrument='-1'"));
+    auto* ctrl = getController();
+    ASSERT_NE(ctrl, nullptr);
+
+    const Real x0Before = ctrl->d_xTip.getValue()[0];
+
+    // applyAction returns early for an out-of-range (negative) instrument: no crash, no change.
+    ctrl->applyAction(BeamAdapterAction::MOVE_FORWARD);
+    EXPECT_NEAR(ctrl->d_xTip.getValue()[0], x0Before, 1e-9);
+}
+
 
 ///////////////////////////////////// Getters / helpers ///////////////////////////////////////////
 
@@ -593,6 +607,22 @@ TEST_F(InterventionalRadiologyController_test, deploy_runsStable)
         sofa::simulation::node::animate(m_root.get(), 0.01);
 
     EXPECT_EQ(ctrl->getComponentState(), ComponentState::Valid);
+}
+
+/// A negative controlledInstrument during stepping must fall back to instrument 0 (no negative index).
+TEST_F(InterventionalRadiologyController_test, deploy_negativeControlledInstrument_fallsBackToZero)
+{
+    loadAndInitRoot(deploymentScene("xtip='0' step='0.5' speed='10' controlledInstrument='-1'"));
+
+    auto* ctrl = getController();
+    ASSERT_NE(ctrl, nullptr);
+    ASSERT_EQ(ctrl->getComponentState(), ComponentState::Valid);
+
+    for (int i = 0; i < 10; ++i)
+        sofa::simulation::node::animate(m_root.get(), 0.01);
+
+    // the step is applied to the fallback instrument 0 instead of dereferencing index -1
+    EXPECT_GT(ctrl->d_xTip.getValue()[0], 0.0);
 }
 
 } // namespace beamadapter_test
