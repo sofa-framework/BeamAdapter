@@ -3,7 +3,7 @@ import Sofa
 
 def createScene(rootNode):
 
-    rootNode.addObject('RequiredPlugin', pluginName='BeamAdapter Sofa.Component.Constraint.Projective Sofa.Component.LinearSolver.Direct Sofa.Component.ODESolver.Backward Sofa.Component.StateContainer Sofa.Component.Topology.Container.Constant Sofa.Component.Topology.Container.Grid Sofa.Component.Visual Sofa.Component.SolidMechanics.Spring Sofa.Component.Topology.Container.Dynamic')
+    rootNode.addObject('RequiredPlugin', pluginName='BeamAdapter Sofa.Component.Constraint.Projective Sofa.Component.LinearSolver.Direct Sofa.Component.IntegrationScheme.Backward Sofa.Component.StateContainer Sofa.Component.Topology.Container.Constant Sofa.Component.Topology.Container.Grid Sofa.Component.Visual Sofa.Component.SolidMechanics.Spring Sofa.Component.Topology.Container.Dynamic')
     rootNode.addObject('VisualStyle', displayFlags='showVisualModels showBehaviorModels showCollisionModels hideMappings showForceFields')
 
     rootNode.addObject('DefaultAnimationLoop')
@@ -31,7 +31,7 @@ def createScene(rootNode):
 
 
     BeamMechanics = rootNode.addChild('BeamModel', bbox="0 0 0 10 10 10")
-    BeamMechanics.addObject('EulerImplicitSolver', rayleighStiffness=0.2, printLog=False, rayleighMass=0.1)
+    BeamMechanics.addObject('EulerImplicitIntegrationScheme', rayleighStiffness=0.2, printLog=False, rayleighMass=0.1)
     BeamMechanics.addObject('BTDLinearSolver', verification=False, subpartSolve=False, verbose=False)
     BeamMechanics.addObject('RegularGridTopology', name='MeshLines', drawEdges=True, 
                                     nx=61, ny=1, nz=1,
