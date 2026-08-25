@@ -28,6 +28,12 @@ AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::AdaptiveBeamVisualMa
     , d_thickness( initData(&d_thickness, 0_sreal, "thickness", "if not 0, add a second layer (where this value will be the distance between the two layers)"))
     , d_flipNormals(initData(&d_flipNormals, bool(false), "flipNormals", "Flip Normal ? (Inverse point order when creating quad)"))
 {
+    // Geometry-only mapping: applyJ/applyJT are not implemented, so it must
+    // never be treated as a mechanical mapping (also allows mapping into a
+    // MechanicalObject without the constraint pass spamming errors).
+    this->f_mapForces.setValue(false);
+    this->f_mapConstraints.setValue(false);
+    this->f_mapMasses.setValue(false);
 }
 
 template<typename InputDataTypes, typename OutputDataTypes>
