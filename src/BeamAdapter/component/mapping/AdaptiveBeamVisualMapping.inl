@@ -28,9 +28,7 @@ AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::AdaptiveBeamVisualMa
     , d_thickness( initData(&d_thickness, 0_sreal, "thickness", "if not 0, add a second layer (where this value will be the distance between the two layers)"))
     , d_flipNormals(initData(&d_flipNormals, bool(false), "flipNormals", "Flip Normal ? (Inverse point order when creating quad)"))
 {
-    // Geometry-only mapping: applyJ/applyJT are not implemented, so it must
-    // never be treated as a mechanical mapping (also allows mapping into a
-    // MechanicalObject without the constraint pass spamming errors).
+    // Geometry-only mapping
     this->f_mapForces.setValue(false);
     this->f_mapConstraints.setValue(false);
     this->f_mapMasses.setValue(false);
@@ -165,11 +163,13 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::init()
     m_beamMapping = sofa::core::objectmodel::New<AdaptiveBeamMapping<InputDataTypes, InputDataTypes>>(this->fromModel, m_centerState.get(), l_wireBeamInterpolation.get());
     m_beamMapping->init();
     this->addSlave(m_beamMapping);
-    
-    Inherit::init();
-    
+
+    // Must be Valid before Inherit::init(): Mapping::init() calls apply(), which
+    // sizes the output (pre-bwdInit branch) only for a valid component.
     this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Valid);
-    
+
+    Inherit::init();
+
 }
 
 
@@ -180,7 +180,8 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::bwdInit()
         return;
     
     m_beamMapping->bwdInit();
-    
+    m_bwdInitDone = true;
+
     const auto N = d_nbPointsOnEachCircle.getValue();
     const auto& edges = m_internalEdges;
     const bool flipNormals = d_flipNormals.getValue();
@@ -280,10 +281,16 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
         return;
     
     const auto* beamState = this->l_wireBeamInterpolation->getMState();
-    
-    // workaround for l_wireBeamInterpolation->m_mstate is nullptr until bwdinit
-    if (!beamState)
+
+    // Before bwdInit, the internal beam mapping has no points yet (and the beam
+    // state may still be nullptr): only size the output.
+    if (!beamState || !m_bwdInitDone)
     {
+        auto out = sofa::helper::getWriteOnlyAccessor(dOut);
+        const auto N = d_nbPointsOnEachCircle.getValue();
+        const auto nCenters = sofa::helper::getReadAccessor(d_localCenters).size();
+        const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
+        out.resize(nCenters * N * layers); // zero-filled: degenerate, invisible
         return;
     }
             

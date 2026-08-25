@@ -46,6 +46,7 @@ protected:
     SeqEdges m_internalEdges;
     typename sofa::component::statecontainer::MappedObject<InputDataTypes>::SPtr m_centerState; // state by itself should be sufficient...
     typename AdaptiveBeamMapping<InputDataTypes, InputDataTypes>::SPtr m_beamMapping;
+    bool m_bwdInitDone { false }; // m_beamMapping is usable only after bwdInit
 
 public:
     void init() override;
