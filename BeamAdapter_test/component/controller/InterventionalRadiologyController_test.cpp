@@ -24,7 +24,7 @@
 
 #include <sofa/simulation/common/SceneLoaderXML.h>
 #include <sofa/simulation/Node.h>
-#include <sofa/simulation/graph/DAGSimulation.h>
+#include <sofa/simulation/Simulation.h>
 
 #include <BeamAdapter/component/controller/InterventionalRadiologyController.h>
 #include <BeamAdapter/component/WireBeamInterpolation.h>
@@ -60,7 +60,7 @@ public:
         sofa::simpleapi::importPlugin(Sofa.Component.SolidMechanics.Spring);
         sofa::simpleapi::importPlugin(Sofa.Component.AnimationLoop);
 
-        m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
+        m_root = sofa::simpleapi::createRootNode(sofa::simulation::MainSimulation::getSimulation(), "root");
     }
 
     void doTearDown() override

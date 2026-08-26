@@ -23,7 +23,7 @@
 #include <sofa/simpleapi/SimpleApi.h>
 using std::string ;
 #include <sofa/component/mapping/testing/MappingTestCreation.h>
-#include <sofa/simulation/graph/DAGSimulation.h>
+#include <sofa/simulation/Simulation.h>
 #include <sofa/defaulttype/VecTypes.h>
 #include <sofa/defaulttype/RigidTypes.h>
 #include <sofa/simulation/UpdateLinksVisitor.h>

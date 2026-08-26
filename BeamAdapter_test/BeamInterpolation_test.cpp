@@ -39,8 +39,8 @@ using sofa::core::ExecParams ;
 #include <sofa/simulation/common/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML;
 
-#include <sofa/simulation/graph/DAGSimulation.h>
-using sofa::simulation::graph::DAGSimulation;
+#include <sofa/simulation/Simulation.h>
+using sofa::simulation::Simulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
 using sofa::core::objectmodel::New ;
