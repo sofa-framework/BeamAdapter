@@ -500,8 +500,7 @@ void InterventionalRadiologyController<DataTypes>::computeInstrumentsCurvAbs(typ
         type::vector<sofa::Size> density_I;
         m_instrumentsList[i]->getSamplingParameters(xP_noticeable_I, density_I); // sampling of the different section of this instrument
 
-        // an instrument must provide at least one noticeable point; otherwise the loop below and the
-        // final key point access (xP_noticeable_I.size()-1) would read out of bounds.
+        // Detect if the instrument does not provide at least one noticeable point
         if (xP_noticeable_I.empty())
         {
             msg_error() << "Instrument " << i << " provides no sampling parameters (no noticeable point). Skipping it.";
@@ -856,8 +855,7 @@ void InterventionalRadiologyController<DataTypes>::applyInterventionalRadiologyC
                 break;
         }
 
-        // If no previous node was found beyond xCurvAbs (see the "Case 1" warning above), the loop
-        // ends with prev_xId == m_nodeCurvAbs.size(): clamp to the last node to avoid out-of-bounds access.
+        // In case prev_xId exceeds size of m_nodeCurvAbs, clamp to the last node to avoid out-of-bounds access
         if (prev_xId >= m_nodeCurvAbs.size())
             prev_xId = m_nodeCurvAbs.size() - 1;
 
