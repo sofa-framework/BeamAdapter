@@ -35,8 +35,8 @@ using sofa::defaulttype::Rigid3Types ;
 #include <sofa/simulation/common/SceneLoaderXML.h>
 using sofa::simulation::SceneLoaderXML ;
 
-#include <sofa/simulation/graph/DAGSimulation.h>
-using sofa::simulation::graph::DAGSimulation;
+#include <sofa/simulation/Simulation.h>
+using sofa::simulation::Simulation;
 using sofa::simulation::Simulation ;
 using sofa::simulation::Node ;
 using sofa::core::objectmodel::New ;
@@ -55,7 +55,7 @@ template <typename DataTypes>
 struct AdaptiveBeamSlidingConstraintTest : public sofa::testing::BaseSimulationTest, AdaptiveBeamSlidingConstraint<DataTypes>
 {
     void normalBehavior(){
-        simulation::Simulation* simu = sofa::simulation::getSimulation();
+        simulation::Simulation* simu = sofa::simulation::MainSimulation::getSimulation();
         assert(simu);
 
         typename AdaptiveBeamSlidingConstraint<DataTypes>::SPtr thisObject = New<AdaptiveBeamSlidingConstraint<DataTypes>>();

@@ -24,7 +24,7 @@
 
 #include <sofa/simulation/common/SceneLoaderXML.h>
 #include <sofa/simulation/Node.h>
-#include <sofa/simulation/graph/DAGSimulation.h>
+#include <sofa/simulation/Simulation.h>
 
 #include <BeamAdapter/component/engine/WireRestShape.h>
 #include <sofa/core/topology/BaseMeshTopology.h>
@@ -48,7 +48,7 @@ public:
 
     void doSetUp() override
     {
-        m_root = sofa::simpleapi::createRootNode(sofa::simulation::getSimulation(), "root");
+        m_root = sofa::simpleapi::createRootNode(sofa::simulation::MainSimulation::getSimulation(), "root");
 
         sofa::simpleapi::importPlugin("BeamAdapter");
         sofa::simpleapi::importPlugin("Sofa.Component.Topology.Container.Dynamic");
