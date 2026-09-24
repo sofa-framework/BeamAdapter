@@ -31,7 +31,7 @@ def combineInstruments(node, xtip=[1, 0, 0], instruments=['guide'],
                               rotationInstrument=[0, 0, 0], speed=0, controlledInstrument=0):
 
     InstrumentCombined = node.addChild('InstrumentCombined')
-    InstrumentCombined.addObject('EulerImplicitSolver', rayleighStiffness=0.2, 
+    InstrumentCombined.addObject('EulerImplicitIntegrationScheme', rayleighStiffness=0.2, 
                                     printLog=False, rayleighMass=0.1)
     InstrumentCombined.addObject('BTDLinearSolver', verification=False, 
                                     subpartSolve=False, verbose=False)
@@ -68,7 +68,7 @@ def createInstrumentsCombined(node, xtip=[1, 0, 0], instruments=['guide'],
     #                           rotationInstrument, speed, controlledInstrument)
 
     InstrumentCombined = node.addChild('InstrumentCombined')
-    InstrumentCombined.addObject('EulerImplicitSolver', rayleighStiffness=0.2, 
+    InstrumentCombined.addObject('EulerImplicitIntegrationScheme', rayleighStiffness=0.2, 
                                     printLog=False, rayleighMass=0.1)
     InstrumentCombined.addObject('BTDLinearSolver', verification=False, 
                                     subpartSolve=False, verbose=False)

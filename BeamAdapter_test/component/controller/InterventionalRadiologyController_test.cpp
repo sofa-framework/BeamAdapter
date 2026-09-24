@@ -55,7 +55,7 @@ public:
         sofa::simpleapi::importPlugin(Sofa.Component.Topology.Container.Grid);
         sofa::simpleapi::importPlugin(Sofa.Component.Constraint.Projective);
         sofa::simpleapi::importPlugin(Sofa.Component.StateContainer);
-        sofa::simpleapi::importPlugin(Sofa.Component.ODESolver.Backward);
+        sofa::simpleapi::importPlugin(Sofa.Component.IntegrationScheme.Backward);
         sofa::simpleapi::importPlugin(Sofa.Component.LinearSolver.Direct);
         sofa::simpleapi::importPlugin(Sofa.Component.SolidMechanics.Spring);
         sofa::simpleapi::importPlugin(Sofa.Component.AnimationLoop);
