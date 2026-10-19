@@ -50,6 +50,8 @@ set(HEADER_FILES
 
     ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.inl
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamVisualMapping.h
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamVisualMapping.inl
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.h
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.inl
     ${BEAMADAPTER_SRC}/component/mapping/BeamProjectionDifferenceMultiMapping.h
@@ -92,6 +94,7 @@ set(SOURCE_FILES
     ${BEAMADAPTER_SRC}/component/forcefield/AdaptiveInflatableBeamForceField.cpp
 
     ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamMapping.cpp
+    ${BEAMADAPTER_SRC}/component/mapping/AdaptiveBeamVisualMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/BeamLengthMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/BeamProjectionDifferenceMultiMapping.cpp
     ${BEAMADAPTER_SRC}/component/mapping/MultiAdaptiveBeamMapping.cpp

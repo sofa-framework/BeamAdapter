@@ -234,7 +234,6 @@ void InterventionalRadiologyController<DataTypes>::init()
         
         m_idInstrumentCurvAbsTable.push_back(listTool);
     }
-
     
     type::vector<int> listInit;
     for(unsigned int i=0; i<numberOfInstruments; i++)
