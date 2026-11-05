@@ -83,9 +83,11 @@ void WireRestShape<DataTypes>::init()
     }
     else
     {
-        msg_error() << "Cannot find topology container. Please specify the link to the topology or insert one in the same node.";
-        this->d_componentState.setValue(sofa::core::objectmodel::ComponentState::Invalid);
-        return;
+        // force print this message (an important message which is not a warning)
+        const auto printLogValue = f_printLog.getValue();
+        f_printLog.setValue(true);
+        msg_info() << "A topology container has not been set (or included in the same node). This will throw an error only if it is intended to be used with Edge2QuadTopologyContainer further in your scene.";
+        f_printLog.setValue(printLogValue);
     }
 
     if (l_sectionMaterials.empty())
@@ -142,6 +144,11 @@ void WireRestShape<DataTypes>::initLengths()
 template <class DataTypes>
 bool WireRestShape<DataTypes>::initTopology()
 {
+    if(!l_topology)
+    {
+        return false;
+    }
+    
     /// fill topology :
     l_topology->clear();
     l_topology->cleanup();
