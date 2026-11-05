@@ -399,7 +399,6 @@ void BaseBeamInterpolation<DataTypes>::getTangent(Vec3& t, const Real baryCoord,
 }
 
 
-// TODO check why this method is called in continue
 template<class DataTypes>
 int BaseBeamInterpolation<DataTypes>::getNodeIndices(const EdgeID edgeInList,
     unsigned int& node0Idx,
