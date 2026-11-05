@@ -27,5 +27,6 @@ var classbeamadapter_1_1_base_beam_interpolation =
     [ "d_DOF0TransformNode0", "classbeamadapter_1_1_base_beam_interpolation.html#a32dde414cec5c9c285bcfd55cfb27e89", null ],
     [ "d_DOF1TransformNode1", "classbeamadapter_1_1_base_beam_interpolation.html#a37eccf180bea40b5e88d51bf642c8997", null ],
     [ "d_lengthList", "classbeamadapter_1_1_base_beam_interpolation.html#a4a1171d1838973e168662e5d8375a9e7", null ],
+    [ "d_wireTipIndex", "classbeamadapter_1_1_base_beam_interpolation.html#a9c094cf604d84f26370b34bbf5d0ee05", null ],
     [ "l_topology", "classbeamadapter_1_1_base_beam_interpolation.html#a24846dd4595a9640747e73cf2c639854", null ]
 ];
