@@ -46,7 +46,9 @@ var hierarchy =
       [ "AdaptiveBeamLengthConstraint< DataTypes >", "classbeamadapter_1_1_adaptive_beam_length_constraint.html", null ]
     ] ],
     [ "Mapping", null, [
+      [ "AdaptiveBeamMapping< InputDataTypes, InputDataTypes >", "classbeamadapter_1_1_adaptive_beam_mapping.html", null ],
       [ "AdaptiveBeamMapping< TIn, TOut >", "classbeamadapter_1_1_adaptive_beam_mapping.html", null ],
+      [ "AdaptiveBeamVisualMapping< InputDataTypes, OutputDataTypes >", "classbeamadapter_1_1_adaptive_beam_visual_mapping.html", null ],
       [ "BeamLengthMapping< TIn, TOut >", "classbeamadapter_1_1_beam_length_mapping.html", null ]
     ] ],
     [ "Mass", null, [

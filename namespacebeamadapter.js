@@ -7,6 +7,7 @@ var namespacebeamadapter =
     [ "AdaptiveBeamMapping", "classbeamadapter_1_1_adaptive_beam_mapping.html", "classbeamadapter_1_1_adaptive_beam_mapping" ],
     [ "AdaptiveBeamSlidingConstraint", "classbeamadapter_1_1_adaptive_beam_sliding_constraint.html", null ],
     [ "AdaptiveBeamSlidingConstraintResolution", "classbeamadapter_1_1_adaptive_beam_sliding_constraint_resolution.html", null ],
+    [ "AdaptiveBeamVisualMapping", "classbeamadapter_1_1_adaptive_beam_visual_mapping.html", "classbeamadapter_1_1_adaptive_beam_visual_mapping" ],
     [ "AdaptiveInflatableBeamForceField", "classbeamadapter_1_1_adaptive_inflatable_beam_force_field.html", "classbeamadapter_1_1_adaptive_inflatable_beam_force_field" ],
     [ "BaseBeamInterpolation", "classbeamadapter_1_1_base_beam_interpolation.html", "classbeamadapter_1_1_base_beam_interpolation" ],
     [ "BaseRodSectionMaterial", "classbeamadapter_1_1_base_rod_section_material.html", "classbeamadapter_1_1_base_rod_section_material" ],
