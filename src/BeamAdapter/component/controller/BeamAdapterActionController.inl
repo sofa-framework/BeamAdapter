@@ -77,8 +77,8 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 		
     case 'E':
         m_currAction = BeamAdapterAction::NO_ACTION;
-        std::cout << "timeSteps='" << d_timeSteps.getValue() << "'" << std::endl;
-        std::cout << "actions='" << d_actions.getValue() << "'" << std::endl;
+        msg_info() << "timeSteps='" << d_timeSteps.getValue();
+        msg_info() << "actions='" << d_actions.getValue();
         break;
     case 'D':
         m_currAction = BeamAdapterAction::DROP_TOOL;
