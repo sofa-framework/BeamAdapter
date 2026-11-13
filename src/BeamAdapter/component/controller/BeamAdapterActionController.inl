@@ -36,7 +36,7 @@ BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
     , l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
 {
-    this->f_printlog.setValue(true);
+    this->f_printLog.setValue(true);
 }
 
 template <class DataTypes>
