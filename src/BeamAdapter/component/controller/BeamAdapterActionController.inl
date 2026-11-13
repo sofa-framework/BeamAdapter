@@ -36,7 +36,7 @@ BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
     , d_timeSteps(initData(&d_timeSteps, "timeSteps", "List of key times corresponding to the actions"))
     , l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
 {
-    
+    this->f_printLog.setValue(true);
 }
 
 template <class DataTypes>
@@ -77,7 +77,8 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 		
     case 'E':
         m_currAction = BeamAdapterAction::NO_ACTION;
-        m_exportActions = !m_exportActions;
+        msg_info() << "timeSteps='" << d_timeSteps.getValue();
+        msg_info() << "actions='" << d_actions.getValue();
         break;
     case 'D':
         m_currAction = BeamAdapterAction::DROP_TOOL;
@@ -137,12 +138,6 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
         auto actions = sofa::helper::WriteAccessor(d_actions);
         times.push_back(currentTime);
         actions.push_back(int(m_currAction));
-
-        if (m_exportActions)
-        {
-            std::cout << "timeSteps='" << times.wref() << "'" << std::endl;
-            std::cout << "actions='" << actions.wref() << "'" << std::endl;
-        }
 
         m_lastAction = m_currAction;
     }

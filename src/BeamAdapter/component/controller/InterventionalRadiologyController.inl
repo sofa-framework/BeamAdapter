@@ -308,13 +308,13 @@ void InterventionalRadiologyController<DataTypes>::onKeyPressedEvent(KeypressedE
         case 'D':
             applyAction(BeamAdapterAction::DROP_TOOL);
             break;
-        case '2':
+        case '3':
             applyAction(BeamAdapterAction::USE_TOOL_2);
             break;
-        case '1':
+        case '2':
             applyAction(BeamAdapterAction::USE_TOOL_1);
             break;
-        case '0':
+        case '1':
             applyAction(BeamAdapterAction::USE_TOOL_0);
             break;
         case 20: // droite = 20
