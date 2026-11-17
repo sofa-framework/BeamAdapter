@@ -6,6 +6,7 @@ var classbeamadapter_1_1_beam_adapter_action_controller =
     [ "onMouseEvent", "classbeamadapter_1_1_beam_adapter_action_controller.html#a8b21b9996ce5e8e64bcfc8ac052a94de", null ],
     [ "d_actions", "classbeamadapter_1_1_beam_adapter_action_controller.html#adb6b5ae43148c36890fcda0a7457a2de", null ],
     [ "d_actionString", "classbeamadapter_1_1_beam_adapter_action_controller.html#a9c438662b1f2f0426484b110d910a1ef", null ],
+    [ "d_currentAction", "classbeamadapter_1_1_beam_adapter_action_controller.html#a4121c891badb4e9a303b66e86a7f08e7", null ],
     [ "d_timeSteps", "classbeamadapter_1_1_beam_adapter_action_controller.html#a785ccb6343d78ea5f5dbcf911f06a7be", null ],
     [ "d_writeMode", "classbeamadapter_1_1_beam_adapter_action_controller.html#aee317470786949a7ec8555b47c61bb32", null ],
     [ "l_interventionController", "classbeamadapter_1_1_beam_adapter_action_controller.html#a173ca5005be1ee6dd9d72609fd9f2e6b", null ]
