@@ -11,5 +11,6 @@ var searchData=
   ['statedatatypes_8',['StateDataTypes',['../classbeamadapter_1_1_base_beam_interpolation.html#af7240bec65ca3fb869fcecc0b9fe48f5',1,'beamadapter::BaseBeamInterpolation']]],
   ['steerablecatheter_9',['SteerableCatheter',['../md_doc_2modeling_2implementation.html#autotoc_md33',1,'']]],
   ['storeresetstate_10',['storeResetState',['../classbeamadapter_1_1_beam_interpolation.html#aaf09cb1e03ecba4d969c91fd8854cf28',1,'beamadapter::BeamInterpolation']]],
-  ['suturecontroller_11',['SutureController',['../classbeamadapter_1_1_suture_controller.html',1,'beamadapter']]]
+  ['suturecontroller_11',['SutureController',['../classbeamadapter_1_1_suture_controller.html',1,'beamadapter']]],
+  ['suturecontroller_3c_20sofa_3a_3adefaulttype_3a_3arigid3types_20_3e_12',['SutureController&lt; sofa::defaulttype::Rigid3Types &gt;',['../namespacebeamadapter.html#a973b27f9f060845bc6df42d1a1580dc8',1,'beamadapter']]]
 ];

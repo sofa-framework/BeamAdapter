@@ -7,7 +7,7 @@ var indexSectionsWithContent =
   4: "_abdilmprs",
   5: "iosv",
   6: "b",
-  7: "abdilst"
+  7: "12345abcdefilmnopqrstvw"
 };
 
 var indexSectionNames =

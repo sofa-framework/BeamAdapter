@@ -115,8 +115,9 @@ var NAVTREEINDEX =
 [
 "_adaptive_beam_controller_8h_source.html",
 "classbeamadapter_1_1_base_rod_section_material.html#a28bfdfb34747b0c2ee6516865bcf22e2",
-"classbeamadapter_1_1_wire_rest_shape.html#a4121d4720627c76671afb19f95e5d2b4"
+"classbeamadapter_1_1_wire_rest_shape.html#a3ca76ea162e106b600b154bbf6da7a76"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

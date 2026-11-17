@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['m_5fa0ref_0',['m_a0ref',['../classbeamadapter_1_1_adaptive_inflatable_beam_force_field_1_1_beam_local_matrices.html#a7adcee4963235f199ee0d6ad5a5fe73d',1,'beamadapter::AdaptiveInflatableBeamForceField::BeamLocalMatrices::m_A0Ref'],['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html#acb1eb5dcea202f5698034b75e86aaff3',1,'beamadapter::AdaptiveBeamForceFieldAndMass::BeamLocalMatrices::m_A0Ref']]],
+  ['m_5fa0ref_0',['m_A0Ref',['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html#acb1eb5dcea202f5698034b75e86aaff3',1,'beamadapter::AdaptiveBeamForceFieldAndMass::BeamLocalMatrices::m_A0Ref'],['../classbeamadapter_1_1_adaptive_inflatable_beam_force_field_1_1_beam_local_matrices.html#a7adcee4963235f199ee0d6ad5a5fe73d',1,'beamadapter::AdaptiveInflatableBeamForceField::BeamLocalMatrices::m_A0Ref']]],
   ['m_5factivatedpointsbuf_1',['m_activatedPointsBuf',['../classbeamadapter_1_1_interventional_radiology_controller.html#aa57cca3ded28b9c310eccbc079d04462',1,'beamadapter::InterventionalRadiologyController']]],
   ['m_5falarmlength_2',['m_alarmLength',['../classbeamadapter_1_1_adaptive_beam_length_constraint.html#a0a766071c6569f1aeb35d8aea1cf0832',1,'beamadapter::AdaptiveBeamLengthConstraint']]],
   ['m_5fbeamend_3',['m_beamEnd',['../classbeamadapter_1_1_projection_search.html#afa4bf646aaa5967a6f0fbbf9515e765a',1,'beamadapter::ProjectionSearch']]],
@@ -15,7 +15,7 @@ var searchData=
   ['m_5ffound_12',['m_found',['../classbeamadapter_1_1_projection_search.html#a99e762d36503cfca01121661c31ba7aa',1,'beamadapter::ProjectionSearch']]],
   ['m_5finputmapping_13',['m_inputMapping',['../classbeamadapter_1_1_adaptive_beam_mapping.html#aa6d82db3f8e3e5a518e1a579f79fe155',1,'beamadapter::AdaptiveBeamMapping']]],
   ['m_5finterpolation_14',['m_interpolation',['../classbeamadapter_1_1_projection_search.html#a158c2f2b55e3748355327d2dcfff1fe3',1,'beamadapter::ProjectionSearch']]],
-  ['m_5fm00_15',['m_m00',['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html#a48957b9bb6d7032b63f3d44eead953d9',1,'beamadapter::AdaptiveBeamForceFieldAndMass::BeamLocalMatrices::m_M00'],['../classbeamadapter_1_1_adaptive_inflatable_beam_force_field_1_1_beam_local_matrices.html#a9947d7ca90e9fb4f47701656275067f8',1,'beamadapter::AdaptiveInflatableBeamForceField::BeamLocalMatrices::m_M00']]],
+  ['m_5fm00_15',['m_M00',['../classbeamadapter_1_1_adaptive_beam_force_field_and_mass_1_1_beam_local_matrices.html#a48957b9bb6d7032b63f3d44eead953d9',1,'beamadapter::AdaptiveBeamForceFieldAndMass::BeamLocalMatrices::m_M00'],['../classbeamadapter_1_1_adaptive_inflatable_beam_force_field_1_1_beam_local_matrices.html#a9947d7ca90e9fb4f47701656275067f8',1,'beamadapter::AdaptiveInflatableBeamForceField::BeamLocalMatrices::m_M00']]],
   ['m_5fsearchdirection_16',['m_searchDirection',['../classbeamadapter_1_1_projection_search.html#ab3bf4882eded3931d85d2fa7c6647f4b',1,'beamadapter::ProjectionSearch']]],
   ['m_5fsegend_17',['m_segEnd',['../classbeamadapter_1_1_projection_search.html#a4436d63adf9023cda1f95e71c1eac917',1,'beamadapter::ProjectionSearch']]],
   ['m_5ftarget_18',['m_target',['../classbeamadapter_1_1_projection_search.html#a9257ba6bad768efa0a4ab50e77b01dc6',1,'beamadapter::ProjectionSearch']]],
