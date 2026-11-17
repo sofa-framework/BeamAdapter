@@ -142,7 +142,7 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
         ctrl->applyAction(m_currAction);
 
-		    int currentActionInt = int(m_currAction);
+        int currentActionInt = int(m_currAction);
         d_currentAction.setValue(currentActionInt);
 
         auto times = sofa::helper::WriteAccessor(d_timeSteps);
