@@ -37,7 +37,8 @@ BeamAdapterActionController<DataTypes>::BeamAdapterActionController()
 	, d_currentAction(initData(&d_currentAction, 0, "currentAction", "Current action applied to the BeamAdapter"))
     , l_interventionController(initLink("interventionController", "Path to the InterventionalRadiologyController component on scene"))
 {
-	d_currentAction.setReadOnly(true);
+    d_currentAction.setReadOnly(true);
+    this->f_printLog.setValue(true);
 }
 
 template <class DataTypes>
@@ -78,8 +79,8 @@ void BeamAdapterActionController<DataTypes>::onKeyPressedEvent(core::objectmodel
 		
     case 'E':
         m_currAction = BeamAdapterAction::NO_ACTION;
-        std::cout << "timeSteps='" << d_timeSteps.getValue() << "'" << std::endl;
-        std::cout << "actions='" << d_actions.getValue() << "'" << std::endl;
+        msg_info() << "timeSteps='" << d_timeSteps.getValue();
+        msg_info() << "actions='" << d_actions.getValue();
         break;
     case 'D':
         m_currAction = BeamAdapterAction::DROP_TOOL;
@@ -141,7 +142,7 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
         ctrl->applyAction(m_currAction);
 
-		int currentActionInt = int(m_currAction);
+		    int currentActionInt = int(m_currAction);
         d_currentAction.setValue(currentActionInt);
 
         auto times = sofa::helper::WriteAccessor(d_timeSteps);
@@ -160,12 +161,12 @@ void BeamAdapterActionController<DataTypes>::onBeginAnimationStep(const double /
 
             if (currentTime >= time) // check if another key time has been reached and change action
             {                
-				int currentActionInt = d_actions.getValue()[m_readStep];
+                int currentActionInt = d_actions.getValue()[m_readStep];
                 m_currAction = BeamAdapterAction(currentActionInt);
                 m_readStep++;
 
                 ctrl->applyAction(m_currAction);
-				d_currentAction.setValue(currentActionInt);
+                d_currentAction.setValue(currentActionInt);
             }
         }
     }
