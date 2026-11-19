@@ -294,6 +294,7 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
             this->toModel->resize(expected);
     }
 
+    const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
     // Before bwdInit, the internal beam mapping has no points yet (and the beam
     // state may still be nullptr): only size the output.
     if (!beamState || !m_bwdInitDone)
@@ -301,7 +302,6 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
         auto out = sofa::helper::getWriteOnlyAccessor(dOut);
         const auto N = d_nbPointsOnEachCircle.getValue();
         const auto nCenters = sofa::helper::getReadAccessor(d_localCenters).size();
-        const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
         out.resize(nCenters * N * layers); // zero-filled: degenerate, invisible
         return;
     }
@@ -324,7 +324,6 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
 
     auto circlePoints = sofa::helper::getReadAccessor(d_circlePoints);
 
-    const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
     const std::size_t nMapped = std::min<std::size_t>(mappedCenters.size(), localCenters.size());
     out.resize(localCenters.size() * N * layers);
     for (std::size_t k = nMapped * N * layers; k < out.size(); ++k)
