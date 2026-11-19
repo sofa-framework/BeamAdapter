@@ -309,15 +309,20 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
     auto N = d_nbPointsOnEachCircle.getValue();
     
     const auto& mappedCenters = m_centerState->readPositions();
-        
-    out.clear();
-    
+
     auto circlePoints = sofa::helper::getReadAccessor(d_circlePoints);
-    
+
+    const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
+    const std::size_t nMapped = std::min<std::size_t>(mappedCenters.size(), localCenters.size());
+    out.resize(localCenters.size() * N * layers);
+    for (std::size_t k = nMapped * N * layers; k < out.size(); ++k)
+    {
+        out[k] = OutCoord();
+    }
+
     if(d_thickness.getValue() == 0.0)
     {
-        out.resize(mappedCenters.size() * N);
-        for (sofa::Index i=0; i< mappedCenters.size(); ++i)
+        for (sofa::Index i=0; i< nMapped; ++i)
         {
             const auto p0 = i;
 
@@ -329,8 +334,7 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
     }
     else
     {
-        out.resize(mappedCenters.size() * N * 2);
-        for (sofa::Index i=0; i< mappedCenters.size(); ++i)
+        for (sofa::Index i=0; i< nMapped; ++i)
         {
             const auto p0 = i;
 
