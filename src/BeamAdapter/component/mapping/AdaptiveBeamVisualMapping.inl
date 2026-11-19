@@ -282,6 +282,18 @@ void AdaptiveBeamVisualMapping<InputDataTypes, OutputDataTypes>::apply(const Mec
     
     const auto* beamState = this->l_wireBeamInterpolation->getMState();
 
+    // Keep the OUTPUT STATE's size consistent with the vector written below:
+    // resizing only dOut leaves a MechanicalObject output at its default size 1,
+    // and every vOp / free-motion access on it then fails its size check.
+    {
+        const auto N = d_nbPointsOnEachCircle.getValue();
+        const auto nCenters = sofa::helper::getReadAccessor(d_localCenters).size();
+        const std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;
+        const std::size_t expected = nCenters * N * layers;
+        if (this->toModel && this->toModel->getSize() != expected)
+            this->toModel->resize(expected);
+    }
+
     // Before bwdInit, the internal beam mapping has no points yet (and the beam
     // state may still be nullptr): only size the output.
     if (!beamState || !m_bwdInitDone)
