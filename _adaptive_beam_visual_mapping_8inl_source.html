@@ -403,44 +403,48 @@ $(function(){initNavTree('_adaptive_beam_visual_mapping_8inl_source.html','','')
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    <span class="keyword">auto</span> N = d_nbPointsOnEachCircle.getValue();</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    </div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; mappedCenters = m_centerState-&gt;readPositions();</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    out.clear();</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    </div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keyword">auto</span> circlePoints = sofa::helper::getReadAccessor(d_circlePoints);</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    </div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keywordflow">if</span>(d_thickness.getValue() == 0.0)</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    {</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        out.resize(mappedCenters.size() * N);</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordflow">for</span> (sofa::Index i=0; i&lt; mappedCenters.size(); ++i)</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        {</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keyword">const</span> <span class="keyword">auto</span> p0 = i;</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j=0; j&lt;N; ++j)</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            {</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                out[p0*N+j] = mappedCenters[p0].projectPoint(circlePoints[p0*N+j]);</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            }</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        }</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    }</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        out.resize(mappedCenters.size() * N * 2);</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="keywordflow">for</span> (sofa::Index i=0; i&lt; mappedCenters.size(); ++i)</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        {</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            <span class="keyword">const</span> <span class="keyword">auto</span> p0 = i;</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j=0; j&lt;N; ++j)</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            {</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                out[p0*2*N+j] = mappedCenters[p0].projectPoint(circlePoints[p0*2*N+j]);</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                out[p0*2*N+j + N] = mappedCenters[p0].projectPoint(circlePoints[p0*2*N+j + N]);</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            }</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        }</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    }</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    </div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>}</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>} <span class="comment">// namespace beamadapter</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keyword">auto</span> circlePoints = sofa::helper::getReadAccessor(d_circlePoints);</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keyword">const</span> std::size_t layers = (d_thickness.getValue() == 0.0) ? 1 : 2;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keyword">const</span> std::size_t nMapped = std::min&lt;std::size_t&gt;(mappedCenters.size(), localCenters.size());</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    out.resize(localCenters.size() * N * layers);</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="keywordflow">for</span> (std::size_t k = nMapped * N * layers; k &lt; out.size(); ++k)</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    {</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        out[k] = OutCoord();</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    }</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keywordflow">if</span>(d_thickness.getValue() == 0.0)</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    {</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordflow">for</span> (sofa::Index i=0; i&lt; nMapped; ++i)</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keyword">const</span> <span class="keyword">auto</span> p0 = i;</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j=0; j&lt;N; ++j)</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            {</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                out[p0*N+j] = mappedCenters[p0].projectPoint(circlePoints[p0*N+j]);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            }</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        }</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    }</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    {</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="keywordflow">for</span> (sofa::Index i=0; i&lt; nMapped; ++i)</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        {</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="keyword">const</span> <span class="keyword">auto</span> p0 = i;</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j=0; j&lt;N; ++j)</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            {</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                out[p0*2*N+j] = mappedCenters[p0].projectPoint(circlePoints[p0*2*N+j]);</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                out[p0*2*N+j + N] = mappedCenters[p0].projectPoint(circlePoints[p0*2*N+j + N]);</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            }</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        }</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    }</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    </div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>}</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>} <span class="comment">// namespace beamadapter</span></div>
 <div class="ttc" id="anamespacebeamadapter_html"><div class="ttname"><a href="namespacebeamadapter.html">beamadapter</a></div><div class="ttdoc">Declarations.</div><div class="ttdef"><b>Definition</b> BaseBeamInterpolation.cpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
